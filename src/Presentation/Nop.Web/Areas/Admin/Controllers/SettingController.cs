@@ -70,7 +70,6 @@ public partial class SettingController : BaseAdminController
     protected readonly INopFileProvider _fileProvider;
     protected readonly INotificationService _notificationService;
     protected readonly IOrderService _orderService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IPictureService _pictureService;
     protected readonly ISettingModelFactory _settingModelFactory;
     protected readonly ISettingService _settingService;
@@ -99,7 +98,6 @@ public partial class SettingController : BaseAdminController
         INopFileProvider fileProvider,
         INotificationService notificationService,
         IOrderService orderService,
-        IPermissionService permissionService,
         IPictureService pictureService,
         ISettingModelFactory settingModelFactory,
         ISettingService settingService,
@@ -123,7 +121,6 @@ public partial class SettingController : BaseAdminController
         _fileProvider = fileProvider;
         _notificationService = notificationService;
         _orderService = orderService;
-        _permissionService = permissionService;
         _pictureService = pictureService;
         _settingModelFactory = settingModelFactory;
         _settingService = settingService;

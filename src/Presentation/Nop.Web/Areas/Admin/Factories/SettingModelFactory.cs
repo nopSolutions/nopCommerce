@@ -674,7 +674,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         //prepare available translation services
         var availableTranslationServices = await TranslationServiceType.GoogleTranslate.ToSelectListAsync(false);
         model.AvailableTranslationService = availableTranslationServices.ToList();
-        
+
         //prepare available languages
         await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
 

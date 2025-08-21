@@ -220,7 +220,6 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     #endregion

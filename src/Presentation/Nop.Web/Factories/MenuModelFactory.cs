@@ -41,15 +41,14 @@ public partial class MenuModelFactory : IMenuModelFactory
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly ITopicService _topicService;
     protected readonly IVendorService _vendorService;
-    protected readonly MenuSettings _menuSettings;
     protected readonly IWorkContext _workContext;
+    protected readonly MenuSettings _menuSettings;
 
     #endregion
 
     #region Ctor
 
-    public MenuModelFactory(
-        IAclService aclService,
+    public MenuModelFactory(IAclService aclService,
         ICategoryService categoryService,
         ICustomerService customerService,
         ILocalizationService localizationService,
@@ -64,8 +63,8 @@ public partial class MenuModelFactory : IMenuModelFactory
         IStoreMappingService storeMappingService,
         ITopicService topicService,
         IVendorService vendorService,
-        MenuSettings menuSettings,
-        IWorkContext workContext)
+        IWorkContext workContext,
+        MenuSettings menuSettings)
     {
         _aclService = aclService;
         _categoryService = categoryService;
@@ -82,8 +81,8 @@ public partial class MenuModelFactory : IMenuModelFactory
         _storeMappingService = storeMappingService;
         _topicService = topicService;
         _vendorService = vendorService;
-        _menuSettings = menuSettings;
         _workContext = workContext;
+        _menuSettings = menuSettings;
     }
 
     #endregion
@@ -351,7 +350,8 @@ public partial class MenuModelFactory : IMenuModelFactory
     /// </returns>
     protected virtual async Task<List<MenuItemModel>> PrepareMenuItemModelsAsync(Menu menu)
     {
-        var allItems = await _menuService.GetAllMenuItemsAsync(menuId: menu.Id);
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var allItems = await _menuService.GetAllMenuItemsAsync(menuId: menu.Id, storeId: store.Id);
         var result = new List<MenuItemModel>();
         var rootItems = allItems.Where(item => item.ParentId == 0);
 
@@ -414,6 +414,8 @@ public partial class MenuModelFactory : IMenuModelFactory
         if (menuItemModel.Template == MenuItemTemplate.Simple)
             return new();
 
+        var store = await _storeContext.GetCurrentStoreAsync();
+
         return menuItemModel.MenuItemType switch
         {
             MenuItemType.Category => await (await _categoryService.GetAllCategoriesByParentCategoryIdAsync(menuItemModel.EntityId))
@@ -436,7 +438,7 @@ public partial class MenuModelFactory : IMenuModelFactory
                     return item;
                 }).Take(limitItems).ToListAsync(),
 
-            MenuItemType.Manufacturer => await (await _manufacturerService.GetAllManufacturersAsync(pageSize: limitItems))
+            MenuItemType.Manufacturer => await (await _manufacturerService.GetAllManufacturersAsync(storeId: store.Id, pageSize: limitItems))
                 .SelectAwait(async manufacturer =>
                 {
                     var localizedName = await _localizationService.GetLocalizedAsync(manufacturer, x => x.Name);
@@ -496,7 +498,7 @@ public partial class MenuModelFactory : IMenuModelFactory
 
         return await _staticCacheManager.GetAsync(menuCacheKey, async () =>
         {
-            var menus = await _menuService.GetAllMenusAsync(menuType);
+            var menus = await _menuService.GetAllMenusAsync(menuType, store.Id);
 
             return await menus.SelectAwait(async menu => new MenuModel
             {

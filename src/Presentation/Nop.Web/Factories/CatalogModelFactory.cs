@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -31,7 +30,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 {
     #region Fields
 
-    protected readonly BlogSettings _blogSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CustomerSettings _customerSettings;
     protected readonly ForumSettings _forumSettings;
@@ -68,8 +66,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
     #region Ctor
 
-    public CatalogModelFactory(BlogSettings blogSettings,
-        CatalogSettings catalogSettings,
+    public CatalogModelFactory(CatalogSettings catalogSettings,
         CustomerSettings customerSettings,
         ForumSettings forumSettings,
         ICategoryService categoryService,
@@ -100,7 +97,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         SeoSettings seoSettings,
         VendorSettings vendorSettings)
     {
-        _blogSettings = blogSettings;
         _catalogSettings = catalogSettings;
         _customerSettings = customerSettings;
         _forumSettings = forumSettings;

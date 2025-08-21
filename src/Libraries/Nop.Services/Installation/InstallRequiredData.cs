@@ -3491,11 +3491,10 @@ public partial class InstallationService
     /// <summary>
     /// Installs menus
     /// </summary>
-    /// <param name="withCategories">The main menu should be automatically loaded from categories</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task InstallMenusAsync(bool withCategories)
+    protected virtual async Task InstallMenusAsync()
     {
-        await _dataProvider.InsertEntityAsync(new Menu()
+        await _dataProvider.InsertEntityAsync(new Menu
         {
             Name = "Categories",
             MenuType = MenuType.Main,
@@ -3503,16 +3502,17 @@ public partial class InstallationService
             Published = _installationSettings.InstallSampleData
         });
 
-        var standardMainMenu = await _dataProvider.InsertEntityAsync(new Menu()
+        var standardMainMenu = await _dataProvider.InsertEntityAsync(new Menu
         {
             Name = "Menu",
             MenuType = MenuType.Main,
             DisplayOrder = 0,
             DisplayAllCategories = false,
-            Published = !withCategories
+            Published = !_installationSettings.InstallSampleData
         });
 
-        await _dataProvider.BulkInsertEntitiesAsync([
+        await _dataProvider.BulkInsertEntitiesAsync(
+        [
             new MenuItem
             {
                 MenuId = standardMainMenu.Id,
@@ -3563,7 +3563,7 @@ public partial class InstallationService
             }
         ]);
 
-        var footerInformation = await _dataProvider.InsertEntityAsync(new Menu()
+        var footerInformation = await _dataProvider.InsertEntityAsync(new Menu
         {
             Name = "Information",
             MenuType = MenuType.Footer,
@@ -3571,7 +3571,8 @@ public partial class InstallationService
             Published = true
         });
 
-        await _dataProvider.BulkInsertEntitiesAsync([
+        await _dataProvider.BulkInsertEntitiesAsync(
+        [
             new MenuItem
             {
                 MenuId = footerInformation.Id,
@@ -3618,7 +3619,7 @@ public partial class InstallationService
             },
         ]);
 
-        var footerCustomerService = await _dataProvider.InsertEntityAsync(new Menu()
+        var footerCustomerService = await _dataProvider.InsertEntityAsync(new Menu
         {
             Name = "Customer service",
             MenuType = MenuType.Footer,
@@ -3626,7 +3627,8 @@ public partial class InstallationService
             Published = true
         });
 
-        await _dataProvider.BulkInsertEntitiesAsync([
+        await _dataProvider.BulkInsertEntitiesAsync(
+        [
             new MenuItem
             {
                 MenuId = footerCustomerService.Id,
@@ -3647,7 +3649,7 @@ public partial class InstallationService
             {
                 MenuId = footerCustomerService.Id,
                 MenuItemType = MenuItemType.StandardPage,
-                RouteName = NopRouteNames.General.BOARDS,
+                RouteName = NopRouteNames.General.BLOG,
                 Title = "Blog",
                 Published = true
             },
@@ -3677,7 +3679,7 @@ public partial class InstallationService
             },
         ]);
 
-        var footerMyAccount = await _dataProvider.InsertEntityAsync(new Menu()
+        var footerMyAccount = await _dataProvider.InsertEntityAsync(new Menu
         {
             Name = "My account",
             MenuType = MenuType.Footer,
@@ -3685,7 +3687,8 @@ public partial class InstallationService
             Published = true
         });
 
-        await _dataProvider.BulkInsertEntitiesAsync([
+        await _dataProvider.BulkInsertEntitiesAsync(
+        [
            new MenuItem
             {
                 MenuId = footerMyAccount.Id,

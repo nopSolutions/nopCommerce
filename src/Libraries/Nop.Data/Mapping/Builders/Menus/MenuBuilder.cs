@@ -19,7 +19,6 @@ public partial class MenuBuilder : NopEntityBuilder<Menu>
         table
             .WithColumn(nameof(Menu.Name)).AsString(400).NotNullable()
             .WithColumn(nameof(Menu.CssClass)).AsString(400).Nullable();
-        ;
     }
 
     #endregion

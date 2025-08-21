@@ -107,13 +107,13 @@ public partial interface IMenuService
     Task UpdateMenuItemAsync(MenuItem menuItem);
 
     /// <summary>
-    /// Search menu items
+    /// Get all menu items
     /// </summary>
     /// <param name="menuId">Menu identifier; 0 or null to load all records</param>
     /// <param name="parentMenuItemId">Parent menu item identifier</param>
     /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
     /// <param name="depth">Depth to limit items</param>
-    /// <param name="treeSotring">A value indicating whether to sort menu items for tree representation</param>
+    /// <param name="treeSorting">A value indicating whether to sort menu items for tree representation</param>
     /// <param name="showHidden">A value indicating whether to show hidden records</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
@@ -126,7 +126,7 @@ public partial interface IMenuService
         int parentMenuItemId = 0,
         int storeId = 0,
         int depth = 0,
-        bool treeSotring = false,
+        bool treeSorting = false,
         bool showHidden = false,
         int pageIndex = 0,
         int pageSize = int.MaxValue);

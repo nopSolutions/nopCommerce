@@ -30,17 +30,17 @@ public partial class MenuItem : BaseEntity, IAclSupported, IStoreMappingSupporte
     public int? EntityId { get; set; }
 
     /// <summary>
-    /// The number of sub-items for entity item in the grid view
+    /// Gets or sets the number of sub-items for entity item in the grid view
     /// </summary>
     public int? NumberOfSubItemsPerGridElement { get; set; }
 
     /// <summary>
-    /// Number of elements in a grid row
+    /// Gets or sets the number of elements in a grid row
     /// </summary>
     public int? NumberOfItemsPerGridRow { get; set; }
 
     /// <summary>
-    /// Maximum number of loaded sub-entities
+    /// Gets or sets the maximum number of loaded sub-entities
     /// </summary>
     public int? MaximumNumberEntities { get; set; }
 
@@ -65,12 +65,12 @@ public partial class MenuItem : BaseEntity, IAclSupported, IStoreMappingSupporte
     public string CssClass { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the item menu is subject to ACL
+    /// Gets or sets a value indicating whether the menu item is subject to ACL
     /// </summary>
     public bool SubjectToAcl { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the item menu is limited/restricted to certain stores
+    /// Gets or sets a value indicating whether the menu item is limited/restricted to certain stores
     /// </summary>
     public bool LimitedToStores { get; set; }
 

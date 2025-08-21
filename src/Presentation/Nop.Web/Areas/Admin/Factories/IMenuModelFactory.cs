@@ -3,6 +3,9 @@ using Nop.Web.Areas.Admin.Models.Menus;
 
 namespace Nop.Web.Areas.Admin.Factories;
 
+/// <summary>
+/// Represents the menu model factory
+/// </summary>
 public partial interface IMenuModelFactory
 {
     #region Menus

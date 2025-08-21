@@ -17,6 +17,9 @@ using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories;
 
+/// <summary>
+/// Represents the menu model factory implementation
+/// </summary>
 public partial class MenuModelFactory : IMenuModelFactory
 {
     #region Fields
@@ -120,7 +123,7 @@ public partial class MenuModelFactory : IMenuModelFactory
         var items = await _menuService.GetAllMenuItemsAsync(menuId: menuItemModel.MenuId, showHidden: true);
         menuItemsToAdd.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.No"), Value = string.Empty });
 
-        if (menuItemModel.Id > 0 && chiedrenLevels(items, menuItemModel.Id) >= _menuSettings.MaximumMainMenuLevels - 1)
+        if (menuItemModel.Id > 0 && childrenLevels(items, menuItemModel.Id) >= _menuSettings.MaximumMainMenuLevels - 1)
             return;
 
         var availableParents = _menuService
@@ -132,7 +135,7 @@ public partial class MenuModelFactory : IMenuModelFactory
             menuItemsToAdd.Add(new SelectListItem { Value = item.Id.ToString(), Text = await GetMenuItemBreadcrumbAsync(item, items) });
         }
 
-        int chiedrenLevels(IEnumerable<MenuItem> elements, int parentId, HashSet<int> visited = null)
+        int childrenLevels(IEnumerable<MenuItem> elements, int parentId, HashSet<int> visited = null)
         {
             visited ??= new HashSet<int>();
 
@@ -147,7 +150,7 @@ public partial class MenuModelFactory : IMenuModelFactory
             var maxChildDepth = 0;
             foreach (var child in children)
             {
-                var childDepth = chiedrenLevels(elements, child.Id, visited);
+                var childDepth = childrenLevels(elements, child.Id, visited);
                 if (childDepth > maxChildDepth)
                     maxChildDepth = childDepth;
             }
@@ -382,25 +385,20 @@ public partial class MenuModelFactory : IMenuModelFactory
         }
 
         var isMainMenu = menu.MenuType == MenuType.Main;
-
-        await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, menuItem, excludeProperties);
+        if (isMainMenu)
+        {
+            model.AvailableMenuItemTemplates.AddRange(await MenuItemTemplate.Simple.ToSelectListAsync(false));
+            await PrepareModelAvailableParentMenuItemsAsync(model, _menuSettings.MaximumMainMenuLevels, model.AvailableMenuItems);
+        }
 
         model.AvailableMenuItemTypes = (await MenuItemType.StandardPage.ToSelectListAsync(false)).ToList();
-
-        await _baseAdminModelFactory.ConstantsToSelectListAsync(model.AvailableStandardRoutes, typeof(NopRouteNames.General), sortItems: true);
-        model.AvailableStandardRoutes = model.AvailableStandardRoutes.OrderBy(x => x.Text).ToList();
-
-        if (isMainMenu)
-            model.AvailableMenuItemTemplates.AddRange(await MenuItemTemplate.Simple.ToSelectListAsync(false));
+        model.AvailableStandardRoutes = await model.AvailableStandardRoutes.ConstantsToSelectListAsync(typeof(NopRouteNames.General), sortItems: true);
 
         await PrepareAvailableTopicsAsync(model.AvailableTopics);
-
-        await _baseAdminModelFactory.PrepareCategoriesAsync(model.AvailableCategories, isMainMenu, await _localizationService.GetResourceAsync("Admin.ContentManagement.Menus.MenuItem.Fields.Category.All"));
-        await _baseAdminModelFactory.PrepareManufacturersAsync(model.AvailableManufacturers, isMainMenu, await _localizationService.GetResourceAsync("Admin.ContentManagement.Menus.MenuItem.Fields.Manufacturer.All"));
-        await _baseAdminModelFactory.PrepareVendorsAsync(model.AvailableVendors, isMainMenu, await _localizationService.GetResourceAsync("Admin.ContentManagement.Menus.MenuItem.Fields.Vendor.All"));
-
-        if (isMainMenu)
-            await PrepareModelAvailableParentMenuItemsAsync(model, _menuSettings.MaximumMainMenuLevels, model.AvailableMenuItems);
+        await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, menuItem, excludeProperties);
+        await _baseAdminModelFactory.PrepareCategoriesAsync(model.AvailableCategories, isMainMenu);
+        await _baseAdminModelFactory.PrepareManufacturersAsync(model.AvailableManufacturers, isMainMenu);
+        await _baseAdminModelFactory.PrepareVendorsAsync(model.AvailableVendors, isMainMenu);
 
         //prepare localized models
         if (!excludeProperties)

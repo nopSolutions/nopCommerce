@@ -201,8 +201,7 @@ public partial class InstallationService : IInstallationService
         await InstallScheduleTasksAsync();
         await InstallReturnRequestReasonsAsync();
         await InstallReturnRequestActionsAsync();
-
-        await InstallMenusAsync(installationSettings.InstallSampleData);
+        await InstallMenusAsync();
 
         if (!installationSettings.InstallSampleData)
             return;

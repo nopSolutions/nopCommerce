@@ -22,48 +22,48 @@
 
 <section class="content">
     <div class="container-fluid">
-    <div class="form-horizontal">
-        <div class="cards-group">
-            <div class="card card-default">
-                <div class="card-body" id="menus-area">
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "menus-grid",
-                        RowIdBasedOnField = nameof(MenuModel.Name),
-                        UrlRead = new DataUrl("MenuList", "Menu", null),
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        ColumnCollection = new List<ColumnProperty>
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body" id="menus-area">
+                        @await Html.PartialAsync("Table", new DataTablesModel
                         {
-                            new ColumnProperty(nameof(MenuModel.Name))
+                            Name = "menus-grid",
+                            RowIdBasedOnField = nameof(MenuModel.Name),
+                            UrlRead = new DataUrl("MenuList", "Menu", null),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
                             {
-                                Title = T("Admin.ContentManagement.Menus.Fields.Name").Text,
-                                Width = "150"
-                            },
-                            new ColumnProperty(nameof(MenuModel.MenuTypeName))
-                            {
-                                Title = T("Admin.ContentManagement.Menus.Fields.MenuType").Text,
-                                Width = "100"
-                            },
-                            new ColumnProperty(nameof(MenuModel.Published))
-                            {
-                                Title = T("Admin.ContentManagement.Menus.Fields.Published").Text,
-                                Width = "50",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(MenuModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName = $"{NopColumnClassDefaults.Button} {NopColumnClassDefaults.CenterAll} column-edit",
-                                Render = new RenderButtonEdit(new DataUrl("~/Admin/Menu/Edit/"))
+                                new ColumnProperty(nameof(MenuModel.Name))
+                                {
+                                    Title = T("Admin.ContentManagement.Menus.Fields.Name").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(MenuModel.MenuTypeName))
+                                {
+                                    Title = T("Admin.ContentManagement.Menus.Fields.MenuType").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(MenuModel.Published))
+                                {
+                                    Title = T("Admin.ContentManagement.Menus.Fields.Published").Text,
+                                    Width = "50",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(MenuModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName = $"{NopColumnClassDefaults.Button} {NopColumnClassDefaults.CenterAll} column-edit",
+                                    Render = new RenderButtonEdit(new DataUrl("~/Admin/Menu/Edit/"))
+                                }
                             }
-                        }
-                    })
+                        })
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </section>

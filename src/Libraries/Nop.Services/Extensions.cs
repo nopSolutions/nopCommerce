@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.Reflection;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Services.Catalog;
 using Nop.Services.Localization;
 
 namespace Nop.Services;
@@ -56,6 +59,44 @@ public static class Extensions
     public static SelectList ToSelectList<T>(this T objList, Func<BaseEntity, string> selector) where T : IEnumerable<BaseEntity>
     {
         return new SelectList(objList.Select(p => new { ID = p.Id, Name = selector(p) }), "ID", "Name");
+    }
+
+    /// <summary>
+    /// Convert constants defined in the passed type to select list 
+    /// </summary>
+    /// <param name="items">Collection add items</param>
+    /// <param name="type">Type to extract constants</param>
+    /// <param name="useLocalization">Localize</param>
+    /// <param name="sortItems">Sort resulting items (<see cref="SelectListItem"/>)</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the select list
+    /// </returns>
+    public static async Task<List<SelectListItem>> ConstantsToSelectListAsync(this IList<SelectListItem> items,
+        Type type, bool useLocalization = true, bool sortItems = false)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+        ArgumentNullException.ThrowIfNull(type);
+
+        var result = new List<SelectListItem>();
+        var fields = type
+            .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+            .Where(f => f.IsLiteral && !f.IsInitOnly);
+
+        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+
+        foreach (var prop in fields)
+        {
+            var resourceTypeName = Regex.Replace(type.FullName, "\\W+", ".");
+            var resourceConstantName = CommonHelper.SnakeCaseToPascalCase(prop.Name);
+
+            var resourceName = $"{NopLocalizationDefaults.LiteralLocaleStringResourcesPrefix}{resourceTypeName}.{resourceConstantName}";
+            var resourceValue = useLocalization ? await localizationService.GetResourceAsync(resourceName) : resourceConstantName;
+
+            result.Add(new SelectListItem { Value = (string)prop.GetRawConstantValue(), Text = resourceValue });
+        }
+
+        return sortItems ? result.OrderBy(item => item.Text).ToList() : result;
     }
 
     /// <summary>

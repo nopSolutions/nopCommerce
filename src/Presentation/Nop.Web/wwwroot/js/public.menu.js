@@ -8,6 +8,6 @@ var mainMenu = {
 
     menuDropdowns.forEach((e) => {
       e.addEventListener("click", toggleClass.bind(e));
-    }
-  },
+    })
+  }
 };

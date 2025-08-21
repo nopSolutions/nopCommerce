@@ -1,10 +1,7 @@
 ﻿using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Menus;
 using Nop.Data;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
-using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 
@@ -18,12 +15,8 @@ public partial class MenuService : IMenuService
     #region Fields
 
     protected readonly IAclService _aclService;
-    protected readonly ICustomerService _customerService;
-    protected readonly ILocalizationService _localizationService;
     protected readonly IRepository<Menu> _menuRepository;
     protected readonly IRepository<MenuItem> _menuItemRepository;
-    protected readonly IStaticCacheManager _staticCacheManager;
-    protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly IWorkContext _workContext;
 
@@ -31,24 +24,15 @@ public partial class MenuService : IMenuService
 
     #region Ctor
 
-    public MenuService(
-        IAclService aclService,
-        ICustomerService customerService,
-        ILocalizationService localizationService,
+    public MenuService(IAclService aclService,
         IRepository<Menu> menuRepository,
         IRepository<MenuItem> menuItemRepository,
-        IStaticCacheManager staticCacheManager,
-        IStoreContext storeContext,
         IStoreMappingService storeMappingService,
         IWorkContext workContext)
     {
         _aclService = aclService;
-        _customerService = customerService;
-        _localizationService = localizationService;
         _menuRepository = menuRepository;
         _menuItemRepository = menuItemRepository;
-        _staticCacheManager = staticCacheManager;
-        _storeContext = storeContext;
         _storeMappingService = storeMappingService;
         _workContext = workContext;
     }
@@ -270,13 +254,13 @@ public partial class MenuService : IMenuService
     }
 
     /// <summary>
-    /// Search menu items
+    /// Get all menu items
     /// </summary>
     /// <param name="menuId">Menu identifier; 0 or null to load all records</param>
     /// <param name="parentMenuItemId">Parent menu item identifier</param>
     /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
     /// <param name="depth">Depth to limit items</param>
-    /// <param name="treeSotring">A value indicating whether to sort menu items for tree representation</param>
+    /// <param name="treeSorting">A value indicating whether to sort menu items for tree representation</param>
     /// <param name="showHidden">A value indicating whether to show hidden records</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
@@ -289,7 +273,7 @@ public partial class MenuService : IMenuService
         int parentMenuItemId = 0,
         int storeId = 0,
         int depth = 0,
-        bool treeSotring = false,
+        bool treeSorting = false,
         bool showHidden = false,
         int pageIndex = 0, int pageSize = int.MaxValue)
     {
@@ -316,14 +300,15 @@ public partial class MenuService : IMenuService
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
             }
 
-            return query.OrderBy(i => i.DisplayOrder)
-                    .ThenBy(i => i.Id);
+            return query
+                .OrderBy(i => i.DisplayOrder)
+                .ThenBy(i => i.Id);
         });
 
         if (depth > 0)
             menuItems = FilterMenuItemsByDepth(menuItems, parentMenuItemId, depth).ToList();
 
-        if (treeSotring)
+        if (treeSorting)
             menuItems = SortMenuItemsForTree(menuItems.ToLookup(c => c.ParentId)).ToList();
 
         //paging

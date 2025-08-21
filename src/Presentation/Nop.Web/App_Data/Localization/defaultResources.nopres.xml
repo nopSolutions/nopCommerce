@@ -10843,17 +10843,11 @@
 <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Category.Hint">
   <Value>Select one of the available categories.</Value>
 </LocaleResource>
-<LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Category.All">
-  <Value>All categories</Value>
-</LocaleResource>
 <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Manufacturer">
   <Value>Manufacturer</Value>
 </LocaleResource>
 <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Manufacturer.Hint">
   <Value>Select one of the available manufacturers.</Value>
-</LocaleResource>
-<LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Manufacturer.All">
-  <Value>All manufacturers</Value>
 </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.MenuItemType">
     <Value>Menu item type</Value>
@@ -10899,9 +10893,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Vendor.Hint">
     <Value>Select one of the available vendors.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.Vendor.All">
-    <Value>All vendors</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Menus.MenuItem.Fields.DisplayOrder">
     <Value>Display order</Value>
@@ -18017,7 +18008,7 @@
     <Value>Topic (page)</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuItemType.Category">
-    <Value>Categories</Value>
+    <Value>Category</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuItemType.Manufacturer">
     <Value>Manufacturer</Value>

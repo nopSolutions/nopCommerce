@@ -2,6 +2,7 @@
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
@@ -307,6 +308,7 @@ public class SettingMigration : MigrationBase
             aiSettings.ProductDescriptionQuery = ArtificialIntelligenceDefaults.ProductDescriptionQuery;
             settingService.SaveSetting(aiSettings, settings => settings.ProductDescriptionQuery);
         }
+
         //#7390
         var menuSettings = settingService.LoadSetting<MenuSettings>();
         if (!settingService.SettingExists(menuSettings, settings => settings.MaximumNumberEntities))
@@ -339,15 +341,12 @@ public class SettingMigration : MigrationBase
             settingService.SaveSetting(menuSettings, settings => settings.GridThumbPictureSize);
         }
 
-        var displayDefaultMenuItemSettings = settingService.GetAllSettings()
-            .Where(s => s.Name.StartsWith("DisplayDefaultMenuItemSettings.", StringComparison.OrdinalIgnoreCase));
-
-        if (displayDefaultMenuItemSettings.Any())
-            settingService.DeleteSettingsAsync(displayDefaultMenuItemSettings.ToList());
+        var settingRepository = EngineContext.Current.Resolve<IRepository<Setting>>();
+        settingRepository.Delete(setting => setting.Name.StartsWith("displaydefaultmenuitemsettings"));
 
         var useajaxloadmenu = settingService.GetSetting("catalogsettings.useajaxloadmenu");
         if (useajaxloadmenu is not null)
-            settingService.DeleteSettingAsync(useajaxloadmenu);
+            settingService.DeleteSetting(useajaxloadmenu);
     }
 
     public override void Down()

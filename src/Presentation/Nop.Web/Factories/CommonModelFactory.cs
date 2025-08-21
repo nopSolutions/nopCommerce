@@ -3,7 +3,6 @@ using System.Text;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -25,9 +24,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Security;
-using Nop.Services.Seo;
 using Nop.Services.Themes;
-using Nop.Services.Topics;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Cache;
@@ -42,7 +39,6 @@ public partial class CommonModelFactory : ICommonModelFactory
 {
     #region Fields
 
-    protected readonly BlogSettings _blogSettings;
     protected readonly CaptchaSettings _captchaSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CommonSettings _commonSettings;
@@ -65,8 +61,6 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IStoreContext _storeContext;
     protected readonly IThemeContext _themeContext;
     protected readonly IThemeProvider _themeProvider;
-    protected readonly ITopicService _topicService;
-    protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
     protected readonly LocalizationSettings _localizationSettings;
@@ -74,17 +68,14 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly MessagesSettings _messagesSettings;
     protected readonly NewsSettings _newsSettings;
     protected readonly RobotsTxtSettings _robotsTxtSettings;
-    protected readonly SitemapSettings _sitemapSettings;
     protected readonly SitemapXmlSettings _sitemapXmlSettings;
     protected readonly StoreInformationSettings _storeInformationSettings;
-    protected readonly VendorSettings _vendorSettings;
 
     #endregion
 
     #region Ctor
 
-    public CommonModelFactory(BlogSettings blogSettings,
-        CaptchaSettings captchaSettings,
+    public CommonModelFactory(CaptchaSettings captchaSettings,
         CatalogSettings catalogSettings,
         CommonSettings commonSettings,
         CurrencySettings currencySettings,
@@ -106,8 +97,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         IStoreContext storeContext,
         IThemeContext themeContext,
         IThemeProvider themeProvider,
-        ITopicService topicService,
-        IUrlRecordService urlRecordService,
         IWebHelper webHelper,
         IWorkContext workContext,
         LocalizationSettings localizationSettings,
@@ -115,12 +104,9 @@ public partial class CommonModelFactory : ICommonModelFactory
         MessagesSettings messagesSettings,
         NewsSettings newsSettings,
         RobotsTxtSettings robotsTxtSettings,
-        SitemapSettings sitemapSettings,
         SitemapXmlSettings sitemapXmlSettings,
-        StoreInformationSettings storeInformationSettings,
-        VendorSettings vendorSettings)
+        StoreInformationSettings storeInformationSettings)
     {
-        _blogSettings = blogSettings;
         _captchaSettings = captchaSettings;
         _catalogSettings = catalogSettings;
         _commonSettings = commonSettings;
@@ -143,8 +129,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         _storeContext = storeContext;
         _themeContext = themeContext;
         _themeProvider = themeProvider;
-        _topicService = topicService;
-        _urlRecordService = urlRecordService;
         _webHelper = webHelper;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
@@ -152,10 +136,8 @@ public partial class CommonModelFactory : ICommonModelFactory
         _localizationSettings = localizationSettings;
         _newsSettings = newsSettings;
         _robotsTxtSettings = robotsTxtSettings;
-        _sitemapSettings = sitemapSettings;
         _sitemapXmlSettings = sitemapXmlSettings;
         _storeInformationSettings = storeInformationSettings;
-        _vendorSettings = vendorSettings;
     }
 
     #endregion
