@@ -1,29 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Blogs;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.News;
-using Nop.Core.Domain.Topics;
-using Nop.Core.Domain.Vendors;
 using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.ArtificialIntelligence;
-using Nop.Services.Blogs;
-using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
-using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
-using Nop.Services.Topics;
-using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework;
@@ -42,9 +31,6 @@ public partial class CommonController : BaseAdminController
 
     #region Fields
 
-    protected readonly IArtificialIntelligenceService _artificialIntelligenceService;
-    protected readonly IBlogService _blogService;
-    protected readonly ICategoryService _categoryService;
     protected readonly ICommonModelFactory _commonModelFactory;
     protected readonly ICustomerService _customerService;
     protected readonly INopDataProvider _dataProvider;
@@ -52,19 +38,14 @@ public partial class CommonController : BaseAdminController
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IMaintenanceService _maintenanceService;
-    protected readonly IManufacturerService _manufacturerService;
-    protected readonly INewsService _newsService;
     protected readonly INopFileProvider _fileProvider;
     protected readonly INotificationService _notificationService;
     protected readonly IPermissionService _permissionService;
-    protected readonly IProductService _productService;
     protected readonly IQueuedEmailService _queuedEmailService;
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IThumbService _thumbService;
-    protected readonly ITopicService _topicService;
     protected readonly IUrlRecordService _urlRecordService;
-    protected readonly IVendorService _vendorService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
 
@@ -72,35 +53,24 @@ public partial class CommonController : BaseAdminController
 
     #region Ctor
 
-    public CommonController(IArtificialIntelligenceService artificialIntelligenceService,
-        IBlogService blogService,
-        ICategoryService categoryService,
-        ICommonModelFactory commonModelFactory,
+    public CommonController(ICommonModelFactory commonModelFactory,
         ICustomerService customerService,
         INopDataProvider dataProvider,
         IDateTimeHelper dateTimeHelper,
         ILanguageService languageService,
         ILocalizationService localizationService,
         IMaintenanceService maintenanceService,
-        IManufacturerService manufacturerService,
-        INewsService newsService,
         INopFileProvider fileProvider,
         INotificationService notificationService,
         IPermissionService permissionService,
-        IProductService productService,
         IQueuedEmailService queuedEmailService,
         IShoppingCartService shoppingCartService,
         IStaticCacheManager staticCacheManager,
         IThumbService thumbService,
-        ITopicService topicService,
         IUrlRecordService urlRecordService,
-        IVendorService vendorService,
         IWebHelper webHelper,
         IWorkContext workContext)
     {
-        _artificialIntelligenceService = artificialIntelligenceService;
-        _blogService = blogService;
-        _categoryService = categoryService;
         _commonModelFactory = commonModelFactory;
         _customerService = customerService;
         _dataProvider = dataProvider;
@@ -108,19 +78,14 @@ public partial class CommonController : BaseAdminController
         _languageService = languageService;
         _localizationService = localizationService;
         _maintenanceService = maintenanceService;
-        _manufacturerService = manufacturerService;
-        _newsService = newsService;
         _fileProvider = fileProvider;
         _notificationService = notificationService;
         _permissionService = permissionService;
-        _productService = productService;
         _queuedEmailService = queuedEmailService;
         _shoppingCartService = shoppingCartService;
         _staticCacheManager = staticCacheManager;
         _thumbService = thumbService;
-        _topicService = topicService;
         _urlRecordService = urlRecordService;
-        _vendorService = vendorService;
         _webHelper = webHelper;
         _workContext = workContext;
     }
@@ -511,60 +476,6 @@ public partial class CommonController : BaseAdminController
             return Json(new { Result = string.Empty });
 
         return Json(new { Result = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.URL.Reserved"), validatedSeName) });
-    }
-
-    public async Task<IActionResult> GenerateMetaTags(MetaTagsGeneratorModel metaTagsGeneratorModel)
-    {
-        var metaTitle = string.Empty;
-        var metaKeywords = string.Empty;
-        var metaDescription = string.Empty;
-
-        try
-        {
-            switch (metaTagsGeneratorModel.EntityType)
-            {
-                case nameof(Product):
-                    var product = await _productService.GetProductByIdAsync(metaTagsGeneratorModel.EntityId);
-                    (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsAsync(product, metaTagsGeneratorModel.LanguageId);
-                    break;
-                case nameof(Category):
-                    var category = await _categoryService.GetCategoryByIdAsync(metaTagsGeneratorModel.EntityId);
-                    (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsAsync(category, metaTagsGeneratorModel.LanguageId);
-                    break;
-                case nameof(BlogPost):
-                    var blogPost = await _blogService.GetBlogPostByIdAsync(metaTagsGeneratorModel.EntityId);
-                    (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsAsync(blogPost);
-                    break;
-                case nameof(Manufacturer):
-                    var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(metaTagsGeneratorModel.EntityId);
-                    (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsAsync(manufacturer, metaTagsGeneratorModel.LanguageId);
-                    break;
-                case nameof(NewsItem):
-                    var newsItem = await _newsService.GetNewsByIdAsync(metaTagsGeneratorModel.EntityId);
-                    (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsAsync(newsItem);
-                    break;
-                case nameof(Topic):
-                    var topic = await _topicService.GetTopicByIdAsync(metaTagsGeneratorModel.EntityId);
-                    (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsAsync(topic, metaTagsGeneratorModel.LanguageId);
-                    break;
-                case nameof(Vendor):
-                    var vendor = await _vendorService.GetVendorByIdAsync(metaTagsGeneratorModel.EntityId);
-                    (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsAsync(vendor, metaTagsGeneratorModel.LanguageId);
-                    break;
-            }
-
-            return Json(new
-                {
-                    Title = metaTitle,
-                    Keywords = metaKeywords,
-                    Description = metaDescription
-                }
-            );
-        }
-        catch (NopException e)
-        {
-            return ErrorJson(e.Message);
-        }
     }
 
     #endregion
