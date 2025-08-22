@@ -18335,6 +18335,9 @@
   <LocaleResource Name="Forum.Post.IsUseful">
     <Value>This post/answer is useful</Value>
   </LocaleResource>
+  <LocaleResource Name="Forum.Post.Text">
+    <Value>Post</Value>
+  </LocaleResource>
   <LocaleResource Name="Forum.Posted">
     <Value>Posted</Value>
   </LocaleResource>
