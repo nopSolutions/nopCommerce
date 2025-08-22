@@ -20,7 +20,7 @@
                 loadRequirements();
 
                 //adding requirement event
-                $("#discountRequirementContainer").bind('nopnewdiscountruleadded', function(event, newRequirementId) {
+                $("#discountRequirementContainer").on('nopnewdiscountruleadded', function(event, newRequirementId) {
                     var parentId = $("#@Html.IdFor(model => model.RequirementGroupId)").val();
                     loadRequirements(newRequirementId, parentId);
                 });
@@ -187,12 +187,12 @@
                 <div class="requirement-container {{if IsGroup}}requirement-group{{/if}}" id="editrequirement{{>DiscountRequirementId}}">
                     <div class="requirement-heading clearfix">
                         {{if IsGroup}}
-                        <span class="float-left margin-r-5">
+                        <span class="margin-r-5 float-left">
                             @T("Admin.Promotions.Discounts.Requirements.RequirementGroup.Title")
                             <i>{{:RuleName}}</i>
                         </span>
-                        <div class="interaction-type float-left clearfix">
-                            <span class="float-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
+                        <div class="interaction-type clearfix float-left">
+                            <span class="margin-r-10 float-left">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
                             <select class="form-control input-sm float-left" id="interactiontype{{>DiscountRequirementId}}" 
                                     name="interactiontype{{>DiscountRequirementId}}" 
                                     onchange="changeInteraction({{> DiscountRequirementId}}, {{if ParentId}} {{>ParentId}} {{else}} null {{/if}}, this.value)">
