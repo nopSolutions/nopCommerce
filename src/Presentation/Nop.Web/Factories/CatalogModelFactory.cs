@@ -627,8 +627,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
     {
         var cachedCategoriesModel = new List<CategorySimpleModel>();
         //categories
-        if (!_catalogSettings.UseAjaxLoadMenu)
-            cachedCategoriesModel = await PrepareCategorySimpleModelsAsync();
+        cachedCategoriesModel = await PrepareCategorySimpleModelsAsync();
 
         var store = await _storeContext.GetCurrentStoreAsync();
 
@@ -655,7 +654,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             DisplayBlogMenuItem = _displayDefaultMenuItemSettings.DisplayBlogMenuItem,
             DisplayForumsMenuItem = _displayDefaultMenuItemSettings.DisplayForumsMenuItem,
             DisplayContactUsMenuItem = _displayDefaultMenuItemSettings.DisplayContactUsMenuItem,
-            UseAjaxMenu = _catalogSettings.UseAjaxLoadMenu
         };
 
         return model;
