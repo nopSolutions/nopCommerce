@@ -499,6 +499,13 @@ columns: [
                             },
                         </text>
                         break;
+                    case RenderCurrency currency:
+                        <text>
+                            render: function (data, type, row) {
+                                return '<div style="text-align:@currency.TextAlign.ToString().ToLowerInvariant();" nop-value="' + data + '">' + new Intl.NumberFormat('@locale', { currency: '@currency.Currency', style: 'currency', }).format(data) + '</div>';
+                            },
+                        </text>
+                        break;
                 }
                 data: '@column.Data'
             }

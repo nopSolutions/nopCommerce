@@ -226,7 +226,14 @@
                     });
 
                     if (columnType == 'number') {
-                        $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + editRowData_@(tableName)[cellName] + '" class="userinput form-control" type="number" step="any" min="@int.MinValue" max="@int.MaxValue"/>');
+                        var cellValue = editRowData_@(tableName)[cellName];
+                        if(isNaN(parseFloat(cellValue))) {
+                            var container = document.createElement('div');
+                            container.innerHTML = cellValue;
+                            cellValue = container.children[0].getAttribute('nop-value');
+                        }
+
+                        $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + cellValue + '" class="userinput form-control" type="number" step="any" min="@int.MinValue" max="@int.MaxValue"/>');
                     }
                     if (columnType == 'checkbox') {
                         var cellValue = editRowData_@(tableName)[cellName];
