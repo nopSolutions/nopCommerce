@@ -1,25 +1,29 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Nop.Core.Infrastructure.Mapper;
 using Nop.Plugin.Widgets.AccessiBe.Models;
 
 namespace Nop.Plugin.Widgets.AccessiBe.Infrastructure;
 
 /// <summary>
-/// Represents AutoMapper configuration for widget models
+/// Represents Mapster configuration for widget models
 /// </summary>
-public class MapperConfiguration : Profile, IOrderedMapperProfile
+public class MapperConfiguration : IOrderedMapperProfile
 {
-    #region Ctor
+    #region Methods
 
-    public MapperConfiguration()
+    /// <summary>
+    /// Configure mappings for Mapster
+    /// </summary>
+    /// <param name="config">Type adapter configuration</param>
+    public void Configure(TypeAdapterConfig config)
     {
-        CreateMap<AccessiBeMobileSettings, AccessiBeTriggerMobileModel>();
-        CreateMap<AccessiBeTriggerMobileModel, AccessiBeMobileSettings>();
+        config.NewConfig<AccessiBeMobileSettings, AccessiBeTriggerMobileModel>();
+        config.NewConfig<AccessiBeTriggerMobileModel, AccessiBeMobileSettings>();
 
-        CreateMap<AccessiBeSettings, AccessiBeTriggerModel>()
-            .ForMember(model => model.ShowMobile, options => options.MapFrom(src => !src.HideMobile)); //invert
-        CreateMap<AccessiBeTriggerModel, AccessiBeSettings>()
-            .ForMember(setting => setting.HideMobile, options => options.MapFrom(src => !src.ShowMobile)); //invert
+        config.NewConfig<AccessiBeSettings, AccessiBeTriggerModel>()
+              .Map(model => model.ShowMobile, src => !src.HideMobile); // invert
+        config.NewConfig<AccessiBeTriggerModel, AccessiBeSettings>()
+              .Map(setting => setting.HideMobile, src => !src.ShowMobile); // invert
     }
 
     #endregion

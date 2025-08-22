@@ -1,11 +1,12 @@
-﻿using AutoMapper;
+using Mapster;
+using MapsterMapper;
 
 namespace Nop.Core.Infrastructure.Mapper;
 
 /// <summary>
-/// AutoMapper configuration
+/// Mapster configuration
 /// </summary>
-public static class AutoMapperConfiguration
+public static class MapsterConfiguration
 {
     /// <summary>
     /// Mapper
@@ -13,17 +14,17 @@ public static class AutoMapperConfiguration
     public static IMapper Mapper { get; private set; }
 
     /// <summary>
-    /// Mapper configuration
+    /// TypeAdapterConfig
     /// </summary>
-    public static MapperConfiguration MapperConfiguration { get; private set; }
+    public static TypeAdapterConfig Config { get; private set; }
 
     /// <summary>
     /// Initialize mapper
     /// </summary>
     /// <param name="config">Mapper configuration</param>
-    public static void Init(MapperConfiguration config)
+    public static void Init(TypeAdapterConfig config)
     {
-        MapperConfiguration = config;
-        Mapper = config.CreateMapper();
+        Config = config;
+        Mapper = new MapsterMapper.Mapper(config);
     }
 }

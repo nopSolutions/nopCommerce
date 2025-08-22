@@ -1,5 +1,8 @@
-﻿using Nop.Core;
+﻿using Mapster;
+using MapsterMapper;
+using Nop.Core;
 using Nop.Core.Configuration;
+using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.Mapper;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Models;
@@ -7,11 +10,19 @@ using Nop.Web.Framework.Models;
 namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 
 /// <summary>
-/// Represents the extensions to map entity to model and vise versa
+/// Represents the extensions to map entity to model and vise versa (DI-based version)
 /// </summary>
 public static class MappingExtensions
 {
     #region Utilities
+
+    /// <summary>
+    /// Get the mapper instance from DI container
+    /// </summary>
+    private static IMapper GetMapper()
+    {
+        return EngineContext.Current.Resolve<IMapper>();
+    }
 
     /// <summary>
     /// Execute a mapping from the source object to a new destination object. The source type is inferred from the source object
@@ -21,8 +32,9 @@ public static class MappingExtensions
     /// <returns>Mapped destination object</returns>
     private static TDestination Map<TDestination>(this object source)
     {
-        //use AutoMapper for mapping objects
-        return AutoMapperConfiguration.Mapper.Map<TDestination>(source);
+        //use Mapster for mapping objects
+        var mapper = GetMapper();
+        return mapper.Map<TDestination>(source);
     }
 
     /// <summary>
@@ -35,8 +47,9 @@ public static class MappingExtensions
     /// <returns>Mapped destination object, same instance as the passed destination object</returns>
     private static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
     {
-        //use AutoMapper for mapping objects
-        return AutoMapperConfiguration.Mapper.Map(source, destination);
+        //use Mapster for mapping objects
+        var mapper = GetMapper();
+        return mapper.Map(source, destination);
     }
 
     #endregion

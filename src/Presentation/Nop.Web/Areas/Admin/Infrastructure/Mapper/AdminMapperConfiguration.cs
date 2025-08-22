@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.Internal;
+﻿using Mapster;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
@@ -71,114 +70,123 @@ using Nop.Web.Framework.WebOptimizer;
 namespace Nop.Web.Areas.Admin.Infrastructure.Mapper;
 
 /// <summary>
-/// AutoMapper configuration for admin area models
+/// Mapster configuration for admin area models
 /// </summary>
-public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
+public partial class AdminMapperConfiguration : IOrderedMapperProfile
 {
-    #region Ctor
+    #region Methods
 
-    public AdminMapperConfiguration()
+    /// <summary>
+    /// Configure mappings
+    /// </summary>
+    /// <param name="config">Type adapter configuration</param>
+    public void Configure(TypeAdapterConfig config)
     {
         //create specific maps
-        CreateConfigMaps();
-        CreateAffiliatesMaps();
-        CreateAuthenticationMaps();
-        CreateMultiFactorAuthenticationMaps();
-        CreateBlogsMaps();
-        CreateCatalogMaps();
-        CreateCmsMaps();
-        CreateCommonMaps();
-        CreateCustomersMaps();
-        CreateDirectoryMaps();
-        CreateDiscountsMaps();
-        CreateForumsMaps();
-        CreateGdprMaps();
-        CreateLocalizationMaps();
-        CreateLoggingMaps();
-        CreateMediaMaps();
-        CreateMessagesMaps();
-        CreateNewsMaps();
-        CreateOrdersMaps();
-        CreatePaymentsMaps();
-        CreatePluginsMaps();
-        CreatePollsMaps();
-        CreateSecurityMaps();
-        CreateSeoMaps();
-        CreateShippingMaps();
-        CreateStoresMaps();
-        CreateTasksMaps();
-        CreateTaxMaps();
-        CreateTopicsMaps();
-        CreateVendorsMaps();
-        CreateWarehouseMaps();
+        CreateConfigMaps(config);
+        CreateAffiliatesMaps(config);
+        CreateAuthenticationMaps(config);
+        CreateMultiFactorAuthenticationMaps(config);
+        CreateBlogsMaps(config);
+        CreateCatalogMaps(config);
+        CreateCmsMaps(config);
+        CreateCommonMaps(config);
+        CreateCustomersMaps(config);
+        CreateDirectoryMaps(config);
+        CreateDiscountsMaps(config);
+        CreateForumsMaps(config);
+        CreateGdprMaps(config);
+        CreateLocalizationMaps(config);
+        CreateLoggingMaps(config);
+        CreateMediaMaps(config);
+        CreateMessagesMaps(config);
+        CreateNewsMaps(config);
+        CreateOrdersMaps(config);
+        CreatePaymentsMaps(config);
+        CreatePluginsMaps(config);
+        CreatePollsMaps(config);
+        CreateSecurityMaps(config);
+        CreateSeoMaps(config);
+        CreateShippingMaps(config);
+        CreateStoresMaps(config);
+        CreateTasksMaps(config);
+        CreateTaxMaps(config);
+        CreateTopicsMaps(config);
+        CreateVendorsMaps(config);
+        CreateWarehouseMaps(config);
 
         //add some generic mapping rules
-        this.Internal().ForAllMaps((mapConfiguration, map) =>
-        {
-            //exclude Form and CustomProperties from mapping BaseNopModel
-            if (typeof(BaseNopModel).IsAssignableFrom(mapConfiguration.DestinationType))
+        ConfigureGlobalSettings(config);
+    }
+
+    #endregion
+
+    #region Utilities
+
+    /// <summary>
+    /// Configure global mapping settings
+    /// </summary>
+    /// <param name="config">Type adapter configuration</param>
+    protected virtual void ConfigureGlobalSettings(TypeAdapterConfig config)
+    {
+        // BaseNopModel
+        config.When((s, d, m) => typeof(BaseNopModel).IsAssignableFrom(d))
+              .Ignore(nameof(BaseNopModel.CustomProperties));
+
+        // ISettingsModel
+        config.When((s, d, m) => typeof(ISettingsModel).IsAssignableFrom(d))
+              .Ignore(nameof(ISettingsModel.ActiveStoreScopeConfiguration));
+
+        // IConfig
+        config.When((s, d, m) => typeof(IConfig).IsAssignableFrom(d))
+              .Ignore(nameof(IConfig.Name));
+
+        // ILocalizedModel
+        config.When((s, d, m) => typeof(ILocalizedModel).IsAssignableFrom(d))
+              .Ignore(nameof(ILocalizedModel<ILocalizedModel>.Locales));
+
+        // IStoreMappingSupported
+        config.When((s, d, m) => typeof(IStoreMappingSupported).IsAssignableFrom(d))
+              .Ignore(nameof(IStoreMappingSupported.LimitedToStores));
+
+        // IStoreMappingSupportedModel
+        config.When((s, d, m) => typeof(IStoreMappingSupportedModel).IsAssignableFrom(d))
+              .Ignore(nameof(IStoreMappingSupportedModel.AvailableStores))
+              .Ignore(nameof(IStoreMappingSupportedModel.SelectedStoreIds));
+
+        // IAclSupported
+        config.When((s, d, m) => typeof(IAclSupported).IsAssignableFrom(d))
+              .Ignore(nameof(IAclSupported.SubjectToAcl));
+
+        // IAclSupportedModel
+        config.When((s, d, m) => typeof(IAclSupportedModel).IsAssignableFrom(d))
+              .Ignore(nameof(IAclSupportedModel.AvailableCustomerRoles))
+              .Ignore(nameof(IAclSupportedModel.SelectedCustomerRoleIds));
+
+        // IDiscountSupportedModel
+        config.When((s, d, m) => typeof(IDiscountSupportedModel).IsAssignableFrom(d))
+              .Ignore(nameof(IDiscountSupportedModel.AvailableDiscounts))
+              .Ignore(nameof(IDiscountSupportedModel.SelectedDiscountIds));
+
+        // ITranslationSupportedModel
+        config.When((s, d, m) => typeof(ITranslationSupportedModel).IsAssignableFrom(d))
+              .Ignore(nameof(ITranslationSupportedModel.PreTranslationAvailable));
+
+        // IPluginModel common ignores
+        config.When((s, d, m) => typeof(IPluginModel).IsAssignableFrom(d))
+              .Ignore(nameof(IPluginModel.ConfigurationUrl))
+              .Ignore(nameof(IPluginModel.IsActive))
+              .Ignore(nameof(IPluginModel.LogoUrl));
+
+        
+        // Base rule: any IPlugin -> any IPluginModel
+        config.NewConfig<IPlugin, IPluginModel>()
+            .AfterMapping((src, dest) =>
             {
-                //map.ForMember(nameof(BaseNopModel.Form), options => options.Ignore());
-                map.ForMember(nameof(BaseNopModel.CustomProperties), options => options.Ignore());
-            }
-
-            //exclude ActiveStoreScopeConfiguration from mapping ISettingsModel
-            if (typeof(ISettingsModel).IsAssignableFrom(mapConfiguration.DestinationType))
-                map.ForMember(nameof(ISettingsModel.ActiveStoreScopeConfiguration), options => options.Ignore());
-
-            //exclude some properties from mapping configuration and models
-            if (typeof(IConfig).IsAssignableFrom(mapConfiguration.DestinationType))
-                map.ForMember(nameof(IConfig.Name), options => options.Ignore());
-
-            //exclude Locales from mapping ILocalizedModel
-            if (typeof(ILocalizedModel).IsAssignableFrom(mapConfiguration.DestinationType))
-                map.ForMember(nameof(ILocalizedModel<ILocalizedModel>.Locales), options => options.Ignore());
-
-            //exclude some properties from mapping store mapping supported entities and models
-            if (typeof(IStoreMappingSupported).IsAssignableFrom(mapConfiguration.DestinationType))
-                map.ForMember(nameof(IStoreMappingSupported.LimitedToStores), options => options.Ignore());
-            if (typeof(IStoreMappingSupportedModel).IsAssignableFrom(mapConfiguration.DestinationType))
-            {
-                map.ForMember(nameof(IStoreMappingSupportedModel.AvailableStores), options => options.Ignore());
-                map.ForMember(nameof(IStoreMappingSupportedModel.SelectedStoreIds), options => options.Ignore());
-            }
-
-            //exclude some properties from mapping ACL supported entities and models
-            if (typeof(IAclSupported).IsAssignableFrom(mapConfiguration.DestinationType))
-                map.ForMember(nameof(IAclSupported.SubjectToAcl), options => options.Ignore());
-            if (typeof(IAclSupportedModel).IsAssignableFrom(mapConfiguration.DestinationType))
-            {
-                map.ForMember(nameof(IAclSupportedModel.AvailableCustomerRoles), options => options.Ignore());
-                map.ForMember(nameof(IAclSupportedModel.SelectedCustomerRoleIds), options => options.Ignore());
-            }
-
-            //exclude some properties from mapping discount supported entities and models
-            if (typeof(IDiscountSupportedModel).IsAssignableFrom(mapConfiguration.DestinationType))
-            {
-                map.ForMember(nameof(IDiscountSupportedModel.AvailableDiscounts), options => options.Ignore());
-                map.ForMember(nameof(IDiscountSupportedModel.SelectedDiscountIds), options => options.Ignore());
-            }
-
-            //exclude PreTranslationAvailable from mapping ITranslationSupportedModel
-            if (typeof(ITranslationSupportedModel).IsAssignableFrom(mapConfiguration.DestinationType))
-                map.ForMember(nameof(ITranslationSupportedModel.PreTranslationAvailable), options => options.Ignore());
-
-            if (typeof(IPluginModel).IsAssignableFrom(mapConfiguration.DestinationType))
-            {
-                //exclude some properties from mapping plugin models
-                map.ForMember(nameof(IPluginModel.ConfigurationUrl), options => options.Ignore());
-                map.ForMember(nameof(IPluginModel.IsActive), options => options.Ignore());
-                map.ForMember(nameof(IPluginModel.LogoUrl), options => options.Ignore());
-
-                //define specific rules for mapping plugin models
-                if (typeof(IPlugin).IsAssignableFrom(mapConfiguration.SourceType))
-                {
-                    map.ForMember(nameof(IPluginModel.DisplayOrder), options => options.MapFrom(plugin => ((IPlugin)plugin).PluginDescriptor.DisplayOrder));
-                    map.ForMember(nameof(IPluginModel.FriendlyName), options => options.MapFrom(plugin => ((IPlugin)plugin).PluginDescriptor.FriendlyName));
-                    map.ForMember(nameof(IPluginModel.SystemName), options => options.MapFrom(plugin => ((IPlugin)plugin).PluginDescriptor.SystemName));
-                }
-            }
-        });
+                dest.DisplayOrder = src.PluginDescriptor.DisplayOrder;
+                dest.FriendlyName = src.PluginDescriptor.FriendlyName;
+                dest.SystemName   = src.PluginDescriptor.SystemName;
+            });
     }
 
     #endregion
@@ -188,1597 +196,1602 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
     /// <summary>
     /// Create configuration maps 
     /// </summary>
-    protected virtual void CreateConfigMaps()
+    protected virtual void CreateConfigMaps(TypeAdapterConfig config)
     {
-        CreateMap<CacheConfig, CacheConfigModel>();
-        CreateMap<CacheConfigModel, CacheConfig>();
+        config.NewConfig<CacheConfig, CacheConfigModel>();
+        config.NewConfig<CacheConfigModel, CacheConfig>();
 
-        CreateMap<HostingConfig, HostingConfigModel>();
-        CreateMap<HostingConfigModel, HostingConfig>();
+        config.NewConfig<HostingConfig, HostingConfigModel>();
+        config.NewConfig<HostingConfigModel, HostingConfig>();
 
-        CreateMap<DistributedCacheConfig, DistributedCacheConfigModel>()
-            .ForMember(model => model.DistributedCacheTypeValues, options => options.Ignore());
-        CreateMap<DistributedCacheConfigModel, DistributedCacheConfig>();
+        config.NewConfig<DistributedCacheConfig, DistributedCacheConfigModel>()
+              .Ignore(model => model.DistributedCacheTypeValues);
+        config.NewConfig<DistributedCacheConfigModel, DistributedCacheConfig>();
 
-        CreateMap<InstallationConfig, InstallationConfigModel>();
-        CreateMap<InstallationConfigModel, InstallationConfig>();
+        config.NewConfig<InstallationConfig, InstallationConfigModel>();
+        config.NewConfig<InstallationConfigModel, InstallationConfig>();
 
-        CreateMap<PluginConfig, PluginConfigModel>();
-        CreateMap<PluginConfigModel, PluginConfig>();
+        config.NewConfig<PluginConfig, PluginConfigModel>();
+        config.NewConfig<PluginConfigModel, PluginConfig>();
 
-        CreateMap<CommonConfig, CommonConfigModel>();
-        CreateMap<CommonConfigModel, CommonConfig>();
+        config.NewConfig<CommonConfig, CommonConfigModel>();
+        config.NewConfig<CommonConfigModel, CommonConfig>();
 
-        CreateMap<DataConfig, DataConfigModel>()
-            .ForMember(model => model.DataProviderTypeValues, options => options.Ignore());
-        CreateMap<DataConfigModel, DataConfig>();
+        config.NewConfig<DataConfig, DataConfigModel>()
+              .Ignore(model => model.DataProviderTypeValues);
+        config.NewConfig<DataConfigModel, DataConfig>();
 
-        CreateMap<WebOptimizerConfig, WebOptimizerConfigModel>();
-        CreateMap<WebOptimizerConfigModel, WebOptimizerConfig>()
-            .ForMember(entity => entity.CdnUrl, options => options.Ignore())
-            .ForMember(entity => entity.AllowEmptyBundle, options => options.Ignore())
-            .ForMember(entity => entity.HttpsCompression, options => options.Ignore())
-            .ForMember(entity => entity.EnableTagHelperBundling, options => options.Ignore())
-            .ForMember(entity => entity.EnableCaching, options => options.Ignore())
-            .ForMember(entity => entity.EnableMemoryCache, options => options.Ignore());
+        config.NewConfig<WebOptimizerConfig, WebOptimizerConfigModel>();
+        config.NewConfig<WebOptimizerConfigModel, WebOptimizerConfig>()
+              .Ignore(entity => entity.CdnUrl)
+              .Ignore(entity => entity.AllowEmptyBundle)
+              .Ignore(entity => entity.HttpsCompression)
+              .Ignore(entity => entity.EnableTagHelperBundling)
+              .Ignore(entity => entity.EnableCaching)
+              .Ignore(entity => entity.EnableMemoryCache);
     }
 
     /// <summary>
     /// Create affiliates maps 
     /// </summary>
-    protected virtual void CreateAffiliatesMaps()
+    protected virtual void CreateAffiliatesMaps(TypeAdapterConfig config)
     {
-        CreateMap<Affiliate, AffiliateModel>()
-            .ForMember(model => model.Address, options => options.Ignore())
-            .ForMember(model => model.AffiliatedCustomerSearchModel, options => options.Ignore())
-            .ForMember(model => model.AffiliatedOrderSearchModel, options => options.Ignore())
-            .ForMember(model => model.Url, options => options.Ignore());
-        CreateMap<AffiliateModel, Affiliate>()
-            .ForMember(entity => entity.Deleted, options => options.Ignore());
+        config.NewConfig<Affiliate, AffiliateModel>()
+              .Ignore(model => model.Address)
+              .Ignore(model => model.AffiliatedCustomerSearchModel)
+              .Ignore(model => model.AffiliatedOrderSearchModel)
+              .Ignore(model => model.Url);
+        config.NewConfig<AffiliateModel, Affiliate>()
+              .Ignore(entity => entity.Deleted);
 
-        CreateMap<Order, AffiliatedOrderModel>()
-            .ForMember(model => model.OrderStatus, options => options.Ignore())
-            .ForMember(model => model.PaymentStatus, options => options.Ignore())
-            .ForMember(model => model.ShippingStatus, options => options.Ignore())
-            .ForMember(model => model.OrderTotal, options => options.Ignore())
-            .ForMember(model => model.CreatedOn, options => options.Ignore());
+        config.NewConfig<Order, AffiliatedOrderModel>()
+              .Ignore(model => model.OrderStatus)
+              .Ignore(model => model.PaymentStatus)
+              .Ignore(model => model.ShippingStatus)
+              .Ignore(model => model.OrderTotal)
+              .Ignore(model => model.CreatedOn);
 
-        CreateMap<Customer, AffiliatedCustomerModel>()
-            .ForMember(model => model.Name, options => options.Ignore());
-
+        config.NewConfig<Customer, AffiliatedCustomerModel>()
+              .Ignore(model => model.Name);
     }
 
     /// <summary>
     /// Create authentication maps 
     /// </summary>
-    protected virtual void CreateAuthenticationMaps()
+    protected virtual void CreateAuthenticationMaps(TypeAdapterConfig config)
     {
-        CreateMap<IExternalAuthenticationMethod, ExternalAuthenticationMethodModel>();
+        config.NewConfig<IExternalAuthenticationMethod, ExternalAuthenticationMethodModel>();
     }
 
     /// <summary>
     /// Create multi-factor authentication maps 
     /// </summary>
-    protected virtual void CreateMultiFactorAuthenticationMaps()
+    protected virtual void CreateMultiFactorAuthenticationMaps(TypeAdapterConfig config)
     {
-        CreateMap<IMultiFactorAuthenticationMethod, MultiFactorAuthenticationMethodModel>();
+        config.NewConfig<IMultiFactorAuthenticationMethod, MultiFactorAuthenticationMethodModel>();
     }
 
     /// <summary>
     /// Create blogs maps 
-    /// </summary>new
-    protected virtual void CreateBlogsMaps()
+    /// </summary>
+    protected virtual void CreateBlogsMaps(TypeAdapterConfig config)
     {
-        CreateMap<BlogComment, BlogCommentModel>()
-            .ForMember(model => model.BlogPostTitle, options => options.Ignore())
-            .ForMember(model => model.Comment, options => options.Ignore())
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.CustomerInfo, options => options.Ignore())
-            .ForMember(model => model.StoreName, options => options.Ignore());
+        config.NewConfig<BlogComment, BlogCommentModel>()
+            .Ignore(d => d.BlogPostTitle)
+            .Ignore(d => d.Comment)
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.CustomerInfo)
+            .Ignore(d => d.StoreName);
 
-        CreateMap<BlogCommentModel, BlogComment>()
-            .ForMember(entity => entity.CommentText, options => options.Ignore())
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.BlogPostId, options => options.Ignore())
-            .ForMember(entity => entity.CustomerId, options => options.Ignore())
-            .ForMember(entity => entity.StoreId, options => options.Ignore());
+        config.NewConfig<BlogCommentModel, BlogComment>()
+            .Ignore(d => d.CommentText)
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.BlogPostId)
+            .Ignore(d => d.CustomerId)
+            .Ignore(d => d.StoreId);
 
-        CreateMap<BlogPost, BlogPostModel>()
-            .ForMember(model => model.ApprovedComments, options => options.Ignore())
-            .ForMember(model => model.AvailableLanguages, options => options.Ignore())
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.LanguageName, options => options.Ignore())
-            .ForMember(model => model.NotApprovedComments, options => options.Ignore())
-            .ForMember(model => model.SeName, options => options.Ignore())
-            .ForMember(model => model.InitialBlogTags, options => options.Ignore());
-        CreateMap<BlogPostModel, BlogPost>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore());
+        config.NewConfig<BlogPost, BlogPostModel>()
+            .Ignore(d => d.ApprovedComments)
+            .Ignore(d => d.AvailableLanguages)
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.LanguageName)
+            .Ignore(d => d.NotApprovedComments)
+            .Ignore(d => d.SeName)
+            .Ignore(d => d.InitialBlogTags);
 
-        CreateMap<BlogSettings, BlogSettingsModel>()
-            .ForMember(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.BlogCommentsMustBeApproved_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.Enabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NotifyAboutNewBlogComments_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NumberOfTags_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PostsPageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowHeaderRssUrl_OverrideForStore, options => options.Ignore());
-        CreateMap<BlogSettingsModel, BlogSettings>();
+        config.NewConfig<BlogPostModel, BlogPost>()
+            .Ignore(d => d.CreatedOnUtc);
+
+        config.NewConfig<BlogSettings, BlogSettingsModel>()
+            .Ignore(d => d.AllowNotRegisteredUsersToLeaveComments_OverrideForStore)
+            .Ignore(d => d.BlogCommentsMustBeApproved_OverrideForStore)
+            .Ignore(d => d.Enabled_OverrideForStore)
+            .Ignore(d => d.NotifyAboutNewBlogComments_OverrideForStore)
+            .Ignore(d => d.NumberOfTags_OverrideForStore)
+            .Ignore(d => d.PostsPageSize_OverrideForStore)
+            .Ignore(d => d.ShowHeaderRssUrl_OverrideForStore);
+
+        config.NewConfig<BlogSettingsModel, BlogSettings>();
     }
 
     /// <summary>
     /// Create catalog maps 
     /// </summary>
-    protected virtual void CreateCatalogMaps()
+    protected virtual void CreateCatalogMaps(TypeAdapterConfig config)
     {
-        CreateMap<CatalogSettings, CatalogSettingsModel>()
-            .ForMember(model => model.AllowAnonymousUsersToEmailAFriend_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowAnonymousUsersToReviewProduct_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowProductSorting_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowProductViewModeChanging_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowViewUnpublishedProductPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AvailableViewModes, options => options.Ignore())
-            .ForMember(model => model.CategoryBreadcrumbEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.CompareProductsEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DefaultViewMode_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayTaxShippingInfoFooter_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayTaxShippingInfoProductBoxes_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayTaxShippingInfoShoppingCart_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayTaxShippingInfoWishlist_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.EmailAFriendEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ExportImportAllowDownloadImages_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ExportImportCategoriesUsingCategoryName_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ExportImportProductAttributes_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ExportImportProductCategoryBreadcrumb_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ExportImportProductSpecificationAttributes_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ExportImportTierPrices_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ExportImportRelatedEntitiesByName_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ExportImportProductUseLimitedToStores_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ExportImportCategoryUseLimitedToStores_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ExportImportSplitProductsFile_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.IncludeFullDescriptionInCompareProducts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.IncludeShortDescriptionInCompareProducts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ManufacturersBlockItemsToDisplay_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NewProductsEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NewProductsPageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NewProductsAllowCustomersToSelectPageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NewProductsPageSizeOptions_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NotifyCustomerAboutProductReviewReply_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NumberOfBestsellersOnHomepage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NumberOfProductTags_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PageShareCode_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductReviewsMustBeApproved_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.OneReviewPerProductFromCustomer_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductReviewsPageSizeOnAccountPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductReviewsSortByCreatedDateAscending_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductsAlsoPurchasedEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductsAlsoPurchasedNumber_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductsByTagPageSizeOptions_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductsByTagPageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductSearchAutoCompleteEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductSearchEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductSearchTermMinimumLength_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.RecentlyViewedProductsEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.RecentlyViewedProductsNumber_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.RemoveRequiredProducts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.SearchPageAllowCustomersToSelectPageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.SearchPagePageSizeOptions_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.SearchPageProductsPerPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowBestsellersOnHomepage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowCategoryProductNumber_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowFreeShippingNotification_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowShortDescriptionOnCatalogPages_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowGtin_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowLinkToAllResultInSearchAutoComplete_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowManufacturerPartNumber_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowProductImagesInSearchAutoComplete_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowProductReviewsOnAccountPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowProductReviewsPerStore_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowProductsFromSubcategories_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowShareButton_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowSkuOnCatalogPages_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowSkuOnProductDetailsPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayDatePreOrderAvailability_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.UseAjaxCatalogProductsLoading_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.SearchPagePriceRangeFiltering_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.SearchPagePriceFrom_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.SearchPagePriceTo_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.SearchPageManuallyPriceRange_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.ProductsByTagPriceRangeFiltering_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.ProductsByTagPriceFrom_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.ProductsByTagPriceTo_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.ProductsByTagManuallyPriceRange_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.EnableManufacturerFiltering_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.EnablePriceRangeFiltering_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.EnableSpecificationAttributeFiltering_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.DisplayFromPrices_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.AttributeValueOutOfStockDisplayTypes, mo => mo.Ignore())
-            .ForMember(model => model.AttributeValueOutOfStockDisplayType_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.SortOptionSearchModel, options => options.Ignore())
-            .ForMember(model => model.ReviewTypeSearchModel, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
-            .ForMember(model => model.AllowCustomersToSearchWithManufacturerName_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowCustomersToSearchWithCategoryName_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayAllPicturesOnCatalogPages_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductUrlStructureTypeId_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.ProductUrlStructureTypes, mo => mo.Ignore())
-            .ForMember(model => model.ShowSearchBoxCategories_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.ArtificialIntelligenceSettingsModel, mo => mo.Ignore());
-        CreateMap<CatalogSettingsModel, CatalogSettings>()
-            .ForMember(settings => settings.AjaxProcessAttributeChange, options => options.Ignore())
-            .ForMember(settings => settings.CompareProductsNumber, options => options.Ignore())
-            .ForMember(settings => settings.CountDisplayedYearsDatePicker, options => options.Ignore())
-            .ForMember(settings => settings.DefaultCategoryPageSize, options => options.Ignore())
-            .ForMember(settings => settings.DefaultCategoryPageSizeOptions, options => options.Ignore())
-            .ForMember(settings => settings.DefaultManufacturerPageSize, options => options.Ignore())
-            .ForMember(settings => settings.DefaultManufacturerPageSizeOptions, options => options.Ignore())
-            .ForMember(settings => settings.DefaultProductRatingValue, options => options.Ignore())
-            .ForMember(settings => settings.DisplayTierPricesWithDiscounts, options => options.Ignore())
-            .ForMember(settings => settings.ExportImportProductsCountInOneFile, options => options.Ignore())
-            .ForMember(settings => settings.ExportImportUseDropdownlistsForAssociatedEntities, options => options.Ignore())
-            .ForMember(settings => settings.IncludeFeaturedProductsInNormalLists, options => options.Ignore())
-            .ForMember(settings => settings.MaximumBackInStockSubscriptions, options => options.Ignore())
-            .ForMember(settings => settings.ProductSortingEnumDisabled, options => options.Ignore())
-            .ForMember(settings => settings.ProductSortingEnumDisplayOrder, options => options.Ignore())
-            .ForMember(settings => settings.PublishBackProductWhenCancellingOrders, options => options.Ignore())
-            .ForMember(settings => settings.UseAjaxLoadMenu, options => options.Ignore())
-            .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore())
-            .ForMember(settings => settings.UseStandardSearchWhenSearchProviderThrowsException, options => options.Ignore())
-            .ForMember(settings => settings.ActiveSearchProviderSystemName, options => options.Ignore())
-            .ForMember(settings => settings.VendorProductReviewsPageSize, options => options.Ignore());
+        config.NewConfig<CatalogSettings, CatalogSettingsModel>()
+            .Ignore(d => d.AllowAnonymousUsersToEmailAFriend_OverrideForStore)
+            .Ignore(d => d.AllowAnonymousUsersToReviewProduct_OverrideForStore)
+            .Ignore(d => d.AllowProductSorting_OverrideForStore)
+            .Ignore(d => d.AllowProductViewModeChanging_OverrideForStore)
+            .Ignore(d => d.AllowViewUnpublishedProductPage_OverrideForStore)
+            .Ignore(d => d.AvailableViewModes)
+            .Ignore(d => d.CategoryBreadcrumbEnabled_OverrideForStore)
+            .Ignore(d => d.CompareProductsEnabled_OverrideForStore)
+            .Ignore(d => d.DefaultViewMode_OverrideForStore)
+            .Ignore(d => d.DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore)
+            .Ignore(d => d.DisplayTaxShippingInfoFooter_OverrideForStore)
+            .Ignore(d => d.DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore)
+            .Ignore(d => d.DisplayTaxShippingInfoProductBoxes_OverrideForStore)
+            .Ignore(d => d.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore)
+            .Ignore(d => d.DisplayTaxShippingInfoShoppingCart_OverrideForStore)
+            .Ignore(d => d.DisplayTaxShippingInfoWishlist_OverrideForStore)
+            .Ignore(d => d.EmailAFriendEnabled_OverrideForStore)
+            .Ignore(d => d.ExportImportAllowDownloadImages_OverrideForStore)
+            .Ignore(d => d.ExportImportCategoriesUsingCategoryName_OverrideForStore)
+            .Ignore(d => d.ExportImportProductAttributes_OverrideForStore)
+            .Ignore(d => d.ExportImportProductCategoryBreadcrumb_OverrideForStore)
+            .Ignore(d => d.ExportImportProductSpecificationAttributes_OverrideForStore)
+            .Ignore(d => d.ExportImportTierPrices_OverrideForStore)
+            .Ignore(d => d.ExportImportRelatedEntitiesByName_OverrideForStore)
+            .Ignore(d => d.ExportImportProductUseLimitedToStores_OverrideForStore)
+            .Ignore(d => d.ExportImportCategoryUseLimitedToStores_OverrideForStore)
+            .Ignore(d => d.ExportImportSplitProductsFile_OverrideForStore)
+            .Ignore(d => d.IncludeFullDescriptionInCompareProducts_OverrideForStore)
+            .Ignore(d => d.IncludeShortDescriptionInCompareProducts_OverrideForStore)
+            .Ignore(d => d.ManufacturersBlockItemsToDisplay_OverrideForStore)
+            .Ignore(d => d.NewProductsEnabled_OverrideForStore)
+            .Ignore(d => d.NewProductsPageSize_OverrideForStore)
+            .Ignore(d => d.NewProductsAllowCustomersToSelectPageSize_OverrideForStore)
+            .Ignore(d => d.NewProductsPageSizeOptions_OverrideForStore)
+            .Ignore(d => d.NotifyCustomerAboutProductReviewReply_OverrideForStore)
+            .Ignore(d => d.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore)
+            .Ignore(d => d.NumberOfBestsellersOnHomepage_OverrideForStore)
+            .Ignore(d => d.NumberOfProductTags_OverrideForStore)
+            .Ignore(d => d.PageShareCode_OverrideForStore)
+            .Ignore(d => d.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore)
+            .Ignore(d => d.ProductReviewsMustBeApproved_OverrideForStore)
+            .Ignore(d => d.OneReviewPerProductFromCustomer_OverrideForStore)
+            .Ignore(d => d.ProductReviewsPageSizeOnAccountPage_OverrideForStore)
+            .Ignore(d => d.ProductReviewsSortByCreatedDateAscending_OverrideForStore)
+            .Ignore(d => d.ProductsAlsoPurchasedEnabled_OverrideForStore)
+            .Ignore(d => d.ProductsAlsoPurchasedNumber_OverrideForStore)
+            .Ignore(d => d.ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore)
+            .Ignore(d => d.ProductsByTagPageSizeOptions_OverrideForStore)
+            .Ignore(d => d.ProductsByTagPageSize_OverrideForStore)
+            .Ignore(d => d.ProductSearchAutoCompleteEnabled_OverrideForStore)
+            .Ignore(d => d.ProductSearchEnabled_OverrideForStore)
+            .Ignore(d => d.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore)
+            .Ignore(d => d.ProductSearchTermMinimumLength_OverrideForStore)
+            .Ignore(d => d.RecentlyViewedProductsEnabled_OverrideForStore)
+            .Ignore(d => d.RecentlyViewedProductsNumber_OverrideForStore)
+            .Ignore(d => d.RemoveRequiredProducts_OverrideForStore)
+            .Ignore(d => d.SearchPageAllowCustomersToSelectPageSize_OverrideForStore)
+            .Ignore(d => d.SearchPagePageSizeOptions_OverrideForStore)
+            .Ignore(d => d.SearchPageProductsPerPage_OverrideForStore)
+            .Ignore(d => d.ShowBestsellersOnHomepage_OverrideForStore)
+            .Ignore(d => d.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore)
+            .Ignore(d => d.ShowCategoryProductNumber_OverrideForStore)
+            .Ignore(d => d.ShowFreeShippingNotification_OverrideForStore)
+            .Ignore(d => d.ShowShortDescriptionOnCatalogPages_OverrideForStore)
+            .Ignore(d => d.ShowGtin_OverrideForStore)
+            .Ignore(d => d.ShowLinkToAllResultInSearchAutoComplete_OverrideForStore)
+            .Ignore(d => d.ShowManufacturerPartNumber_OverrideForStore)
+            .Ignore(d => d.ShowProductImagesInSearchAutoComplete_OverrideForStore)
+            .Ignore(d => d.ShowProductReviewsOnAccountPage_OverrideForStore)
+            .Ignore(d => d.ShowProductReviewsPerStore_OverrideForStore)
+            .Ignore(d => d.ShowProductsFromSubcategories_OverrideForStore)
+            .Ignore(d => d.ShowShareButton_OverrideForStore)
+            .Ignore(d => d.ShowSkuOnCatalogPages_OverrideForStore)
+            .Ignore(d => d.ShowSkuOnProductDetailsPage_OverrideForStore)
+            .Ignore(d => d.DisplayDatePreOrderAvailability_OverrideForStore)
+            .Ignore(d => d.UseAjaxCatalogProductsLoading_OverrideForStore)
+            .Ignore(d => d.SearchPagePriceRangeFiltering_OverrideForStore)
+            .Ignore(d => d.SearchPagePriceFrom_OverrideForStore)
+            .Ignore(d => d.SearchPagePriceTo_OverrideForStore)
+            .Ignore(d => d.SearchPageManuallyPriceRange_OverrideForStore)
+            .Ignore(d => d.ProductsByTagPriceRangeFiltering_OverrideForStore)
+            .Ignore(d => d.ProductsByTagPriceFrom_OverrideForStore)
+            .Ignore(d => d.ProductsByTagPriceTo_OverrideForStore)
+            .Ignore(d => d.ProductsByTagManuallyPriceRange_OverrideForStore)
+            .Ignore(d => d.EnableManufacturerFiltering_OverrideForStore)
+            .Ignore(d => d.EnablePriceRangeFiltering_OverrideForStore)
+            .Ignore(d => d.EnableSpecificationAttributeFiltering_OverrideForStore)
+            .Ignore(d => d.DisplayFromPrices_OverrideForStore)
+            .Ignore(d => d.AttributeValueOutOfStockDisplayTypes)
+            .Ignore(d => d.AttributeValueOutOfStockDisplayType_OverrideForStore)
+            .Ignore(d => d.SortOptionSearchModel)
+            .Ignore(d => d.ReviewTypeSearchModel)
+            .Ignore(d => d.PrimaryStoreCurrencyCode)
+            .Ignore(d => d.AllowCustomersToSearchWithManufacturerName_OverrideForStore)
+            .Ignore(d => d.AllowCustomersToSearchWithCategoryName_OverrideForStore)
+            .Ignore(d => d.DisplayAllPicturesOnCatalogPages_OverrideForStore)
+            .Ignore(d => d.ProductUrlStructureTypeId_OverrideForStore)
+            .Ignore(d => d.ProductUrlStructureTypes)
+            .Ignore(d => d.ShowSearchBoxCategories_OverrideForStore)
+            .Ignore(d => d.ArtificialIntelligenceSettingsModel);
+        config.NewConfig<CatalogSettingsModel, CatalogSettings>()
+            .Ignore(d => d.AjaxProcessAttributeChange)
+            .Ignore(d => d.CompareProductsNumber)
+            .Ignore(d => d.CountDisplayedYearsDatePicker)
+            .Ignore(d => d.DefaultCategoryPageSize)
+            .Ignore(d => d.DefaultCategoryPageSizeOptions)
+            .Ignore(d => d.DefaultManufacturerPageSize)
+            .Ignore(d => d.DefaultManufacturerPageSizeOptions)
+            .Ignore(d => d.DefaultProductRatingValue)
+            .Ignore(d => d.DisplayTierPricesWithDiscounts)
+            .Ignore(d => d.ExportImportProductsCountInOneFile)
+            .Ignore(d => d.ExportImportUseDropdownlistsForAssociatedEntities)
+            .Ignore(d => d.IncludeFeaturedProductsInNormalLists)
+            .Ignore(d => d.MaximumBackInStockSubscriptions)
+            .Ignore(d => d.ProductSortingEnumDisabled)
+            .Ignore(d => d.ProductSortingEnumDisplayOrder)
+            .Ignore(d => d.PublishBackProductWhenCancellingOrders)
+            .Ignore(d => d.UseAjaxLoadMenu)
+            .Ignore(d => d.UseLinksInRequiredProductWarnings)
+            .Ignore(d => d.UseStandardSearchWhenSearchProviderThrowsException)
+            .Ignore(d => d.ActiveSearchProviderSystemName)
+            .Ignore(d => d.VendorProductReviewsPageSize);
 
-        CreateMap<ProductCategory, CategoryProductModel>()
-            .ForMember(model => model.ProductName, options => options.Ignore());
-        CreateMap<CategoryProductModel, ProductCategory>()
-            .ForMember(entity => entity.CategoryId, options => options.Ignore())
-            .ForMember(entity => entity.ProductId, options => options.Ignore());
+        config.NewConfig<ProductCategory, CategoryProductModel>()
+            .Ignore(d => d.ProductName);
+        config.NewConfig<CategoryProductModel, ProductCategory>()
+            .Ignore(d => d.CategoryId)
+            .Ignore(d => d.ProductId);
 
-        CreateMap<Category, CategoryModel>()
-            .ForMember(model => model.AvailableCategories, options => options.Ignore())
-            .ForMember(model => model.AvailableCategoryTemplates, options => options.Ignore())
-            .ForMember(model => model.Breadcrumb, options => options.Ignore())
-            .ForMember(model => model.CategoryProductSearchModel, options => options.Ignore())
-            .ForMember(model => model.SeName, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore());
-        CreateMap<CategoryModel, Category>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.Deleted, options => options.Ignore())
-            .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
+        config.NewConfig<Category, CategoryModel>()
+            .Ignore(d => d.AvailableCategories)
+            .Ignore(d => d.AvailableCategoryTemplates)
+            .Ignore(d => d.Breadcrumb)
+            .Ignore(d => d.CategoryProductSearchModel)
+            .Ignore(d => d.SeName)
+            .Ignore(d => d.PrimaryStoreCurrencyCode);
+        config.NewConfig<CategoryModel, Category>()
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.Deleted)
+            .Ignore(d => d.UpdatedOnUtc);
 
-        CreateMap<CategoryTemplate, CategoryTemplateModel>();
-        CreateMap<CategoryTemplateModel, CategoryTemplate>();
+        config.NewConfig<CategoryTemplate, CategoryTemplateModel>();
+        config.NewConfig<CategoryTemplateModel, CategoryTemplate>();
 
-        CreateMap<ProductManufacturer, ManufacturerProductModel>()
-            .ForMember(model => model.ProductName, options => options.Ignore());
-        CreateMap<ManufacturerProductModel, ProductManufacturer>()
-            .ForMember(entity => entity.ManufacturerId, options => options.Ignore())
-            .ForMember(entity => entity.ProductId, options => options.Ignore());
+        config.NewConfig<ProductManufacturer, ManufacturerProductModel>()
+            .Ignore(d => d.ProductName);
+        config.NewConfig<ManufacturerProductModel, ProductManufacturer>()
+            .Ignore(d => d.ManufacturerId)
+            .Ignore(d => d.ProductId);
 
-        CreateMap<Manufacturer, ManufacturerModel>()
-            .ForMember(model => model.AvailableManufacturerTemplates, options => options.Ignore())
-            .ForMember(model => model.ManufacturerProductSearchModel, options => options.Ignore())
-            .ForMember(model => model.SeName, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore());
-        CreateMap<ManufacturerModel, Manufacturer>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.Deleted, options => options.Ignore())
-            .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
+        config.NewConfig<Manufacturer, ManufacturerModel>()
+            .Ignore(d => d.AvailableManufacturerTemplates)
+            .Ignore(d => d.ManufacturerProductSearchModel)
+            .Ignore(d => d.SeName)
+            .Ignore(d => d.PrimaryStoreCurrencyCode);
+        config.NewConfig<ManufacturerModel, Manufacturer>()
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.Deleted)
+            .Ignore(d => d.UpdatedOnUtc);
 
-        CreateMap<ManufacturerTemplate, ManufacturerTemplateModel>();
-        CreateMap<ManufacturerTemplateModel, ManufacturerTemplate>();
+        config.NewConfig<ManufacturerTemplate, ManufacturerTemplateModel>();
+        config.NewConfig<ManufacturerTemplateModel, ManufacturerTemplate>();
 
         //Review type
-        CreateMap<ReviewType, ReviewTypeModel>();
-        CreateMap<ReviewTypeModel, ReviewType>();
+        config.NewConfig<ReviewType, ReviewTypeModel>();
+        config.NewConfig<ReviewTypeModel, ReviewType>();
 
         //product review
-        CreateMap<ProductReview, ProductReviewModel>()
-            .ForMember(model => model.CustomerInfo, mo => mo.Ignore())
-            .ForMember(model => model.IsLoggedInAsVendor, mo => mo.Ignore())
-            .ForMember(model => model.ProductReviewReviewTypeMappingSearchModel, mo => mo.Ignore())
-            .ForMember(model => model.CreatedOn, mo => mo.Ignore())
-            .ForMember(model => model.StoreName, mo => mo.Ignore())
-            .ForMember(model => model.ShowStoreName, mo => mo.Ignore())
-            .ForMember(model => model.ProductName, mo => mo.Ignore());
+        config.NewConfig<ProductReview, ProductReviewModel>()
+            .Ignore(d => d.CustomerInfo)
+            .Ignore(d => d.IsLoggedInAsVendor)
+            .Ignore(d => d.ProductReviewReviewTypeMappingSearchModel)
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.StoreName)
+            .Ignore(d => d.ShowStoreName)
+            .Ignore(d => d.ProductName);
 
         //product review type mapping
-        CreateMap<ProductReviewReviewTypeMapping, ProductReviewReviewTypeMappingModel>()
-            .ForMember(model => model.Name, mo => mo.Ignore())
-            .ForMember(model => model.Description, mo => mo.Ignore())
-            .ForMember(model => model.VisibleToAllCustomers, mo => mo.Ignore());
+        config.NewConfig<ProductReviewReviewTypeMapping, ProductReviewReviewTypeMappingModel>()
+            .Ignore(d => d.Name)
+            .Ignore(d => d.Description)
+            .Ignore(d => d.VisibleToAllCustomers);
 
         //products
-        CreateMap<Product, ProductModel>()
-            .ForMember(model => model.AddPictureModel, options => options.Ignore())
-            .ForMember(model => model.AssociatedProductSearchModel, options => options.Ignore())
-            .ForMember(model => model.AssociatedToProductId, options => options.Ignore())
-            .ForMember(model => model.AssociatedToProductName, options => options.Ignore())
-            .ForMember(model => model.AvailableBasepriceBaseUnits, options => options.Ignore())
-            .ForMember(model => model.AvailableBasepriceUnits, options => options.Ignore())
-            .ForMember(model => model.AvailableCategories, options => options.Ignore())
-            .ForMember(model => model.AvailableDeliveryDates, options => options.Ignore())
-            .ForMember(model => model.AvailableManufacturers, options => options.Ignore())
-            .ForMember(model => model.AvailableProductAvailabilityRanges, options => options.Ignore())
-            .ForMember(model => model.AvailableProductTemplates, options => options.Ignore())
-            .ForMember(model => model.AvailableTaxCategories, options => options.Ignore())
-            .ForMember(model => model.AvailableVendors, options => options.Ignore())
-            .ForMember(model => model.AvailableWarehouses, options => options.Ignore())
-            .ForMember(model => model.BaseDimensionIn, options => options.Ignore())
-            .ForMember(model => model.BaseWeightIn, options => options.Ignore())
-            .ForMember(model => model.CopyProductModel, options => options.Ignore())
-            .ForMember(model => model.CrossSellProductSearchModel, options => options.Ignore())
-            .ForMember(model => model.HasAvailableSpecificationAttributes, options => options.Ignore())
-            .ForMember(model => model.IsLoggedInAsVendor, options => options.Ignore())
-            .ForMember(model => model.LastStockQuantity, options => options.Ignore())
-            .ForMember(model => model.PictureThumbnailUrl, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
-            .ForMember(model => model.ProductAttributeCombinationSearchModel, options => options.Ignore())
-            .ForMember(model => model.ProductAttributeMappingSearchModel, options => options.Ignore())
-            .ForMember(model => model.ProductAttributesExist, options => options.Ignore())
-            .ForMember(model => model.CanCreateCombinations, options => options.Ignore())
-            .ForMember(model => model.ProductEditorSettingsModel, options => options.Ignore())
-            .ForMember(model => model.ProductOrderSearchModel, options => options.Ignore())
-            .ForMember(model => model.ProductPictureModels, options => options.Ignore())
-            .ForMember(model => model.ProductPictureSearchModel, options => options.Ignore())
-            .ForMember(model => model.ProductVideoModels, options => options.Ignore())
-            .ForMember(model => model.ProductVideoSearchModel, options => options.Ignore())
-            .ForMember(model => model.AddVideoModel, options => options.Ignore())
-            .ForMember(model => model.ProductSpecificationAttributeSearchModel, options => options.Ignore())
-            .ForMember(model => model.ProductsTypesSupportedByProductTemplates, options => options.Ignore())
-            .ForMember(model => model.AvailableProductTags, options => options.Ignore())
-            .ForMember(model => model.ProductTypeName, options => options.Ignore())
-            .ForMember(model => model.ProductWarehouseInventoryModels, options => options.Ignore())
-            .ForMember(model => model.RelatedProductSearchModel, options => options.Ignore())
-            .ForMember(model => model.SelectedCategoryIds, options => options.Ignore())
-            .ForMember(model => model.SelectedManufacturerIds, options => options.Ignore())
-            .ForMember(model => model.SeName, options => options.Ignore())
-            .ForMember(model => model.StockQuantityHistory, options => options.Ignore())
-            .ForMember(model => model.StockQuantityHistorySearchModel, options => options.Ignore())
-            .ForMember(model => model.StockQuantityStr, options => options.Ignore())
-            .ForMember(model => model.TierPriceSearchModel, options => options.Ignore())
-            .ForMember(model => model.SelectedProductTags, options => options.Ignore())
-            .ForMember(model => model.AvailableProductTags, options => options.Ignore())
-            .ForMember(model => model.FormattedPrice, options => options.Ignore());
-        CreateMap<ProductModel, Product>()
-            .ForMember(entity => entity.ApprovedRatingSum, options => options.Ignore())
-            .ForMember(entity => entity.ApprovedTotalReviews, options => options.Ignore())
-            .ForMember(entity => entity.BackorderMode, options => options.Ignore())
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.Deleted, options => options.Ignore())
-            .ForMember(entity => entity.DownloadActivationType, options => options.Ignore())
-            .ForMember(entity => entity.GiftCardType, options => options.Ignore())
-            .ForMember(entity => entity.LowStockActivity, options => options.Ignore())
-            .ForMember(entity => entity.ManageInventoryMethod, options => options.Ignore())
-            .ForMember(entity => entity.NotApprovedRatingSum, options => options.Ignore())
-            .ForMember(entity => entity.NotApprovedTotalReviews, options => options.Ignore())
-            .ForMember(entity => entity.ParentGroupedProductId, options => options.Ignore())
-            .ForMember(entity => entity.ProductType, options => options.Ignore())
-            .ForMember(entity => entity.RecurringCyclePeriod, options => options.Ignore())
-            .ForMember(entity => entity.RentalPricePeriod, options => options.Ignore())
-            .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
+        config.NewConfig<Product, ProductModel>()
+            .Ignore(d => d.AddPictureModel)
+            .Ignore(d => d.AssociatedProductSearchModel)
+            .Ignore(d => d.AssociatedToProductId)
+            .Ignore(d => d.AssociatedToProductName)
+            .Ignore(d => d.AvailableBasepriceBaseUnits)
+            .Ignore(d => d.AvailableBasepriceUnits)
+            .Ignore(d => d.AvailableCategories)
+            .Ignore(d => d.AvailableDeliveryDates)
+            .Ignore(d => d.AvailableManufacturers)
+            .Ignore(d => d.AvailableProductAvailabilityRanges)
+            .Ignore(d => d.AvailableProductTemplates)
+            .Ignore(d => d.AvailableTaxCategories)
+            .Ignore(d => d.AvailableVendors)
+            .Ignore(d => d.AvailableWarehouses)
+            .Ignore(d => d.BaseDimensionIn)
+            .Ignore(d => d.BaseWeightIn)
+            .Ignore(d => d.CopyProductModel)
+            .Ignore(d => d.CrossSellProductSearchModel)
+            .Ignore(d => d.HasAvailableSpecificationAttributes)
+            .Ignore(d => d.IsLoggedInAsVendor)
+            .Ignore(d => d.LastStockQuantity)
+            .Ignore(d => d.PictureThumbnailUrl)
+            .Ignore(d => d.PrimaryStoreCurrencyCode)
+            .Ignore(d => d.ProductAttributeCombinationSearchModel)
+            .Ignore(d => d.ProductAttributeMappingSearchModel)
+            .Ignore(d => d.ProductAttributesExist)
+            .Ignore(d => d.CanCreateCombinations)
+            .Ignore(d => d.ProductEditorSettingsModel)
+            .Ignore(d => d.ProductOrderSearchModel)
+            .Ignore(d => d.ProductPictureModels)
+            .Ignore(d => d.ProductPictureSearchModel)
+            .Ignore(d => d.ProductVideoModels)
+            .Ignore(d => d.ProductVideoSearchModel)
+            .Ignore(d => d.AddVideoModel)
+            .Ignore(d => d.ProductSpecificationAttributeSearchModel)
+            .Ignore(d => d.ProductsTypesSupportedByProductTemplates)
+            .Ignore(d => d.AvailableProductTags)
+            .Ignore(d => d.ProductTypeName)
+            .Ignore(d => d.ProductWarehouseInventoryModels)
+            .Ignore(d => d.RelatedProductSearchModel)
+            .Ignore(d => d.SelectedCategoryIds)
+            .Ignore(d => d.SelectedManufacturerIds)
+            .Ignore(d => d.SeName)
+            .Ignore(d => d.StockQuantityHistory)
+            .Ignore(d => d.StockQuantityHistorySearchModel)
+            .Ignore(d => d.StockQuantityStr)
+            .Ignore(d => d.TierPriceSearchModel)
+            .Ignore(d => d.SelectedProductTags)
+            .Ignore(d => d.FormattedPrice);
 
-        CreateMap<Product, DiscountProductModel>()
-            .ForMember(model => model.ProductId, options => options.Ignore())
-            .ForMember(model => model.ProductName, options => options.Ignore())
-            .ForMember(model => model.VendorId, options => options.Ignore());
+        config.NewConfig<ProductModel, Product>()
+            .Ignore(d => d.ApprovedRatingSum)
+            .Ignore(d => d.ApprovedTotalReviews)
+            .Ignore(d => d.BackorderMode)
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.Deleted)
+            .Ignore(d => d.DownloadActivationType)
+            .Ignore(d => d.GiftCardType)
+            .Ignore(d => d.LowStockActivity)
+            .Ignore(d => d.ManageInventoryMethod)
+            .Ignore(d => d.NotApprovedRatingSum)
+            .Ignore(d => d.NotApprovedTotalReviews)
+            .Ignore(d => d.ParentGroupedProductId)
+            .Ignore(d => d.ProductType)
+            .Ignore(d => d.RecurringCyclePeriod)
+            .Ignore(d => d.RentalPricePeriod)
+            .Ignore(d => d.UpdatedOnUtc);
 
-        CreateMap<Product, AssociatedProductModel>()
-            .ForMember(model => model.ProductName, options => options.Ignore());
+        config.NewConfig<Product, DiscountProductModel>()
+            .Ignore(d => d.ProductId)
+            .Ignore(d => d.ProductName)
+            .Ignore(d => d.VendorId);
 
-        CreateMap<ProductAttributeCombination, ProductAttributeCombinationModel>()
-            .ForMember(model => model.AttributesXml, options => options.Ignore())
-            .ForMember(model => model.ProductAttributes, options => options.Ignore())
-            .ForMember(model => model.ProductPictureModels, options => options.Ignore())
-            .ForMember(model => model.PictureThumbnailUrl, options => options.Ignore())
-            .ForMember(model => model.Warnings, options => options.Ignore())
-            .ForMember(model => model.PictureIds, options => options.Ignore());
-        CreateMap<ProductAttributeCombinationModel, ProductAttributeCombination>()
-            .ForMember(entity => entity.AttributesXml, options => options.Ignore())
+        config.NewConfig<Product, AssociatedProductModel>()
+            .Ignore(d => d.ProductName);
+
+        config.NewConfig<ProductAttributeCombination, ProductAttributeCombinationModel>()
+            .Ignore(d => d.AttributesXml)
+            .Ignore(d => d.ProductAttributes)
+            .Ignore(d => d.ProductPictureModels)
+            .Ignore(d => d.PictureThumbnailUrl)
+            .Ignore(d => d.Warnings)
+            .Ignore(d => d.PictureIds);
+
+        config.NewConfig<ProductAttributeCombinationModel, ProductAttributeCombination>()
+            .Ignore(d => d.AttributesXml)
 #pragma warning disable CS0618
-            .ForMember(entity => entity.PictureId, options => options.Ignore());
+            .Ignore(d => d.PictureId);
 #pragma warning restore CS0618
 
-        CreateMap<ProductAttribute, ProductAttributeModel>()
-            .ForMember(model => model.PredefinedProductAttributeValueSearchModel, options => options.Ignore())
-            .ForMember(model => model.ProductAttributeProductSearchModel, options => options.Ignore());
-        CreateMap<ProductAttributeModel, ProductAttribute>();
+        config.NewConfig<ProductAttribute, ProductAttributeModel>()
+            .Ignore(d => d.PredefinedProductAttributeValueSearchModel)
+            .Ignore(d => d.ProductAttributeProductSearchModel);
+        config.NewConfig<ProductAttributeModel, ProductAttribute>();
 
-        CreateMap<Product, ProductAttributeProductModel>()
-            .ForMember(model => model.ProductName, options => options.Ignore());
+        config.NewConfig<Product, ProductAttributeProductModel>()
+            .Ignore(d => d.ProductName);
 
-        CreateMap<PredefinedProductAttributeValue, PredefinedProductAttributeValueModel>()
-            .ForMember(model => model.WeightAdjustmentStr, options => options.Ignore())
-            .ForMember(model => model.PriceAdjustmentStr, options => options.Ignore());
-        CreateMap<PredefinedProductAttributeValueModel, PredefinedProductAttributeValue>();
+        config.NewConfig<PredefinedProductAttributeValue, PredefinedProductAttributeValueModel>()
+            .Ignore(d => d.WeightAdjustmentStr)
+            .Ignore(d => d.PriceAdjustmentStr);
 
-        CreateMap<ProductAttributeMapping, ProductAttributeMappingModel>()
-            .ForMember(model => model.ValidationRulesString, options => options.Ignore())
-            .ForMember(model => model.AttributeControlType, options => options.Ignore())
-            .ForMember(model => model.ConditionString, options => options.Ignore())
-            .ForMember(model => model.ProductAttribute, options => options.Ignore())
-            .ForMember(model => model.AvailableProductAttributes, options => options.Ignore())
-            .ForMember(model => model.ConditionAllowed, options => options.Ignore())
-            .ForMember(model => model.ConditionModel, options => options.Ignore())
-            .ForMember(model => model.ProductAttributeValueSearchModel, options => options.Ignore());
-        CreateMap<ProductAttributeMappingModel, ProductAttributeMapping>()
-            .ForMember(entity => entity.ConditionAttributeXml, options => options.Ignore())
-            .ForMember(entity => entity.AttributeControlType, options => options.Ignore());
+        config.NewConfig<PredefinedProductAttributeValueModel, PredefinedProductAttributeValue>();
 
-        CreateMap<ProductAttributeValue, ProductAttributeValueModel>()
-            .ForMember(model => model.AttributeValueTypeName, options => options.Ignore())
-            .ForMember(model => model.Name, options => options.Ignore())
-            .ForMember(model => model.PriceAdjustmentStr, options => options.Ignore())
-            .ForMember(model => model.AssociatedProductName, options => options.Ignore())
-            .ForMember(model => model.PictureThumbnailUrl, options => options.Ignore())
-            .ForMember(model => model.WeightAdjustmentStr, options => options.Ignore())
-            .ForMember(model => model.DisplayColorSquaresRgb, options => options.Ignore())
-            .ForMember(model => model.DisplayImageSquaresPicture, options => options.Ignore())
-            .ForMember(model => model.ProductPictureModels, options => options.Ignore())
-            .ForMember(model => model.PictureIds, options => options.Ignore());
-        CreateMap<ProductAttributeValueModel, ProductAttributeValue>()
-            .ForMember(entity => entity.AttributeValueType, options => options.Ignore())
-            .ForMember(entity => entity.Quantity, options => options.Ignore())
+        config.NewConfig<ProductAttributeMapping, ProductAttributeMappingModel>()
+            .Ignore(d => d.ValidationRulesString)
+            .Ignore(d => d.AttributeControlType)
+            .Ignore(d => d.ConditionString)
+            .Ignore(d => d.ProductAttribute)
+            .Ignore(d => d.AvailableProductAttributes)
+            .Ignore(d => d.ConditionAllowed)
+            .Ignore(d => d.ConditionModel)
+            .Ignore(d => d.ProductAttributeValueSearchModel);
+
+        config.NewConfig<ProductAttributeMappingModel, ProductAttributeMapping>()
+            .Ignore(d => d.ConditionAttributeXml)
+            .Ignore(d => d.AttributeControlType);
+
+        config.NewConfig<ProductAttributeValue, ProductAttributeValueModel>()
+            .Ignore(d => d.AttributeValueTypeName)
+            .Ignore(d => d.Name)
+            .Ignore(d => d.PriceAdjustmentStr)
+            .Ignore(d => d.AssociatedProductName)
+            .Ignore(d => d.PictureThumbnailUrl)
+            .Ignore(d => d.WeightAdjustmentStr)
+            .Ignore(d => d.DisplayColorSquaresRgb)
+            .Ignore(d => d.DisplayImageSquaresPicture)
+            .Ignore(d => d.ProductPictureModels)
+            .Ignore(d => d.PictureIds);
+        config.NewConfig<ProductAttributeValueModel, ProductAttributeValue>()
+            .Ignore(d => d.AttributeValueType)
+            .Ignore(d => d.Quantity)
 #pragma warning disable CS0618
-            .ForMember(entity => entity.PictureId, options => options.Ignore());
+            .Ignore(d => d.PictureId);
 #pragma warning restore CS0618
 
-        CreateMap<ProductEditorSettings, ProductEditorSettingsModel>();
-        CreateMap<ProductEditorSettingsModel, ProductEditorSettings>();
+        config.NewConfig<ProductEditorSettings, ProductEditorSettingsModel>();
+        config.NewConfig<ProductEditorSettingsModel, ProductEditorSettings>();
 
-        CreateMap<ProductPicture, ProductPictureModel>()
-            .ForMember(model => model.OverrideAltAttribute, options => options.Ignore())
-            .ForMember(model => model.OverrideTitleAttribute, options => options.Ignore())
-            .ForMember(model => model.PictureUrl, options => options.Ignore());
+        config.NewConfig<ProductPicture, ProductPictureModel>()
+            .Ignore(d => d.OverrideAltAttribute)
+            .Ignore(d => d.OverrideTitleAttribute)
+            .Ignore(d => d.PictureUrl);
 
-        CreateMap<ProductVideo, ProductVideoModel>()
-            .ForMember(model => model.VideoUrl, options => options.Ignore());
+        config.NewConfig<ProductVideo, ProductVideoModel>()
+            .Ignore(d => d.VideoUrl);
 
-        CreateMap<Product, SpecificationAttributeProductModel>()
-            .ForMember(model => model.SpecificationAttributeId, options => options.Ignore())
-            .ForMember(model => model.ProductId, options => options.Ignore())
-            .ForMember(model => model.ProductName, options => options.Ignore());
+        config.NewConfig<Product, SpecificationAttributeProductModel>()
+            .Ignore(d => d.SpecificationAttributeId)
+            .Ignore(d => d.ProductId)
+            .Ignore(d => d.ProductName);
 
-        CreateMap<ProductSpecificationAttribute, ProductSpecificationAttributeModel>()
-            .ForMember(model => model.AttributeTypeName, options => options.Ignore())
-            .ForMember(model => model.ValueRaw, options => options.Ignore())
-            .ForMember(model => model.AttributeId, options => options.Ignore())
-            .ForMember(model => model.AttributeName, options => options.Ignore())
-            .ForMember(model => model.SpecificationAttributeOptionId, options => options.Ignore());
+        config.NewConfig<ProductSpecificationAttribute, ProductSpecificationAttributeModel>()
+            .Ignore(d => d.AttributeTypeName)
+            .Ignore(d => d.ValueRaw)
+            .Ignore(d => d.AttributeId)
+            .Ignore(d => d.AttributeName)
+            .Ignore(d => d.SpecificationAttributeOptionId);
 
-        CreateMap<ProductSpecificationAttribute, AddSpecificationAttributeModel>()
-            .ForMember(entity => entity.SpecificationId, options => options.Ignore())
-            .ForMember(entity => entity.AttributeTypeName, options => options.Ignore())
-            .ForMember(entity => entity.AttributeId, options => options.Ignore())
-            .ForMember(entity => entity.AttributeName, options => options.Ignore())
-            .ForMember(entity => entity.ValueRaw, options => options.Ignore())
-            .ForMember(entity => entity.Value, options => options.Ignore())
-            .ForMember(entity => entity.AvailableOptions, options => options.Ignore())
-            .ForMember(entity => entity.AvailableAttributes, options => options.Ignore());
+        config.NewConfig<ProductSpecificationAttribute, AddSpecificationAttributeModel>()
+            .Ignore(d => d.SpecificationId)
+            .Ignore(d => d.AttributeTypeName)
+            .Ignore(d => d.AttributeId)
+            .Ignore(d => d.AttributeName)
+            .Ignore(d => d.ValueRaw)
+            .Ignore(d => d.Value)
+            .Ignore(d => d.AvailableOptions)
+            .Ignore(d => d.AvailableAttributes);
 
-        CreateMap<AddSpecificationAttributeModel, ProductSpecificationAttribute>()
-            .ForMember(model => model.CustomValue, options => options.Ignore())
-            .ForMember(model => model.AttributeType, options => options.Ignore());
+        config.NewConfig<AddSpecificationAttributeModel, ProductSpecificationAttribute>()
+            .Ignore(d => d.CustomValue)
+            .Ignore(d => d.AttributeType);
 
-        CreateMap<ProductTag, ProductTagModel>()
-            .ForMember(model => model.ProductCount, options => options.Ignore())
-            .ForMember(model => model.ProductTagProductSearchModel, options => options.Ignore());
+        config.NewConfig<ProductTag, ProductTagModel>()
+            .Ignore(d => d.ProductCount)
+            .Ignore(d => d.ProductTagProductSearchModel);
 
-        CreateMap<ProductTemplate, ProductTemplateModel>();
-        CreateMap<ProductTemplateModel, ProductTemplate>();
+        config.NewConfig<ProductTemplate, ProductTemplateModel>();
+        config.NewConfig<ProductTemplateModel, ProductTemplate>();
 
-        CreateMap<RelatedProduct, RelatedProductModel>()
-            .ForMember(model => model.Product2Name, options => options.Ignore());
+        config.NewConfig<RelatedProduct, RelatedProductModel>()
+            .Ignore(d => d.Product2Name);
 
-        CreateMap<SpecificationAttribute, SpecificationAttributeModel>()
-            .ForMember(model => model.SpecificationAttributeOptionSearchModel, options => options.Ignore())
-            .ForMember(model => model.SpecificationAttributeProductSearchModel, options => options.Ignore())
-            .ForMember(model => model.AvailableGroups, options => options.Ignore());
-        CreateMap<SpecificationAttributeModel, SpecificationAttribute>();
+        config.NewConfig<SpecificationAttribute, SpecificationAttributeModel>()
+            .Ignore(d => d.SpecificationAttributeOptionSearchModel)
+            .Ignore(d => d.SpecificationAttributeProductSearchModel)
+            .Ignore(d => d.AvailableGroups);
+        config.NewConfig<SpecificationAttributeModel, SpecificationAttribute>();
 
-        CreateMap<SpecificationAttributeOption, SpecificationAttributeOptionModel>()
-            .ForMember(model => model.EnableColorSquaresRgb, options => options.Ignore())
-            .ForMember(model => model.NumberOfAssociatedProducts, options => options.Ignore());
-        CreateMap<SpecificationAttributeOptionModel, SpecificationAttributeOption>();
+        config.NewConfig<SpecificationAttributeOption, SpecificationAttributeOptionModel>()
+            .Ignore(d => d.EnableColorSquaresRgb)
+            .Ignore(d => d.NumberOfAssociatedProducts);
+        config.NewConfig<SpecificationAttributeOptionModel, SpecificationAttributeOption>();
 
-        CreateMap<SpecificationAttributeGroup, SpecificationAttributeGroupModel>();
-        CreateMap<SpecificationAttributeGroupModel, SpecificationAttributeGroup>();
+        config.NewConfig<SpecificationAttributeGroup, SpecificationAttributeGroupModel>();
+        config.NewConfig<SpecificationAttributeGroupModel, SpecificationAttributeGroup>();
 
-        CreateMap<StockQuantityHistory, StockQuantityHistoryModel>()
-            .ForMember(model => model.WarehouseName, options => options.Ignore())
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.AttributeCombination, options => options.Ignore());
+        config.NewConfig<StockQuantityHistory, StockQuantityHistoryModel>()
+            .Ignore(d => d.WarehouseName)
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.AttributeCombination);
 
-        CreateMap<TierPrice, TierPriceModel>()
-            .ForMember(model => model.Store, options => options.Ignore())
-            .ForMember(model => model.AvailableCustomerRoles, options => options.Ignore())
-            .ForMember(model => model.AvailableStores, options => options.Ignore())
-            .ForMember(model => model.CustomerRole, options => options.Ignore())
-            .ForMember(model => model.FormattedPrice, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore());
-        CreateMap<TierPriceModel, TierPrice>()
-            .ForMember(entity => entity.CustomerRoleId, options => options.Ignore())
-            .ForMember(entity => entity.ProductId, options => options.Ignore());
+        config.NewConfig<TierPrice, TierPriceModel>()
+            .Ignore(d => d.Store)
+            .Ignore(d => d.AvailableCustomerRoles)
+            .Ignore(d => d.AvailableStores)
+            .Ignore(d => d.CustomerRole)
+            .Ignore(d => d.FormattedPrice)
+            .Ignore(d => d.PrimaryStoreCurrencyCode);
+        config.NewConfig<TierPriceModel, TierPrice>()
+            .Ignore(d => d.CustomerRoleId)
+            .Ignore(d => d.ProductId);
     }
 
     /// <summary>
-    /// Create CMS maps 
+    /// Create CMS maps
     /// </summary>
-    protected virtual void CreateCmsMaps()
+    protected virtual void CreateCmsMaps(TypeAdapterConfig config)
     {
-        CreateMap<IWidgetPlugin, WidgetModel>()
-            .ForMember(model => model.WidgetViewComponentArguments, options => options.Ignore())
-            .ForMember(model => model.WidgetViewComponentName, options => options.Ignore());
+        config.NewConfig<IWidgetPlugin, WidgetModel>()
+            .Ignore(d => d.WidgetViewComponentArguments)
+            .Ignore(d => d.WidgetViewComponentName);
     }
 
     /// <summary>
-    /// Create common maps 
+    /// Create common maps
     /// </summary>
-    protected virtual void CreateCommonMaps()
+    protected virtual void CreateCommonMaps(TypeAdapterConfig config)
     {
-        CreateMap<Address, AddressModel>()
-            .ForMember(model => model.AddressHtml, options => options.Ignore())
-            .ForMember(model => model.AvailableCountries, options => options.Ignore())
-            .ForMember(model => model.AvailableStates, options => options.Ignore())
-            .ForMember(model => model.CountryName, options => options.Ignore())
-            .ForMember(model => model.CustomAddressAttributes, options => options.Ignore())
-            .ForMember(model => model.FormattedCustomAddressAttributes, options => options.Ignore())
-            .ForMember(model => model.StateProvinceName, options => options.Ignore())
-            .ForMember(model => model.CityRequired, options => options.Ignore())
-            .ForMember(model => model.CompanyRequired, options => options.Ignore())
-            .ForMember(model => model.CountryRequired, options => options.Ignore())
-            .ForMember(model => model.CountyRequired, options => options.Ignore())
-            .ForMember(model => model.EmailRequired, options => options.Ignore())
-            .ForMember(model => model.FaxRequired, options => options.Ignore())
-            .ForMember(model => model.FirstNameRequired, options => options.Ignore())
-            .ForMember(model => model.LastNameRequired, options => options.Ignore())
-            .ForMember(model => model.PhoneRequired, options => options.Ignore())
-            .ForMember(model => model.StateProvinceName, options => options.Ignore())
-            .ForMember(model => model.StreetAddress2Required, options => options.Ignore())
-            .ForMember(model => model.StreetAddressRequired, options => options.Ignore())
-            .ForMember(model => model.ZipPostalCodeRequired, options => options.Ignore());
-        CreateMap<AddressModel, Address>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.CustomAttributes, options => options.Ignore());
+        config.NewConfig<Address, AddressModel>()
+            .Ignore(d => d.AddressHtml)
+            .Ignore(d => d.AvailableCountries)
+            .Ignore(d => d.AvailableStates)
+            .Ignore(d => d.CountryName)
+            .Ignore(d => d.CustomAddressAttributes)
+            .Ignore(d => d.FormattedCustomAddressAttributes)
+            .Ignore(d => d.StateProvinceName)
+            .Ignore(d => d.CityRequired)
+            .Ignore(d => d.CompanyRequired)
+            .Ignore(d => d.CountryRequired)
+            .Ignore(d => d.CountyRequired)
+            .Ignore(d => d.EmailRequired)
+            .Ignore(d => d.FaxRequired)
+            .Ignore(d => d.FirstNameRequired)
+            .Ignore(d => d.LastNameRequired)
+            .Ignore(d => d.PhoneRequired)
+            .Ignore(d => d.StreetAddress2Required)
+            .Ignore(d => d.StreetAddressRequired)
+            .Ignore(d => d.ZipPostalCodeRequired);
 
-        CreateMap<AddressAttribute, AddressAttributeModel>()
-            .ForMember(model => model.AddressAttributeValueSearchModel, options => options.Ignore())
-            .ForMember(model => model.AttributeControlTypeName, options => options.Ignore());
-        CreateMap<AddressAttributeModel, AddressAttribute>()
-            .ForMember(entity => entity.AttributeControlType, options => options.Ignore());
+        config.NewConfig<AddressModel, Address>()
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.CustomAttributes);
+        config.NewConfig<AddressAttribute, AddressAttributeModel>()
+            .Ignore(d => d.AddressAttributeValueSearchModel)
+            .Ignore(d => d.AttributeControlTypeName);
+        config.NewConfig<AddressAttributeModel, AddressAttribute>()
+            .Ignore(d => d.AttributeControlType);
+        config.NewConfig<AddressAttributeValue, AddressAttributeValueModel>();
+        config.NewConfig<AddressAttributeValueModel, AddressAttributeValue>();
 
-        CreateMap<AddressAttributeValue, AddressAttributeValueModel>();
-        CreateMap<AddressAttributeValueModel, AddressAttributeValue>();
+        config.NewConfig<AddressSettings, AddressSettingsModel>()
+            .Ignore(d => d.AvailableCountries);
 
-        CreateMap<AddressSettings, AddressSettingsModel>()
-            .ForMember(model => model.AvailableCountries, options => options.Ignore());
-        CreateMap<AddressSettingsModel, AddressSettings>()
-            .ForMember(settings => settings.PreselectCountryIfOnlyOne, options => options.Ignore())
-            .ForMember(settings => settings.PrePopulateCountryByCustomer, options => options.Ignore());
+        config.NewConfig<AddressSettingsModel, AddressSettings>()
+            .Ignore(d => d.PreselectCountryIfOnlyOne)
+            .Ignore(d => d.PrePopulateCountryByCustomer);
 
-        CreateMap<Setting, SettingModel>()
-            .ForMember(setting => setting.AvailableStores, options => options.Ignore())
-            .ForMember(setting => setting.Store, options => options.Ignore());
+        config.NewConfig<Setting, SettingModel>()
+            .Ignore(d => d.AvailableStores)
+            .Ignore(d => d.Store);
     }
 
     /// <summary>
-    /// Create customers maps 
+    /// Create customers maps
     /// </summary>
-    protected virtual void CreateCustomersMaps()
+    protected virtual void CreateCustomersMaps(TypeAdapterConfig config)
     {
-        CreateMap<CustomerAttribute, CustomerAttributeModel>()
-            .ForMember(model => model.AttributeControlTypeName, options => options.Ignore())
-            .ForMember(model => model.CustomerAttributeValueSearchModel, options => options.Ignore());
-        CreateMap<CustomerAttributeModel, CustomerAttribute>()
-            .ForMember(entity => entity.AttributeControlType, options => options.Ignore());
+        config.NewConfig<CustomerAttribute, CustomerAttributeModel>()
+            .Ignore(d => d.AttributeControlTypeName)
+            .Ignore(d => d.CustomerAttributeValueSearchModel);
+        config.NewConfig<CustomerAttributeModel, CustomerAttribute>()
+            .Ignore(d => d.AttributeControlType);
 
-        CreateMap<CustomerAttributeValue, CustomerAttributeValueModel>();
-        CreateMap<CustomerAttributeValueModel, CustomerAttributeValue>();
+        config.NewConfig<CustomerAttributeValue, CustomerAttributeValueModel>();
+        config.NewConfig<CustomerAttributeValueModel, CustomerAttributeValue>();
 
-        CreateMap<CustomerRole, CustomerRoleModel>()
-            .ForMember(model => model.PurchasedWithProductName, options => options.Ignore())
-            .ForMember(model => model.TaxDisplayTypeValues, options => options.Ignore());
-        CreateMap<CustomerRoleModel, CustomerRole>();
+        config.NewConfig<CustomerRole, CustomerRoleModel>()
+            .Ignore(d => d.PurchasedWithProductName)
+            .Ignore(d => d.TaxDisplayTypeValues);
+        config.NewConfig<CustomerRoleModel, CustomerRole>();
 
-        CreateMap<CustomerSettings, CustomerSettingsModel>()
-            .ForMember(model => model.AvailableCountries, options => options.Ignore());
-        CreateMap<CustomerSettingsModel, CustomerSettings>()
-            .ForMember(settings => settings.AvatarMaximumSizeBytes, options => options.Ignore())
-            .ForMember(settings => settings.DeleteGuestTaskOlderThanMinutes, options => options.Ignore())
-            .ForMember(settings => settings.DownloadableProductsValidateUser, options => options.Ignore())
-            .ForMember(settings => settings.HashedPasswordFormat, options => options.Ignore())
-            .ForMember(settings => settings.OnlineCustomerMinutes, options => options.Ignore())
-            .ForMember(settings => settings.SuffixDeletedCustomers, options => options.Ignore())
-            .ForMember(settings => settings.LastActivityMinutes, options => options.Ignore())
-            .ForMember(settings => settings.RequiredReLoginAfterPasswordChange, options => options.Ignore());
+        config.NewConfig<CustomerSettings, CustomerSettingsModel>()
+            .Ignore(d => d.AvailableCountries);
+        config.NewConfig<CustomerSettingsModel, CustomerSettings>()
+            .Ignore(d => d.AvatarMaximumSizeBytes)
+            .Ignore(d => d.DeleteGuestTaskOlderThanMinutes)
+            .Ignore(d => d.DownloadableProductsValidateUser)
+            .Ignore(d => d.HashedPasswordFormat)
+            .Ignore(d => d.OnlineCustomerMinutes)
+            .Ignore(d => d.SuffixDeletedCustomers)
+            .Ignore(d => d.LastActivityMinutes)
+            .Ignore(d => d.RequiredReLoginAfterPasswordChange);
 
-        CreateMap<MultiFactorAuthenticationSettings, MultiFactorAuthenticationSettingsModel>();
-        CreateMap<MultiFactorAuthenticationSettingsModel, MultiFactorAuthenticationSettings>()
-            .ForMember(settings => settings.ActiveAuthenticationMethodSystemNames, option => option.Ignore());
+        config.NewConfig<MultiFactorAuthenticationSettings, MultiFactorAuthenticationSettingsModel>();
+        config.NewConfig<MultiFactorAuthenticationSettingsModel, MultiFactorAuthenticationSettings>()
+            .Ignore(d => d.ActiveAuthenticationMethodSystemNames);
 
-        CreateMap<RewardPointsSettings, RewardPointsSettingsModel>()
-            .ForMember(model => model.ActivatePointsImmediately, options => options.Ignore())
-            .ForMember(model => model.ActivationDelay_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayHowMuchWillBeEarned_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.Enabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ExchangeRate_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MaximumRewardPointsToUsePerOrder_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MinimumRewardPointsToUse_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MinOrderTotalToAwardPoints_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PointsForPurchases_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MaximumRedeemedRate_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PointsForRegistration_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
-            .ForMember(model => model.PurchasesPointsValidity_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.RegistrationPointsValidity_OverrideForStore, options => options.Ignore());
-        CreateMap<RewardPointsSettingsModel, RewardPointsSettings>();
+        config.NewConfig<RewardPointsSettings, RewardPointsSettingsModel>()
+            .Ignore(d => d.ActivatePointsImmediately)
+            .Ignore(d => d.ActivationDelay_OverrideForStore)
+            .Ignore(d => d.DisplayHowMuchWillBeEarned_OverrideForStore)
+            .Ignore(d => d.Enabled_OverrideForStore)
+            .Ignore(d => d.ExchangeRate_OverrideForStore)
+            .Ignore(d => d.MaximumRewardPointsToUsePerOrder_OverrideForStore)
+            .Ignore(d => d.MinimumRewardPointsToUse_OverrideForStore)
+            .Ignore(d => d.MinOrderTotalToAwardPoints_OverrideForStore)
+            .Ignore(d => d.PageSize_OverrideForStore)
+            .Ignore(d => d.PointsForPurchases_OverrideForStore)
+            .Ignore(d => d.MaximumRedeemedRate_OverrideForStore)
+            .Ignore(d => d.PointsForRegistration_OverrideForStore)
+            .Ignore(d => d.PrimaryStoreCurrencyCode)
+            .Ignore(d => d.PurchasesPointsValidity_OverrideForStore)
+            .Ignore(d => d.RegistrationPointsValidity_OverrideForStore);
+        config.NewConfig<RewardPointsSettingsModel, RewardPointsSettings>();
 
-        CreateMap<RewardPointsHistory, CustomerRewardPointsModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.PointsBalance, options => options.Ignore())
-            .ForMember(model => model.EndDate, options => options.Ignore())
-            .ForMember(model => model.StoreName, options => options.Ignore());
+        config.NewConfig<RewardPointsHistory, CustomerRewardPointsModel>()
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.PointsBalance)
+            .Ignore(d => d.EndDate)
+            .Ignore(d => d.StoreName);
 
-        CreateMap<ActivityLog, CustomerActivityLogModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.ActivityLogTypeName, options => options.Ignore());
+        config.NewConfig<ActivityLog, CustomerActivityLogModel>()
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.ActivityLogTypeName);
 
-        CreateMap<Customer, CustomerModel>()
-            .ForMember(model => model.Email, options => options.Ignore())
-            .ForMember(model => model.FullName, options => options.Ignore())
-            .ForMember(model => model.Company, options => options.Ignore())
-            .ForMember(model => model.Phone, options => options.Ignore())
-            .ForMember(model => model.ZipPostalCode, options => options.Ignore())
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.LastActivityDate, options => options.Ignore())
-            .ForMember(model => model.CustomerRoleNames, options => options.Ignore())
-            .ForMember(model => model.AvatarUrl, options => options.Ignore())
-            .ForMember(model => model.UsernamesEnabled, options => options.Ignore())
-            .ForMember(model => model.Password, options => options.Ignore())
-            .ForMember(model => model.AvailableVendors, options => options.Ignore())
-            .ForMember(model => model.GenderEnabled, options => options.Ignore())
-            .ForMember(model => model.NeutralGenderEnabled, options => options.Ignore())
-            .ForMember(model => model.Gender, options => options.Ignore())
-            .ForMember(model => model.FirstNameEnabled, options => options.Ignore())
-            .ForMember(model => model.FirstName, options => options.Ignore())
-            .ForMember(model => model.LastNameEnabled, options => options.Ignore())
-            .ForMember(model => model.LastName, options => options.Ignore())
-            .ForMember(model => model.DateOfBirthEnabled, options => options.Ignore())
-            .ForMember(model => model.DateOfBirth, options => options.Ignore())
-            .ForMember(model => model.CompanyEnabled, options => options.Ignore())
-            .ForMember(model => model.StreetAddressEnabled, options => options.Ignore())
-            .ForMember(model => model.StreetAddress, options => options.Ignore())
-            .ForMember(model => model.StreetAddress2Enabled, options => options.Ignore())
-            .ForMember(model => model.StreetAddress2, options => options.Ignore())
-            .ForMember(model => model.ZipPostalCodeEnabled, options => options.Ignore())
-            .ForMember(model => model.CityEnabled, options => options.Ignore())
-            .ForMember(model => model.City, options => options.Ignore())
-            .ForMember(model => model.CountyEnabled, options => options.Ignore())
-            .ForMember(model => model.County, options => options.Ignore())
-            .ForMember(model => model.CountryEnabled, options => options.Ignore())
-            .ForMember(model => model.CountryId, options => options.Ignore())
-            .ForMember(model => model.AvailableCountries, options => options.Ignore())
-            .ForMember(model => model.StateProvinceEnabled, options => options.Ignore())
-            .ForMember(model => model.StateProvinceId, options => options.Ignore())
-            .ForMember(model => model.AvailableStates, options => options.Ignore())
-            .ForMember(model => model.PhoneEnabled, options => options.Ignore())
-            .ForMember(model => model.FaxEnabled, options => options.Ignore())
-            .ForMember(model => model.Fax, options => options.Ignore())
-            .ForMember(model => model.CustomerAttributes, options => options.Ignore())
-            .ForMember(model => model.RegisteredInStore, options => options.Ignore())
-            .ForMember(model => model.DisplayRegisteredInStore, options => options.Ignore())
-            .ForMember(model => model.AffiliateName, options => options.Ignore())
-            .ForMember(model => model.TimeZoneId, options => options.Ignore())
-            .ForMember(model => model.AllowCustomersToSetTimeZone, options => options.Ignore())
-            .ForMember(model => model.AvailableTimeZones, options => options.Ignore())
-            .ForMember(model => model.VatNumber, options => options.Ignore())
-            .ForMember(model => model.VatNumberStatusNote, options => options.Ignore())
-            .ForMember(model => model.DisplayVatNumber, options => options.Ignore())
-            .ForMember(model => model.LastVisitedPage, options => options.Ignore())
-            .ForMember(model => model.DisplayRewardPointsHistory, options => options.Ignore())
-            .ForMember(model => model.AddRewardPoints, options => options.Ignore())
-            .ForMember(model => model.CustomerRewardPointsSearchModel, options => options.Ignore())
-            .ForMember(model => model.SendEmail, options => options.Ignore())
-            .ForMember(model => model.SendPm, options => options.Ignore())
-            .ForMember(model => model.AllowSendingOfPrivateMessage, options => options.Ignore())
-            .ForMember(model => model.AllowSendingOfWelcomeMessage, options => options.Ignore())
-            .ForMember(model => model.AllowReSendingOfActivationMessage, options => options.Ignore())
-            .ForMember(model => model.GdprEnabled, options => options.Ignore())
-            .ForMember(model => model.MultiFactorAuthenticationProvider, options => options.Ignore())
-            .ForMember(model => model.CustomerAssociatedExternalAuthRecordsSearchModel, options => options.Ignore())
-            .ForMember(model => model.CustomerAddressSearchModel, options => options.Ignore())
-            .ForMember(model => model.CustomerOrderSearchModel, options => options.Ignore())
-            .ForMember(model => model.CustomerShoppingCartSearchModel, options => options.Ignore())
-            .ForMember(model => model.CustomerActivityLogSearchModel, options => options.Ignore())
-            .ForMember(model => model.CustomerBackInStockSubscriptionSearchModel, options => options.Ignore());
+        config.NewConfig<Customer, CustomerModel>()
+            .Ignore(d => d.Email)
+            .Ignore(d => d.FullName)
+            .Ignore(d => d.Company)
+            .Ignore(d => d.Phone)
+            .Ignore(d => d.ZipPostalCode)
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.LastActivityDate)
+            .Ignore(d => d.CustomerRoleNames)
+            .Ignore(d => d.AvatarUrl)
+            .Ignore(d => d.UsernamesEnabled)
+            .Ignore(d => d.Password)
+            .Ignore(d => d.AvailableVendors)
+            .Ignore(d => d.GenderEnabled)
+            .Ignore(d => d.NeutralGenderEnabled)
+            .Ignore(d => d.Gender)
+            .Ignore(d => d.FirstNameEnabled)
+            .Ignore(d => d.FirstName)
+            .Ignore(d => d.LastNameEnabled)
+            .Ignore(d => d.LastName)
+            .Ignore(d => d.DateOfBirthEnabled)
+            .Ignore(d => d.DateOfBirth)
+            .Ignore(d => d.CompanyEnabled)
+            .Ignore(d => d.StreetAddressEnabled)
+            .Ignore(d => d.StreetAddress)
+            .Ignore(d => d.StreetAddress2Enabled)
+            .Ignore(d => d.StreetAddress2)
+            .Ignore(d => d.ZipPostalCodeEnabled)
+            .Ignore(d => d.CityEnabled)
+            .Ignore(d => d.City)
+            .Ignore(d => d.CountyEnabled)
+            .Ignore(d => d.County)
+            .Ignore(d => d.CountryEnabled)
+            .Ignore(d => d.CountryId)
+            .Ignore(d => d.AvailableCountries)
+            .Ignore(d => d.StateProvinceEnabled)
+            .Ignore(d => d.StateProvinceId)
+            .Ignore(d => d.AvailableStates)
+            .Ignore(d => d.PhoneEnabled)
+            .Ignore(d => d.FaxEnabled)
+            .Ignore(d => d.Fax)
+            .Ignore(d => d.CustomerAttributes)
+            .Ignore(d => d.RegisteredInStore)
+            .Ignore(d => d.DisplayRegisteredInStore)
+            .Ignore(d => d.AffiliateName)
+            .Ignore(d => d.TimeZoneId)
+            .Ignore(d => d.AllowCustomersToSetTimeZone)
+            .Ignore(d => d.AvailableTimeZones)
+            .Ignore(d => d.VatNumber)
+            .Ignore(d => d.VatNumberStatusNote)
+            .Ignore(d => d.DisplayVatNumber)
+            .Ignore(d => d.LastVisitedPage)
+            .Ignore(d => d.DisplayRewardPointsHistory)
+            .Ignore(d => d.AddRewardPoints)
+            .Ignore(d => d.CustomerRewardPointsSearchModel)
+            .Ignore(d => d.SendEmail)
+            .Ignore(d => d.SendPm)
+            .Ignore(d => d.AllowSendingOfPrivateMessage)
+            .Ignore(d => d.AllowSendingOfWelcomeMessage)
+            .Ignore(d => d.AllowReSendingOfActivationMessage)
+            .Ignore(d => d.GdprEnabled)
+            .Ignore(d => d.MultiFactorAuthenticationProvider)
+            .Ignore(d => d.CustomerAssociatedExternalAuthRecordsSearchModel)
+            .Ignore(d => d.CustomerAddressSearchModel)
+            .Ignore(d => d.CustomerOrderSearchModel)
+            .Ignore(d => d.CustomerShoppingCartSearchModel)
+            .Ignore(d => d.CustomerActivityLogSearchModel)
+            .Ignore(d => d.CustomerBackInStockSubscriptionSearchModel);
 
-        CreateMap<CustomerModel, Customer>()
-            .ForMember(entity => entity.CustomerGuid, options => options.Ignore())
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.LastActivityDateUtc, options => options.Ignore())
-            .ForMember(entity => entity.EmailToRevalidate, options => options.Ignore())
-            .ForMember(entity => entity.HasShoppingCartItems, options => options.Ignore())
-            .ForMember(entity => entity.RequireReLogin, options => options.Ignore())
-            .ForMember(entity => entity.FailedLoginAttempts, options => options.Ignore())
-            .ForMember(entity => entity.CannotLoginUntilDateUtc, options => options.Ignore())
-            .ForMember(entity => entity.Deleted, options => options.Ignore())
-            .ForMember(entity => entity.IsSystemAccount, options => options.Ignore())
-            .ForMember(entity => entity.SystemName, options => options.Ignore())
-            .ForMember(entity => entity.LastLoginDateUtc, options => options.Ignore())
-            .ForMember(entity => entity.BillingAddressId, options => options.Ignore())
-            .ForMember(entity => entity.ShippingAddressId, options => options.Ignore())
-            .ForMember(entity => entity.VatNumberStatusId, options => options.Ignore())
-            .ForMember(entity => entity.CustomCustomerAttributesXML, options => options.Ignore())
-            .ForMember(entity => entity.CurrencyId, options => options.Ignore())
-            .ForMember(entity => entity.LanguageId, options => options.Ignore())
-            .ForMember(entity => entity.TaxDisplayTypeId, options => options.Ignore())
-            .ForMember(entity => entity.VatNumberStatus, options => options.Ignore())
-            .ForMember(entity => entity.TaxDisplayType, options => options.Ignore())
-            .ForMember(entity => entity.RegisteredInStoreId, options => options.Ignore());
+        config.NewConfig<CustomerModel, Customer>()
+            .Ignore(d => d.CustomerGuid)
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.LastActivityDateUtc)
+            .Ignore(d => d.EmailToRevalidate)
+            .Ignore(d => d.HasShoppingCartItems)
+            .Ignore(d => d.RequireReLogin)
+            .Ignore(d => d.FailedLoginAttempts)
+            .Ignore(d => d.CannotLoginUntilDateUtc)
+            .Ignore(d => d.Deleted)
+            .Ignore(d => d.IsSystemAccount)
+            .Ignore(d => d.SystemName)
+            .Ignore(d => d.LastLoginDateUtc)
+            .Ignore(d => d.BillingAddressId)
+            .Ignore(d => d.ShippingAddressId)
+            .Ignore(d => d.VatNumberStatusId)
+            .Ignore(d => d.CustomCustomerAttributesXML)
+            .Ignore(d => d.CurrencyId)
+            .Ignore(d => d.LanguageId)
+            .Ignore(d => d.TaxDisplayTypeId)
+            .Ignore(d => d.VatNumberStatus)
+            .Ignore(d => d.TaxDisplayType)
+            .Ignore(d => d.RegisteredInStoreId);
 
-        CreateMap<Customer, OnlineCustomerModel>()
-            .ForMember(model => model.LastActivityDate, options => options.Ignore())
-            .ForMember(model => model.CustomerInfo, options => options.Ignore())
-            .ForMember(model => model.LastIpAddress, options => options.Ignore())
-            .ForMember(model => model.Location, options => options.Ignore())
-            .ForMember(model => model.LastVisitedPage, options => options.Ignore());
+        config.NewConfig<Customer, OnlineCustomerModel>()
+            .Ignore(d => d.LastActivityDate)
+            .Ignore(d => d.CustomerInfo)
+            .Ignore(d => d.LastIpAddress)
+            .Ignore(d => d.Location)
+            .Ignore(d => d.LastVisitedPage);
 
-        CreateMap<BackInStockSubscription, CustomerBackInStockSubscriptionModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.StoreName, options => options.Ignore())
-            .ForMember(model => model.ProductName, options => options.Ignore());
+        config.NewConfig<BackInStockSubscription, CustomerBackInStockSubscriptionModel>()
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.StoreName)
+            .Ignore(d => d.ProductName);
     }
 
     /// <summary>
     /// Create directory maps 
     /// </summary>
-    protected virtual void CreateDirectoryMaps()
+    protected virtual void CreateDirectoryMaps(TypeAdapterConfig config)
     {
-        CreateMap<Country, CountryModel>()
-            .ForMember(model => model.NumberOfStates, options => options.Ignore())
-            .ForMember(model => model.StateProvinceSearchModel, options => options.Ignore());
-        CreateMap<CountryModel, Country>();
+        config.NewConfig<Country, CountryModel>()
+            .Ignore(d => d.NumberOfStates)
+            .Ignore(d => d.StateProvinceSearchModel);
+        config.NewConfig<CountryModel, Country>();
 
-        CreateMap<Currency, CurrencyModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.IsPrimaryExchangeRateCurrency, options => options.Ignore())
-            .ForMember(model => model.IsPrimaryStoreCurrency, options => options.Ignore());
-        CreateMap<CurrencyModel, Currency>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.RoundingType, options => options.Ignore())
-            .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
+        config.NewConfig<Currency, CurrencyModel>()
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.IsPrimaryExchangeRateCurrency)
+            .Ignore(d => d.IsPrimaryStoreCurrency);
+        config.NewConfig<CurrencyModel, Currency>()
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.RoundingType)
+            .Ignore(d => d.UpdatedOnUtc);
 
-        CreateMap<MeasureDimension, MeasureDimensionModel>()
-            .ForMember(model => model.IsPrimaryDimension, options => options.Ignore());
-        CreateMap<MeasureDimensionModel, MeasureDimension>();
+        config.NewConfig<MeasureDimension, MeasureDimensionModel>()
+            .Ignore(d => d.IsPrimaryDimension);
+        config.NewConfig<MeasureDimensionModel, MeasureDimension>();
 
-        CreateMap<MeasureWeight, MeasureWeightModel>()
-            .ForMember(model => model.IsPrimaryWeight, options => options.Ignore());
-        CreateMap<MeasureWeightModel, MeasureWeight>();
+        config.NewConfig<MeasureWeight, MeasureWeightModel>()
+            .Ignore(d => d.IsPrimaryWeight);
+        config.NewConfig<MeasureWeightModel, MeasureWeight>();
 
-        CreateMap<StateProvince, StateProvinceModel>();
-        CreateMap<StateProvinceModel, StateProvince>();
+        config.NewConfig<StateProvince, StateProvinceModel>();
+        config.NewConfig<StateProvinceModel, StateProvince>();
     }
 
     /// <summary>
-    /// Create discounts maps 
+    /// Create discounts maps
     /// </summary>
-    protected virtual void CreateDiscountsMaps()
+    protected virtual void CreateDiscountsMaps(TypeAdapterConfig config)
     {
-        CreateMap<Discount, DiscountModel>()
-            .ForMember(model => model.AddDiscountRequirement, options => options.Ignore())
-            .ForMember(model => model.AvailableDiscountRequirementRules, options => options.Ignore())
-            .ForMember(model => model.AvailableRequirementGroups, options => options.Ignore())
-            .ForMember(model => model.AvailableVendors, options => options.Ignore())
-            .ForMember(model => model.DiscountCategorySearchModel, options => options.Ignore())
-            .ForMember(model => model.DiscountManufacturerSearchModel, options => options.Ignore())
-            .ForMember(model => model.DiscountProductSearchModel, options => options.Ignore())
-            .ForMember(model => model.DiscountTypeName, options => options.Ignore())
-            .ForMember(model => model.DiscountUrl, options => options.Ignore())
-            .ForMember(model => model.DiscountUsageHistorySearchModel, options => options.Ignore())
-            .ForMember(model => model.GroupName, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
-            .ForMember(model => model.RequirementGroupId, options => options.Ignore())
-            .ForMember(model => model.TimesUsed, options => options.Ignore())
-            .ForMember(model => model.IsLoggedInAsVendor, options => options.Ignore());
-        CreateMap<DiscountModel, Discount>()
-            .ForMember(entity => entity.DiscountLimitation, options => options.Ignore())
-            .ForMember(entity => entity.DiscountType, options => options.Ignore());
+        config.NewConfig<Discount, DiscountModel>()
+            .Ignore(d => d.AddDiscountRequirement)
+            .Ignore(d => d.AvailableDiscountRequirementRules)
+            .Ignore(d => d.AvailableRequirementGroups)
+            .Ignore(d => d.AvailableVendors)
+            .Ignore(d => d.DiscountCategorySearchModel)
+            .Ignore(d => d.DiscountManufacturerSearchModel)
+            .Ignore(d => d.DiscountProductSearchModel)
+            .Ignore(d => d.DiscountTypeName)
+            .Ignore(d => d.DiscountUrl)
+            .Ignore(d => d.DiscountUsageHistorySearchModel)
+            .Ignore(d => d.GroupName)
+            .Ignore(d => d.PrimaryStoreCurrencyCode)
+            .Ignore(d => d.RequirementGroupId)
+            .Ignore(d => d.TimesUsed)
+            .Ignore(d => d.IsLoggedInAsVendor);
 
-        CreateMap<DiscountUsageHistory, DiscountUsageHistoryModel>()
-            .ForMember(entity => entity.CreatedOn, options => options.Ignore())
-            .ForMember(entity => entity.OrderTotal, options => options.Ignore())
-            .ForMember(entity => entity.CustomOrderNumber, options => options.Ignore());
+        config.NewConfig<DiscountModel, Discount>()
+            .Ignore(d => d.DiscountLimitation)
+            .Ignore(d => d.DiscountType);
 
-        CreateMap<Category, DiscountCategoryModel>()
-            .ForMember(entity => entity.CategoryName, options => options.Ignore())
-            .ForMember(entity => entity.CategoryId, options => options.Ignore());
+        config.NewConfig<DiscountUsageHistory, DiscountUsageHistoryModel>()
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.OrderTotal)
+            .Ignore(d => d.CustomOrderNumber);
 
-        CreateMap<Manufacturer, DiscountManufacturerModel>()
-            .ForMember(entity => entity.ManufacturerId, options => options.Ignore())
-            .ForMember(entity => entity.ManufacturerName, options => options.Ignore());
+        config.NewConfig<Category, DiscountCategoryModel>()
+            .Ignore(d => d.CategoryName)
+            .Ignore(d => d.CategoryId);
+
+        config.NewConfig<Manufacturer, DiscountManufacturerModel>()
+            .Ignore(d => d.ManufacturerId)
+            .Ignore(d => d.ManufacturerName);
     }
 
     /// <summary>
-    /// Create forums maps 
+    /// Create forums maps
     /// </summary>
-    protected virtual void CreateForumsMaps()
+    protected virtual void CreateForumsMaps(TypeAdapterConfig config)
     {
-        CreateMap<Forum, ForumModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.ForumGroups, options => options.Ignore());
-        CreateMap<ForumModel, Forum>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.LastPostCustomerId, options => options.Ignore())
-            .ForMember(entity => entity.LastPostId, options => options.Ignore())
-            .ForMember(entity => entity.LastPostTime, options => options.Ignore())
-            .ForMember(entity => entity.LastTopicId, options => options.Ignore())
-            .ForMember(entity => entity.NumPosts, options => options.Ignore())
-            .ForMember(entity => entity.NumTopics, options => options.Ignore())
-            .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
+        config.NewConfig<Forum, ForumModel>()
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.ForumGroups);
+        config.NewConfig<ForumModel, Forum>()
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.LastPostCustomerId)
+            .Ignore(d => d.LastPostId)
+            .Ignore(d => d.LastPostTime)
+            .Ignore(d => d.LastTopicId)
+            .Ignore(d => d.NumPosts)
+            .Ignore(d => d.NumTopics)
+            .Ignore(d => d.UpdatedOnUtc);
 
-        CreateMap<ForumGroup, ForumGroupModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore());
-        CreateMap<ForumGroupModel, ForumGroup>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
+        config.NewConfig<ForumGroup, ForumGroupModel>()
+            .Ignore(d => d.CreatedOn);
+        config.NewConfig<ForumGroupModel, ForumGroup>()
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.UpdatedOnUtc);
 
-        CreateMap<ForumSettings, ForumSettingsModel>()
-            .ForMember(model => model.ActiveDiscussionsFeedCount_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ActiveDiscussionsFeedEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ActiveDiscussionsPageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowCustomersToDeletePosts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowCustomersToEditPosts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowCustomersToManageSubscriptions_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowGuestsToCreatePosts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowGuestsToCreateTopics_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowPostVoting_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowPrivateMessages_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ForumEditorValues, options => options.Ignore())
-            .ForMember(model => model.ForumEditor_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ForumFeedCount_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ForumFeedsEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ForumsEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MaxVotesPerDay_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NotifyAboutPrivateMessages_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PostsPageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.RelativeDateTimeFormattingEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.SearchResultsPageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowAlertForPM_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowCustomersPostCount_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.SignaturesEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.TopicsPageSize_OverrideForStore, options => options.Ignore());
-        CreateMap<ForumSettingsModel, ForumSettings>()
-            .ForMember(settings => settings.ForumSearchTermMinimumLength, options => options.Ignore())
-            .ForMember(settings => settings.ForumSubscriptionsPageSize, options => options.Ignore())
-            .ForMember(settings => settings.HomepageActiveDiscussionsTopicCount, options => options.Ignore())
-            .ForMember(settings => settings.LatestCustomerPostsPageSize, options => options.Ignore())
-            .ForMember(settings => settings.PMSubjectMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.PMTextMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.PostMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.PrivateMessagesPageSize, options => options.Ignore())
-            .ForMember(settings => settings.StrippedTopicMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.TopicSubjectMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.TopicMetaDescriptionLength, options => options.Ignore());
+        config.NewConfig<ForumSettings, ForumSettingsModel>()
+            .Ignore(d => d.ActiveDiscussionsFeedCount_OverrideForStore)
+            .Ignore(d => d.ActiveDiscussionsFeedEnabled_OverrideForStore)
+            .Ignore(d => d.ActiveDiscussionsPageSize_OverrideForStore)
+            .Ignore(d => d.AllowCustomersToDeletePosts_OverrideForStore)
+            .Ignore(d => d.AllowCustomersToEditPosts_OverrideForStore)
+            .Ignore(d => d.AllowCustomersToManageSubscriptions_OverrideForStore)
+            .Ignore(d => d.AllowGuestsToCreatePosts_OverrideForStore)
+            .Ignore(d => d.AllowGuestsToCreateTopics_OverrideForStore)
+            .Ignore(d => d.AllowPostVoting_OverrideForStore)
+            .Ignore(d => d.AllowPrivateMessages_OverrideForStore)
+            .Ignore(d => d.ForumEditorValues)
+            .Ignore(d => d.ForumEditor_OverrideForStore)
+            .Ignore(d => d.ForumFeedCount_OverrideForStore)
+            .Ignore(d => d.ForumFeedsEnabled_OverrideForStore)
+            .Ignore(d => d.ForumsEnabled_OverrideForStore)
+            .Ignore(d => d.MaxVotesPerDay_OverrideForStore)
+            .Ignore(d => d.NotifyAboutPrivateMessages_OverrideForStore)
+            .Ignore(d => d.PostsPageSize_OverrideForStore)
+            .Ignore(d => d.RelativeDateTimeFormattingEnabled_OverrideForStore)
+            .Ignore(d => d.SearchResultsPageSize_OverrideForStore)
+            .Ignore(d => d.ShowAlertForPM_OverrideForStore)
+            .Ignore(d => d.ShowCustomersPostCount_OverrideForStore)
+            .Ignore(d => d.SignaturesEnabled_OverrideForStore)
+            .Ignore(d => d.TopicsPageSize_OverrideForStore);
+        config.NewConfig<ForumSettingsModel, ForumSettings>()
+            .Ignore(d => d.ForumSearchTermMinimumLength)
+            .Ignore(d => d.ForumSubscriptionsPageSize)
+            .Ignore(d => d.HomepageActiveDiscussionsTopicCount)
+            .Ignore(d => d.LatestCustomerPostsPageSize)
+            .Ignore(d => d.PMSubjectMaxLength)
+            .Ignore(d => d.PMTextMaxLength)
+            .Ignore(d => d.PostMaxLength)
+            .Ignore(d => d.PrivateMessagesPageSize)
+            .Ignore(d => d.StrippedTopicMaxLength)
+            .Ignore(d => d.TopicSubjectMaxLength)
+            .Ignore(d => d.TopicMetaDescriptionLength);
     }
 
     /// <summary>
     /// Create GDPR maps 
     /// </summary>
-    protected virtual void CreateGdprMaps()
+    protected virtual void CreateGdprMaps(TypeAdapterConfig config)
     {
-        CreateMap<GdprSettings, GdprSettingsModel>()
-            .ForMember(model => model.GdprConsentSearchModel, options => options.Ignore())
-            .ForMember(model => model.GdprEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.LogNewsLetterConsent_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.LogPrivacyPolicyConsent_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.LogUserProfileChanges_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DeleteInactiveCustomersAfterMonths_OverrideForStore, options => options.Ignore());
-        CreateMap<GdprSettingsModel, GdprSettings>();
+        config.NewConfig<GdprSettings, GdprSettingsModel>()
+            .Ignore(d => d.GdprConsentSearchModel)
+            .Ignore(d => d.GdprEnabled_OverrideForStore)
+            .Ignore(d => d.LogNewsLetterConsent_OverrideForStore)
+            .Ignore(d => d.LogPrivacyPolicyConsent_OverrideForStore)
+            .Ignore(d => d.LogUserProfileChanges_OverrideForStore)
+            .Ignore(d => d.DeleteInactiveCustomersAfterMonths_OverrideForStore);
+        config.NewConfig<GdprSettingsModel, GdprSettings>();
 
-        CreateMap<GdprConsent, GdprConsentModel>();
-        CreateMap<GdprConsentModel, GdprConsent>();
+        config.NewConfig<GdprConsent, GdprConsentModel>();
+        config.NewConfig<GdprConsentModel, GdprConsent>();
 
-        CreateMap<GdprLog, GdprLogModel>()
-            .ForMember(model => model.CustomerInfo, options => options.Ignore())
-            .ForMember(model => model.RequestType, options => options.Ignore())
-            .ForMember(model => model.CreatedOn, options => options.Ignore());
+        config.NewConfig<GdprLog, GdprLogModel>()
+            .Ignore(d => d.CustomerInfo)
+            .Ignore(d => d.RequestType)
+            .Ignore(d => d.CreatedOn);
     }
 
     /// <summary>
     /// Create localization maps 
     /// </summary>
-    protected virtual void CreateLocalizationMaps()
+    protected virtual void CreateLocalizationMaps(TypeAdapterConfig config)
     {
-        CreateMap<Language, LanguageModel>()
-            .ForMember(model => model.AvailableCurrencies, options => options.Ignore())
-            .ForMember(model => model.LocaleResourceSearchModel, options => options.Ignore())
-            .ForMember(model => model.AvailableFlagImages, options => options.Ignore());
-        CreateMap<LanguageModel, Language>();
+        config.NewConfig<Language, LanguageModel>()
+            .Ignore(d => d.AvailableCurrencies)
+            .Ignore(d => d.LocaleResourceSearchModel)
+            .Ignore(d => d.AvailableFlagImages);
+        config.NewConfig<LanguageModel, Language>();
 
-        CreateMap<LocaleResourceModel, LocaleStringResource>()
-            .ForMember(entity => entity.LanguageId, options => options.Ignore());
+        config.NewConfig<LocaleResourceModel, LocaleStringResource>()
+            .Ignore(d => d.LanguageId);
     }
 
     /// <summary>
-    /// Create logging maps 
+    /// Create logging maps
     /// </summary>
-    protected virtual void CreateLoggingMaps()
+    protected virtual void CreateLoggingMaps(TypeAdapterConfig config)
     {
-        CreateMap<ActivityLog, ActivityLogModel>()
-            .ForMember(model => model.ActivityLogTypeName, options => options.Ignore())
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.CustomerEmail, options => options.Ignore());
-        CreateMap<ActivityLogModel, ActivityLog>()
-            .ForMember(entity => entity.ActivityLogTypeId, options => options.Ignore())
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.EntityId, options => options.Ignore())
-            .ForMember(entity => entity.EntityName, options => options.Ignore());
+        config.NewConfig<ActivityLog, ActivityLogModel>()
+            .Ignore(d => d.ActivityLogTypeName)
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.CustomerEmail);
+        config.NewConfig<ActivityLogModel, ActivityLog>()
+            .Ignore(d => d.ActivityLogTypeId)
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.EntityId)
+            .Ignore(d => d.EntityName);
 
-        CreateMap<ActivityLogType, ActivityLogTypeModel>();
-        CreateMap<ActivityLogTypeModel, ActivityLogType>()
-            .ForMember(entity => entity.SystemKeyword, options => options.Ignore());
+        config.NewConfig<ActivityLogType, ActivityLogTypeModel>();
+        config.NewConfig<ActivityLogTypeModel, ActivityLogType>()
+            .Ignore(d => d.SystemKeyword);
 
-        CreateMap<Log, LogModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.FullMessage, options => options.Ignore())
-            .ForMember(model => model.CustomerEmail, options => options.Ignore());
-        CreateMap<LogModel, Log>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.LogLevelId, options => options.Ignore());
+        config.NewConfig<Log, LogModel>()
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.FullMessage)
+            .Ignore(d => d.CustomerEmail);
+        config.NewConfig<LogModel, Log>()
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.LogLevelId);
     }
 
     /// <summary>
-    /// Create media maps 
+    /// Create media maps
     /// </summary>
-    protected virtual void CreateMediaMaps()
+    protected virtual void CreateMediaMaps(TypeAdapterConfig config)
     {
-        CreateMap<MediaSettings, MediaSettingsModel>()
-            .ForMember(model => model.AssociatedProductPictureSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AvatarPictureSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.CartThumbPictureSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.OrderThumbPictureSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.CategoryThumbPictureSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DefaultImageQuality_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DefaultPictureZoomEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ImportProductImagesUsingHash_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ManufacturerThumbPictureSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MaximumImageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MiniCartThumbPictureSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MultipleThumbDirectories_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PicturesStoredIntoDatabase, options => options.Ignore())
-            .ForMember(model => model.ProductDetailsPictureSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductThumbPictureSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.VendorThumbPictureSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ProductDefaultImageId_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowSvgUploads_OverrideForStore, options => options.Ignore());
-        CreateMap<MediaSettingsModel, MediaSettings>()
-            .ForMember(settings => settings.AutoCompleteSearchThumbPictureSize, options => options.Ignore())
-            .ForMember(settings => settings.UseAbsoluteImagePath, options => options.Ignore())
-            .ForMember(settings => settings.AutoOrientImage, options => options.Ignore())
-            .ForMember(settings => settings.ImageSquarePictureSize, options => options.Ignore())
-            .ForMember(settings => settings.VideoIframeAllow, options => options.Ignore())
-            .ForMember(settings => settings.VideoIframeHeight, options => options.Ignore())
-            .ForMember(settings => settings.VideoIframeWidth, options => options.Ignore())
-            .ForMember(settings => settings.PicturePath, options => options.Ignore());
+        config.NewConfig<MediaSettings, MediaSettingsModel>()
+            .Ignore(d => d.AssociatedProductPictureSize_OverrideForStore)
+            .Ignore(d => d.AvatarPictureSize_OverrideForStore)
+            .Ignore(d => d.CartThumbPictureSize_OverrideForStore)
+            .Ignore(d => d.OrderThumbPictureSize_OverrideForStore)
+            .Ignore(d => d.CategoryThumbPictureSize_OverrideForStore)
+            .Ignore(d => d.DefaultImageQuality_OverrideForStore)
+            .Ignore(d => d.DefaultPictureZoomEnabled_OverrideForStore)
+            .Ignore(d => d.ImportProductImagesUsingHash_OverrideForStore)
+            .Ignore(d => d.ManufacturerThumbPictureSize_OverrideForStore)
+            .Ignore(d => d.MaximumImageSize_OverrideForStore)
+            .Ignore(d => d.MiniCartThumbPictureSize_OverrideForStore)
+            .Ignore(d => d.MultipleThumbDirectories_OverrideForStore)
+            .Ignore(d => d.PicturesStoredIntoDatabase)
+            .Ignore(d => d.ProductDetailsPictureSize_OverrideForStore)
+            .Ignore(d => d.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore)
+            .Ignore(d => d.ProductThumbPictureSize_OverrideForStore)
+            .Ignore(d => d.VendorThumbPictureSize_OverrideForStore)
+            .Ignore(d => d.ProductDefaultImageId_OverrideForStore)
+            .Ignore(d => d.AllowSvgUploads_OverrideForStore);
+        config.NewConfig<MediaSettingsModel, MediaSettings>()
+            .Ignore(d => d.AutoCompleteSearchThumbPictureSize)
+            .Ignore(d => d.UseAbsoluteImagePath)
+            .Ignore(d => d.AutoOrientImage)
+            .Ignore(d => d.ImageSquarePictureSize)
+            .Ignore(d => d.VideoIframeAllow)
+            .Ignore(d => d.VideoIframeHeight)
+            .Ignore(d => d.VideoIframeWidth)
+            .Ignore(d => d.PicturePath);
     }
 
     /// <summary>
-    /// Create messages maps 
+    /// Create messages maps
     /// </summary>
-    protected virtual void CreateMessagesMaps()
+    protected virtual void CreateMessagesMaps(TypeAdapterConfig config)
     {
-        CreateMap<Campaign, CampaignModel>()
-            .ForMember(model => model.AllowedTokens, options => options.Ignore())
-            .ForMember(model => model.AvailableCustomerRoles, options => options.Ignore())
-            .ForMember(model => model.AvailableNewsLetterSubscriptionTypes, options => options.Ignore())
-            .ForMember(model => model.AvailableEmailAccounts, options => options.Ignore())
-            .ForMember(model => model.AvailableStores, options => options.Ignore())
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.DontSendBeforeDate, options => options.Ignore())
-            .ForMember(model => model.EmailAccountId, options => options.Ignore())
-            .ForMember(model => model.TestEmail, options => options.Ignore())
-            .ForMember(model => model.CopyCampaignModel, options => options.Ignore());
-        CreateMap<CampaignModel, Campaign>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.DontSendBeforeDateUtc, options => options.Ignore());
+        config.NewConfig<Campaign, CampaignModel>()
+            .Ignore(d => d.AllowedTokens)
+            .Ignore(d => d.AvailableCustomerRoles)
+            .Ignore(d => d.AvailableNewsLetterSubscriptionTypes)
+            .Ignore(d => d.AvailableEmailAccounts)
+            .Ignore(d => d.AvailableStores)
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.DontSendBeforeDate)
+            .Ignore(d => d.EmailAccountId)
+            .Ignore(d => d.TestEmail)
+            .Ignore(d => d.CopyCampaignModel);
+        config.NewConfig<CampaignModel, Campaign>()
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.DontSendBeforeDateUtc);
+        config.NewConfig<EmailAccount, EmailAccountModel>()
+            .Ignore(d => d.IsDefaultEmailAccount)
+            .Ignore(d => d.SendTestEmailTo)
+            .Ignore(d => d.AvailableEmailAuthenticationMethods)
+            .Ignore(d => d.AuthUrl);
+        config.NewConfig<EmailAccountModel, EmailAccount>()
+            .Ignore(d => d.Password)
+            .Ignore(d => d.ClientSecret)
+            .Ignore(d => d.EmailAuthenticationMethodId);
 
-        CreateMap<EmailAccount, EmailAccountModel>()
-            .ForMember(model => model.IsDefaultEmailAccount, options => options.Ignore())
-            .ForMember(model => model.SendTestEmailTo, options => options.Ignore())
-            .ForMember(model => model.AvailableEmailAuthenticationMethods, options => options.Ignore())
-            .ForMember(model => model.AuthUrl, options => options.Ignore());
-        CreateMap<EmailAccountModel, EmailAccount>()
-            .ForMember(entity => entity.Password, options => options.Ignore())
-            .ForMember(entity => entity.ClientSecret, options => options.Ignore())
-            .ForMember(entity => entity.EmailAuthenticationMethodId, options => options.Ignore());
+        config.NewConfig<MessageTemplate, MessageTemplateModel>()
+            .Ignore(d => d.AllowedTokens)
+            .Ignore(d => d.AvailableEmailAccounts)
+            .Ignore(d => d.HasAttachedDownload)
+            .Ignore(d => d.ListOfStores)
+            .Ignore(d => d.SendImmediately);
+        config.NewConfig<MessageTemplateModel, MessageTemplate>()
+            .Ignore(d => d.DelayPeriod);
 
-        CreateMap<MessageTemplate, MessageTemplateModel>()
-            .ForMember(model => model.AllowedTokens, options => options.Ignore())
-            .ForMember(model => model.AvailableEmailAccounts, options => options.Ignore())
-            .ForMember(model => model.HasAttachedDownload, options => options.Ignore())
-            .ForMember(model => model.ListOfStores, options => options.Ignore())
-            .ForMember(model => model.SendImmediately, options => options.Ignore());
-        CreateMap<MessageTemplateModel, MessageTemplate>()
-            .ForMember(entity => entity.DelayPeriod, options => options.Ignore());
-
-        CreateMap<NewsLetterSubscription, NewsLetterSubscriptionModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.SubscriptionTypeName, options => options.Ignore())
-            .ForMember(model => model.AvailableNewsLetterSubscriptionTypes, options => options.Ignore())
-            .ForMember(model => model.AvailableNewsLetterSubscriptionStores, options => options.Ignore())
-            .ForMember(model => model.AvailableNewsLetterSubscriptionLanguages, options => options.Ignore())
-            .ForMember(model => model.SelectedNewsLetterSubscriptionTypeId, options => options.Ignore())
-            .ForMember(model => model.SelectedNewsLetterSubscriptionStoreId, options => options.Ignore())
-            .ForMember(model => model.SelectedNewsLetterSubscriptionLanguageId, options => options.Ignore())
-            .ForMember(model => model.LanguageName, options => options.Ignore())
-            .ForMember(model => model.StoreName, options => options.Ignore());
-        CreateMap<NewsLetterSubscriptionModel, NewsLetterSubscription>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.TypeId, options => options.Ignore())
-            .ForMember(entity => entity.NewsLetterSubscriptionGuid, options => options.Ignore())
-            .ForMember(entity => entity.LanguageId, option => option.Ignore())
-            .ForMember(entity => entity.StoreId, options => options.Ignore());
+        config.NewConfig<NewsLetterSubscription, NewsLetterSubscriptionModel>()
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.SubscriptionTypeName)
+            .Ignore(d => d.AvailableNewsLetterSubscriptionTypes)
+            .Ignore(d => d.AvailableNewsLetterSubscriptionStores)
+            .Ignore(d => d.AvailableNewsLetterSubscriptionLanguages)
+            .Ignore(d => d.SelectedNewsLetterSubscriptionTypeId)
+            .Ignore(d => d.SelectedNewsLetterSubscriptionStoreId)
+            .Ignore(d => d.SelectedNewsLetterSubscriptionLanguageId)
+            .Ignore(d => d.LanguageName)
+            .Ignore(d => d.StoreName);
+        config.NewConfig<NewsLetterSubscriptionModel, NewsLetterSubscription>()
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.TypeId)
+            .Ignore(d => d.NewsLetterSubscriptionGuid)
+            .Ignore(d => d.LanguageId)
+            .Ignore(d => d.StoreId);
 
         //Newsletter subscription type
-        CreateMap<NewsLetterSubscriptionType, NewsLetterSubscriptionTypeModel>();
-        CreateMap<NewsLetterSubscriptionTypeModel, NewsLetterSubscriptionType>();
+        config.NewConfig<NewsLetterSubscriptionType, NewsLetterSubscriptionTypeModel>();
+        config.NewConfig<NewsLetterSubscriptionTypeModel, NewsLetterSubscriptionType>();
 
-        CreateMap<QueuedEmail, QueuedEmailModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.DontSendBeforeDate, options => options.Ignore())
-            .ForMember(model => model.EmailAccountName, options => options.Ignore())
-            .ForMember(model => model.PriorityName, options => options.Ignore())
-            .ForMember(model => model.SendImmediately, options => options.Ignore())
-            .ForMember(model => model.SentOn, options => options.Ignore());
-        CreateMap<QueuedEmailModel, QueuedEmail>()
-            .ForMember(entity => entity.AttachmentFileName, options => options.Ignore())
-            .ForMember(entity => entity.AttachmentFilePath, options => options.Ignore())
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.DontSendBeforeDateUtc, options => options.Ignore())
-            .ForMember(entity => entity.EmailAccountId, options => options.Ignore())
-            .ForMember(entity => entity.Priority, options => options.Ignore())
-            .ForMember(entity => entity.PriorityId, options => options.Ignore())
-            .ForMember(entity => entity.SentOnUtc, options => options.Ignore());
+        config.NewConfig<QueuedEmail, QueuedEmailModel>()
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.DontSendBeforeDate)
+            .Ignore(d => d.EmailAccountName)
+            .Ignore(d => d.PriorityName)
+            .Ignore(d => d.SendImmediately)
+            .Ignore(d => d.SentOn);
+        config.NewConfig<QueuedEmailModel, QueuedEmail>()
+            .Ignore(d => d.AttachmentFileName)
+            .Ignore(d => d.AttachmentFilePath)
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.DontSendBeforeDateUtc)
+            .Ignore(d => d.EmailAccountId)
+            .Ignore(d => d.Priority)
+            .Ignore(d => d.PriorityId)
+            .Ignore(d => d.SentOnUtc);
     }
 
     /// <summary>
-    /// Create news maps 
+    /// Create news maps
     /// </summary>
-    protected virtual void CreateNewsMaps()
+    protected virtual void CreateNewsMaps(TypeAdapterConfig config)
     {
-        CreateMap<NewsComment, NewsCommentModel>()
-            .ForMember(model => model.CustomerInfo, options => options.Ignore())
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.CommentText, options => options.Ignore())
-            .ForMember(model => model.NewsItemTitle, options => options.Ignore())
-            .ForMember(model => model.StoreName, options => options.Ignore());
-        CreateMap<NewsCommentModel, NewsComment>()
-            .ForMember(entity => entity.CommentTitle, options => options.Ignore())
-            .ForMember(entity => entity.CommentText, options => options.Ignore())
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.NewsItemId, options => options.Ignore())
-            .ForMember(entity => entity.CustomerId, options => options.Ignore())
-            .ForMember(entity => entity.StoreId, options => options.Ignore());
+        config.NewConfig<NewsComment, NewsCommentModel>()
+            .Ignore(d => d.CustomerInfo)
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.CommentText)
+            .Ignore(d => d.NewsItemTitle)
+            .Ignore(d => d.StoreName);
+        config.NewConfig<NewsCommentModel, NewsComment>()
+            .Ignore(d => d.CommentTitle)
+            .Ignore(d => d.CommentText)
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.NewsItemId)
+            .Ignore(d => d.CustomerId)
+            .Ignore(d => d.StoreId);
 
-        CreateMap<NewsItem, NewsItemModel>()
-            .ForMember(model => model.ApprovedComments, options => options.Ignore())
-            .ForMember(model => model.AvailableLanguages, options => options.Ignore())
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.LanguageName, options => options.Ignore())
-            .ForMember(model => model.NotApprovedComments, options => options.Ignore())
-            .ForMember(model => model.SeName, options => options.Ignore());
-        CreateMap<NewsItemModel, NewsItem>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore());
+        config.NewConfig<NewsItem, NewsItemModel>()
+            .Ignore(d => d.ApprovedComments)
+            .Ignore(d => d.AvailableLanguages)
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.LanguageName)
+            .Ignore(d => d.NotApprovedComments)
+            .Ignore(d => d.SeName);
+        config.NewConfig<NewsItemModel, NewsItem>()
+            .Ignore(d => d.CreatedOnUtc);
 
-        CreateMap<NewsSettings, NewsSettingsModel>()
-            .ForMember(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.Enabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MainPageNewsCount_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NewsArchivePageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NewsCommentsMustBeApproved_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NotifyAboutNewNewsComments_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowHeaderRssUrl_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowNewsOnMainPage_OverrideForStore, options => options.Ignore());
-        CreateMap<NewsSettingsModel, NewsSettings>();
+        config.NewConfig<NewsSettings, NewsSettingsModel>()
+            .Ignore(d => d.AllowNotRegisteredUsersToLeaveComments_OverrideForStore)
+            .Ignore(d => d.Enabled_OverrideForStore)
+            .Ignore(d => d.MainPageNewsCount_OverrideForStore)
+            .Ignore(d => d.NewsArchivePageSize_OverrideForStore)
+            .Ignore(d => d.NewsCommentsMustBeApproved_OverrideForStore)
+            .Ignore(d => d.NotifyAboutNewNewsComments_OverrideForStore)
+            .Ignore(d => d.ShowHeaderRssUrl_OverrideForStore)
+            .Ignore(d => d.ShowNewsOnMainPage_OverrideForStore);
+        config.NewConfig<NewsSettingsModel, NewsSettings>();
     }
 
     /// <summary>
     /// Create orders maps 
     /// </summary>
-    protected virtual void CreateOrdersMaps()
+    protected virtual void CreateOrdersMaps(TypeAdapterConfig config)
     {
-        CreateMap<Order, CustomerOrderModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.OrderStatus, options => options.Ignore())
-            .ForMember(model => model.PaymentStatus, options => options.Ignore())
-            .ForMember(model => model.ShippingStatus, options => options.Ignore())
-            .ForMember(model => model.OrderTotal, options => options.Ignore())
-            .ForMember(model => model.StoreName, options => options.Ignore());
+        config.NewConfig<Order, CustomerOrderModel>()
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.OrderStatus)
+            .Ignore(d => d.PaymentStatus)
+            .Ignore(d => d.ShippingStatus)
+            .Ignore(d => d.OrderTotal)
+            .Ignore(d => d.StoreName);
 
-        CreateMap<OrderNote, OrderNoteModel>()
-            .ForMember(model => model.DownloadGuid, options => options.Ignore())
-            .ForMember(model => model.CreatedOn, options => options.Ignore());
+        config.NewConfig<OrderNote, OrderNoteModel>()
+            .Ignore(d => d.DownloadGuid)
+            .Ignore(d => d.CreatedOn);
 
-        CreateMap<CheckoutAttribute, CheckoutAttributeModel>()
-            .ForMember(model => model.AttributeControlTypeName, options => options.Ignore())
-            .ForMember(model => model.AvailableTaxCategories, options => options.Ignore())
-            .ForMember(model => model.CheckoutAttributeValueSearchModel, options => options.Ignore())
-            .ForMember(model => model.ConditionAllowed, options => options.Ignore())
-            .ForMember(model => model.ConditionModel, options => options.Ignore());
-        CreateMap<CheckoutAttributeModel, CheckoutAttribute>()
-            .ForMember(entity => entity.AttributeControlType, options => options.Ignore())
-            .ForMember(entity => entity.ConditionAttributeXml, options => options.Ignore());
+        config.NewConfig<CheckoutAttribute, CheckoutAttributeModel>()
+            .Ignore(d => d.AttributeControlTypeName)
+            .Ignore(d => d.AvailableTaxCategories)
+            .Ignore(d => d.CheckoutAttributeValueSearchModel)
+            .Ignore(d => d.ConditionAllowed)
+            .Ignore(d => d.ConditionModel);
+        config.NewConfig<CheckoutAttributeModel, CheckoutAttribute>()
+            .Ignore(d => d.AttributeControlType)
+            .Ignore(d => d.ConditionAttributeXml);
 
-        CreateMap<CheckoutAttributeValue, CheckoutAttributeValueModel>()
-            .ForMember(model => model.BaseWeightIn, options => options.Ignore())
-            .ForMember(model => model.DisplayColorSquaresRgb, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore());
-        CreateMap<CheckoutAttributeValueModel, CheckoutAttributeValue>();
+        config.NewConfig<CheckoutAttributeValue, CheckoutAttributeValueModel>()
+            .Ignore(d => d.BaseWeightIn)
+            .Ignore(d => d.DisplayColorSquaresRgb)
+            .Ignore(d => d.PrimaryStoreCurrencyCode);
+        config.NewConfig<CheckoutAttributeValueModel, CheckoutAttributeValue>();
 
-        CreateMap<GiftCard, GiftCardModel>()
-            .ForMember(model => model.AmountStr, options => options.Ignore())
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.GiftCardUsageHistorySearchModel, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
-            .ForMember(model => model.PurchasedWithOrderId, options => options.Ignore())
-            .ForMember(model => model.PurchasedWithOrderNumber, options => options.Ignore())
-            .ForMember(model => model.RemainingAmountStr, options => options.Ignore());
-        CreateMap<GiftCardModel, GiftCard>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.GiftCardType, options => options.Ignore())
-            .ForMember(entity => entity.IsRecipientNotified, options => options.Ignore())
-            .ForMember(entity => entity.PurchasedWithOrderItemId, options => options.Ignore());
+        config.NewConfig<GiftCard, GiftCardModel>()
+            .Ignore(d => d.AmountStr)
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.GiftCardUsageHistorySearchModel)
+            .Ignore(d => d.PrimaryStoreCurrencyCode)
+            .Ignore(d => d.PurchasedWithOrderId)
+            .Ignore(d => d.PurchasedWithOrderNumber)
+            .Ignore(d => d.RemainingAmountStr);
+        config.NewConfig<GiftCardModel, GiftCard>()
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.GiftCardType)
+            .Ignore(d => d.IsRecipientNotified)
+            .Ignore(d => d.PurchasedWithOrderItemId);
 
-        CreateMap<GiftCardUsageHistory, GiftCardUsageHistoryModel>()
-            .ForMember(model => model.OrderId, options => options.Ignore())
-            .ForMember(model => model.CustomOrderNumber, options => options.Ignore())
-            .ForMember(entity => entity.CreatedOn, options => options.Ignore())
-            .ForMember(entity => entity.UsedValue, options => options.Ignore());
+        config.NewConfig<GiftCardUsageHistory, GiftCardUsageHistoryModel>()
+            .Ignore(d => d.OrderId)
+            .Ignore(d => d.CustomOrderNumber)
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.UsedValue);
 
-        CreateMap<OrderSettings, OrderSettingsModel>()
-            .ForMember(model => model.AllowAdminsToBuyCallForPriceProducts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowProductThumbnailInOrderDetailsPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AnonymousCheckoutAllowed_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AttachPdfInvoiceToOrderProcessingEmail_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AutoUpdateOrderTotalsOnEditingOrder_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.CheckoutDisabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.CustomOrderNumberMask_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DeleteGiftCardUsageHistory_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisableBillingAddressCheckoutStep_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisableOrderCompletedPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayPickupInStoreOnShippingMethodPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ExportWithProducts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.IsReOrderAllowed_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MinOrderSubtotalAmountIncludingTax_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MinOrderSubtotalAmount_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MinOrderTotalAmount_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NumberOfDaysReturnRequestAvailable_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.OnePageCheckoutEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.OrderIdent, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
-            .ForMember(model => model.ReturnRequestActionSearchModel, options => options.Ignore())
-            .ForMember(model => model.ReturnRequestNumberMask_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ReturnRequestReasonSearchModel, options => options.Ignore())
-            .ForMember(model => model.ReturnRequestsAllowFiles_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ReturnRequestsEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.TermsOfServiceOnOrderConfirmPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.TermsOfServiceOnShoppingCartPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore());
-        CreateMap<OrderSettingsModel, OrderSettings>()
-            .ForMember(settings => settings.GeneratePdfInvoiceInCustomerLanguage, options => options.Ignore())
-            .ForMember(settings => settings.MinimumOrderPlacementInterval, options => options.Ignore())
-            .ForMember(settings => settings.DisplayCustomerCurrencyOnOrders, options => options.Ignore())
-            .ForMember(settings => settings.ReturnRequestsFileMaximumSize, options => options.Ignore())
-            .ForMember(settings => settings.DisplayOrderSummary, options => options.Ignore())
-            .ForMember(settings => settings.PlaceOrderWithLock, options => options.Ignore())
-            .ForMember(settings => settings.CustomerOrdersPageSize, options => options.Ignore());
+        config.NewConfig<OrderSettings, OrderSettingsModel>()
+            .Ignore(d => d.AllowAdminsToBuyCallForPriceProducts_OverrideForStore)
+            .Ignore(d => d.ShowProductThumbnailInOrderDetailsPage_OverrideForStore)
+            .Ignore(d => d.AnonymousCheckoutAllowed_OverrideForStore)
+            .Ignore(d => d.AttachPdfInvoiceToOrderProcessingEmail_OverrideForStore)
+            .Ignore(d => d.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore)
+            .Ignore(d => d.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore)
+            .Ignore(d => d.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore)
+            .Ignore(d => d.AutoUpdateOrderTotalsOnEditingOrder_OverrideForStore)
+            .Ignore(d => d.CheckoutDisabled_OverrideForStore)
+            .Ignore(d => d.CustomOrderNumberMask_OverrideForStore)
+            .Ignore(d => d.DeleteGiftCardUsageHistory_OverrideForStore)
+            .Ignore(d => d.DisableBillingAddressCheckoutStep_OverrideForStore)
+            .Ignore(d => d.DisableOrderCompletedPage_OverrideForStore)
+            .Ignore(d => d.DisplayPickupInStoreOnShippingMethodPage_OverrideForStore)
+            .Ignore(d => d.ExportWithProducts_OverrideForStore)
+            .Ignore(d => d.IsReOrderAllowed_OverrideForStore)
+            .Ignore(d => d.MinOrderSubtotalAmountIncludingTax_OverrideForStore)
+            .Ignore(d => d.MinOrderSubtotalAmount_OverrideForStore)
+            .Ignore(d => d.MinOrderTotalAmount_OverrideForStore)
+            .Ignore(d => d.NumberOfDaysReturnRequestAvailable_OverrideForStore)
+            .Ignore(d => d.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore)
+            .Ignore(d => d.OnePageCheckoutEnabled_OverrideForStore)
+            .Ignore(d => d.OrderIdent)
+            .Ignore(d => d.PrimaryStoreCurrencyCode)
+            .Ignore(d => d.ReturnRequestActionSearchModel)
+            .Ignore(d => d.ReturnRequestNumberMask_OverrideForStore)
+            .Ignore(d => d.ReturnRequestReasonSearchModel)
+            .Ignore(d => d.ReturnRequestsAllowFiles_OverrideForStore)
+            .Ignore(d => d.ReturnRequestsEnabled_OverrideForStore)
+            .Ignore(d => d.TermsOfServiceOnOrderConfirmPage_OverrideForStore)
+            .Ignore(d => d.TermsOfServiceOnShoppingCartPage_OverrideForStore);
+        config.NewConfig<OrderSettingsModel, OrderSettings>()
+            .Ignore(d => d.GeneratePdfInvoiceInCustomerLanguage)
+            .Ignore(d => d.MinimumOrderPlacementInterval)
+            .Ignore(d => d.DisplayCustomerCurrencyOnOrders)
+            .Ignore(d => d.ReturnRequestsFileMaximumSize)
+            .Ignore(d => d.DisplayOrderSummary)
+            .Ignore(d => d.PlaceOrderWithLock)
+            .Ignore(d => d.CustomerOrdersPageSize);
 
-        CreateMap<ReturnRequestAction, ReturnRequestActionModel>();
-        CreateMap<ReturnRequestActionModel, ReturnRequestAction>();
+        config.NewConfig<ReturnRequestAction, ReturnRequestActionModel>();
+        config.NewConfig<ReturnRequestActionModel, ReturnRequestAction>();
 
-        CreateMap<ReturnRequestReason, ReturnRequestReasonModel>();
-        CreateMap<ReturnRequestReasonModel, ReturnRequestReason>();
+        config.NewConfig<ReturnRequestReason, ReturnRequestReasonModel>();
+        config.NewConfig<ReturnRequestReasonModel, ReturnRequestReason>();
 
-        CreateMap<ReturnRequest, ReturnRequestModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.CustomerInfo, options => options.Ignore())
-            .ForMember(model => model.ReturnRequestStatusStr, options => options.Ignore())
-            .ForMember(model => model.ProductId, options => options.Ignore())
-            .ForMember(model => model.ProductName, options => options.Ignore())
-            .ForMember(model => model.OrderId, options => options.Ignore())
-            .ForMember(model => model.AttributeInfo, options => options.Ignore())
-            .ForMember(model => model.CustomOrderNumber, options => options.Ignore())
-            .ForMember(model => model.UploadedFileGuid, options => options.Ignore())
-            .ForMember(model => model.ReturnRequestStatusStr, options => options.Ignore());
-        CreateMap<ReturnRequestModel, ReturnRequest>()
-            .ForMember(entity => entity.CustomNumber, options => options.Ignore())
-            .ForMember(entity => entity.StoreId, options => options.Ignore())
-            .ForMember(entity => entity.OrderItemId, options => options.Ignore())
-            .ForMember(entity => entity.UploadedFileId, options => options.Ignore())
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.ReturnRequestStatus, options => options.Ignore())
-            .ForMember(entity => entity.CustomerId, options => options.Ignore())
-            .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
+        config.NewConfig<ReturnRequest, ReturnRequestModel>()
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.CustomerInfo)
+            .Ignore(d => d.ReturnRequestStatusStr)
+            .Ignore(d => d.ProductId)
+            .Ignore(d => d.ProductName)
+            .Ignore(d => d.OrderId)
+            .Ignore(d => d.AttributeInfo)
+            .Ignore(d => d.CustomOrderNumber)
+            .Ignore(d => d.UploadedFileGuid);
+        config.NewConfig<ReturnRequestModel, ReturnRequest>()
+            .Ignore(d => d.CustomNumber)
+            .Ignore(d => d.StoreId)
+            .Ignore(d => d.OrderItemId)
+            .Ignore(d => d.UploadedFileId)
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.ReturnRequestStatus)
+            .Ignore(d => d.CustomerId)
+            .Ignore(d => d.UpdatedOnUtc);
 
-        CreateMap<ShoppingCartSettings, ShoppingCartSettingsModel>()
-            .ForMember(model => model.AllowAnonymousUsersToEmailWishlist_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowCartItemEditing_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowMultipleWishlist_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MaximumNumberOfCustomWishlist_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.CartsSharedBetweenStores_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.CrossSellsNumber_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.GroupTierPricesForDistinctShoppingCartItems_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayCartAfterAddingProduct_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayWishlistAfterAddingProduct_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.EmailWishlistEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MaximumShoppingCartItems_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MaximumWishlistItems_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MiniShoppingCartEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MiniShoppingCartProductNumber_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MoveItemsFromWishlistToCart_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowDiscountBox_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowGiftCardBox_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowProductImagesInMiniShoppingCart_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowProductImagesOnShoppingCart_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowProductImagesOnWishList_OverrideForStore, options => options.Ignore());
-        CreateMap<ShoppingCartSettingsModel, ShoppingCartSettings>()
-            .ForMember(settings => settings.RenderAssociatedAttributeValueQuantity, options => options.Ignore())
-            .ForMember(settings => settings.RoundPricesDuringCalculation, options => options.Ignore());
+        config.NewConfig<ShoppingCartSettings, ShoppingCartSettingsModel>()
+            .Ignore(d => d.AllowAnonymousUsersToEmailWishlist_OverrideForStore)
+            .Ignore(d => d.AllowCartItemEditing_OverrideForStore)
+            .Ignore(d => d.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore)
+            .Ignore(d => d.AllowMultipleWishlist_OverrideForStore)
+            .Ignore(d => d.MaximumNumberOfCustomWishlist_OverrideForStore)
+            .Ignore(d => d.CartsSharedBetweenStores_OverrideForStore)
+            .Ignore(d => d.CrossSellsNumber_OverrideForStore)
+            .Ignore(d => d.GroupTierPricesForDistinctShoppingCartItems_OverrideForStore)
+            .Ignore(d => d.DisplayCartAfterAddingProduct_OverrideForStore)
+            .Ignore(d => d.DisplayWishlistAfterAddingProduct_OverrideForStore)
+            .Ignore(d => d.EmailWishlistEnabled_OverrideForStore)
+            .Ignore(d => d.MaximumShoppingCartItems_OverrideForStore)
+            .Ignore(d => d.MaximumWishlistItems_OverrideForStore)
+            .Ignore(d => d.MiniShoppingCartEnabled_OverrideForStore)
+            .Ignore(d => d.MiniShoppingCartProductNumber_OverrideForStore)
+            .Ignore(d => d.MoveItemsFromWishlistToCart_OverrideForStore)
+            .Ignore(d => d.ShowDiscountBox_OverrideForStore)
+            .Ignore(d => d.ShowGiftCardBox_OverrideForStore)
+            .Ignore(d => d.ShowProductImagesInMiniShoppingCart_OverrideForStore)
+            .Ignore(d => d.ShowProductImagesOnShoppingCart_OverrideForStore)
+            .Ignore(d => d.ShowProductImagesOnWishList_OverrideForStore);
+        config.NewConfig<ShoppingCartSettingsModel, ShoppingCartSettings>()
+            .Ignore(d => d.RenderAssociatedAttributeValueQuantity)
+            .Ignore(d => d.RoundPricesDuringCalculation);
 
-        CreateMap<ShoppingCartItem, ShoppingCartItemModel>()
-            .ForMember(model => model.Store, options => options.Ignore())
-            .ForMember(model => model.CustomWishlistName, options => options.Ignore())
-            .ForMember(model => model.AttributeInfo, options => options.Ignore())
-            .ForMember(model => model.UnitPrice, options => options.Ignore())
-            .ForMember(model => model.UnitPriceValue, options => options.Ignore())
-            .ForMember(model => model.UpdatedOn, options => options.Ignore())
-            .ForMember(model => model.ProductName, options => options.Ignore())
-            .ForMember(model => model.Total, options => options.Ignore())
-            .ForMember(model => model.TotalValue, options => options.Ignore());
+        config.NewConfig<ShoppingCartItem, ShoppingCartItemModel>()
+            .Ignore(d => d.Store)
+            .Ignore(d => d.CustomWishlistName)
+            .Ignore(d => d.AttributeInfo)
+            .Ignore(d => d.UnitPrice)
+            .Ignore(d => d.UnitPriceValue)
+            .Ignore(d => d.UpdatedOn)
+            .Ignore(d => d.ProductName)
+            .Ignore(d => d.Total)
+            .Ignore(d => d.TotalValue);
     }
 
     /// <summary>
     /// Create payments maps 
     /// </summary>
-    protected virtual void CreatePaymentsMaps()
+    protected virtual void CreatePaymentsMaps(TypeAdapterConfig config)
     {
-        CreateMap<IPaymentMethod, PaymentMethodModel>()
-            .ForMember(model => model.RecurringPaymentType, options => options.Ignore());
+        config.NewConfig<IPaymentMethod, PaymentMethodModel>()
+            .Ignore(d => d.RecurringPaymentType);
 
-        CreateMap<RecurringPayment, RecurringPaymentModel>()
-            .ForMember(model => model.CustomerId, options => options.Ignore())
-            .ForMember(model => model.InitialOrderId, options => options.Ignore())
-            .ForMember(model => model.NextPaymentDate, options => options.Ignore())
-            .ForMember(model => model.StartDate, options => options.Ignore())
-            .ForMember(model => model.CyclePeriodStr, options => options.Ignore())
-            .ForMember(model => model.PaymentType, options => options.Ignore())
-            .ForMember(model => model.CanCancelRecurringPayment, options => options.Ignore())
-            .ForMember(model => model.CustomerEmail, options => options.Ignore())
-            .ForMember(model => model.RecurringPaymentHistorySearchModel, options => options.Ignore())
-            .ForMember(model => model.CyclesRemaining, options => options.Ignore());
+        config.NewConfig<RecurringPayment, RecurringPaymentModel>()
+            .Ignore(d => d.CustomerId)
+            .Ignore(d => d.InitialOrderId)
+            .Ignore(d => d.NextPaymentDate)
+            .Ignore(d => d.StartDate)
+            .Ignore(d => d.CyclePeriodStr)
+            .Ignore(d => d.PaymentType)
+            .Ignore(d => d.CanCancelRecurringPayment)
+            .Ignore(d => d.CustomerEmail)
+            .Ignore(d => d.RecurringPaymentHistorySearchModel)
+            .Ignore(d => d.CyclesRemaining);
 
-        CreateMap<RecurringPaymentModel, RecurringPayment>()
-            .ForMember(entity => entity.StartDateUtc, options => options.Ignore())
-            .ForMember(entity => entity.Deleted, options => options.Ignore())
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.CyclePeriod, options => options.Ignore())
-            .ForMember(entity => entity.InitialOrderId, options => options.Ignore());
+        config.NewConfig<RecurringPaymentModel, RecurringPayment>()
+            .Ignore(d => d.StartDateUtc)
+            .Ignore(d => d.Deleted)
+            .Ignore(d => d.CreatedOnUtc)
+            .Ignore(d => d.CyclePeriod)
+            .Ignore(d => d.InitialOrderId);
 
-        CreateMap<RecurringPaymentHistory, RecurringPaymentHistoryModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.OrderStatus, options => options.Ignore())
-            .ForMember(model => model.PaymentStatus, options => options.Ignore())
-            .ForMember(model => model.ShippingStatus, options => options.Ignore())
-            .ForMember(model => model.CustomOrderNumber, options => options.Ignore());
+        config.NewConfig<RecurringPaymentHistory, RecurringPaymentHistoryModel>()
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.OrderStatus)
+            .Ignore(d => d.PaymentStatus)
+            .Ignore(d => d.ShippingStatus)
+            .Ignore(d => d.CustomOrderNumber);
     }
 
     /// <summary>
     /// Create plugins maps 
     /// </summary>
-    protected virtual void CreatePluginsMaps()
+    protected virtual void CreatePluginsMaps(TypeAdapterConfig config)
     {
-        CreateMap<PluginDescriptor, PluginModel>()
-            .ForMember(model => model.CanChangeEnabled, options => options.Ignore())
-            .ForMember(model => model.IsEnabled, options => options.Ignore());
+        config.NewConfig<PluginDescriptor, PluginModel>()
+            .Ignore(d => d.CanChangeEnabled)
+            .Ignore(d => d.IsEnabled);
     }
-
     /// <summary>
     /// Create polls maps 
     /// </summary>
-    protected virtual void CreatePollsMaps()
+    protected virtual void CreatePollsMaps(TypeAdapterConfig config)
     {
-        CreateMap<PollAnswer, PollAnswerModel>();
-        CreateMap<PollAnswerModel, PollAnswer>();
+        config.NewConfig<PollAnswer, PollAnswerModel>();
+        config.NewConfig<PollAnswerModel, PollAnswer>();
 
-        CreateMap<Poll, PollModel>()
-            .ForMember(model => model.AvailableLanguages, options => options.Ignore())
-            .ForMember(model => model.PollAnswerSearchModel, options => options.Ignore())
-            .ForMember(model => model.LanguageName, options => options.Ignore());
-        CreateMap<PollModel, Poll>();
+        config.NewConfig<Poll, PollModel>()
+            .Ignore(d => d.AvailableLanguages)
+            .Ignore(d => d.PollAnswerSearchModel)
+            .Ignore(d => d.LanguageName);
+        config.NewConfig<PollModel, Poll>();
     }
 
     /// <summary>
     /// Create security maps 
     /// </summary>
-    protected virtual void CreateSecurityMaps()
+    protected virtual void CreateSecurityMaps(TypeAdapterConfig config)
     {
-        CreateMap<CaptchaSettings, CaptchaSettingsModel>()
-            .ForMember(model => model.Enabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ReCaptchaPrivateKey_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ReCaptchaPublicKey_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnApplyVendorPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnBlogCommentPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnContactUsPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnEmailProductToFriendPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnEmailWishlistToFriendPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnLoginPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnNewsCommentPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnNewsLetterPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnProductReviewPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnRegistrationPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnForgotPasswordPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnForum_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnCheckoutPageForGuests_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnCheckGiftCardBalance_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.CaptchaType_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ReCaptchaV3ScoreThreshold_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.CaptchaTypeValues, options => options.Ignore());
-        CreateMap<CaptchaSettingsModel, CaptchaSettings>()
-            .ForMember(settings => settings.AutomaticallyChooseLanguage, options => options.Ignore())
-            .ForMember(settings => settings.ReCaptchaDefaultLanguage, options => options.Ignore())
-            .ForMember(settings => settings.ReCaptchaRequestTimeout, options => options.Ignore())
-            .ForMember(settings => settings.ReCaptchaTheme, options => options.Ignore())
-            .ForMember(settings => settings.ReCaptchaApiUrl, options => options.Ignore());
+        config.NewConfig<CaptchaSettings, CaptchaSettingsModel>()
+            .Ignore(d => d.Enabled_OverrideForStore)
+            .Ignore(d => d.ReCaptchaPrivateKey_OverrideForStore)
+            .Ignore(d => d.ReCaptchaPublicKey_OverrideForStore)
+            .Ignore(d => d.ShowOnApplyVendorPage_OverrideForStore)
+            .Ignore(d => d.ShowOnBlogCommentPage_OverrideForStore)
+            .Ignore(d => d.ShowOnContactUsPage_OverrideForStore)
+            .Ignore(d => d.ShowOnEmailProductToFriendPage_OverrideForStore)
+            .Ignore(d => d.ShowOnEmailWishlistToFriendPage_OverrideForStore)
+            .Ignore(d => d.ShowOnLoginPage_OverrideForStore)
+            .Ignore(d => d.ShowOnNewsCommentPage_OverrideForStore)
+            .Ignore(d => d.ShowOnNewsLetterPage_OverrideForStore)
+            .Ignore(d => d.ShowOnProductReviewPage_OverrideForStore)
+            .Ignore(d => d.ShowOnRegistrationPage_OverrideForStore)
+            .Ignore(d => d.ShowOnForgotPasswordPage_OverrideForStore)
+            .Ignore(d => d.ShowOnForum_OverrideForStore)
+            .Ignore(d => d.ShowOnCheckoutPageForGuests_OverrideForStore)
+            .Ignore(d => d.ShowOnCheckGiftCardBalance_OverrideForStore)
+            .Ignore(d => d.CaptchaType_OverrideForStore)
+            .Ignore(d => d.ReCaptchaV3ScoreThreshold_OverrideForStore)
+            .Ignore(d => d.CaptchaTypeValues);
+        config.NewConfig<CaptchaSettingsModel, CaptchaSettings>()
+            .Ignore(d => d.AutomaticallyChooseLanguage)
+            .Ignore(d => d.ReCaptchaDefaultLanguage)
+            .Ignore(d => d.ReCaptchaRequestTimeout)
+            .Ignore(d => d.ReCaptchaTheme)
+            .Ignore(d => d.ReCaptchaApiUrl);
     }
 
     /// <summary>
     /// Create SEO maps 
     /// </summary>
-    protected virtual void CreateSeoMaps()
+    protected virtual void CreateSeoMaps(TypeAdapterConfig config)
     {
-        CreateMap<UrlRecord, UrlRecordModel>()
-            .ForMember(model => model.DetailsUrl, options => options.Ignore())
-            .ForMember(model => model.Language, options => options.Ignore())
-            .ForMember(model => model.Name, options => options.Ignore());
-        CreateMap<UrlRecordModel, UrlRecord>()
-            .ForMember(entity => entity.LanguageId, options => options.Ignore())
-            .ForMember(entity => entity.Slug, options => options.Ignore());
+        config.NewConfig<UrlRecord, UrlRecordModel>()
+            .Ignore(d => d.DetailsUrl)
+            .Ignore(d => d.Language)
+            .Ignore(d => d.Name);
+
+        config.NewConfig<UrlRecordModel, UrlRecord>()
+            .Ignore(d => d.LanguageId)
+            .Ignore(d => d.Slug);
     }
 
     /// <summary>
     /// Create shipping maps 
     /// </summary>
-    protected virtual void CreateShippingMaps()
+    protected virtual void CreateShippingMaps(TypeAdapterConfig config)
     {
-        CreateMap<DeliveryDate, DeliveryDateModel>();
-        CreateMap<DeliveryDateModel, DeliveryDate>();
+        config.NewConfig<DeliveryDate, DeliveryDateModel>();
+        config.NewConfig<DeliveryDateModel, DeliveryDate>();
 
-        CreateMap<IPickupPointProvider, PickupPointProviderModel>();
+        config.NewConfig<IPickupPointProvider, PickupPointProviderModel>();
+        config.NewConfig<IShippingRateComputationMethod, ShippingProviderModel>();
 
-        CreateMap<ProductAvailabilityRange, ProductAvailabilityRangeModel>();
-        CreateMap<ProductAvailabilityRangeModel, ProductAvailabilityRange>();
+        config.NewConfig<ProductAvailabilityRange, ProductAvailabilityRangeModel>();
+        config.NewConfig<ProductAvailabilityRangeModel, ProductAvailabilityRange>();
 
-        CreateMap<ShippingMethod, ShippingMethodModel>();
-        CreateMap<ShippingMethodModel, ShippingMethod>();
+        config.NewConfig<ShippingMethod, ShippingMethodModel>();
+        config.NewConfig<ShippingMethodModel, ShippingMethod>();
 
-        CreateMap<IShippingRateComputationMethod, ShippingProviderModel>();
+        config.NewConfig<Shipment, ShipmentModel>()
+            .Ignore(d => d.ShippedDate)
+            .Ignore(d => d.ReadyForPickupDate)
+            .Ignore(d => d.DeliveryDate)
+            .Ignore(d => d.TotalWeight)
+            .Ignore(d => d.TrackingNumberUrl)
+            .Ignore(d => d.Items)
+            .Ignore(d => d.ShipmentStatusEvents)
+            .Ignore(d => d.PickupInStore)
+            .Ignore(d => d.CanShip)
+            .Ignore(d => d.CanMarkAsReadyForPickup)
+            .Ignore(d => d.CanDeliver)
+            .Ignore(d => d.CustomOrderNumber);
 
-        CreateMap<Shipment, ShipmentModel>()
-            .ForMember(model => model.ShippedDate, options => options.Ignore())
-            .ForMember(model => model.ReadyForPickupDate, options => options.Ignore())
-            .ForMember(model => model.DeliveryDate, options => options.Ignore())
-            .ForMember(model => model.TotalWeight, options => options.Ignore())
-            .ForMember(model => model.TrackingNumberUrl, options => options.Ignore())
-            .ForMember(model => model.Items, options => options.Ignore())
-            .ForMember(model => model.ShipmentStatusEvents, options => options.Ignore())
-            .ForMember(model => model.PickupInStore, options => options.Ignore())
-            .ForMember(model => model.CanShip, options => options.Ignore())
-            .ForMember(model => model.CanMarkAsReadyForPickup, options => options.Ignore())
-            .ForMember(model => model.CanDeliver, options => options.Ignore())
-            .ForMember(model => model.CustomOrderNumber, options => options.Ignore());
+        config.NewConfig<ShippingSettings, ShippingSettingsModel>()
+            .Ignore(d => d.AllowPickupInStore_OverrideForStore)
+            .Ignore(d => d.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore)
+            .Ignore(d => d.ConsiderAssociatedProductsDimensions_OverrideForStore)
+            .Ignore(d => d.SortShippingValues)
+            .Ignore(d => d.ShippingSorting_OverrideForStore)
+            .Ignore(d => d.DisplayPickupPointsOnMap_OverrideForStore)
+            .Ignore(d => d.IgnoreAdditionalShippingChargeForPickupInStore_OverrideForStore)
+            .Ignore(d => d.DisplayShipmentEventsToCustomers_OverrideForStore)
+            .Ignore(d => d.DisplayShipmentEventsToStoreOwner_OverrideForStore)
+            .Ignore(d => d.EstimateShippingCartPageEnabled_OverrideForStore)
+            .Ignore(d => d.EstimateShippingProductPageEnabled_OverrideForStore)
+            .Ignore(d => d.EstimateShippingCityNameEnabled_OverrideForStore)
+            .Ignore(d => d.FreeShippingOverXEnabled_OverrideForStore)
+            .Ignore(d => d.FreeShippingOverXIncludingTax_OverrideForStore)
+            .Ignore(d => d.FreeShippingOverXValue_OverrideForStore)
+            .Ignore(d => d.GoogleMapsApiKey_OverrideForStore)
+            .Ignore(d => d.HideShippingTotal_OverrideForStore)
+            .Ignore(d => d.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore)
+            .Ignore(d => d.PrimaryStoreCurrencyCode)
+            .Ignore(d => d.ShippingOriginAddress)
+            .Ignore(d => d.ShippingOriginAddress_OverrideForStore)
+            .Ignore(d => d.ShipToSameAddress_OverrideForStore)
+            .Ignore(d => d.UseWarehouseLocation_OverrideForStore);
 
-        CreateMap<ShippingSettings, ShippingSettingsModel>()
-            .ForMember(model => model.AllowPickupInStore_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ConsiderAssociatedProductsDimensions_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.SortShippingValues, options => options.Ignore())
-            .ForMember(model => model.ShippingSorting_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayPickupPointsOnMap_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.IgnoreAdditionalShippingChargeForPickupInStore_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayShipmentEventsToCustomers_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayShipmentEventsToStoreOwner_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.EstimateShippingCartPageEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.EstimateShippingProductPageEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.EstimateShippingCityNameEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.FreeShippingOverXEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.FreeShippingOverXIncludingTax_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.FreeShippingOverXValue_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.GoogleMapsApiKey_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.HideShippingTotal_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
-            .ForMember(model => model.ShippingOriginAddress, options => options.Ignore())
-            .ForMember(model => model.ShippingOriginAddress_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShipToSameAddress_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.UseWarehouseLocation_OverrideForStore, options => options.Ignore());
-        CreateMap<ShippingSettingsModel, ShippingSettings>()
-            .ForMember(settings => settings.ActivePickupPointProviderSystemNames, options => options.Ignore())
-            .ForMember(settings => settings.ActiveShippingRateComputationMethodSystemNames, options => options.Ignore())
-            .ForMember(settings => settings.ReturnValidOptionsIfThereAreAny, options => options.Ignore())
-            .ForMember(settings => settings.ShipSeparatelyOneItemEach, options => options.Ignore())
-            .ForMember(settings => settings.UseCubeRootMethod, options => options.Ignore())
-            .ForMember(settings => settings.RequestDelay, options => options.Ignore());
+        config.NewConfig<ShippingSettingsModel, ShippingSettings>()
+            .Ignore(d => d.ActivePickupPointProviderSystemNames)
+            .Ignore(d => d.ActiveShippingRateComputationMethodSystemNames)
+            .Ignore(d => d.ReturnValidOptionsIfThereAreAny)
+            .Ignore(d => d.ShipSeparatelyOneItemEach)
+            .Ignore(d => d.UseCubeRootMethod)
+            .Ignore(d => d.RequestDelay);
     }
 
     /// <summary>
     /// Create stores maps 
     /// </summary>
-    protected virtual void CreateStoresMaps()
+    protected virtual void CreateStoresMaps(TypeAdapterConfig config)
     {
-        CreateMap<Store, StoreModel>()
-            .ForMember(model => model.AvailableLanguages, options => options.Ignore());
-        CreateMap<StoreModel, Store>()
-            .ForMember(entity => entity.SslEnabled, options => options.Ignore())
-            .ForMember(entity => entity.Deleted, options => options.Ignore());
+        config.NewConfig<Store, StoreModel>()
+            .Ignore(d => d.AvailableLanguages);
+
+        config.NewConfig<StoreModel, Store>()
+            .Ignore(d => d.SslEnabled)
+            .Ignore(d => d.Deleted);
     }
 
     /// <summary>
     /// Create tasks maps 
     /// </summary>
-    protected virtual void CreateTasksMaps()
+    protected virtual void CreateTasksMaps(TypeAdapterConfig config)
     {
-        CreateMap<ScheduleTask, ScheduleTaskModel>();
-        CreateMap<ScheduleTaskModel, ScheduleTask>()
-            .ForMember(entity => entity.Type, options => options.Ignore())
-            .ForMember(entity => entity.LastStartUtc, options => options.Ignore())
-            .ForMember(entity => entity.LastEndUtc, options => options.Ignore())
-            .ForMember(entity => entity.LastSuccessUtc, options => options.Ignore())
-            .ForMember(entity => entity.LastEnabledUtc, options => options.Ignore());
+        config.NewConfig<ScheduleTask, ScheduleTaskModel>();
+        config.NewConfig<ScheduleTaskModel, ScheduleTask>()
+            .Ignore(d => d.Type)
+            .Ignore(d => d.LastStartUtc)
+            .Ignore(d => d.LastEndUtc)
+            .Ignore(d => d.LastSuccessUtc)
+            .Ignore(d => d.LastEnabledUtc);
     }
 
     /// <summary>
     /// Create tax maps 
     /// </summary>
-    protected virtual void CreateTaxMaps()
+    protected virtual void CreateTaxMaps(TypeAdapterConfig config)
     {
-        CreateMap<TaxCategory, TaxCategoryModel>();
-        CreateMap<TaxCategoryModel, TaxCategory>();
+        config.NewConfig<TaxCategory, TaxCategoryModel>();
+        config.NewConfig<TaxCategoryModel, TaxCategory>();
 
-        CreateMap<ITaxProvider, TaxProviderModel>()
-            .ForMember(model => model.IsPrimaryTaxProvider, options => options.Ignore());
+        config.NewConfig<ITaxProvider, TaxProviderModel>()
+            .Ignore(d => d.IsPrimaryTaxProvider);
 
-        CreateMap<TaxSettings, TaxSettingsModel>()
-            .ForMember(model => model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AutomaticallyDetectCountry_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DefaultTaxAddress, options => options.Ignore())
-            .ForMember(model => model.DefaultTaxAddress_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DefaultTaxCategoryId_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayTaxRates_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.DisplayTaxSuffix_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.EuVatAllowVatExemption_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.EuVatAssumeValid_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.EuVatEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.EuVatEnabledForGuests_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.EuVatRequired_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.EuVatShopCountries, options => options.Ignore())
-            .ForMember(model => model.EuVatShopCountryId_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.EuVatUseWebService_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ForceTaxExclusionFromOrderSubtotal_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.HideTaxInOrderSummary_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.HideZeroTax_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PaymentMethodAdditionalFeeIncludesTax_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PricesIncludeTax_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShippingIsTaxable_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShippingPriceIncludesTax_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShippingTaxClassId_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.TaxBasedOnPickupPointAddress_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.TaxBasedOnValues, options => options.Ignore())
-            .ForMember(model => model.TaxBasedOn_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.TaxCategories, options => options.Ignore())
-            .ForMember(model => model.TaxDisplayTypeValues, options => options.Ignore())
-            .ForMember(model => model.TaxDisplayType_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.HmrcApiUrl_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.HmrcClientId_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.HmrcClientSecret_OverrideForStore, options => options.Ignore());
-        CreateMap<TaxSettingsModel, TaxSettings>()
-            .ForMember(settings => settings.ActiveTaxProviderSystemName, options => options.Ignore())
-            .ForMember(settings => settings.LogErrors, options => options.Ignore());
+        config.NewConfig<TaxSettings, TaxSettingsModel>()
+            .Ignore(d => d.AllowCustomersToSelectTaxDisplayType_OverrideForStore)
+            .Ignore(d => d.AutomaticallyDetectCountry_OverrideForStore)
+            .Ignore(d => d.DefaultTaxAddress)
+            .Ignore(d => d.DefaultTaxAddress_OverrideForStore)
+            .Ignore(d => d.DefaultTaxCategoryId_OverrideForStore)
+            .Ignore(d => d.DisplayTaxRates_OverrideForStore)
+            .Ignore(d => d.DisplayTaxSuffix_OverrideForStore)
+            .Ignore(d => d.EuVatAllowVatExemption_OverrideForStore)
+            .Ignore(d => d.EuVatAssumeValid_OverrideForStore)
+            .Ignore(d => d.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore)
+            .Ignore(d => d.EuVatEnabled_OverrideForStore)
+            .Ignore(d => d.EuVatEnabledForGuests_OverrideForStore)
+            .Ignore(d => d.EuVatRequired_OverrideForStore)
+            .Ignore(d => d.EuVatShopCountries)
+            .Ignore(d => d.EuVatShopCountryId_OverrideForStore)
+            .Ignore(d => d.EuVatUseWebService_OverrideForStore)
+            .Ignore(d => d.ForceTaxExclusionFromOrderSubtotal_OverrideForStore)
+            .Ignore(d => d.HideTaxInOrderSummary_OverrideForStore)
+            .Ignore(d => d.HideZeroTax_OverrideForStore)
+            .Ignore(d => d.PaymentMethodAdditionalFeeIncludesTax_OverrideForStore)
+            .Ignore(d => d.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore)
+            .Ignore(d => d.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore)
+            .Ignore(d => d.PricesIncludeTax_OverrideForStore)
+            .Ignore(d => d.ShippingIsTaxable_OverrideForStore)
+            .Ignore(d => d.ShippingPriceIncludesTax_OverrideForStore)
+            .Ignore(d => d.ShippingTaxClassId_OverrideForStore)
+            .Ignore(d => d.TaxBasedOnPickupPointAddress_OverrideForStore)
+            .Ignore(d => d.TaxBasedOnValues)
+            .Ignore(d => d.TaxBasedOn_OverrideForStore)
+            .Ignore(d => d.TaxCategories)
+            .Ignore(d => d.TaxDisplayTypeValues)
+            .Ignore(d => d.TaxDisplayType_OverrideForStore)
+            .Ignore(d => d.HmrcApiUrl_OverrideForStore)
+            .Ignore(d => d.HmrcClientId_OverrideForStore)
+            .Ignore(d => d.HmrcClientSecret_OverrideForStore);
+
+        config.NewConfig<TaxSettingsModel, TaxSettings>()
+            .Ignore(d => d.ActiveTaxProviderSystemName)
+            .Ignore(d => d.LogErrors);
     }
 
     /// <summary>
     /// Create topics maps 
     /// </summary>
-    protected virtual void CreateTopicsMaps()
+    protected virtual void CreateTopicsMaps(TypeAdapterConfig config)
     {
-        CreateMap<Topic, TopicModel>()
-            .ForMember(model => model.AvailableTopicTemplates, options => options.Ignore())
-            .ForMember(model => model.SeName, options => options.Ignore())
-            .ForMember(model => model.TopicName, options => options.Ignore())
-            .ForMember(model => model.Url, options => options.Ignore());
-        CreateMap<TopicModel, Topic>();
+        config.NewConfig<Topic, TopicModel>()
+            .Ignore(d => d.AvailableTopicTemplates)
+            .Ignore(d => d.SeName)
+            .Ignore(d => d.TopicName)
+            .Ignore(d => d.Url);
 
-        CreateMap<TopicTemplate, TopicTemplateModel>();
-        CreateMap<TopicTemplateModel, TopicTemplate>();
+        config.NewConfig<TopicModel, Topic>();
+
+        config.NewConfig<TopicTemplate, TopicTemplateModel>();
+        config.NewConfig<TopicTemplateModel, TopicTemplate>();
     }
 
     /// <summary>
     /// Create vendors maps 
     /// </summary>
-    protected virtual void CreateVendorsMaps()
+    protected virtual void CreateVendorsMaps(TypeAdapterConfig config)
     {
-        CreateMap<Vendor, VendorModel>()
-            .ForMember(model => model.Address, options => options.Ignore())
-            .ForMember(model => model.AddVendorNoteMessage, options => options.Ignore())
-            .ForMember(model => model.AssociatedCustomers, options => options.Ignore())
-            .ForMember(model => model.SeName, options => options.Ignore())
-            .ForMember(model => model.VendorAttributes, options => options.Ignore())
-            .ForMember(model => model.VendorNoteSearchModel, options => options.Ignore())
-            .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore())
-            .ForMember(model => model.PmCustomerInfo, options => options.Ignore());
-        CreateMap<VendorModel, Vendor>()
-            .ForMember(entity => entity.Deleted, options => options.Ignore());
+        config.NewConfig<Vendor, VendorModel>()
+            .Ignore(d => d.Address)
+            .Ignore(d => d.AddVendorNoteMessage)
+            .Ignore(d => d.AssociatedCustomers)
+            .Ignore(d => d.SeName)
+            .Ignore(d => d.VendorAttributes)
+            .Ignore(d => d.VendorNoteSearchModel)
+            .Ignore(d => d.PrimaryStoreCurrencyCode)
+            .Ignore(d => d.PmCustomerInfo);
+        config.NewConfig<VendorModel, Vendor>()
+            .Ignore(d => d.Deleted);
 
-        CreateMap<VendorNote, VendorNoteModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.Note, options => options.Ignore());
+        config.NewConfig<VendorNote, VendorNoteModel>()
+            .Ignore(d => d.CreatedOn)
+            .Ignore(d => d.Note);
 
-        CreateMap<VendorAttribute, VendorAttributeModel>()
-            .ForMember(model => model.AttributeControlTypeName, options => options.Ignore())
-            .ForMember(model => model.VendorAttributeValueSearchModel, options => options.Ignore());
-        CreateMap<VendorAttributeModel, VendorAttribute>()
-            .ForMember(entity => entity.AttributeControlType, options => options.Ignore());
+        config.NewConfig<VendorAttribute, VendorAttributeModel>()
+            .Ignore(d => d.AttributeControlTypeName)
+            .Ignore(d => d.VendorAttributeValueSearchModel);
+        config.NewConfig<VendorAttributeModel, VendorAttribute>()
+            .Ignore(d => d.AttributeControlType);
 
-        CreateMap<VendorAttributeValue, VendorAttributeValueModel>();
-        CreateMap<VendorAttributeValueModel, VendorAttributeValue>();
+        config.NewConfig<VendorAttributeValue, VendorAttributeValueModel>();
+        config.NewConfig<VendorAttributeValueModel, VendorAttributeValue>();
 
-        CreateMap<VendorSettings, VendorSettingsModel>()
-            .ForMember(model => model.AllowCustomersToApplyForVendorAccount_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowCustomersToContactVendors_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowSearchByVendor_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowVendorsToEditInfo_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowVendorsToImportProducts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MaximumProductNumber_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowVendorOnOrderDetailsPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowVendorOnProductDetailsPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.TermsOfServiceEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.VendorAttributeSearchModel, options => options.Ignore())
-            .ForMember(model => model.VendorsBlockItemsToDisplay_OverrideForStore, options => options.Ignore());
-        CreateMap<VendorSettingsModel, VendorSettings>()
-            .ForMember(settings => settings.DefaultVendorPageSizeOptions, options => options.Ignore())
-            .ForMember(settings => settings.MaximumProductPicturesNumber, options => options.Ignore());
+        config.NewConfig<VendorSettings, VendorSettingsModel>()
+            .Ignore(d => d.AllowCustomersToApplyForVendorAccount_OverrideForStore)
+            .Ignore(d => d.AllowCustomersToContactVendors_OverrideForStore)
+            .Ignore(d => d.AllowSearchByVendor_OverrideForStore)
+            .Ignore(d => d.AllowVendorsToEditInfo_OverrideForStore)
+            .Ignore(d => d.AllowVendorsToImportProducts_OverrideForStore)
+            .Ignore(d => d.MaximumProductNumber_OverrideForStore)
+            .Ignore(d => d.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore)
+            .Ignore(d => d.ShowVendorOnOrderDetailsPage_OverrideForStore)
+            .Ignore(d => d.ShowVendorOnProductDetailsPage_OverrideForStore)
+            .Ignore(d => d.TermsOfServiceEnabled_OverrideForStore)
+            .Ignore(d => d.VendorAttributeSearchModel)
+            .Ignore(d => d.VendorsBlockItemsToDisplay_OverrideForStore);
+        config.NewConfig<VendorSettingsModel, VendorSettings>()
+            .Ignore(d => d.DefaultVendorPageSizeOptions)
+            .Ignore(d => d.MaximumProductPicturesNumber);
     }
 
     /// <summary>
     /// Create warehouse maps 
     /// </summary>
-    protected virtual void CreateWarehouseMaps()
+    protected virtual void CreateWarehouseMaps(TypeAdapterConfig config)
     {
-        CreateMap<Warehouse, WarehouseModel>()
-            .ForMember(entity => entity.Address, options => options.Ignore());
-        CreateMap<WarehouseModel, Warehouse>()
-            .ForMember(entity => entity.AddressId, options => options.Ignore());
+        config.NewConfig<Warehouse, WarehouseModel>()
+            .Ignore(d => d.Address);
+
+        config.NewConfig<WarehouseModel, Warehouse>()
+            .Ignore(d => d.AddressId);
     }
 
     #endregion
-
+    
     #region Properties
 
     /// <summary>
