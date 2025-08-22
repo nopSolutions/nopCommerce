@@ -1,5 +1,6 @@
 ﻿using System.util;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Menus;
 using Nop.Core.Http;
@@ -7,6 +8,7 @@ using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Menus;
+using Nop.Services.Messages;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -31,6 +33,7 @@ public partial class MenuModelFactory : IMenuModelFactory
     protected readonly ILocalizedModelFactory _localizedModelFactory;
     protected readonly IManufacturerService _manufacturerService;
     protected readonly IMenuService _menuService;
+    protected readonly INotificationService _notificationService;
     protected readonly IProductService _productService;
     protected readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
     protected readonly ITopicService _topicService;
@@ -49,6 +52,7 @@ public partial class MenuModelFactory : IMenuModelFactory
         ILocalizedModelFactory localizedModelFactory,
         IManufacturerService manufacturerService,
         IMenuService menuService,
+        INotificationService notificationService,
         IProductService productService,
         IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
         ITopicService topicService,
@@ -62,6 +66,7 @@ public partial class MenuModelFactory : IMenuModelFactory
         _localizedModelFactory = localizedModelFactory;
         _manufacturerService = manufacturerService;
         _menuService = menuService;
+        _notificationService = notificationService;
         _productService = productService;
         _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         _topicService = topicService;
@@ -120,7 +125,7 @@ public partial class MenuModelFactory : IMenuModelFactory
     /// </returns>
     protected virtual async Task PrepareModelAvailableParentMenuItemsAsync(MenuItemModel menuItemModel, int depth, IList<SelectListItem> menuItemsToAdd)
     {
-        var items = await _menuService.GetAllMenuItemsAsync(menuId: menuItemModel.MenuId, showHidden: true);
+        var items = await _menuService.GetAllMenuItemsAsync(menuId: menuItemModel.MenuId, treeSorting: true, showHidden: true);
         menuItemsToAdd.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.No"), Value = string.Empty });
 
         if (menuItemModel.Id > 0 && childrenLevels(items, menuItemModel.Id) >= _menuSettings.MaximumMainMenuLevels - 1)
@@ -305,7 +310,7 @@ public partial class MenuModelFactory : IMenuModelFactory
     /// </returns>
     public virtual async Task<MenuItemListModel> PrepareMenuItemListModelAsync(MenuItemSearchModel searchModel)
     {
-        var allItems = await _menuService.GetAllMenuItemsAsync(menuId: searchModel.MenuId, showHidden: true);
+        var allItems = await _menuService.GetAllMenuItemsAsync(menuId: searchModel.MenuId, treeSorting: true, showHidden: true);
 
         var itemsPaged = allItems.ToPagedList(searchModel);
 
@@ -352,27 +357,64 @@ public partial class MenuModelFactory : IMenuModelFactory
                 locale.Title = await _localizationService.GetLocalizedAsync(menuItem, entity => entity.Title, languageId, false, false);
             };
 
-            switch (menuItem.MenuItemType)
+            try
             {
-                case MenuItemType.Product:
-                    var product = await _productService.GetProductByIdAsync(menuItem.EntityId ?? 0);
-                    model.ProductName = product?.Name;
-                    model.ProductId = product?.Id;
-                    break;
-                case MenuItemType.TopicPage:
-                    model.TopicId = menuItem.EntityId ?? 0;
-                    break;
-                case MenuItemType.Category:
-                    model.CategoryId = menuItem.EntityId ?? 0;
-                    break;
-                case MenuItemType.Vendor:
-                    model.VendorId = menuItem.EntityId ?? 0;
-                    break;
-                case MenuItemType.Manufacturer:
-                    model.ManufacturerId = menuItem.EntityId ?? 0;
-                    break;
-                default:
-                    break;
+                switch (menuItem.MenuItemType)
+                {
+                    case MenuItemType.Product:
+                    {
+                        var product = await _productService.GetProductByIdAsync(menuItem.EntityId ?? 0);
+
+                        if (product is null || product.Deleted)
+                            throw new NopException("Product not found");
+
+                        model.ProductName = product.Name;
+                        model.ProductId = product.Id;
+                        break;
+                    }
+                    case MenuItemType.TopicPage:
+                    {
+                        var topic = await _topicService.GetTopicByIdAsync(menuItem.EntityId ?? 0) ?? throw new NopException("Topic not found");
+                        model.TopicId = topic.Id;
+                        break;
+                    }
+                    case MenuItemType.Category:
+                    {
+                        var category = await _categoryService.GetCategoryByIdAsync(menuItem.EntityId ?? 0);
+
+                        if (category is null || category.Deleted)
+                            throw new NopException("Category not found");
+
+                        model.CategoryId = category.Id;
+                        break;
+                    }
+                    case MenuItemType.Vendor:
+                    {
+                        var vendor = await _vendorService.GetVendorByIdAsync(menuItem.EntityId ?? 0);
+
+                        if (vendor is null || vendor.Deleted)
+                            throw new NopException("Manufacturer not found");
+
+                        model.VendorId = vendor.Id;
+                        break;
+                    }
+                    case MenuItemType.Manufacturer:
+                    {
+                        var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(menuItem.EntityId ?? 0);
+
+                        if (manufacturer is null || manufacturer.Deleted)
+                            throw new NopException("Manufacturer not found");
+
+                        model.ManufacturerId = manufacturer.Id;
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+            catch (NopException ex)
+            {
+                _notificationService.WarningNotification(ex.Message);
             }
         }
         else

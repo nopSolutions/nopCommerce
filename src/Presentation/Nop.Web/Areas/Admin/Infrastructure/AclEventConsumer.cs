@@ -171,7 +171,7 @@ public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopMode
             case MenuItemModel menuItemModel:
                 var menuItem = await _menuService.GetMenuItemByIdAsync(menuItemModel.Id);
                 await _aclService.SaveAclAsync(menuItem, menuItemModel.SelectedCustomerRoleIds);
-                key = menuItem == null ? menuItemModel.Title : string.Empty;
+                key = menuItem == null ? $"{menuItemModel.Title}:{menuItemModel.MenuId}:{menuItemModel.MenuItemTypeId}:{menuItemModel.TemplateId}" : string.Empty;
                 break;
 
             case ProductModel productModel:
@@ -260,7 +260,7 @@ public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopMode
     public virtual async Task HandleEventAsync(EntityInsertedEvent<MenuItem> eventMessage)
     {
         var entity = eventMessage.Entity;
-        await SaveStoredDataAsync(entity.Title, entity);
+        await SaveStoredDataAsync($"{entity.Title}:{entity.MenuId}:{entity.MenuItemTypeId}:{entity.TemplateId}", entity);
     }
 
     #endregion

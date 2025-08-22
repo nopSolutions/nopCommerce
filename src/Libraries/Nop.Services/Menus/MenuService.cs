@@ -196,12 +196,21 @@ public partial class MenuService : IMenuService
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task DeleteMenuItemAsync(MenuItem menuItem)
     {
+        if (menuItem is null)
+            return;
+
+        await deleteChildrenRecursive(menuItem.Id);
         await _menuItemRepository.DeleteAsync(menuItem);
 
-        foreach (var subitem in await GetAllMenuItemsAsync(parentMenuItemId: menuItem.Id, showHidden: true))
+        async Task deleteChildrenRecursive(int parentId)
         {
-            subitem.ParentId = 0;
-            await UpdateMenuItemAsync(subitem);
+            var children = await GetAllMenuItemsAsync(parentMenuItemId: parentId, showHidden: true);
+
+            foreach (var child in children)
+            {
+                await deleteChildrenRecursive(child.Id);
+                await _menuItemRepository.DeleteAsync(child);
+            }
         }
     }
 
@@ -303,7 +312,7 @@ public partial class MenuService : IMenuService
             return query
                 .OrderBy(i => i.DisplayOrder)
                 .ThenBy(i => i.Id);
-        });
+        }, includeDeleted: false);
 
         if (depth > 0)
             menuItems = FilterMenuItemsByDepth(menuItems, parentMenuItemId, depth).ToList();

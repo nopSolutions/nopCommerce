@@ -18634,64 +18634,64 @@
   <LocaleResource Name="Languages.Selector.Label">
     <Value>Languages selector</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.ApplyVendorAccount">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.ApplyVendorAccount">
     <Value>Apply for vendor account</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.CheckGiftCardBalance">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.CheckGiftCardBalance">
     <Value>Check gift card balance</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.Homepage">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Homepage">
     <Value>Homepage</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.CompareProducts">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.CompareProducts">
     <Value>Compare products list</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.CustomerAddresses">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.CustomerAddresses">
     <Value>Addresses</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.CustomerInfo">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.CustomerInfo">
     <Value>My account</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.CustomerOrders">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.CustomerOrders">
     <Value>Orders</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.ContactUs">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.ContactUs">
     <Value>Contact us</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.Search">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Search">
     <Value>Search</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.RecentlyViewedProducts">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.RecentlyViewedProducts">
     <Value>Recently viewed products</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.NewProducts">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.NewProducts">
     <Value>New products</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.Blog">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Blog">
     <Value>Blog</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.News">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.News">
     <Value>News archive</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.Boards">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Boards">
     <Value>Forums</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.ProductTags">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.ProductTags">
     <Value>Product tags</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.Manufacturers">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Manufacturers">
     <Value>Manufacturers</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.Vendors">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Vendors">
     <Value>Vendors</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.Sitemap">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Sitemap">
     <Value>Sitemap</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.Cart">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Cart">
     <Value>Shopping cart</Value>
   </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopStandardRouteNames.Wishlist">
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Wishlist">
     <Value>Wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Manufacturers">

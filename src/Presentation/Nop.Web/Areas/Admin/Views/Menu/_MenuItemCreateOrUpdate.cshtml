@@ -311,16 +311,16 @@
             if (!isTypeTemplated())
                 return;
 
-
             $('.row-@((int)MenuItemType.Text)').addClass('d-none');
-
-            if (categoryElement.val() == '0' || categoryElement.val() == null)
-                $('.row-@((int)MenuItemType.Text)').removeClass('d-none');
 
             if ($(this).val() == '@((int)MenuItemTemplate.Simple)')
                 return;
 
             if (menuItemTypeElement.val() == '@((int)MenuItemType.Category)') {
+
+                if (categoryElement.val() == '0' || categoryElement.val() == null)
+                    $('.row-@((int)MenuItemType.Text)').removeClass('d-none');
+
                 if ($(this).val() == '@((int)MenuItemTemplate.Grid)')
                     $('.row-template-subitems').removeClass('d-none');
             }

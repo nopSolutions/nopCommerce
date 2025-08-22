@@ -78,7 +78,7 @@ public partial class MenuController : BaseAdminController
             _ => null
         };
 
-        if ((menuItem.EntityId ?? 0) != 0 || menu.MenuType == MenuType.Footer)
+        if ((menuItem.MenuItemType != MenuItemType.Category && (menuItem.EntityId ?? 0) != 0) || menu.MenuType == MenuType.Footer)
             menuItem.Template = MenuItemTemplate.Simple;
 
         if (menuItem.MenuItemType != MenuItemType.StandardPage)
