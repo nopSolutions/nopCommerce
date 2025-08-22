@@ -1,6 +1,7 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Services.ArtificialIntelligence;
 
@@ -33,5 +34,15 @@ public partial interface IArtificialIntelligenceService
     /// A task that represents the asynchronous operation
     /// The task result contains the generated meta tags
     /// </returns>
-    Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<T>(T entity, int languageId) where T: BaseEntity, IMetaTagsSupported;
+    Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<T>(T entity, int languageId) where T: BaseEntity, IMetaTagsSupported, ILocalizedEntity;
+
+    /// <summary>
+    /// Create meta tags by artificial intelligence
+    /// </summary>
+    /// <param name="entity">The entity to which need to generate meta tags</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the generated meta tags
+    /// </returns>
+    Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<T>(T entity) where T : BaseEntity, IMetaTagsSupported;
 }

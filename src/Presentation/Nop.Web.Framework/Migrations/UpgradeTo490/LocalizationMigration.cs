@@ -387,6 +387,16 @@ public class LocalizationMigration : MigrationBase
             ["Admin.ArtificialIntelligence.CategoryDescriptionRequired"] = "Category description (on {0} language) is required for meta tags generation with artificial intelligence services.",
             ["Admin.ArtificialIntelligence.ProductNameRequired"] = "Product name (on {0} language) is required for meta tags generation with artificial intelligence services.",
             ["Admin.ArtificialIntelligence.CategoryNameRequired"] = "Category name (on {0} language) is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.BlogPostTitleRequired"] = "Blog post title (on {0} language) is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.BlogPostBodyRequired"] = "Blog post body (on {0} language) is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.ManufacturerDescriptionRequired"] = "Manufacturer description (on {0} language) is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.ManufacturerNameRequired"] = "Manufacturer name (on {0} language) is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.VendorDescriptionRequired"] = "Vendor description (on {0} language) is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.VendorNameRequired"] = "Vendor name (on {0} language) is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.NewsItemFullRequired"] = "News item full (on {0} language) is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.NewsItemTitleRequired"] = "News item title (on {0} language) is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.TopicTitleRequired"] = "Topic title (on {0} language) is required for meta tags generation with artificial intelligence services.",
+            ["Admin.ArtificialIntelligence.TopicBodyRequired"] = "Topic body (on {0} language) is required for meta tags generation with artificial intelligence services.",
             ["Admin.ArtificialIntelligence.GenerateMetaTags.SaveBeforeGenerate"] = "You need to save the entity before you can generate meta tags.",
         }, languageId);
 

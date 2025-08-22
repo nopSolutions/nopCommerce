@@ -13,7 +13,7 @@ public partial record MetaTagsGeneratorModel : BaseNopModel
 
     }
 
-    public MetaTagsGeneratorModel(IMetaTagsSupportedModel model, string entityTypeName, int languageId = 0)
+    public MetaTagsGeneratorModel(IMetaTagsSupportedModel model, string entityTypeName, int languagePosition = 0, int languageId = 0)
     {
         LanguageId = languageId;
         EntityType = entityTypeName;
@@ -21,7 +21,7 @@ public partial record MetaTagsGeneratorModel : BaseNopModel
         if (model is BaseNopEntityModel entityModel)
             EntityId = entityModel.Id;
         
-        var prefix = languageId > 0 ? $"Locales_{languageId}__" : string.Empty;
+        var prefix = languageId > 0 ? $"Locales_{languagePosition}__" : string.Empty;
 
         MetaTitleElementId = $"{prefix}{nameof(model.MetaTitle)}";
         MetaKeywordsElementId = $"{prefix}{nameof(model.MetaKeywords)}";

@@ -41,7 +41,7 @@
                             <span asp-validation-for="@Model.Locales[item].MetaDescription"></span>
                         </div>
                     </div>
-                    @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel(Model, nameof(Product), Model.Locales[item].LanguageId)
+                    @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel(Model, nameof(Product), item, Model.Locales[item].LanguageId)
                     {
                         TitleFieldId = Html.IdFor(model => model.Locales[item].Name),
                         TextFieldId = Html.IdFor(model => model.Locales[item].FullDescription)
