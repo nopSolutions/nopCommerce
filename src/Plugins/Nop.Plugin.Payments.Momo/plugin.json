@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Payment methods",
+  "FriendlyName": "Momo Payment",
+  "SystemName": "Payments.Momo",
+  "Version": "4.90.1",
+  "SupportedVersions": [ "4.90" ],
+  "Author": "gentle kiwi",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.Momo.dll",
+  "Description": "This plugin enables momo payment (stored into database)"
+}
