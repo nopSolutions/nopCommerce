@@ -10,7 +10,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
-using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 
@@ -28,7 +27,7 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILogger _logger;
-    protected readonly IProductService _productService;
+    protected readonly IWorkContext _workContext;
     protected readonly LocalizationSettings _localizationSettings;
 
     #endregion
@@ -40,7 +39,7 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
         ILanguageService languageService,
         ILocalizationService localizationService,
         ILogger logger,
-        IProductService productService,
+        IWorkContext workContext,
         LocalizationSettings localizationSettings)
     {
         _httpClient = httpClient;
@@ -48,7 +47,7 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
         _languageService = languageService;
         _localizationService = localizationService;
         _logger = logger;
-        _productService = productService;
+        _workContext = workContext;
         _localizationSettings = localizationSettings;
     }
 
@@ -94,7 +93,10 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     /// A task that represents the asynchronous operation
     /// The task result contains the title and text for AI request
     /// </returns>
-    protected async Task<(string title, string text)> GetTitleAndTextAsync<TEntity>(TEntity entity, int languageId, string languageName, Expression<Func<TEntity, string>> titleSelector, Expression<Func<TEntity, string>> textSelector, string textRequiredLocale, string titleRequiredLocale) where TEntity : BaseEntity, ILocalizedEntity, IMetaTagsSupported
+    protected virtual async Task<(string title, string text)> GetTitleAndTextAsync<TEntity>(TEntity entity, int languageId, string languageName,
+        Expression<Func<TEntity, string>> titleSelector, Expression<Func<TEntity, string>> textSelector,
+        string textRequiredLocale, string titleRequiredLocale)
+        where TEntity : BaseEntity, ILocalizedEntity, IMetaTagsSupported
     {
         var getTitle = titleSelector.Compile();
         var getText = textSelector.Compile();
@@ -103,8 +105,8 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
             return await GetTitleAndTextAsync(entity, languageName, getTitle, getText, textRequiredLocale, titleRequiredLocale);
 
         var title = await _localizationService.GetLocalizedAsync(entity, titleSelector, languageId, false);
-        var text =  await _localizationService.GetLocalizedAsync(entity, textSelector, languageId, false);
-        
+        var text = await _localizationService.GetLocalizedAsync(entity, textSelector, languageId, false);
+
         return await ValidateTitleAndTextAsync(languageName, textRequiredLocale, titleRequiredLocale, title, text);
     }
 
@@ -122,7 +124,10 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     /// A task that represents the asynchronous operation
     /// The task result contains the title and text for AI request
     /// </returns>
-    protected async Task<(string title, string text)> GetTitleAndTextAsync<TEntity>(TEntity entity, string languageName, Func<TEntity, string> titleSelector, Func<TEntity, string> textSelector, string textRequiredLocale, string titleRequiredLocale) where TEntity : BaseEntity, IMetaTagsSupported
+    protected virtual async Task<(string title, string text)> GetTitleAndTextAsync<TEntity>(TEntity entity, string languageName,
+        Func<TEntity, string> titleSelector, Func<TEntity, string> textSelector,
+        string textRequiredLocale, string titleRequiredLocale)
+        where TEntity : BaseEntity, IMetaTagsSupported
     {
         var title = titleSelector(entity);
         var text = textSelector(entity);
@@ -142,7 +147,8 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     /// A task that represents the asynchronous operation
     /// The task result contains the validated title and text
     /// </returns>
-    private async Task<(string title, string text)> ValidateTitleAndTextAsync(string languageName, string textRequiredLocale, string titleRequiredLocale, string title, string text)
+    protected virtual async Task<(string title, string text)> ValidateTitleAndTextAsync(string languageName,
+        string textRequiredLocale, string titleRequiredLocale, string title, string text)
     {
         if (string.IsNullOrEmpty(title))
             throw new NopException(string.Format(await _localizationService.GetResourceAsync(titleRequiredLocale), languageName));
@@ -168,14 +174,16 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     /// A task that represents the asynchronous operation
     /// The task result contains the generated meta tags
     /// </returns>
-    public virtual async Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<T>(T entity, string currentMetaTitle, string currentMetaKeywords, string currentMetaDescription, int languageId) where T : BaseEntity, IMetaTagsSupported
+    protected virtual async Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<TEntity>(TEntity entity,
+        string currentMetaTitle, string currentMetaKeywords, string currentMetaDescription, int languageId)
+        where TEntity : BaseEntity, IMetaTagsSupported
     {
         var title = string.Empty;
         var text = string.Empty;
         var metaTitle = string.Empty;
         var metaKeywords = string.Empty;
         var metaDescription = string.Empty;
-        
+
         var currentLanguage = await _languageService.GetLanguageByIdAsync(languageId);
 
         (title, text) = entity switch
@@ -190,7 +198,7 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
                 "Admin.ArtificialIntelligence.ManufacturerDescriptionRequired", "Admin.ArtificialIntelligence.ManufacturerNameRequired"),
             NewsItem newsItem => await GetTitleAndTextAsync(newsItem, currentLanguage.Name, n => n.Title, n => n.Full,
                 "Admin.ArtificialIntelligence.NewsItemFullRequired", "Admin.ArtificialIntelligence.NewsItemTitleRequired"),
-            Topic topic => await GetTitleAndTextAsync(topic, currentLanguage.Name, t => t.Title, t => t.Body,
+            Topic topic => await GetTitleAndTextAsync(topic, languageId, currentLanguage.Name, t => t.Title, t => t.Body,
                 "Admin.ArtificialIntelligence.TopicBodyRequired", "Admin.ArtificialIntelligence.TopicTitleRequired"),
             Vendor vendor => await GetTitleAndTextAsync(vendor, languageId, currentLanguage.Name, v => v.Name, v => v.Description,
                 "Admin.ArtificialIntelligence.VendorDescriptionRequired", "Admin.ArtificialIntelligence.VendorNameRequired"),
@@ -231,7 +239,8 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
         }
         catch (Exception e)
         {
-            await _logger.ErrorAsync(e.Message, e);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            await _logger.ErrorAsync(e.Message, e, customer);
 
             throw new NopException(e.Message);
         }
@@ -274,7 +283,8 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
         }
         catch (Exception e)
         {
-            await _logger.ErrorAsync(e.Message, e);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            await _logger.ErrorAsync(e.Message, e, customer);
 
             throw new NopException(string.Format(await _localizationService.GetResourceAsync("ArtificialIntelligence.CreateProductFailed"), e.Message));
         }
@@ -289,13 +299,22 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     /// A task that represents the asynchronous operation
     /// The task result contains the generated meta tags
     /// </returns>
-    public virtual async Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<T>(T entity, int languageId) where T: BaseEntity, IMetaTagsSupported, ILocalizedEntity
+    public virtual async Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<TEntity>(TEntity entity, int languageId)
+        where TEntity : BaseEntity, IMetaTagsSupported, ILocalizedEntity
     {
-        var currentMetaTitle = languageId == 0 ? entity.MetaTitle : await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaTitle, languageId, false);
-        var currentMetaKeywords = languageId == 0 ? entity.MetaKeywords : await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaKeywords, languageId, false);
-        var currentMetaDescription = languageId == 0 ? entity.MetaDescription : await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaDescription, languageId, false);
-        
-        var currentLanguageId = languageId == 0 ? _localizationSettings.DefaultAdminLanguageId : languageId;
+        var currentMetaTitle = languageId == 0
+            ? entity.MetaTitle
+            : await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaTitle, languageId, false);
+        var currentMetaKeywords = languageId == 0
+            ? entity.MetaKeywords
+            : await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaKeywords, languageId, false);
+        var currentMetaDescription = languageId == 0
+            ? entity.MetaDescription
+            : await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaDescription, languageId, false);
+
+        var currentLanguageId = languageId == 0
+            ? _localizationSettings.DefaultAdminLanguageId
+            : languageId;
 
         return await CreateMetaTagsAsync(entity, currentMetaTitle, currentMetaKeywords, currentMetaDescription, currentLanguageId);
     }
@@ -308,7 +327,8 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     /// A task that represents the asynchronous operation
     /// The task result contains the generated meta tags
     /// </returns>
-    public virtual async Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<T>(T entity) where T : BaseEntity, IMetaTagsSupported
+    public virtual async Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<TEntity>(TEntity entity)
+        where TEntity : BaseEntity, IMetaTagsSupported
     {
         var metaTitle = entity.MetaTitle;
         var metaKeywords = entity.MetaKeywords;

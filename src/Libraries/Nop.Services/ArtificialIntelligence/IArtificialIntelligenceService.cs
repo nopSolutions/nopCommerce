@@ -34,7 +34,8 @@ public partial interface IArtificialIntelligenceService
     /// A task that represents the asynchronous operation
     /// The task result contains the generated meta tags
     /// </returns>
-    Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<T>(T entity, int languageId) where T: BaseEntity, IMetaTagsSupported, ILocalizedEntity;
+    Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<TEntity>(TEntity entity, int languageId)
+        where TEntity : BaseEntity, IMetaTagsSupported, ILocalizedEntity;
 
     /// <summary>
     /// Create meta tags by artificial intelligence
@@ -44,5 +45,6 @@ public partial interface IArtificialIntelligenceService
     /// A task that represents the asynchronous operation
     /// The task result contains the generated meta tags
     /// </returns>
-    Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<T>(T entity) where T : BaseEntity, IMetaTagsSupported;
+    Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<TEntity>(TEntity entity)
+        where TEntity : BaseEntity, IMetaTagsSupported;
 }

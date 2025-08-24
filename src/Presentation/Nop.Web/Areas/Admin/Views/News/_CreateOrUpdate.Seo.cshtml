@@ -41,7 +41,8 @@
     @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel(Model, nameof(NewsItem))
     {
         TitleFieldId = Html.IdFor(model => model.Title),
-        TextFieldId = Html.IdFor(model => model.Full)
+        TextFieldId = Html.IdFor(model => model.Full),
+        LanguageId = Model.LanguageId
     })
     <script>
         $(function() {

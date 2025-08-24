@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
-using Nop.Web.Framework.Models.Translation;
 using Nop.Web.Framework.Models.ArtificialIntelligence;
+using Nop.Web.Framework.Models.Translation;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog;
@@ -141,7 +141,7 @@ public partial record CategoryModel : BaseNopEntityModel, IAclSupportedModel, ID
     #endregion
 }
 
-public partial record CategoryLocalizedModel : ILocalizedLocaleModel
+public partial record CategoryLocalizedModel : ILocalizedLocaleModel, IMetaTagsSupportedModel
 {
     public int LanguageId { get; set; }
 

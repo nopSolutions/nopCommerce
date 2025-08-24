@@ -114,7 +114,7 @@ public partial record TopicModel : BaseNopEntityModel, IAclSupportedModel, ILoca
     #endregion
 }
 
-public partial record TopicLocalizedModel : ILocalizedLocaleModel
+public partial record TopicLocalizedModel : ILocalizedLocaleModel, IMetaTagsSupportedModel
 {
     public int LanguageId { get; set; }
 

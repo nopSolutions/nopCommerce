@@ -142,7 +142,7 @@ public partial record VendorModel : BaseNopEntityModel, ILocalizedModel<VendorLo
     #endregion
 }
 
-public partial record VendorLocalizedModel : ILocalizedLocaleModel
+public partial record VendorLocalizedModel : ILocalizedLocaleModel, IMetaTagsSupportedModel
 {
     public int LanguageId { get; set; }
 

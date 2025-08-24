@@ -2037,7 +2037,7 @@ public partial class InstallationService
                 "/files/exportimport/",
                 "/install",
                 "/*?*returnUrl=",
-                "/*?*returnurl=", 
+                "/*?*returnurl=",
                 "/*?*ReturnUrl=",
                 //AJAX urls
                 "/cart/estimateshipping",

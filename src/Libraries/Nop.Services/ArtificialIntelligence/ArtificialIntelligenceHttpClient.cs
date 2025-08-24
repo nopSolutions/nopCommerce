@@ -60,7 +60,7 @@ public partial class ArtificialIntelligenceHttpClient
 
         if (!httpResponse.IsSuccessStatusCode)
             throw new NopException(httpResponse.ReasonPhrase, innerException: new Exception(response));
-        
+
         var result = _artificialIntelligenceHttpClientHelper.ParseResponse(response);
 
         return result;

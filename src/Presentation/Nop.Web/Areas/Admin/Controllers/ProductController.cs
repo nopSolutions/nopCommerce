@@ -3164,7 +3164,7 @@ public partial class ProductController : BaseAdminController
             return Json(translationModel);
 
         var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId);
-        
+
         if (product == null)
             return Json(translationModel);
 

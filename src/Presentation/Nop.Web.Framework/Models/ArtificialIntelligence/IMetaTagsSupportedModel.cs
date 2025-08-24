@@ -6,11 +6,11 @@
 public partial interface IMetaTagsSupportedModel
 {
     #region Properties
-    
+
     public string MetaKeywords { get; set; }
-    
+
     public string MetaDescription { get; set; }
-    
+
     public string MetaTitle { get; set; }
 
     #endregion

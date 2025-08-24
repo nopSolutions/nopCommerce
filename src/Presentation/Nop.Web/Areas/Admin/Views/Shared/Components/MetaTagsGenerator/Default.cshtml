@@ -2,7 +2,6 @@
 
 @using Nop.Services.Messages
 
-
 <div class="form-group row">
     <div class="col-md-3">
     </div>
@@ -23,14 +22,14 @@
 
         document.addEventListener('readystatechange', function () {
             if (document.readyState === 'complete' && (origTitle === undefined || origText == undefined)) {
-                origTitle = $("#@Model.TitleFieldId").val();
-                origText = $("#@Model.TextFieldId").val();
+                origTitle = $('#@Model.TitleFieldId').val();
+                origText = $('#@Model.TextFieldId').val();
             }
         });
 
         $('#generate-button-@Model.LanguageId').click(function () {
 
-            if(@Model.EntityId == 0 || origTitle != $("#@Model.TitleFieldId").val() || origText != $("#@Model.TextFieldId").val())
+            if(@Model.EntityId == 0 || origTitle != $('#@Model.TitleFieldId').val() || origText != $('#@Model.TextFieldId').val())
             {
                 alert('@T("Admin.ArtificialIntelligence.GenerateMetaTags.SaveBeforeGenerate")');
                 return;

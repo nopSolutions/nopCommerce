@@ -35,7 +35,9 @@ public partial class MetaTagsGeneratorViewComponent : NopViewComponent
         if (!_artificialIntelligenceSettings.AllowMetaTitleGeneration &&
             !_artificialIntelligenceSettings.AllowMetaKeywordsGeneration &&
             !_artificialIntelligenceSettings.AllowMetaDescriptionGeneration)
+        {
             return Content(string.Empty);
+        }
 
         return View(model);
     }

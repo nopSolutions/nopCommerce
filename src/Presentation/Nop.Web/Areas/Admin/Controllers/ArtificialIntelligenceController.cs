@@ -55,7 +55,7 @@ public partial class ArtificialIntelligenceController : BaseAdminController
 
     #region Methods
 
-    public async Task<IActionResult> GenerateMetaTags(MetaTagsGeneratorModel metaTagsGeneratorModel)
+    public virtual async Task<IActionResult> GenerateMetaTags(MetaTagsGeneratorModel metaTagsGeneratorModel)
     {
         var metaTitle = string.Empty;
         var metaKeywords = string.Empty;
