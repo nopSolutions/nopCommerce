@@ -1,0 +1,36 @@
+﻿@model MenuModel
+
+@using Nop.Core.Domain.Menus;
+
+<script src="~/js/public.menu.js" asp-location="Footer"></script>
+<script asp-location="Footer">
+    mainMenu.init('.menu-container .menu__toggle, .menu-container .menu__item-toggle', 'menu-dropdown--active');
+</script>
+
+
+<div class="menu-container menu-dropdown">
+    <div id="menu-@Model.Id" class="menu__toggle" role="button">@Model.Name</div>
+    <nav class="menu @Model.CssClass" aria-labelledby="menu-@Model.Id">
+        @foreach (var menuItem in Model.Items)
+        {
+            @if (menuItem.ChildrenItems.Any())
+            {
+                @switch (menuItem.Template)
+                {
+                    case MenuItemTemplate.Grid:
+                        @await Html.PartialAsync("_MenuItem.Grid.cshtml", menuItem)
+                        break;
+                    default:
+                        @await Html.PartialAsync("_MenuItem.List.cshtml", menuItem)
+                        break;
+                }
+            }
+            else
+            {
+                <div class="menu__item">
+                    @await Html.PartialAsync("_MenuItem.cshtml", menuItem)
+                </div>
+            }
+        }
+    </nav>
+</div>

@@ -1346,6 +1346,18 @@ input[type=file].form-control {
   content: attr(data-postfix);
 }
 
+.form-group .choose-entity-container {
+  display: flex;
+  gap: 3px;
+}
+
+.form-group .choose-entity-container .entity-info {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  padding: 5px;
+}
+
 /* PRODUCT EDIT/CREATE */
 .form-group + .nav-tabs-localized-fields {
   margin-top: 15px;

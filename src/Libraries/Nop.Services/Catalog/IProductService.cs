@@ -73,7 +73,7 @@ public partial interface IProductService
     Task<IPagedList<Product>> GetProductsMarkedAsNewAsync(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
 
     /// <summary>
-    /// Gets product
+    /// Gets a product
     /// </summary>
     /// <param name="productId">Product identifier</param>
     /// <returns>

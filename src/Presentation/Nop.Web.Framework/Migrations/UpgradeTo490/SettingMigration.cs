@@ -2,10 +2,13 @@
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
@@ -17,7 +20,6 @@ using Nop.Data.Migrations;
 using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
-using Nop.Core.Domain.Forums;
 using Nop.Services.Media;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo490;
@@ -314,6 +316,45 @@ public class SettingMigration : MigrationBase
             mediaSettings.PicturePath = NopMediaDefaults.DefaultImagesPath;
             settingService.SaveSetting(mediaSettings, settings => settings.PicturePath);
         }
+
+        //#7390
+        var menuSettings = settingService.LoadSetting<MenuSettings>();
+        if (!settingService.SettingExists(menuSettings, settings => settings.MaximumNumberEntities))
+        {
+            menuSettings.MaximumNumberEntities = 8;
+            settingService.SaveSetting(menuSettings, settings => settings.MaximumNumberEntities);
+        }
+
+        if (!settingService.SettingExists(menuSettings, settings => settings.NumberOfItemsPerGridRow))
+        {
+            menuSettings.NumberOfItemsPerGridRow = 4;
+            settingService.SaveSetting(menuSettings, settings => settings.NumberOfItemsPerGridRow);
+        }
+
+        if (!settingService.SettingExists(menuSettings, settings => settings.NumberOfSubItemsPerGridElement))
+        {
+            menuSettings.NumberOfSubItemsPerGridElement = 3;
+            settingService.SaveSetting(menuSettings, settings => settings.NumberOfSubItemsPerGridElement);
+        }
+
+        if (!settingService.SettingExists(menuSettings, settings => settings.MaximumMainMenuLevels))
+        {
+            menuSettings.MaximumMainMenuLevels = 2;
+            settingService.SaveSetting(menuSettings, settings => settings.MaximumMainMenuLevels);
+        }
+
+        if (!settingService.SettingExists(menuSettings, settings => settings.GridThumbPictureSize))
+        {
+            menuSettings.GridThumbPictureSize = 340;
+            settingService.SaveSetting(menuSettings, settings => settings.GridThumbPictureSize);
+        }
+
+        var settingRepository = EngineContext.Current.Resolve<IRepository<Setting>>();
+        settingRepository.Delete(setting => setting.Name.StartsWith("displaydefaultmenuitemsettings"));
+
+        var useajaxloadmenu = settingService.GetSetting("catalogsettings.useajaxloadmenu");
+        if (useajaxloadmenu is not null)
+            settingService.DeleteSetting(useajaxloadmenu);
     }
 
     public override void Down()

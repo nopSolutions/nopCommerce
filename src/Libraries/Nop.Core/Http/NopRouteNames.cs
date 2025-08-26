@@ -754,16 +754,6 @@ public static partial class NopRouteNames
         public const string TOPIC_AUTHENTICATE = "TopicAuthenticate";
 
         /// <summary>
-        /// Gets the catalog root route name
-        /// </summary>
-        public const string GET_CATALOG_ROOT = "GetCatalogRoot";
-
-        /// <summary>
-        /// Gets the catalog sub-categories route name
-        /// </summary>
-        public const string GET_CATALOG_SUB_CATEGORIES = "GetCatalogSubCategories";
-
-        /// <summary>
         /// Gets the category products route name
         /// </summary>
         public const string GET_CATEGORY_PRODUCTS = "GetCategoryProducts";
