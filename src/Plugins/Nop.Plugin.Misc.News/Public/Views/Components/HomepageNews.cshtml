@@ -1,0 +1,34 @@
+﻿@model HomepageNewsItemsModel
+
+@if (Model.NewsItems.Count > 0)
+{
+    <link href="~/Plugins/Misc.News/Content/styles.css" rel="stylesheet">
+    <section class="news-list-homepage">
+        <h2 class="title">
+            @T("Plugins.Misc.News.Title")
+        </h2>
+        <div class="news-items">
+            @foreach (var item in Model.NewsItems)
+            {
+                <article class="news-item">
+                    <header class="news-head">
+                        <a class="news-title" href="@(Url.RouteUrl(NewsDefaults.Routes.Public.NewsItemRouteName, new { SeName = item.SeName }))">
+                            <h3>@item.Title</h3>
+                        </a>
+                        <time datetime="@item.CreatedOn.ToString("yyyy-MM-dd")" class="news-date">-@item.CreatedOn.ToString("D")</time>
+                    </header>
+                    <section class="news-body">
+                        @Html.Raw(item.Short)
+                    </section>
+                    <footer class="buttons">
+                        <a href="@(Url.RouteUrl(NewsDefaults.Routes.Public.NewsItemRouteName, new { SeName = item.SeName }))" class="read-more">@T("Plugins.Misc.News.MoreInfo")</a>
+                    </footer>
+                </article>
+            }
+        </div>
+        <div class="view-all">
+            <a href="@Url.RouteUrl(NewsDefaults.Routes.Public.NewsArchive)">@T("Plugins.Misc.News.ViewAll")</a>
+        </div>
+    </section>
+
+}

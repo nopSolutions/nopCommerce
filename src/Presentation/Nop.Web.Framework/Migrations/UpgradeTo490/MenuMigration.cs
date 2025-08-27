@@ -7,7 +7,6 @@ using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Menus;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
@@ -170,18 +169,6 @@ public class MenuMigration : Migration
 
         if (displayproductsearchfooteritem is not null)
             _settingService.DeleteSetting(displayproductsearchfooteritem);
-
-        _menuItemRepository.Insert(new M.MenuItem
-        {
-            MenuId = footerCustomerService.Id,
-            MenuItemType = MenuItemType.StandardPage,
-            RouteName = NopRouteNames.General.NEWS,
-            Title = "News",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaynewsfooteritem", out var displaynewsfooteritem) && _settingService.LoadSetting<NewsSettings>().Enabled
-        });
-
-        if (displaynewsfooteritem is not null)
-            _settingService.DeleteSetting(displaynewsfooteritem);
 
         _menuItemRepository.Insert(new M.MenuItem
         {

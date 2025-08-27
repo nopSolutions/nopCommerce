@@ -3,7 +3,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
@@ -136,14 +135,6 @@ public partial interface IMessageTokenProvider
     /// <param name="blogComment">Blog post comment</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task AddBlogCommentTokensAsync(IList<Token> tokens, BlogComment blogComment);
-
-    /// <summary>
-    /// Add news comment tokens
-    /// </summary>
-    /// <param name="tokens">List of already added tokens</param>
-    /// <param name="newsComment">News comment</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task AddNewsCommentTokensAsync(IList<Token> tokens, NewsComment newsComment);
 
     /// <summary>
     /// Add product tokens

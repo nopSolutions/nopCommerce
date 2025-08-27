@@ -14,7 +14,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -35,7 +34,6 @@ using Nop.Services.Helpers;
 using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
@@ -71,7 +69,6 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILogger _logger;
-    protected readonly INewsService _newsService;
     protected readonly IOrderService _orderService;
     protected readonly IPaymentPluginManager _paymentPluginManager;
     protected readonly IPaymentService _paymentService;
@@ -115,7 +112,6 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         ILanguageService languageService,
         ILocalizationService localizationService,
         ILogger logger,
-        INewsService newsService,
         IOrderService orderService,
         IPaymentPluginManager paymentPluginManager,
         IPaymentService paymentService,
@@ -153,7 +149,6 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         _languageService = languageService;
         _localizationService = localizationService;
         _logger = logger;
-        _newsService = newsService;
         _orderService = orderService;
         _paymentPluginManager = paymentPluginManager;
         _paymentService = paymentService;
@@ -463,15 +458,6 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                     new[]
                     {
                         "%BlogComment.BlogPostTitle%"
-                    }
-                },
-
-                //news comment tokens
-                {
-                    TokenGroupNames.NewsCommentTokens,
-                    new[]
-                    {
-                        "%NewsComment.NewsTitle%"
                     }
                 },
 
@@ -1396,22 +1382,6 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     }
 
     /// <summary>
-    /// Add news comment tokens
-    /// </summary>
-    /// <param name="tokens">List of already added tokens</param>
-    /// <param name="newsComment">News comment</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task AddNewsCommentTokensAsync(IList<Token> tokens, NewsComment newsComment)
-    {
-        var newsItem = await _newsService.GetNewsByIdAsync(newsComment.NewsItemId);
-
-        tokens.Add(new Token("NewsComment.NewsTitle", newsItem.Title));
-
-        //event notification
-        await _eventPublisher.EntityTokensAddedAsync(newsComment, tokens);
-    }
-
-    /// <summary>
     /// Add product tokens
     /// </summary>
     /// <param name="tokens">List of already added tokens</param>
@@ -1690,7 +1660,6 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             MessageTemplateSystemNames.QUANTITY_BELOW_ATTRIBUTE_COMBINATION_VENDOR_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens, TokenGroupNames.AttributeCombinationTokens],
             MessageTemplateSystemNames.NEW_VAT_SUBMITTED_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VatValidation],
             MessageTemplateSystemNames.BLOG_COMMENT_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.BlogCommentTokens, TokenGroupNames.CustomerTokens],
-            MessageTemplateSystemNames.NEWS_COMMENT_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.NewsCommentTokens, TokenGroupNames.CustomerTokens],
             MessageTemplateSystemNames.BACK_IN_STOCK_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductBackInStockTokens],
             MessageTemplateSystemNames.CONTACT_US_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactUs],
             MessageTemplateSystemNames.CONTACT_VENDOR_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactVendor],

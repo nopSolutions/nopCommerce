@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
@@ -156,8 +155,6 @@ public partial class NopUrlHelper : INopUrlHelper
                 => RouteUrl(NopRoutingDefaults.RouteName.Generic.Manufacturer, values, protocol, host, fragment),
             var entityType when entityType == typeof(Vendor)
                 => RouteUrl(NopRoutingDefaults.RouteName.Generic.Vendor, values, protocol, host, fragment),
-            var entityType when entityType == typeof(NewsItem)
-                => RouteUrl(NopRoutingDefaults.RouteName.Generic.NewsItem, values, protocol, host, fragment),
             var entityType when entityType == typeof(BlogPost)
                 => RouteUrl(NopRoutingDefaults.RouteName.Generic.BlogPost, values, protocol, host, fragment),
             var entityType when entityType == typeof(Topic)

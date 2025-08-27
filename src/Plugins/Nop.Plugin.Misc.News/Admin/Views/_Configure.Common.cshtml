@@ -1,0 +1,96 @@
+@model ConfigurationModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="Enabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Enabled" />
+            <span asp-validation-for="Enabled"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowNewsOnMainPage_OverrideForStore" asp-input="ShowNewsOnMainPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowNewsOnMainPage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowNewsOnMainPage" />
+            <span asp-validation-for="ShowNewsOnMainPage"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="MainPageNewsCount_OverrideForStore" asp-input="MainPageNewsCount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="MainPageNewsCount" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MainPageNewsCount" />
+            <span asp-validation-for="MainPageNewsCount"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NewsArchivePageSize_OverrideForStore" asp-input="NewsArchivePageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NewsArchivePageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NewsArchivePageSize" />
+            <span asp-validation-for="NewsArchivePageSize"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowHeaderRssUrl_OverrideForStore" asp-input="ShowHeaderRssUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowHeaderRssUrl" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowHeaderRssUrl" />
+            <span asp-validation-for="ShowHeaderRssUrl"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="SitemapIncludeNews_OverrideForStore" asp-input="SitemapIncludeNews" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="SitemapIncludeNews" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SitemapIncludeNews" />
+            <span asp-validation-for="SitemapIncludeNews"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="SitemapXmlIncludeNews_OverrideForStore" asp-input="SitemapXmlIncludeNews" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="SitemapXmlIncludeNews" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SitemapXmlIncludeNews" />
+            <span asp-validation-for="SitemapXmlIncludeNews"></span>
+        </div>
+    </div>
+
+    @*<div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DisplayNewsFooterItem_OverrideForStore" asp-input="DisplayNewsFooterItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DisplayNewsFooterItem" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayNewsFooterItem" />
+            <span asp-validation-for="DisplayNewsFooterItem"></span>
+        </div>
+    </div>*@
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowCaptchaOnNewsCommentPage_OverrideForStore" asp-input="ShowCaptchaOnNewsCommentPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowCaptchaOnNewsCommentPage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowCaptchaOnNewsCommentPage" />
+            <span asp-validation-for="ShowCaptchaOnNewsCommentPage"></span>
+        </div>
+    </div>
+</div>

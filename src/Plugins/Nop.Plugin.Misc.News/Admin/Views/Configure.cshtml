@@ -1,0 +1,56 @@
+@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+    NopHtml.SetActiveMenuItemSystemName("Local plugins");
+}
+
+<form asp-controller="NewsAdmin" asp-action="Configure" method="post">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
+                <div asp-validation-summary="All"></div>
+
+                <nop-cards id="newsettings-cards">
+                    <div class="card card-default">
+                        <div class="card-header">
+                            <i class="fas fa-info"></i>@T("Plugins.Misc.News.Configuration.BlockTitle.Common")
+                        </div>
+                        @await Html.PartialAsync("~/Plugins/Misc.News/Admin/Views/_Configure.Common.cshtml", Model)
+                    </div>
+
+                    <div class="card card-default">
+                        <div class="card-header">
+                            <i class="far fa-comments"></i>@T("Plugins.Misc.News.Configuration.BlockTitle.NewsComments")
+                        </div>
+                        @await Html.PartialAsync("~/Plugins/Misc.News/Admin/Views/_Configure.Comments.cshtml", Model)
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="offset-md-3 col-md-9">
+                            <button type="submit" name="save" class="btn btn-primary">
+                                <i class="far fa-floppy-disk"></i>
+                                @T("Admin.Common.Save")
+                            </button>
+                        </div>
+                    </div>
+
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+</form>
+
+<script>
+    $(function() {
+        $("#@Html.IdFor(model => model.ShowCaptchaOnNewsCommentPage)").click(toggleCheckbox);
+        toggleCheckbox();
+    });
+
+    function toggleCheckbox() {
+        warningValidation('@Url.Action("ShowCaptcha", "NewsAdmin")', '@Html.NameFor(model => model.ShowCaptchaOnNewsCommentPage)',
+            { showCaptchaOnNewsCommentPage: $('#@Html.IdFor(model => model.ShowCaptchaOnNewsCommentPage)').is(':checked') });
+    }
+</script>

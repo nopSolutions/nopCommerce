@@ -30,7 +30,6 @@ using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
-using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
@@ -45,7 +44,6 @@ using Nop.Web.Areas.Admin.Models.Blogs;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Localization;
-using Nop.Web.Areas.Admin.Models.News;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Models.Extensions;
@@ -81,7 +79,6 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IManufacturerService _manufacturerService;
     protected readonly IMeasureService _measureService;
     protected readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-    protected readonly INewsService _newsService;
     protected readonly INopDataProvider _dataProvider;
     protected readonly INopFileProvider _fileProvider;
     protected readonly INopUrlHelper _nopUrlHelper;
@@ -133,7 +130,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         IManufacturerService manufacturerService,
         IMeasureService measureService,
         IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
-        INewsService newsService,
         INopDataProvider dataProvider,
         INopFileProvider fileProvider,
         INopUrlHelper nopUrlHelper,
@@ -182,7 +178,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         _manufacturerService = manufacturerService;
         _measureService = measureService;
         _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
-        _newsService = newsService;
         _fileProvider = fileProvider;
         _nopUrlHelper = nopUrlHelper;
         _orderService = orderService;
@@ -1152,9 +1147,6 @@ public partial class CommonModelFactory : ICommonModelFactory
                     case "product":
                         detailsUrl = urlHelper.Action("Edit", "Product", new { id = urlRecord.EntityId });
                         break;
-                    case "newsitem":
-                        detailsUrl = urlHelper.Action("NewsItemEdit", "News", new { id = urlRecord.EntityId });
-                        break;
                     case "topic":
                         detailsUrl = urlHelper.Action("Edit", "Topic", new { id = urlRecord.EntityId });
                         break;
@@ -1291,10 +1283,6 @@ public partial class CommonModelFactory : ICommonModelFactory
             case ManufacturerModel manufacturerModel:
                 var manufacturerEntity = await _manufacturerService.GetManufacturerByIdAsync(manufacturerModel.Id);
                 return await PrepareMultistorePreviewModelsForEntityAsync(manufacturerEntity);
-
-            case NewsItemModel newsItemModel:
-                var newsItem = await _newsService.GetNewsByIdAsync(newsItemModel.Id);
-                return await PrepareMultistorePreviewModelsForEntityAsync(newsItem);
 
             case ProductModel productModel:
                 var product = await _productService.GetProductByIdAsync(productModel.Id);

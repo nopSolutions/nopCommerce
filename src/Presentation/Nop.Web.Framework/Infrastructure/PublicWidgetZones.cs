@@ -123,7 +123,6 @@ public static partial class PublicWidgetZones
     public static string HeadHtmlTag => "head_html_tag";
     public static string HomepageBeforeBestSellers => "home_page_before_best_sellers";
     public static string HomepageBeforeCategories => "home_page_before_categories";
-    public static string HomepageBeforeNews => "home_page_before_news";
     public static string HomepageBeforePoll => "home_page_before_poll";
     public static string HomepageBeforeProducts => "home_page_before_products";
     public static string HomepageBottom => "home_page_bottom";
@@ -146,13 +145,6 @@ public static partial class PublicWidgetZones
     public static string ManufacturerDetailsTop => "manufacturerdetails_top";
     public static string MobHeaderMenuAfter => "mob_header_menu_after";
     public static string MobHeaderMenuBefore => "mob_header_menu_before";
-    public static string NewsItemPageAfterComments => "newsitem_page_after_comments";
-    public static string NewsItemPageBeforeBody => "newsitem_page_before_body";
-    public static string NewsItemPageBeforeComments => "newsitem_page_before_comments";
-    public static string NewsItemPageInsideComment => "newsitem_page_inside_comment";
-    public static string NewsListPageAfterItems => "newslist_page_after_items";
-    public static string NewsListPageBeforeItems => "newslist_page_before_items";
-    public static string NewsListPageInsideItem => "newslist_page_inside_item";
     public static string Notifications => "notifications";
     public static string OpcContentAfter => "opc_content_after";
     public static string OpcContentBefore => "opc_content_before";

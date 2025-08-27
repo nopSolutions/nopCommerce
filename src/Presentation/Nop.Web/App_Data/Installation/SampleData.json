@@ -2841,50 +2841,6 @@
       "Comments": [ "This is a sample comment for this blog post" ]
     }
   ],
-  "NewsItems": [
-    {
-      "Title": "About nopCommerce",
-      "Short": "It's stable and highly usable. From downloads to documentation, www.nopCommerce.com offers a comprehensive base of information, resources, and support to the nopCommerce community.",
-      "Full": "<p>For full feature list go to <a href=\"https://www.nopCommerce.com\">nopCommerce.com</a></p><p>Providing outstanding custom search engine optimization, web development services and e-commerce development solutions to our clients at a fair price in a professional manner.</p>",
-      "NewsComments": [
-        {
-          "CommentTitle": "Sample comment title",
-          "CommentText": "This is a sample comment...",
-          "IsApproved": true
-        }
-      ],
-      "Published": true,
-      "AllowComments": true
-    },
-    {
-      "Title": "nopCommerce new release!",
-      "Short": "nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included! nopCommerce is a fully customizable shopping cart",
-      "Full": "<p>nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!</p>",
-      "NewsComments": [
-        {
-          "CommentTitle": "Sample comment title",
-          "CommentText": "This is a sample comment...",
-          "IsApproved": true
-        }
-      ],
-      "Published": true,
-      "AllowComments": true
-    },
-    {
-      "Title": "New online store is open!",
-      "Short": "The new nopCommerce store is open now! We are very excited to offer our new range of products. We will be constantly adding to our range so please register on our site.",
-      "Full": "<p>Our online store is officially up and running. Stock up for the holiday season! We have a great selection of items. We will be constantly adding to our range so please register on our site, this will enable you to keep up to date with any new products.</p><p>All shipping is worldwide and will leave the same day an order is placed! Happy Shopping and spread the word!!</p>",
-      "NewsComments": [
-        {
-          "CommentTitle": "Sample comment title",
-          "CommentText": "This is a sample comment...",
-          "IsApproved": true
-        }
-      ],
-      "Published": true,
-      "AllowComments": true
-    }
-  ],
   "Polls": [
     {
       "Name": "Do you like nopCommerce?",

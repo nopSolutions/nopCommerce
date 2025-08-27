@@ -8,10 +8,6 @@
 	{
 		<li class="twitter"><a href="@Model.TwitterLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Twitter")</a></li>
 	}
-	@if (Model.NewsEnabled)
-	{
-        <li class="rss"><a href="@Url.RouteUrl(NopRouteNames.Standard.NEWS_RSS, new { languageId = Model.WorkingLanguageId })">@T("Footer.FollowUs.RSS")</a></li>
-	}
 	@if (!string.IsNullOrEmpty(Model.YoutubeLink))
 	{
 		<li class="youtube"><a href="@Model.YoutubeLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Youtube")</a></li>

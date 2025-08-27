@@ -1,0 +1,40 @@
+@model NewsItemModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Plugins.Misc.News.NewsItems.EditNewsItemDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName(NewsDefaults.NewsItemsMenuSystemName);
+}
+
+<form asp-controller="NewsAdmin" asp-action="NewsItemEdit" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Plugins.Misc.News.NewsItems.EditNewsItemDetails") - @Model.Title
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="NewsItems">@T("Plugins.Misc.News.NewsItems.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="button" onclick="javascript:OpenWindow('@(Url.RouteUrl(NewsDefaults.Routes.Public.NewsItemRouteName, new { SeName = Model.SeName }))', 800, 600, true); return false;" class="btn btn-info">
+                <i class="far fa-eye"></i>
+                @T("Admin.Common.Preview")
+            </button>
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="newsitem-delete" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Plugins/Misc.News/Admin/Views/_CreateOrUpdate.cshtml", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="newsitem-delete" />

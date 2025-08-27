@@ -7,7 +7,6 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Localization;
@@ -196,8 +195,6 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
                 "Admin.ArtificialIntelligence.BlogPostBodyRequired", "Admin.ArtificialIntelligence.BlogPostTitleRequired"),
             Manufacturer manufacturer => await GetTitleAndTextAsync(manufacturer, languageId, currentLanguage.Name, m => m.Name, m => m.Description,
                 "Admin.ArtificialIntelligence.ManufacturerDescriptionRequired", "Admin.ArtificialIntelligence.ManufacturerNameRequired"),
-            NewsItem newsItem => await GetTitleAndTextAsync(newsItem, currentLanguage.Name, n => n.Title, n => n.Full,
-                "Admin.ArtificialIntelligence.NewsItemFullRequired", "Admin.ArtificialIntelligence.NewsItemTitleRequired"),
             Topic topic => await GetTitleAndTextAsync(topic, languageId, currentLanguage.Name, t => t.Title, t => t.Body,
                 "Admin.ArtificialIntelligence.TopicBodyRequired", "Admin.ArtificialIntelligence.TopicTitleRequired"),
             Vendor vendor => await GetTitleAndTextAsync(vendor, languageId, currentLanguage.Name, v => v.Name, v => v.Description,

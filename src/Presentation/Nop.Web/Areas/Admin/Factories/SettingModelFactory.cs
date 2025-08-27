@@ -13,7 +13,6 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
@@ -443,7 +442,6 @@ public partial class SettingModelFactory : ISettingModelFactory
             SitemapIncludeProducts = sitemapSettings.SitemapIncludeProducts,
             SitemapIncludeProductTags = sitemapSettings.SitemapIncludeProductTags,
             SitemapIncludeBlogPosts = sitemapSettings.SitemapIncludeBlogPosts,
-            SitemapIncludeNews = sitemapSettings.SitemapIncludeNews,
             SitemapIncludeTopics = sitemapSettings.SitemapIncludeTopics
         };
 
@@ -458,7 +456,6 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.SitemapIncludeProducts_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeProducts, storeId);
         model.SitemapIncludeProductTags_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeProductTags, storeId);
         model.SitemapIncludeBlogPosts_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeBlogPosts, storeId);
-        model.SitemapIncludeNews_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeNews, storeId);
         model.SitemapIncludeTopics_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeTopics, storeId);
 
         return model;
@@ -598,7 +595,6 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.ShowOnEmailWishlistToFriendPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnEmailWishlistToFriendPage, storeId);
         model.ShowOnEmailProductToFriendPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnEmailProductToFriendPage, storeId);
         model.ShowOnBlogCommentPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnBlogCommentPage, storeId);
-        model.ShowOnNewsCommentPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnNewsCommentPage, storeId);
         model.ShowOnNewsLetterPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnNewsletterPage, storeId);
         model.ShowOnProductReviewPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnProductReviewPage, storeId);
         model.ShowOnApplyVendorPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnApplyVendorPage, storeId);
@@ -1001,42 +997,6 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.ForumFeedCount_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ForumFeedCount, storeId);
         model.SearchResultsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.SearchResultsPageSize, storeId);
         model.ActiveDiscussionsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ActiveDiscussionsPageSize, storeId);
-
-        return model;
-    }
-
-    /// <summary>
-    /// Prepare news settings model
-    /// </summary>
-    /// <param name="model">News settings model</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the news settings model
-    /// </returns>
-    public virtual async Task<NewsSettingsModel> PrepareNewsSettingsModelAsync(NewsSettingsModel model = null)
-    {
-        //load settings for a chosen store scope
-        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-        var newsSettings = await _settingService.LoadSettingAsync<NewsSettings>(storeId);
-
-        //fill in model values from the entity
-        model ??= newsSettings.ToSettingsModel<NewsSettingsModel>();
-
-        //fill in additional values (not existing in the entity)
-        model.ActiveStoreScopeConfiguration = storeId;
-
-        if (storeId <= 0)
-            return model;
-
-        //fill in overridden values
-        model.Enabled_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.Enabled, storeId);
-        model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeId);
-        model.NotifyAboutNewNewsComments_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NotifyAboutNewNewsComments, storeId);
-        model.ShowNewsOnMainPage_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.ShowNewsOnMainPage, storeId);
-        model.MainPageNewsCount_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.MainPageNewsCount, storeId);
-        model.NewsArchivePageSize_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NewsArchivePageSize, storeId);
-        model.ShowHeaderRssUrl_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.ShowHeaderRssUrl, storeId);
-        model.NewsCommentsMustBeApproved_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NewsCommentsMustBeApproved, storeId);
 
         return model;
     }

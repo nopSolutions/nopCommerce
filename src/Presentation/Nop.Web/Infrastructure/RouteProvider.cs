@@ -162,11 +162,6 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/blog",
             defaults: new { controller = "Blog", action = "List" });
 
-        //news
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.General.NEWS,
-            pattern: $"{lang}/news",
-            defaults: new { controller = "News", action = "List" });
-
         //forum
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.General.BOARDS,
             pattern: $"{lang}/boards",
@@ -367,11 +362,6 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.BLOG_RSS,
             pattern: $"blog/rss/{{languageId:min(0)}}",
             defaults: new { controller = "Blog", action = "ListRss" });
-
-        //news RSS (file result)
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.NEWS_RSS,
-            pattern: $"news/rss/{{languageId:min(0)}}",
-            defaults: new { controller = "News", action = "ListRss" });
 
         //set review helpfulness (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.SET_PRODUCT_REVIEW_HELPFULNESS,

@@ -22,7 +22,6 @@ using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.ScheduleTasks;
@@ -819,13 +818,6 @@ public partial class InstallationService
                     EmailAccountId = eaGeneral.Id
                 },
                 new() {
-                    Name = MessageTemplateSystemNames.NEWS_COMMENT_STORE_OWNER_NOTIFICATION,
-                    Subject = "%Store.Name%. New news comment.",
-                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}A new news comment has been created for news \"%NewsComment.NewsTitle%\".{Environment.NewLine}</p>{Environment.NewLine}",
-                    IsActive = true,
-                    EmailAccountId = eaGeneral.Id
-                },
-                new() {
                     Name = MessageTemplateSystemNames.NEWSLETTER_SUBSCRIPTION_ACTIVATION_MESSAGE,
                     Subject = "%Store.Name%. Subscription activation message.",
                     Body = $"<p>{Environment.NewLine}<a href=\"%NewsLetterSubscription.ActivationUrl%\">Click here to confirm your subscription to our list.</a>{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}If you received this email by mistake, simply delete it.{Environment.NewLine}</p>{Environment.NewLine}",
@@ -1282,7 +1274,6 @@ public partial class InstallationService
             SitemapIncludeProducts = false,
             SitemapIncludeProductTags = false,
             SitemapIncludeBlogPosts = true,
-            SitemapIncludeNews = false,
             SitemapIncludeTopics = true
         });
 
@@ -1292,7 +1283,6 @@ public partial class InstallationService
             SitemapXmlIncludeBlogPosts = true,
             SitemapXmlIncludeCategories = true,
             SitemapXmlIncludeManufacturers = true,
-            SitemapXmlIncludeNews = true,
             SitemapXmlIncludeProducts = true,
             SitemapXmlIncludeProductTags = true,
             SitemapXmlIncludeCustomUrls = true,
@@ -1894,18 +1884,6 @@ public partial class InstallationService
             BlogCommentsMustBeApproved = false,
             ShowBlogCommentsPerStore = false
         });
-        await SaveSettingAsync(dictionary, new NewsSettings
-        {
-            Enabled = true,
-            AllowNotRegisteredUsersToLeaveComments = true,
-            NotifyAboutNewNewsComments = false,
-            ShowNewsOnMainPage = true,
-            MainPageNewsCount = 3,
-            NewsArchivePageSize = 10,
-            ShowHeaderRssUrl = false,
-            NewsCommentsMustBeApproved = false,
-            ShowNewsCommentsPerStore = false
-        });
 
         await SaveSettingAsync(dictionary, new ForumSettings
         {
@@ -1983,7 +1961,6 @@ public partial class InstallationService
             ShowOnForgotPasswordPage = false,
             ShowOnForum = false,
             ShowOnLoginPage = false,
-            ShowOnNewsCommentPage = false,
             ShowOnNewsletterPage = false,
             ShowOnProductReviewPage = false,
             ShowOnRegistrationPage = false,
@@ -2563,11 +2540,6 @@ public partial class InstallationService
                     Name = "Add a new measure weight"
                 },
                 new() {
-                    SystemKeyword = "AddNewNews",
-                    Enabled = true,
-                    Name = "Add a new news"
-                },
-                new() {
                     SystemKeyword = "AddNewProduct",
                     Enabled = true,
                     Name = "Add a new product"
@@ -2771,16 +2743,6 @@ public partial class InstallationService
                     SystemKeyword = "DeleteMessageTemplate",
                     Enabled = true,
                     Name = "Delete a message template"
-                },
-                new() {
-                    SystemKeyword = "DeleteNews",
-                    Enabled = true,
-                    Name = "Delete a news"
-                },
-                 new() {
-                    SystemKeyword = "DeleteNewsComment",
-                    Enabled = true,
-                    Name = "Delete a news comment"
                 },
                 new() {
                     SystemKeyword = "DeleteOrder",
@@ -3006,11 +2968,6 @@ public partial class InstallationService
                     SystemKeyword = "EditMessageTemplate",
                     Enabled = true,
                     Name = "Edit a message template"
-                },
-                new() {
-                    SystemKeyword = "EditNews",
-                    Enabled = true,
-                    Name = "Edit a news"
                 },
                 new() {
                     SystemKeyword = "EditOrder",
@@ -3292,11 +3249,6 @@ public partial class InstallationService
                     SystemKeyword = "PublicStore.AddProductReview",
                     Enabled = false,
                     Name = "Public store. Add product review"
-                },
-                new() {
-                    SystemKeyword = "PublicStore.AddNewsComment",
-                    Enabled = false,
-                    Name = "Public store. Add news comment"
                 },
                 new() {
                     SystemKeyword = "PublicStore.AddBlogComment",
@@ -3689,14 +3641,6 @@ public partial class InstallationService
                 MenuItemType = MenuItemType.StandardPage,
                 RouteName = NopRouteNames.General.SEARCH,
                 Title = "Search",
-                Published = true
-            },
-            new MenuItem
-            {
-                MenuId = footerCustomerService.Id,
-                MenuItemType = MenuItemType.StandardPage,
-                RouteName = NopRouteNames.General.NEWS,
-                Title = "News",
                 Published = true
             },
             new MenuItem

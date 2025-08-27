@@ -1,0 +1,31 @@
+@model NewsItemModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Plugins.Misc.News.NewsItems.AddNew").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName(NewsDefaults.NewsItemsMenuSystemName);
+}
+
+<form asp-controller="NewsAdmin" asp-action="NewsItemCreate" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Plugins.Misc.News.NewsItems.AddNew")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="NewsItems">@T("Plugins.Misc.News.NewsItems.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Plugins/Misc.News/Admin/Views/_CreateOrUpdate.cshtml", Model)
+</form>

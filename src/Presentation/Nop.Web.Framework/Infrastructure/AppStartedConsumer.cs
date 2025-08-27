@@ -62,12 +62,12 @@ public partial class AppStartedConsumer : IConsumer<AppStartedEvent>
         //log application start
         await _logger.InformationAsync("Application started");
 
+        //insert new ACL permission if exists
+        await _permissionService.InsertPermissionsAsync();
+
         //install and update plugins
         await _pluginService.InstallPluginsAsync();
         await _pluginService.UpdatePluginsAsync();
-
-        //insert new ACL permission if exists
-        await _permissionService.InsertPermissionsAsync();
 
         //update nopCommerce core and db
         var assembly = Assembly.GetAssembly(typeof(ApplicationBuilderExtensions));

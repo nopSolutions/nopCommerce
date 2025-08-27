@@ -82,10 +82,6 @@ public partial class GenericUrlRouteProvider : BaseRouteProvider, IRouteProvider
             pattern: genericPattern,
             defaults: new { controller = "Catalog", action = "Vendor" });
 
-        endpointRouteBuilder.MapControllerRoute(name: NopRoutingDefaults.RouteName.Generic.NewsItem,
-            pattern: genericPattern,
-            defaults: new { controller = "News", action = "NewsItem" });
-
         endpointRouteBuilder.MapControllerRoute(name: NopRoutingDefaults.RouteName.Generic.BlogPost,
             pattern: genericPattern,
             defaults: new { controller = "Blog", action = "BlogPost" });

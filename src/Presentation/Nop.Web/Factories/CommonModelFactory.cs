@@ -11,7 +11,6 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
@@ -66,7 +65,6 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly LocalizationSettings _localizationSettings;
     protected readonly MediaSettings _mediaSettings;
     protected readonly MessagesSettings _messagesSettings;
-    protected readonly NewsSettings _newsSettings;
     protected readonly RobotsTxtSettings _robotsTxtSettings;
     protected readonly SitemapXmlSettings _sitemapXmlSettings;
     protected readonly StoreInformationSettings _storeInformationSettings;
@@ -102,7 +100,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         LocalizationSettings localizationSettings,
         MediaSettings mediaSettings,
         MessagesSettings messagesSettings,
-        NewsSettings newsSettings,
         RobotsTxtSettings robotsTxtSettings,
         SitemapXmlSettings sitemapXmlSettings,
         StoreInformationSettings storeInformationSettings)
@@ -134,7 +131,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         _mediaSettings = mediaSettings;
         _messagesSettings = messagesSettings;
         _localizationSettings = localizationSettings;
-        _newsSettings = newsSettings;
         _robotsTxtSettings = robotsTxtSettings;
         _sitemapXmlSettings = sitemapXmlSettings;
         _storeInformationSettings = storeInformationSettings;
@@ -403,7 +399,6 @@ public partial class CommonModelFactory : ICommonModelFactory
             YoutubeLink = _storeInformationSettings.YoutubeLink,
             InstagramLink = _storeInformationSettings.InstagramLink,
             WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id,
-            NewsEnabled = _newsSettings.Enabled,
         };
 
         return model;
