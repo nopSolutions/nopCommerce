@@ -69,7 +69,6 @@
 
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeadHtmlTag })
     @NopHtml.GenerateCanonicalUrls()
-    @await Component.InvokeAsync(typeof(NewsRssHeaderLinkViewComponent))
     @await Component.InvokeAsync(typeof(BlogRssHeaderLinkViewComponent))
     @*Insert favicon and app icons head code*@
     @await Component.InvokeAsync(typeof(FaviconViewComponent))

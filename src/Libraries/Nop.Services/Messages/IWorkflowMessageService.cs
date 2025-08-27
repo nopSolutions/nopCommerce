@@ -3,7 +3,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
@@ -642,17 +641,6 @@ public partial interface IWorkflowMessageService
     /// The task result contains the queued email identifier
     /// </returns>
     Task<IList<int>> SendBlogCommentStoreOwnerNotificationMessageAsync(BlogComment blogComment, int languageId);
-
-    /// <summary>
-    /// Sends a news comment notification message to a store owner
-    /// </summary>
-    /// <param name="newsComment">News comment</param>
-    /// <param name="languageId">Message language identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the queued email identifier
-    /// </returns>
-    Task<IList<int>> SendNewsCommentStoreOwnerNotificationMessageAsync(NewsComment newsComment, int languageId);
 
     /// <summary>
     /// Sends a 'Back in stock' notification message to a customer

@@ -104,16 +104,6 @@
                 <span asp-validation-for="CaptchaSettings.ShowOnBlogCommentPage"></span>
             </div>
         </div>
-        <div class="form-group row" id="ssCaptchaShowOnNewsCommentPagepnl">
-            <div class="col-md-3">
-                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnNewsCommentPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnNewsCommentPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                <nop-label asp-for="CaptchaSettings.ShowOnNewsCommentPage" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="CaptchaSettings.ShowOnNewsCommentPage" />
-                <span asp-validation-for="CaptchaSettings.ShowOnNewsCommentPage"></span>
-            </div>
-        </div>
         <div class="form-group row" id="ssCaptchaShowOnNewsletterPagepnl">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnNewsLetterPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnNewsLetterPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -221,7 +211,6 @@
             $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').showElement();
             $('#ssCaptchaShowOnEmailProductToFriendPagepnl').showElement();
             $('#ssCaptchaShowOnBlogCommentPagepnl').showElement();
-            $('#ssCaptchaShowOnNewsCommentPagepnl').showElement();
             $('#ssCaptchaShowOnNewsletterPagepnl').showElement();
             $('#ssCaptchaShowOnProductReviewPagepnl').showElement();
             $('#ssCaptchaShowOnApplyVendorPagepnl').showElement();
@@ -241,7 +230,6 @@
             $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hideElement();
             $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hideElement();
             $('#ssCaptchaShowOnBlogCommentPagepnl').hideElement();
-            $('#ssCaptchaShowOnNewsCommentPagepnl').hideElement();
             $('#ssCaptchaShowOnNewsletterPagepnl').hideElement();
             $('#ssCaptchaShowOnProductReviewPagepnl').hideElement();
             $('#ssCaptchaShowOnApplyVendorPagepnl').hideElement();

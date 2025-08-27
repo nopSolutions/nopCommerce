@@ -43,7 +43,6 @@ public static partial class NopSeoDefaults
     "logout",
     "multi-factor-verification",
     "newproducts",
-    "news",
     "onepagecheckout",
     "page-not-found",
     "passwordrecovery",

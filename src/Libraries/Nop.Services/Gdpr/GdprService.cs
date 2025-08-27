@@ -10,7 +10,6 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
 using Nop.Services.Messages;
-using Nop.Services.News;
 using Nop.Services.Orders;
 
 namespace Nop.Services.Gdpr;
@@ -31,7 +30,6 @@ public partial class GdprService : IGdprService
     protected readonly IForumService _forumService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-    protected readonly INewsService _newsService;
     protected readonly IProductReviewService _productReviewService;
     protected readonly IProductService _productService;
     protected readonly IRepository<GdprConsent> _gdprConsentRepository;
@@ -50,7 +48,6 @@ public partial class GdprService : IGdprService
         IEventPublisher eventPublisher,
         IForumService forumService,
         IGenericAttributeService genericAttributeService,
-        INewsService newsService,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
         IProductReviewService productReviewService,
         IProductService productService,
@@ -66,7 +63,6 @@ public partial class GdprService : IGdprService
         _eventPublisher = eventPublisher;
         _forumService = forumService;
         _genericAttributeService = genericAttributeService;
-        _newsService = newsService;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
         _productReviewService = productReviewService;
         _productService = productService;
@@ -266,10 +262,6 @@ public partial class GdprService : IGdprService
         //blog comments
         var blogComments = await _blogService.GetAllCommentsAsync(customerId: customer.Id);
         await _blogService.DeleteBlogCommentsAsync(blogComments);
-
-        //news comments
-        var newsComments = await _newsService.GetAllCommentsAsync(customerId: customer.Id);
-        await _newsService.DeleteNewsCommentsAsync(newsComments);
 
         //back in stock subscriptions
         var backInStockSubscriptions = await _backInStockSubscriptionService.GetAllSubscriptionsByCustomerIdAsync(customer.Id);

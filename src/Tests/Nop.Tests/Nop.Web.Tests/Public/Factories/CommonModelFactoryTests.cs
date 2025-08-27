@@ -5,7 +5,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Configuration;
 using Nop.Services.Vendors;
@@ -24,7 +23,6 @@ public class CommonModelFactoryTests : BaseNopTest
     private CustomerSettings _customerSettings;
     private ForumSettings _forumSettings;
     private StoreInformationSettings _storeInformationSettings;
-    private NewsSettings _newsSettings;
     private CommonSettings _commonSettings;
     private Vendor _vendor;
     private ISettingService _settingsService;
@@ -47,7 +45,6 @@ public class CommonModelFactoryTests : BaseNopTest
         _customerSettings = GetService<CustomerSettings>();
 
         _storeInformationSettings = GetService<StoreInformationSettings>();
-        _newsSettings = GetService<NewsSettings>();
         _commonSettings = GetService<CommonSettings>();
 
         _vendor = await GetService<IVendorService>().GetVendorByIdAsync(1);
@@ -141,7 +138,6 @@ public class CommonModelFactoryTests : BaseNopTest
         model.YoutubeLink.Should().Be(_storeInformationSettings.YoutubeLink);
         model.InstagramLink.Should().Be(_storeInformationSettings.InstagramLink);
         model.WorkingLanguageId.Should().Be(1);
-        model.NewsEnabled.Should().Be(_newsSettings.Enabled);
     }
 
     [Test]

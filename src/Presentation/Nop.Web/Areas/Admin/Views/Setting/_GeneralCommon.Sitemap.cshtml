@@ -83,15 +83,5 @@
                 <span asp-validation-for="SitemapSettings.SitemapIncludeBlogPosts"></span>
             </div>
         </div>
-        <div class="form-group row advanced-setting">
-            <div class="col-md-3">
-                <nop-override-store-checkbox asp-for="SitemapSettings.SitemapIncludeNews_OverrideForStore" asp-input="SitemapSettings.SitemapIncludeNews" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                <nop-label asp-for="SitemapSettings.SitemapIncludeNews" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="SitemapSettings.SitemapIncludeNews" />
-                <span asp-validation-for="SitemapSettings.SitemapIncludeNews"></span>
-            </div>
-        </div>
     </nop-nested-setting>
 </div>

@@ -287,11 +287,6 @@ public static partial class MessageTemplateSystemNames
     public const string BLOG_COMMENT_STORE_OWNER_NOTIFICATION = "Blog.BlogComment";
 
     /// <summary>
-    /// Represents system name of notification store owner about new news comment
-    /// </summary>
-    public const string NEWS_COMMENT_STORE_OWNER_NOTIFICATION = "News.NewsComment";
-
-    /// <summary>
     /// Represents system name of notification customer about product receipt
     /// </summary>
     public const string BACK_IN_STOCK_NOTIFICATION = "Customer.BackInStock";

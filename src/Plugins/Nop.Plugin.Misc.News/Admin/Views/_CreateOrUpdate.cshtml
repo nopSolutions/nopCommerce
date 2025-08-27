@@ -1,0 +1,24 @@
+﻿@model NewsItemModel
+
+@{
+    const string hideInfoBlockAttributeName = "NewsItemPage.HideInfoBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+    const string hideSeoBlockAttributeName = "NewsItemPage.HideSeoBlock";
+    var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSeoBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <nop-cards id="news-item-cards">
+                <nop-card asp-name="news-item-info" asp-icon="fas fa-info" asp-title="@T("Plugins.Misc.News.NewsItems.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock">@await Html.PartialAsync("~/Plugins/Misc.News/Admin/Views/_CreateOrUpdate.Info.cshtml", Model)</nop-card>
+                <nop-card asp-name="news-item-seo" asp-icon="fas fa-magnifying-glass-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock">@await Html.PartialAsync("~/Plugins/Misc.News/Admin/Views/_CreateOrUpdate.Seo.cshtml", Model)</nop-card>
+            </nop-cards>
+        </div>
+    </div>
+</section>
