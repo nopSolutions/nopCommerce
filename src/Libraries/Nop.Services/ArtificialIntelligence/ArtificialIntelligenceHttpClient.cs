@@ -46,9 +46,11 @@ public partial class ArtificialIntelligenceHttpClient
     /// <summary>
     /// Send query to artificial intelligence host
     /// </summary>
-    /// <param name="query"></param>
-    /// <returns></returns>
-    /// <exception cref="NopException"></exception>
+    /// <param name="query">Query to artificial intelligence host</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the response from the artificial intelligence host
+    /// </returns>
     public virtual async Task<string> SendQueryAsync(string query)
     {
         var request = _artificialIntelligenceHttpClientHelper.CreateRequest(_artificialIntelligenceSettings, query);
@@ -56,10 +58,12 @@ public partial class ArtificialIntelligenceHttpClient
         var httpResponse = await _httpClient.SendAsync(request);
         var response = await httpResponse.Content.ReadAsStringAsync();
 
-        if (httpResponse.IsSuccessStatusCode)
-            return _artificialIntelligenceHttpClientHelper.ParseResponse(response);
+        if (!httpResponse.IsSuccessStatusCode)
+            throw new NopException(httpResponse.ReasonPhrase, innerException: new Exception(response));
 
-        throw new NopException(httpResponse.ReasonPhrase, innerException: new Exception(response));
+        var result = _artificialIntelligenceHttpClientHelper.ParseResponse(response);
+
+        return result;
     }
 
     #endregion

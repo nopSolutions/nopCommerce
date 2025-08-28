@@ -1683,6 +1683,54 @@
   <LocaleResource Name="Admin.Affiliates.Updated">
     <Value>The affiliate has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.BlogPostBodyRequired">
+    <Value>Blog post body (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.BlogPostTitleRequired">
+    <Value>Blog post title (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.CategoryDescriptionRequired">
+    <Value>Category description (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.CategoryNameRequired">
+    <Value>Category name (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.GenerateMetaTags">
+    <Value>Generate meta tags with AI</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.GenerateMetaTags.SaveBeforeGenerate">
+    <Value>You need to save the entity before you can generate meta tags.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.ManufacturerDescriptionRequired">
+    <Value>Manufacturer description (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.ManufacturerNameRequired">
+    <Value>Manufacturer name (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.NewsItemFullRequired">
+    <Value>News item full (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.NewsItemTitleRequired">
+    <Value>News item title (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.ProductDescriptionRequired">
+    <Value>Product description (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.ProductNameRequired">
+    <Value>Product name (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.TopicBodyRequired">
+    <Value>Topic body (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.TopicTitleRequired">
+    <Value>Topic title (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.VendorDescriptionRequired">
+    <Value>Vendor description (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ArtificialIntelligence.VendorNameRequired">
+    <Value>Vendor name (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog">
     <Value>Catalog</Value>
   </LocaleResource>
@@ -5961,6 +6009,51 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage.Hint">
     <Value>Check to allow viewing of unpublished product details page. This way SEO won't be affected by search crawlers when a product is temporary unpublished. Please note that a store owner always has access to unpublished products.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.AllowGenerateMetaDescription">
+    <Value>Allow to generate meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.AllowGenerateMetaDescription.Hint">
+    <Value>Check to allow generation of meta description with artificial intelligence services. Please note that this functionality will not change any meta description that you have added, or edited, manually.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.AllowGenerateMetaKeywords">
+    <Value>Allow to generate meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.AllowGenerateMetaKeywords.Hint">
+    <Value>Check to allow generation of meta keywords with artificial intelligence services. Please note that this functionality will not change any meta keywords that you have added, or edited, manually.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.AllowGenerateMetaTitle">
+    <Value>Allow to generate meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.AllowGenerateMetaTitle.Hint">
+    <Value>Check to allow generation of meta title with artificial intelligence services. Please note that this functionality will not change any meta title that you have added, or edited, manually.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.AllowGenerateProductDescription">
+    <Value>Allow to generate product description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.AllowGenerateProductDescription.Hint">
+    <Value>Check to allow generation of product descriptions with artificial intelligence services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.Info">
+    <Value><![CDATA[<p>Artificial intelligence functionality allows you to use third-party AI services such as <a href='https://www.deepseek.com/' target='_blank'>DeepSeek</a>, <a href='https://gemini.google.com/' target='_blank'>Gemini</a> or <a href='https://chatgpt.com/' target='_blank'>ChatGPT</a> to automatically generate content. This could be either product descriptions or meta tags for specific pages or entities.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaDescriptionQuery">
+    <Value>AI query to generate meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaDescriptionQuery.Hint">
+    <Value>Set the query to generate meta description with artificial intelligence.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaKeywordsQuery">
+    <Value>AI query to generate meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaKeywordsQuery.Hint">
+    <Value>Set the query to generate meta keywords with artificial intelligence.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaTitleQuery">
+    <Value>AI query to generate meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaTitleQuery.Hint">
+    <Value>Set the query to generate meta title with artificial intelligence.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ChatGptApiKey">
     <Value>API key</Value>
   </LocaleResource>
@@ -5998,10 +6091,10 @@
     <Value><![CDATA[<p>Artificial intelligence functionality allows you to use third-party AI services such as <a href='https://www.deepseek.com/' target='_blank'>DeepSeek</a>, <a href='https://gemini.google.com/' target='_blank'>Gemini</a> or <a href='https://chatgpt.com/' target='_blank'>ChatGPT</a> to automatically generate product descriptions.</p>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery">
-    <Value>Artificial intelligence query</Value>
+    <Value>AI query to generate product description</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery.Hint">
-    <Value>Set the query for create product description with artificial intelligence service.</Value>
+    <Value>Set the query to generate product description with artificial intelligence.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProviderType">
     <Value>Provider type</Value>

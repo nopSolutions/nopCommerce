@@ -1,3 +1,4 @@
+@using Nop.Core.Domain.Topics
 @model TopicModel
 
 <div class="card-body">
@@ -39,17 +40,22 @@
                 <span asp-validation-for="@Model.Locales[item].MetaDescription"></span>
             </div>
         </div>
+        @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel(Model, nameof(Topic), item, Model.Locales[item].LanguageId)
+        {
+            TitleFieldId = Html.IdFor(model => model.Locales[item].Title),
+            TextFieldId = Html.IdFor(model => model.Locales[item].Body)
+        })
         <script>
-                  $(function() {
-                      $('#@Html.IdFor(model => model.Locales[item].SeName)').on('input change', function () {
-                          var parameters = {
-                              entityId: '@Model.Id',
-                              entityName: 'Topic',
-                              seName: $(this).val()
-                          };
-                          warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.Locales[item].SeName)', parameters);
-                      });
-                  });
+            $(function() {
+                $('#@Html.IdFor(model => model.Locales[item].SeName)').on('input change', function () {
+                    var parameters = {
+                        entityId: '@Model.Id',
+                        entityName: 'Topic',
+                        seName: $(this).val()
+                    };
+                    warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.Locales[item].SeName)', parameters);
+                });
+            });
         </script>
         <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
     </div>
@@ -91,6 +97,11 @@
                 <span asp-validation-for="MetaDescription"></span>
             </div>
         </div>
+        @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel(Model, nameof(Topic))
+        {
+            TitleFieldId = Html.IdFor(model => model.Title),
+            TextFieldId = Html.IdFor(model => model.Body)
+        })
         <script>
             $(function() {
                 $('#@Html.IdFor(model => model.SeName)').on('input change', function () {

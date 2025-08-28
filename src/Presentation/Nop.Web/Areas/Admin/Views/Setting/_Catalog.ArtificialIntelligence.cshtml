@@ -15,15 +15,6 @@
     <nop-nested-setting asp-for="ArtificialIntelligenceSettingsModel.Enabled">
         <div class="form-group row">
             <div class="col-md-3">
-                <nop-label asp-for="ArtificialIntelligenceSettingsModel.ProductDescriptionQuery" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.ProductDescriptionQuery" />
-                <span asp-validation-for="ArtificialIntelligenceSettingsModel.ProductDescriptionQuery"></span>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3">
                 <nop-label asp-for="ArtificialIntelligenceSettingsModel.ProviderTypeId"/>
             </div>
             <div class="col-md-9">
@@ -36,7 +27,7 @@
                 <nop-label asp-for="ArtificialIntelligenceSettingsModel.GeminiApiKey"/>
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.GeminiApiKey" html-attributes="@(new { value = Model.ArtificialIntelligenceSettingsModel.GeminiApiKey })" />
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.GeminiApiKey" html-attributes="@(new { value = Model.ArtificialIntelligenceSettingsModel.GeminiApiKey })"/>
                 <span asp-validation-for="ArtificialIntelligenceSettingsModel.GeminiApiKey"></span>
                 @Html.Raw(T("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.GeminiApiKey.Instruction"))
             </div>
@@ -46,7 +37,7 @@
                 <nop-label asp-for="ArtificialIntelligenceSettingsModel.ChatGptApiKey"/>
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.ChatGptApiKey" html-attributes="@(new { value = Model.ArtificialIntelligenceSettingsModel.ChatGptApiKey })" />
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.ChatGptApiKey" html-attributes="@(new { value = Model.ArtificialIntelligenceSettingsModel.ChatGptApiKey })"/>
                 <span asp-validation-for="ArtificialIntelligenceSettingsModel.ChatGptApiKey"></span>
                 @Html.Raw(T("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ChatGptApiKey.Instruction"))
             </div>
@@ -56,11 +47,94 @@
                 <nop-label asp-for="ArtificialIntelligenceSettingsModel.DeepSeekApiKey"/>
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.DeepSeekApiKey" html-attributes="@(new { value = Model.ArtificialIntelligenceSettingsModel.DeepSeekApiKey })" />
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.DeepSeekApiKey" html-attributes="@(new { value = Model.ArtificialIntelligenceSettingsModel.DeepSeekApiKey })"/>
                 <span asp-validation-for="ArtificialIntelligenceSettingsModel.DeepSeekApiKey"></span>
                 @Html.Raw(T("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.DeepSeekApiKey.Instruction"))
             </div>
         </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.AllowProductDescriptionGeneration" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.AllowProductDescriptionGeneration" />
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.AllowProductDescriptionGeneration"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="ArtificialIntelligenceSettingsModel.AllowProductDescriptionGeneration">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ArtificialIntelligenceSettingsModel.ProductDescriptionQuery" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ArtificialIntelligenceSettingsModel.ProductDescriptionQuery" />
+                    <span asp-validation-for="ArtificialIntelligenceSettingsModel.ProductDescriptionQuery"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+        
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.AllowMetaTitleGeneration" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.AllowMetaTitleGeneration" />
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.AllowMetaTitleGeneration"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="ArtificialIntelligenceSettingsModel.AllowMetaTitleGeneration">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ArtificialIntelligenceSettingsModel.MetaTitleQuery" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ArtificialIntelligenceSettingsModel.MetaTitleQuery" />
+                    <span asp-validation-for="ArtificialIntelligenceSettingsModel.MetaTitleQuery"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+        
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration"/>
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration" />
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ArtificialIntelligenceSettingsModel.MetaKeywordsQuery"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ArtificialIntelligenceSettingsModel.MetaKeywordsQuery" />
+                    <span asp-validation-for="ArtificialIntelligenceSettingsModel.MetaKeywordsQuery"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+        
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.AllowMetaDescriptionGeneration" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.AllowMetaDescriptionGeneration" />
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.AllowMetaDescriptionGeneration"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="ArtificialIntelligenceSettingsModel.AllowMetaDescriptionGeneration">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ArtificialIntelligenceSettingsModel.MetaDescriptionQuery" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ArtificialIntelligenceSettingsModel.MetaDescriptionQuery" />
+                    <span asp-validation-for="ArtificialIntelligenceSettingsModel.MetaDescriptionQuery"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
     </nop-nested-setting>
 </div>
 

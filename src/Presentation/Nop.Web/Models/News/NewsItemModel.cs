@@ -1,8 +1,9 @@
 ﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Models.ArtificialIntelligence;
 
 namespace Nop.Web.Models.News;
 
-public partial record NewsItemModel : BaseNopEntityModel
+public partial record NewsItemModel : BaseNopEntityModel, IMetaTagsSupportedModel
 {
     public NewsItemModel()
     {

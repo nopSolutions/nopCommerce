@@ -1,9 +1,10 @@
 ﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Models.ArtificialIntelligence;
 using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog;
 
-public partial record VendorModel : BaseNopEntityModel
+public partial record VendorModel : BaseNopEntityModel, IMetaTagsSupportedModel
 {
     public VendorModel()
     {
