@@ -674,12 +674,16 @@ namespace Nop.Plugin.Misc.AbcCore.Mattresses
                 {
                     ProductId = product.Id,
                     ProductAttributeId = pa.Id,
-                    IsRequired = false,
+                    IsRequired = true,
                     AttributeControlType = AttributeControlType.DropdownList,
                     DisplayOrder = 10,
                     TextPrompt = attributeName,
                     ConditionAttributeXml = $"<Attributes><ProductAttribute ID=\"{sizePam.Id}\"><ProductAttributeValue><Value>{sizePav.Id}</Value></ProductAttributeValue></ProductAttribute></Attributes>"
                 };
+                if (product.Sku == "MACTVBRZ")
+                {
+                    pam.IsRequired = true;
+                }
                 await _productAttributeService.InsertProductAttributeMappingAsync(pam);
             }
             else if (pam != null && !bases.Any())

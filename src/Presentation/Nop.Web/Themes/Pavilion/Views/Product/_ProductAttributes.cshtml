@@ -24,6 +24,7 @@
     }
 
     var isAccessoryAlreadySelected = false;
+    var productId = Model.First().ProductId;
 }
 
 @if (Model.Count > 0)
@@ -54,7 +55,7 @@
                         <i class="fas fa-info-circle warranty-info"></i>
                     }
                     @* ABC: also require if warranty *@
-                    @if (attribute.IsRequired || attribute.Name == "Warranty")
+                    @if (attribute.IsRequired || attribute.Name == "Warranty" || productId == 79952)
                     {
                         <span class="required">*</span>
                     }
@@ -80,7 +81,7 @@
                                 if (attribute.Name.Contains("Frame")) { mattressClass = "mattress-frame"; }
                                 if (attribute.Name.Contains("Protector")) { mattressClass = "mattress-protector"; }
                                 <select class="@(mattressClass)" name="@(controlId)" id="@(controlId)" @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onchange=\"showHideDropdownQuantity('{controlId}')\"") : null)>
-                                    @if (!attribute.IsRequired)
+                                    @if (!attribute.IsRequired || productId != 79952)
                                     {
                                         <option value="0">---</option>
                                     }
@@ -496,7 +497,6 @@
     var attributesHaveConditions = Model.Any(x => x.HasCondition);
     var attributesHaveAssociatedPictures = Model.Any(x => x.ProductId > 0);
     var attributeChangeScriptsBuilder = new StringBuilder();
-    var productId = Model.First().ProductId;
     var attributeChangeHandlerFuncName = $"attribute_change_handler_{productId}";
     if (catalogSettings.AjaxProcessAttributeChange)
     {
