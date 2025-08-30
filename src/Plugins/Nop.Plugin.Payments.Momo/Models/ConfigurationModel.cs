@@ -8,16 +8,21 @@ public record ConfigurationModel : BaseNopModel
 {
     public int ActiveStoreScopeConfiguration { get; set; }
 
-    [NopResourceDisplayName("Plugins.Payments.Manual.Fields.AdditionalFeePercentage")]
-    public bool AdditionalFeePercentage { get; set; }
-    public bool AdditionalFeePercentage_OverrideForStore { get; set; }
+    [NopResourceDisplayName("Plugins.Payments.Momo.Fields.SubscriptionKey")]
+    public string SubscriptionKey { get; set; }
+    public bool SubscriptionKey_OverrideForStore { get; set; }
 
-    [NopResourceDisplayName("Plugins.Payments.Manual.Fields.AdditionalFee")]
-    public decimal AdditionalFee { get; set; }
-    public bool AdditionalFee_OverrideForStore { get; set; }
+    [NopResourceDisplayName("Plugins.Payments.Momo.Fields.ApiUser")]
+    public string ApiUser { get; set; }
+    public bool ApiUser_OverrideForStore { get; set; }
 
-    public int TransactModeId { get; set; }
-    [NopResourceDisplayName("Plugins.Payments.Manual.Fields.TransactMode")]
-    public SelectList TransactModeValues { get; set; }
-    public bool TransactModeId_OverrideForStore { get; set; }
+    [NopResourceDisplayName("Plugins.Payments.Momo.Fields.ApiKey")]
+    public string ApiKey { get; set; }
+    public bool ApiKey_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Plugins.Payments.Momo.Fields.CallbackUrl")]
+    public string CallbackUrl { get; set; }
+    public bool CallbackUrl_OverrideForStore { get; set; }
+
+    public bool UserCreated { get; set; }
 }

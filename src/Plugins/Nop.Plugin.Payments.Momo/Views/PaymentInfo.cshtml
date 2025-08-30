@@ -1,51 +1,94 @@
 ﻿@{
     Layout = "";
 }
-@model Nop.Plugin.Payments.Manual.Models.PaymentInfoModel
-<table width="100%" cellspacing="2" cellpadding="1" border="0">
-    <tr>
-        <td>
-            <label asp-for="CreditCardTypes">@T("Payment.SelectCreditCard"):</label>
-        </td>
-        <td>
-            <select asp-for="CreditCardType" asp-items="Model.CreditCardTypes" class="dropdownlists"></select>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <label asp-for="CardholderName">@T("Payment.CardholderName"):</label>
-        </td>
-        <td>
-            <input type="text" asp-for="CardholderName" style="width:165px;" autocomplete="off" />
-            <span asp-validation-for="CardholderName"></span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <label asp-for="CardNumber">@T("Payment.CardNumber"):</label>
-        </td>
-        <td>
-            <input type="text" asp-for="CardNumber" style="width:165px;" autocomplete="off" maxlength="22" />
-            <span asp-validation-for="CardNumber"></span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <label asp-for="ExpireMonth">@T("Payment.ExpirationDate"):</label>
-        </td>
-        <td>
-            <select asp-for="ExpireMonth" asp-items="Model.ExpireMonths"></select>
-            /
-            <select asp-for="ExpireYear" asp-items="Model.ExpireYears"></select>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <label asp-for="CardCode">@T("Payment.CardCode"):</label>
-        </td>
-        <td>
-            <input type="text" asp-for="CardCode" style="width:60px;" autocomplete="off" maxlength="4" />
-            <span asp-validation-for="CardCode"></span>
-        </td>
-    </tr>
-</table>
+@model Nop.Plugin.Payments.Momo.Models.PaymentInfoModel
+
+<div class="form-group">
+    <label asp-for="@Model.PhoneNumber"></label>
+    <input asp-for="@Model.PhoneNumber" class="form-control" />
+    <span asp-validation-for="@Model.PhoneNumber"></span>
+</div>
+
+<div id="momoPaymentStatus" style="display: none;" class="alert alert-info mt-3">
+    <p id="momoStatusMessage">Please check your phone and approve the payment request.</p>
+    <div class="progress">
+        <div id="momoStatusProgress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var momoPaymentChecker = {
+            referenceId: '',
+            checkInterval: null,
+            maxAttempts: 60, // 5 minutes (5 * 60 seconds)
+            currentAttempt: 0,
+
+            init: function(referenceId) {
+                this.referenceId = referenceId;
+                if (this.referenceId) {
+                    this.startChecking();
+                }
+            },
+
+            startChecking: function() {
+                $('#momoPaymentStatus').show();
+                this.currentAttempt = 0;
+                this.checkStatus();
+                this.checkInterval = setInterval(() => this.checkStatus(), 5000); // Check every 5 seconds
+            },
+
+            stopChecking: function() {
+                if (this.checkInterval) {
+                    clearInterval(this.checkInterval);
+                    this.checkInterval = null;
+                }
+            },
+
+            updateProgress: function() {
+                var progress = (this.currentAttempt / this.maxAttempts) * 100;
+                $('#momoStatusProgress').css('width', progress + '%');
+            },
+
+            checkStatus: function() {
+                if (this.currentAttempt >= this.maxAttempts) {
+                    this.stopChecking();
+                    $('#momoStatusMessage').text('Payment request has expired. Please try again.');
+                    $('#momoStatusProgress').removeClass('progress-bar-animated').addClass('bg-danger');
+                    return;
+                }
+
+                this.currentAttempt++;
+                this.updateProgress();
+
+                $.get('@Url.Action("CheckStatus", "PaymentMomo")', { referenceId: this.referenceId })
+                    .done(function(response) {
+                        if (response.isComplete) {
+                            momoPaymentChecker.stopChecking();
+                            
+                            if (response.status === 'SUCCESSFUL') {
+                                $('#momoStatusMessage').text('Payment successful! Redirecting...');
+                                $('#momoStatusProgress').removeClass('progress-bar-animated').addClass('bg-success');
+                                window.location.href = response.redirectUrl;
+                            } else {
+                                $('#momoStatusMessage').text('Payment failed. Please try again.');
+                                $('#momoStatusProgress').removeClass('progress-bar-animated').addClass('bg-danger');
+                            }
+                        }
+                    })
+                    .fail(function() {
+                        momoPaymentChecker.stopChecking();
+                        $('#momoStatusMessage').text('Error checking payment status. Please contact support.');
+                        $('#momoStatusProgress').removeClass('progress-bar-animated').addClass('bg-danger');
+                    });
+            }
+        };
+
+        $(document).ready(function() {
+            // Listen for the payment initiated event
+            $(document).on('momo:paymentInitiated', function(e, referenceId) {
+                momoPaymentChecker.init(referenceId);
+            });
+        });
+    </script>
+}

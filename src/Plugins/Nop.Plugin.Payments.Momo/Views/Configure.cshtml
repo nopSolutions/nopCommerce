@@ -1,46 +1,96 @@
-﻿@model Nop.Plugin.Payments.Manual.Models.ConfigurationModel
+﻿@using Nop.Web.Areas.Admin.Components
+@using Nop.Web.Framework.Models.AdminAreaTour
+@model Nop.Plugin.Payments.Momo.Models.ConfigurationModel
+
 @{
     Layout = "_ConfigurePlugin";
 }
 
 @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
-<form asp-controller="PaymentManual" asp-action="Configure" method="post">
+<form asp-controller="PaymentMomo" asp-action="Configure" method="post">
     <div class="cards-group">
         <div class="card card-default">
             <div class="card-body">
-                <p>@T("Plugins.Payments.Manual.Instructions")</p>
+                <p>@T("Plugins.Payments.Momo.Instructions")</p>
+                
+                @* Step 1: Initial Configuration *@
                 <div class="form-group row">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="TransactModeId_OverrideForStore" asp-input="TransactModeId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="TransactModeValues" />
+                        <nop-override-store-checkbox asp-for="SubscriptionKey_OverrideForStore" asp-input="SubscriptionKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="SubscriptionKey" />
                     </div>
                     <div class="col-md-9">
-                        <nop-select asp-for="TransactModeId" asp-items="Model.TransactModeValues" />
-                        <span asp-validation-for="TransactModeId"></span>
+                        <nop-editor asp-for="SubscriptionKey" />
+                        <span asp-validation-for="SubscriptionKey"></span>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="AdditionalFee_OverrideForStore" asp-input="AdditionalFee" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="AdditionalFee" />
+                        <nop-override-store-checkbox asp-for="CallbackUrl_OverrideForStore" asp-input="CallbackUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CallbackUrl" />
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="AdditionalFee" />
-                        <span asp-validation-for="AdditionalFee"></span>
+                        <nop-editor asp-for="CallbackUrl" />
+                        <span asp-validation-for="CallbackUrl"></span>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="AdditionalFeePercentage_OverrideForStore" asp-input="AdditionalFeePercentage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="AdditionalFeePercentage" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="AdditionalFeePercentage" />
-                        <span asp-validation-for="AdditionalFeePercentage"></span>
+
+                @* Step 2: API User Creation *@
+                <div class="card bg-light mt-3">
+                    <div class="card-body">
+                        <h5>@T("Plugins.Payments.Momo.ApiSetup")</h5>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ApiUser_OverrideForStore" asp-input="ApiUser" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ApiUser" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <nop-editor asp-for="ApiUser" />
+                                    <div class="input-group-append">
+                                        <button type="submit" 
+                                                formaction="@Url.Action("CreateApiUser")" 
+                                                formmethod="post" 
+                                                class="btn btn-info" 
+                                                @(Model.UserCreated ? "disabled" : "")>
+                                            @T("Plugins.Payments.Momo.CreateApiUser")
+                                        </button>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="ApiUser"></span>
+                            </div>
+                        </div>
+
+                        @* Step 3: API Key Generation *@
+                        @if (Model.UserCreated)
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ApiKey_OverrideForStore" asp-input="ApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ApiKey" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <nop-editor asp-for="ApiKey" />
+                                        <div class="input-group-append">
+                                            <button type="submit" name="generate" class="btn btn-info"
+                                                    formaction="@Url.Action("GenerateApiKey")" 
+                                                    formmethod="post" 
+                                                    >
+                                                @T("Plugins.Payments.Momo.GenerateApiKey")
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="ApiKey"></span>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
-                <div class="form-group row">
+
+                <div class="form-group row mt-3">
                     <div class="col-md-9 offset-md-3">
                         <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
                     </div>
