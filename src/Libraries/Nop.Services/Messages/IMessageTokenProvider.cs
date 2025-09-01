@@ -207,6 +207,14 @@ public partial interface IMessageTokenProvider
     Task AddBackInStockTokensAsync(IList<Token> tokens, BackInStockSubscription subscription);
 
     /// <summary>
+    /// Add shopping cart tokens
+    /// </summary>
+    /// <param name="tokens">List of already added tokens</param>
+    /// <param name="subscription">BackInStock subscription</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task AddShoppingCartTokensAsync(IList<Token> tokens, IList<ShoppingCartItem> cart, int languageId);
+
+    /// <summary>
     /// Get collection of allowed (supported) message tokens for campaigns
     /// </summary>
     /// <returns>

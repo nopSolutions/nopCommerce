@@ -1952,6 +1952,10 @@ div.dt-container div.dt-paging {
   border: 1px solid #eaeaea;
 }
 
+.reminder-row input[type=checkbox] {
+  margin-top: 11px;
+}
+
 @media (max-width: 1500px) {
   /* CONFIGURATION STEPS */
   .configuration-step-icon {

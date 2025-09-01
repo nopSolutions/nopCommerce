@@ -11,6 +11,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Reminders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Translation;
@@ -423,6 +424,28 @@ public class SettingMigration : MigrationBase
         {
             orderSettings.AllowCustomersCancelOrders = true;
             settingService.SaveSetting(orderSettings, settings => settings.AllowCustomersCancelOrders);
+        }
+
+        //#7743
+        var remindersSettings = settingService.LoadSetting<RemindersSettings>();
+        if (!settingService.SettingExists(remindersSettings, settings => settings.AbandonedCartEnabled))
+        {
+            remindersSettings.AbandonedCartEnabled = false;
+            settingService.SaveSetting(remindersSettings, settings => settings.AbandonedCartEnabled);
+        }
+
+
+        if (!settingService.SettingExists(remindersSettings, settings => settings.PendingOrdersEnabled))
+        {
+            remindersSettings.PendingOrdersEnabled = false;
+            settingService.SaveSetting(remindersSettings, settings => settings.PendingOrdersEnabled);
+        }
+
+
+        if (!settingService.SettingExists(remindersSettings, settings => settings.IncompleteRegistrationEnabled))
+        {
+            remindersSettings.IncompleteRegistrationEnabled = false;
+            settingService.SaveSetting(remindersSettings, settings => settings.IncompleteRegistrationEnabled);
         }
     }
 

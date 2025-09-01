@@ -1,0 +1,50 @@
+@using Nop.Core.Domain.Messages
+@using Nop.Services
+
+@model IList<FollowUpModel>
+
+@{
+	var prefix = Html.ViewData.TemplateInfo.HtmlFieldPrefix;
+}
+
+@for (var i = 0; i < Model.Count; i++)
+{
+	<input asp-for="@Model[i].Name" type="hidden" />
+	<div class="form-group row">
+		<div class="col-md-3">
+			<nop-label asp-for="@Model[i].Enabled" asp-resource-params="@(new string[] { (i + 1).ToString() })" />
+		</div>
+		<div class="col-md-9">
+			<div class="reminder-row row">
+				<div class="col-sm-auto col-xs-4">
+					<input asp-for="@Model[i].Enabled" class="followup-enable-@prefix" />
+				</div>
+				<div class="col-sm-8 @Html.IdFor(m => Model[i].Enabled)-followup-block">
+					<div class="row">
+						<div class="col-3">
+							@Html.EditorFor(m => m[i].DelayBeforeSend)
+						</div>
+						<div class="col-auto" style="width: 150px;">
+							<nop-select asp-for="@Model[i].DelayPeriodId" asp-items="@(await ((MessageDelayPeriod)@Model[i].DelayPeriodId).ToSelectListAsync())" style="max-width: 200px;" />
+							<span asp-validation-for="@Model[i].DelayPeriodId"></span>
+						</div>
+						<div class="col-auto label-wrapper">
+							<div title='@T("Admin.Promotions.Reminder.FollowUp.DelayBeforeSend.Hint")' data-toggle='tooltip' class='ico-help'><i class='fas fa-circle-question'></i></div>
+						</div>
+					</div>
+					<span asp-validation-for="@Model[i].DelayBeforeSend"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+<script>
+	$(function() {
+		$(".followup-enable-@prefix").on('change', function () {
+			$('.' + this.id + '-followup-block').toggle($(this).is(":checked"))
+		});
+
+		$(".followup-enable-@prefix").trigger('change');
+	});
+</script>

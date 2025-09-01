@@ -137,6 +137,11 @@ public static partial class NopRouteNames
         public const string CHECKOUT = "Checkout";
 
         /// <summary>
+        /// Gets the customer shopping cart route name
+        /// </summary>
+        public const string CUSTOMER_CART = "CustomerCart";
+
+        /// <summary>
         /// Gets the one page checkout route name
         /// </summary>
         public const string CHECKOUT_ONE_PAGE = "CheckoutOnePage";

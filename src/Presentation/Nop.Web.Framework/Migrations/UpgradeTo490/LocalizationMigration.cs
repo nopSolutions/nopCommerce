@@ -1,6 +1,5 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -682,12 +681,32 @@ public class LocalizationMigration : MigrationBase
             ["Products.CompatibleWith.Items"] = "{0} items are compatible with this product",
             ["Search.FilterLevelValues"] = "Search by Year Make Model",
 
+
+            //#7743
+            ["Admin.Promotions.Reminder.AbandonedCartEnabled"] = "Abandoned сart reminders enabled",
+            ["Admin.Promotions.Reminder.FollowUp.DelayBeforeSend"] = "Delay send",
+            ["Admin.Promotions.Reminder.FollowUp.DelayBeforeSend.Hint"] = "A delay before sending the follow up.",
+            ["Admin.Promotions.Reminder.FollowUp.DelayBeforeSend.MustBeGreaterThanZero"] = "The delay must be greater than '0'.",
+            ["Admin.Promotions.Reminder.FollowUp.DelayBeforeSend.Required"] = "The delay is required.",
+            ["Admin.Promotions.Reminder.FollowUp.Enabled"] = "Follow up #{0}",
+            ["Admin.Promotions.Reminder.FollowUp.Enabled.Hint"] = "Check to enable reminder.",
+            ["Admin.Promotions.Reminder.IncompleteRegistrationEnabled"] = "Incomplete registration reminder enabled",
+            ["Admin.Promotions.Reminder.PendingOrdersEnabled"] = "Pending orders reminders enabled",
+            ["Admin.Promotions.Reminders"] = "Reminders",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_1_MESSAGE}"] = "This message template is used to send the follow-up #1 for a abandoned cart.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_2_MESSAGE}"] = "This message template is used to send the follow-up #2 for a abandoned cart.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_3_MESSAGE}"] = "This message template is used to send the follow-up #3 for a abandoned cart.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_PENDING_ORDER_FOLLOW_UP_1_MESSAGE}"] = "This message template is used to send the follow-up #1 for a pending order.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_PENDING_ORDER_FOLLOW_UP_2_MESSAGE}"] = "This message template is used to send the follow-up #2 for a pending order.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_REGISTRATION_FOLLOW_UP_MESSAGE}"] = "This message template is used to send the follow-up #1 for a incomplete registration.",
         }, languageId);
 
         #endregion
     }
 
-    /// <summary>Collects the DOWN migration expressions</summary>
+    /// <summary>
+    /// Collects the DOWN migration expressions
+    /// </summary>
     public override void Down()
     {
         //add the downgrade logic if necessary 
