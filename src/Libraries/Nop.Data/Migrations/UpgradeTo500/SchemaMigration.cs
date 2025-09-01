@@ -1,9 +1,12 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo500;
 
-[NopSchemaMigration("2025-11-17 15:07:00", "SchemaMigration for 5.00")]
+[NopSchemaMigration("2026-02-02 00:00:04", "SchemaMigration for 5.00")]
 public class SchemaMigration : ForwardOnlyMigration
 {
     /// <summary>
@@ -58,5 +61,31 @@ public class SchemaMigration : ForwardOnlyMigration
                 .AsString()
                 .SetExistingRowsTo(null);
         }
+
+        //#7743
+        this.AddOrAlterColumnFor<Customer>(t => t.LastShoppingCartUpdateDateUtc)
+            .AsDateTime2()
+            .Nullable();
+
+        this.AddOrAlterColumnFor<Customer>(t => t.LastAbandonedCartFollowUpNumber)
+            .AsInt32()
+            .Nullable();
+        this.AddOrAlterColumnFor<Customer>(t => t.LastAbandonedCartFollowUpDateUtc)
+            .AsDateTime2()
+            .Nullable();
+
+        this.AddOrAlterColumnFor<Customer>(t => t.LastRegistrationFollowUpNumber)
+            .AsInt32()
+            .Nullable();
+        this.AddOrAlterColumnFor<Customer>(t => t.LastRegistrationFollowUpDateUtc)
+            .AsDateTime2()
+            .Nullable();
+
+        this.AddOrAlterColumnFor<Order>(t => t.LastPendingOrderFollowUpNumber)
+            .AsInt32()
+            .Nullable();
+        this.AddOrAlterColumnFor<Order>(t => t.LastPendingOrderFollowUpDateUtc)
+            .AsDateTime2()
+            .Nullable();
     }
 }

@@ -90,6 +90,7 @@ public partial class StandardPermission
         public const string CAMPAIGNS_CREATE_EDIT = $"{nameof(Promotions)}.CampaignsCreateEdit";
         public const string CAMPAIGNS_DELETE = $"{nameof(Promotions)}.CampaignsDelete";
         public const string CAMPAIGNS_SEND_EMAILS = $"{nameof(Promotions)}.CampaignsSendEmails";
+        public const string REMINDERS_MANAGE = $"{nameof(Promotions)}.ManageReminders";
     }
 
     public partial class ContentManagement

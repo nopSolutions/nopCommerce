@@ -924,7 +924,12 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(entity => entity.TaxDisplayTypeId, options => options.Ignore())
             .ForMember(entity => entity.VatNumberStatus, options => options.Ignore())
             .ForMember(entity => entity.TaxDisplayType, options => options.Ignore())
-            .ForMember(entity => entity.RegisteredInStoreId, options => options.Ignore());
+            .ForMember(entity => entity.RegisteredInStoreId, options => options.Ignore())
+            .ForMember(entity => entity.LastShoppingCartUpdateDateUtc, options => options.Ignore())
+            .ForMember(entity => entity.LastRegistrationFollowUpDateUtc, options => options.Ignore())
+            .ForMember(entity => entity.LastRegistrationFollowUpNumber, options => options.Ignore())
+            .ForMember(entity => entity.LastAbandonedCartFollowUpDateUtc, options => options.Ignore())
+            .ForMember(entity => entity.LastAbandonedCartFollowUpNumber, options => options.Ignore());
 
         CreateMap<Customer, OnlineCustomerModel>()
             .ForMember(model => model.LastActivityDate, options => options.Ignore())

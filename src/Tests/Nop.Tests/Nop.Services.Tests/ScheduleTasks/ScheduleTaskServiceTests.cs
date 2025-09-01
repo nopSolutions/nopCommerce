@@ -135,13 +135,13 @@ public class ScheduleTaskServiceTests : ServiceTest
     {
         var tasks = await _scheduleTaskService.GetAllTasksAsync();
 
-        tasks.Count.Should().Be(5);
+        tasks.Count.Should().Be(8);
         tasks.Any(p => p.Enabled == false).Should().BeFalse();
         tasks.Any(p => p.Id == _task.Id).Should().BeFalse();
 
         tasks = await _scheduleTaskService.GetAllTasksAsync(true);
 
-        tasks.Count.Should().Be(9);
+        tasks.Count.Should().Be(12);
         tasks.Any(p => p.Enabled).Should().BeTrue();
         tasks.Any(p => p.Id == _task.Id).Should().BeTrue();
     }

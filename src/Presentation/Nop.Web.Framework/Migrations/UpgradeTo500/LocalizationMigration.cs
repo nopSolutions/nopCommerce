@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Web.Framework.Extensions;
@@ -213,9 +214,33 @@ public class LocalizationMigration : MigrationBase
 
             //#7989
             ["Products.ProductHasBeenUpdatedInTheWishlist.Link"] = "The product has been updated in your <a href=\"{0}\">wishlist</a>",
-            
+
             //#8021
             ["Admin.Catalog.Products.RelatedProducts.CyclicallyRelated"] = "Circular dependency is not allowed for required products (e.g. product A requires product B. And product B requires product A)",
+
+            //#7743
+            ["Admin.Promotions.Reminder.AbandonedCartEnabled"] = "Abandoned cart reminders enabled",
+            ["Admin.Promotions.Reminder.AbandonedCartEnabled.Hint"] = "Check to enable Abandoned cart reminders.",
+            ["Admin.Promotions.Reminder.FollowUp.DelayBeforeSend"] = "Delay send",
+            ["Admin.Promotions.Reminder.FollowUp.DelayBeforeSend.Hint"] = "A delay before sending the follow up.",
+            ["Admin.Promotions.Reminder.FollowUp.DelayBeforeSend.MustBeGreaterThanZero"] = "The delay must be greater than '0'.",
+            ["Admin.Promotions.Reminder.FollowUp.DelayBeforeSend.Required"] = "The delay is required.",
+            ["Admin.Promotions.Reminder.FollowUp.Enabled"] = "Follow up #{0}",
+            ["Admin.Promotions.Reminder.FollowUp.Enabled.Hint"] = "Check to enable reminder.",
+            ["Admin.Promotions.Reminder.IncompleteRegistrationEnabled"] = "Incomplete registration reminder enabled",
+            ["Admin.Promotions.Reminder.IncompleteRegistrationEnabled.Hint"] = "Check to enable incomplete registration reminders.",
+            ["Admin.Promotions.Reminder.PendingOrdersEnabled"] = "Pending orders reminders enabled",
+            ["Admin.Promotions.Reminder.PendingOrdersEnabled.Hint"] = "Check to enable pending orders reminders.",
+            ["Admin.Promotions.Reminders"] = "Reminders",
+            ["Admin.Promotions.Reminders.Warning.TaskDisabled"] = "Please remember <a href=\"{0}\" target=\"_blank\">to enable</a> the \"{1}\" scheduled task.",
+            ["Admin.Promotions.Reminders.Warning.MultiStore"] = "Abandoned cart reminders may not work as expected when using a multi-store setup.",
+            ["Admin.Promotions.Reminders.Warning.NotFound"] = "The scheduled task not found.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_1_MESSAGE}"] = "This message template is used to send the follow-up #1 for a abandoned cart.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_2_MESSAGE}"] = "This message template is used to send the follow-up #2 for a abandoned cart.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_3_MESSAGE}"] = "This message template is used to send the follow-up #3 for a abandoned cart.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_PENDING_ORDER_FOLLOW_UP_1_MESSAGE}"] = "This message template is used to send the follow-up #1 for a pending order.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_PENDING_ORDER_FOLLOW_UP_2_MESSAGE}"] = "This message template is used to send the follow-up #2 for a pending order.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_REGISTRATION_FOLLOW_UP_MESSAGE}"] = "This message template is used to send the follow-up #1 for a incomplete registration.",
 
             //#7906
             ["Wishlist.DuplicateName"] = "A wishlist with this name already exists.",

@@ -222,6 +222,12 @@ public class Indexes : ForwardOnlyMigration
             .OnColumn(nameof(GenericAttribute.KeyGroup)).Ascending()
             .WithOptions().NonClustered();
 
+        Create.Index("IX_GenericAttribute_EntityId_KeyGroup_and_Key").OnTable(nameof(GenericAttribute))
+            .OnColumn(nameof(GenericAttribute.EntityId)).Ascending()
+            .OnColumn(nameof(GenericAttribute.KeyGroup)).Ascending()
+            .OnColumn(nameof(GenericAttribute.Key)).Ascending()
+            .WithOptions().NonClustered();
+
         Create.Index("IX_Forums_Subscription_TopicId").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumSubscription)))
             .OnColumn(nameof(ForumSubscription.TopicId)).Ascending()
             .WithOptions().NonClustered();

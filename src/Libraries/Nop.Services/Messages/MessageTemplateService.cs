@@ -112,8 +112,7 @@ public partial class MessageTemplateService : IMessageTemplateService
             if (storeId.HasValue && storeId.Value > 0)
                 templatesQuery = await _storeMappingService.ApplyStoreMapping(templatesQuery, storeId.Value);
 
-            return await templatesQuery.OrderBy(messageTemplate => messageTemplate.Id)
-            .ToListAsync();
+            return await templatesQuery.OrderBy(messageTemplate => messageTemplate.Id).ToListAsync();
         });
     }
 

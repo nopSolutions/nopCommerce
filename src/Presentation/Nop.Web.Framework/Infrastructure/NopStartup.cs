@@ -41,6 +41,7 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Plugins.Marketplace;
+using Nop.Services.Reminders;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -242,6 +243,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IWidgetModelFactory, WidgetModelFactory>();
         services.AddScoped<IMenuService, MenuService>();
         services.AddScoped<ISyncCodeHelper, SyncCodeHelper>();
+        services.AddScoped<IReminderService, ReminderService>();
 
         //attribute services
         services.AddScoped(typeof(IAttributeService<,>), typeof(AttributeService<,>));

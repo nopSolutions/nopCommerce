@@ -292,6 +292,16 @@ public partial class Order : BaseEntity, ISoftDeletedEntity
     /// </summary>
     public virtual int? RedeemedRewardPointsEntryId { get; set; }
 
+    /// <summary>
+    /// Gets or sets the current follow-up number for the pending order.
+    /// </summary>
+    public int? LastPendingOrderFollowUpNumber { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current follow-up number for the pending order.
+    /// </summary>
+    public DateTime? LastPendingOrderFollowUpDateUtc { get; set; }
+
     #endregion
 
     #region Custom properties

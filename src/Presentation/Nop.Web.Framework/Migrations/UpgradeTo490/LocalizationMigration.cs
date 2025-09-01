@@ -679,7 +679,9 @@ public class LocalizationMigration : MigrationBase
         #endregion
     }
 
-    /// <summary>Collects the DOWN migration expressions</summary>
+    /// <summary>
+    /// Collects the DOWN migration expressions
+    /// </summary>
     public override void Down()
     {
         //add the downgrade logic if necessary 

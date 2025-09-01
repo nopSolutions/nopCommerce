@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.ArtificialIntelligence;
+using Nop.Core.Domain.Reminders;
 using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Web.Framework.Extensions;
@@ -17,6 +18,11 @@ public class SettingMigration : MigrationBase
         
         //#7898
         this.SetSettingIfNotExists<ArtificialIntelligenceSettings, bool>(settings => settings.LogRequests, false);
+
+        //#7743
+        this.SetSettingIfNotExists<ReminderSettings, bool>(settings => settings.AbandonedCartEnabled, false);
+        this.SetSettingIfNotExists<ReminderSettings, bool>(settings => settings.PendingOrdersEnabled, false);
+        this.SetSettingIfNotExists<ReminderSettings, bool>(settings => settings.IncompleteRegistrationEnabled, false);
     }
 
     public override void Down()

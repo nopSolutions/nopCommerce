@@ -243,6 +243,31 @@ public partial class Customer : BaseEntity, ISoftDeletedEntity
     /// </summary>
     public int? ShippingAddressId { get; set; }
 
+    /// <summary>
+    /// Gets or sets the date and time (in UTC) when the customer's shopping cart was last updated.
+    /// </summary>
+    public DateTime? LastShoppingCartUpdateDateUtc { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current follow-up number for the abandoned shopping cart.
+    /// </summary>
+    public int? LastAbandonedCartFollowUpNumber { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current follow-up number for the abandoned shopping cart.
+    /// </summary>
+    public DateTime? LastAbandonedCartFollowUpDateUtc { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current follow-up number for customer registration.
+    /// </summary>
+    public int? LastRegistrationFollowUpNumber { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current follow-up number for customer registration.
+    /// </summary>
+    public DateTime? LastRegistrationFollowUpDateUtc { get; set; }
+
     #region Custom properties
 
     /// <summary>

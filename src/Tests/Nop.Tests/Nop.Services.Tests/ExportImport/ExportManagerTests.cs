@@ -244,7 +244,7 @@ public class ExportManagerTests : ServiceTest
             "CaptureTransactionId", "CaptureTransactionResult", "SubscriptionTransactionId", "PaidDateUtc",
             "Deleted", "PickupAddress", "RedeemedRewardPointsEntryId", "DiscountUsageHistory", "GiftCardUsageHistory",
             "OrderNotes", "OrderItems", "Shipments", "OrderStatus", "PaymentStatus", "ShippingStatus",
-            "CustomerTaxDisplayType", "CustomOrderNumber"
+            "CustomerTaxDisplayType", "CustomOrderNumber", "LastPendingOrderFollowUpNumber", "LastPendingOrderFollowUpDateUtc"
         });
 
         //fields tested individually
@@ -338,7 +338,9 @@ public class ExportManagerTests : ServiceTest
 
         var customer = customers.First();
 
-        var ignore = new List<string> { "Id", "ExternalAuthenticationRecords", "ShoppingCartItems",
+        var ignore = new List<string> 
+        { 
+            "Id", "ExternalAuthenticationRecords", "ShoppingCartItems",
             "ReturnRequests", "BillingAddress", "ShippingAddress", "Addresses", "AdminComment",
             "EmailToRevalidate", "HasShoppingCartItems", "RequireReLogin", "FailedLoginAttempts",
             "CannotLoginUntilDateUtc", "Deleted", "IsSystemAccount", "SystemName", "LastIpAddress",
@@ -346,7 +348,9 @@ public class ExportManagerTests : ServiceTest
             "CustomerCustomerRoleMappings", "CustomerAddressMappings", "EntityCacheKey", "VendorId",
             "DateOfBirth", "CountryId",
             "StateProvinceId", "VatNumberStatusId", "TimeZoneId",
-            "CurrencyId", "LanguageId", "TaxDisplayTypeId", "TaxDisplayType", "TaxDisplayType", "VatNumberStatusId", "MustChangePassword" };
+            "CurrencyId", "LanguageId", "TaxDisplayTypeId", "TaxDisplayType", "TaxDisplayType", "VatNumberStatusId", "MustChangePassword",
+            "LastShoppingCartUpdateDateUtc", "LastRegistrationFollowUpDateUtc", "LastRegistrationFollowUpNumber", "LastAbandonedCartFollowUpDateUtc", "LastAbandonedCartFollowUpNumber"
+        };
 
         if (!_customerSettings.FirstNameEnabled)
             ignore.Add("FirstName");

@@ -352,6 +352,14 @@ public partial class AdminMenu : IAdminMenu
                             PermissionNames = new List<string> { StandardPermission.Promotions.CAMPAIGNS_VIEW },
                             Url = GetMenuItemUrl("Campaign", "List"),
                             IconClass = "far fa-dot-circle"
+                        },
+                        new()
+                        {
+                            SystemName = "Reminders",
+                            Title = await _localizationService.GetResourceAsync("Admin.Promotions.Reminders"),
+                            PermissionNames = new List<string> { StandardPermission.Promotions.REMINDERS_MANAGE },
+                            Url = GetMenuItemUrl("Reminder", "Index"),
+                            IconClass = "far fa-dot-circle"
                         }
                     }
                 },
