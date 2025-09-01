@@ -106,6 +106,7 @@ public partial class DefaultPermissionConfigManager : IPermissionConfigManager
         new ("Admin area. Campaigns. Create and Edit", StandardPermission.Promotions.CAMPAIGNS_CREATE_EDIT, nameof(StandardPermission.Promotions), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Campaigns. Delete", StandardPermission.Promotions.CAMPAIGNS_DELETE, nameof(StandardPermission.Promotions), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Campaigns. Send emails", StandardPermission.Promotions.CAMPAIGNS_SEND_EMAILS, nameof(StandardPermission.Promotions), NopCustomerDefaults.AdministratorsRoleName),
+        new ("Admin area. Reminders. Manage", StandardPermission.Promotions.REMINDERS_MANAGE, nameof(StandardPermission.Promotions), NopCustomerDefaults.AdministratorsRoleName),
 
         #endregion
 

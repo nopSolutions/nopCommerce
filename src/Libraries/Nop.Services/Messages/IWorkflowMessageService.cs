@@ -741,4 +741,44 @@ public partial interface IWorkflowMessageService
         bool ignoreDelayBeforeSend = false);
 
     #endregion
+
+    #region Reminders
+
+    /// <summary>
+    /// Sends a registration activation follow up to a customer
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifiers
+    /// </returns>
+    Task<IList<int>> SendIncompleteRegistrationNotificationMessageAsync(Customer customer);
+
+    /// <summary>
+    /// Sends an abandoned cart follow up to a customer
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="cart">Shopping cart</param>
+    /// <param name="storeId">Store identifier</param>
+    /// <param name="messageTemplateName">Follow up message name</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifiers
+    /// </returns>
+    Task<IList<int>> SendAbandonedCartFollowUpCustomerNotificationAsync(Customer customer,
+        IList<ShoppingCartItem> cart, int storeId, string messageTemplateName);
+
+    /// <summary>
+    /// Sends a pending order follow up to a customer
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="order">Order</param>
+    /// <param name="messageTemplateName">Follow up message name</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifiers
+    /// </returns>
+    Task<IList<int>> SendPendingOrderFollowUpCustomerNotificationAsync(Customer customer, Order order, string messageTemplateName);
+
+    #endregion
 }

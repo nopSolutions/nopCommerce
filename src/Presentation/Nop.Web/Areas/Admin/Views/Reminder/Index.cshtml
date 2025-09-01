@@ -1,0 +1,99 @@
+@using Nop.Core.Domain.Messages
+@using Nop.Services
+@model RemindersModel
+
+@{
+	//page title
+	ViewBag.PageTitle = T("Admin.Promotions.Reminders").Text;
+	//active menu item (system name)
+	NopHtml.SetActiveMenuItemSystemName("Reminders");
+}
+
+<form asp-controller="Reminder" method="post">
+	<div class="content-header clearfix">
+		<h1 class="float-left">
+			@T("Admin.Promotions.Reminders")
+		</h1>
+		<div class="float-right">
+			<button type="submit" name="save" class="btn btn-primary">
+				<i class="far fa-floppy-disk"></i>
+				@T("Admin.Common.Save")
+			</button>
+		</div>
+	</div>
+	<section class="content">
+		<div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+				<div class="card card-default">
+					<div class="card-body">
+						<div class="cards-group">
+							<div class="card card-default">
+								<div class="card-body">
+									<div class="form-group row">
+										<div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="AbandonedCartEnabled_OverrideForStore" asp-input="AbandonedCartEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="AbandonedCartEnabled" />
+										</div>
+										<div class="col-md-9">
+											<nop-editor asp-for="AbandonedCartEnabled" />
+										</div>
+									</div>
+									<nop-nested-setting asp-for="AbandonedCartEnabled">
+										@{
+											var abandonedCartFollowUpsViewData = new ViewDataDictionary(ViewData);
+											abandonedCartFollowUpsViewData.TemplateInfo.HtmlFieldPrefix = nameof(Model.AbandonedCartFollowUps);
+											@await Html.PartialAsync("_FollowUp", Model.AbandonedCartFollowUps, abandonedCartFollowUpsViewData)
+										}
+									</nop-nested-setting>
+								</div>
+							</div>
+
+							<div class="card card-default">
+								<div class="card-body">
+									<div class="form-group row">
+										<div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="PendingOrdersEnabled_OverrideForStore" asp-input="PendingOrdersEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="PendingOrdersEnabled" />
+										</div>
+										<div class="col-md-9">
+											<nop-editor asp-for="PendingOrdersEnabled" />
+										</div>
+									</div>
+									<nop-nested-setting asp-for="PendingOrdersEnabled">
+										@{
+											var pendingOrdersFollowUpsUpsViewData = new ViewDataDictionary(ViewData);
+											pendingOrdersFollowUpsUpsViewData.TemplateInfo.HtmlFieldPrefix = nameof(Model.PendingOrdersFollowUps);
+											@await Html.PartialAsync("_FollowUp", Model.PendingOrdersFollowUps, pendingOrdersFollowUpsUpsViewData)
+										}
+									</nop-nested-setting>
+								</div>
+							</div>
+
+							<div class="card card-default">
+								<div class="card-body">
+									<div class="form-group row">
+										<div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="IncompleteRegistrationEnabled_OverrideForStore" asp-input="IncompleteRegistrationEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="IncompleteRegistrationEnabled" />
+										</div>
+										<div class="col-md-9">
+											<nop-editor asp-for="IncompleteRegistrationEnabled" />
+										</div>
+									</div>
+									<nop-nested-setting asp-for="IncompleteRegistrationEnabled">
+										@{
+											var incompleteRegistrationFollowUpsViewData = new ViewDataDictionary(ViewData);
+											incompleteRegistrationFollowUpsViewData.TemplateInfo.HtmlFieldPrefix = nameof(Model.IncompleteRegistrationFollowUps);
+											@await Html.PartialAsync("_FollowUp", Model.IncompleteRegistrationFollowUps, incompleteRegistrationFollowUpsViewData)
+										}
+									</nop-nested-setting>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</form>

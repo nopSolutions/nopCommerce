@@ -1212,6 +1212,19 @@ public partial class ShoppingCartController : BasePublicController
         return View(model);
     }
 
+    public virtual async Task<IActionResult> CustomerCart()
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART))
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
+
+        var customer = await _workContext.GetCurrentCustomerAsync();
+
+        if (!await _customerService.IsRegisteredAsync(customer))
+            return Challenge();
+
+        return RedirectToRoute(NopRouteNames.General.CART);
+    }
+
     [HttpPost, ActionName("Cart")]
     [FormValueRequired("updatecart")]
     public virtual async Task<IActionResult> UpdateCart(IFormCollection form)

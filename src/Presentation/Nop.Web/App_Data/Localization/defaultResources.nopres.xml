@@ -11417,6 +11417,24 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ProductReview.Reply.CustomerNotification">
     <Value><![CDATA[This message template is used to notify customers when a store owner (or vendor) replies to their product reviews. You can set up this option by ticking the checkbox <strong>Notify customer about product review reply</strong> in Configuration - Settings - Catalog settings.]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Reminders.AbandonedCartFollowUp1">
+    <Value>This message template is used to send the follow-up #1 for a abandoned cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Reminders.AbandonedCartFollowUp2">
+    <Value>This message template is used to send the follow-up #2 for a abandoned cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Reminders.AbandonedCartFollowUp3">
+    <Value>This message template is used to send the follow-up #3 for a abandoned cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Reminders.PendingOrderFollowUp1">
+    <Value>This message template is used to send the follow-up #1 for a pending order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Reminders.PendingOrderFollowUp2">
+    <Value>This message template is used to send the follow-up #2 for a pending order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Reminders.RegistrationFollowUp">
+    <Value>This message template is used to send the follow-up #1 for a incomplete registration.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.QuantityBelow.AttributeCombination.StoreOwnerNotification">
     <Value>This message template is used to notify a store owner that the certain product attribute combination is getting low stock. You can set up the combination minimum quantity when creating or editing the product in Product attribute tab - Attributes combinations tab in Notify admin for quantity below field.</Value>
   </LocaleResource>
@@ -15298,6 +15316,45 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Updated">
     <Value>The subscription type has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.AbandonedCartEnabled">
+    <Value>Abandoned сart reminders enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.AbandonedCartEnabled.Hint">
+    <Value>Check to enable abandoned сart reminders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.FollowUp.DelayBeforeSend">
+    <Value>Delay send</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.FollowUp.DelayBeforeSend.Hint">
+    <Value>A delay before sending the follow up.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.FollowUp.DelayBeforeSend.MustBeGreaterThanZero">
+    <Value>The delay must be greater than '0'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.FollowUp.DelayBeforeSend.Required">
+    <Value>The delay is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.FollowUp.Enabled">
+    <Value>Follow up #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.FollowUp.Enabled.Hint">
+    <Value>Check to enable reminder.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.IncompleteRegistrationEnabled">
+    <Value>Incomplete registration reminder enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.IncompleteRegistrationEnabled.Hint">
+    <Value>Check to enable incomplete registration reminders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.PendingOrdersEnabled">
+    <Value>Pending orders reminders enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.PendingOrdersEnabled.Hint">
+    <Value>Check to enable pending orders reminders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminders">
+    <Value>Reminders</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.RecurringPayments">
     <Value>Recurring payments</Value>

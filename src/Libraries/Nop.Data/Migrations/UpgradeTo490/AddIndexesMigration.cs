@@ -1,12 +1,13 @@
 ﻿using FluentMigrator;
 using FluentMigrator.SqlServer;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Topics;
 using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo490;
 
-[NopSchemaMigration("2025-01-28 00:00:01", "AddIndexesMigration for 4.90.0")]
+[NopSchemaMigration("2025-01-28 00:00:02", "AddIndexesMigration for 4.90.0")]
 public class AddIndexesMigration : ForwardOnlyMigration
 {
     /// <summary>
@@ -104,5 +105,15 @@ public class AddIndexesMigration : ForwardOnlyMigration
                 .OnColumn(manufacturerIdColumnName).Ascending()
                 .WithOptions().NonClustered()
                 .Include(productIdColumnName);
+
+        //#7743
+        var genericAttributeIndexName = "IX_GenericAttribute_EntityId_KeyGroup_and_Key";
+        var genericAttributeTableName = nameof(GenericAttribute);
+        if (!Schema.Table(genericAttributeTableName).Index(genericAttributeIndexName).Exists())
+            Create.Index(genericAttributeIndexName).OnTable(genericAttributeTableName)
+            .OnColumn(nameof(GenericAttribute.EntityId)).Ascending()
+            .OnColumn(nameof(GenericAttribute.KeyGroup)).Ascending()
+            .OnColumn(nameof(GenericAttribute.Key)).Ascending()
+            .WithOptions().NonClustered();
     }
 }

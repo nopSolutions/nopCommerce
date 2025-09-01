@@ -56,6 +56,10 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/cart/",
             defaults: new { controller = "ShoppingCart", action = "Cart" });
 
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CUSTOMER_CART,
+            pattern: $"{lang}/customercart/",
+            defaults: new { controller = "ShoppingCart", action = "CustomerCart" });
+
         //estimate shipping (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.ESTIMATE_SHIPPING,
             pattern: $"cart/estimateshipping",
