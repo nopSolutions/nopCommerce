@@ -143,22 +143,6 @@ public partial class CatalogController : BasePublicController
         return PartialView("_ProductsInGridOrLines", model);
     }
 
-    [HttpPost]
-    public virtual async Task<IActionResult> GetCatalogRoot()
-    {
-        var model = await _catalogModelFactory.PrepareRootCategoriesAsync();
-
-        return Json(model);
-    }
-
-    [HttpPost]
-    public virtual async Task<IActionResult> GetCatalogSubCategories(int id)
-    {
-        var model = await _catalogModelFactory.PrepareSubCategoriesAsync(id);
-
-        return Json(model);
-    }
-
     #endregion
 
     #region Manufacturers

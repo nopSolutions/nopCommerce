@@ -124,6 +124,8 @@ public partial class DefaultPermissionConfigManager : IPermissionConfigManager
         new ("Admin area. Polls. Create, edit, delete", StandardPermission.ContentManagement.POLLS_CREATE_EDIT_DELETE, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Forums. View", StandardPermission.ContentManagement.FORUMS_VIEW, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Forums. Create, edit, delete", StandardPermission.ContentManagement.FORUMS_CREATE_EDIT_DELETE, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
+        new ("Admin area. Menus. View", StandardPermission.ContentManagement.MENU_VIEW, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
+        new ("Admin area. Menus. Create, edit, delete", StandardPermission.ContentManagement.MENU_CREATE_EDIT_DELETE, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
 
         #endregion
 

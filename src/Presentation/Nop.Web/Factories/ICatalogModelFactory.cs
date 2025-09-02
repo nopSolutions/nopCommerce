@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Catalog;
 
@@ -43,15 +42,6 @@ public partial interface ICatalogModelFactory
         int currentProductId);
 
     /// <summary>
-    /// Prepare top menu model
-    /// </summary>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the op menu model
-    /// </returns>
-    Task<TopMenuModel> PrepareTopMenuModelAsync();
-
-    /// <summary>
     /// Prepare homepage category models
     /// </summary>
     /// <returns>
@@ -59,25 +49,6 @@ public partial interface ICatalogModelFactory
     /// The task result contains the list of homepage category models
     /// </returns>
     Task<List<CategoryModel>> PrepareHomepageCategoryModelsAsync();
-
-    /// <summary>
-    /// Prepare root categories for menu
-    /// </summary>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the list of category (simple) models
-    /// </returns>
-    Task<List<CategorySimpleModel>> PrepareRootCategoriesAsync();
-
-    /// <summary>
-    /// Prepare subcategories for menu
-    /// </summary>
-    /// <param name="id">Id of category to get subcategory</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the 
-    /// </returns>
-    Task<List<CategorySimpleModel>> PrepareSubCategoriesAsync(int id);
 
     /// <summary>
     /// Prepares the category products model
@@ -109,15 +80,6 @@ public partial interface ICatalogModelFactory
     /// The task result contains the list of category (simple) models
     /// </returns>
     Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId, bool loadSubCategories = true);
-
-    /// <summary>
-    /// Prepare category (simple) xml document
-    /// </summary>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the xml document of category (simple) models
-    /// </returns>
-    Task<XDocument> PrepareCategoryXmlDocumentAsync();
 
     #endregion
 

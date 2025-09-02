@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Models.ArtificialIntelligence;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Vendors;
@@ -9,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors;
 /// <summary>
 /// Represents a vendor model
 /// </summary>
-public partial record VendorModel : BaseNopEntityModel, ILocalizedModel<VendorLocalizedModel>
+public partial record VendorModel : BaseNopEntityModel, ILocalizedModel<VendorLocalizedModel>, IMetaTagsSupportedModel
 {
     #region Ctor
 
@@ -141,7 +142,7 @@ public partial record VendorModel : BaseNopEntityModel, ILocalizedModel<VendorLo
     #endregion
 }
 
-public partial record VendorLocalizedModel : ILocalizedLocaleModel
+public partial record VendorLocalizedModel : ILocalizedLocaleModel, IMetaTagsSupportedModel
 {
     public int LanguageId { get; set; }
 

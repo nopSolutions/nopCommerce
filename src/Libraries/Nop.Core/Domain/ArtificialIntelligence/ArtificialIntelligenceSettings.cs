@@ -38,9 +38,42 @@ public partial class ArtificialIntelligenceSettings : ISettings
     public int? RequestTimeout { get; set; }
 
     /// <summary>
-    /// /// <summary>
-    /// Gets or sets a query format string for generate product description with AI
+    /// Gets or sets a value indicating whether generation of product descriptions with AI is allowed
     /// </summary>
+    public bool AllowProductDescriptionGeneration { get; set; }
+
+    /// <summary>
+    /// Gets or sets a query format string to generate product description with AI
     /// </summary>
     public string ProductDescriptionQuery { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether generation of meta keywords with AI is allowed
+    /// </summary>
+    public bool AllowMetaKeywordsGeneration { get; set; }
+
+    /// <summary>
+    /// Gets or sets a query format string to generate meta keywords with AI
+    /// </summary>
+    public string MetaKeywordsQuery { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether generation of meta descriptions with AI is allowed
+    /// </summary>
+    public bool AllowMetaDescriptionGeneration { get; set; }
+
+    /// <summary>
+    /// Gets or sets a query format string to generate meta description with AI
+    /// </summary>
+    public string MetaDescriptionQuery { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether generation of meta title with AI is allowed
+    /// </summary>
+    public bool AllowMetaTitleGeneration { get; set; }
+
+    /// <summary>
+    /// Gets or sets a query format string to generate meta title with AI
+    /// </summary>
+    public string MetaTitleQuery { get; set; }
 }

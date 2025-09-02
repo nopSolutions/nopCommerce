@@ -559,9 +559,6 @@ public partial class ImportManager : IImportManager
                 case "AutomaticallyCalculatePriceRange":
                     category.ManuallyPriceRange = property.BooleanValue;
                     break;
-                case "IncludeInTopMenu":
-                    category.IncludeInTopMenu = property.BooleanValue;
-                    break;
                 case "IsLimitedToStores":
                     category.LimitedToStores = property.BooleanValue;
                     break;
@@ -626,7 +623,6 @@ public partial class ImportManager : IImportManager
             category.PageSize = _catalogSettings.DefaultCategoryPageSize;
             category.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
             category.Published = true;
-            category.IncludeInTopMenu = true;
             category.AllowCustomersToSelectPageSize = true;
         }
         else

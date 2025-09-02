@@ -9,19 +9,6 @@ namespace Nop.Web.Areas.Admin.Factories;
 public partial interface IBaseAdminModelFactory
 {
     /// <summary>
-    /// Prepare a select list from the constants defined in the passed type 
-    /// </summary>
-    /// <param name="items">Collection add items</param>
-    /// <param name="type">Type to extract constants</param>
-    /// <param name="useLocalization">Localize</param>
-    /// <param name="sortItems">Sort resulting items (<see cref="SelectListItem"/>)</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the select list
-    /// </returns>
-    Task ConstantsToSelectListAsync(IList<SelectListItem> items, Type type, bool useLocalization = true, bool sortItems = false);
-
-    /// <summary>
     /// Prepare available activity log types
     /// </summary>
     /// <param name="items">Activity log type items</param>

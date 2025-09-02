@@ -4,6 +4,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
@@ -85,7 +86,15 @@ public partial class ModelCacheEventConsumer :
     //shopping cart items
     IConsumer<EntityUpdatedEvent<ShoppingCartItem>>,
     //plugins
-    IConsumer<PluginUpdatedEvent>
+    IConsumer<PluginUpdatedEvent>,
+    //menus
+    IConsumer<EntityInsertedEvent<Menu>>,
+    IConsumer<EntityUpdatedEvent<Menu>>,
+    IConsumer<EntityDeletedEvent<Menu>>,
+    IConsumer<EntityInsertedEvent<MenuItem>>,
+    IConsumer<EntityUpdatedEvent<MenuItem>>,
+    IConsumer<EntityDeletedEvent<MenuItem>>
+
 {
     #region Fields
 
@@ -164,6 +173,7 @@ public partial class ModelCacheEventConsumer :
     public async Task HandleEventAsync(EntityInsertedEvent<Vendor> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorNavigationModelKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -172,6 +182,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorNavigationModelKey);
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.VendorPicturePrefixCacheKeyById, eventMessage.Entity.Id));
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.VendorReviewsByVendorIdPrefixCacheKey, eventMessage.Entity.Id));
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -179,6 +190,7 @@ public partial class ModelCacheEventConsumer :
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorNavigationModelKey);
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.VendorReviewsByVendorIdPrefixCacheKey, eventMessage.Entity.Id));
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     #endregion
@@ -190,6 +202,7 @@ public partial class ModelCacheEventConsumer :
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -198,6 +211,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ManufacturerPicturePrefixCacheKeyById, eventMessage.Entity.Id));
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -205,6 +219,7 @@ public partial class ModelCacheEventConsumer :
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     #endregion
@@ -219,6 +234,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SearchBoxCategoryListPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -230,6 +246,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.CategoryPicturePrefixCacheKeyById, eventMessage.Entity.Id));
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SearchBoxCategoryListPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -240,6 +257,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SearchBoxCategoryListPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     #endregion
@@ -278,6 +296,7 @@ public partial class ModelCacheEventConsumer :
     public async Task HandleEventAsync(EntityInsertedEvent<Product> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -288,6 +307,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductReviewsPrefixCacheKeyById, eventMessage.Entity.Id));
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorReviewsPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -297,6 +317,7 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorReviewsPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     #endregion
@@ -340,18 +361,21 @@ public partial class ModelCacheEventConsumer :
     public async Task HandleEventAsync(EntityInsertedEvent<Topic> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityUpdatedEvent<Topic> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(EntityDeletedEvent<Topic> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     #endregion
@@ -557,6 +581,46 @@ public partial class ModelCacheEventConsumer :
     {
         if (eventMessage?.Plugin?.Instance<IWidgetPlugin>() != null)
             await _staticCacheManager.RemoveByPrefixAsync(WidgetModelDefaults.WidgetPrefixCacheKey);
+    }
+
+    #endregion
+
+    #region Menus
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityInsertedEvent<Menu> eventMessage)
+    {
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityUpdatedEvent<Menu> eventMessage)
+    {
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityDeletedEvent<Menu> eventMessage)
+    {
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityInsertedEvent<MenuItem> eventMessage)
+    {
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityUpdatedEvent<MenuItem> eventMessage)
+    {
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public async Task HandleEventAsync(EntityDeletedEvent<MenuItem> eventMessage)
+    {
+        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     #endregion

@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Security;
+﻿namespace Nop.Core.Domain.Security;
 
 /// <summary>
 /// Represents an entity which supports ACL

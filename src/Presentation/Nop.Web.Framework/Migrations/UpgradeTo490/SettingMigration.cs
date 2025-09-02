@@ -2,10 +2,13 @@
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
@@ -17,7 +20,6 @@ using Nop.Data.Migrations;
 using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
-using Nop.Core.Domain.Forums;
 using Nop.Services.Media;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo490;
@@ -313,6 +315,88 @@ public class SettingMigration : MigrationBase
         {
             mediaSettings.PicturePath = NopMediaDefaults.DefaultImagesPath;
             settingService.SaveSetting(mediaSettings, settings => settings.PicturePath);
+        }
+
+        //#7390
+        var menuSettings = settingService.LoadSetting<MenuSettings>();
+        if (!settingService.SettingExists(menuSettings, settings => settings.MaximumNumberEntities))
+        {
+            menuSettings.MaximumNumberEntities = 8;
+            settingService.SaveSetting(menuSettings, settings => settings.MaximumNumberEntities);
+        }
+
+        if (!settingService.SettingExists(menuSettings, settings => settings.NumberOfItemsPerGridRow))
+        {
+            menuSettings.NumberOfItemsPerGridRow = 4;
+            settingService.SaveSetting(menuSettings, settings => settings.NumberOfItemsPerGridRow);
+        }
+
+        if (!settingService.SettingExists(menuSettings, settings => settings.NumberOfSubItemsPerGridElement))
+        {
+            menuSettings.NumberOfSubItemsPerGridElement = 3;
+            settingService.SaveSetting(menuSettings, settings => settings.NumberOfSubItemsPerGridElement);
+        }
+
+        if (!settingService.SettingExists(menuSettings, settings => settings.MaximumMainMenuLevels))
+        {
+            menuSettings.MaximumMainMenuLevels = 2;
+            settingService.SaveSetting(menuSettings, settings => settings.MaximumMainMenuLevels);
+        }
+
+        if (!settingService.SettingExists(menuSettings, settings => settings.GridThumbPictureSize))
+        {
+            menuSettings.GridThumbPictureSize = 340;
+            settingService.SaveSetting(menuSettings, settings => settings.GridThumbPictureSize);
+        }
+
+        var settingRepository = EngineContext.Current.Resolve<IRepository<Setting>>();
+        settingRepository.Delete(setting => setting.Name.StartsWith("displaydefaultmenuitemsettings"));
+
+        var useajaxloadmenu = settingService.GetSetting("catalogsettings.useajaxloadmenu");
+        if (useajaxloadmenu is not null)
+            settingService.DeleteSetting(useajaxloadmenu);
+
+        //#7732
+        if (!settingService.SettingExists(aiSettings, settings => settings.AllowProductDescriptionGeneration))
+        {
+            aiSettings.AllowProductDescriptionGeneration = true;
+            settingService.SaveSetting(aiSettings, settings => settings.AllowProductDescriptionGeneration);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaTitleGeneration))
+        {
+            aiSettings.AllowMetaTitleGeneration = true;
+            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaTitleGeneration);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.MetaTitleQuery))
+        {
+            aiSettings.MetaTitleQuery = ArtificialIntelligenceDefaults.MetaTitleQuery;
+            settingService.SaveSetting(aiSettings, settings => settings.MetaTitleQuery);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaKeywordsGeneration))
+        {
+            aiSettings.AllowMetaKeywordsGeneration = true;
+            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaKeywordsGeneration);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.MetaKeywordsQuery))
+        {
+            aiSettings.MetaKeywordsQuery = ArtificialIntelligenceDefaults.MetaKeywordsQuery;
+            settingService.SaveSetting(aiSettings, settings => settings.MetaKeywordsQuery);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaDescriptionGeneration))
+        {
+            aiSettings.AllowMetaDescriptionGeneration = true;
+            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaDescriptionGeneration);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.MetaDescriptionQuery))
+        {
+            aiSettings.MetaDescriptionQuery = ArtificialIntelligenceDefaults.MetaDescriptionQuery;
+            settingService.SaveSetting(aiSettings, settings => settings.MetaDescriptionQuery);
         }
     }
 
