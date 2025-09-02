@@ -273,7 +273,7 @@
                     {
                         var dataDictAddToCart = new ViewDataDictionary(ViewData);
                         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = $"addtocart_{Model.Id}";
-                        @await Html.PartialAsync("_AddToCart", Model.AddToCart, dataDictAddToCart)
+                        @await Html.PartialAsync("_AddToCart", Model, dataDictAddToCart)
                     }
                     <!--wishlist, compare, email a friend-->
                     @if (isClearance)
