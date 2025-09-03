@@ -138,7 +138,13 @@
 					$(specificationPanels[i]).hide();
 				}
 
-				if (title.toLowerCase() === 'capacity') {
+				// This list should match the "Range" filters in SpecificationAttribute, so we're hiding the specific values from PLP
+				if (title.toLowerCase() === 'capacity' ||
+					title.toLowerCase() === 'width' || 
+					title.toLowerCase() === 'height' || 
+					title.toLowerCase() === 'depth' ||
+					title.toLowerCase() === 'maximum rpm' ||
+					title.toLowerCase() === 'decibel range') {
 					$(specificationPanels[i]).hide();
 				}
 				if (title.toLowerCase() === 'capacity_range') {
