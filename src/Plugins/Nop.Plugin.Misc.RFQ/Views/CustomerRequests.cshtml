@@ -35,9 +35,9 @@
             @foreach (var request in Model)
             {
                 <div class="section">
-                    <div class="title">
-                        <strong>@string.Format(T("Plugins.Misc.RFQ.RequestQuoteNumber").Text, request.Id)</strong>
-                    </div>
+                    <h2 class="title">
+                        @string.Format(T("Plugins.Misc.RFQ.RequestQuoteNumber").Text, request.Id)
+                    </h2>
                     <ul class="info">
                         <li>@T("Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn"): <span>@request.CreatedOnUtc</span></li>
                         <li>@T("Plugins.Misc.RFQ.Fields.RequestQuote.Status"): <span>@request.Status</span></li>

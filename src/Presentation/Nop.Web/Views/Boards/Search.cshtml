@@ -38,7 +38,7 @@
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsSearchBeforeSearchform, additionalData = Model })
         <div class="search-input">
             <form asp-route="@NopRouteNames.Standard.BOARDS_SEARCH" method="get">
-                <div class="fieldset">
+                <section class="fieldset">
                     <div class="form-fields">
                         <div class="basic-search">
                             <div class="inputs">
@@ -65,10 +65,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="buttons">
+                </section>
+                <section class="buttons">
                     <button type="submit" class="button-1 forum-search-button">@T("Forum.SearchButton")</button>
-                </div>
+                </section>
             </form>
         </div>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsSearchAfterSearchform, additionalData = Model })

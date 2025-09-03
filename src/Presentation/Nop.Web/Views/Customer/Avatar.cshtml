@@ -21,7 +21,7 @@
         <div class="page-body">
             @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerAvatarTop, additionalData = Model })
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
-            <div class="fieldset">
+            <section class="fieldset">
                 @if (!string.IsNullOrEmpty(Model.AvatarUrl))
                 {
                     <div class="image">
@@ -29,14 +29,14 @@
                     </div>
                 }
                 <input name="uploadedFile" accept="image/jpeg, image/gif" type="file" />
-            </div>
-            <div class="buttons">
+            </section>
+            <section class="buttons">
                 <button type="submit" name="upload-avatar" class="button-1 upload-avatar-button">@T("Common.Upload")</button>
                 @if (!string.IsNullOrEmpty(Model.AvatarUrl))
                 {
                     <button type="submit" name="remove-avatar" class="button-2 remove-avatar-button">@T("Account.Avatar.RemoveAvatar")</button>
                 }
-            </div>
+            </section>
             <div class="info">
                 @T("Account.Avatar.UploadRules")
             </div>

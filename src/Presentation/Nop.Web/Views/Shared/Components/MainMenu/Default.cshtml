@@ -8,9 +8,9 @@
 </script>
 
 
-<div class="menu-container menu-dropdown">
+<nav class="menu-container menu-dropdown">
     <div id="menu-@Model.Id" class="menu__toggle" role="button">@Model.Name</div>
-    <nav class="menu @Model.CssClass" aria-labelledby="menu-@Model.Id">
+    <div class="menu @Model.CssClass" aria-labelledby="menu-@Model.Id">
         @foreach (var menuItem in Model.Items)
         {
             @if (menuItem.ChildrenItems.Any())
@@ -32,5 +32,5 @@
                 </div>
             }
         }
-    </nav>
-</div>
+    </div>
+</nav>

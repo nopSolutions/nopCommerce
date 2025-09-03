@@ -4,10 +4,10 @@
 
 @if (Model.Vendors.Count > 0)
 {
-    <div class="block block-vendor-navigation">
-        <div class="title">
-            <strong>@T("Vendors")</strong>
-        </div>
+    <section class="block block-vendor-navigation">
+        <h2 class="title">
+            @T("Vendors")
+        </h2>
         <div class="listbox">
             <ul class="list">
                 @foreach (var vendor in Model.Vendors)
@@ -24,5 +24,5 @@
                 </div>
             }
         </div>
-    </div>
+    </section>
 }

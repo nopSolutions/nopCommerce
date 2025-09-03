@@ -62,7 +62,7 @@
     <div class="page-body">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsTop, additionalData = Model })
         <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
-            <div data-productid="@Model.Id">
+            <article data-productid="@Model.Id">
                 <div class="product-essential">
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsEssentialTop, additionalData = Model })
                     <div class="gallery">
@@ -108,12 +108,12 @@
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsEssentialBottom, additionalData = Model })
                 </div>
                 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsBeforeCollateral, additionalData = Model })
-                <div class="product-collateral">
+                <section class="product-collateral">
                     <!--associated products-->
                     <div class="product-variant-list">
                         @foreach (var variant in Model.AssociatedProducts)
                         {
-                            <div class="product-variant-line" data-productid="@variant.Id">
+                            <article class="product-variant-line" data-productid="@variant.Id">
                                 @if (!string.IsNullOrWhiteSpace(variant.DefaultPictureModel.ImageUrl))
                                 {
                                     <div class="variant-picture">
@@ -124,9 +124,9 @@
                                 <div class="variant-overview">
                                     @if (!string.IsNullOrWhiteSpace(variant.Name))
                                     {
-                                        <div class="variant-name">
+                                        <h2 class="variant-name">
                                             @variant.Name
-                                        </div>
+                                        </h2>
                                     }
                                     @if (!string.IsNullOrWhiteSpace(variant.ShortDescription))
                                     {
@@ -186,7 +186,7 @@
                                         @await Html.PartialAsync("_AddToWishlist", variant.AddToCart, dataDictAddToWishlist)
                                     }
                                 </div>
-                            </div>
+                            </article>
                         }
                         @if (!Model.AssociatedProducts.Any())
                         {
@@ -197,11 +197,11 @@
                     </div>
                     @await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecificationModel)
                     @await Html.PartialAsync("_ProductTags", Model.ProductTags)
-                </div>
+                </section>
                 @*we do not display "also purchased" for grouped products
                     @await Component.InvokeAsync(typeof(ProductsAlsoPurchasedViewComponent), new { productId = Model.Id })*@
                 @await Component.InvokeAsync(typeof(RelatedProductsViewComponent), new { productId = Model.Id })
-            </div>
+            </article>
         </form>
         <!--product reviews-->
         @if (Model.ProductReviewOverview.AllowCustomerReviews)

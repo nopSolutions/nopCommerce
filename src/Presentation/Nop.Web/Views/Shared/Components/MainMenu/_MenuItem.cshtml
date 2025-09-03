@@ -1,8 +1,12 @@
 ﻿@model MenuItemModel
 
+@{
+    var ariaExpanded = Model.ChildrenItems.Any() ? "aria-expanded=false" : "";
+}
+
 @if (!string.IsNullOrEmpty(Model.Url))
 {
-    <a href="@Model.Url" class="menu__link">@Model.Title</a>
+    <a role="menuitem" @ariaExpanded href="@Model.Url" class="menu__link">@Model.Title</a>
 }
 else
 {

@@ -86,6 +86,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   color: var(--dark-gray-color);
+  font-weight: normal;
 }
 
 a {
@@ -283,11 +284,6 @@ label, label + * {
   padding: 0 10px;
   font-size: 20px;
   color: var(--dark-gray-color);
-}
-
-.fieldset .title strong,
-.section .title strong {
-  font-weight: normal;
 }
 
 .fieldset .warnings {
@@ -1147,10 +1143,6 @@ label, label + * {
   cursor: pointer;
 }
 
-.footer-block .title strong {
-  font-weight: normal;
-}
-
 .follow-us {
   text-align: left;
   flex: 1 1 0;
@@ -1494,10 +1486,6 @@ label, label + * {
   cursor: pointer;
 }
 
-.block .title strong {
-  font-weight: normal;
-}
-
 .block .listbox {
   display: none;
   border-bottom: 1px solid #ddd;
@@ -1789,10 +1777,6 @@ label, label + * {
   padding: 10px;
   font-size: 17px;
   color: var(--dark-gray-color);
-}
-
-.product-filter .filter-title strong {
-  font-weight: normal;
 }
 
 .product-filter .filter-content {
@@ -2108,13 +2092,9 @@ label, label + * {
   margin: 0 0 30px;
   border-bottom: 1px solid #ddd;
   padding: 0 0 15px;
-  font-size: 30px;
+  font-size: 28px;
   font-weight: normal;
   color: var(--dark-gray-color);
-}
-
-.product-grid .title strong {
-  font-weight: normal;
 }
 
 .manufacturer-grid .title {
@@ -2708,10 +2688,6 @@ label, label + * {
   color: var(--dark-gray-color);
 }
 
-.product-collateral .title strong {
-  font-weight: normal;
-}
-
 .product-variant-line {
   margin: 0 0 30px;
   border-bottom: 1px solid #ddd;
@@ -3162,10 +3138,6 @@ label, label + * {
   margin: 0 0 20px;
   font-size: 20px;
   color: var(--dark-gray-color);
-}
-
-.product-reviews .title strong {
-  font-weight: normal;
 }
 
 .write-review {
@@ -3648,7 +3620,6 @@ label, label + * {
 
 .topic-block-title h2 {
   font-size: 30px;
-  font-weight: normal;
 }
 
 .topic-block-body {
@@ -3952,10 +3923,6 @@ label, label + * {
   margin: 0 0 15px;
   font-size: 20px;
   color: var(--dark-gray-color);
-}
-
-.login-page .title strong {
-  font-weight: normal;
 }
 
 .login-page .new-wrapper {
@@ -5302,11 +5269,6 @@ label, label + * {
   padding: 0;
   font-size: 16px;
   font-weight: bold;
-}
-
-.order-review-data .title strong,
-.order-details-area .title strong,
-.shipment-details-area .title strong {
   font-weight: 700;
 }
 
@@ -5789,7 +5751,6 @@ label, label + * {
   padding: 20px 10px;
   line-height: 20px;
   font-size: 16px;
-  font-weight: bold;
   color: var(--dark-gray-color);
 }
 
@@ -7609,7 +7570,7 @@ label, label + * {
     margin: 0 2.5%;
   }
 
-  .cart-footer .cart-collaterals div,
+  .cart-footer .cart-collaterals .title,
   .cart-footer .cart-collaterals label {
     text-align: left;
   }
@@ -8651,10 +8612,6 @@ label, label + * {
     border-bottom: 1px solid #ddd;
     background: none;
     cursor: auto;
-  }
-
-  .block .title strong {
-    font-weight: bold;
   }
 
   .block .listbox {

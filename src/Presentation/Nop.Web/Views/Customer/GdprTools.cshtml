@@ -25,21 +25,21 @@
             </div>
         }
         <form asp-route="@NopRouteNames.Standard.GDPR_TOOLS" method="post">
-            <div class="fieldset">
-                <div class="title">
-                    <strong>@T("Account.Gdpr.Export")</strong>
-                </div>
+            <section class="fieldset">
+                <h2 class="title">
+                    @T("Account.Gdpr.Export")
+                </h2>
                 <div class="form-fields">
                     @T("Account.Gdpr.Export.Hint")
                 </div>
                 <div class="buttons">
                     <button type="submit" name="export-data" class="button-1 gdpr-export-data-button">@T("Account.Gdpr.Export.Button")</button>
                 </div>
-            </div>
-            <div class="fieldset">
-                <div class="title">
-                    <strong>@T("Account.Gdpr.Delete")</strong>
-                </div>
+            </section>
+            <section class="fieldset">
+                <h2 class="title">
+                    @T("Account.Gdpr.Delete")
+                </h2>
                 <div class="form-fields">
                     @T("Account.Gdpr.Delete.Hint")
                 </div>
@@ -54,7 +54,7 @@
                         });
                     </script>
                 </div>
-            </div>
+            </section>
         </form>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerGdprToolsBottom, additionalData = Model })
     </div>

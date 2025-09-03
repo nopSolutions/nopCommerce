@@ -10,9 +10,9 @@
 
 <div class="page vendor-page">
     <div class="block">
-        <div class="title">
+        <h1 class="title">
             <a href="@Model.VendorUrl">@T("Vendors.Reviews.BackTo", Model.VendorName)</a>
-        </div>
+        </h1>
     </div>
     <div class="page-body">
         @await Html.PartialAsync("_VendorProductReviews", Model.Reviews)

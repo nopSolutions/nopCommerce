@@ -24,10 +24,10 @@
         else
         {
             <form asp-route="@NopRouteNames.Standard.RETURN_REQUEST" method="post">
-                <div class="section">
-                    <div class="title">
-                        <strong>@T("ReturnRequests.SelectProduct(s)")</strong>
-                    </div>
+                <section class="section">
+                    <h2 class="title">
+                        @T("ReturnRequests.SelectProduct(s)")
+                    </h2>
                     <div class="table-wrapper">
                         <table class="data-table">
                             <colgroup>
@@ -77,12 +77,12 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </section>
 
-                <div class="fieldset">
-                    <div class="title">
-                        <strong>@T("ReturnRequests.WhyReturning")</strong>
-                    </div>
+                <section class="fieldset">
+                    <h2 class="title">
+                        @T("ReturnRequests.WhyReturning")
+                    </h2>
                     <div class="form-fields">
                         <div class="inputs">
                             @{
@@ -176,10 +176,10 @@
                             </script>
                         }
                     </div>
-                </div>
-                <div class="buttons">
+                </section>
+                <section class="buttons">
                     <button type="submit" name="submit-return-request" class="button-1 submit-return-request-button">@T("ReturnRequests.Submit")</button>
-                </div>
+                </section>
             </form>
         }
     </div>

@@ -7,9 +7,9 @@
         </div>         
     }
     <div class="profile-stats">
-        <div class="title">
-            <strong>@T("Profile.Statistics")</strong>
-        </div>
+        <h2 class="title">
+            @T("Profile.Statistics")
+        </h2>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProfilePageInfoUserdetails, additionalData = Model })
         <ul class="stats">
             @if (Model.LocationEnabled)
