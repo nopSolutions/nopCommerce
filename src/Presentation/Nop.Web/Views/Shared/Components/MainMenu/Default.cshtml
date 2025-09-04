@@ -10,7 +10,7 @@
 
 <nav class="menu-container menu-dropdown">
     <div id="menu-@Model.Id" class="menu__toggle" role="button">@Model.Name</div>
-    <div class="menu @Model.CssClass" aria-labelledby="menu-@Model.Id">
+    <div role="menu" class="menu @Model.CssClass" aria-labelledby="menu-@Model.Id">
         @foreach (var menuItem in Model.Items)
         {
             @if (menuItem.ChildrenItems.Any())
@@ -27,7 +27,7 @@
             }
             else
             {
-                <div class="menu__item">
+                <div class="menu__item" role="menuitem">
                     @await Html.PartialAsync("_MenuItem.cshtml", menuItem)
                 </div>
             }

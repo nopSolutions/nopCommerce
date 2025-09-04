@@ -1,14 +1,8 @@
 ﻿@model MenuItemModel
 
 @{
-    var ariaExpanded = Model.ChildrenItems.Any() ? "aria-expanded=false" : "";
+    var expanded = Model.ChildrenItems.Any() ? $"aria-expanded=false aria-haspopup=menu" : "";
+    var href = !string.IsNullOrEmpty(Model.Url) ? $"href={Model.Url}" : "";
 }
 
-@if (!string.IsNullOrEmpty(Model.Url))
-{
-    <a role="menuitem" @ariaExpanded href="@Model.Url" class="menu__link">@Model.Title</a>
-}
-else
-{
-    @Model.Title
-}
+<a @href @expanded role="button" class="menu__link">@Model.Title</a>
