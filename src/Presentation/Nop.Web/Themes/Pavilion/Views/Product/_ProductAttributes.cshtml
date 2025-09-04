@@ -28,6 +28,8 @@
 
 @if (Model.Count > 0)
 {
+    var productId = Model.First().ProductId;
+    
     <div class="attributes">
         <dl>
             @foreach (var attribute in Model)
@@ -54,7 +56,8 @@
                         <i class="fas fa-info-circle warranty-info"></i>
                     }
                     @* ABC: also require if warranty *@
-                    @if (attribute.IsRequired || attribute.Name == "Warranty")
+
+                    @if (attribute.IsRequired || attribute.Name == "Warranty" || attribute.Name.Contains("Base"))
                     {
                         <span class="required">*</span>
                     }
@@ -82,7 +85,10 @@
                                 <select class="@(mattressClass)" name="@(controlId)" id="@(controlId)" @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onchange=\"showHideDropdownQuantity('{controlId}')\"") : null)>
                                     @if (!attribute.IsRequired)
                                     {
-                                        <option value="0">---</option>
+                                        if (!attribute.Name.Contains("Base"))
+                                        {
+                                            <option value="0">---</option>
+                                        }
                                     }
                                     @foreach (var attributeValue in attribute.Values)
                                     {
@@ -496,7 +502,6 @@
     var attributesHaveConditions = Model.Any(x => x.HasCondition);
     var attributesHaveAssociatedPictures = Model.Any(x => x.ProductId > 0);
     var attributeChangeScriptsBuilder = new StringBuilder();
-    var productId = Model.First().ProductId;
     var attributeChangeHandlerFuncName = $"attribute_change_handler_{productId}";
     if (catalogSettings.AjaxProcessAttributeChange)
     {
