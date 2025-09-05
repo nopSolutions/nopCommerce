@@ -1,0 +1,1 @@
+update store set Name = 'rcc-upgrade-to-4-60-1', url = 'https://rcc-upgrade-to-4-60-1-wa.azurewebsites.net/', hosts = 'rcc-upgrade-to-4-60-1-wa.azurewebsites.net'

@@ -1,0 +1,1 @@
+Update [Setting] set value = 'False' where [name] = 'captchasettings.showonloginpage'

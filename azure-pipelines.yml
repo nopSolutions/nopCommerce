@@ -1,0 +1,162 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:   
+  branchName: $[replace(variables['Build.SourceBranchName'], '.', '-')]
+  dbName: 'RCC-$(branchName)-sqldb'
+  dbAlreadyExists: true
+  ip: '0.0.0.0'
+  serverFqdn: 'q4u5ofuj04.database.windows.net'
+  AdminUser: 'derrick.madden'
+  AdminPassword: $(sqlPassword)
+  SQLUpgradeFile: './4_30_upgrade.sql'
+  SQLStoreSettingsFile: './dbStoreSettings.sql'
+  SQLRecaptchaSettingsFile: './dbRecaptchaSettings.sql'
+
+steps:
+- task: AzureCLI@2
+  displayName: 'Creating Sql Database on Azure'
+  inputs:
+    azureSubscription: 'Pipeline to Azure Portal Access'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      $ip = (Invoke-WebRequest -uri "http://ifconfig.me/ip").Content
+      $dbList = az sql db list --resource-group RoseCottageCroft --server q4u5ofuj04 --query "[?name=='$dbName']" | ConvertFrom-Json   
+      if ($dbList.Length -gt 0) {
+        echo "Database $(dbName) found"
+      }
+      else {
+        echo "Database $(dbName) not found"
+        echo "Creating $(dbName) on server q4u5ofuj04"
+        az sql db copy -g RoseCottageCroft -s q4u5ofuj04 -n RoseCottageStore --dest-name $(dbName)
+        echo "Setting firewall rule for sql server ip to $ip"
+        az sql server firewall-rule create -g RoseCottageCroft -s q4u5ofuj04 -n pipeline --start-ip-address $ip --end-ip-address $ip
+        Write-Host "##vso[task.setvariable variable=dbAlreadyExists]false"
+      }
+- task: PowerShell@2
+  displayName: 'Install sqlserver module'
+  condition: eq(variables.dbAlreadyExists, 'false')
+  inputs:
+    targetType: 'inline'
+    script: Install-Module SQLServer -Scope CurrentUser -Force
+    pwsh: true
+- task: PowerShell@2
+  displayName: 'Running DB upgrade script'
+  condition: eq(variables.dbAlreadyExists, 'false')
+  inputs:
+    targetType: 'inline'
+    script: Invoke-Sqlcmd -InputFile "$(SQLUpgradeFile)" -ServerInstance $(ServerFqdn) -Username $(AdminUser) -Password $(AdminPassword) -Database $(dbName)
+    pwsh: true
+- task: PowerShell@2
+  displayName: 'Setting store info on database'
+  condition: eq(variables.dbAlreadyExists, 'false')
+  inputs:
+    targetType: 'inline'
+    script: Invoke-Sqlcmd -InputFile "$(SQLStoreSettingsFile)" -ServerInstance $(ServerFqdn) -Username $(AdminUser) -Password $(AdminPassword) -Database $(dbName)
+    pwsh: true
+- task: PowerShell@2
+  displayName: 'Setting recaptcha info on database'
+  condition: eq(variables.dbAlreadyExists, 'false')
+  inputs:
+    targetType: 'inline'
+    script: Invoke-Sqlcmd -InputFile "$(SQLRecaptchaSettingsFile)" -ServerInstance $(ServerFqdn) -Username $(AdminUser) -Password $(AdminPassword) -Database $(dbName)
+    pwsh: true
+- task: AzureCLI@2
+  displayName: 'Remove Database firewall rule on Azure for pipeline'  
+  condition: eq(variables.dbAlreadyExists, 'false')
+  inputs:
+    azureSubscription: 'Pipeline to Azure Portal Access'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |      
+      echo "Removing firewall rule for sql server ip to $ip"
+      az sql server firewall-rule delete -n pipeline -g RoseCottageCroft -s q4u5ofuj04
+- task: AzureCLI@2
+  displayName: 'Creating resources on Azure'
+  inputs:
+    azureSubscription: 'Pipeline to Azure Portal Access'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      $resourceGroup = 'RCC-$(branchName)-rg'
+      $rgExists = az group exists -n $resourceGroup
+      if ($rgExists -eq 'true') {
+        echo "Resource group $resourceGroup found"
+      }
+      else {
+        $location = "UK West"
+        echo "Resource group $resourceGroup not found"
+        echo "Creating $resourceGroup in $location..."
+        az group create --name $resourceGroup --location "$location"
+      }
+      $appServicePlan = "RCC-$(branchName)-as"
+      $asList = az appservice plan list --query "[?name=='$appServicePlan']" | ConvertFrom-Json
+      if ($asList.Length -gt 0) {
+        echo "App service plan $appServicePlan found, upgrade to B1 for publishing"
+        az appservice plan update --name $appServicePlan --resource-group $resourceGroup --sku B1
+      }
+      else {
+        echo "App service plan $appServicePlan not found"
+        echo "Creating $appServicePlan in $resourceGroup..."
+        az appservice plan create --name $appServicePlan --resource-group $resourceGroup --sku B1
+      }
+      $webapp="RCC-$(branchName)-wa"
+      $waList = az webapp list --query "[?name=='$webapp']" | ConvertFrom-Json
+      if ($waList.Length -gt 0) {
+        echo "Web App $webapp found"
+      }
+      else {
+        echo "Web App $webapp not found"
+        echo "Creating $webapp in $resourceGroup on $appServicePlan..."
+        az webapp create --name $webapp --resource-group $resourceGroup --plan $appServicePlan
+      }
+- task: DownloadBuildArtifacts@1
+  displayName: 'Download Build Artifacts'
+  inputs:
+    buildType: 'specific'
+    project: 'ffab289e-ba3a-4b64-a688-3c5708a8c53a'
+    pipeline: '3'
+    specificBuildWithTriggering: true
+    buildVersionToDownload: 'latest'
+    allowPartiallySucceededBuilds: true
+    downloadType: 'single'
+    artifactName: '$(branchName)_published'
+    itemPattern: '**/*.zip'
+    downloadPath: '$(System.ArtifactsDirectory)'
+    cleanDestinationFolder: true
+- task: CmdLine@2
+  displayName: 'Listing Archive files'
+  inputs:
+    script: |
+      ls
+    workingDirectory: '$(System.ArtifactsDirectory)'
+- task: AzureWebApp@1
+  displayName: 'Zip Deploy'
+  inputs:
+    azureSubscription: 'Pipeline to Azure Portal Access'
+    appType: 'webApp'
+    appName: 'RCC-$(branchName)-wa'
+    deployToSlotOrASE: true
+    resourceGroupName: 'RCC-$(branchName)-rg'
+    slotName: 'production'
+    package: '$(System.ArtifactsDirectory)/Nop.Web.zip'
+    deploymentMethod: zipDeploy
+- task: AzureCLI@2
+  displayName: 'Downgrade sku after deploy'
+  inputs:
+    azureSubscription: 'Pipeline to Azure Portal Access'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      $resourceGroup = 'RCC-$(branchName)-rg'
+      $appServicePlan = "RCC-$(branchName)-as"
+      az appservice plan update --name $appServicePlan --resource-group $resourceGroup --sku F1

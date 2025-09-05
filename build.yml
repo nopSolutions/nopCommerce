@@ -1,0 +1,88 @@
+trigger:
+- upgrade-branch-4.60.1
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/NopCommerce.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  branchName: $[replace(variables['Build.SourceBranchName'], '.', '-')]
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  inputs:
+    command: restore
+    projects: ./NopCommerce.sln
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    projects: ./NopCommerce.sln
+    arguments: '--configuration $(BuildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test'
+  inputs:
+    command: test
+    projects: |
+     ./Tests/Nop.Core.Tests/Nop.Core.Tests.csproj
+     ./Tests/Nop.Web.MVC.Tests/Nop.Web.MVC.Tests.csproj
+     ./Tests/Nop.Services.Tests/Nop.Services.Tests.csproj
+    arguments: '--configuration $(BuildConfiguration) --collect "Code coverage"'
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish Nop Web csproj'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'Presentation\Nop.Web\Nop.Web.csproj'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'    
+    zipAfterPublish: false
+    arguments: >
+      -o $(Build.ArtifactStagingDirectory)
+- task: CmdLine@2
+  displayName: 'List ArtifactsDirectory after publish'
+  inputs:
+    script: |
+      echo Listing Archive files
+      ls
+    workingDirectory: '$(System.ArtifactsDirectory)'
+- task: PowerShell@2
+  displayName: 'Add dataSettings.json to App_Data folder'
+  inputs:
+    targetType: 'inline'
+    script: |
+      $json = '{
+       "DataProvider": "sqlserver",
+       "DataConnectionString": "Data Source=tcp:q4u5ofuj04.database.windows.net,1433;Initial Catalog=RCC-$(branchName)-sqldb;Persist Security Info=False;User ID=derrick.madden;Password=$(sqlPassword);MultipleActiveResultSets=False;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False",
+       "RawDataSettings": {}
+      }'
+        
+      $json | Out-File ./App_Data/dataSettings.json
+    workingDirectory: '$(System.ArtifactsDirectory)/Nop.Web'
+- task: CmdLine@2
+  displayName: 'List ArtifactsDirectory post add dataSettings.json to App_Data folder'
+  inputs:
+    script: |
+      echo Listing Archive files
+      ls
+    workingDirectory: '$(System.ArtifactsDirectory)/Nop.Web'
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.ArtifactsDirectory)/Nop.Web'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(System.ArtifactsDirectory)/Nop.Web.zip'
+    replaceExistingArchive: true
+- task: CmdLine@2
+  displayName: 'List ArtifactsDirectory post zip'
+  inputs:
+    script: |
+      echo Listing Archive files
+      ls
+    workingDirectory: '$(System.ArtifactsDirectory)'
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish pipeline artifacts'
+  inputs:    
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifact: '$(branchName)_published'
