@@ -1,6 +1,6 @@
 /*********** CSS RESET **********/
 :root {
-  --accent-blue-color: #327196;
+  --accent-blue-color: #4ab2f1;
   --accent-blue-active-color: #248ece;
   --gray-color: #6B6B6B;
   --dark-gray-color: #444;
@@ -8531,7 +8531,7 @@ label, label + * {
     align-items: center;
     gap: 10px;
     line-height: 20px;
-    color: var(--dark-gray-color);
+    color: var(--gray-color);
     cursor: pointer;
     text-align: left;
     position: relative;

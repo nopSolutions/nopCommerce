@@ -1,7 +1,7 @@
 ﻿@model AdminHeaderLinksModel
 @if (Model.IsCustomerImpersonated || Model.DisplayAdminLink)
 {
-    <nav aria-label="Admin navigation" class="admin-header-links">
+    <nav class="admin-header-links">
         @if (Model.IsCustomerImpersonated)
         {
             <div class="impersonate">
