@@ -1128,7 +1128,7 @@ label, label + * {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  gap: 40px;
+  gap: 100px;
 }
 
 .footer-block .title {
@@ -1146,7 +1146,7 @@ label, label + * {
 
 .follow-us {
   text-align: left;
-  flex: 1 1 0;
+  flex: 2 1 0;
   display: flex;
   flex-direction: column;
   min-width: 280px;
@@ -8325,7 +8325,7 @@ label, label + * {
     margin: 0 auto 30px;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
-    padding: 25px 0;
+    padding: 0;
     text-align: center;
   }
 
@@ -8525,8 +8525,8 @@ label, label + * {
   .footer-navigation {
     display: flex;
     flex-wrap: wrap;
-    flex: 3 1 0;
-    justify-content: space-around;
+    flex: 5 1 0;
+    justify-content: space-between;
     gap: 30px;
   }
 
