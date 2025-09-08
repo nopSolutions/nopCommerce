@@ -111,7 +111,7 @@ public partial class BaseNopTest
     {
         var dataProvider = _serviceProvider.GetService<IDataProviderManager>().DataProvider;
 
-        dataProvider.CreateDatabase(null);
+        dataProvider.CreateDatabase();
         dataProvider.InitializeDatabase();
 
         var installationService = _serviceProvider.GetService<IInstallationService>();
@@ -444,14 +444,13 @@ public partial class BaseNopTest
         services
             // add common FluentMigrator services
             .AddFluentMigratorCore()
-            .AddScoped<IProcessorAccessor, TestProcessorAccessor>()
             // set accessor for the connection string
             .AddScoped<IConnectionStringAccessor>(_ => DataSettingsManager.LoadSettings())
             .AddScoped<IMigrationManager, MigrationManager>()
             .AddScoped<Lazy<IMigrationManager>>()
             .AddSingleton<IConventionSet, NopTestConventionSet>()
             .ConfigureRunner(rb =>
-                rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres().AddSQLite()
+                rb.WithVersionTable(new MigrationVersionInfo()).AddSQLite()
                     // define the assembly containing the migrations
                     .ScanIn(mAssemblies).For.Migrations());
 

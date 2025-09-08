@@ -25,6 +25,7 @@ public partial record InstallModel : INopConnectionStringInfo
     public bool UseCustomCollation { get; set; }
 
     public string Collation { get; set; }
+    public string CharacterSet { get; set; }
 
     public bool CreateDatabaseIfNotExists { get; set; }
     public bool DisableSampleDataOption { get; set; }
