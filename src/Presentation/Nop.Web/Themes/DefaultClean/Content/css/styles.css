@@ -8413,12 +8413,14 @@ label, label + * {
     padding: 0 10px;
   }
 
+  .menu__item:focus-within > .menu__grid-view,
   .menu__item:hover .menu__grid-view {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
   }
 
+  .menu__item:focus-within > .menu__list-view,
   .menu__item:hover > .menu__list-view {
     opacity: 1;
     visibility: visible;

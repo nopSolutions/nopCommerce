@@ -3,7 +3,7 @@
 <div class="menu__item @(Model.ChildrenItems.Any() ? "menu-dropdown" : "") @Model.CssClass" role="menuitem">
     @if (Model.ChildrenItems.Any())
     {
-        <div class="menu__item-toggle" aria-haspopup="menu">
+        <div class="menu__item-toggle" aria-haspopup="menu" tabindex="-1">
             @await Html.PartialAsync("_MenuItem.cshtml", Model)
         </div>
         <div class="menu__list-view" role="menu" aria-label="@Model.Title">

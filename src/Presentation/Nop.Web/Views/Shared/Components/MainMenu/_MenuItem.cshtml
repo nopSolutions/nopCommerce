@@ -5,4 +5,4 @@
     var href = !string.IsNullOrEmpty(Model.Url) ? $"href={Model.Url}" : "";
 }
 
-<a @href @expanded role="button" class="menu__link">@Model.Title</a>
+<a @href @expanded role="button" class="menu__link" tabindex="0">@Model.Title</a>
