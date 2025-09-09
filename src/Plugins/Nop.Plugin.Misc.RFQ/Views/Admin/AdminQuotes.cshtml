@@ -160,7 +160,7 @@
                             <script>
                                 $(function() {
                                     //"delete selected" button
-                                    $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
+                                    $("#delete-selected-action-confirmation-submit-button").on("click", function () {
                                         var postData = {
                                             selectedIds: selectedIds
                                         };
@@ -175,8 +175,7 @@
                                                 showAlert('deleteSelectedFailed', errorThrown);
                                             },
                                             complete: function (jqXHR, textStatus) {
-                                                if (jqXHR.status === 204)
-                                                {
+                                                if (jqXHR.status === 204) {
                                                     showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
                                                     return;
                                                 }

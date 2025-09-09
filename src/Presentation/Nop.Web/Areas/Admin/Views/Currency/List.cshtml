@@ -146,7 +146,7 @@
 
                         $(function() {
 
-                            $("#btnMarkPSC-action-confirmation-submit-button").bind("click", function () {
+                            $("#btnMarkPSC-action-confirmation-submit-button").on("click", function () {
                                 var postData = {
                                     id: selectedId
                                 };
@@ -166,7 +166,7 @@
                                 $('#btnMarkPSC-action-confirmation').modal('toggle');
                             });
 
-                            $("#btnMarkPERC-action-confirmation-submit-button").bind("click", function () {
+                            $("#btnMarkPERC-action-confirmation-submit-button").on("click", function () {
                                 var postData = {
                                     id: selectedId
                                 };
