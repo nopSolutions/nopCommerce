@@ -18854,6 +18854,9 @@
   <LocaleResource Name="Media.Product.ImageAlternateTextFormat">
     <Value>Picture of {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Media.Product.VideoTitleFormat">
+    <Value>Video of {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="Media.Product.ImageAlternateTextFormat.Details">
     <Value>Picture of {0}</Value>
   </LocaleResource>
