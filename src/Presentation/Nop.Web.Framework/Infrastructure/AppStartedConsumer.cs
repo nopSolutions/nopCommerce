@@ -2,6 +2,7 @@
 using Nop.Core.Events;
 using Nop.Data;
 using Nop.Data.Migrations;
+using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Logging;
 using Nop.Services.Plugins;
@@ -22,6 +23,7 @@ public partial class AppStartedConsumer : IConsumer<AppStartedEvent>
     protected readonly IMigrationManager _migrationManager;
     protected readonly IPermissionService _permissionService;
     protected readonly IPluginService _pluginService;
+    protected readonly ISettingService _settingService;
     protected readonly ITaskScheduler _taskScheduler;
 
     #endregion
@@ -32,12 +34,14 @@ public partial class AppStartedConsumer : IConsumer<AppStartedEvent>
         IMigrationManager migrationManager,
         IPermissionService permissionService,
         IPluginService pluginService,
+        ISettingService settingService,
         ITaskScheduler taskScheduler)
     {
         _logger = logger;
         _migrationManager = migrationManager;
         _permissionService = permissionService;
         _pluginService = pluginService;
+        _settingService = settingService;
         _taskScheduler = taskScheduler;
     }
 
@@ -74,6 +78,8 @@ public partial class AppStartedConsumer : IConsumer<AppStartedEvent>
         //run scheduler
         await _taskScheduler.InitializeAsync();
         await _taskScheduler.StartSchedulerAsync();
+
+        await _settingService.TryGetLicenseAsync();
     }
 
     #endregion

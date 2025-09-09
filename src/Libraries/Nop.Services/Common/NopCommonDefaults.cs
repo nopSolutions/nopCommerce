@@ -115,6 +115,18 @@ public static partial class NopCommonDefaults
     public static string NopWarningPath => "site-warnings?url={0}&version={1}&email={2}&language={3}";
 
     /// <summary>
+    /// Gets a path to request the nopCommerce official site for license terms
+    /// </summary>
+    /// <remarks>
+    /// {0} : store URL
+    /// {1} : nopCommerce version
+    /// {2} : admin email
+    /// {3} : language code
+    /// {4} : whether the license terms accepted
+    /// </remarks>
+    public static string NopLicenseTermsPath => "license-terms?url={0}&version={1}&email={2}&language={3}&accepted={4}";
+
+    /// <summary>
     /// Gets a path to request the nopCommerce official site for license compliance check
     /// </summary>
     /// <remarks>
