@@ -42,7 +42,7 @@
                     <div class="form-fields">
                         <div class="basic-search">
                             <div class="inputs">
-                                <label>@T("Forum.Search.SearchKeyword")</label>
+                                <label for="searchterms">@T("Forum.Search.SearchKeyword")</label>
                                 <input type="text" name="searchterms" id="searchterms" class="forum-search-text" value="@Model.SearchTerms" />
                             </div>
                             <div class="inputs reversed">
@@ -52,15 +52,15 @@
                         </div>
                         <div class="advanced-search" id="advanced-search" style="display: none;">
                             <div class="inputs">
-                                <label>@T("Forum.Search.SearchInForum")</label>
+                                <label for="forumId">@T("Forum.Search.SearchInForum")</label>
                                 <select name="forumId" id="forumId" asp-items="@(new SelectList(Model.ForumList, "Value", "Text", Model.ForumIdSelected))"></select>
                             </div>
                             <div class="inputs">
-                                <label>@T("Forum.Search.SearchWithin")</label>
+                                <label for="within">@T("Forum.Search.SearchWithin")</label>
                                 <select name="within" id="within" asp-items="@(new SelectList(Model.WithinList, "Value", "Text", Model.WithinSelected))"></select>
                             </div>
                             <div class="inputs">
-                                <label>@T("Forum.Search.LimitResultsToPrevious")</label>
+                                <label for="limitDays">@T("Forum.Search.LimitResultsToPrevious")</label>
                                 <select name="limitDays" id="limitDays" asp-items="@(new SelectList(Model.LimitList, "Value", "Text", Model.LimitDaysSelected))"></select>
                             </div>
                         </div>

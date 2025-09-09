@@ -28,7 +28,7 @@
                     <thead>
                         <tr>
                             <th class="select">
-                                <input type="checkbox" id="selectall-sent" />
+                                <input type="checkbox" id="selectall-sent" aria-label="@T("PrivateMessages.SentItems")" />
                             </th>
                             <th class="to">
                                 @T("PrivateMessages.Inbox.ToColumn")
@@ -47,7 +47,7 @@
                             var item = Model.Messages[i];
                             <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
                                 <td class="select">
-                                    <input type="checkbox" name="si@(item.Id)" class="rowcheckbox" />
+                                    <input type="checkbox" name="si@(item.Id)" class="rowcheckbox" aria-label="@T("PrivateMessages.PM")" />
                                 </td>
                                 <td class="to">
                                     @if (item.AllowViewingToProfile)

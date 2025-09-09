@@ -45,9 +45,9 @@
     <div class="topic-password" id="ph-password-@Model.Id">
         <form asp-route="@NopRouteNames.Ajax.TOPIC_AUTHENTICATE" method="post" autocomplete="off">
             <input asp-for="Id" id="topic-@Model.Id" type="hidden"/>
-            <div class="enter-password-title">
+            <label for="password-@(Model.Id)" class="enter-password-title">
                 @T("Topic.EnterPassword")
-            </div>
+            </label>
             <div class="enter-password-form">
                 <input name="password" type="password" id="password-@(Model.Id)" />
                 <button type="submit" id="button-password-@Model.Id" class="button-1 topic-password-button">@T("Topic.Button")</button>

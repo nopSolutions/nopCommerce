@@ -3662,6 +3662,7 @@ label, label + * {
 .enter-password-title {
   margin: 0 0 20px;
   color: var(--dark-gray-color);
+  display: block;
 }
 
 .enter-password-form {

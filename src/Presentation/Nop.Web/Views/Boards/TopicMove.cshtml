@@ -18,7 +18,7 @@
             <section class="fieldset">
                 <div class="form-fields">
                     <div class="inputs">
-                        <label>@T("Forum.SelectTheForumToMoveTopic"):</label>
+                        <label asp-for="ForumSelected">@T("Forum.SelectTheForumToMoveTopic"):</label>
                         <select asp-for="ForumSelected" asp-items="@(new SelectList(Model.ForumList, "Value", "Text"))"></select>
                     </div>
                 </div>

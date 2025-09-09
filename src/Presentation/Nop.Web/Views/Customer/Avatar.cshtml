@@ -28,7 +28,7 @@
                         <img src="@(Model.AvatarUrl)" alt="avatar" />
                     </div>
                 }
-                <input name="uploadedFile" accept="image/jpeg, image/gif" type="file" />
+                <input name="uploadedFile" accept="image/jpeg, image/gif" type="file" aria-label="@T("Account.Avatar")" />
             </section>
             <section class="buttons">
                 <button type="submit" name="upload-avatar" class="button-1 upload-avatar-button">@T("Common.Upload")</button>
