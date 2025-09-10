@@ -106,7 +106,7 @@ public partial class ReviewTypeService : IReviewTypeService
     public async Task<IList<ProductReviewReviewTypeMapping>> GetProductReviewReviewTypeMappingsByProductReviewIdAsync(
         int productReviewId)
     {
-        var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductReviewTypeMappingByReviewTypeCacheKey, productReviewId);
+        var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductReviewTypeMappingByReviewIdCacheKey, productReviewId);
 
         var query = from pam in _productReviewReviewTypeMappingRepository.Table
             orderby pam.Id

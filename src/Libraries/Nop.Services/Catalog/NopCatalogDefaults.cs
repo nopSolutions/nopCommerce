@@ -419,7 +419,14 @@ public static partial class NopCatalogDefaults
     /// <remarks>
     /// {0} : product review ID
     /// </remarks>
-    public static CacheKey ProductReviewTypeMappingByReviewTypeCacheKey => new("Nop.productreviewreviewtypemapping.byreviewtype.{0}");
+    public static CacheKey ProductReviewTypeMappingByReviewIdCacheKey => new("Nop.productreviewreviewtypemapping.byreviewid.{0}");
+
+    /// <summary>
+    /// Gets a key pattern to clear cache
+    /// </summary>
+    /// <remarks>
+    /// </remarks>
+    public static string ProductReviewTypeMappingByReviewIdPrefix => new("Nop.productreviewreviewtypemapping.byreviewid.");
 
     #endregion
 
