@@ -5786,11 +5786,12 @@ label, label + * {
   padding: 0 10px;
 }
 
-.blog-page .tags label,
-.blogpost-page .tags label {
+.blog-page .tags .tags-title,
+.blogpost-page .tags .tags-title {
   display: inline-block;
   margin: 0 3px 3px 0;
   font-weight: bold;
+  font-size: 14px;
   color: var(--dark-gray-color);
 }
 
@@ -5844,7 +5845,7 @@ label, label + * {
 }
 
 .blog-posts .buttons .read-more,
-.news-items .buttons .read-more {
+.news-items .buttons  .read-more {
   display: inline-block;
   border: none;
   background-color: var(--accent-blue-color);

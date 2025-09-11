@@ -56,11 +56,11 @@
                         @Html.Raw(!string.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
                     </div>
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageAfterPostBody, additionalData = item })
-                    <div class="blog-details">
+                    <div role="navigation" class="blog-details">
                         @if (item.Tags.Count > 0)
                         {
                             <div class="tags">
-                                <label>@T("Blog.Tags"):</label>
+                                <h3>@T("Blog.Tags"):</h3>
                                 <ul>
                                     @for (var i = 0; i < item.Tags.Count; i++)
                                     {
