@@ -40,10 +40,10 @@
             @T("Account.MultiFactorAuthentication.Description")
         </div>
         <form asp-route="@NopRouteNames.Standard.MULTI_FACTOR_AUTHENTICATION_SETTINGS" method="post">
-            <div class="fieldset">
-                <div class="title">
-                    <strong>@T("Account.MultiFactorAuthentication.Settings")</strong>
-                </div>
+            <section class="fieldset">
+                <h2 class="title">
+                    @T("Account.MultiFactorAuthentication.Settings")
+                </h2>
                 <div class="form-fields">
                     @if (!string.IsNullOrEmpty(Model.Message))
                     {
@@ -57,11 +57,11 @@
                         <span asp-validation-for="IsEnabled"></span>
                     </div>
                 </div>
-            </div>
-            <div class="fieldset">
-                <div class="title">
-                    <strong>@T("Account.MultiFactorAuthentication.Providers")</strong>
-                </div>
+            </section>
+            <section class="fieldset">
+                <h2 class="title">
+                    @T("Account.MultiFactorAuthentication.Providers")
+                </h2>
                 <div class="form-fields">
                     <div class="section payment-method">
                         @if (Model.Providers.Count > 0)
@@ -74,11 +74,11 @@
                         }
                     </div>                        
                 </div>
-            </div>
+            </section>
             
-            <div class="buttons">
+            <section class="buttons">
                 <button type="submit" id="save-mfa-settings-button" name="save-mfa-settsing-button" class="button-1 save-customer-mfa-button">@T("Common.Save")</button>
-            </div>
+            </section>
         </form>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerMultiFactorAuthenticationBottom, additionalData = Model })
     </div>

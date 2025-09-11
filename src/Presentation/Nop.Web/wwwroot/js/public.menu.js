@@ -4,6 +4,7 @@ var mainMenu = {
 
     let toggleClass = function (event) {
       this.parentNode.classList.toggle(activeClassName);
+      this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true')
     };
 
     menuDropdowns.forEach((e) => {

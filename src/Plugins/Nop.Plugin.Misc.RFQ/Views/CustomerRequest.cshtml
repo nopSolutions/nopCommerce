@@ -36,10 +36,10 @@
     <form asp-controller="RfqCustomer" asp-action="CustomerRequest" method="post">
         <input asp-for="Id" type="hidden" />
         <div class="page-body">
-            <div class="fieldset">
-                <div class="title">
-                    <strong>@T("Plugins.Misc.RFQ.CustomerRequest.Info")</strong>
-                </div>
+            <section class="fieldset">
+                <h2 class="title">
+                    @T("Plugins.Misc.RFQ.CustomerRequest.Info")
+                </h2>
                 <div class="form-fields">
                     @if (Model.Id != 0)
                     {
@@ -78,12 +78,12 @@
                         }
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="fieldset">
-                <div class="title">
-                    <strong>@T("Plugins.Misc.RFQ.Products")</strong>
-                </div>
+            <section class="fieldset">
+                <h2 class="title">
+                    @T("Plugins.Misc.RFQ.Products")
+                </h2>
                 <div>
                     <table class="data-table">
                         <thead>
@@ -135,7 +135,7 @@
                     <br />
                     @await Html.PartialAsync("_CustomerRequest.buttons.cshtml", Model)
                 </div>
-            </div>
+            </section>
         </div>
     </form>
 </div>

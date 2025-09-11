@@ -185,24 +185,33 @@
                                             </div>
                                             <script asp-location="Footer">
                                                 $(function() {
-                                                    $('#quantity-up-@(item.Id)').on('click',
-                                                        function (e) {
-                                                            var input = $(document).find('#itemquantity@(item.Id)');
-                                                            var oldValue = parseInt(input.val());
-                                                            var newVal = oldValue + 1;
-                                                            input.val(newVal.toString());
-                                                            input.trigger("change");
-                                                        });
+                                                    $('#quantity-up-@(item.Id)').on('click', () => changeQuantity(1, true));
+                                                    $('#quantity-down-@(item.Id)').on('click', () => changeQuantity(-1, true));
+                                                    $('#itemquantity@(item.Id)').on('keydown', (e) => {
+                                                        switch (e.key) {
+                                                            case 'ArrowUp':
+                                                                changeQuantity(1)
+                                                                break;
+                                                            case 'ArrowDown':
+                                                                changeQuantity(-1)
+                                                                break;
+                                                            default:
+                                                                break;
+                                                        }
+                                                    })
 
-                                                    $('#quantity-down-@(item.Id)').on('click',
-                                                        function (e) {
-                                                            var input = $(document).find('#itemquantity@(item.Id)');
-                                                            var oldValue = parseInt(input.val());
-                                                            var newVal = oldValue - 1;
-                                                            input.val(newVal.toString());
-                                                            input.trigger("change");
-                                                        });
                                                 });
+
+                                                function changeQuantity(amount, triggerChange) {
+                                                    var input = $(document).find('#itemquantity@(item.Id)');
+                                                    var oldValue = parseInt(input.val());
+                                                    var amountValue = parseInt(amount);
+                                                    var newVal = oldValue + amountValue;
+                                                    input.val(newVal > 0 ? newVal.toString() : '0');
+
+                                                    if(triggerChange)
+                                                        input.trigger("change");
+                                                }
                                             </script>
                                         }
                                     }
@@ -307,22 +316,26 @@
                                 <label for="termsofservice">@T("Checkout.TermsOfService.IAccept")</label>
                                 @if (Model.TermsOfServicePopup)
                                 {
-                                    <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
+                                    <a class="read" id="read-terms" role="button" tabindex="0">@T("Checkout.TermsOfService.Read")</a>
                                     <script asp-location="Footer">
                                         $(function() {
-                                            $('#read-terms').on('click',
-                                                function(e) {
-                                                    e.preventDefault();
+                                            $('#read-terms').on('click keyup', function(e) {
+                                                e.preventDefault();
+
+                                                if (e.type == 'click' || (e.type == 'keydown' && e.key === 'Enter'))
+                                                {
+                                                    $(this).trigger("blur");
                                                     displayPopupContentFromUrl(
                                                         '@Url.RouteUrl(NopRouteNames.Ajax.TOPIC_POPUP, new { SystemName = "conditionsofuse" })',
                                                         '@T("Checkout.TermsOfService")');
-                                                });
+                                                }
+                                            });
                                         });
                                     </script>
                                 }
                                 else
                                 {
-                                    <a class="read" id="read-terms" href="@Url.RouteTopicUrl("conditionsofuse")">@T("Checkout.TermsOfService.Read")</a>
+                                    <a class="read" id="read-terms" href="@Url.RouteTopicUrl("conditionsofuse")" role="button" tabindex="0">@T("Checkout.TermsOfService.Read")</a>
                                 }
                             </div>
                         }

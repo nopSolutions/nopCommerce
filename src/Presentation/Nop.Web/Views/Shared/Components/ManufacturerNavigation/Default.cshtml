@@ -4,10 +4,10 @@
 
 @if (Model.Manufacturers.Count > 0)
 {
-    <div class="block block-manufacturer-navigation">
-        <div class="title">
-            <strong>@T("Manufacturers")</strong>
-        </div>
+    <section class="block block-manufacturer-navigation">
+        <h2 class="title">
+            @T("Manufacturers")
+        </h2>
         <div class="listbox">
             <ul class="list">
                 @foreach (var manufacturer in Model.Manufacturers)
@@ -24,5 +24,5 @@
                 </div>
             }
         </div>
-    </div>
+    </section>
 }

@@ -595,6 +595,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.ArtificialIntelligence.TopicTitleRequired"] = "Topic title (on {0} language) is required for meta tags generation with artificial intelligence services.",
             ["Admin.ArtificialIntelligence.TopicBodyRequired"] = "Topic body (on {0} language) is required for meta tags generation with artificial intelligence services.",
             ["Admin.ArtificialIntelligence.GenerateMetaTags.SaveBeforeGenerate"] = "You need to save the entity before you can generate meta tags.",
+
+            //#7643
+            ["Media.Product.VideoTitleFormat"] = "Video of {0}",
         }, languageId);
 
         #endregion

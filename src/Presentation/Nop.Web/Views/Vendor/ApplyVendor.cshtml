@@ -25,7 +25,7 @@
         {
             <form asp-route="@NopRouteNames.General.APPLY_VENDOR_ACCOUNT" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                <div class="fieldset">
+                <section class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
                             <label asp-for="Name" asp-postfix=":"></label>
@@ -92,10 +92,10 @@
                             </div>
                         }
                     </div>
-                </div>
-                <div class="buttons">
+                </section>
+                <section class="buttons">
                     <button type="submit" id="apply-vendor" name="apply-vendor" class="button-1 apply-vendor-button">@T("Vendors.ApplyAccount.Button")</button>
-                </div>
+                </section>
             </form>
         }
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ApplyVendorBottom, additionalData = Model })

@@ -113,7 +113,7 @@
                     function toggleCollation() {
 
                         var connectionStringRaw = $("#@Html.IdFor(x => x.UseCustomCollation)").is(':checked');
-                        var collationInput = $("#sqlDatabaseCollation")
+                        var collationInput = $("#@Html.IdFor(x => x.Collation)")
                         if (connectionStringRaw) {
                             collationInput.show();
                         } else {
@@ -187,7 +187,7 @@
                                     <div class="col-md-6 offset-md-3">
                                         <div class="form-check">
                                             <input class="form-check-input" asp-for="InstallSampleData" />
-                                            <label asp-for="InstallSampleData" class="form-check-label">
+                                            <label class="form-check-label" asp-for="InstallSampleData">
                                                 @ILS.GetResource("CreateSampleData")
                                             </label>
                                         </div>
@@ -198,7 +198,7 @@
                                 <div class="col-md-6 offset-md-3">
                                     <div class="form-check">
                                         <input class="form-check-input" asp-for="SubscribeNewsletters" />
-                                        <label asp-for="SubscribeNewsletters" class="form-check-label">
+                                        <label class="form-check-label" asp-for="SubscribeNewsletters">
                                             @ILS.GetResource("SubscribeNewsletters")
                                         </label>
                                     </div>
@@ -213,7 +213,7 @@
                         </h3>
                         <div class="card-body">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                <label asp-for="DataProvider" class="col-sm-3 col-form-label text-right font-weight-bold">
                                     @ILS.GetResource("Database")
                                 </label>
                                 <div class="col-sm-8">
@@ -224,7 +224,7 @@
                                 <div class="col-md-6 offset-md-3">
                                     <div class="form-check">
                                         <input class="form-check-input" asp-for="CreateDatabaseIfNotExists" />
-                                        <label class="form-check-label" for="@Html.IdFor(m => m.CreateDatabaseIfNotExists)">
+                                        <label asp-for="CreateDatabaseIfNotExists" class="form-check-label">
                                             @ILS.GetResource("CreateDatabaseIfDoesNotExist")
                                         </label>
                                     </div>
@@ -234,7 +234,7 @@
                                 <div class="col-md-6 offset-md-3">
                                     <div class="form-check">
                                         <input class="form-check-input" asp-for="ConnectionStringRaw" />
-                                        <label class="form-check-label" for="@Html.IdFor(m => m.ConnectionStringRaw)">
+                                        <label asp-for="ConnectionStringRaw" class="form-check-label">
                                             @ILS.GetResource("RawConnectionString")
                                         </label>
                                     </div>
@@ -244,7 +244,7 @@
                                 <hr />
                                 @await Html.PartialAsync("_Install.ConnectionString", Model)
                                 <div class="form-group row" id="sqlDatabaseConnectionString">
-                                    <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                    <label asp-for="ConnectionString" class="col-sm-3 col-form-label text-right font-weight-bold">
                                         @ILS.GetResource("ConnectionString")
                                     </label>
                                     <div class="col-sm-8">
@@ -262,7 +262,7 @@
                                     <div class="col-sm-8 offset-sm-3">
                                         <div class="form-check">
                                             <input class="form-check-input" asp-for="UseCustomCollation" />
-                                            <label class="form-check-label" for="@Html.IdFor(m => m.UseCustomCollation)">
+                                            <label asp-for="UseCustomCollation"  class="form-check-label">
                                                 @ILS.GetResource("CustomCollation")
                                             </label>
                                         </div>

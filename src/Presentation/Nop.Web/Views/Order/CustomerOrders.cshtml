@@ -33,9 +33,9 @@
                 @foreach (var order in Model.Orders)
                 {
                     <div class="section order-item">
-                        <div class="title">
-                            <strong>@T("Account.CustomerOrders.OrderNumber"): @order.CustomOrderNumber</strong>
-                        </div>
+                        <h2 class="title">
+                            @T("Account.CustomerOrders.OrderNumber"): @order.CustomOrderNumber
+                        </h2>
                         <ul class="info">
                             <li>@T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span></li>
                             <li>@T("Account.CustomerOrders.OrderDate"): <span class="order-date">@order.CreatedOn.ToString()</span></li>

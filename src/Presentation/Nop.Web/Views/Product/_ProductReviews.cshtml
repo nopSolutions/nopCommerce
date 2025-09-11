@@ -2,15 +2,15 @@
 
 @inject Nop.Services.Html.IHtmlFormatter htmlFormatter
 
-<div class="page product-reviews">
+<section class="page product-reviews">
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductReviewsPageTop, additionalData = Model })
     @if (Model.Items.Count > 0)
     {
         <div class="product-review-list">
             <a name="productreviews"></a>
-            <div class="title">
-                <strong>@T("Reviews.ExistingReviews")</strong>
-            </div>
+            <h2 class="title">
+                @T("Reviews.ExistingReviews")
+            </h2>
             @foreach (var review in Model.Items)
             {
                 var ratingPercent = review.Rating * 20;
@@ -117,13 +117,13 @@
     {
         <div class="write-review" id="review-form">
             <a name="addreview"></a>
-            <div class="title">
-                <strong>@T("Reviews.Write")</strong>
-            </div>
+            <h2 class="title">
+                @T("Reviews.Write")
+            </h2>
             <form asp-action="ProductReviews" asp-fragment="addreview" method="post">
                 <input type="hidden" asp-for="ProductId" />
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                <div class="fieldset">
+                <section class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
                             <label asp-for="AddProductReview.Title" asp-postfix=":"></label>
@@ -193,12 +193,12 @@
                             <nop-captcha action-name="ProductReviews" />
                         }
                     </div>
-                </div>
-                <div class="buttons">
+                </section>
+                <section class="buttons">
                     <button type="submit" name="add-review" id="add-review" class="button-1 write-product-review-button">@T("Reviews.SubmitButton")</button>
-                </div>
+                </section>
             </form>
         </div>
     }
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductReviewsPageBottom, additionalData = Model })
-</div>
+</section>

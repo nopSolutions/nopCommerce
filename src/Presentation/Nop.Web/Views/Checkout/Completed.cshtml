@@ -19,9 +19,9 @@
     <div class="page-body checkout-data">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutCompletedTop, additionalData = Model })
         <div class="section order-completed">
-            <div class="title">
-                <strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong>
-            </div>
+            <h2 class="title">
+                @T("Checkout.YourOrderHasBeenSuccessfullyProcessed")
+            </h2>
             <div class="details">
                 <div class="order-number">
                     <strong>@T("Checkout.OrderNumber"): @Model.CustomOrderNumber</strong>
