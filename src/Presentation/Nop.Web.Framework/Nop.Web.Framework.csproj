@@ -15,7 +15,7 @@
     <PackageReference Include="DeepL.net" Version="1.15.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Google.Cloud.Translation.V2" Version="3.4.0" />
-    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.426" />
+    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.477" />
     <PackageReference Include="WebMarkupMin.AspNetCoreLatest" Version="2.19.0" />
     <PackageReference Include="WebMarkupMin.NUglify" Version="2.19.0" />
   </ItemGroup>
