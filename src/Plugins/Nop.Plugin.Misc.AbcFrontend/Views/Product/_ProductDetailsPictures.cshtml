@@ -9,178 +9,185 @@
     // custom
     Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/Misc.AbcFrontend/scripts/jquery.jcarousel.min.js");
 }
+
 <div class="gallery">
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsBeforePictures, additionalData = Model })
+
     <div class="picture">
-        @if (Model.DefaultPictureZoomEnabled && Model.PictureModels.Count == 1)
-        {
-            <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
-                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
-            </a>
-            <script asp-location="Footer">
-                $(document).ready(function() {
-                    $('#main-product-img-lightbox-anchor-@Model.Id').magnificPopup({ type: 'image' });
-                });
-            </script>
-        }
-        else
-        {
-            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
-        }
+        <!-- Always wrap the main image in an anchor so it's clickable for fullscreen -->
+        <a href="@Model.DefaultPictureModel.FullSizeImageUrl"
+           title="@Model.DefaultPictureModel.Title"
+           id="main-product-img-lightbox-anchor-@Model.Id"
+           class="mfp-image">
+            <img alt="@Model.DefaultPictureModel.AlternateText"
+                 src="@Model.DefaultPictureModel.ImageUrl"
+                 title="@Model.DefaultPictureModel.Title"
+                 id="main-product-img-@Model.Id" />
+        </a>
     </div>
-    @if (Model.PictureModels.Count > 1 && Model.DefaultPictureZoomEnabled)
+
+    @if (Model.PictureModels.Count > 1)
     {
         <div class="jcarousel-wrapper">
             <a class="jcarousel-prev"><i class="fas fa-arrow-left"></i></a>
+
             <div class="jcarousel">
                 <ul>
+                    @{
+                        var idx = 0;
+                    }
                     @foreach (var picture in Model.PictureModels)
                     {
-                        var typeClass = picture.Title.Contains("video") ? "mfp-iframe" : "mfp-image";
+                        var isVideo = picture.Title?.Contains("video", System.StringComparison.OrdinalIgnoreCase) ?? false;
+                        var typeClass = isVideo ? "mfp-iframe" : "mfp-image";
                         <li>
-                            <a class="jcarousel-item @typeClass" href="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title">
-                                <img class="@typeClass" src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                            <a class="jcarousel-item @typeClass"
+                               href="@picture.FullSizeImageUrl"
+                               data-index="@idx"
+                               title="@picture.Title">
+                                <img class="@typeClass"
+                                     src="@picture.ThumbImageUrl"
+                                     alt="@picture.AlternateText"
+                                     title="@picture.Title"
+                                     data-defaultsize="@picture.ImageUrl"
+                                     data-fullsize="@picture.FullSizeImageUrl" />
                             </a>
                         </li>
+                        idx++;
                     }
                 </ul>
             </div>
+
             <a class="jcarousel-next"><i class="fas fa-arrow-right"></i></a>
         </div>
+
+        <!-- Thumbnails lightbox (gallery) -->
         <script asp-location="Footer">
-            $(document).ready(function() {
-                $('.jcarousel').magnificPopup(
-                    {
-                        type: 'image',
-                        delegate: 'a',
-                        removalDelay: 300,
-                        gallery: {
-                            enabled: true,
-                            navigateByImgClick: true,
-                            preload: [0, 1],
-                            tPrev: '@T("Media.MagnificPopup.Previous")',
-                            tNext: '@T("Media.MagnificPopup.Next")',
-                            tCounter: '@T("Media.MagnificPopup.Counter")'
-                        },
-                        tClose: '@T("Media.MagnificPopup.Close")',
-                        tLoading: '@T("Media.MagnificPopup.Loading")'
-                    });
+            $(function () {
+                $('.jcarousel').magnificPopup({
+                    type: 'image',
+                    delegate: 'a.mfp-image',
+                    removalDelay: 300,
+                    gallery: {
+                        enabled: true,
+                        navigateByImgClick: true,
+                        preload: [0, 1],
+                        tPrev: '@T("Media.MagnificPopup.Previous")',
+                        tNext: '@T("Media.MagnificPopup.Next")',
+                        tCounter: '@T("Media.MagnificPopup.Counter")'
+                    },
+                    tClose: '@T("Media.MagnificPopup.Close")',
+                    tLoading: '@T("Media.MagnificPopup.Loading")'
+                });
             });
         </script>
+
+        <!-- Keep main image + its lightbox target in sync with thumbnail selection -->
         <script asp-location="Footer">
-            $(document).ready(function() {
-                $('.jcarousel-item > img').on('click',
-                    function() {
-                        $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
-                        $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
-                        $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
-                        $('#main-product-img-lightbox-anchor-@Model.Id').attr('href', $(this).attr('data-fullsize'));
-                        $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
+            $(function () {
+                var $mainImg = $('#main-product-img-@Model.Id');
+                var $mainAnchor = $('#main-product-img-lightbox-anchor-@Model.Id');
+
+                // Track which index is currently shown on the main image
+                var currentIndex = 0;
+
+                // When a thumbnail is clicked, update the main image and the anchor's href/title
+                $('.jcarousel .jcarousel-item img').on('click', function (e) {
+                    var $img = $(this);
+                    var defaultSrc = $img.attr('data-defaultsize');
+                    var fullSrc = $img.attr('data-fullsize');
+                    var title = $img.attr('title');
+                    var alt = $img.attr('alt');
+
+                    $mainImg.attr({ src: defaultSrc, title: title, alt: alt });
+                    $mainAnchor.attr({ href: fullSrc, title: title });
+
+                    // store the index for opening correct slide in gallery
+                    currentIndex = parseInt($img.closest('a.jcarousel-item').attr('data-index')) || 0;
+                });
+
+                // Build a gallery items array from current thumbnails
+                function buildGalleryItems() {
+                    var items = [];
+                    $('.jcarousel a.mfp-image').each(function () {
+                        items.push({ src: $(this).attr('href'), type: 'image', title: $(this).attr('title') });
                     });
+                    return items;
+                }
+
+                // Make the MAIN IMAGE open the same gallery overlay as thumbnails, at currentIndex
+                $mainAnchor.on('click', function (e) {
+                    e.preventDefault();
+
+                    // If there are multiple images, open the gallery at the current index
+                    var count = $('.jcarousel a.mfp-image').length;
+                    if (count > 0) {
+                        $.magnificPopup.open({
+                            items: buildGalleryItems(),
+                            type: 'image',
+                            gallery: {
+                                enabled: true,
+                                navigateByImgClick: true,
+                                preload: [0, 1],
+                                tPrev: '@T("Media.MagnificPopup.Previous")',
+                                tNext: '@T("Media.MagnificPopup.Next")',
+                                tCounter: '@T("Media.MagnificPopup.Counter")'
+                            },
+                            tClose: '@T("Media.MagnificPopup.Close")',
+                            tLoading: '@T("Media.MagnificPopup.Loading")'
+                        }, currentIndex);
+                    } else {
+                        // Fallback for single image: just open that one
+                        $(this).magnificPopup({ type: 'image' }).magnificPopup('open');
+                    }
+                });
             });
         </script>
     }
     else
     {
-        if (Model.PictureModels.Count > 1)
-        {
-            <div class="jcarousel-wrapper">
-                <a class="jcarousel-prev"><i class="fas fa-arrow-left"></i></a>
-                <div class="jcarousel">
-                    
-                    <ul>
-                        @foreach (var picture in Model.PictureModels)
-                        {
-                            <li>
-                                <div class="jcarousel-item">
-                                    <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
-                                </div>
-                            </li>
-                        }
-                    </ul>
-                </div>
-                <a class="jcarousel-next"><i class="fas fa-arrow-right"></i></a>
-            </div>
-            
-            <script asp-location="Footer">
-                $(document).ready(function() {
-                    $('.jcarousel-item img').on('click',
-                        function() {
-                            $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
-                            $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
-                            $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
-                            $('#main-product-img-lightbox-anchor-@Model.Id')
-                                .attr('href', $(this).attr('data-fullsize'));
-                            $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
-                        });
-                });
-            </script>
-        }
+        <!-- Single image: simple lightbox on the main anchor -->
+        <script asp-location="Footer">
+            $(function () {
+                $('#main-product-img-lightbox-anchor-@Model.Id').magnificPopup({ type: 'image' });
+            });
+        </script>
     }
+
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsAfterPictures, additionalData = Model })
 </div>
-<!-- carousel -->
+
+<!-- carousel init -->
 <script>
-    $(document).ready(function () {
-        var carousel = $('.jcarousel').jcarousel({
-            wrap: 'circular'
-        });
-
-        $('.jcarousel-prev').jcarouselControl({
-            target: '-=2',
-            carousel: carousel
-        });
-
-        $('.jcarousel-next').jcarouselControl({
-            target: '+=2',
-            carousel: carousel
-        });
+    $(function () {
+        var carousel = $('.jcarousel').jcarousel({ wrap: 'circular' });
+        $('.jcarousel-prev').jcarouselControl({ target: '-=2', carousel: carousel });
+        $('.jcarousel-next').jcarouselControl({ target: '+=2', carousel: carousel });
     });
 </script>
+
 <style>
-    /*
-    This is the visible area of you carousel.
-    Set a width here to define how much items are visible.
-    The width can be either fixed in px or flexible in %.
-    Position must be relative!
-    */
     .jcarousel {
         position: relative;
         overflow: hidden;
         margin: 20px auto;
         width: 200px;
     }
-
-    /*
-    This is the container of the carousel items.
-    You must ensure that the position is relative or absolute and
-    that the width is big enough to contain all items.
-    */
     .jcarousel ul {
         width: 10000em;
         position: relative;
-
-        /* Optional, required in this case since it's a <ul> element */
         list-style: none;
         margin: 0;
         padding: 0;
     }
-
-    /*
-    These are the item elements. jCarousel works best, if the items
-    have a fixed width and height (but it's not required).
-    */
     .jcarousel li {
-        /* Required only for block elements like <li>'s */
         float: left;
         width: 100px;
     }
-
     .jcarousel-nav {
         margin: 0 auto;
         text-align: center;
     }
-
     .jcarousel-wrapper {
         display: flex;
         align-items: center;
@@ -188,27 +195,9 @@
         margin: 0 auto;
     }
 
-    @@media screen and (min-width: 475px) {
-        .jcarousel {
-            width: 300px;
-        }
-    }
-
-    @@media screen and (min-width: 595px) {
-        .jcarousel {
-            width: 400px;
-        }
-    }
-
-    @@media screen and (min-width: 769px) {
-        .jcarousel {
-            width: 200px;
-        }
-    }
-
-    @@media screen and (min-width: 1001px) {
-        .jcarousel {
-            width: 300px;
-        }
-    }
+    /* Responsive widths */
+    @@media screen and (min-width: 475px) { .jcarousel { width: 300px; } }
+    @@media screen and (min-width: 595px) { .jcarousel { width: 400px; } }
+    @@media screen and (min-width: 769px) { .jcarousel { width: 200px; } }
+    @@media screen and (min-width: 1001px) { .jcarousel { width: 300px; } }
 </style>
