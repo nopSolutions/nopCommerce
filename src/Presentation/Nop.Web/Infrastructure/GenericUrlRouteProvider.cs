@@ -14,7 +14,7 @@ public partial class GenericUrlRouteProvider : BaseRouteProvider, IRouteProvider
     /// Register routes
     /// </summary>
     /// <param name="endpointRouteBuilder">Route builder</param>
-    public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
     {
         var lang = GetLanguageRoutePattern();
 

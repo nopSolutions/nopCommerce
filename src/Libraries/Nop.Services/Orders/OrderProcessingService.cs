@@ -2332,6 +2332,11 @@ public partial class OrderProcessingService : IOrderProcessingService
         //cancel order
         await SetOrderStatusAsync(order, OrderStatus.Cancelled, notifyCustomer);
 
+        //notify store owner
+        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+        if (order.CustomerId == currentCustomer.Id)
+            await _workflowMessageService.SendOrderCancelledStoreOwnerNotificationAsync(order, _localizationSettings.DefaultAdminLanguageId);
+
         //add a note
         await AddOrderNoteAsync(order, "Order has been cancelled");
 

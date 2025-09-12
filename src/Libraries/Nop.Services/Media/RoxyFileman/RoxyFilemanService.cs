@@ -67,7 +67,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// </summary>
     /// <param name="pathBase">The base path for the current request</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task ConfigureAsync(string pathBase)
+    public virtual async Task ConfigureAsync(string pathBase)
     {
         var currentLanguage = await _workContext.GetWorkingLanguageAsync();
         await _fileProvider.GetOrCreateConfigurationAsync(pathBase, currentLanguage.UniqueSeoCode);
@@ -81,7 +81,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// Delete the directory
     /// </summary>
     /// <param name="path">Path to the directory</param>
-    public void DeleteDirectory(string path)
+    public virtual void DeleteDirectory(string path)
     {
         _fileProvider.DeleteDirectory(path);
     }
@@ -90,7 +90,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// Download the directory from the server as a zip archive
     /// </summary>
     /// <param name="path">Path to the directory</param>
-    public byte[] DownloadDirectory(string path)
+    public virtual byte[] DownloadDirectory(string path)
     {
         return _fileProvider.CreateZipArchiveFromDirectory(path);
     }
@@ -100,7 +100,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// </summary>
     /// <param name="sourcePath">Path to the source directory</param>
     /// <param name="destinationPath">Path to the destination directory</param>
-    public void CopyDirectory(string sourcePath, string destinationPath)
+    public virtual void CopyDirectory(string sourcePath, string destinationPath)
     {
         _fileProvider.CopyDirectory(sourcePath, destinationPath);
     }
@@ -120,7 +120,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// </summary>
     /// <param name="type">Type of the file</param>
     /// <returns>List of directories</returns>
-    public IEnumerable<object> GetDirectoryList(string type)
+    public virtual IEnumerable<object> GetDirectoryList(string type)
     {
         var contents = _fileProvider.GetDirectories(type);
 
@@ -149,7 +149,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// </summary>
     /// <param name="sourcePath">Path to the source directory</param>
     /// <param name="destinationPath">Path to the destination directory</param>
-    public void MoveDirectory(string sourcePath, string destinationPath)
+    public virtual void MoveDirectory(string sourcePath, string destinationPath)
     {
         if (destinationPath.IndexOf(sourcePath, StringComparison.InvariantCulture) == 0)
             throw new RoxyFilemanException("E_CannotMoveDirToChild");
@@ -162,7 +162,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// </summary>
     /// <param name="directoryPath">Path to the files directory</param>
     /// <param name="type">Type of the files</param>
-    public IEnumerable<object> GetFiles(string directoryPath, string type)
+    public virtual IEnumerable<object> GetFiles(string directoryPath, string type)
     {
         return _fileProvider.GetFiles(directoryPath, type?.Trim('#'))
             .Select(f => new
@@ -180,7 +180,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// </summary>
     /// <param name="sourcePath">Path to the source directory</param>
     /// <param name="newName">New name of the directory</param>
-    public void RenameDirectory(string sourcePath, string newName)
+    public virtual void RenameDirectory(string sourcePath, string newName)
     {
         _fileProvider.RenameDirectory(sourcePath, newName);
     }
@@ -191,7 +191,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// <param name="directoryPath">Path to directory to upload files</param>
     /// <param name="files">Files sent with the HttpRequest</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task UploadFilesAsync(string directoryPath, IEnumerable<IFormFile> files)
+    public virtual async Task UploadFilesAsync(string directoryPath, IEnumerable<IFormFile> files)
     {
         foreach (var formFile in files)
         {
@@ -208,7 +208,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// </summary>
     /// <param name="sourcePath">Path to the source file</param>
     /// <param name="destinationPath">Path to the destination file</param>
-    public void CopyFile(string sourcePath, string destinationPath)
+    public virtual void CopyFile(string sourcePath, string destinationPath)
     {
         _fileProvider.CopyFile(sourcePath, destinationPath);
     }
@@ -227,7 +227,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// Delete the directory
     /// </summary>
     /// <param name="path">Path to the directory</param>
-    public void DeleteFile(string path)
+    public virtual void DeleteFile(string path)
     {
         _fileProvider.DeleteFile(path);
     }
@@ -236,7 +236,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// Get filename and read-only content stream
     /// </summary>
     /// <param name="path">Path to the file</param>
-    public (Stream stream, string name) GetFileStream(string path)
+    public virtual (Stream stream, string name) GetFileStream(string path)
     {
         var file = _fileProvider.GetFileInfo(path);
 
@@ -251,7 +251,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// </summary>
     /// <param name="sourcePath">Path to the source file</param>
     /// <param name="destinationPath">Path to the destination file</param>
-    public void MoveFile(string sourcePath, string destinationPath)
+    public virtual void MoveFile(string sourcePath, string destinationPath)
     {
         if (!CanHandleFile(sourcePath) && !CanHandleFile(destinationPath))
             throw new RoxyFilemanException("E_FileExtensionForbidden");
@@ -264,7 +264,7 @@ public partial class RoxyFilemanService : IRoxyFilemanService
     /// </summary>
     /// <param name="sourcePath">Path to the source file</param>
     /// <param name="newName">New name of the file</param>
-    public void RenameFile(string sourcePath, string newName)
+    public virtual void RenameFile(string sourcePath, string newName)
     {
         if (!CanHandleFile(sourcePath) && !CanHandleFile(newName))
             throw new RoxyFilemanException("E_FileExtensionForbidden");

@@ -32,6 +32,7 @@ public partial class OrderController : BasePublicController
     protected readonly IShipmentService _shipmentService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
+    protected readonly OrderSettings _orderSettings;
     protected readonly RewardPointsSettings _rewardPointsSettings;
 
     #endregion
@@ -49,6 +50,7 @@ public partial class OrderController : BasePublicController
         IShipmentService shipmentService,
         IWebHelper webHelper,
         IWorkContext workContext,
+        OrderSettings orderSettings,
         RewardPointsSettings rewardPointsSettings)
     {
         _customerService = customerService;
@@ -62,6 +64,7 @@ public partial class OrderController : BasePublicController
         _shipmentService = shipmentService;
         _webHelper = webHelper;
         _workContext = workContext;
+        _orderSettings = orderSettings;
         _rewardPointsSettings = rewardPointsSettings;
     }
 
@@ -210,6 +213,33 @@ public partial class OrderController : BasePublicController
             bytes = stream.ToArray();
         }
         return File(bytes, MimeTypes.ApplicationPdf, string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf");
+    }
+
+    public async Task<IActionResult> CancelOrder(int orderId)
+    {
+        if(!_orderSettings.AllowCustomersCancelOrders)
+            return RedirectToRoute(NopRouteNames.Standard.ORDER_DETAILS, new { orderId });
+
+        var order = await _orderService.GetOrderByIdAsync(orderId);
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        if (order == null || customer.Id != order.CustomerId)
+            return Challenge();
+        
+        try
+        {
+            if (_orderProcessingService.CanCancelOrder(order))
+                await _orderProcessingService.CancelOrderAsync(order, false);
+        }
+        catch
+        {
+            _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Order.Cancel.Failed"));
+            return RedirectToRoute(NopRouteNames.Standard.ORDER_DETAILS, new { orderId });
+        }
+
+        await _orderService.UpdateOrderAsync(order);
+       _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Order.Cancelled"));
+
+        return RedirectToRoute(NopRouteNames.Standard.ORDER_DETAILS, new { orderId });
     }
 
     //My account / Order details page / re-order

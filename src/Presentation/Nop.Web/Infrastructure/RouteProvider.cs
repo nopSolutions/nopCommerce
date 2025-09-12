@@ -15,7 +15,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
     /// Register routes
     /// </summary>
     /// <param name="endpointRouteBuilder">Route builder</param>
-    public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
     {
         //get language pattern
         //it's not needed to use language pattern in AJAX requests and for actions returning the result directly (e.g. file to download),
@@ -460,6 +460,11 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.PRINT_ORDER_DETAILS,
             pattern: $"{lang}/orderdetails/print/{{orderId}}",
             defaults: new { controller = "Order", action = "PrintOrderDetails" });
+
+        //cancel order
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CANCEL_ORDER,
+            pattern: $"{lang}/orderdetails/cancelorder/{{orderId}}",
+            defaults: new { controller = "Order", action = "CancelOrder" });
 
         //order downloads (file result)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.GET_DOWNLOAD,

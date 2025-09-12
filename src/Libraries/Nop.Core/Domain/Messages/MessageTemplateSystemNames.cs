@@ -122,6 +122,11 @@ public static partial class MessageTemplateSystemNames
     public const string ORDER_CANCELLED_CUSTOMER_NOTIFICATION = "OrderCancelled.CustomerNotification";
 
     /// <summary>
+    /// Represents system name of notification store owner about cancelled order
+    /// </summary>
+    public const string ORDER_CANCELLED_STORE_OWNER_NOTIFICATION = "OrderCancelled.StoreOwnerNotification";
+
+    /// <summary>
     /// Represents system name of notification vendor about cancelled order
     /// </summary>
     public const string ORDER_CANCELLED_VENDOR_NOTIFICATION = "OrderCancelled.VendorNotification";

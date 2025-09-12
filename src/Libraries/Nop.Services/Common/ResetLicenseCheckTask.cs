@@ -30,7 +30,7 @@ public partial class ResetLicenseCheckTask : IScheduleTask
     /// Executes a task
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task ExecuteAsync()
+    public virtual async Task ExecuteAsync()
     {
         await _settingService.SetSettingAsync($"{nameof(AdminAreaSettings)}.{nameof(AdminAreaSettings.CheckLicense)}", true);
     }

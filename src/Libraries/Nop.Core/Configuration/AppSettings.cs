@@ -33,7 +33,7 @@ public partial class AppSettings
     /// </summary>
     /// <typeparam name="TConfig">Configuration type</typeparam>
     /// <returns>Configuration parameters</returns>
-    public TConfig Get<TConfig>() where TConfig : class, IConfig
+    public virtual TConfig Get<TConfig>() where TConfig : class, IConfig
     {
         if (_configurations[typeof(TConfig)] is not TConfig config)
             throw new NopException($"No configuration with type '{typeof(TConfig)}' found");
@@ -45,7 +45,7 @@ public partial class AppSettings
     /// Update app settings
     /// </summary>
     /// <param name="configurations">Configurations to update</param>
-    public void Update(IList<IConfig> configurations)
+    public virtual void Update(IList<IConfig> configurations)
     {
         foreach (var config in configurations)
         {

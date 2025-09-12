@@ -402,6 +402,11 @@ public static partial class NopRouteNames
         public const string PRINT_ORDER_DETAILS = "PrintOrderDetails";
 
         /// <summary>
+        /// Gets the cancel order route name
+        /// </summary>
+        public const string CANCEL_ORDER = "CancelOrder";
+
+        /// <summary>
         /// Gets the order downloads (file result) route name
         /// </summary>
         public const string GET_DOWNLOAD = "GetDownload";

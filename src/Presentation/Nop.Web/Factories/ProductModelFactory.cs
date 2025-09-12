@@ -254,7 +254,7 @@ public partial class ProductModelFactory : IProductModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the minimum possible product price
     /// </returns>
-    protected async Task<(bool hasMultiplePrices, decimal minPossiblePriceWithoutDiscount, decimal minPossiblePriceWithDiscount)> GetFromPriceAsync(Product product, Customer customer, Store store)
+    protected virtual async Task<(bool hasMultiplePrices, decimal minPossiblePriceWithoutDiscount, decimal minPossiblePriceWithDiscount)> GetFromPriceAsync(Product product, Customer customer, Store store)
     {
         var hasMultiplePrices = false;
 

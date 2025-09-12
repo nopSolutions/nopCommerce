@@ -118,7 +118,7 @@ public partial class ModelCacheEventConsumer :
     #region Languages
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Language> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Language> eventMessage)
     {
         //clear all localizable models
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
@@ -127,7 +127,7 @@ public partial class ModelCacheEventConsumer :
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Language> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Language> eventMessage)
     {
         //clear all localizable models
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
@@ -136,7 +136,7 @@ public partial class ModelCacheEventConsumer :
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<Language> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Language> eventMessage)
     {
         //clear all localizable models
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
@@ -149,7 +149,7 @@ public partial class ModelCacheEventConsumer :
     #region Setting
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Setting> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Setting> eventMessage)
     {
         //clear models which depend on settings
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey); //depends on CatalogSettings.ManufacturersBlockItemsToDisplay
@@ -170,14 +170,14 @@ public partial class ModelCacheEventConsumer :
     #region Vendors
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Vendor> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Vendor> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorNavigationModelKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Vendor> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Vendor> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorNavigationModelKey);
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.VendorPicturePrefixCacheKeyById, eventMessage.Entity.Id));
@@ -186,7 +186,7 @@ public partial class ModelCacheEventConsumer :
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<Vendor> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Vendor> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorNavigationModelKey);
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.VendorReviewsByVendorIdPrefixCacheKey, eventMessage.Entity.Id));
@@ -198,7 +198,7 @@ public partial class ModelCacheEventConsumer :
     #region  Manufacturers
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Manufacturer> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Manufacturer> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
@@ -206,7 +206,7 @@ public partial class ModelCacheEventConsumer :
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Manufacturer> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Manufacturer> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
@@ -215,7 +215,7 @@ public partial class ModelCacheEventConsumer :
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<Manufacturer> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Manufacturer> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
@@ -227,7 +227,7 @@ public partial class ModelCacheEventConsumer :
     #region Categories
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
@@ -238,7 +238,7 @@ public partial class ModelCacheEventConsumer :
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Category> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Category> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
@@ -250,7 +250,7 @@ public partial class ModelCacheEventConsumer :
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<Category> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Category> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
@@ -265,7 +265,7 @@ public partial class ModelCacheEventConsumer :
     #region Product categories
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<ProductCategory> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<ProductCategory> eventMessage)
     {
         if (_catalogSettings.ShowCategoryProductNumber)
         {
@@ -277,7 +277,7 @@ public partial class ModelCacheEventConsumer :
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<ProductCategory> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<ProductCategory> eventMessage)
     {
         if (_catalogSettings.ShowCategoryProductNumber)
         {
@@ -293,14 +293,14 @@ public partial class ModelCacheEventConsumer :
     #region Products
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Product> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Product> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Product> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Product> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
@@ -311,7 +311,7 @@ public partial class ModelCacheEventConsumer :
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<Product> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Product> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
@@ -325,19 +325,19 @@ public partial class ModelCacheEventConsumer :
     #region Product tags
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<ProductTag> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<ProductTag> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<ProductTag> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<ProductTag> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<ProductTag> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<ProductTag> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
     }
@@ -347,7 +347,7 @@ public partial class ModelCacheEventConsumer :
     #region Product attributes
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<ProductAttributeValue> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<ProductAttributeValue> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributeImageSquarePicturePrefixCacheKey);
@@ -358,21 +358,21 @@ public partial class ModelCacheEventConsumer :
     #region Topics
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Topic> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Topic> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Topic> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Topic> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<Topic> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Topic> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
@@ -383,21 +383,21 @@ public partial class ModelCacheEventConsumer :
     #region Orders
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Order> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Order> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Order> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Order> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<Order> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Order> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
@@ -408,7 +408,7 @@ public partial class ModelCacheEventConsumer :
     #region Pictures
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Picture> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Picture> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
@@ -416,7 +416,7 @@ public partial class ModelCacheEventConsumer :
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Picture> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Picture> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
@@ -429,7 +429,7 @@ public partial class ModelCacheEventConsumer :
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<Picture> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Picture> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
@@ -446,7 +446,7 @@ public partial class ModelCacheEventConsumer :
     #region Product picture mappings
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<ProductPicture> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<ProductPicture> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductOverviewPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
@@ -456,7 +456,7 @@ public partial class ModelCacheEventConsumer :
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<ProductPicture> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<ProductPicture> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductOverviewPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
@@ -466,7 +466,7 @@ public partial class ModelCacheEventConsumer :
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<ProductPicture> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<ProductPicture> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductOverviewPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
@@ -480,19 +480,19 @@ public partial class ModelCacheEventConsumer :
     #region Polls
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Poll> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Poll> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.PollsPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Poll> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Poll> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.PollsPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<Poll> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Poll> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.PollsPrefixCacheKey);
     }
@@ -502,21 +502,21 @@ public partial class ModelCacheEventConsumer :
     #region Blog posts
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<BlogPost> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<BlogPost> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.BlogPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<BlogPost> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<BlogPost> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.BlogPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<BlogPost> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<BlogPost> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.BlogPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
@@ -527,21 +527,21 @@ public partial class ModelCacheEventConsumer :
     #region News items
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<NewsItem> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<NewsItem> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.NewsPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<NewsItem> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<NewsItem> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.NewsPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<NewsItem> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<NewsItem> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.NewsPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
@@ -552,7 +552,7 @@ public partial class ModelCacheEventConsumer :
     #region Shopping cart items
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
     }
@@ -562,7 +562,7 @@ public partial class ModelCacheEventConsumer :
     #region Product reviews
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<ProductReview> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<ProductReview> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductReviewsPrefixCacheKeyById, eventMessage.Entity.ProductId));
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorReviewsPrefixCacheKey);
@@ -577,7 +577,7 @@ public partial class ModelCacheEventConsumer :
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(PluginUpdatedEvent eventMessage)
+    public virtual async Task HandleEventAsync(PluginUpdatedEvent eventMessage)
     {
         if (eventMessage?.Plugin?.Instance<IWidgetPlugin>() != null)
             await _staticCacheManager.RemoveByPrefixAsync(WidgetModelDefaults.WidgetPrefixCacheKey);
@@ -588,37 +588,37 @@ public partial class ModelCacheEventConsumer :
     #region Menus
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Menu> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Menu> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Menu> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Menu> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<Menu> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Menu> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<MenuItem> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<MenuItem> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<MenuItem> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<MenuItem> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<MenuItem> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<MenuItem> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.MenuPrefixCacheKey);
     }

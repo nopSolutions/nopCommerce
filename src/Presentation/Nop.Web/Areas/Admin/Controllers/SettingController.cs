@@ -924,6 +924,7 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.CustomOrderNumberMask, model.CustomOrderNumberMask_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.ExportWithProducts, model.ExportWithProducts_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.AllowAdminsToBuyCallForPriceProducts, model.AllowAdminsToBuyCallForPriceProducts_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.AllowCustomersCancelOrders, model.AllowCustomersCancelOrders_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.ShowProductThumbnailInOrderDetailsPage, model.ShowProductThumbnailInOrderDetailsPage_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.DeleteGiftCardUsageHistory, model.DeleteGiftCardUsageHistory_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingAsync(orderSettings, x => x.ActivateGiftCardsAfterCompletingOrder, 0, false);
@@ -1915,7 +1916,7 @@ public partial class SettingController : BaseAdminController
 
     //action displaying notification (warning) to a store owner about a lot of traffic 
     //between the distributed cache server and the application when LoadAllLocaleRecordsOnStartup setting is set
-    public async Task<IActionResult> DistributedCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
+    public virtual async Task<IActionResult> DistributedCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
     {
         //LoadAllLocaleRecordsOnStartup is set and distributed cache is used, so display warning
         if (_appSettings.Get<DistributedCacheConfig>().Enabled && _appSettings.Get<DistributedCacheConfig>().DistributedCacheType != DistributedCacheType.Memory && loadAllLocaleRecordsOnStartup)
@@ -1931,7 +1932,7 @@ public partial class SettingController : BaseAdminController
     }
 
     //Action that displays a notification (warning) to the store owner about the absence of active authentication providers
-    public async Task<IActionResult> ForceMultifactorAuthenticationWarning(bool forceMultifactorAuthentication)
+    public virtual async Task<IActionResult> ForceMultifactorAuthenticationWarning(bool forceMultifactorAuthentication)
     {
         //ForceMultifactorAuthentication is set and the store haven't active Authentication provider , so display warning
         if (forceMultifactorAuthentication && !await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
@@ -1947,7 +1948,7 @@ public partial class SettingController : BaseAdminController
     }
 
     //Action that displays a notification (warning) to the store owner about the need to restart the application after changing the setting
-    public async Task<IActionResult> SeoFriendlyUrlsForLanguagesEnabledWarning(bool seoFriendlyUrlsForLanguagesEnabled)
+    public virtual async Task<IActionResult> SeoFriendlyUrlsForLanguagesEnabledWarning(bool seoFriendlyUrlsForLanguagesEnabled)
     {
         //load settings for a chosen store scope
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();

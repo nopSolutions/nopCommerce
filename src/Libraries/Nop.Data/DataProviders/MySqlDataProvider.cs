@@ -40,7 +40,7 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// Gets the connection string builder
     /// </summary>
     /// <returns>The connection string builder</returns>
-    protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
+    protected virtual MySqlConnectionStringBuilder GetConnectionStringBuilder()
     {
         return new MySqlConnectionStringBuilder(DataSettings.ConnectionString);
     }
@@ -64,9 +64,8 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// <summary>
     /// Creates the database by using the loaded connection string
     /// </summary>
-    /// <param name="collation"></param>
     /// <param name="triesToConnect"></param>
-    public void CreateDatabase(int triesToConnect = 10)
+    public virtual void CreateDatabase(int triesToConnect = 10)
     {
         if (DatabaseExists())
             return;
@@ -123,7 +122,7 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// A task that represents the asynchronous operation
     /// The task result contains the returns true if the database exists.
     /// </returns>
-    public async Task<bool> DatabaseExistsAsync()
+    public virtual async Task<bool> DatabaseExistsAsync()
     {
         try
         {
@@ -144,7 +143,7 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// Checks if the specified database exists, returns true if database exists
     /// </summary>
     /// <returns>Returns true if the database exists.</returns>
-    public bool DatabaseExists()
+    public virtual bool DatabaseExists()
     {
         try
         {

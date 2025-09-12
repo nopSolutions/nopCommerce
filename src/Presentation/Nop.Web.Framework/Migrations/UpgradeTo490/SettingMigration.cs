@@ -398,6 +398,13 @@ public class SettingMigration : MigrationBase
             aiSettings.MetaDescriptionQuery = ArtificialIntelligenceDefaults.MetaDescriptionQuery;
             settingService.SaveSetting(aiSettings, settings => settings.MetaDescriptionQuery);
         }
+
+        //#7384
+        if (!settingService.SettingExists(orderSettings, settings => settings.AllowCustomersCancelOrders))
+        {
+            orderSettings.AllowCustomersCancelOrders = true;
+            settingService.SaveSetting(orderSettings, settings => settings.AllowCustomersCancelOrders);
+        }
     }
 
     public override void Down()

@@ -5497,6 +5497,15 @@ label, label + * {
   background-color: var(--accent-blue-active-color);
 }
 
+.order-details-page .page-title a.cancel-order-button {
+  background-color: #cc0000;
+}
+
+.order-details-page .page-title a.cancel-order-button:hover,
+.order-details-page .page-title a.cancel-order-button:focus {
+  background-color: #f00000;
+}
+
 .order-details-page .order-overview {
   margin: 0 0 50px;
   line-height: 26px;
