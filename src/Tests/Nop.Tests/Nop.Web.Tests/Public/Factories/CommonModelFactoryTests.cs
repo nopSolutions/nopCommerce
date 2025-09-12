@@ -84,7 +84,7 @@ public class CommonModelFactoryTests : BaseNopTest
         model.AvailableLanguages.Should().NotBeNullOrEmpty();
         var lang = model.AvailableLanguages.FirstOrDefault();
         lang.Should().NotBeNull();
-        lang?.Name.Should().Be("EN");
+        lang?.Name.Should().Be("English");
         lang?.FlagImageFileName.Should().Be("us.png");
     }
 
@@ -245,6 +245,6 @@ public class CommonModelFactoryTests : BaseNopTest
         var model = await _commonModelFactory.PrepareRobotsTextFileAsync();
         model.Should().NotBeNullOrEmpty();
 
-        model.Trim().Split(Environment.NewLine).Length.Should().Be(163);
+        model.Trim().Split(Environment.NewLine).Length.Should().Be(165);
     }
 }
