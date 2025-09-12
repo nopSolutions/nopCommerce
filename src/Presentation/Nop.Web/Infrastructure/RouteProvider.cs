@@ -461,6 +461,11 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/orderdetails/print/{{orderId}}",
             defaults: new { controller = "Order", action = "PrintOrderDetails" });
 
+        //cancel order
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CANCEL_ORDER,
+            pattern: $"{lang}/orderdetails/cancelorder/{{orderId}}",
+            defaults: new { controller = "Order", action = "CancelOrder" });
+
         //order downloads (file result)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.GET_DOWNLOAD,
             pattern: $"download/getdownload/{{orderItemId:guid}}/{{agree?}}",

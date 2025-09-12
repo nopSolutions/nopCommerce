@@ -1,4 +1,6 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
+using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 
@@ -28,7 +30,8 @@ public partial record OrderDetailsModel : BaseNopEntityModel
 
     public DateTime CreatedOn { get; set; }
 
-    public string OrderStatus { get; set; }
+    public OrderStatus OrderStatus { get; set; }
+    public string OrderStatusText { get; set; }
 
     public bool IsReOrderAllowed { get; set; }
 
@@ -48,6 +51,7 @@ public partial record OrderDetailsModel : BaseNopEntityModel
 
     public string PaymentMethod { get; set; }
     public string PaymentMethodStatus { get; set; }
+    public PaymentStatus PaymentStatus { get; set; }
     public bool CanRePostProcessPayment { get; set; }
     public Dictionary<string, string> CustomValues { get; set; }
 
@@ -84,6 +88,7 @@ public partial record OrderDetailsModel : BaseNopEntityModel
 
     public bool ShowVendorName { get; set; }
     public bool ShowProductThumbnail { get; set; }
+    public bool CanCancelOrder { get; set; }
 
 
     #region Nested Classes

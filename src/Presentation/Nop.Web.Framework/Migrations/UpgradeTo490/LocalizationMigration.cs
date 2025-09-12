@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -598,6 +599,14 @@ public class LocalizationMigration : MigrationBase
 
             //#7643
             ["Media.Product.VideoTitleFormat"] = "Video of {0}",
+
+            //#7384
+            ["Order.Cancel"] = "Cancel order",
+            ["Order.Cancel.Failed"] = "Failed to cancel order",
+            ["Order.Cancelled"] = "Order has been cancelled",
+            ["Admin.Configuration.Settings.Order.AllowCustomersCancelOrders"] = "Allow customers to cancel orders",
+            ["Admin.Configuration.Settings.Order.AllowCustomersCancelOrders.Hint"] = "Check to allow customers to cancel orders",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.ORDER_CANCELLED_STORE_OWNER_NOTIFICATION}"] = "This message template is used to notify a store owner that the certain order was cancelled by customer.",
         }, languageId);
 
         #endregion

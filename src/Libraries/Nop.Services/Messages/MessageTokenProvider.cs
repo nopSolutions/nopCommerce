@@ -1649,7 +1649,8 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             MessageTemplateSystemNames.ORDER_COMPLETED_CUSTOMER_NOTIFICATION or
             MessageTemplateSystemNames.ORDER_COMPLETED_STORE_OWNER_NOTIFICATION or
             MessageTemplateSystemNames.ORDER_CANCELLED_VENDOR_NOTIFICATION or
-            MessageTemplateSystemNames.ORDER_CANCELLED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
+            MessageTemplateSystemNames.ORDER_CANCELLED_CUSTOMER_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_CANCELLED_STORE_OWNER_NOTIFICATION=> [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
 
             MessageTemplateSystemNames.SHIPMENT_SENT_CUSTOMER_NOTIFICATION or
             MessageTemplateSystemNames.SHIPMENT_READY_FOR_PICKUP_CUSTOMER_NOTIFICATION or
