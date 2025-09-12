@@ -327,7 +327,7 @@ public partial class NopStartup : INopStartup
     /// Configure the using of added middleware
     /// </summary>
     /// <param name="application">Builder for configuring an application's request pipeline</param>
-    public void Configure(IApplicationBuilder application)
+    public virtual void Configure(IApplicationBuilder application)
     {
     }
 

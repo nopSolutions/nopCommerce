@@ -32,7 +32,7 @@ public partial class GetPickupPointsResponse
     /// Add error
     /// </summary>
     /// <param name="error">Error</param>
-    public void AddError(string error)
+    public virtual void AddError(string error)
     {
         Errors.Add(error);
     }

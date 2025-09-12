@@ -87,7 +87,7 @@ public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopMode
     /// <param name="key">Key to load mapping</param>
     /// <param name="entity">Entity to store mapping</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected async Task SaveStoredDataAsync<TEntity>(string key, TEntity entity) where TEntity : BaseEntity, IAclSupported
+    protected virtual async Task SaveStoredDataAsync<TEntity>(string key, TEntity entity) where TEntity : BaseEntity, IAclSupported
     {
         if (!_tempData.ContainsKey(key))
             return;

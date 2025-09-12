@@ -37,7 +37,7 @@ public class CustomerEventConsumer : IConsumer<CustomerChangeWorkingLanguageEven
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(CustomerChangeWorkingLanguageEvent eventMessage)
+    public virtual async Task HandleEventAsync(CustomerChangeWorkingLanguageEvent eventMessage)
     {
         if (eventMessage.Customer is not Customer customer)
             return;

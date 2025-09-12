@@ -44,7 +44,7 @@ public partial class TaskScheduler : ITaskScheduler
     /// Initializes task scheduler
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task InitializeAsync()
+    public virtual async Task InitializeAsync()
     {
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
@@ -115,7 +115,7 @@ public partial class TaskScheduler : ITaskScheduler
     /// Starts the task scheduler
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public Task StartSchedulerAsync()
+    public virtual Task StartSchedulerAsync()
     {
         _taskThread = Task.WhenAll(_taskThreads.Select(taskThread => taskThread.InitTimerAsync()));
 
@@ -126,7 +126,7 @@ public partial class TaskScheduler : ITaskScheduler
     /// Stops the task scheduler
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task StopSchedulerAsync()
+    public virtual async Task StopSchedulerAsync()
     {
         foreach (var taskThread in _taskThreads)
             taskThread.Dispose();
@@ -251,7 +251,7 @@ public partial class TaskScheduler : ITaskScheduler
         /// <summary>
         /// Disposes the instance
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -260,7 +260,7 @@ public partial class TaskScheduler : ITaskScheduler
         /// <summary>
         /// Inits a timer
         /// </summary>
-        public async Task InitTimerAsync()
+        public virtual async Task InitTimerAsync()
         {
             var interval = TimeSpan.FromMilliseconds(Interval);
             IsStarted = true;

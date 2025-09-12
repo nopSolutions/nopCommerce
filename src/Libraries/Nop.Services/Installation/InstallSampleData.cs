@@ -78,7 +78,7 @@ public partial class InstallationService
     /// <param name="getName">Function to getting the name fore creating the slug</param>
     /// <param name="languageId">The language identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected async Task InsertSearchEngineNamesAsync<TEntity>(IEnumerable<TEntity> entities, Func<TEntity, string> getName, int languageId = 0) where TEntity : BaseEntity
+    protected virtual async Task InsertSearchEngineNamesAsync<TEntity>(IEnumerable<TEntity> entities, Func<TEntity, string> getName, int languageId = 0) where TEntity : BaseEntity
     {
         await _dataProvider.BulkInsertEntitiesAsync(await entities.SelectAwait(async entity => new UrlRecord
         {
@@ -1623,7 +1623,7 @@ public partial class InstallationService
     /// A task that represents the asynchronous operation
     /// The task contains created address
     /// </returns>
-    protected async Task<Address> CreateAddressAsync(SampleAddress sampleAddress)
+    protected virtual async Task<Address> CreateAddressAsync(SampleAddress sampleAddress)
     {
         return new Address
         {

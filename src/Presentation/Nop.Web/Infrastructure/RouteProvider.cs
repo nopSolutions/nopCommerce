@@ -15,7 +15,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
     /// Register routes
     /// </summary>
     /// <param name="endpointRouteBuilder">Route builder</param>
-    public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
     {
         //get language pattern
         //it's not needed to use language pattern in AJAX requests and for actions returning the result directly (e.g. file to download),

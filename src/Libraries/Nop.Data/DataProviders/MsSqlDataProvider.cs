@@ -20,7 +20,7 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// Gets the connection string builder
     /// </summary>
     /// <returns>The connection string builder</returns>
-    protected SqlConnectionStringBuilder GetConnectionStringBuilder()
+    protected virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
     {
         return new SqlConnectionStringBuilder(DataSettings.ConnectionString);
     }
@@ -45,7 +45,7 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// Create the database
     /// </summary>
     /// <param name="triesToConnect">Count of tries to connect to the database after creating; set 0 if no need to connect after creating</param>
-    public void CreateDatabase(int triesToConnect = 10)
+    public virtual void CreateDatabase(int triesToConnect = 10)
     {
         if (DatabaseExists())
             return;
@@ -98,7 +98,7 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// A task that represents the asynchronous operation
     /// The task result contains the returns true if the database exists.
     /// </returns>
-    public async Task<bool> DatabaseExistsAsync()
+    public virtual async Task<bool> DatabaseExistsAsync()
     {
         try
         {
@@ -119,7 +119,7 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// Checks if the specified database exists, returns true if database exists
     /// </summary>
     /// <returns>Returns true if the database exists.</returns>
-    public bool DatabaseExists()
+    public virtual bool DatabaseExists()
     {
         try
         {

@@ -35,7 +35,7 @@ public partial class DeleteInactiveCustomersTask : IScheduleTask
     /// <summary>
     /// Executes a task
     /// </summary>
-    public async Task ExecuteAsync()
+    public virtual async Task ExecuteAsync()
     {
         if (!_gdprSettings.GdprEnabled)
             return;

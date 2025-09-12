@@ -38,7 +38,7 @@ public partial record PagerModel
     /// Gets the first button text
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task<string> GetFirstButtonTextAsync()
+    public virtual async Task<string> GetFirstButtonTextAsync()
     {
         return await _localizationService.GetResourceAsync("Pager.First");
     }
@@ -47,7 +47,7 @@ public partial record PagerModel
     /// Gets the last button text
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task<string> GetLastButtonTextAsync()
+    public virtual async Task<string> GetLastButtonTextAsync()
     {
         return await _localizationService.GetResourceAsync("Pager.Last");
     }
@@ -56,7 +56,7 @@ public partial record PagerModel
     /// Gets the next button text
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task<string> GetNextButtonTextAsync()
+    public virtual async Task<string> GetNextButtonTextAsync()
     {
         return await _localizationService.GetResourceAsync("Pager.Next");
     }
@@ -65,7 +65,7 @@ public partial record PagerModel
     /// Gets the previous button text
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task<string> GetPreviousButtonTextAsync()
+    public virtual async Task<string> GetPreviousButtonTextAsync()
     {
         return await _localizationService.GetResourceAsync("Pager.Previous");
     }
@@ -74,7 +74,7 @@ public partial record PagerModel
     /// Gets or sets the current page text
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task<string> GetCurrentPageTextAsync()
+    public virtual async Task<string> GetCurrentPageTextAsync()
     {
         return await _localizationService.GetResourceAsync("Pager.CurrentPage");
     }
@@ -99,7 +99,7 @@ public partial record PagerModel
     /// Get last individual page index
     /// </summary>
     /// <returns>Page index</returns>
-    public int GetLastIndividualPageIndex()
+    public virtual int GetLastIndividualPageIndex()
     {
         var num = IndividualPagesDisplayedCount / 2;
         if ((IndividualPagesDisplayedCount % 2) == 0) 

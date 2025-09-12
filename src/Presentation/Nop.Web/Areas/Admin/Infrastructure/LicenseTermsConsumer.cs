@@ -41,7 +41,7 @@ public partial class LicenseTermsConsumer : IConsumer<PageRenderingEvent>
     /// </summary>
     /// <param name="eventMessage">Event</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(PageRenderingEvent eventMessage)
+    public virtual async Task HandleEventAsync(PageRenderingEvent eventMessage)
     {
         if (_httpContextAccessor.HttpContext.GetRouteValue("area") is not string area || area != AreaNames.ADMIN)
             return;

@@ -79,7 +79,7 @@ public partial class CheckVatService : ICheckVatService
     /// A task that represents the asynchronous operation
     /// The task result contains the vAT Number status. Name (if received). Address (if received)
     /// </returns>
-    public async Task<(VatNumberStatus vatNumberStatus, string name, string address)> CheckVatAsync(string twoLetterIsoCode, string vatNumber)
+    public virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address)> CheckVatAsync(string twoLetterIsoCode, string vatNumber)
     {
         var name = string.Empty;
         var address = string.Empty;

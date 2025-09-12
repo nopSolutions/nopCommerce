@@ -925,7 +925,7 @@ public partial class ProductController : BaseAdminController
 
     [HttpPost, ActionName("BulkEdit"), ParameterBasedOnFormName("bulk-edit-save-selected", "selected")]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
-    public async Task<IActionResult> BulkEditSave(ProductSearchModel searchModel, bool selected)
+    public virtual async Task<IActionResult> BulkEditSave(ProductSearchModel searchModel, bool selected)
     {
         var data = await ParseBulkEditDataAsync();
 

@@ -120,7 +120,7 @@ public partial class MigrationManager : IMigrationManager
     /// Executes a Down for all found (and applied) migrations
     /// </summary>
     /// <param name="assembly">Assembly to find the migration</param>
-    public void ApplyDownMigrations(Assembly assembly)
+    public virtual void ApplyDownMigrations(Assembly assembly)
     {
         ArgumentNullException.ThrowIfNull(assembly);
 
@@ -132,7 +132,7 @@ public partial class MigrationManager : IMigrationManager
     /// Executes down expressions for the passed migration
     /// </summary>
     /// <param name="migrationInfo">Migration to rollback</param>
-    public void ApplyDownMigration(IMigrationInfo migrationInfo)
+    public virtual void ApplyDownMigration(IMigrationInfo migrationInfo)
     {
         ArgumentNullException.ThrowIfNull(migrationInfo);
 
@@ -145,7 +145,7 @@ public partial class MigrationManager : IMigrationManager
     /// </summary>
     /// <param name="migrationInfo">Migration to apply</param>
     /// <param name="commitVersionOnly">Commit only version information</param>
-    public void ApplyUpMigration(IMigrationInfo migrationInfo, bool commitVersionOnly = false)
+    public virtual void ApplyUpMigration(IMigrationInfo migrationInfo, bool commitVersionOnly = false)
     {
         ArgumentNullException.ThrowIfNull(migrationInfo);
 

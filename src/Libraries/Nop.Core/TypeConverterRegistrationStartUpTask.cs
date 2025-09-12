@@ -13,7 +13,7 @@ public partial class TypeConverterRegistrationStartUpTask : IStartupTask
     /// <summary>
     /// Executes a task
     /// </summary>
-    public void Execute()
+    public virtual void Execute()
     {
         //lists
         TypeDescriptor.AddAttributes(typeof(List<int>), new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));

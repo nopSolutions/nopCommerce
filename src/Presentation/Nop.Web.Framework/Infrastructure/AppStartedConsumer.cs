@@ -54,7 +54,7 @@ public partial class AppStartedConsumer : IConsumer<AppStartedEvent>
     /// </summary>
     /// <param name="eventMessage">Event</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(AppStartedEvent eventMessage)
+    public virtual async Task HandleEventAsync(AppStartedEvent eventMessage)
     {
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;

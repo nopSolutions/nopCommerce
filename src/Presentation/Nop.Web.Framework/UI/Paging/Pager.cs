@@ -152,7 +152,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager ShowTotalSummary(bool value)
+    public virtual Pager ShowTotalSummary(bool value)
     {
         _showTotalSummary = value;
         return this;
@@ -163,7 +163,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager ShowPagerItems(bool value)
+    public virtual Pager ShowPagerItems(bool value)
     {
         _showPagerItems = value;
         return this;
@@ -174,7 +174,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager ShowFirst(bool value)
+    public virtual Pager ShowFirst(bool value)
     {
         _showFirst = value;
         return this;
@@ -185,7 +185,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager ShowPrevious(bool value)
+    public virtual Pager ShowPrevious(bool value)
     {
         _showPrevious = value;
         return this;
@@ -196,7 +196,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager ShowNext(bool value)
+    public virtual Pager ShowNext(bool value)
     {
         _showNext = value;
         return this;
@@ -207,7 +207,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager ShowLast(bool value)
+    public virtual Pager ShowLast(bool value)
     {
         _showLast = value;
         return this;
@@ -218,7 +218,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager ShowIndividualPages(bool value)
+    public virtual Pager ShowIndividualPages(bool value)
     {
         _showIndividualPages = value;
         return this;
@@ -229,7 +229,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager RenderEmptyParameters(bool value)
+    public virtual Pager RenderEmptyParameters(bool value)
     {
         _renderEmptyParameters = value;
         return this;
@@ -240,7 +240,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager IndividualPagesDisplayedCount(int value)
+    public virtual Pager IndividualPagesDisplayedCount(int value)
     {
         _individualPagesDisplayedCount = value;
         return this;
@@ -252,7 +252,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="paramName">Parameter name</param>
     /// <returns>Pager</returns>
-    public Pager BooleanParameterName(string paramName)
+    public virtual Pager BooleanParameterName(string paramName)
     {
         _booleanParameterNames.Add(paramName);
         return this;
@@ -263,7 +263,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager FirstPageCssClass(string value)
+    public virtual Pager FirstPageCssClass(string value)
     {
         _firstPageCssClass = value;
         return this;
@@ -274,7 +274,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager PreviousPageCssClass(string value)
+    public virtual Pager PreviousPageCssClass(string value)
     {
         _previousPageCssClass = value;
         return this;
@@ -285,7 +285,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager CurrentPageCssClass(string value)
+    public virtual Pager CurrentPageCssClass(string value)
     {
         _currentPageCssClass = value;
         return this;
@@ -296,7 +296,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager IndividualPageCssClass(string value)
+    public virtual Pager IndividualPageCssClass(string value)
     {
         _individualPageCssClass = value;
         return this;
@@ -307,7 +307,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager NextPageCssClass(string value)
+    public virtual Pager NextPageCssClass(string value)
     {
         _nextPageCssClass = value;
         return this;
@@ -318,7 +318,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager LastPageCssClass(string value)
+    public virtual Pager LastPageCssClass(string value)
     {
         _lastPageCssClass = value;
         return this;
@@ -329,7 +329,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="value">Value</param>
     /// <returns>Pager</returns>
-    public Pager MainUlCssClass(string value)
+    public virtual Pager MainUlCssClass(string value)
     {
         _mainUlCssClass = value;
         return this;
@@ -342,7 +342,7 @@ public partial class Pager : IHtmlContent
     /// </summary>
     /// <param name="writer">Writer</param>
     /// <param name="encoder">Encoder</param>
-    public void WriteTo(TextWriter writer, HtmlEncoder encoder)
+    public virtual void WriteTo(TextWriter writer, HtmlEncoder encoder)
     {
         writer.Write(ToString());
     }

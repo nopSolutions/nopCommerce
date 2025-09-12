@@ -491,7 +491,7 @@ public partial class AttributeParser<TAttribute, TAttributeValue> : IAttributePa
     /// A task that represents the asynchronous operation
     /// The task result contains the result
     /// </returns>
-    public async Task<bool?> IsConditionMetAsync(string conditionAttributeXml, string selectedAttributesXml)
+    public virtual async Task<bool?> IsConditionMetAsync(string conditionAttributeXml, string selectedAttributesXml)
     {
         if (string.IsNullOrEmpty(conditionAttributeXml))
             //no condition

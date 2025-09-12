@@ -103,7 +103,7 @@ public partial class ReviewTypeService : IReviewTypeService
     /// A task that represents the asynchronous operation
     /// The task result contains the product review and review type mapping collection
     /// </returns>
-    public async Task<IList<ProductReviewReviewTypeMapping>> GetProductReviewReviewTypeMappingsByProductReviewIdAsync(
+    public virtual async Task<IList<ProductReviewReviewTypeMapping>> GetProductReviewReviewTypeMappingsByProductReviewIdAsync(
         int productReviewId)
     {
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductReviewTypeMappingByReviewIdCacheKey, productReviewId);

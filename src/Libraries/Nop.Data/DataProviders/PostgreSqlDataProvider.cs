@@ -40,7 +40,7 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// Gets the connection string builder
     /// </summary>
     /// <returns>The connection string builder</returns>
-    protected NpgsqlConnectionStringBuilder GetConnectionStringBuilder()
+    protected virtual NpgsqlConnectionStringBuilder GetConnectionStringBuilder()
     {
         return new NpgsqlConnectionStringBuilder(DataSettings.ConnectionString);
     }
@@ -110,9 +110,8 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// <summary>
     /// Creates the database by using the loaded connection string
     /// </summary>
-    /// <param name="collation"></param>
     /// <param name="triesToConnect"></param>
-    public void CreateDatabase(int triesToConnect = 10)
+    public virtual void CreateDatabase(int triesToConnect = 10)
     {
         if (DatabaseExists())
             return;
@@ -178,7 +177,7 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// Checks if the specified database exists, returns true if database exists
     /// </summary>
     /// <returns>Returns true if the database exists.</returns>
-    public bool DatabaseExists()
+    public virtual bool DatabaseExists()
     {
         try
         {
@@ -202,7 +201,7 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// A task that represents the asynchronous operation
     /// The task result contains the returns true if the database exists.
     /// </returns>
-    public async Task<bool> DatabaseExistsAsync()
+    public virtual async Task<bool> DatabaseExistsAsync()
     {
         try
         {
