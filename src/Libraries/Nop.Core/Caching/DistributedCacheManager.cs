@@ -143,7 +143,7 @@ public abstract class DistributedCacheManager : CacheKeyService, IStaticCacheMan
     /// <param name="cacheKey">Cache key</param>
     /// <param name="cacheKeyParameters">Parameters to create cache key</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
+    public virtual async Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
     {
         await RemoveAsync(PrepareKey(cacheKey, cacheKeyParameters).Key);
     }
@@ -158,7 +158,7 @@ public abstract class DistributedCacheManager : CacheKeyService, IStaticCacheMan
     /// A task that represents the asynchronous operation
     /// The task result contains the cached value associated with the specified key
     /// </returns>
-    public async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
+    public virtual async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
     {
         if (_concurrentCollection.TryGetValue(key.Key, out var data))
             return (T)data;
@@ -205,12 +205,12 @@ public abstract class DistributedCacheManager : CacheKeyService, IStaticCacheMan
     /// A task that represents the asynchronous operation
     /// The task result contains the cached value associated with the specified key
     /// </returns>
-    public Task<T> GetAsync<T>(CacheKey key, Func<T> acquire)
+    public virtual async Task<T> GetAsync<T>(CacheKey key, Func<T> acquire)
     {
-        return GetAsync(key, () => Task.FromResult(acquire()));
+        return await GetAsync(key, () => Task.FromResult(acquire()));
     }
 
-    public async Task<T> GetAsync<T>(CacheKey key, T defaultValue = default)
+    public virtual async Task<T> GetAsync<T>(CacheKey key, T defaultValue = default)
     {
         var value = await _distributedCache.GetStringAsync(key.Key);
 
@@ -227,7 +227,7 @@ public abstract class DistributedCacheManager : CacheKeyService, IStaticCacheMan
     /// A task that represents the asynchronous operation
     /// The task result contains the cached value associated with the specified key, or null if none was found
     /// </returns>
-    public async Task<object> GetAsync(CacheKey key)
+    public virtual async Task<object> GetAsync(CacheKey key)
     {
         return await GetAsync<object>(key);
     }
@@ -238,7 +238,7 @@ public abstract class DistributedCacheManager : CacheKeyService, IStaticCacheMan
     /// <param name="key">Key of cached item</param>
     /// <param name="data">Value for caching</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task SetAsync<T>(CacheKey key, T data)
+    public virtual async Task SetAsync<T>(CacheKey key, T data)
     {
         if (data == null || (key?.CacheTime ?? 0) <= 0)
             return;
@@ -274,7 +274,7 @@ public abstract class DistributedCacheManager : CacheKeyService, IStaticCacheMan
     public abstract Task ClearAsync();
 
     /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-    public void Dispose()
+    public virtual void Dispose()
     {
         GC.SuppressFinalize(this);
     }

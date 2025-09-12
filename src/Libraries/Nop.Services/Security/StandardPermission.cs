@@ -107,6 +107,8 @@ public partial class StandardPermission
         public const string POLLS_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.PollsCreateEditDelete";
         public const string FORUMS_VIEW = $"{nameof(ContentManagement)}.ForumsView";
         public const string FORUMS_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.ForumsCreateEditDelete";
+        public const string MENU_VIEW = $"{nameof(ContentManagement)}.MenusView";
+        public const string MENU_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.MenusCreateEditDelete";
     }
 
     public partial class Configuration

@@ -106,7 +106,7 @@
                                 <tr>
                                     @if (Model.DisplayAddToCart)
                                     {
-                                        <th class="add-to-cart">
+                                        <th id="add-to-cart-caption" class="add-to-cart">
                                             @T("ShoppingCart.AddToCart")
                                         </th>
                                     }
@@ -149,8 +149,8 @@
                                         @if (Model.DisplayAddToCart)
                                         {
                                             <td class="add-to-cart">
-                                                <label class="td-title">@T("ShoppingCart.AddToCart"):</label>
-                                                <input type="checkbox" name="addtocart" value="@(item.Id)" />
+                                                <label for="addtocart-@item.Id" class="td-title">@T("ShoppingCart.AddToCart"):</label>
+                                                <input type="checkbox" id="addtocart-@item.Id" name="addtocart" value="@(item.Id)" aria-labelledby="add-to-cart-caption" />
                                             </td>
                                         }
                                         @if (Model.ShowSku)
@@ -271,7 +271,7 @@
                                         {
                                             <td class="remove-from-cart">
                                                 <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
-                                                <button type="button" name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true); $('#updatecart').trigger('click');"></button>
+                                                <button type="button" name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true); $('#updatecart').trigger('click');" aria-labelledby="removefromcart@(item.Id)"></button>
                                             </td>
                                         }
                                     </tr>

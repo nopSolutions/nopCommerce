@@ -31,7 +31,7 @@ public partial class SummernoteHelper : ISummernoteHelper
     /// A task that represents the asynchronous operation
     /// The task result contains the Summernote language name
     /// </returns>
-    public async Task<string> GetRichEditorLanguageAsync()
+    public virtual async Task<string> GetRichEditorLanguageAsync()
     {
         var languageCulture = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
 

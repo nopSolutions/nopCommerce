@@ -360,6 +360,14 @@ public partial class AdminMenu : IAdminMenu
                         },
                         new()
                         {
+                            SystemName = "Menus",
+                            Title = await _localizationService.GetResourceAsync("Admin.ContentManagement.Menus"),
+                            PermissionNames = new List<string> { StandardPermission.ContentManagement.MENU_VIEW },
+                            Url = GetMenuItemUrl("Menu", "List"),
+                            IconClass = "far fa-dot-circle"
+                        },
+                        new()
+                        {
                             SystemName = "Message templates",
                             Title = await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates"),
                             PermissionNames =
@@ -1051,7 +1059,7 @@ public partial class AdminMenu : IAdminMenu
         if (await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS, customer))
         {
             await _eventPublisher.PublishAsync(new ThirdPartyPluginsMenuItemCreatedEvent(this, root.GetItemBySystemName("Third party plugins")));
-            
+
             var adminMenuPlugins = await _adminMenuPluginManager.LoadAllPluginsAsync(customer);
 
             foreach (var adminMenuPlugin in adminMenuPlugins)
@@ -1108,7 +1116,7 @@ public partial class AdminMenu : IAdminMenu
     /// A task that represents the asynchronous operation
     /// The task result contains the root menu item
     /// </returns>
-    public async Task<AdminMenuItem> GetRootNodeAsync(bool showHidden = false)
+    public virtual async Task<AdminMenuItem> GetRootNodeAsync(bool showHidden = false)
     {
         if (_rootItem != null)
             return _rootItem;
@@ -1137,7 +1145,7 @@ public partial class AdminMenu : IAdminMenu
     /// <param name="controllerName">The name of the controller</param>
     /// <param name="actionName">The name of the action method</param>
     /// <returns>Menu item URL</returns>
-    public string GetMenuItemUrl(string controllerName, string actionName)
+    public virtual string GetMenuItemUrl(string controllerName, string actionName)
     {
         if (string.IsNullOrEmpty(controllerName) || string.IsNullOrEmpty(actionName))
             return null;

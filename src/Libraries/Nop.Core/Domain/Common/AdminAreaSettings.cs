@@ -58,6 +58,11 @@ public partial class AdminAreaSettings : ISettings
     public string LastNewsTitleAdminArea { get; set; }
 
     /// <summary>
+    /// Gets or sets the license terms details
+    /// </summary>
+    public string LicenseTerms { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether to use IsoDateFormat in JSON results (used for avoiding issue with dates in grids)
     /// </summary>
     public bool UseIsoDateFormatInJsonResult { get; set; }

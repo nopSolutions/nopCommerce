@@ -65,10 +65,10 @@
 
 @if (Model.Categories.Count > 0)
 {
-    <div class="block block-category-navigation">
-        <div class="title">
-            <strong>@T("Categories")</strong>
-        </div>
+    <section class="block block-category-navigation">
+        <h2 class="title">
+            @T("Categories")
+        </h2>
         <div class="listbox">
             <ul class="list">
                 @foreach (var category in Model.Categories)
@@ -82,5 +82,5 @@
                 }
             </ul>
         </div>
-    </div>
+    </section>
 }

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
@@ -16,7 +16,7 @@ public partial class NopStaticFilesStartup : INopStartup
     /// </summary>
     /// <param name="services">Collection of service descriptors</param>
     /// <param name="configuration">Configuration of the application</param>
-    public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+    public virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         //compression
         services.AddResponseCompression();
@@ -29,7 +29,7 @@ public partial class NopStaticFilesStartup : INopStartup
     /// Configure the using of added middleware
     /// </summary>
     /// <param name="application">Builder for configuring an application's request pipeline</param>
-    public void Configure(IApplicationBuilder application)
+    public virtual void Configure(IApplicationBuilder application)
     {
         //use response compression before UseNopStaticFiles to support compress for it
         application.UseNopResponseCompression();

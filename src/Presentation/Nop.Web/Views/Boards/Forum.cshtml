@@ -1,7 +1,14 @@
-﻿@model ForumPageModel
+﻿@using Nop.Core
 @using Nop.Core.Domain.Forums
+@using Nop.Core.Domain.Seo
 @using Nop.Services.Localization
+
+@model ForumPageModel
+
 @inject ILocalizationService localizationService
+@inject IWebHelper webHelper
+@inject SeoSettings seoSettings
+
 @{
     Layout = "_ColumnsOne";
 
@@ -9,6 +16,23 @@
     NopHtml.AddTitleParts(Model.Name);
     //page class
     NopHtml.AppendPageCssClassParts("html-forum-page");
+
+    if (seoSettings.CanonicalUrlsEnabled)
+    {
+        var forumUrl = string.Empty;
+        if (Model.TopicPageIndex > 0)
+        {
+            forumUrl = Url.RouteUrl(NopRouteNames.Standard.FORUM_SLUG_PAGED,
+                new { id = Model.Id, slug = Model.SeName, pageNumber = Model.TopicPageIndex + 1 }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        }
+        else
+        {
+            forumUrl = Url.RouteUrl(NopRouteNames.Standard.FORUM_SLUG,
+                new { id = Model.Id, slug = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        }
+
+        NopHtml.AddCanonicalUrlParts(forumUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
+    }
 }
 <div class="page forum-page">
     @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumId = Model.Id })

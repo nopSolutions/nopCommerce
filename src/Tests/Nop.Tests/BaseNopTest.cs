@@ -61,6 +61,7 @@ using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
+using Nop.Services.Menus;
 using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Orders;
@@ -110,9 +111,9 @@ public partial class BaseNopTest
     {
         var dataProvider = _serviceProvider.GetService<IDataProviderManager>().DataProvider;
 
-        dataProvider.CreateDatabase(null);
+        dataProvider.CreateDatabase();
         dataProvider.InitializeDatabase();
-        
+
         var installationService = _serviceProvider.GetService<IInstallationService>();
 
         installationService.InstallAsync(
@@ -126,7 +127,7 @@ public partial class BaseNopTest
                 CultureInfo = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture),
                 InstallSampleData = true
             }).Wait();
-        
+
         var permissionService = EngineContext.Current.Resolve<IPermissionService>();
         permissionService.InsertPermissionsAsync().Wait();
     }
@@ -337,6 +338,7 @@ public partial class BaseNopTest
         services.AddTransient<ILanguageService, LanguageService>();
         services.AddTransient<IDownloadService, DownloadService>();
         services.AddTransient<IMessageTemplateService, MessageTemplateService>();
+        services.AddTransient<IMenuService, MenuService>();
         services.AddTransient<IQueuedEmailService, QueuedEmailService>();
         services.AddTransient<INewsLetterSubscriptionService, NewsLetterSubscriptionService>();
         services.AddTransient<INewsLetterSubscriptionTypeService, NewsLetterSubscriptionTypeService>();
@@ -443,14 +445,13 @@ public partial class BaseNopTest
         services
             // add common FluentMigrator services
             .AddFluentMigratorCore()
-            .AddScoped<IProcessorAccessor, TestProcessorAccessor>()
             // set accessor for the connection string
             .AddScoped<IConnectionStringAccessor>(_ => DataSettingsManager.LoadSettings())
             .AddScoped<IMigrationManager, MigrationManager>()
             .AddScoped<Lazy<IMigrationManager>>()
             .AddSingleton<IConventionSet, NopTestConventionSet>()
             .ConfigureRunner(rb =>
-                rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres().AddSQLite()
+                rb.WithVersionTable(new MigrationVersionInfo()).AddSQLite()
                     // define the assembly containing the migrations
                     .ScanIn(mAssemblies).For.Migrations());
 

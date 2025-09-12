@@ -80,9 +80,9 @@
     <div class="topic-password" id="ph-password">
         <form asp-route="@NopRouteNames.Ajax.TOPIC_AUTHENTICATE" method="post" autocomplete="off">
             <input asp-for="Id" id="topic-@Model.Id" type="hidden" />
-            <div class="enter-password-title">
+            <label for="password" class="enter-password-title">
                 @T("Topic.EnterPassword")
-            </div>
+            </label>
             <div class="enter-password-form">
                 <input name="password" id="password" type="password" />
                 <button type="submit" id="button-password" class="button-1 topic-password-button">@T("Topic.Button")</button>

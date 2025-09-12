@@ -8,9 +8,9 @@
     @await Component.InvokeAsync(typeof(AdminHeaderLinksViewComponent))
     @{ await Html.RenderPartialAsync("_Header"); }
     <div class="header-menu">
-        @await Component.InvokeAsync(typeof(TopMenuViewComponent))
+        @await Component.InvokeAsync(typeof(MainMenuViewComponent))
     </div>
-    <div class="master-wrapper-content" id="main" role="main">
+    <main class="master-wrapper-content" id="main">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContentBefore })
 
         @if (IsSectionDefined("Breadcrumb"))
@@ -21,7 +21,7 @@
             @RenderBody()
         </div>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContentAfter })
-    </div>
+    </main>
     @await Component.InvokeAsync(typeof(FooterViewComponent))
 </div>
 @await Component.InvokeAsync(typeof(EuCookieLawViewComponent))

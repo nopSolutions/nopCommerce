@@ -25,7 +25,7 @@ public partial class DefaultAsset : IAsset
     /// </summary>
     /// <param name="context">HTTP context</param>
     /// <param name="options">Configuration options</param>
-    public Task<byte[]> ExecuteAsync(HttpContext context, IWebOptimizerOptions options)
+    public virtual Task<byte[]> ExecuteAsync(HttpContext context, IWebOptimizerOptions options)
     {
         throw new NotImplementedException();
     }
@@ -36,7 +36,7 @@ public partial class DefaultAsset : IAsset
     /// <param name="context">HTTP context</param>
     /// <param name="options">Configuration options</param>
     /// <returns></returns>
-    public string GenerateCacheKey(HttpContext context, IWebOptimizerOptions options)
+    public virtual string GenerateCacheKey(HttpContext context, IWebOptimizerOptions options)
     {
         return string.Empty;
     }
@@ -45,12 +45,11 @@ public partial class DefaultAsset : IAsset
     /// Adds a source file to the asset
     /// </summary>
     /// <param name="route">Relative path of a source file</param>
-    public void TryAddSourceFile(string route)
+    public virtual void TryAddSourceFile(string route)
     {
         throw new NotImplementedException();
     }
-
-
+    
     #endregion
 
     #region Properties
@@ -83,7 +82,7 @@ public partial class DefaultAsset : IAsset
     /// <summary>
     /// Gets the webroot relative source files
     /// </summary>
-    public HashSet<string> SourceFiles => new();
+    public IList<string> SourceFiles => new List<string>();
 
     #endregion
 }

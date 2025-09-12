@@ -40,9 +40,9 @@
                     @if (Model.ExistingAddresses.Count > 0)
                     {
                         <div class="section select-billing-address">
-                            <div class="title">
-                                <strong>@T("Checkout.SelectBillingAddress")</strong>
-                            </div>
+                            <h2 class="title">
+                                @T("Checkout.SelectBillingAddress")
+                            </h2>
                             @if (Model.InvalidExistingAddresses.Count > 0)
                             {
                                 <label class="min-amount-warning">
@@ -173,16 +173,9 @@
                 </div>
                 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutBillingAddressMiddle, additionalData = Model })
                 <div class="section new-billing-address" id="billingaddress-new-form">
-                    <div class="title">
-                        @if (Model.ExistingAddresses.Count > 0)
-                        {
-                            <strong class="title-text">@T("Checkout.OrEnterNewAddress")</strong>
-                        }
-                        else
-                        {
-                            <strong>@T("Checkout.EnterBillingAddress")</strong>
-                        }
-                    </div>
+                    <h2 class="title title-text">
+                        @(Model.ExistingAddresses.Count > 0 ? T("Checkout.OrEnterNewAddress") : T("Checkout.EnterBillingAddress"))
+                    </h2>
                     @if (Model.EuVatEnabled)
                     {
                         <div class="inputs">
@@ -225,9 +218,9 @@
             $('#delete-billing-address-button').show();
         </script>
         <div class="section order-summary">
-            <div class="title">
-                <strong>@T("Checkout.OrderSummary")</strong>
-            </div>
+            <h2 class="title">
+                @T("Checkout.OrderSummary")
+            </h2>
             @await Component.InvokeAsync(typeof(OrderSummaryViewComponent))
         </div>
     </div>

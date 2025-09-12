@@ -16,20 +16,20 @@
         <h1>@Model.Title</h1>
     </div>
     <div class="page-body">
-        <div class="news-date">
+        <time datetime="@Model.CreatedOn.ToString("yyyy-MM-dd")" class="news-date">
             @Model.CreatedOn.ToString("D")
-        </div>
+        </time>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.NewsItemPageBeforeBody, additionalData = Model })
-        <div class="news-body">
+        <article class="news-body">
             @Html.Raw(Model.Full)
-        </div>
+        </article>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.NewsItemPageBeforeComments, additionalData = Model })
         @if (Model.AllowComments)
         {
             <div class="fieldset new-comment" id="comments">
-                <div class="title">
-                    <strong>@T("News.Comments.LeaveYourComment")</strong>
-                </div>
+                <h2 class="title">
+                    @T("News.Comments.LeaveYourComment")
+                </h2>
                 <div class="notifications">
                     <div asp-validation-summary="ModelOnly" class="message-error"></div>
                     @{
@@ -75,9 +75,9 @@
             if (Model.Comments.Count > 0)
             {
                 <div class="comment-list">
-                    <div class="title">
-                        <strong>@T("News.Comments")</strong>
-                    </div>
+                    <h2 class="title">
+                        @T("News.Comments")
+                    </h2>
                     <div class="comments">
                         @foreach (var comment in Model.Comments)
                         {

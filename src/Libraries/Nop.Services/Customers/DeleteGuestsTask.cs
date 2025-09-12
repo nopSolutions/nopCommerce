@@ -31,7 +31,7 @@ public partial class DeleteGuestsTask : IScheduleTask
     /// <summary>
     /// Executes a task
     /// </summary>
-    public async System.Threading.Tasks.Task ExecuteAsync()
+    public virtual async Task ExecuteAsync()
     {
         var olderThanMinutes = _customerSettings.DeleteGuestTaskOlderThanMinutes;
         // Default value in case 0 is returned.  0 would effectively disable this service and harm performance.

@@ -19,9 +19,9 @@
         </div>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutPaymentInfoBottom, additionalData = Model })
         <div class="section order-summary">
-            <div class="title">
-                <strong>@T("Checkout.OrderSummary")</strong>
-            </div>
+            <h2 class="title">
+                @T("Checkout.OrderSummary")
+            </h2>
             @await Component.InvokeAsync(typeof(OrderSummaryViewComponent))
         </div>
     </div>

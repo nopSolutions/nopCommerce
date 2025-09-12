@@ -1,8 +1,8 @@
 ﻿@model CustomerNavigationModel
-<div class="block block-account-navigation">
-    <div class="title">
-        <strong>@T("Account.Navigation")</strong>
-    </div>
+<section class="block block-account-navigation">
+    <h2 class="title">
+        @T("Account.Navigation")
+    </h2>
     <div class="listbox">
         <ul class="list">
             @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AccountNavigationBefore, additionalData = Model })
@@ -15,4 +15,4 @@
             @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AccountNavigationAfter, additionalData = Model })
         </ul>
     </div>
-</div>
+</section>

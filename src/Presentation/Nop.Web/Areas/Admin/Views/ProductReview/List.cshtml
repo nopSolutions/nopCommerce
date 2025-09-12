@@ -304,7 +304,7 @@
                             });
 
                             //"delete selected" button
-                            $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
+                            $("#delete-selected-action-confirmation-submit-button").on("click", function () {
                                 var postData = {
                                     selectedIds: selectedIds
                                 };

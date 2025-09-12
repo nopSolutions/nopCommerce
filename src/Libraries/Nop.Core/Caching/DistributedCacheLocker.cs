@@ -30,7 +30,7 @@ public partial class DistributedCacheLocker : ILocker
     /// <param name="expirationTime">The time after which the lock will automatically be expired</param>
     /// <param name="action">Asynchronous task to be performed with locking</param>
     /// <returns>A task that resolves true if lock was acquired and action was performed; otherwise false</returns>
-    public async Task<bool> PerformActionWithLockAsync(string resource, TimeSpan expirationTime, Func<Task> action)
+    public virtual async Task<bool> PerformActionWithLockAsync(string resource, TimeSpan expirationTime, Func<Task> action)
     {
         //ensure that lock is acquired
         if (!string.IsNullOrEmpty(await _distributedCache.GetStringAsync(resource)))
@@ -64,7 +64,7 @@ public partial class DistributedCacheLocker : ILocker
     /// <param name="action">Asynchronous background task to be performed</param>
     /// <param name="cancellationTokenSource">A CancellationTokenSource for manually canceling the task</param>
     /// <returns>A task that resolves true if lock was acquired and action was performed; otherwise false</returns>
-    public async Task RunWithHeartbeatAsync(string key, TimeSpan expirationTime, TimeSpan heartbeatInterval, Func<CancellationToken, Task> action, CancellationTokenSource cancellationTokenSource = default)
+    public virtual async Task RunWithHeartbeatAsync(string key, TimeSpan expirationTime, TimeSpan heartbeatInterval, Func<CancellationToken, Task> action, CancellationTokenSource cancellationTokenSource = default)
     {
         if (!string.IsNullOrEmpty(await _distributedCache.GetStringAsync(key)))
             return;
@@ -122,7 +122,7 @@ public partial class DistributedCacheLocker : ILocker
     /// even if not explicitly canceled.</param>
     /// <returns>A task that represents requesting cancellation of the task. Note that the completion of this task does not
     /// necessarily imply that the task has been canceled, only that cancellation has been requested.</returns>
-    public async Task CancelTaskAsync(string key, TimeSpan expirationTime)
+    public virtual async Task CancelTaskAsync(string key, TimeSpan expirationTime)
     {
         var status = await _distributedCache.GetStringAsync(key);
         if (!string.IsNullOrEmpty(status) &&
@@ -138,7 +138,7 @@ public partial class DistributedCacheLocker : ILocker
     /// </summary>
     /// <param name="key">The task's key</param>
     /// <returns>A task that resolves to true if the background task is running; otherwise false</returns>
-    public async Task<bool> IsTaskRunningAsync(string key)
+    public virtual async Task<bool> IsTaskRunningAsync(string key)
     {
         return !string.IsNullOrEmpty(await _distributedCache.GetStringAsync(key));
     }

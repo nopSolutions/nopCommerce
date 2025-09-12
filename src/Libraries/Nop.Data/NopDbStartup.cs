@@ -1,6 +1,8 @@
 ﻿using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
+using FluentMigrator.Runner.Generators;
+using FluentMigrator.Runner.Generators.MySql;
 using FluentMigrator.Runner.Initialization;
 using FluentMigrator.Runner.Processors;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
+using Nop.Data.DataProviders.Fluentmigrator;
 using Nop.Data.Extensions;
 using Nop.Data.Migrations;
 
@@ -23,7 +26,7 @@ public partial class NopDbStartup : INopStartup
     /// </summary>
     /// <param name="services">Collection of service descriptors</param>
     /// <param name="configuration">Configuration of the application</param>
-    public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+    public virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         var typeFinder = Singleton<ITypeFinder>.Instance;
         var mAssemblies = typeFinder.FindClassesOfType<MigrationBase>()
@@ -35,6 +38,7 @@ public partial class NopDbStartup : INopStartup
         services
             // add common FluentMigrator services
             .AddFluentMigratorCore()
+            .AddScoped<IGeneratorAccessor, NopGeneratorAccessor>()
             .AddScoped<IProcessorAccessor, NopProcessorAccessor>()
             // set accessor for the connection string
             .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
@@ -47,6 +51,7 @@ public partial class NopDbStartup : INopStartup
                     .ScanIn(mAssemblies).For.Migrations()
                     .SetCommandTimeout());
 
+        services.AddScoped<IMySqlTypeMap>(_ => new NopMySql5TypeMap());
         services.AddTransient(p => new Lazy<IVersionLoader>(p.GetRequiredService<IVersionLoader>()));
 
         //data layer
@@ -70,7 +75,7 @@ public partial class NopDbStartup : INopStartup
     /// Configure the using of added middleware
     /// </summary>
     /// <param name="application">Builder for configuring an application's request pipeline</param>
-    public void Configure(IApplicationBuilder application)
+    public virtual void Configure(IApplicationBuilder application)
     {
         var config = Singleton<AppSettings>.Instance.Get<CacheConfig>();
 

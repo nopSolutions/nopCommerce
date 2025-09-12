@@ -168,7 +168,7 @@ public partial class StoreService : IStoreService
     /// A task that represents the asynchronous operation
     /// The task result contains the list of names and/or IDs not existing stores
     /// </returns>
-    public async Task<string[]> GetNotExistingStoresAsync(string[] storeIdsNames)
+    public virtual async Task<string[]> GetNotExistingStoresAsync(string[] storeIdsNames)
     {
         ArgumentNullException.ThrowIfNull(storeIdsNames);
 

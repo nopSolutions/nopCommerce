@@ -925,7 +925,7 @@ public partial class ProductController : BaseAdminController
 
     [HttpPost, ActionName("BulkEdit"), ParameterBasedOnFormName("bulk-edit-save-selected", "selected")]
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
-    public async Task<IActionResult> BulkEditSave(ProductSearchModel searchModel, bool selected)
+    public virtual async Task<IActionResult> BulkEditSave(ProductSearchModel searchModel, bool selected)
     {
         var data = await ParseBulkEditDataAsync();
 
@@ -1455,9 +1455,22 @@ public partial class ProductController : BaseAdminController
             return View(model);
 
         if (model.SaveButtonClicked)
+        {
             ViewBag.SaveDescription = true;
+        }
         else
-            model.GeneratedDescription = await _artificialIntelligenceService.CreateProductDescriptionAsync(model.ProductName, model.Keywords, (ToneOfVoiceType)model.ToneOfVoiceId, model.Instructions, model.CustomToneOfVoice, model.TargetLanguageId);
+        {
+            try
+            {
+                model.GeneratedDescription = await _artificialIntelligenceService.CreateProductDescriptionAsync(
+                    model.ProductName, model.Keywords, (ToneOfVoiceType)model.ToneOfVoiceId, model.Instructions,
+                    model.CustomToneOfVoice, model.LanguageId);
+            }
+            catch (NopException ex)
+            {
+                model.GeneratedDescription = ex.Message;
+            }
+        }
 
         await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
 

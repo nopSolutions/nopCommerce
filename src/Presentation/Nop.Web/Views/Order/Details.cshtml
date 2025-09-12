@@ -37,6 +37,18 @@
             {
                 <a href="@Url.RouteUrl(NopRouteNames.Standard.GET_ORDER_PDF_INVOICE, new { orderId = Model.Id })" class="button-2 pdf-invoice-button">@T("Order.GetPDFInvoice")</a>
             }
+            @if (Model.CanCancelOrder)
+            {
+                <a id="cancel_order" href="@Url.RouteUrl("CancelOrder", new { orderId = Model.Id })" class="button-2 cancel-order-button">@T("Order.Cancel")</a>
+
+                <script asp-location="Footer">
+                    $(function() {
+                        $('#cancel_order').on('click', function() {
+                            return confirm('@T("Common.AreYouSure")');
+                        });
+                    });
+                </script>
+            }
         </div>
     }
     <div class="page-body">
@@ -50,7 +62,7 @@
                     @T("Order.OrderDate"): @Model.CreatedOn.ToString("D")
                 </li>
                 <li class="order-status">
-                    @T("Order.OrderStatus"): @Model.OrderStatus
+                    @T("Order.OrderStatus"): @Model.OrderStatusText
                 </li>
                 <li class="order-total">
                     @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
@@ -61,9 +73,9 @@
         <div class="order-details-area">
             <div class="billing-info-wrap">
                 <div class="billing-info">
-	                <div class="title">
-	                    <strong>@T("Order.BillingAddress")</strong>
-	                </div>
+	                <h2 class="title">
+	                    @T("Order.BillingAddress")
+	                </h2>
                     <ul class="info-list">
                         <li class="name">
                             @Model.BillingAddress.FirstName @Model.BillingAddress.LastName
@@ -116,9 +128,9 @@
                 @if (!string.IsNullOrEmpty(Model.PaymentMethod))
                 {
                     <div class="payment-method-info">
-                        <div class="title">
-                            <strong>@T("Order.Payment")</strong>
-                        </div>
+                        <h2 class="title">
+                            @T("Order.Payment")
+                        </h2>
                         <ul class="info-list">
                             <li class="payment-method">
                                 <span class="label">
@@ -173,9 +185,9 @@
             {
                 <div class="shipping-info-wrap">
                     <div class="shipping-info">
-	                    <div class="title">
-	                        <strong>@(Model.PickupInStore ? T("Order.PickupAddress") : T("Order.ShippingAddress"))</strong>
-	                    </div>
+                        <h2 class="title">
+	                        @(Model.PickupInStore ? T("Order.PickupAddress") : T("Order.ShippingAddress"))
+	                    </h2>
                         <ul class="info-list">
                             @if (!Model.PickupInStore)
                             {
@@ -225,9 +237,9 @@
                         </ul>
                     </div>
                     <div class="shipping-method-info">
-                        <div class="title">
-                            <strong>@T("Order.Shipping")</strong>
-                        </div>
+                        <h2 class="title">
+                            @T("Order.Shipping")
+                        </h2>
                         <ul class="info-list">
                             <li class="shipping-method">
                                 <span class="label">
@@ -256,9 +268,9 @@
         @if (!Model.PrintMode && Model.Shipments.Count > 0)
         {
             <div class="section shipments">
-                <div class="title">
-                    <strong>@T("Order.Shipments")</strong>
-                </div>
+                <h2 class="title">
+                    @T("Order.Shipments")
+                </h2>
                 <div class="table-wrapper">
                     <table class="data-table">
                         <colgroup>
@@ -362,9 +374,9 @@
             if (!Model.PrintMode && Model.OrderNotes.Count > 0)
             {
                 <div class="section order-notes">
-                    <div class="title">
-                        <strong>@T("Order.Notes")</strong>
-                    </div>
+                    <h2 class="title">
+                        @T("Order.Notes")
+                    </h2>
                     <div class="table-wrapper">
                         <table class="data-table">
                             <colgroup>
@@ -406,9 +418,9 @@
             }
             @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageBeforeproducts, additionalData = Model })
             <div class="section products">
-                <div class="title">
-                    <strong>@T("Order.Product(s)")</strong>
-                </div>
+                <h2 class="title">
+                    @T("Order.Product(s)")
+                </h2>
                 <div class="table-wrapper">
                     <table class="data-table">
                         <colgroup>

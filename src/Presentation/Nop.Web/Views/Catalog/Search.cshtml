@@ -34,7 +34,7 @@
     <div class="page-body">
         <div class="search-input">
             <form asp-route="@NopRouteNames.General.SEARCH" method="get">
-                <div class="fieldset">
+                <section class="fieldset">
                     <div class="form-fields">
                         <div class="basic-search">
                             <div class="inputs">
@@ -84,10 +84,10 @@
                             @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductSearchPageAdvanced, additionalData = Model })
                         </div>
                     </div>
-                </div>
-                <div class="buttons">
+                </section>
+                <section class="buttons">
                     <button type="submit" class="button-1 search-button">@T("Search.Button")</button>
-                </div>
+                </section>
             </form>
         </div>
         @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)

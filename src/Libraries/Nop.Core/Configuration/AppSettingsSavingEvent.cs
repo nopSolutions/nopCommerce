@@ -30,7 +30,7 @@ public partial class AppSettingsSavingEvent
     /// Add configuration to save
     /// </summary>
     /// <param name="config">Configuration to save</param>
-    public void AddConfig<TConfig>(TConfig config) where TConfig : class, IConfig
+    public virtual void AddConfig<TConfig>(TConfig config) where TConfig : class, IConfig
     {
         if (_configurations.OfType<TConfig>().FirstOrDefault() is { } currentConfig)
             _configurations[_configurations.IndexOf(currentConfig)] = config;

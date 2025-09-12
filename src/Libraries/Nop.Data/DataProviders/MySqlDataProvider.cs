@@ -40,9 +40,9 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// Gets the connection string builder
     /// </summary>
     /// <returns>The connection string builder</returns>
-    protected static MySqlConnectionStringBuilder GetConnectionStringBuilder()
+    protected virtual MySqlConnectionStringBuilder GetConnectionStringBuilder()
     {
-        return new MySqlConnectionStringBuilder(GetCurrentConnectionString());
+        return new MySqlConnectionStringBuilder(DataSettings.ConnectionString);
     }
 
     /// <summary>
@@ -64,9 +64,8 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// <summary>
     /// Creates the database by using the loaded connection string
     /// </summary>
-    /// <param name="collation"></param>
     /// <param name="triesToConnect"></param>
-    public void CreateDatabase(string collation, int triesToConnect = 10)
+    public virtual void CreateDatabase(int triesToConnect = 10)
     {
         if (DatabaseExists())
             return;
@@ -82,8 +81,12 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
         using (var connection = GetInternalDbConnection(builder.ConnectionString))
         {
             var query = $"CREATE DATABASE IF NOT EXISTS {databaseName}";
-            if (!string.IsNullOrWhiteSpace(collation))
-                query = $"{query} COLLATE {collation}";
+
+            if (!string.IsNullOrWhiteSpace(DataSettings.CharacterSet))
+                query = $"{query} CHARACTER SET {DataSettings.CharacterSet}";
+
+            if (!string.IsNullOrWhiteSpace(DataSettings.Collation))
+                query = $"{query} COLLATE {DataSettings.Collation}";
 
             var command = connection.CreateCommand();
             command.CommandText = query;
@@ -119,11 +122,11 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// A task that represents the asynchronous operation
     /// The task result contains the returns true if the database exists.
     /// </returns>
-    public async Task<bool> DatabaseExistsAsync()
+    public virtual async Task<bool> DatabaseExistsAsync()
     {
         try
         {
-            await using var connection = GetInternalDbConnection(GetCurrentConnectionString());
+            await using var connection = GetInternalDbConnection(DataSettings.ConnectionString);
 
             //just try to connect
             await connection.OpenAsync();
@@ -140,7 +143,7 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// Checks if the specified database exists, returns true if database exists
     /// </summary>
     /// <returns>Returns true if the database exists.</returns>
-    public bool DatabaseExists()
+    public virtual bool DatabaseExists()
     {
         try
         {
@@ -168,11 +171,11 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
         using var currentConnection = CreateDataConnection();
         var tableName = NopMappingSchema.GetEntityDescriptor(typeof(TEntity)).EntityName;
-        var databaseName = currentConnection.Connection.Database;
+        var databaseName = GetConnectionStringBuilder().Database;
 
         //we're using the DbConnection object until linq2db solve this issue https://github.com/linq2db/linq2db/issues/1987
         //with DataContext we could be used KeepConnectionAlive option
-        await using var dbConnection = GetInternalDbConnection(GetCurrentConnectionString());
+        await using var dbConnection = GetInternalDbConnection(DataSettings.ConnectionString);
 
         dbConnection.StateChange += (sender, e) =>
         {
@@ -246,7 +249,7 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     public virtual async Task ReIndexTablesAsync()
     {
         using var currentConnection = CreateDataConnection();
-        var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
+        var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{GetConnectionStringBuilder().Database}`").ToList();
 
         if (tables.Count > 0)
             await currentConnection.ExecuteAsync($"OPTIMIZE TABLE `{string.Join("`, `", tables)}`");
@@ -323,7 +326,9 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// </returns>
     public virtual Task<string> GetDataBaseCollationAsync()
     {
-        return GetSqlStringValueAsync($"SELECT @@collation_database;");
+        var connectionBuilder = GetConnectionStringBuilder();
+
+        return GetSqlStringValueAsync($"SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = '{connectionBuilder.Database}';");
     }
 
     #endregion
@@ -333,7 +338,7 @@ public partial class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     /// <summary>
     /// MySql data provider
     /// </summary>
-    protected override IDataProvider LinqToDbDataProvider => MySqlTools.GetDataProvider(ProviderName.MySqlConnector);
+    protected override IDataProvider LinqToDbDataProvider => MySqlTools.GetDataProvider();
 
     /// <summary>
     /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

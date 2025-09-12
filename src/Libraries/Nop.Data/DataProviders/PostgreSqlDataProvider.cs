@@ -40,9 +40,9 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// Gets the connection string builder
     /// </summary>
     /// <returns>The connection string builder</returns>
-    protected static NpgsqlConnectionStringBuilder GetConnectionStringBuilder()
+    protected virtual NpgsqlConnectionStringBuilder GetConnectionStringBuilder()
     {
-        return new NpgsqlConnectionStringBuilder(GetCurrentConnectionString());
+        return new NpgsqlConnectionStringBuilder(DataSettings.ConnectionString);
     }
 
     /// <summary>
@@ -110,9 +110,8 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// <summary>
     /// Creates the database by using the loaded connection string
     /// </summary>
-    /// <param name="collation"></param>
     /// <param name="triesToConnect"></param>
-    public void CreateDatabase(string collation, int triesToConnect = 10)
+    public virtual void CreateDatabase(int triesToConnect = 10)
     {
         if (DatabaseExists())
             return;
@@ -128,8 +127,12 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
         using (var connection = GetInternalDbConnection(builder.ConnectionString))
         {
             var query = $"CREATE DATABASE \"{databaseName}\" WITH OWNER = '{builder.Username}'";
-            if (!string.IsNullOrWhiteSpace(collation))
-                query = $"{query} LC_COLLATE = '{collation}'";
+
+            if (!string.IsNullOrWhiteSpace(DataSettings.CharacterSet))
+                query = $"{query} ENCODING '{DataSettings.CharacterSet}'";
+
+            if (!string.IsNullOrWhiteSpace(DataSettings.Collation))
+                query = $"{query} LC_COLLATE = '{DataSettings.Collation}' TEMPLATE template0";
 
             var command = connection.CreateCommand();
             command.CommandText = query;
@@ -174,11 +177,11 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// Checks if the specified database exists, returns true if database exists
     /// </summary>
     /// <returns>Returns true if the database exists.</returns>
-    public bool DatabaseExists()
+    public virtual bool DatabaseExists()
     {
         try
         {
-            using var connection = GetInternalDbConnection(GetCurrentConnectionString());
+            using var connection = GetInternalDbConnection(DataSettings.ConnectionString);
 
             //just try to connect
             connection.Open();
@@ -198,11 +201,11 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// A task that represents the asynchronous operation
     /// The task result contains the returns true if the database exists.
     /// </returns>
-    public async Task<bool> DatabaseExistsAsync()
+    public virtual async Task<bool> DatabaseExistsAsync()
     {
         try
         {
-            await using var connection = GetInternalDbConnection(GetCurrentConnectionString());
+            await using var connection = GetInternalDbConnection(DataSettings.ConnectionString);
 
             //just try to connect
             await connection.OpenAsync();
@@ -327,7 +330,7 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     public virtual async Task ReIndexTablesAsync()
     {
         using var currentConnection = CreateDataConnection();
-        await currentConnection.ExecuteAsync($"REINDEX DATABASE \"{currentConnection.Connection.Database}\";");
+        await currentConnection.ExecuteAsync($"REINDEX DATABASE \"{GetConnectionStringBuilder().Database}\";");
     }
 
     /// <summary>
@@ -400,7 +403,8 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     /// </returns>
     public virtual Task<string> GetDataBaseCollationAsync()
     {
-        return GetSqlStringValueAsync("SELECT datcollate AS collation FROM pg_database WHERE datname = current_database();");
+        var builder = GetConnectionStringBuilder();
+        return GetSqlStringValueAsync($"SELECT datcollate AS collation FROM pg_database WHERE datname = '{builder.Database}';");
     }
 
     #endregion

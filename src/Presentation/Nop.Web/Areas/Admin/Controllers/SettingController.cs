@@ -71,7 +71,6 @@ public partial class SettingController : BaseAdminController
     protected readonly INopFileProvider _fileProvider;
     protected readonly INotificationService _notificationService;
     protected readonly IOrderService _orderService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IPictureService _pictureService;
     protected readonly ISettingModelFactory _settingModelFactory;
     protected readonly ISettingService _settingService;
@@ -100,7 +99,6 @@ public partial class SettingController : BaseAdminController
         INopFileProvider fileProvider,
         INotificationService notificationService,
         IOrderService orderService,
-        IPermissionService permissionService,
         IPictureService pictureService,
         ISettingModelFactory settingModelFactory,
         ISettingService settingService,
@@ -124,7 +122,6 @@ public partial class SettingController : BaseAdminController
         _fileProvider = fileProvider;
         _notificationService = notificationService;
         _orderService = orderService;
-        _permissionService = permissionService;
         _pictureService = pictureService;
         _settingModelFactory = settingModelFactory;
         _settingService = settingService;
@@ -757,7 +754,14 @@ public partial class SettingController : BaseAdminController
             artificialIntelligenceSettings.ChatGptApiKey = model.ArtificialIntelligenceSettingsModel.ChatGptApiKey;
             artificialIntelligenceSettings.DeepSeekApiKey = model.ArtificialIntelligenceSettingsModel.DeepSeekApiKey;
             artificialIntelligenceSettings.GeminiApiKey = model.ArtificialIntelligenceSettingsModel.GeminiApiKey;
+            artificialIntelligenceSettings.AllowProductDescriptionGeneration = model.ArtificialIntelligenceSettingsModel.AllowProductDescriptionGeneration;
             artificialIntelligenceSettings.ProductDescriptionQuery = model.ArtificialIntelligenceSettingsModel.ProductDescriptionQuery;
+            artificialIntelligenceSettings.AllowMetaTitleGeneration = model.ArtificialIntelligenceSettingsModel.AllowMetaTitleGeneration;
+            artificialIntelligenceSettings.MetaTitleQuery = model.ArtificialIntelligenceSettingsModel.MetaTitleQuery;
+            artificialIntelligenceSettings.AllowMetaKeywordsGeneration = model.ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration;
+            artificialIntelligenceSettings.MetaKeywordsQuery = model.ArtificialIntelligenceSettingsModel.MetaKeywordsQuery;
+            artificialIntelligenceSettings.AllowMetaDescriptionGeneration = model.ArtificialIntelligenceSettingsModel.AllowMetaDescriptionGeneration;
+            artificialIntelligenceSettings.MetaDescriptionQuery = model.ArtificialIntelligenceSettingsModel.MetaDescriptionQuery;
 
             await _settingService.SaveSettingAsync(artificialIntelligenceSettings);
 
@@ -920,6 +924,7 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.CustomOrderNumberMask, model.CustomOrderNumberMask_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.ExportWithProducts, model.ExportWithProducts_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.AllowAdminsToBuyCallForPriceProducts, model.AllowAdminsToBuyCallForPriceProducts_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.AllowCustomersCancelOrders, model.AllowCustomersCancelOrders_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.ShowProductThumbnailInOrderDetailsPage, model.ShowProductThumbnailInOrderDetailsPage_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.DeleteGiftCardUsageHistory, model.DeleteGiftCardUsageHistory_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingAsync(orderSettings, x => x.ActivateGiftCardsAfterCompletingOrder, 0, false);
@@ -1645,72 +1650,6 @@ public partial class SettingController : BaseAdminController
             translationSettings.TranslationServiceId = model.TranslationSettings.TranslationServiceId;
             await _settingService.SaveSettingAsync(translationSettings);
 
-            //display default menu item
-            var displayDefaultMenuItemSettings = await _settingService.LoadSettingAsync<DisplayDefaultMenuItemSettings>(storeScope);
-
-            //we do not clear cache after each setting update.
-            //this behavior can increase performance because cached settings will not be cleared 
-            //and loaded from database after each update
-            displayDefaultMenuItemSettings.DisplayHomepageMenuItem = model.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem;
-            displayDefaultMenuItemSettings.DisplayNewProductsMenuItem = model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem;
-            displayDefaultMenuItemSettings.DisplayProductSearchMenuItem = model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem;
-            displayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem = model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem;
-            displayDefaultMenuItemSettings.DisplayBlogMenuItem = model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem;
-            displayDefaultMenuItemSettings.DisplayForumsMenuItem = model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem;
-            displayDefaultMenuItemSettings.DisplayContactUsMenuItem = model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem;
-
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultMenuItemSettings, x => x.DisplayHomepageMenuItem, model.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultMenuItemSettings, x => x.DisplayNewProductsMenuItem, model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultMenuItemSettings, x => x.DisplayProductSearchMenuItem, model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultMenuItemSettings, x => x.DisplayCustomerInfoMenuItem, model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultMenuItemSettings, x => x.DisplayBlogMenuItem, model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultMenuItemSettings, x => x.DisplayForumsMenuItem, model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultMenuItemSettings, x => x.DisplayContactUsMenuItem, model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem_OverrideForStore, storeScope, false);
-
-            //now clear settings cache
-            await _settingService.ClearCacheAsync();
-
-            //display default footer item
-            var displayDefaultFooterItemSettings = await _settingService.LoadSettingAsync<DisplayDefaultFooterItemSettings>(storeScope);
-
-            //we do not clear cache after each setting update.
-            //this behavior can increase performance because cached settings will not be cleared 
-            //and loaded from database after each update
-            displayDefaultFooterItemSettings.DisplaySitemapFooterItem = model.DisplayDefaultFooterItemSettings.DisplaySitemapFooterItem;
-            displayDefaultFooterItemSettings.DisplayContactUsFooterItem = model.DisplayDefaultFooterItemSettings.DisplayContactUsFooterItem;
-            displayDefaultFooterItemSettings.DisplayProductSearchFooterItem = model.DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem;
-            displayDefaultFooterItemSettings.DisplayNewsFooterItem = model.DisplayDefaultFooterItemSettings.DisplayNewsFooterItem;
-            displayDefaultFooterItemSettings.DisplayBlogFooterItem = model.DisplayDefaultFooterItemSettings.DisplayBlogFooterItem;
-            displayDefaultFooterItemSettings.DisplayForumsFooterItem = model.DisplayDefaultFooterItemSettings.DisplayForumsFooterItem;
-            displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem = model.DisplayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem;
-            displayDefaultFooterItemSettings.DisplayCompareProductsFooterItem = model.DisplayDefaultFooterItemSettings.DisplayCompareProductsFooterItem;
-            displayDefaultFooterItemSettings.DisplayNewProductsFooterItem = model.DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem;
-            displayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem = model.DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem;
-            displayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem = model.DisplayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem;
-            displayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem = model.DisplayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem;
-            displayDefaultFooterItemSettings.DisplayShoppingCartFooterItem = model.DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem;
-            displayDefaultFooterItemSettings.DisplayWishlistFooterItem = model.DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem;
-            displayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem = model.DisplayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem;
-
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplaySitemapFooterItem, model.DisplayDefaultFooterItemSettings.DisplaySitemapFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayContactUsFooterItem, model.DisplayDefaultFooterItemSettings.DisplayContactUsFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayProductSearchFooterItem, model.DisplayDefaultFooterItemSettings.DisplayProductSearchFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayNewsFooterItem, model.DisplayDefaultFooterItemSettings.DisplayNewsFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayBlogFooterItem, model.DisplayDefaultFooterItemSettings.DisplayBlogFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayForumsFooterItem, model.DisplayDefaultFooterItemSettings.DisplayForumsFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayRecentlyViewedProductsFooterItem, model.DisplayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayCompareProductsFooterItem, model.DisplayDefaultFooterItemSettings.DisplayCompareProductsFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayNewProductsFooterItem, model.DisplayDefaultFooterItemSettings.DisplayNewProductsFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayCustomerInfoFooterItem, model.DisplayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayCustomerOrdersFooterItem, model.DisplayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayCustomerAddressesFooterItem, model.DisplayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayShoppingCartFooterItem, model.DisplayDefaultFooterItemSettings.DisplayShoppingCartFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayWishlistFooterItem, model.DisplayDefaultFooterItemSettings.DisplayWishlistFooterItem_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(displayDefaultFooterItemSettings, x => x.DisplayApplyVendorAccountFooterItem, model.DisplayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem_OverrideForStore, storeScope, false);
-
-            //now clear settings cache
-            await _settingService.ClearCacheAsync();
-
             //admin area
             var adminAreaSettings = await _settingService.LoadSettingAsync<AdminAreaSettings>(storeScope);
 
@@ -1977,7 +1916,7 @@ public partial class SettingController : BaseAdminController
 
     //action displaying notification (warning) to a store owner about a lot of traffic 
     //between the distributed cache server and the application when LoadAllLocaleRecordsOnStartup setting is set
-    public async Task<IActionResult> DistributedCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
+    public virtual async Task<IActionResult> DistributedCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
     {
         //LoadAllLocaleRecordsOnStartup is set and distributed cache is used, so display warning
         if (_appSettings.Get<DistributedCacheConfig>().Enabled && _appSettings.Get<DistributedCacheConfig>().DistributedCacheType != DistributedCacheType.Memory && loadAllLocaleRecordsOnStartup)
@@ -1993,7 +1932,7 @@ public partial class SettingController : BaseAdminController
     }
 
     //Action that displays a notification (warning) to the store owner about the absence of active authentication providers
-    public async Task<IActionResult> ForceMultifactorAuthenticationWarning(bool forceMultifactorAuthentication)
+    public virtual async Task<IActionResult> ForceMultifactorAuthenticationWarning(bool forceMultifactorAuthentication)
     {
         //ForceMultifactorAuthentication is set and the store haven't active Authentication provider , so display warning
         if (forceMultifactorAuthentication && !await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
@@ -2009,7 +1948,7 @@ public partial class SettingController : BaseAdminController
     }
 
     //Action that displays a notification (warning) to the store owner about the need to restart the application after changing the setting
-    public async Task<IActionResult> SeoFriendlyUrlsForLanguagesEnabledWarning(bool seoFriendlyUrlsForLanguagesEnabled)
+    public virtual async Task<IActionResult> SeoFriendlyUrlsForLanguagesEnabledWarning(bool seoFriendlyUrlsForLanguagesEnabled)
     {
         //load settings for a chosen store scope
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();

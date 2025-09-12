@@ -15,7 +15,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
     /// Register routes
     /// </summary>
     /// <param name="endpointRouteBuilder">Route builder</param>
-    public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
     {
         //get language pattern
         //it's not needed to use language pattern in AJAX requests and for actions returning the result directly (e.g. file to download),
@@ -461,6 +461,11 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/orderdetails/print/{{orderId}}",
             defaults: new { controller = "Order", action = "PrintOrderDetails" });
 
+        //cancel order
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CANCEL_ORDER,
+            pattern: $"{lang}/orderdetails/cancelorder/{{orderId}}",
+            defaults: new { controller = "Order", action = "CancelOrder" });
+
         //order downloads (file result)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.GET_DOWNLOAD,
             pattern: $"download/getdownload/{{orderItemId:guid}}/{{agree?}}",
@@ -541,15 +546,6 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.TOPIC_AUTHENTICATE,
             pattern: $"topic/authenticate",
             defaults: new { controller = "Topic", action = "Authenticate" });
-
-        //prepare top menu (AJAX)
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.GET_CATALOG_ROOT,
-            pattern: $"catalog/getcatalogroot",
-            defaults: new { controller = "Catalog", action = "GetCatalogRoot" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.GET_CATALOG_SUB_CATEGORIES,
-            pattern: $"catalog/getcatalogsubcategories",
-            defaults: new { controller = "Catalog", action = "GetCatalogSubCategories" });
 
         //Catalog products (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.GET_CATEGORY_PRODUCTS,

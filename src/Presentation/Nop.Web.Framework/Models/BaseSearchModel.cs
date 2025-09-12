@@ -57,7 +57,7 @@ public abstract partial record BaseSearchModel : BaseNopModel, IPagingRequestMod
     /// <summary>
     /// Set grid page parameters
     /// </summary>
-    public void SetGridPageSize()
+    public virtual void SetGridPageSize()
     {
         var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
         SetGridPageSize(adminAreaSettings?.DefaultGridPageSize ?? 0, adminAreaSettings?.GridPageSizes);
@@ -66,7 +66,7 @@ public abstract partial record BaseSearchModel : BaseNopModel, IPagingRequestMod
     /// <summary>
     /// Set popup grid page parameters
     /// </summary>
-    public void SetPopupGridPageSize()
+    public virtual void SetPopupGridPageSize()
     {
         var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
         SetGridPageSize(adminAreaSettings.PopupGridPageSize, adminAreaSettings.GridPageSizes);
@@ -77,7 +77,7 @@ public abstract partial record BaseSearchModel : BaseNopModel, IPagingRequestMod
     /// </summary>
     /// <param name="pageSize">Page size; pass null to use default value</param>
     /// <param name="availablePageSizes">Available page sizes; pass null to use default value</param>
-    public void SetGridPageSize(int pageSize, string availablePageSizes = null)
+    public virtual void SetGridPageSize(int pageSize, string availablePageSizes = null)
     {
         Start = 0;
         Length = pageSize;

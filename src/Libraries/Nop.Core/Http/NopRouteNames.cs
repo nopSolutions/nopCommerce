@@ -402,6 +402,11 @@ public static partial class NopRouteNames
         public const string PRINT_ORDER_DETAILS = "PrintOrderDetails";
 
         /// <summary>
+        /// Gets the cancel order route name
+        /// </summary>
+        public const string CANCEL_ORDER = "CancelOrder";
+
+        /// <summary>
         /// Gets the order downloads (file result) route name
         /// </summary>
         public const string GET_DOWNLOAD = "GetDownload";
@@ -752,16 +757,6 @@ public static partial class NopRouteNames
         /// Gets the authenticate topic route name
         /// </summary>
         public const string TOPIC_AUTHENTICATE = "TopicAuthenticate";
-
-        /// <summary>
-        /// Gets the catalog root route name
-        /// </summary>
-        public const string GET_CATALOG_ROOT = "GetCatalogRoot";
-
-        /// <summary>
-        /// Gets the catalog sub-categories route name
-        /// </summary>
-        public const string GET_CATALOG_SUB_CATEGORIES = "GetCatalogSubCategories";
 
         /// <summary>
         /// Gets the category products route name

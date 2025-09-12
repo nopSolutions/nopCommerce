@@ -70,7 +70,7 @@ public partial class MemoryCacheLocker : ILocker
     /// <param name="expirationTime">The time after which the lock will automatically be expired</param>
     /// <param name="action">Asynchronous task to be performed with locking</param>
     /// <returns>A task that resolves true if lock was acquired and action was performed; otherwise false</returns>
-    public async Task<bool> PerformActionWithLockAsync(string resource, TimeSpan expirationTime, Func<Task> action)
+    public virtual async Task<bool> PerformActionWithLockAsync(string resource, TimeSpan expirationTime, Func<Task> action)
     {
         return await RunAsync(resource, expirationTime, _ => action());
     }
@@ -85,7 +85,7 @@ public partial class MemoryCacheLocker : ILocker
     /// <param name="action">Asynchronous background task to be performed</param>
     /// <param name="cancellationTokenSource">A CancellationTokenSource for manually canceling the task</param>
     /// <returns>A task that resolves true if lock was acquired and action was performed; otherwise false</returns>
-    public async Task RunWithHeartbeatAsync(string key, TimeSpan expirationTime, TimeSpan heartbeatInterval, Func<CancellationToken, Task> action, CancellationTokenSource cancellationTokenSource = default)
+    public virtual async Task RunWithHeartbeatAsync(string key, TimeSpan expirationTime, TimeSpan heartbeatInterval, Func<CancellationToken, Task> action, CancellationTokenSource cancellationTokenSource = default)
     {
         // We ignore expirationTime and heartbeatInterval here, as the cache is not shared with other instances,
         // and will be cleared on system failure anyway. The task is guaranteed to still be running as long as it is in the cache.
@@ -100,7 +100,7 @@ public partial class MemoryCacheLocker : ILocker
     /// even if not explicitly canceled.</param>
     /// <returns>A task that represents requesting cancellation of the task. Note that the completion of this task does not
     /// necessarily imply that the task has been canceled, only that cancellation has been requested.</returns>
-    public Task CancelTaskAsync(string key, TimeSpan expirationTime)
+    public virtual Task CancelTaskAsync(string key, TimeSpan expirationTime)
     {
         if (_memoryCache.TryGetValue(key, out Lazy<CancellationTokenSource> tokenSource))
             tokenSource.Value.Cancel();
@@ -113,7 +113,7 @@ public partial class MemoryCacheLocker : ILocker
     /// </summary>
     /// <param name="key">The task's key</param>
     /// <returns>A task that resolves to true if the background task is running; otherwise false</returns>
-    public Task<bool> IsTaskRunningAsync(string key)
+    public virtual Task<bool> IsTaskRunningAsync(string key)
     {
         return Task.FromResult(_memoryCache.TryGetValue(key, out _));
     }

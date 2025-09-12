@@ -28,7 +28,7 @@ public partial class ClearCacheTask : IScheduleTask
     /// <summary>
     /// Executes a task
     /// </summary>
-    public async System.Threading.Tasks.Task ExecuteAsync()
+    public virtual async Task ExecuteAsync()
     {
         await _staticCacheManager.ClearAsync();
     }

@@ -65,7 +65,7 @@ public partial class RemotePost
     /// </summary>
     /// <param name="name">The key of the element to add</param>
     /// <param name="value">The value of the element to add.</param>
-    public void Add(string name, string value)
+    public virtual void Add(string name, string value)
     {
         Params.Add(name, value);
     }
@@ -73,7 +73,7 @@ public partial class RemotePost
     /// <summary>
     /// Post
     /// </summary>
-    public void Post()
+    public virtual void Post()
     {
         //text
         var sb = new StringBuilder();

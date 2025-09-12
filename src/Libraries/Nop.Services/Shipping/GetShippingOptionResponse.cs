@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Shipping;
+﻿using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Shipping;
 
@@ -37,7 +37,7 @@ public partial class GetShippingOptionResponse
     /// Add error
     /// </summary>
     /// <param name="error">Error</param>
-    public void AddError(string error)
+    public virtual void AddError(string error)
     {
         Errors.Add(error);
     }

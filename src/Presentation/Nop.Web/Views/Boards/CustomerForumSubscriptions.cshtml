@@ -47,9 +47,9 @@
                             <thead>
                             <tr>
                                 <th class="select-boxes">
-                                    <input type="checkbox" id="selectall" />
+                                    <input type="checkbox" id="selectall" aria-labelledby="info-col-caption" />
                                 </th>
-                                <th class="info">
+                                <th class="info" id="info-col-caption">
                                     @T("Account.ForumSubscriptions.InfoColumn")
                                 </th>
                             </tr>
@@ -60,7 +60,7 @@
                                 var item = Model.ForumSubscriptions[i];
                                 <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
                                     <td class="select-boxes">
-                                        <input type="checkbox" name="fs@(item.Id)" class="rowcheckbox" />
+                                        <input type="checkbox" name="fs@(item.Id)" class="rowcheckbox" aria-labelledby="info-col-caption" />
                                     </td>
                                     <td class="info">
                                         @if (item.TopicSubscription)
@@ -69,7 +69,7 @@
                                         }
                                         else
                                         {
-                                                @Html.RouteLink(item.Title, NopRouteNames.Standard.FORUM_SLUG, new { Id = item.ForumId, slug = item.Slug })
+                                            @Html.RouteLink(item.Title, NopRouteNames.Standard.FORUM_SLUG, new { Id = item.ForumId, slug = item.Slug })
                                         }
                                     </td>
                                 </tr>

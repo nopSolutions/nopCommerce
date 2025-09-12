@@ -64,7 +64,17 @@
     {
         <script asp-location="Footer">
             $(function() {
-                $('.header').on({
+                $('.header-upper').on({
+                    focus: function(){
+                        $('#flyout-cart').addClass('active');
+                    },
+                    focusout: function() {
+                        setTimeout(function() {
+                            if (!$('#topcartlink, #flyout-cart').find(':focus').length) {
+                                $('#flyout-cart').removeClass('active');
+                            }
+                        }, 0)
+                    },
                     mouseenter: function() {
                         $('#flyout-cart').addClass('active');
                     },
@@ -72,7 +82,6 @@
                         $('#flyout-cart').removeClass('active');
                     }
                 }, '#topcartlink, #flyout-cart');
-
 
                 var localized_data = {
                     AjaxCartFailure: "@T("AjaxCart.Failure")"

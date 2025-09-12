@@ -12,6 +12,7 @@ using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
@@ -167,5 +168,7 @@ public class SchemaMigration : ForwardOnlyMigration
         Create.TableFor<VendorAttribute>();
         Create.TableFor<VendorAttributeValue>();
         Create.TableFor<VendorNote>();
+        Create.TableFor<Menu>();
+        Create.TableFor<MenuItem>();
     }
 }

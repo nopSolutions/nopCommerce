@@ -681,7 +681,6 @@ i.false-icon {
 
 /*override font-awesome styles*/
 .fa, .far, .fas {
-  padding-right: 5px;
   font-size: 1.01em;
 }
 
@@ -1350,6 +1349,18 @@ input[type=file].form-control {
 
 .form-group input[type=datetime-local] {
   width: 200px;
+}
+
+.form-group .choose-entity-container {
+  display: flex;
+  gap: 3px;
+}
+
+.form-group .choose-entity-container .entity-info {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  padding: 5px;
 }
 
 /* PRODUCT EDIT/CREATE */

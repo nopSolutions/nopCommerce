@@ -7,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
@@ -314,7 +315,8 @@ public partial class OrderModelFactory : IOrderModelFactory
         {
             Id = order.Id,
             CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc),
-            OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus),
+            OrderStatus = order.OrderStatus,
+            OrderStatusText = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus),
             IsReOrderAllowed = _orderSettings.IsReOrderAllowed,
             IsReturnRequestAllowed = await _orderProcessingService.IsReturnRequestAllowedAsync(order),
             PdfInvoiceDisabled = _pdfSettings.DisablePdfInvoicesForPendingOrders && order.OrderStatus == OrderStatus.Pending,
@@ -396,6 +398,7 @@ public partial class OrderModelFactory : IOrderModelFactory
         var paymentMethod = await _paymentPluginManager
             .LoadPluginBySystemNameAsync(order.PaymentMethodSystemName, customer, order.StoreId);
         model.PaymentMethod = paymentMethod != null ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, languageId) : order.PaymentMethodSystemName;
+        model.PaymentStatus = order.PaymentStatus;
         model.PaymentMethodStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
         model.CanRePostProcessPayment = await _paymentService.CanRePostProcessPaymentAsync(order);
         //custom values
@@ -553,6 +556,11 @@ public partial class OrderModelFactory : IOrderModelFactory
                 CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(orderNote.CreatedOnUtc, DateTimeKind.Utc)
             });
         }
+
+        //can user cancel the order
+        model.CanCancelOrder = order.PaymentStatus == PaymentStatus.Pending
+            && order.OrderStatus != OrderStatus.Cancelled
+            && _orderSettings.AllowCustomersCancelOrders;
 
         //purchased products
         model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;

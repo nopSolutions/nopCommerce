@@ -335,7 +335,7 @@ public partial class EmailAccountController : BaseAdminController
         }
     }
 
-    public async Task<IActionResult> AuthReturn(AuthorizationCodeResponseUrl authorizationCode)
+    public virtual async Task<IActionResult> AuthReturn(AuthorizationCodeResponseUrl authorizationCode)
     {
         if (string.IsNullOrEmpty(authorizationCode.State))
             return RedirectToAction(nameof(List));

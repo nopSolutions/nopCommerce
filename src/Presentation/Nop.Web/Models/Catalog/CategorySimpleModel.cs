@@ -15,11 +15,7 @@ public partial record CategorySimpleModel : BaseNopEntityModel
 
     public int? NumberOfProducts { get; set; }
 
-    public bool IncludeInTopMenu { get; set; }
-
     public List<CategorySimpleModel> SubCategories { get; set; }
-
-    public bool HaveSubCategories { get; set; }
 
     public string Route { get; set; }
 }

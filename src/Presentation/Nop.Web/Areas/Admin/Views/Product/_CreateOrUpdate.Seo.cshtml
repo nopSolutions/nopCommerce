@@ -1,3 +1,4 @@
+@using Nop.Core.Domain.Catalog
 @model ProductModel
 <div class="card-body">
     <div class="cards-group">
@@ -40,6 +41,11 @@
                             <span asp-validation-for="@Model.Locales[item].MetaDescription"></span>
                         </div>
                     </div>
+                    @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel(Model, nameof(Product), item, Model.Locales[item].LanguageId)
+                    {
+                        TitleFieldId = Html.IdFor(model => model.Locales[item].Name),
+                        TextFieldId = Html.IdFor(model => model.Locales[item].FullDescription)
+                    })
                     <script>
                 $(function() {
                     $('#@Html.IdFor(model => model.Locales[item].SeName)').on('input change', function () {
@@ -94,6 +100,11 @@
                                     <span asp-validation-for="MetaDescription"></span>
                                 </div>
                             </div>
+                            @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel(Model, nameof(Product))
+                            {
+                                TitleFieldId = Html.IdFor(model => model.Name),
+                                TextFieldId = Html.IdFor(model => model.FullDescription)
+                            })
                             <script>
                 $(function() {
                     $('#@Html.IdFor(model => model.SeName)').on('input change', function () {

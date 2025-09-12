@@ -74,7 +74,7 @@ public partial class PropertyManager<T>
     /// </summary>
     /// <param name="cell">The cell to set value</param>
     /// <param name="value">The cell value</param>
-    protected void SetCellValue(IXLCell cell, object value)
+    protected virtual void SetCellValue(IXLCell cell, object value)
     {
         if (value == null)
         {
@@ -170,7 +170,7 @@ public partial class PropertyManager<T>
     /// </summary>
     /// <param name="propertyName">Property name</param>
     /// <returns></returns>
-    public int GetIndex(string propertyName)
+    public virtual int GetIndex(string propertyName)
     {
         if (!_defaultProperties.TryGetValue(propertyName, out var value))
             return -1;
@@ -182,7 +182,7 @@ public partial class PropertyManager<T>
     /// Remove object by property name
     /// </summary>
     /// <param name="propertyName">Property name</param>
-    public void Remove(string propertyName)
+    public virtual void Remove(string propertyName)
     {
         _defaultProperties.Remove(propertyName);
     }
@@ -383,7 +383,7 @@ public partial class PropertyManager<T>
     /// Set caption style to excel cell
     /// </summary>
     /// <param name="cell">Excel cell</param>
-    public void SetCaptionStyle(IXLCell cell)
+    public virtual void SetCaptionStyle(IXLCell cell)
     {
         cell.Style.Fill.PatternType = XLFillPatternValues.Solid;
         cell.Style.Fill.BackgroundColor = XLColor.FromColor(Color.FromArgb(184, 204, 228));
@@ -400,7 +400,7 @@ public partial class PropertyManager<T>
     /// </summary>
     /// <param name="propertyName"></param>
     /// <returns></returns>
-    public PropertyByName<T> GetDefaultProperty(string propertyName)
+    public virtual PropertyByName<T> GetDefaultProperty(string propertyName)
     {
         return _defaultProperties.TryGetValue(propertyName, out var value) ? value : null;
     }
@@ -410,7 +410,7 @@ public partial class PropertyManager<T>
     /// </summary>
     /// <param name="propertyName"></param>
     /// <returns></returns>
-    public PropertyByName<T> GetLocalizedProperty(string propertyName)
+    public virtual PropertyByName<T> GetLocalizedProperty(string propertyName)
     {
         return _localizedProperties.TryGetValue(propertyName, out var value) ? value : null;
     }
@@ -418,19 +418,19 @@ public partial class PropertyManager<T>
     /// <summary>
     /// Get default property array
     /// </summary>
-    public PropertyByName<T>[] GetDefaultProperties => _defaultProperties.Values.ToArray();
+    public virtual PropertyByName<T>[] GetDefaultProperties => _defaultProperties.Values.ToArray();
 
     /// <summary>
     /// Get localized property array
     /// </summary>
-    public PropertyByName<T>[] GetLocalizedProperties => _localizedProperties.Values.ToArray();
+    public virtual PropertyByName<T>[] GetLocalizedProperties => _localizedProperties.Values.ToArray();
 
     /// <summary>
     /// Set SelectList
     /// </summary>
     /// <param name="propertyName">Property name</param>
     /// <param name="list">SelectList</param>
-    public void SetSelectList(string propertyName, SelectList list)
+    public virtual void SetSelectList(string propertyName, SelectList list)
     {
         var tempProperty = GetDefaultProperty(propertyName);
         if (tempProperty != null)

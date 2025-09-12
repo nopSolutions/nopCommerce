@@ -149,6 +149,93 @@ public class DataMigration : Migration
                 EmailAccountId = eaGeneral.Id
             });
         }
+
+        //#7390
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "AddNewMenu", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewMenu",
+                    Enabled = true,
+                    Name = "Add a new menu"
+                }
+            );
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "DeleteMenu", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteMenu",
+                    Enabled = true,
+                    Name = "Delete a menu"
+                }
+            );
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "EditMenu", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditMenu",
+                    Enabled = true,
+                    Name = "Edit a menu"
+                }
+            );
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "AddNewMenuItem", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewMenuItem",
+                    Enabled = true,
+                    Name = "Add a new menu item"
+                }
+            );
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "DeleteMenuItem", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteMenuItem",
+                    Enabled = true,
+                    Name = "Delete a menu item"
+                }
+            );
+        }
+
+        if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "EditMenuItem", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            _dataProvider.InsertEntity(
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditMenuItem",
+                    Enabled = true,
+                    Name = "Edit a menu item"
+                }
+            );
+        }
+
+        //#7384
+        if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.ORDER_CANCELLED_STORE_OWNER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
+            _dataProvider.InsertEntity(new MessageTemplate
+            {
+                Name = MessageTemplateSystemNames.ORDER_CANCELLED_STORE_OWNER_NOTIFICATION,
+                Subject = "%Store.Name%. Order #%Order.OrderNumber% cancelled",
+                Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order #%Order.OrderNumber% has been cancelled by customer.{Environment.NewLine}<br />{Environment.NewLine}Customer: %Order.CustomerFullName%,{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Order Number: %Order.OrderNumber%{Environment.NewLine}<br />{Environment.NewLine}Date Ordered: %Order.CreatedOn%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Order.Product(s)%{Environment.NewLine}</p>{Environment.NewLine}",
+                IsActive = true,
+                EmailAccountId = eaGeneral.Id
+            });
+        }
     }
 
     public override void Down()
