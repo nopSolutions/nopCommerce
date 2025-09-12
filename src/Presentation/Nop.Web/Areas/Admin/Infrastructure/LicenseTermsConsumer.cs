@@ -56,7 +56,7 @@ public partial class LicenseTermsConsumer : IConsumer<PageRenderingEvent>
         if ((currentVersion.InstallationDate ?? DateTime.UtcNow).AddMonths(1) > DateTime.UtcNow)
             return;
 
-        if (currentVersion.LastCheckDate.HasValue && currentVersion.LastCheckDate.Value.AddDays(1) > DateTime.UtcNow)
+        if (currentVersion.LastCheckDate.HasValue && currentVersion.LastCheckDate.Value.AddHours(3) > DateTime.UtcNow)
             return;
 
         var licenseCheckModel = new LicenseCheckModel();

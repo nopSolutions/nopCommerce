@@ -18,9 +18,9 @@
         <div class="shipment-details-area">
             <div class="order-info-wrap">
                 <div class="order-info">
-	                <div class="title">
-	                    <strong>@T("Order.Shipments.Order#")@Model.Order.Id</strong>
-	                </div>
+	                <h2 class="title">
+                        @T("Order.Shipments.Order#")@Model.Order.Id
+	                </h2>
                     <ul class="info-list">
                         <li class="shipping-method">
                             @T("Order.Shipments.ShippingMethod"): @Model.Order.ShippingMethod
@@ -85,9 +85,9 @@
                 <div class="shipping-info">
                     @if (!Model.Order.PickupInStore)
                     {
-                        <div class="title">
-                            <strong>@T("Order.Shipments.ShippingAddress")</strong>
-                        </div>
+                        <h2 class="title">
+                            @T("Order.Shipments.ShippingAddress")
+                        </h2>
                         <ul class="info-list">
                             <li class="name">
                                 @Model.Order.ShippingAddress.FirstName @Model.Order.ShippingAddress.LastName
@@ -118,9 +118,9 @@
                     }
                     else
                     {
-                        <div class="title">
-                            <strong>@T("Order.Shipments.PickupAddress")</strong>
-                        </div>
+                        <h2 class="title">
+                            @T("Order.Shipments.PickupAddress")
+                        </h2>
                         <ul class="info-list">
                             <li class="address1">
                                 @Model.Order.PickupAddress.Address1
@@ -144,9 +144,9 @@
         @if (Model.Items.Count > 0)
         {
             <div class="section products">
-                <div class="title">
-                    <strong>@T("Order.Shipments.Product(s)")</strong>
-                </div>
+                <h2 class="title">
+                    @T("Order.Shipments.Product(s)")
+                </h2>
                 <div class="table-wrapper">
                     <table class="data-table">
                         <colgroup>
@@ -211,9 +211,9 @@
         @if (Model.ShipmentStatusEvents.Count > 0)
         {
             <div class="section shipment-status-events">
-                <div class="title">
-                    <strong>@T("Order.ShipmentStatusEvents")</strong>
-                </div>
+                <h2 class="title">
+                    @T("Order.ShipmentStatusEvents")
+                </h2>
                 <div class="table-wrapper">
                     <table class="data-table">
                         <colgroup>

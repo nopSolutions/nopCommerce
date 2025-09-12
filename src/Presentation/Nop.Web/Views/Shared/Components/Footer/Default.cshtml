@@ -6,20 +6,20 @@
 
 @inject IWorkContext workContext
 
-<div class="footer">
-    <div class="footer-upper">
+<footer class="footer">
+    <section class="footer-upper">
         @await Component.InvokeAsync(typeof(FooterMenuViewComponent))
         <div class="footer-block follow-us">
             <div class="social">
-                <div class="title">
-                    <strong>@T("Footer.FollowUs")</strong>
-                </div>
+                <h2 class="title">
+                    @T("Footer.FollowUs")
+                </h2>
                 @await Component.InvokeAsync(typeof(SocialButtonsViewComponent))
             </div>
             @await Component.InvokeAsync(typeof(NewsLetterBoxViewComponent))
         </div>
-    </div>
-    <div class="footer-lower">
+    </section>
+    <section class="footer-lower">
         <div class="footer-info">
             <span class="footer-disclaimer">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
             @if (Model.DisplayTaxShippingInfoFooter)
@@ -39,9 +39,9 @@
             </div>
         }
         @await Component.InvokeAsync(typeof(StoreThemeSelectorViewComponent))
-    </div>
+    </section>
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.Footer, additionalData = Model })
-</div>
+</footer>
 
 <script asp-location="Footer">
     $(function() {

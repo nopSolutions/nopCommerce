@@ -19,8 +19,8 @@
                 var gridMode = Model.AvailableViewModes[0];
                 var listMode = Model.AvailableViewModes[1];
 
-                <a class="viewmode-icon grid @if (gridMode.Selected){<text>selected</text>}" data-viewmode="@gridMode.Value" title="@gridMode.Text" tabindex="0" aria-role="button" href="#">@gridMode.Text</a>
-                <a class="viewmode-icon list @if (listMode.Selected){<text>selected</text>}" data-viewmode="@listMode.Value" title="@listMode.Text" tabindex="0" aria-role="button" href="#">@listMode.Text</a>
+                <a class="viewmode-icon grid @if (gridMode.Selected){<text>selected</text>}" data-viewmode="@gridMode.Value" title="@gridMode.Text" tabindex="0" role="button" href="#">@gridMode.Text</a>
+                <a class="viewmode-icon list @if (listMode.Selected){<text>selected</text>}" data-viewmode="@listMode.Value" title="@listMode.Text" tabindex="0" role="button" href="#">@listMode.Text</a>
             }
         </div>
         <script asp-location="Footer">

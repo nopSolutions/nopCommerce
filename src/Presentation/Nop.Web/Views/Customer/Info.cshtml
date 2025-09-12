@@ -24,10 +24,10 @@
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerInfoTop, additionalData = Model })
         <form asp-route="@NopRouteNames.General.CUSTOMER_INFO" method="post">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
-            <div class="fieldset">
-                <div class="title">
-                    <strong>@T("Account.YourPersonalDetails")</strong>
-                </div>
+            <section class="fieldset">
+                <h2 class="title">
+                    @T("Account.YourPersonalDetails")
+                </h2>
                 <div class="form-fields">
                     @if (Model.GenderEnabled)
                     {
@@ -136,13 +136,13 @@
                         }
                     }
                 </div>
-            </div>
+            </section>
             @if (Model.CompanyEnabled || Model.DisplayVatNumber)
             {
-                <div class="fieldset">
-                    <div class="title">
-                        <strong>@T("Account.CompanyDetails")</strong>
-                    </div>
+                <section class="fieldset">
+                    <h2 class="title">
+                        @T("Account.CompanyDetails")
+                    </h2>
                     <div class="form-fields">
                         @if (Model.CompanyEnabled)
                         {
@@ -173,7 +173,7 @@
                             </div>
                         }
                     </div>
-                </div>
+                </section>
             }
             @if (Model.StreetAddressEnabled ||
         Model.StreetAddress2Enabled ||
@@ -182,10 +182,10 @@
         Model.CountyEnabled ||
         Model.CountryEnabled)
             {
-                <div class="fieldset">
-                    <div class="title">
-                        <strong>@T("Account.YourAddress")</strong>
-                    </div>
+                <section class="fieldset">
+                    <h2 class="title">
+                        @T("Account.YourAddress")
+                    </h2>
                     <div class="form-fields">
                         @if (Model.StreetAddressEnabled)
                         {
@@ -277,14 +277,14 @@
                             </div>
                         }
                     </div>
-                </div>
+                </section>
             }
             @if (Model.PhoneEnabled || Model.FaxEnabled)
             {
-                <div class="fieldset">
-                    <div class="title">
-                        <strong>@T("Account.YourContactInformation")</strong>
-                    </div>
+                <section class="fieldset">
+                    <h2 class="title">
+                        @T("Account.YourContactInformation")
+                    </h2>
                     <div class="form-fields">
                         @if (Model.PhoneEnabled)
                         {
@@ -311,15 +311,15 @@
                             </div>
                         }
                     </div>
-                </div>
+                </section>
             }
 
             @if (Model.NewsletterEnabled &&  Model.NewsLetterSubscriptions.Count > 0)
             {
-                <div class="fieldset">
-                    <div class="title">
-                        <strong>@T("Account.SubscribeToNewsletter")</strong>
-                    </div>
+                <section class="fieldset">
+                    <h2 class="title">
+                        @T("Account.SubscribeToNewsletter")
+                    </h2>
                     <div class="form-fields">
                         <div class="inputs">
                             <div class="attributes">
@@ -336,26 +336,26 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
             }
             @if (Model.CustomerAttributes.Count > 0)
             {
-                <div class="fieldset">
-                    <div class="title">
-                        <strong>@T("Account.Options")</strong>
-                    </div>
+                <section class="fieldset">
+                    <h2 class="title">
+                        @T("Account.Options")
+                    </h2>
                     <div class="form-fields">
                         @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
                     </div>
-                </div>
+                </section>
             }
             
             @if (Model.AllowCustomersToSetTimeZone || Model.SignatureEnabled)
             {
-                <div class="fieldset">
-                    <div class="title">
-                        <strong>@T("Account.Preferences")</strong>
-                    </div>
+                <section class="fieldset">
+                    <h2 class="title">
+                        @T("Account.Preferences")
+                    </h2>
                     <div class="form-fields">
                         @if (Model.AllowCustomersToSetTimeZone)
                         {
@@ -373,14 +373,14 @@
                             </div>
                         }
                     </div>
-                </div>
+                </section>
             }
             @if (Model.NumberOfExternalAuthenticationProviders > 0)
             {
-                <div class="fieldset">
-                    <div class="title">
-                        <strong>@T("Account.AssociatedExternalAuth")</strong>
-                    </div>
+                <section class="fieldset">
+                    <h2 class="title">
+                        @T("Account.AssociatedExternalAuth")
+                    </h2>
                     @if (Model.AssociatedExternalAuthRecords.Count > 0)
                     {
                         //existing associated external records
@@ -444,15 +444,15 @@
                             <a href="@loginUrl">@loginUrl</a>
                         </div>
                     }
-                </div>
+                </section>
             }
 
             @if (Model.GdprConsents.Count > 0)
             {
-                <div class="fieldset">
-                    <div class="title">
-                        <strong>@T("Account.UserAgreement")</strong>
-                    </div>
+                <section class="fieldset">
+                    <h2 class="title">
+                        @T("Account.UserAgreement")
+                    </h2>
                     <div class="form-fields">
                         @foreach (var consent in Model.GdprConsents)
                         {
@@ -479,11 +479,11 @@
                             </div>
                         }
                     </div>
-                </div>
+                </section>
             }
-            <div class="buttons">
+            <section class="buttons">
                 <button type="submit" id="save-info-button" name="save-info-button" class="button-1 save-customer-info-button">@T("Common.Save")</button>
-            </div>
+            </section>
         </form>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerInfoBottom, additionalData = Model })
     </div>

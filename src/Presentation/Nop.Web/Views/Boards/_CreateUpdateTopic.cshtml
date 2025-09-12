@@ -21,7 +21,7 @@
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
         <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="ForumId" />
-        <div class="fieldset">
+        <section class="fieldset">
             <div class="form-fields">
                 <div class="inputs">
                     <label>@T("Forum.ForumName"):</label>
@@ -66,10 +66,10 @@
                     <nop-captcha />
                 }
             </div>
-        </div>
-        <div class="buttons">
+        </section>
+        <section class="buttons">
             <button type="submit" class="button-1 submit-topic-button">@T("Forum.Submit")</button>
             <button type="button" class="button-2 cancel-topic-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.FORUM_SLUG, new { id = Model.ForumId, slug = Model.ForumSeName })')">@T("Forum.Cancel")</button>
-        </div>
+        </section>
     </div>
 </div>

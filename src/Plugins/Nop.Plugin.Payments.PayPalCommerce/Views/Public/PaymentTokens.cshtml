@@ -23,9 +23,9 @@
                 @foreach (var token in Model.PaymentTokens)
                 {
                     <div class="section order-item">
-                        <div class="title">
-                            <strong>@token.Type</strong>
-                        </div>
+                        <h2 class="title">
+                            @token.Type
+                        </h2>
                         <ul class="info">
                             <li>@T("Plugins.Payments.PayPalCommerce.PaymentTokens.Title"): <span class="order-status">@token.Title</span></li>
                             <li>@T("Plugins.Payments.PayPalCommerce.PaymentTokens.Expiration"): <span class="order-date">@token.Expiration</span></li>

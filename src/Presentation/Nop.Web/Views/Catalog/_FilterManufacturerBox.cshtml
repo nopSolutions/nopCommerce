@@ -1,9 +1,9 @@
 ﻿@model ManufacturerFilterModel
 
 <div class="product-filter product-manufacturer-filter">
-    <div class="filter-title">
-        <strong>@T("Filtering.ManufacturerFilter")</strong>
-    </div>
+    <h2 class="filter-title">
+        @T("Filtering.ManufacturerFilter")
+    </h2>
     <div class="filter-content">
         <ul class="group product-manufacturer-group">
             @foreach (var manufacturer in Model.Manufacturers)

@@ -18863,6 +18863,9 @@
   <LocaleResource Name="Media.Product.ImageLinkTitleFormat.Details">
     <Value>Picture of {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Media.Product.VideoTitleFormat">
+    <Value>Video of {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="Media.Vendor.ImageAlternateTextFormat">
     <Value>Picture for vendor {0}</Value>
   </LocaleResource>

@@ -48,9 +48,9 @@
         @if (Model.FeaturedProducts.Count > 0)
         {
             <div class="product-grid featured-product-grid">
-                <div class="title">
-                    <strong>@T("Products.FeaturedProducts")</strong>
-                </div>
+                <h2 class="title">
+                    @T("Products.FeaturedProducts")
+                </h2>
                 <div class="item-grid">
                     @foreach (var product in Model.FeaturedProducts)
                     {

@@ -1,9 +1,9 @@
 ﻿@model SpecificationFilterModel
 
 <div class="product-filter product-spec-filter">
-    <div class="filter-title">
-        <strong>@T("Filtering.SpecificationFilter")</strong>
-    </div>
+    <h2 class="filter-title">
+        @T("Filtering.SpecificationFilter")
+    </h2>
     <div class="filter-content">
         @foreach (var attr in Model.Attributes)
         {
