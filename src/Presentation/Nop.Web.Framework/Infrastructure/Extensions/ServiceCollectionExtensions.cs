@@ -1,4 +1,5 @@
-﻿using System.Threading.RateLimiting;
+﻿using System.Runtime.Versioning;
+using System.Threading.RateLimiting;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -238,13 +239,14 @@ public static class ServiceCollectionExtensions
     /// Adds data protection services
     /// </summary>
     /// <param name="services">Collection of service descriptors</param>
+    [SupportedOSPlatform("windows")]
     public static void AddNopDataProtection(this IServiceCollection services)
     {
         var dataProtectionKeysPath = CommonHelper.DefaultFileProvider.MapPath(NopDataProtectionDefaults.DataProtectionKeysPath);
         var dataProtectionKeysFolder = new System.IO.DirectoryInfo(dataProtectionKeysPath);
 
         //configure the data protection system to persist keys to the specified directory
-        services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
+        services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder).ProtectKeysWithDpapi();
     }
 
     /// <summary>

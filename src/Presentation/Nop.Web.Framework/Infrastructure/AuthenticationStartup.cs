@@ -19,7 +19,9 @@ public partial class AuthenticationStartup : INopStartup
     public virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         //add data protection
+#pragma warning disable CA1416
         services.AddNopDataProtection();
+#pragma warning restore CA1416
 
         //add authentication
         services.AddNopAuthentication();

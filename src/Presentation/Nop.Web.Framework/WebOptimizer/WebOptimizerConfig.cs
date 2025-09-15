@@ -14,7 +14,7 @@ public partial class WebOptimizerConfig : IWebOptimizerOptions, IConfig
     /// <summary>
     /// A value indicating whether JS file bundling and minification is enabled
     /// </summary>
-    public bool EnableJavaScriptBundling { get; protected set; } = true;
+    public bool EnableJavaScriptBundling { get; protected set; } = false;
 
     /// <summary>
     /// A value indicating whether CSS file bundling and minification is enabled
@@ -68,7 +68,7 @@ public partial class WebOptimizerConfig : IWebOptimizerOptions, IConfig
     public string CdnUrl { get; set; } = "";
     public bool? AllowEmptyBundle { get; set; } = true;
     public HttpsCompressionMode HttpsCompression { get; set; } = HttpsCompressionMode.Compress;
-    public TimeSpan MemoryCacheTimeToLive { get; set; }
+    public TimeSpan MemoryCacheTimeToLive { get; set; } = TimeSpan.FromMinutes(30);
 
     #endregion
 

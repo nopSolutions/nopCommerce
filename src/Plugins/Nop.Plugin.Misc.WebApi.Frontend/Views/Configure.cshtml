@@ -4,24 +4,52 @@
     NopHtml.SetActiveMenuItemSystemName(WebApiFrontendDefaults.SystemName);
 }
 
+<h1>Web API Frontend Plugin</h1>
 
-<h1>Web API (official plugin)</h1>
+<div class="alert alert-info">
+    <strong>Web API is now active!</strong> This plugin provides RESTful API endpoints for accessing nopCommerce data.
+</div>
 
+<h3>Available API Endpoints</h3>
 
-<p>The Web API plugin from nopCommerce allows you to develop any integration with third-party services much faster and cheaper.</p>
-
-<p>Such features of Web API plugin as:</p>
+<h4>Authentication</h4>
 <ul>
-    <li>Open source code.</li>
-    <li>The plugin covers all methods of nopCommerce. There are more than 1.100 methods available.</li>
-    <li>JSON Web Tokens (JWT) authentication.</li>
+    <li><code>POST /api/auth/login</code> - Authenticate and get JWT token</li>
 </ul>
-<p>allow to reduce the time to develop integrations by up to 80%, which means fewer expenditures and more opportunities for enhancing your store capacities.</p>
 
-<p>The open-source code and the coverage of more than 1.100 nopCommerce methods provide you with unlimited capabilities for developing the integrations with any ERP, PIM, CRM, CMS, WMS systems. </p>
+<h4>Products</h4>
+<ul>
+    <li><code>GET /api/products</code> - Get all products (paginated)</li>
+    <li><code>GET /api/products/{id}</code> - Get product by ID</li>
+</ul>
 
-<p>Also, it enables you to develop a mobile application or organize an outstanding headless commerce.</p>
+<h4>Customers</h4>
+<ul>
+    <li><code>GET /api/customers</code> - Get all customers (paginated)</li>
+    <li><code>GET /api/customers/{id}</code> - Get customer by ID</li>
+</ul>
 
+<h4>Orders</h4>
+<ul>
+    <li><code>GET /api/orders</code> - Get all orders (paginated)</li>
+    <li><code>GET /api/orders/{id}</code> - Get order by ID</li>
+</ul>
 
-<a href="https://www.nopcommerce.com/web-api?utm_source=admin-panel&utm_medium=menu&utm_campaign=WebAPI&utm_content=configuration" target="_blank" class="btn btn-primary">Download plugin</a>
+<h3>Authentication</h3>
+<p>All API endpoints (except authentication) require JWT token authentication. Include the token in the Authorization header:</p>
+<pre><code>Authorization: Bearer {your-jwt-token}</code></pre>
+
+<h3>Usage Example</h3>
+<p>First, authenticate to get a token:</p>
+<pre><code>POST /api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "yourpassword"
+}</code></pre>
+
+<p>Then use the token to access protected endpoints:</p>
+<pre><code>GET /api/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</code></pre>
 

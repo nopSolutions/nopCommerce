@@ -81,6 +81,7 @@ public class RfqAdminController : BasePluginController
 
     #region Configure
 
+#pragma warning disable CS1998
     public async Task<IActionResult> Configure()
     {
         var model = new ConfigurationModel
@@ -90,6 +91,7 @@ public class RfqAdminController : BasePluginController
 
         return View("~/Plugins/Misc.RFQ/Views/Admin/Configure.cshtml", model);
     }
+#pragma warning restore CS1998
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("save")]
