@@ -53,7 +53,7 @@ export default function copyDependencies()
 
     //Marked
     gulp
-      .src(`${nodeModules}marked/marked.min.{js,js.map}`)
+      .src(`${nodeModules}marked/lib/marked.umd.js`)
       .pipe(gulp.dest(targetPath + '/marked')),
 
     //Ionicons

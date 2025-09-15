@@ -137,7 +137,7 @@
     <div class="topic-posts">
         @if (Model.ForumEditor == EditorType.MarkdownEditor)
         {
-            <script asp-location="Footer" src="~/lib_npm/marked/marked.min.js"></script>
+            <script asp-location="Footer" src="~/lib_npm/marked/marked.umd.js"></script>
             <script asp-location="Footer">
                 document.addEventListener('DOMContentLoaded', function() {
                     @foreach (var post in @Model.ForumPostModels)
