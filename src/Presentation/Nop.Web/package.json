@@ -39,7 +39,7 @@
     "jquery-validation": "^1.19.5",
     "jquery-validation-unobtrusive": "^4.0.0",
     "jsrender": "1.0.16",
-    "magnific-popup": "^1.1.0",
+    "magnific-popup": "1.2.0",
     "marked": "^15.0.11",
     "moment": "^2.30.1",
     "overlayscrollbars": "2.10.0",
