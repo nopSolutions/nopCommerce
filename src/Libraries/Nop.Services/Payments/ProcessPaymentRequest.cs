@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Orders;
 
 namespace Nop.Services.Payments;
 
@@ -10,7 +11,7 @@ public partial class ProcessPaymentRequest
 {
     public ProcessPaymentRequest()
     {
-        CustomValues = new Dictionary<string, string>();
+        CustomValues = new CustomValues();
         OrderGuid = Guid.NewGuid();
         OrderGuidGeneratedOnUtc = DateTime.UtcNow;
     }
@@ -108,5 +109,5 @@ public partial class ProcessPaymentRequest
     /// <summary>
     /// You can store any custom value in this property
     /// </summary>
-    public Dictionary<string, string> CustomValues { get; set; }
+    public CustomValues CustomValues { get; set; }
 }
