@@ -147,6 +147,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IProductAttributeParser, ProductAttributeParser>();
         services.AddScoped<IProductAttributeService, ProductAttributeService>();
         services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IProductReviewService, ProductReviewService>();
         services.AddScoped<ICopyProductService, CopyProductService>();
         services.AddScoped<ISpecificationAttributeService, SpecificationAttributeService>();
         services.AddScoped<IProductTemplateService, ProductTemplateService>();

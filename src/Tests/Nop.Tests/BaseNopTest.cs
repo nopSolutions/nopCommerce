@@ -292,6 +292,7 @@ public partial class BaseNopTest
         services.AddTransient<IProductAttributeParser, ProductAttributeParser>();
         services.AddTransient<IProductAttributeService, ProductAttributeService>();
         services.AddTransient<IProductService, ProductService>();
+        services.AddTransient<IProductReviewService, ProductReviewService>();
         services.AddTransient<ICopyProductService, CopyProductService>();
         services.AddTransient<ISpecificationAttributeService, SpecificationAttributeService>();
         services.AddTransient<IProductTemplateService, ProductTemplateService>();

@@ -45,6 +45,7 @@ public partial class ProductController : BasePublicController
     protected readonly IPermissionService _permissionService;
     protected readonly IProductAttributeParser _productAttributeParser;
     protected readonly IProductModelFactory _productModelFactory;
+    protected readonly IProductReviewService _productReviewService;
     protected readonly IProductService _productService;
     protected readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
     protected readonly IReviewTypeService _reviewTypeService;
@@ -77,6 +78,7 @@ public partial class ProductController : BasePublicController
         IPermissionService permissionService,
         IProductAttributeParser productAttributeParser,
         IProductModelFactory productModelFactory,
+        IProductReviewService productReviewService,
         IProductService productService,
         IRecentlyViewedProductsService recentlyViewedProductsService,
         IReviewTypeService reviewTypeService,
@@ -105,6 +107,7 @@ public partial class ProductController : BasePublicController
         _permissionService = permissionService;
         _productAttributeParser = productAttributeParser;
         _productModelFactory = productModelFactory;
+        _productReviewService = productReviewService;
         _productService = productService;
         _reviewTypeService = reviewTypeService;
         _recentlyViewedProductsService = recentlyViewedProductsService;
@@ -120,37 +123,7 @@ public partial class ProductController : BasePublicController
     }
 
     #endregion
-
-    #region Utilities
-
-    protected virtual async Task ValidateProductReviewAvailabilityAsync(Product product)
-    {
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
-            ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Reviews.OnlyRegisteredUsersCanWriteReviews"));
-
-        if (!_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
-            return;
-
-        var hasCompletedOrders = product.ProductType == ProductType.SimpleProduct
-            ? await HasCompletedOrdersAsync(product)
-            : await (await _productService.GetAssociatedProductsAsync(product.Id)).AnyAwaitAsync(HasCompletedOrdersAsync);
-
-        if (!hasCompletedOrders)
-            ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
-    }
-
-    protected virtual async ValueTask<bool> HasCompletedOrdersAsync(Product product)
-    {
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        return (await _orderService.SearchOrdersAsync(customerId: customer.Id,
-                productId: product.Id,
-                osIds: [(int)OrderStatus.Complete],
-            pageSize: 1)).Any();
-    }
-
-    #endregion
-
+    
     #region Product details page
 
     public virtual async Task<IActionResult> ProductDetails(int productId, int updatecartitemid = 0)
@@ -335,27 +308,28 @@ public partial class ProductController : BasePublicController
     [ValidateCaptcha]
     public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
     {
+        //validate CAPTCHA
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage && !captchaValid) 
+            ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+
         var product = await _productService.GetProductByIdAsync(productId);
         var currentStore = await _storeContext.GetCurrentStoreAsync();
 
         if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews ||
-            !await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0))
+            !await _productReviewService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0))
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
-
-        //validate CAPTCHA
-        if (_captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage && !captchaValid)
-        {
-            ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
-
-        await ValidateProductReviewAvailabilityAsync(product);
+        
+        foreach (var error in await _productReviewService.ValidateProductReviewAvailabilityAsync(product)) 
+            ModelState.AddModelError(string.Empty, error);
 
         if (ModelState.IsValid)
         {
             //save review
             var rating = model.AddProductReview.Rating;
-            if (rating < 1 || rating > 5)
+
+            if (rating is < 1 or > 5)
                 rating = _catalogSettings.DefaultProductRatingValue;
+
             var isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
             var customer = await _workContext.GetCurrentCustomerAsync();
 
@@ -373,35 +347,14 @@ public partial class ProductController : BasePublicController
                 StoreId = currentStore.Id,
             };
 
-            await _productService.InsertProductReviewAsync(productReview);
-
-            //add product review and review type mapping                
-            foreach (var additionalReview in model.AddAdditionalProductReviewList)
-            {
-                var additionalProductReview = new ProductReviewReviewTypeMapping
+            var productReviewReviewTypeMappings = model.AddAdditionalProductReviewList.Select(additionalReview =>
+                new ProductReviewReviewTypeMapping
                 {
-                    ProductReviewId = productReview.Id,
                     ReviewTypeId = additionalReview.ReviewTypeId,
                     Rating = additionalReview.Rating
-                };
+                }).ToList();
 
-                await _reviewTypeService.InsertProductReviewReviewTypeMappingsAsync(additionalProductReview);
-            }
-
-            //update product totals
-            await _productService.UpdateProductReviewTotalsAsync(product);
-
-            //notify store owner
-            if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
-                await _workflowMessageService.SendProductReviewStoreOwnerNotificationMessageAsync(productReview, _localizationSettings.DefaultAdminLanguageId);
-
-            //activity log
-            await _customerActivityService.InsertActivityAsync("PublicStore.AddProductReview",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddProductReview"), product.Name), product);
-
-            //raise event
-            if (productReview.IsApproved)
-                await _eventPublisher.PublishAsync(new ProductReviewApprovedEvent(productReview));
+            await _productReviewService.InsertProductReviewAsync(productReview, productReviewReviewTypeMappings);
 
             model = await _productModelFactory.PrepareProductReviewsModelAsync(product);
             model.AddProductReview.Title = null;
@@ -413,10 +366,11 @@ public partial class ProductController : BasePublicController
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded"));
 
             var productUrl = await _nopUrlHelper.RouteGenericUrlAsync(product);
+
             return LocalRedirect(productUrl);
         }
 
-        //If we got this far, something failed, redisplay form
+        //if we got this far, something failed, redisplay form
         RouteData.Values["action"] = "ProductDetails";
 
         //model
@@ -430,7 +384,7 @@ public partial class ProductController : BasePublicController
     [HttpPost]
     public virtual async Task<IActionResult> SetProductReviewHelpfulness(int productReviewId, bool washelpful)
     {
-        var productReview = await _productService.GetProductReviewByIdAsync(productReviewId) ?? throw new ArgumentException("No product review found with the specified id");
+        var productReview = await _productReviewService.GetProductReviewByIdAsync(productReviewId) ?? throw new ArgumentException("No product review found with the specified id");
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
@@ -454,10 +408,10 @@ public partial class ProductController : BasePublicController
             });
         }
 
-        await _productService.SetProductReviewHelpfulnessAsync(productReview, washelpful);
+        await _productReviewService.SetProductReviewHelpfulnessAsync(productReview, washelpful);
 
         //new totals
-        await _productService.UpdateProductReviewHelpfulnessTotalsAsync(productReview);
+        await _productReviewService.UpdateProductReviewHelpfulnessTotalsAsync(productReview);
 
         return Json(new
         {
