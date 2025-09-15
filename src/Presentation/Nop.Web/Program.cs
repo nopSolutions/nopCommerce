@@ -39,6 +39,9 @@ public partial class Program
         //add services to the application and configure service provider
         builder.Services.ConfigureApplicationServices(builder);
 
+        //register mappers
+        builder.Services.AddTransient<Nop.Web.Areas.Admin.Infrastructure.Mapper.IAdminMapper, Nop.Web.Areas.Admin.Infrastructure.Mapper.AdminMapper>();
+
         var app = builder.Build();
 
         //configure the application HTTP request pipeline

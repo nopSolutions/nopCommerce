@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
-    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="Riok.Mapperly" Version="4.1.1" />
     <!--Do not remove this reference. Azure.Identity library need for properly work some of the IThumbService implementation-->
     <PackageReference Include="Azure.Identity" Version="1.16.0" />
     <PackageReference Include="Humanizer" Version="2.14.1" />

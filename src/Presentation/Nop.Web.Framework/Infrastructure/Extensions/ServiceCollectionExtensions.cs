@@ -452,4 +452,5 @@ public static class ServiceCollectionExtensions
         //client to request artificial intelligence service
         services.AddHttpClient<ArtificialIntelligenceHttpClient>().WithProxy();
     }
+
 }

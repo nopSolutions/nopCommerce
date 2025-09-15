@@ -1,8 +1,9 @@
 ﻿using Nop.Core;
 using Nop.Core.Configuration;
-using Nop.Core.Infrastructure.Mapper;
+using Nop.Core.Infrastructure;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Models;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper;
 
 namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 
@@ -21,8 +22,11 @@ public static class MappingExtensions
     /// <returns>Mapped destination object</returns>
     private static TDestination Map<TDestination>(this object source)
     {
-        //use AutoMapper for mapping objects
-        return AutoMapperConfiguration.Mapper.Map<TDestination>(source);
+        //use AdminMapper for mapping objects
+        var adminMapper = EngineContext.Current.Resolve<IAdminMapper>();
+
+        // Use dynamic dispatch to call the appropriate Map method
+        return (TDestination)((dynamic)adminMapper).Map((dynamic)source);
     }
 
     /// <summary>
@@ -35,8 +39,11 @@ public static class MappingExtensions
     /// <returns>Mapped destination object, same instance as the passed destination object</returns>
     private static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
     {
-        //use AutoMapper for mapping objects
-        return AutoMapperConfiguration.Mapper.Map(source, destination);
+        //use AdminMapper for mapping objects
+        var adminMapper = EngineContext.Current.Resolve<IAdminMapper>();
+
+        // Use dynamic dispatch to call the appropriate Map method
+        return (TDestination)((dynamic)adminMapper).Map((dynamic)source, (dynamic)destination);
     }
 
     #endregion

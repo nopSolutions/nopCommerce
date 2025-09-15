@@ -1,10 +1,8 @@
 ﻿using System.Reflection;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Infrastructure.Mapper;
 
 namespace Nop.Core.Infrastructure;
 
@@ -52,31 +50,6 @@ public partial class NopEngine : IEngine
             task.Execute();
     }
 
-    /// <summary>
-    /// Register and configure AutoMapper
-    /// </summary>
-    protected virtual void AddAutoMapper()
-    {
-        //find mapper configurations provided by other assemblies
-        var typeFinder = Singleton<ITypeFinder>.Instance;
-        var mapperConfigurations = typeFinder.FindClassesOfType<IOrderedMapperProfile>();
-
-        //create and sort instances of mapper configurations
-        var instances = mapperConfigurations
-            .Select(mapperConfiguration => (IOrderedMapperProfile)Activator.CreateInstance(mapperConfiguration))
-            .Where(mapperConfiguration => mapperConfiguration != null)
-            .OrderBy(mapperConfiguration => mapperConfiguration.Order);
-
-        //create AutoMapper configuration
-        var config = new MapperConfiguration(cfg =>
-        {
-            foreach (var instance in instances)
-                cfg.AddProfile(instance.GetType());
-        });
-
-        //register
-        AutoMapperConfiguration.Init(config);
-    }
 
     protected virtual Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
     {
@@ -123,9 +96,6 @@ public partial class NopEngine : IEngine
 
         services.AddSingleton(services);
 
-        //register mapper configurations
-        AddAutoMapper();
-
         //run startup tasks
         RunStartupTasks();
 
@@ -140,6 +110,7 @@ public partial class NopEngine : IEngine
     public virtual void ConfigureRequestPipeline(IApplicationBuilder application)
     {
         ServiceProvider = application.ApplicationServices;
+
 
         //find startup configurations provided by other assemblies
         var typeFinder = Singleton<ITypeFinder>.Instance;
