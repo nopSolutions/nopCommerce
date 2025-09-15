@@ -113,11 +113,11 @@
                     function toggleCollation() {
 
                         var connectionStringRaw = $("#@Html.IdFor(x => x.UseCustomCollation)").is(':checked');
-                        var collationInput = $("#@Html.IdFor(x => x.Collation)")
+                        var collationBlock = $("#sqlDatabaseCollation")
                         if (connectionStringRaw) {
-                            collationInput.show();
+                            collationBlock.show();
                         } else {
-                            collationInput.hide();
+                            collationBlock.hide();
                         }
                     }
 
