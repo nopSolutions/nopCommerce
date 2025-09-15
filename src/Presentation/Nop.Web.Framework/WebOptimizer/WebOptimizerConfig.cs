@@ -68,7 +68,6 @@ public partial class WebOptimizerConfig : IWebOptimizerOptions, IConfig
     public string CdnUrl { get; set; } = "";
     public bool? AllowEmptyBundle { get; set; } = true;
     public HttpsCompressionMode HttpsCompression { get; set; } = HttpsCompressionMode.Compress;
-    public TimeSpan MemoryCacheTimeToLive { get; set; }
 
     #endregion
 
