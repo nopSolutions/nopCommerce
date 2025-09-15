@@ -82,7 +82,7 @@ public partial class DefaultAsset : IAsset
     /// <summary>
     /// Gets the webroot relative source files
     /// </summary>
-    public IList<string> SourceFiles => new List<string>();
+    public HashSet<string> SourceFiles => new();
 
     #endregion
 }
