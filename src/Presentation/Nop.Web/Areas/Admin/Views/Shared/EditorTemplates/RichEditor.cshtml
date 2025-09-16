@@ -52,7 +52,7 @@
             function handleSelectedFile(file) {
 
                 if (file && file.fullPath) {
-                    var fullImagePath = '@(webHelper.GetStoreLocation().TrimEnd('/'))@((await fileProvider.GetOrCreateConfigurationAsync("", "")).FILES_ROOT)' + file.fullPath;
+                    var fullImagePath = '@(webHelper.GetStoreLocation().TrimEnd('/'))@((await fileProvider.GetOrCreateConfigurationAsync("", "")).FILES_ROOT)/' + file.fullPath;
                     context.invoke('editor.insertImage', fullImagePath);
                 }
                 dialog.modal('hide');
