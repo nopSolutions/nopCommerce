@@ -208,6 +208,11 @@ public partial class PdfService : IPdfService
             addressResult.AddressAttributes = text.Split('\n').ToList();
         }
 
+        //billing address custom values
+        var customValues = new CustomValues();
+        customValues.FillByXml(order.CustomValuesXml, true);
+        addressResult.CustomValues.AddRange(customValues.Where(value => value.DisplayLocation == CustomValueDisplayLocation.BillingAddress));
+
         //vendors payment details
         if (vendor is null)
         {
@@ -221,10 +226,8 @@ public partial class PdfService : IPdfService
                 addressResult.PaymentMethod = paymentMethodStr;
             }
 
-            //custom values
-            var customValues = CommonHelper.DeserializeCustomValuesFromXml(order.CustomValuesXml);
-            if (customValues != null)
-                addressResult.CustomValues = customValues;
+            //payment custom values
+            addressResult.CustomValues.AddRange(customValues.Where(value => value.DisplayLocation == CustomValueDisplayLocation.Payment));
         }
 
         return addressResult;
@@ -320,7 +323,15 @@ public partial class PdfService : IPdfService
                     addressResult.Country = await _localizationService.GetLocalizedAsync(country, x => x.Name, lang.Id);
             }
 
+            //shipping address custom values
+            var customValues = new CustomValues();
+            customValues.FillByXml(order.CustomValuesXml, true);
+            addressResult.CustomValues.AddRange(customValues.Where(value => value.DisplayLocation == CustomValueDisplayLocation.ShippingAddress));
+
             addressResult.ShippingMethod = order.ShippingMethod;
+
+            //shipping custom values
+            addressResult.CustomValues.AddRange(customValues.Where(value => value.DisplayLocation == CustomValueDisplayLocation.Shipping));
         }
 
         return addressResult;
@@ -919,7 +930,7 @@ public partial class PdfService : IPdfService
                 {
                     var (pictureUrl, _) = await _pictureService.GetPictureUrlAsync(pic, pdfSettingsByStore.ImageTargetSize, false);
                     var picPath = await _thumbService.GetThumbLocalPathAsync(pictureUrl);
-                    
+
                     if (!string.IsNullOrEmpty(picPath))
                         picturePaths.Add(picPath);
                 }

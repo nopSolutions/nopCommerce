@@ -1101,14 +1101,13 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Order.PaymentMethod", paymentMethodName));
         tokens.Add(new Token("Order.VatNumber", order.VatNumber));
         var sbCustomValues = new StringBuilder();
-        var customValues = CommonHelper.DeserializeCustomValuesFromXml(order.CustomValuesXml);
-        if (customValues != null)
+        var customValues = new CustomValues();
+        customValues.FillByXml(order.CustomValuesXml, true);
+
+        foreach (var item in customValues)
         {
-            foreach (var item in customValues)
-            {
-                sbCustomValues.AppendFormat("{0}: {1}", WebUtility.HtmlEncode(item.Key), WebUtility.HtmlEncode(item.Value ?? string.Empty));
-                sbCustomValues.Append("<br />");
-            }
+            sbCustomValues.AppendFormat("{0}: {1}", WebUtility.HtmlEncode(item.Name), WebUtility.HtmlEncode(item.Value ?? string.Empty));
+            sbCustomValues.Append("<br />");
         }
 
         tokens.Add(new Token("Order.CustomValues", sbCustomValues.ToString(), true));

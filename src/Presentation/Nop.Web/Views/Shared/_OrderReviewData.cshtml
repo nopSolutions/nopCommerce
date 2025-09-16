@@ -1,4 +1,5 @@
-﻿@model ShoppingCartModel.OrderReviewDataModel
+﻿@using Nop.Services.Orders
+@model ShoppingCartModel.OrderReviewDataModel
 @if (Model.Display)
 {
     <div class="order-review-data">
@@ -43,20 +44,7 @@
                             @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
                         </li>
                     }
-                    @if (Model.CustomValues != null)
-                    {
-                        foreach (var item in Model.CustomValues)
-                        {
-                            <li class="custom-value">
-                                <span class="label">
-                                    @item.Key:
-                                </span>
-                                <span class="value">
-                                    @(item.Value ?? string.Empty)
-                                </span>
-                            </li>
-                        }
-                    }
+                    @await Html.PartialAsync("_OrderCustomValues", Model.CustomValues?.GetValuesByDisplayLocation(CustomValueDisplayLocation.BillingAddress))
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryBillingAddress, additionalData = Model })
                 </ul>
             </div>
@@ -75,6 +63,7 @@
                                 @Model.PaymentMethod
                             </span>
                         </li>
+                        @await Html.PartialAsync("_OrderCustomValues", Model.CustomValues?.GetValuesByDisplayLocation(CustomValueDisplayLocation.Payment))
                         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryPaymentMethodInfo, additionalData = Model })
                     </ul>
                 </div>
@@ -134,6 +123,7 @@
                                 <li class=@item.Key.ToString().ToLower()>@item.Value</li>
                             }
                         }
+                        @await Html.PartialAsync("_OrderCustomValues", Model.CustomValues?.GetValuesByDisplayLocation(CustomValueDisplayLocation.ShippingAddress))
                     </ul>
                 </div>
                 <div class="shipping-method-info">
@@ -149,6 +139,7 @@
                                 @Model.ShippingMethod
                             </span>
                         </li>
+                        @await Html.PartialAsync("_OrderCustomValues", Model.CustomValues?.GetValuesByDisplayLocation(CustomValueDisplayLocation.Shipping))
                         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryShippingMethodInfo, additionalData = Model })
                     </ul>
                 </div>
