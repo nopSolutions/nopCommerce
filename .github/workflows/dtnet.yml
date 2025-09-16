@@ -7,7 +7,7 @@ on:
 permissions:
   contents: read
   checks: write
-  pull-requests: write
+  push: write
 jobs:
   build:
     runs-on: ubuntu-latest
