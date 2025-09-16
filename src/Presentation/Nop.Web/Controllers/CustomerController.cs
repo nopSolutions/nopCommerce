@@ -216,24 +216,22 @@ public partial class CustomerController : BasePublicController
     {
         ArgumentNullException.ThrowIfNull(form);
 
+        if (!form.TryGetValue("mfa_provider", out var curProvider) || StringValues.IsNullOrEmpty(curProvider))
+            return string.Empty;
+
+        var selectedProvider = curProvider.ToString();
+        if (string.IsNullOrEmpty(selectedProvider))
+            return string.Empty;
+
         var store = await _storeContext.GetCurrentStoreAsync();
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var multiFactorAuthenticationProviders = await _multiFactorAuthenticationPluginManager
+            .LoadActivePluginsAsync(customer, store.Id);
+        
+        var isValidProvider = multiFactorAuthenticationProviders
+            .Any(p => p.PluginDescriptor.SystemName.Equals(selectedProvider, StringComparison.InvariantCultureIgnoreCase));
 
-        var multiFactorAuthenticationProviders = await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), store.Id);
-        foreach (var provider in multiFactorAuthenticationProviders)
-        {
-            var controlId = $"provider_{provider.PluginDescriptor.SystemName}";
-
-            var curProvider = form[controlId];
-            if (!StringValues.IsNullOrEmpty(curProvider))
-            {
-                var selectedProvider = curProvider.ToString();
-                if (!string.IsNullOrEmpty(selectedProvider))
-                {
-                    return selectedProvider;
-                }
-            }
-        }
-        return string.Empty;
+        return isValidProvider ? selectedProvider : string.Empty;
     }
 
     protected virtual async Task<string> ParseCustomCustomerAttributesAsync(IFormCollection form)

@@ -14,7 +14,7 @@
                     </div>
                 }
                 <div class="payment-details">
-                    <input id="provider_@(provider.SystemName)" type="radio" name="provider_@(provider.SystemName)" value="@(provider.SystemName)" checked="@provider.Selected" />
+                    <input id="provider_@(provider.SystemName)" type="radio" name="mfa_provider" value="@(provider.SystemName)" checked="@provider.Selected" />
                     <label for="provider_@(provider.SystemName)">@provider.Name</label>
                     @if (!string.IsNullOrEmpty(provider.Description))
                     {
