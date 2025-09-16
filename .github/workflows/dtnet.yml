@@ -4,10 +4,6 @@ on:
     branches:
       - develop
   workflow_dispatch:
-permissions:
-  contents: read
-  checks: write
-  push: write
 jobs:
   build:
     runs-on: ubuntu-latest
