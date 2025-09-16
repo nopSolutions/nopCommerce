@@ -3,17 +3,16 @@ on:
   push:
     branches:
       - develop
-    workflow_dispatch:
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
       - name: Setup .NET
       - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: |
-            9.0.x
+          dotnet-version: 9.0.x
+      - uses: actions/checkout@v5
       - name: restore
         run: dotnet restore src/Presentation/Nop.Web/Nop.Web.csproj
       - name: build
@@ -21,5 +20,5 @@ jobs:
       - name: test
         run: dotnet test src/Presentation/Nop.Web/Nop.Web.csproj
       - name: publish
-        run: dotnet publish --configuaration Release src/Presentation/Nop.Web/Nop.Web.csproj --output published
+        run: dotnet publish --configuration Release src/Presentation/Nop.Web/Nop.Web.csproj --output published
 
