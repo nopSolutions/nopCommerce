@@ -1,0 +1,22 @@
+on:
+  pull_request:
+    branches:
+    - develop
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: |
+          9.0.x
+    - name: restore
+      run: dotnet restore src/Presentation/Nop.Web/Nop.Web.csproj
+    - name: build
+      run: dotnet build --configuration Debug src/Presentation/Nop.Web/Nop.Web.csproj
+    - name: test
+      run: dotnet test src/Tests/Nop.Tests/Nop.Tests.csproj
+    - name: publish
+      run: dotnet publish --configuration Release src/Presentation/Nop.Web/Nop.Web.csproj -o published/
