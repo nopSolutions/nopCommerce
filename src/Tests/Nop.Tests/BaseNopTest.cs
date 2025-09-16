@@ -338,7 +338,7 @@ public partial class BaseNopTest
         services.AddTransient<ILanguageService, LanguageService>();
         services.AddTransient<IDownloadService, DownloadService>();
         services.AddTransient<IMessageTemplateService, MessageTemplateService>();
-        services.AddTransient<IMenuService, MenuService>();
+        services.AddScoped<IMenuService, MenuService>();
         services.AddTransient<IQueuedEmailService, QueuedEmailService>();
         services.AddTransient<INewsLetterSubscriptionService, NewsLetterSubscriptionService>();
         services.AddTransient<INewsLetterSubscriptionTypeService, NewsLetterSubscriptionTypeService>();
@@ -457,9 +457,9 @@ public partial class BaseNopTest
 
         services.AddOptions<GeneratorOptions>().Configure(go => go.CompatibilityMode = CompatibilityMode.LOOSE);
 
-        services.AddTransient<IStoreContext, WebStoreContext>();
+        services.AddScoped<IStoreContext, WebStoreContext>();
         services.AddTransient<Lazy<IStoreContext>>();
-        services.AddTransient<IWorkContext, WebWorkContext>();
+        services.AddScoped<IWorkContext, WebWorkContext>();
         services.AddTransient<Lazy<IWorkContext>>();
         services.AddTransient<IThemeContext, ThemeContext>();
         services.AddTransient<Lazy<ILocalizationService>>();
