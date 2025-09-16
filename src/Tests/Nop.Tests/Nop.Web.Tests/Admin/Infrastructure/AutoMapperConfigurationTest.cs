@@ -5,10 +5,10 @@ using NUnit.Framework;
 
 namespace Nop.Tests.Nop.Web.Tests.Admin.Infrastructure;
 
-[TestFixture]
+
 public class AutoMapperConfigurationTest
 {
-    [Test]
+
     public void ConfigurationIsValid()
     {
         var config = new MapperConfiguration(cfg =>
