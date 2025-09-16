@@ -214,7 +214,9 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
 
         CreateMap<DataConfig, DataConfigModel>()
             .ForMember(model => model.DataProviderTypeValues, options => options.Ignore());
-        CreateMap<DataConfigModel, DataConfig>();
+        CreateMap<DataConfigModel, DataConfig>()
+            .ForMember(entity => entity.Collation, options => options.Ignore())
+            .ForMember(entity => entity.CharacterSet, options => options.Ignore());
 
         CreateMap<WebOptimizerConfig, WebOptimizerConfigModel>();
         CreateMap<WebOptimizerConfigModel, WebOptimizerConfig>()
