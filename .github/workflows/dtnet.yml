@@ -24,7 +24,10 @@ jobs:
       - name: Publish
         run: dotnet publish --configuration Release src/Presentation/Nop.Web/Nop.Web.csproj --output published
       - name: Test
-        run: dotnet test src/Presentation/Nop.Web/Nop.Web.csproj --logger "trx;LogFilePrefix=testResults" --results-directory ./TestResults
+        run: |
+          dotnet test tests/Nop.Tests/Nop.Tests.csproj \
+            --logger "trx;LogFilePrefix=testResults" \
+            --results-directory ./TestResults
 
       - name: Uploading test results
         uses: actions/upload-artifact@v4
