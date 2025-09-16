@@ -26,7 +26,7 @@ x64/
 # Visual Studio Code files
 .vscode/
 
-# MSTest test Results
+# MSTest test Results this is
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
