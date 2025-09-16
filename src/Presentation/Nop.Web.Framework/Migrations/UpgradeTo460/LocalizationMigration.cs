@@ -271,7 +271,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 ["Admin.Promotions.Discounts.List.IsActive.All"] = "All",
                 ["Admin.Promotions.Discounts.List.IsActive.Hint"] = "Search by \"IsActive\" property.",
                 ["Admin.Promotions.Discounts.List.IsActive.InactiveOnly"] = "Inactive only",
-                
+
+                //#1961
+                ["Admin.Configuration.Settings.Tax.EuVatEnabledForGuests"] = "EU VAT enabled for guests",
+                ["Admin.Configuration.Settings.Tax.EuVatEnabledForGuests.Hint"] = "Check to enable EU VAT (the European Union Value Added Tax) for guest customers.",
+                ["Address.Fields.VatNumber"] = "VAT number",
+                ["Address.Fields.VatNumber.Warning"] = "VAT number can be entered and used only after <a href=\"{0}\">registration</a>.",
+
             }, languageId).Wait();
 
             #endregion
