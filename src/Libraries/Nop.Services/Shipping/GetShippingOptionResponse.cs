@@ -5,11 +5,10 @@ namespace Nop.Services.Shipping;
 /// <summary>
 /// Represents a response of getting shipping rate options
 /// </summary>
-public partial class GetShippingOptionResponse
+public partial class GetShippingOptionResponse : BaseNopResult
 {
     public GetShippingOptionResponse()
     {
-        Errors = new List<string>();
         ShippingOptions = new List<ShippingOption>();
     }
 
@@ -22,23 +21,4 @@ public partial class GetShippingOptionResponse
     /// Gets or sets a value indicating whether shipping is done from multiple locations (warehouses)
     /// </summary>
     public bool ShippingFromMultipleLocations { get; set; }
-
-    /// <summary>
-    /// Gets or sets errors
-    /// </summary>
-    public IList<string> Errors { get; set; }
-
-    /// <summary>
-    /// Gets a value indicating whether request has been completed successfully
-    /// </summary>
-    public bool Success => !Errors.Any();
-
-    /// <summary>
-    /// Add error
-    /// </summary>
-    /// <param name="error">Error</param>
-    public virtual void AddError(string error)
-    {
-        Errors.Add(error);
-    }
 }
