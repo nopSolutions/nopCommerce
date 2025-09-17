@@ -240,9 +240,7 @@ public partial class BackInStockSubscriptionController : BasePublicController
     /// <summary>
     /// record that has only page for route value. Used for (My Account) Back in stock subscriptions pagination
     /// </summary>
-    public partial record BackInStockSubscriptionsRouteValues : BaseRouteValues
-    {
-    }
+    public partial record BackInStockSubscriptionsRouteValues : BaseRouteValues;
 
     #endregion
 }

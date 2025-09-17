@@ -3,6 +3,4 @@
 /// <summary>
 /// Represents a request with the authorization
 /// </summary>
-public interface IAuthorizedRequest : IApiRequest
-{
-}
+public interface IAuthorizedRequest : IApiRequest;

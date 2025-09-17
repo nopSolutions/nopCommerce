@@ -5,6 +5,4 @@ namespace Nop.Web.Areas.Admin.Models.Messages;
 /// <summary>
 /// Represents a newsletter subscription type search model
 /// </summary>
-public partial record NewsLetterSubscriptionTypeSearchModel : BaseSearchModel
-{
-}
+public partial record NewsLetterSubscriptionTypeSearchModel : BaseSearchModel;

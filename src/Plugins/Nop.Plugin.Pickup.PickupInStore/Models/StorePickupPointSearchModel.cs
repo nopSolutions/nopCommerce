@@ -2,6 +2,4 @@
 
 namespace Nop.Plugin.Pickup.PickupInStore.Models;
 
-public record StorePickupPointSearchModel : BaseSearchModel
-{
-}
+public record StorePickupPointSearchModel : BaseSearchModel;

@@ -5,6 +5,4 @@ namespace Nop.Web.Areas.Admin.Models.Catalog;
 /// <summary>
 /// Represents a product list model
 /// </summary>
-public partial record ProductTagProductListModel : BasePagedListModel<ProductModel>
-{
-}
+public partial record ProductTagProductListModel : BasePagedListModel<ProductModel>;

@@ -802,9 +802,7 @@ public partial class OrderModelFactory : IOrderModelFactory
     /// <summary>
     /// record that has only page for route value. Used for (My Account) Reward Points pagination
     /// </summary>
-    public partial record RewardPointsRouteValues : BaseRouteValues
-    {
-    }
+    public partial record RewardPointsRouteValues : BaseRouteValues;
 
     /// <summary>
     /// Record that has filter options for route values. Used for Customer orders pagination (My Account)

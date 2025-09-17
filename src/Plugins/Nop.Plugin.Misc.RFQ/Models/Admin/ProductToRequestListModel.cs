@@ -6,6 +6,4 @@ namespace Nop.Plugin.Misc.RFQ.Models.Admin;
 /// <summary>
 /// Represents a product list model to add to the quote
 /// </summary>
-public record ProductToRequestListModel : BasePagedListModel<ProductModel>
-{
-}
+public record ProductToRequestListModel : BasePagedListModel<ProductModel>;

@@ -5,6 +5,4 @@ namespace Nop.Web.Areas.Admin.Models.Menus;
 /// <summary>
 /// Represents menu item list model
 /// </summary>
-public partial record MenuItemListModel : BasePagedListModel<MenuItemModel>
-{
-}
+public partial record MenuItemListModel : BasePagedListModel<MenuItemModel>;

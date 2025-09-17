@@ -6,6 +6,4 @@ namespace Nop.Services.Menus.Caching;
 /// <summary>
 /// Represents a menu item cache event consumer
 /// </summary>
-public partial class MenuCacheEventConsumer : CacheEventConsumer<Menu>
-{
-}
+public partial class MenuCacheEventConsumer : CacheEventConsumer<Menu>;

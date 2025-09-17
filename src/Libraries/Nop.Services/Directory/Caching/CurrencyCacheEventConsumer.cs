@@ -6,6 +6,4 @@ namespace Nop.Services.Directory.Caching;
 /// <summary>
 /// Represents a currency cache event consumer
 /// </summary>
-public partial class CurrencyCacheEventConsumer : CacheEventConsumer<Currency>
-{
-}
+public partial class CurrencyCacheEventConsumer : CacheEventConsumer<Currency>;

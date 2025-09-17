@@ -3,6 +3,4 @@
 /// <summary>
 /// Change password result
 /// </summary>
-public partial class ChangePasswordResult : BaseNopResult
-{
-}
+public partial class ChangePasswordResult : BaseNopResult;

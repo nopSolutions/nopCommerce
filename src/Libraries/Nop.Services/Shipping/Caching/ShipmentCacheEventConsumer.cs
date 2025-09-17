@@ -6,6 +6,4 @@ namespace Nop.Services.Shipping.Caching;
 /// <summary>
 /// Represents a shipment cache event consumer
 /// </summary>
-public partial class ShipmentCacheEventConsumer : CacheEventConsumer<Shipment>
-{
-}
+public partial class ShipmentCacheEventConsumer : CacheEventConsumer<Shipment>;

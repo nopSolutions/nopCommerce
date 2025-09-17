@@ -5,6 +5,4 @@ namespace Nop.Plugin.Tax.Avalara.Models.Log;
 /// <summary>
 /// Represents a tax transaction log list model
 /// </summary>
-public record TaxTransactionLogListModel : BasePagedListModel<TaxTransactionLogModel>
-{
-}
+public record TaxTransactionLogListModel : BasePagedListModel<TaxTransactionLogModel>;

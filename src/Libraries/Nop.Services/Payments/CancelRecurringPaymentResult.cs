@@ -3,6 +3,4 @@
 /// <summary>
 /// Cancel recurring payment result
 /// </summary>
-public partial class CancelRecurringPaymentResult : BaseNopResult
-{
-}
+public partial class CancelRecurringPaymentResult : BaseNopResult;

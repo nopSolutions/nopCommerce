@@ -6,6 +6,4 @@ namespace Nop.Web.Framework.Controllers;
 /// Base controller for plugins
 /// </summary>
 [NotNullValidationMessage]
-public abstract partial class BasePluginController : BaseController
-{
-}
+public abstract partial class BasePluginController : BaseController;

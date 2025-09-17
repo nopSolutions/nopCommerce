@@ -5,6 +5,4 @@ namespace Nop.Web.Areas.Admin.Models.Logging;
 /// <summary>
 /// Represents an activity log list model
 /// </summary>
-public partial record ActivityLogListModel : BasePagedListModel<ActivityLogModel>
-{
-}
+public partial record ActivityLogListModel : BasePagedListModel<ActivityLogModel>;

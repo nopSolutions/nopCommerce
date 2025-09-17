@@ -1071,9 +1071,7 @@ public partial class ForumModelFactory : IForumModelFactory
     /// <summary>
     /// record that has only page for route value. Used for (My Account) Forum Subscriptions pagination
     /// </summary>
-    public partial record ForumSubscriptionsRouteValues : BaseRouteValues
-    {
-    }
+    public partial record ForumSubscriptionsRouteValues : BaseRouteValues;
 
     /// <summary>
     /// record that has search options for route values. Used for Search result pagination
@@ -1090,9 +1088,7 @@ public partial class ForumModelFactory : IForumModelFactory
     /// <summary>
     /// record that has only page for route value. Used for Active Discussions (forums) pagination
     /// </summary>
-    public partial record ForumActiveDiscussionsRouteValues : BaseRouteValues
-    {
-    }
+    public partial record ForumActiveDiscussionsRouteValues : BaseRouteValues;
 
     #endregion
 }

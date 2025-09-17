@@ -3,6 +3,4 @@
 /// <summary>
 /// Represents the Apple Pay payment source
 /// </summary>
-public class ApplePay
-{
-}
+public class ApplePay;

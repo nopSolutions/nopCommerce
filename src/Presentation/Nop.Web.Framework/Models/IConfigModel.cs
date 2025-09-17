@@ -3,6 +3,4 @@
 /// <summary>
 /// Represents a configuration model
 /// </summary>
-public partial interface IConfigModel
-{
-}
+public partial interface IConfigModel;

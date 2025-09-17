@@ -5,6 +5,4 @@ namespace Nop.Core.Domain.Customers;
 /// <summary>
 /// Represents a customer attribute value
 /// </summary>
-public partial class CustomerAttributeValue : BaseAttributeValue
-{
-}
+public partial class CustomerAttributeValue : BaseAttributeValue;

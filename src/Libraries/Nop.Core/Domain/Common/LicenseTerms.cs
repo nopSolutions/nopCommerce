@@ -2,9 +2,7 @@
 
 namespace Nop.Core.Domain.Common;
 
-public partial class LicenseTerms : List<LicenseTermsInfo>
-{
-}
+public partial class LicenseTerms : List<LicenseTermsInfo>;
 
 public partial class LicenseTermsInfo
 {

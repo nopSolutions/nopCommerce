@@ -5,6 +5,4 @@ namespace Nop.Web.Areas.Admin.Models.Catalog;
 /// <summary>
 /// Represents a product review and review type mapping list model
 /// </summary>
-public partial record ProductReviewReviewTypeMappingListModel : BasePagedListModel<ProductReviewReviewTypeMappingModel>
-{
-}
+public partial record ProductReviewReviewTypeMappingListModel : BasePagedListModel<ProductReviewReviewTypeMappingModel>;

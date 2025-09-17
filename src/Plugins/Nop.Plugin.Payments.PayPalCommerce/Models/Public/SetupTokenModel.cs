@@ -3,6 +3,4 @@
 /// <summary>
 /// Represents the setup token model
 /// </summary>
-public record SetupTokenModel : OrderModel
-{
-}
+public record SetupTokenModel : OrderModel;

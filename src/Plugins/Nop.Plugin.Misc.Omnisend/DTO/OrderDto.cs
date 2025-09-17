@@ -17,8 +17,5 @@ public class OrderDto : IBatchSupport
     //[JsonProperty("canceledDate")] public string CanceledDate { get; set; }
     [JsonProperty("products")] public List<OrderItemDto> Products { get; set; }
 
-    public class OrderItemDto : ProductItemDto
-    {
-
-    }
+    public class OrderItemDto : ProductItemDto;
 }

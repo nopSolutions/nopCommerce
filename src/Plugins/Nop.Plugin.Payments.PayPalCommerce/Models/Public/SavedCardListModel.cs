@@ -3,6 +3,4 @@
 /// <summary>
 /// Represents the saved card list model
 /// </summary>
-public record SavedCardListModel : PaymentTokenListModel
-{
-}
+public record SavedCardListModel : PaymentTokenListModel;

@@ -6,6 +6,4 @@ namespace Nop.Services.Forums.Caching;
 /// <summary>
 /// Represents a forum post vote cache event consumer
 /// </summary>
-public partial class ForumPostVoteCacheEventConsumer : CacheEventConsumer<ForumPostVote>
-{
-}
+public partial class ForumPostVoteCacheEventConsumer : CacheEventConsumer<ForumPostVote>;

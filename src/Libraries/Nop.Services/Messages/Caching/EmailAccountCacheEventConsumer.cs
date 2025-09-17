@@ -6,6 +6,4 @@ namespace Nop.Services.Messages.Caching;
 /// <summary>
 /// Represents an email account cache event consumer
 /// </summary>
-public partial class EmailAccountCacheEventConsumer : CacheEventConsumer<EmailAccount>
-{
-}
+public partial class EmailAccountCacheEventConsumer : CacheEventConsumer<EmailAccount>;

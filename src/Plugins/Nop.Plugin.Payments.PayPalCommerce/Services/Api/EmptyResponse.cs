@@ -3,6 +3,4 @@
 /// <summary>
 /// Represents the empty response
 /// </summary>
-public class EmptyResponse : IApiResponse
-{
-}
+public class EmptyResponse : IApiResponse;

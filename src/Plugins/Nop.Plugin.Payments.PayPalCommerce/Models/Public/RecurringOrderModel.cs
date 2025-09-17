@@ -3,6 +3,4 @@
 /// <summary>
 /// Represents the recurring order model
 /// </summary>
-public record RecurringOrderModel : OrderModel
-{
-}
+public record RecurringOrderModel : OrderModel;

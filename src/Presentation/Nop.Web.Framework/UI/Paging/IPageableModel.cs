@@ -1,4 +1,4 @@
-//Contributor : MVCContrib
+﻿//Contributor : MVCContrib
 
 namespace Nop.Web.Framework.UI.Paging;
 
@@ -50,7 +50,4 @@ public partial interface IPageableModel
 /// Generic form of <see cref="IPageableModel"/>
 /// </summary>
 /// <typeparam name="T">Type of object being paged</typeparam>
-public partial interface IPagination<T> : IPageableModel
-{
-
-}
+public partial interface IPagination<T> : IPageableModel;

@@ -3,6 +3,4 @@
 /// <summary>
 /// Customer registration result
 /// </summary>
-public partial class CustomerRegistrationResult : BaseNopResult
-{
-}
+public partial class CustomerRegistrationResult : BaseNopResult;
