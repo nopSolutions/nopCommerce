@@ -1,0 +1,28 @@
+---
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: dotnet setup
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.x
+      - name: Restore 
+        run: dotnet restore src/Presentation/Nop.Web/Nop.Web.csproj
+      - name: Build
+        run: dotnet build --configuration Debug src/Presentation/Nop.Web/Nop.Web.csproj
+      - name: Publish
+        run: dotnet publish --configuration Release src/Presentation/Nop.Web/Nop.Web.csproj --output published
+      - name: Test
+        run: dotnet test src/Presentation/Nop.Web/Nop.Web.csproj --logger "trx;LogFilePrefix=testResults" --results-directory src/Tests/Nop.Tests/Nop.Tests.csproj
+      - name: Uploading test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test results
+          path: src/Tests/Nop.Tests/Nop.Tests.csproj
