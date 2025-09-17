@@ -381,13 +381,10 @@
     <script type="application/ld+json">
         @Html.Raw(jsonLd)
     </script>
-
-
             <!-- ABC: custom - adds widget zone for reviews -->
             @await Component.InvokeAsync("Widget", new { widgetZone = CustomPublicWidgetZones.ProductBoxAddinfoReviews, additionalData = Model })
 
             <!-- ABC: allow for add to cart -->
-
             @if (!usesCartPricing)
             {
                 <div class="prices">

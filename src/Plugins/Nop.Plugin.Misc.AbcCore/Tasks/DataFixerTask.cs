@@ -56,11 +56,39 @@ namespace Nop.Plugin.Misc.AbcCore.Tasks
                 shouldClearCache = true;
             }
 
+            var removedSeePriceInCartForClearanceItems = await RemoveSeePriceInCartForClearanceItems();
+            if (removedSeePriceInCartForClearanceItems > 0)
+            {
+                await _logger.WarningAsync($"DataFixer: Removed 'See Price in Cart' for {removedSeePriceInCartForClearanceItems} clearance items.");
+                shouldClearCache = true;
+            }
+
             if (shouldClearCache)
             {
                 await _logger.WarningAsync($"DataFixer: Fixes performed, clearing cache.");
                 await _staticCacheManager.ClearAsync();
             }
+        }
+
+        private async Task<int> RemoveSeePriceInCartForClearanceItems()
+        {
+            await _nopDataProvider.ExecuteNonQueryAsync($@"
+                DELETE pf FROM ProductFlag pf
+                JOIN Product p ON p.Id = pf.ProductId
+                JOIN Product_Category_Mapping pcm ON pcm.ProductId = p.Id
+                JOIN Category c ON c.Id = pcm.CategoryId
+                WHERE PriceBucketImageUrl = '/Plugins/Misc.AbcFrontend/Images/abc/MapDiscount.jpg'
+                AND c.Name = 'Clearance'
+            ");
+
+            return await _nopDataProvider.ExecuteNonQueryAsync($@"
+                DELETE ga FROM GenericAttribute ga
+                JOIN Product p ON p.Id = ga.EntityId
+                JOIN Product_Category_Mapping pcm ON pcm.ProductId = p.Id
+                JOIN Category c ON c.Id = pcm.CategoryId
+                where KeyGroup = 'Product' and [Key] LIKE '%Add%'
+                AND c.Name = 'Clearance'
+            ");
         }
 
         private async Task<int> UnmapIllegalAbcProductsAsync()
@@ -72,10 +100,14 @@ namespace Nop.Plugin.Misc.AbcCore.Tasks
                     JOIN Product p ON p.Id = pmm.ProductId
                     JOIN StoreMapping sm ON sm.EntityId = p.Id AND sm.EntityName = 'Product'
                     WHERE ManufacturerId IN (
-                        SELECT Id FROM Manufacturer WHERE Name IN ({string.Join(",", illegalAbcBrands.Select(b => $"'{b}'"))})
+                        SELECT Id FROM Manufacturer WHERE Name IN (
+                            {string.Join(",", illegalAbcBrands.Select(b => $"'{b}'"))}
+                        )
                     )
                     AND p.Published = 1
-                    AND sm.StoreId IN (SELECT Id FROM Store WHERE Name LIKE '%ABC%')
+                    AND sm.StoreId IN (
+                        SELECT Id FROM Store WHERE Name LIKE '%ABC%'
+                    )
                 )
             ");
         }
