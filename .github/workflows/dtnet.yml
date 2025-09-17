@@ -1,29 +1,62 @@
----
 on:
-  push:
+  pull_request:
     branches:
       - develop
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v5
-      - name: dotnet setup
+      - name: Setup dotnet
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 9.0.x
-      - name: Restore 
-        run: dotnet restore src/Presentation/Nop.Web/Nop.Web.csproj
-      - name: Build
-        run: dotnet build --configuration Debug src/Presentation/Nop.Web/Nop.Web.csproj
-      - name: Publish
-        run: dotnet publish --configuration Release src/Presentation/Nop.Web/Nop.Web.csproj --output published
-      - name: Test
-        run: dotnet test src/Presentation/Nop.Web/Nop.Web.csproj --logger "trx;LogFilePrefix=testResults" --results-directory src/Tests/Nop.Tests/Nop.Tests.csproj
-      - name: Uploading test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: test results
-          path: src/Tests/Nop.Tests/Nop.Tests.csproj
+          dotnet-version: |
+            9.0.x
 
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Restore dependencies
+        run: dotnet restore src/Presentation/Nop.Web/Nop.Web.csproj
+
+      - name: Build project
+        run: dotnet build --configuration Debug src/Presentation/Nop.Web/Nop.Web.csproj
+
+      - name: Run tests and generate .trx report
+        run: dotnet test src/Tests/Nop.Tests/Nop.Tests.csproj --logger "trx;LogFileName=test-results.trx" --results-directory TestResults
+
+      - name: Install ReportGenerator
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      - name: Add dotnet tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Generate HTML report from .trx
+        run: |
+          reportgenerator \
+            "-reports:TestResults/*.trx" \
+            "-targetdir:TestResults/Report" \
+            "-reporttypes:Html"
+
+      - name: Set artifact name variables
+        id: vars
+        run: |
+          echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
+          echo "BUILD_NUMBER=${{ github.run_number }}" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=${{ github.event.repository.name }}-${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Zip the HTML report
+        run: |
+          cd TestResults
+          zip -r "${ARTIFACT_NAME}.zip" Report
+
+      - name: Upload zipped HTML test report
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: TestResults/${{ env.ARTIFACT_NAME }}.zip
+
+      - name: Publish project
+        run: dotnet publish --configuration Release src/Presentation/Nop.Web/Nop.Web.csproj --output published
