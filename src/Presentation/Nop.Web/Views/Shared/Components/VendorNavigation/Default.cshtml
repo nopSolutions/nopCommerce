@@ -13,7 +13,7 @@
                 @foreach (var vendor in Model.Vendors)
                 {
                     <li>
-                        <a href="@(Url.RouteUrl<Vendor>(new { SeName = vendor.SeName }))">@vendor.Name</a>
+                        <a href="@(await NopUrlHelper.RouteGenericUrlAsync<Vendor>(new { SeName = vendor.SeName }))">@vendor.Name</a>
                     </li>
                 }
             </ul>

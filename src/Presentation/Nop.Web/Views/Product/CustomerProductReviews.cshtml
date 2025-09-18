@@ -63,7 +63,7 @@
                         <div class="review-info">
                             <span class="user">
                                 <label>@T("Account.CustomerProductReviews.ProductReviewFor"):</label>
-                                <a href="@(Url.RouteUrl<Product>(new { SeName = review.ProductSeName }))">@review.ProductName</a>
+                                <a href="@(await NopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = review.ProductSeName })))">@review.ProductName</a>
 
                             </span>
                             <span class="separator">|</span>

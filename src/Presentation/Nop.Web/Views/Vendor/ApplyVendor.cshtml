@@ -87,7 +87,7 @@
                                 }
                                 else
                                 {
-                                    <a class="read" id="read-acceptterms" href="@Url.RouteTopicUrl("VendorTermsOfService")">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
+                                    <a class="read" id="read-acceptterms" href="@await NopUrlHelper.RouteTopicUrlAsync("VendorTermsOfService")">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
                                 }
                             </div>
                         }

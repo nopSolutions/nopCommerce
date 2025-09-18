@@ -13,7 +13,7 @@
                 @for (var i = 0; i < Model.Count; i++)
                 {
                     <li class="tag">
-                        <a href="@(Url.RouteUrl<ProductTag>(new { SeName = Model[i].SeName }))" class="producttag">
+                        <a href="@(await NopUrlHelper.RouteGenericUrlAsync<ProductTag>(new { SeName = Model[i].SeName }))" class="producttag">
                             @Model[i].Name
                         </a> <span>@T("Products.Tags.Count", Model[i].ProductCount)</span>
                     </li>

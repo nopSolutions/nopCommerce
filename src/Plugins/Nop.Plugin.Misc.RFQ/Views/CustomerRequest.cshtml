@@ -5,6 +5,7 @@
 @model Nop.Plugin.Misc.RFQ.Models.Customer.RequestQuoteModel
 @inject MediaSettings mediaSettings
 @inject Nop.Services.Html.IHtmlFormatter htmlFormatter
+@inject INopUrlHelper nopUrlHelper
 
 @{
 
@@ -101,7 +102,7 @@
                                 <tr>
                                     <td class="picture"><img src="@item.PictureUrl" /></td>
                                     <td class="product">
-                                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">
+                                        <a href="@(await nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">
                                             @item.ProductName
                                         </a>
                                         <br />

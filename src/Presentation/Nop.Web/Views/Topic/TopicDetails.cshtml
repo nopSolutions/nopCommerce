@@ -26,7 +26,7 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var topicUrl = Url.RouteUrl<Topic>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        var topicUrl = (await NopUrlHelper.RouteGenericUrlAsync<Topic>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol())).ToLowerInvariant();
         NopHtml.AddCanonicalUrlParts(topicUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 

@@ -50,7 +50,7 @@
                             {
                                 var picture = product.PictureModels.FirstOrDefault();
                                 <td style="width: @columnWidth;">
-                                    <a class="picture" href="@(Url.RouteUrl<Product>(new { SeName = product.SeName }))"><img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" /></a>
+                                    <a class="picture" href="@(await NopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = product.SeName }))"><img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" /></a>
                                 </td>
                             }
                         </tr>
@@ -61,7 +61,7 @@
                             @foreach (var product in Model.Products)
                             {
                                 <td style="width: @columnWidth;">
-                                    <a href="@(Url.RouteUrl<Product>(new { SeName = product.SeName }))">@product.Name</a>
+                                    <a href="@(await NopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = product.SeName }))">@product.Name</a>
                                 </td>
                             }
                         </tr>

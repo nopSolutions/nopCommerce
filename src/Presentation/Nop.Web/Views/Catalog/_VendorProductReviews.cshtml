@@ -21,7 +21,7 @@
                     <div class="review-item-info">
                         <div class="product-info">
                             <div class="review-product-name">
-                                <a href="@(Url.RouteUrl<Product>(new { SeName = review.ProductSeName }))">@review.ProductName</a>
+                                <a href="@(await NopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = review.ProductSeName }))">@review.ProductName</a>
                             </div>
                         </div>
                         <div class="product-review-box">

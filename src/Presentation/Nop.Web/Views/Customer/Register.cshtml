@@ -413,7 +413,7 @@
                                 }
                                 else
                                 {
-                                    <a class="read" id="read-privacyinfo" href="@Url.RouteTopicUrl("privacyinfo")">@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
+                                    <a class="read" id="read-privacyinfo" href="@await NopUrlHelper.RouteTopicUrlAsync("privacyinfo")">@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
                                 }
                             </div>
                         }

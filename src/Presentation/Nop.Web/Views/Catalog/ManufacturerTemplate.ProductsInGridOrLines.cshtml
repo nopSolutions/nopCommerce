@@ -20,7 +20,7 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var manufacturerUrl = Url.RouteUrl<Manufacturer>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        var manufacturerUrl = (await NopUrlHelper.RouteGenericUrlAsync<Manufacturer>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol())).ToLowerInvariant();
         NopHtml.AddCanonicalUrlParts(manufacturerUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 }

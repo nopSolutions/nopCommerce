@@ -478,7 +478,7 @@
                                     @if (Model.ShowProductThumbnail)
                                     {
                                         <td class="picture">
-                                            <a href="@(Url.RouteUrl<Product>(new {SeName = item.ProductSeName}))">
+                                            <a href="@(await NopUrlHelper.RouteGenericUrlAsync<Product>(new {SeName = item.ProductSeName}))">
                                                 <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.DefaultImageQuality" />
                                             </a>
                                         </td>
@@ -486,7 +486,7 @@
                                     <td class="product">
                                         @if (!Model.PrintMode)
                                         {
-                                            <em><a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a></em>
+                                            <em><a href="@(await NopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a></em>
                                         }
                                         else
                                         {
@@ -548,7 +548,7 @@
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                     //of course, you can modify appropriate locales to include VAT info there
                     <div class="tax-shipping-info">
-                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", Url.RouteTopicUrl("shippinginfo"))
+                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", await NopUrlHelper.RouteTopicUrlAsync("shippinginfo"))
                     </div>
                 }
             </div>

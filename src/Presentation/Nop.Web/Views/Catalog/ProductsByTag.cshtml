@@ -22,7 +22,7 @@
     //canonical URL
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var productsByTagUrl = Url.RouteUrl<ProductTag>(new { SeName = Model.TagSeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        var productsByTagUrl = (await NopUrlHelper.RouteGenericUrlAsync<ProductTag>(new { SeName = Model.TagSeName }, webHelper.GetCurrentRequestProtocol())).ToLowerInvariant();
         NopHtml.AddCanonicalUrlParts(productsByTagUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 }
