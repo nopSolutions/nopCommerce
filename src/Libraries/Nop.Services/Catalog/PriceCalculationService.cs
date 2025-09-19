@@ -75,11 +75,23 @@ public partial class PriceCalculationService : IPriceCalculationService
             return allowedDiscounts;
 
         var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
+        var discounts = await _discountService.GetAppliedDiscountsAsync(product);
 
-        foreach (var discount in await _discountService.GetAppliedDiscountsAsync(product))
-            if (discount.DiscountType == DiscountType.AssignedToSkus &&
-                (await _discountService.ValidateDiscountAsync(discount, customer, couponCodesToValidate)).IsValid)
-                allowedDiscounts.Add(discount);
+        // Parallelize discount validations
+        var validationTasks = discounts
+            .Where(d => d.DiscountType == DiscountType.AssignedToSkus)
+            .Select(d => _discountService.ValidateDiscountAsync(d, customer, couponCodesToValidate))
+            .ToList();
+
+        var validationResults = await Task.WhenAll(validationTasks);
+
+        for (var i = 0; i < validationResults.Length; i++)
+        {
+            if (validationResults[i].IsValid)
+            {
+                allowedDiscounts.Add(discounts[i]);
+            }
+        }
 
         return allowedDiscounts;
     }
@@ -99,32 +111,38 @@ public partial class PriceCalculationService : IPriceCalculationService
         if (_catalogSettings.IgnoreDiscounts)
             return allowedDiscounts;
 
-        //load cached discount models (performance optimization)
-        foreach (var discount in await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToCategories))
+        // Get all discounts assigned to categories
+        var discounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToCategories);
+        // Precompute product categories
+        var productCategoryIds = (await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true))
+            .Select(x => x.CategoryId)
+            .ToList();
+
+        // Parallelize getting applied category IDs for each discount
+        var appliedIdsTasks = discounts.Select(d => _categoryService.GetAppliedCategoryIdsAsync(d, customer)).ToList();
+        var appliedIdsResults = await Task.WhenAll(appliedIdsTasks);
+
+        // Collect discounts that can be validated
+        var validDiscounts = new List<(Discount discount, IList<int> discountCategoryIds)>();
+        for (var i = 0; i < discounts.Count; i++)
         {
-            //load identifier of categories with this discount applied to
-            var discountCategoryIds = await _categoryService.GetAppliedCategoryIdsAsync(discount, customer);
-
-            //compare with categories of this product
-            var productCategoryIds = new List<int>();
-            if (discountCategoryIds.Any())
+            var discountCategoryIds = appliedIdsResults[i];
+            if (productCategoryIds.Any(discountCategoryIds.Contains))
             {
-                productCategoryIds = (await _categoryService
-                        .GetProductCategoriesByProductIdAsync(product.Id))
-                    .Select(x => x.CategoryId)
-                    .ToList();
+                validDiscounts.Add((discounts[i], discountCategoryIds));
             }
+        }
 
-            var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
+        // Parallelize validations for valid discounts
+        var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
+        var validationTasks = validDiscounts.Select(pair => _discountService.ValidateDiscountAsync(pair.discount, customer, couponCodesToValidate)).ToList();
+        var validationResults = await Task.WhenAll(validationTasks);
 
-            foreach (var categoryId in productCategoryIds)
+        for (var i = 0; i < validationResults.Length; i++)
+        {
+            if (validationResults[i].IsValid)
             {
-                if (!discountCategoryIds.Contains(categoryId))
-                    continue;
-
-                if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
-                    (await _discountService.ValidateDiscountAsync(discount, customer, couponCodesToValidate)).IsValid)
-                    allowedDiscounts.Add(discount);
+                allowedDiscounts.Add(validDiscounts[i].discount);
             }
         }
 
@@ -146,32 +164,38 @@ public partial class PriceCalculationService : IPriceCalculationService
         if (_catalogSettings.IgnoreDiscounts)
             return allowedDiscounts;
 
-        foreach (var discount in await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToManufacturers))
+        // Get all discounts assigned to manufacturers
+        var discounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToManufacturers);
+        // Precompute product manufacturers
+        var productManufacturerIds = (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id))
+            .Select(x => x.ManufacturerId)
+            .ToList();
+
+        // Parallelize getting applied manufacturer IDs for each discount
+        var appliedIdsTasks = discounts.Select(d => _manufacturerService.GetAppliedManufacturerIdsAsync(d, customer)).ToList();
+        var appliedIdsResults = await Task.WhenAll(appliedIdsTasks);
+
+        // Collect discounts that can be validated
+        var validDiscounts = new List<(Discount discount, IList<int> discountManufacturerIds)>();
+        for (var i = 0; i < discounts.Count; i++)
         {
-            //load identifier of manufacturers with this discount applied to
-            var discountManufacturerIds = await _manufacturerService.GetAppliedManufacturerIdsAsync(discount, customer);
-
-            //compare with manufacturers of this product
-            var productManufacturerIds = new List<int>();
-            if (discountManufacturerIds.Any())
+            var discountManufacturerIds = appliedIdsResults[i];
+            if (productManufacturerIds.Any(discountManufacturerIds.Contains))
             {
-                productManufacturerIds =
-                    (await _manufacturerService
-                        .GetProductManufacturersByProductIdAsync(product.Id))
-                    .Select(x => x.ManufacturerId)
-                    .ToList();
+                validDiscounts.Add((discounts[i], discountManufacturerIds));
             }
+        }
 
-            var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
+        // Parallelize validations for valid discounts
+        var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
+        var validationTasks = validDiscounts.Select(pair => _discountService.ValidateDiscountAsync(pair.discount, customer, couponCodesToValidate)).ToList();
+        var validationResults = await Task.WhenAll(validationTasks);
 
-            foreach (var manufacturerId in productManufacturerIds)
+        for (var i = 0; i < validationResults.Length; i++)
+        {
+            if (validationResults[i].IsValid)
             {
-                if (!discountManufacturerIds.Contains(manufacturerId))
-                    continue;
-
-                if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
-                    (await _discountService.ValidateDiscountAsync(discount, customer, couponCodesToValidate)).IsValid)
-                    allowedDiscounts.Add(discount);
+                allowedDiscounts.Add(validDiscounts[i].discount);
             }
         }
 
@@ -193,20 +217,33 @@ public partial class PriceCalculationService : IPriceCalculationService
         if (_catalogSettings.IgnoreDiscounts)
             return allowedDiscounts;
 
-        //discounts applied to products
-        foreach (var discount in await GetAllowedDiscountsAppliedToProductAsync(product, customer))
-            if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
-                allowedDiscounts.Add(discount);
+        // Parallelize the retrieval of discounts applied to products, categories, and manufacturers
+        var productDiscountsTask = GetAllowedDiscountsAppliedToProductAsync(product, customer);
+        var categoryDiscountsTask = GetAllowedDiscountsAppliedToCategoriesAsync(product, customer);
+        var manufacturerDiscountsTask = GetAllowedDiscountsAppliedToManufacturersAsync(product, customer);
 
-        //discounts applied to categories
-        foreach (var discount in await GetAllowedDiscountsAppliedToCategoriesAsync(product, customer))
-            if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
-                allowedDiscounts.Add(discount);
+        await Task.WhenAll(productDiscountsTask, categoryDiscountsTask, manufacturerDiscountsTask);
 
-        //discounts applied to manufacturers
-        foreach (var discount in await GetAllowedDiscountsAppliedToManufacturersAsync(product, customer))
+        // Collect discounts applied to products
+        foreach (var discount in productDiscountsTask.Result)
+        {
             if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
                 allowedDiscounts.Add(discount);
+        }
+
+        // Collect discounts applied to categories
+        foreach (var discount in categoryDiscountsTask.Result)
+        {
+            if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
+                allowedDiscounts.Add(discount);
+        }
+
+        // Collect discounts applied to manufacturers
+        foreach (var discount in manufacturerDiscountsTask.Result)
+        {
+            if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
+                allowedDiscounts.Add(discount);
+        }
 
         return allowedDiscounts;
     }

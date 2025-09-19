@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+﻿using System.Collections.Concurrent;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -30,6 +31,9 @@ public partial class DiscountService : IDiscountService
     protected readonly IShortTermCacheManager _shortTermCacheManager;
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreContext _storeContext;
+
+    private static readonly ConcurrentDictionary<string, SemaphoreSlim> _cacheLoadLocks = new();
+    private static readonly ConcurrentDictionary<string, SemaphoreSlim> _pluginLoadLocks = new();
 
     #endregion
 
@@ -98,8 +102,18 @@ public partial class DiscountService : IDiscountService
             {
                 //or try to get validation result for the requirement
                 var store = await _storeContext.GetCurrentStoreAsync();
-                var requirementRulePlugin = await _discountPluginManager
-                    .LoadPluginBySystemNameAsync(requirement.DiscountRequirementRuleSystemName, customer, store.Id);
+                var semaphore = _pluginLoadLocks.GetOrAdd(requirement.DiscountRequirementRuleSystemName, _ => new SemaphoreSlim(1, 1));
+                await semaphore.WaitAsync();
+                IDiscountRequirementRule requirementRulePlugin;
+                try
+                {
+                    requirementRulePlugin = await _discountPluginManager
+                        .LoadPluginBySystemNameAsync(requirement.DiscountRequirementRuleSystemName, customer, store.Id);
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
 
                 if (requirementRulePlugin == null)
                     continue;
@@ -552,26 +566,26 @@ public partial class DiscountService : IDiscountService
         switch (discount.DiscountLimitation)
         {
             case DiscountLimitationType.NTimesOnly:
-            {
-                var usedTimes = (await GetAllDiscountUsageHistoryAsync(discount.Id, null, null, false, 0, 1)).TotalCount;
-                if (usedTimes >= discount.LimitationTimes)
-                    return result;
-            }
+                {
+                    var usedTimes = (await GetAllDiscountUsageHistoryAsync(discount.Id, null, null, false, 0, 1)).TotalCount;
+                    if (usedTimes >= discount.LimitationTimes)
+                        return result;
+                }
 
                 break;
             case DiscountLimitationType.NTimesPerCustomer:
-            {
-                if (await _customerService.IsRegisteredAsync(customer))
                 {
-                    var usedTimes = (await GetAllDiscountUsageHistoryAsync(discount.Id, customer.Id, null, false, 0, 1)).TotalCount;
-                    if (usedTimes >= discount.LimitationTimes)
+                    if (await _customerService.IsRegisteredAsync(customer))
                     {
-                        result.Errors = new List<string> { await _localizationService.GetResourceAsync("ShoppingCart.Discount.CannotBeUsedAnymore") };
+                        var usedTimes = (await GetAllDiscountUsageHistoryAsync(discount.Id, customer.Id, null, false, 0, 1)).TotalCount;
+                        if (usedTimes >= discount.LimitationTimes)
+                        {
+                            result.Errors = new List<string> { await _localizationService.GetResourceAsync("ShoppingCart.Discount.CannotBeUsedAnymore") };
 
-                        return result;
+                            return result;
+                        }
                     }
                 }
-            }
 
                 break;
             case DiscountLimitationType.Unlimited:
@@ -582,7 +596,18 @@ public partial class DiscountService : IDiscountService
         //discount requirements
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, discount);
 
-        var requirements = await _staticCacheManager.GetAsync(key, async () => await GetAllDiscountRequirementsAsync(discount.Id));
+        var keyStr = key.Key;
+        var semaphore = _cacheLoadLocks.GetOrAdd(keyStr, _ => new SemaphoreSlim(1, 1));
+        await semaphore.WaitAsync();
+        IList<DiscountRequirement> requirements;
+        try
+        {
+            requirements = await _staticCacheManager.GetAsync(key, async () => await GetAllDiscountRequirementsAsync(discount.Id));
+        }
+        finally
+        {
+            semaphore.Release();
+        }
 
         //get top-level group
         var topLevelGroup = requirements.FirstOrDefault(r => !r.ParentId.HasValue);
