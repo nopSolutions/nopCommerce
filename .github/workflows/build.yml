@@ -1,19 +1,37 @@
-name: My Test Single Project
+name: My Test Monorepo Project
 on:
   push:
-    branches:
+      branches:
       - main
+      paths:
+      - 'lambdas/test/**'
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  sonarqube:
-    name: SonarQube
+  sonarqubeScan1:
+    name: SonarQubeScan1
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  
-      - name: SonarQubeScan
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: repo1/
+          
+  sonarqubeScan2:
+    name: SonarQubeScan2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  
+      - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env: 
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: repo2/
