@@ -680,47 +680,55 @@ public partial class CustomerService : ICustomerService
     public virtual async Task<int> DeleteGuestCustomersAsync(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart)
     {
         var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
+        var batchSize = 500;
+        var totalDeleted = 0;
 
-        var allGuestCustomers = from guest in _customerRepository.Table
-            join ccm in _customerCustomerRoleMappingRepository.Table on guest.Id equals ccm.CustomerId
-            where ccm.CustomerRoleId == guestRole.Id
-            select guest;
+        while (true)
+        {
+            // Step 1: Find a batch of guest customer IDs to delete
+            var guestIdsQuery =
+                from guest in _customerRepository.Table
+                join ccm in _customerCustomerRoleMappingRepository.Table on guest.Id equals ccm.CustomerId
+                where ccm.CustomerRoleId == guestRole.Id
+                      && !guest.IsSystemAccount
+                      && (createdFromUtc == null || guest.CreatedOnUtc > createdFromUtc)
+                      && (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
+                select guest.Id;
 
-        var guestsToDelete = from guest in _customerRepository.Table
-            join g in allGuestCustomers on guest.Id equals g.Id
-            from sCart in _shoppingCartRepository.Table.Where(sci => sci.CustomerId == guest.Id).DefaultIfEmpty()
-            from order in _orderRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from blogComment in _blogCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from newsComment in _newsCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from productReview in _productReviewRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from productReviewHelpfulness in _productReviewHelpfulnessRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from pollVotingRecord in _pollVotingRecordRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from forumTopic in _forumTopicRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from forumPost in _forumPostRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            where (!onlyWithoutShoppingCart || sCart == null) &&
-                  order == null && blogComment == null && newsComment == null && productReview == null && productReviewHelpfulness == null &&
-                  pollVotingRecord == null && forumTopic == null && forumPost == null &&
-                  !guest.IsSystemAccount &&
-                  (createdFromUtc == null || guest.CreatedOnUtc > createdFromUtc) &&
-                  (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
-            select new { CustomerId = guest.Id };
+            // Exclude guests with related data if needed
+            if (onlyWithoutShoppingCart)
+            {
+                guestIdsQuery = from id in guestIdsQuery
+                                where !_shoppingCartRepository.Table.Any(sci => sci.CustomerId == id)
+                                select id;
+            }
 
-        await using var tmpGuests = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsToDelete", guestsToDelete);
-        await using var tmpAddresses = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsAddressesToDelete",
-            _customerAddressMappingRepository.Table
-                .Where(ca => tmpGuests.Any(c => c.CustomerId == ca.CustomerId))
-                .Select(ca => new { AddressId = ca.AddressId }));
+            guestIdsQuery = from id in guestIdsQuery
+                            where !_orderRepository.Table.Any(o => o.CustomerId == id)
+                                  && !_blogCommentRepository.Table.Any(bc => bc.CustomerId == id)
+                                  && !_newsCommentRepository.Table.Any(nc => nc.CustomerId == id)
+                                  && !_productReviewRepository.Table.Any(pr => pr.CustomerId == id)
+                                  && !_productReviewHelpfulnessRepository.Table.Any(prh => prh.CustomerId == id)
+                                  && !_pollVotingRecordRepository.Table.Any(pvr => pvr.CustomerId == id)
+                                  && !_forumTopicRepository.Table.Any(ft => ft.CustomerId == id)
+                                  && !_forumPostRepository.Table.Any(fp => fp.CustomerId == id)
+                            select id;
 
-        //delete guests
-        var totalRecordsDeleted = await _customerRepository.DeleteAsync(c => tmpGuests.Any(tmp => tmp.CustomerId == c.Id));
+            var guestIds = guestIdsQuery.Take(batchSize).ToList();
+            if (!guestIds.Any())
+                break;
 
-        //delete attributes
-        await _gaRepository.DeleteAsync(ga => tmpGuests.Any(c => c.CustomerId == ga.EntityId) && ga.KeyGroup == nameof(Customer));
+            // Step 2: Delete related data in batch
+            await _gaRepository.DeleteAsync(ga => guestIds.Contains(ga.EntityId) && ga.KeyGroup == nameof(Customer));
+            await _customerAddressRepository.DeleteAsync(a => _customerAddressMappingRepository.Table.Any(ca => ca.AddressId == a.Id && guestIds.Contains(ca.CustomerId)));
+            await _customerAddressMappingRepository.DeleteAsync(ca => guestIds.Contains(ca.CustomerId));
 
-        //delete m -> m addresses
-        await _customerAddressRepository.DeleteAsync(a => tmpAddresses.Any(tmp => tmp.AddressId == a.Id));
+            // Step 3: Delete the customers
+            var deleted = await _customerRepository.DeleteAsync(c => guestIds.Contains(c.Id));
+            totalDeleted += deleted;
+        }
 
-        return totalRecordsDeleted;
+        return totalDeleted;
     }
 
     /// <summary>
