@@ -170,7 +170,7 @@ public partial class ThumbService : IThumbService
     {
         var filesCount = 0;
         var filesSize = 0L;
-        var currentFiles = _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath), topDirectoryOnly: false);
+        var currentFiles = _fileProvider.GetFiles(_fileProvider.Combine(_fileProvider.GetLocalImagesPath(_mediaSettings), NopMediaDefaults.ImageThumbsPath), topDirectoryOnly: false);
         
         foreach (var currentFileName in currentFiles)
         {
@@ -192,7 +192,7 @@ public partial class ThumbService : IThumbService
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task DeleteAllThumbsAsync()
     {
-        var currentFiles = _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath), topDirectoryOnly: false);
+        var currentFiles = _fileProvider.GetFiles(_fileProvider.Combine(_fileProvider.GetLocalImagesPath(_mediaSettings), NopMediaDefaults.ImageThumbsPath), topDirectoryOnly: false);
 
         foreach (var currentFileName in currentFiles)
         {
@@ -203,7 +203,7 @@ public partial class ThumbService : IThumbService
             _fileProvider.DeleteFile(thumbFilePath);
         }
 
-        foreach (var directory in _fileProvider.GetDirectories(_fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath)))
+        foreach (var directory in _fileProvider.GetDirectories(_fileProvider.Combine(_fileProvider.GetLocalImagesPath(_mediaSettings), NopMediaDefaults.ImageThumbsPath)))
             _fileProvider.DeleteDirectory(directory);
     }
 
