@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using LinqToDB;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
 
@@ -61,15 +62,15 @@ public class DataMigration : Migration
                 }
             );
 
-            var newsLetterSubscriptions = _dataProvider.GetTable<NewsLetterSubscription>().ToList();
-            foreach (var newsLetterSubscription in newsLetterSubscriptions)
-            {
-                newsLetterSubscription.TypeId = subscriptionType.Id;
-            }
-
-            _dataProvider.UpdateEntities(newsLetterSubscriptions);
+            _dataProvider.GetTable<NewsLetterSubscription>()
+                .Set(p => p.TypeId, subscriptionType.Id)
+                .Update();
         }
 
+        //alter columns
+        Alter.Table(nameof(NewsLetterSubscription))
+            .AlterColumn(nameof(NewsLetterSubscription.TypeId)).AsInt32().NotNullable();
+        
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "AddSubscriptionType", StringComparison.InvariantCultureIgnoreCase) == 0))
         {
             _dataProvider.InsertEntity(
