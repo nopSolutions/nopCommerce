@@ -184,7 +184,7 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
         var metaKeywords = string.Empty;
         var metaDescription = string.Empty;
 
-        var currentLanguage = await _languageService.GetLanguageByIdAsync(languageId);
+        var currentLanguage = await _languageService.GetLanguageByIdAsync(languageId != 0 ? languageId : _localizationSettings.DefaultAdminLanguageId);
 
         (title, text) = entity switch
         {
@@ -324,11 +324,7 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
             ? entity.MetaDescription
             : await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaDescription, languageId, false);
 
-        var currentLanguageId = languageId == 0
-            ? _localizationSettings.DefaultAdminLanguageId
-            : languageId;
-
-        return await CreateMetaTagsAsync(entity, currentMetaTitle, currentMetaKeywords, currentMetaDescription, currentLanguageId);
+        return await CreateMetaTagsAsync(entity, currentMetaTitle, currentMetaKeywords, currentMetaDescription, languageId);
     }
 
     /// <summary>
@@ -347,7 +343,7 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
         var metaKeywords = entity.MetaKeywords;
         var metaDescription = entity.MetaDescription;
 
-        return await CreateMetaTagsAsync(entity, metaTitle, metaKeywords, metaDescription, languageId != 0 ? languageId : _localizationSettings.DefaultAdminLanguageId);
+        return await CreateMetaTagsAsync(entity, metaTitle, metaKeywords, metaDescription, languageId);
     }
 
     #endregion

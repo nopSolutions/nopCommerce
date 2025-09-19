@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Catalog;
 
-public record ProductPriceModel : BaseNopModel
+public partial record ProductPriceModel : BaseNopModel
 {
     public string OldPrice { get; set; }
     public decimal? OldPriceValue { get; set; }

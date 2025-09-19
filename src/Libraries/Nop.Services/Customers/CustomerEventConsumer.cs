@@ -8,7 +8,7 @@ namespace Nop.Services.Customers;
 /// <summary>
 /// Represents a customer event consumer
 /// </summary>
-public class CustomerEventConsumer : IConsumer<CustomerChangeWorkingLanguageEvent>
+public partial class CustomerEventConsumer : IConsumer<CustomerChangeWorkingLanguageEvent>
 {
     #region Fields
 

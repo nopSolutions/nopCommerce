@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.JsonLD;
 
-public record JsonLdInteractionStatisticModel : JsonLdModel
+public partial record JsonLdInteractionStatisticModel : JsonLdModel
 {
     #region Properties
 
