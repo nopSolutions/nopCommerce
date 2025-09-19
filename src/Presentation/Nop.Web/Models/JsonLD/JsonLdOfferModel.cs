@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.JsonLD;
 
-public record JsonLdOfferModel : JsonLdModel
+public partial record JsonLdOfferModel : JsonLdModel
 {
     #region Properties
 

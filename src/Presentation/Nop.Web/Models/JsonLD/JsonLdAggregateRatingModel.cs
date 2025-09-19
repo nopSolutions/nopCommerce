@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.JsonLD;
 
-public record JsonLdAggregateRatingModel : JsonLdModel
+public partial record JsonLdAggregateRatingModel : JsonLdModel
 {
     #region Properties
 

@@ -1,3 +1,3 @@
 ﻿namespace Nop.Web.Models.JsonLD;
 
-public record JsonLdModel;
+public partial record JsonLdModel;

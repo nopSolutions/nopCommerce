@@ -5,7 +5,8 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Globalization;
-public class NopAcceptLanguageHeaderRequestCultureProvider : RequestCultureProvider
+
+public partial class NopAcceptLanguageHeaderRequestCultureProvider : RequestCultureProvider
 {
     public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
     {
@@ -43,8 +44,5 @@ public class NopAcceptLanguageHeaderRequestCultureProvider : RequestCultureProvi
         {
             return NullProviderCultureResult;
         }
-
-
-
     }
 }

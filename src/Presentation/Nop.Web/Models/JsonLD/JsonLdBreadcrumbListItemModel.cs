@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.JsonLD;
 
-public record JsonLdBreadcrumbListItemModel : JsonLdModel
+public partial record JsonLdBreadcrumbListItemModel : JsonLdModel
 {
     #region Properties
 
