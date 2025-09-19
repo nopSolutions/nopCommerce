@@ -3,7 +3,7 @@ name: SonarQube
 on:
      push:
           branches:
-         - develop  # Change to 'main' if that's your default branch
+         - develop  
      pull_request:
          types: [opened, synchronize, reopened]
 
