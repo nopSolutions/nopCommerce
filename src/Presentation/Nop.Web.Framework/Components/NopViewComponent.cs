@@ -50,4 +50,16 @@ public abstract partial class NopViewComponent : ViewComponent
         //invoke the base method
         return base.View(viewName);
     }
+    
+    /// <summary>
+    ///  Returns a result which will render the partial view with name namespace
+    /// </summary>
+    /// <param name="namespace">The name of the partial view to render.</param>
+    /// <returns>A <see cref="ViewViewComponentResult"/>.</returns>
+    public new ViewViewComponentResult View(string namespace)
+    {
+        //invoke the base method
+        return base.View(namespace);
+    }
+    
 }
