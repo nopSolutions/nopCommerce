@@ -100,6 +100,8 @@
 
                     <div class="card card-default">
                         <div class="card-body">
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.RFQ", NopLinksDefaults.Docs.RFQ + NopLinksDefaults.Utm.OnAdmin)" />
+
                             @await Html.PartialAsync("Table", new DataTablesModel
                             {
                                 Name = "quotes-grid",

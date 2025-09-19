@@ -607,6 +607,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Order.AllowCustomersCancelOrders"] = "Allow customers to cancel orders",
             ["Admin.Configuration.Settings.Order.AllowCustomersCancelOrders.Hint"] = "Check to allow customers to cancel orders",
             [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.ORDER_CANCELLED_STORE_OWNER_NOTIFICATION}"] = "This message template is used to notify a store owner that the certain order was cancelled by customer.",
+
+            ["Admin.Documentation.Reference.RFQ"] = "Learn more about <a target=\"_blank\" href=\"{0}\">requests for quote</a>",
+            ["Admin.Documentation.Reference.Menu"] = "Learn more about <a target=\"_blank\" href=\"{0}\">menus</a>",
         }, languageId);
 
         #endregion

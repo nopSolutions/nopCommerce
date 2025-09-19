@@ -13055,6 +13055,9 @@
   <LocaleResource Name="Admin.Documentation.Reference.Maintenance">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">maintenance</a>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Documentation.Reference.Menu">
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">menus</a>]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Manufacturers">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">manufacturers</a>]]></Value>
   </LocaleResource>
@@ -13114,6 +13117,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ReturnRequests">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">return requests</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documentation.Reference.RFQ">
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">requests for quote</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ScheduleTasks">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">scheduled tasks</a>]]></Value>
