@@ -1,37 +1,66 @@
-name: My Test Monorepo Project
+name: SonarQube
+
 on:
-  push:
-      branches:
-      - main
-      paths:
-      - 'lambdas/test/**'
-  pull_request:
-    types: [opened, synchronize, reopened]
+     push:
+          branches:
+         - develop  # Change to 'main' if that's your default branch
+     pull_request:
+         types: [opened, synchronize, reopened]
+
 jobs:
-  sonarqubeScan1:
-    name: SonarQubeScan1
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: repo1/
-          
-  sonarqubeScan2:
-    name: SonarQubeScan2
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        env: 
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: repo2/
+        build:
+         name: Build and Analyze
+        runs-on: windows-latest
+
+     steps:
+       - name: Set up JDK 17
+           uses: actions/setup-java@v4
+             with:
+              java-version: 17
+             distribution: 'zulu'
+
+      - name: Checkout code
+             uses: actions/checkout@v4
+                     with:
+                          fetch-depth: 0  # Required for full analysis
+
+      - name: Cache SonarQube Cloud packages
+            uses: actions/cache@v4
+                   with:
+                          path: ~\sonar\cache
+                                   key: ${{ runner.os }}-sonar
+                                               restore-keys: ${{ runner.os }}-sonar
+
+      - name: Cache SonarQube Cloud scanner
+               id: cache-sonar-scanner
+                    uses: actions/cache@v4
+                           with:
+                                  path: ${{ runner.temp }}\scanner
+                                          key: ${{ runner.os }}-sonar-scanner
+                                                restore-keys: ${{ runner.os }}-sonar-scanner
+
+      - name: Install SonarQube Cloud scanner
+              if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+                 shell: powershell
+                       run: |
+                                 New-Item -Path ${{ runner.temp }}\scanner -ItemType Directory
+                                  dotnet tool update dotnet-sonarscanner --tool-path ${{ runner.temp }}\scanner
+
+      - name: Build and Analyze
+              env:
+                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+                     shell: powershell
+                               run: |
+                                       ${{ runner.temp }}\scanner\dotnet-sonarscanner begin `
+            /k:"spandana-225_nopCommerce-spa" `
+            /o:"spandana-225" `
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
+            /d:sonar.host.url="https://sonarcloud.io" `
+            /d:sonar.pullrequest.key="${{ github.event.number }}" `
+            /d:sonar.pullrequest.branch="${{ github.head_ref }}" `
+            /d:sonar.pullrequest.base="${{ github.base_ref }}"
+
+          dotnet build
+
+          ${{ runner.temp }}\scanner\dotnet-sonarscanner end `
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
