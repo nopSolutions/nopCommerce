@@ -184,7 +184,7 @@
                                         </td>
                                     }
                                     <td class="name">
-                                        <em><a href="@(await NopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a></em>
+                                        <em><a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a></em>
                                         @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                         {
                                             <div class="attributes">

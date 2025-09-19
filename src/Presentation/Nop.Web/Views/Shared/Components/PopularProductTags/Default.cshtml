@@ -13,7 +13,7 @@
                 <ul>
                     @foreach (var item in Model.Tags)
                     {
-                        <li><a href="@(await NopUrlHelper.RouteGenericUrlAsync<ProductTag>(new { SeName = item.SeName }))" style="font-size:@(Model.GetFontSize(item))%;">@item.Name</a></li>
+                        <li><a href="@(await NopUrl.RouteGenericUrlAsync<ProductTag>(new { SeName = item.SeName }))" style="font-size:@(Model.GetFontSize(item))%;">@item.Name</a></li>
                     }
                 </ul>
             </div>

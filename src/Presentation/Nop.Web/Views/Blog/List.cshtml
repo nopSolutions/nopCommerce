@@ -46,7 +46,7 @@
                 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageBeforePost, additionalData = item })
                 <article class="post">
                     <header class="post-head">
-                        <a class="post-title" href="@(await NopUrlHelper.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }))">
+                        <a class="post-title" href="@(await NopUrl.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }))">
                             <h2>@item.Title</h2>
                         </a>
                         <time datetime="@item.CreatedOn.ToString("yyyy-MM-dd")"  class="post-date">@item.CreatedOn.ToString("D")</time>
@@ -77,9 +77,9 @@
                         <div class="buttons">
                             @if (item.AllowComments)
                             {
-                                <a href="@(await NopUrlHelper.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }, fragment: "comments"))" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
+                                <a href="@(await NopUrl.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }, fragment: "comments"))" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
                             }
-                            <a href="@(await NopUrlHelper.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }))" class="read-more">@T("Blog.MoreInfo")</a>
+                            <a href="@(await NopUrl.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }))" class="read-more">@T("Blog.MoreInfo")</a>
                         </div>
                     </div>
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageInsidePost, additionalData = item })

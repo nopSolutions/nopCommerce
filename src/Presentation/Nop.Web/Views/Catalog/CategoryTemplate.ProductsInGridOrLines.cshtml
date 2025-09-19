@@ -21,7 +21,7 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var categoryUrl = (await NopUrlHelper.RouteGenericUrlAsync<Category>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol())).ToLowerInvariant();
+        var categoryUrl = (await NopUrl.RouteGenericUrlAsync<Category>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol())).ToLowerInvariant();
         NopHtml.AddCanonicalUrlParts(categoryUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 
@@ -47,11 +47,11 @@
                         @if (isLastCategory)
                         {
                             <strong class="current-item">@cat.Name</strong>
-                            <span id="@(await NopUrlHelper.RouteGenericUrlAsync<Category>(new { SeName = cat.SeName }))"></span>
+                            <span id="@(await NopUrl.RouteGenericUrlAsync<Category>(new { SeName = cat.SeName }))"></span>
                         }
                         else
                         {
-                            <a href="@(await NopUrlHelper.RouteGenericUrlAsync<Category>(new { SeName = cat.SeName }))" title="@cat.Name">
+                            <a href="@(await NopUrl.RouteGenericUrlAsync<Category>(new { SeName = cat.SeName }))" title="@cat.Name">
                                 <span>@cat.Name</span>
                             </a>
                             <span class="delimiter">@breadcrumbDelimiter</span>
@@ -94,12 +94,12 @@
                         <div class="item-box">
                             <div class="sub-category-item">
                                 <h2 class="title">
-                                    <a href="@(await NopUrlHelper.RouteGenericUrlAsync<Category>(new { SeName = item.SeName }))" title="@item.PictureModel.Title">
+                                    <a href="@(await NopUrl.RouteGenericUrlAsync<Category>(new { SeName = item.SeName }))" title="@item.PictureModel.Title">
                                         @item.Name
                                     </a>
                                 </h2>
                                 <div class="picture">
-                                    <a href="@(await NopUrlHelper.RouteGenericUrlAsync<Category>(new { SeName = item.SeName }))" title="@item.PictureModel.Title">
+                                    <a href="@(await NopUrl.RouteGenericUrlAsync<Category>(new { SeName = item.SeName }))" title="@item.PictureModel.Title">
                                         <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
                                     </a>
                                 </div>

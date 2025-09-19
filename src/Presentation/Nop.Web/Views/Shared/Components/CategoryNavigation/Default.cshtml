@@ -33,7 +33,7 @@
         }
 
         <li class="@liClass">
-            <a href="@(await NopUrlHelper.RouteGenericUrlAsync<Category>(new { SeName = lineModel.Category.SeName }))">
+            <a href="@(await NopUrl.RouteGenericUrlAsync<Category>(new { SeName = lineModel.Category.SeName }))">
                 @lineModel.Category.Name
                 @if (lineModel.Category.NumberOfProducts.HasValue)
                 {

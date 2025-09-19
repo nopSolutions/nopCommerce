@@ -22,7 +22,7 @@
             {
                 <article class="news-item">
                     <header class="news-head">
-                        <a class="news-title" href="@(await NopUrlHelper.RouteGenericUrlAsync<NewsItem>(new { SeName = item.SeName }))">
+                        <a class="news-title" href="@(await NopUrl.RouteGenericUrlAsync<NewsItem>(new { SeName = item.SeName }))">
                             <h2>@item.Title</h2>
                         </a>
                         <time datetime="@item.CreatedOn.ToString("yyyy-MM-dd")" class="news-date">-@item.CreatedOn.ToString("D")</time>
@@ -31,7 +31,7 @@
                         @Html.Raw(item.Short)
                     </section>
                     <footer class="buttons">
-                        <a href="@(await NopUrlHelper.RouteGenericUrlAsync<NewsItem>(new { SeName = item.SeName }))" class="read-more">@T("News.MoreInfo")</a>
+                        <a href="@(await NopUrl.RouteGenericUrlAsync<NewsItem>(new { SeName = item.SeName }))" class="read-more">@T("News.MoreInfo")</a>
                     </footer>
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.NewsListPageInsideItem, additionalData = item })
                 </article>
