@@ -48,11 +48,20 @@
             `;
             dialog.html(content);
 
+            function joinPaths(...segments) {
+              const nonEmptySegments = segments.filter(segment => segment && typeof segment === 'string');
+              const combinedPath = nonEmptySegments.join('/');
+              const normalizedPath = combinedPath.replace(/[\\/]+/g, '/');
+              return normalizedPath.replace(/:\//g, '://');
+            }
+
             // Function to handle image selection
             function handleSelectedFile(file) {
-
                 if (file && file.fullPath) {
-                    var fullImagePath = '@(webHelper.GetStoreLocation().TrimEnd('/'))@((await fileProvider.GetOrCreateConfigurationAsync("", "")).FILES_ROOT)/' + file.fullPath;
+                    var storeLocation = '@(webHelper.GetStoreLocation())';
+                    var filesRoot = '@(((await fileProvider.GetOrCreateConfigurationAsync("", "")).FILES_ROOT))';
+                    
+                    var fullImagePath = joinPaths(storeLocation, filesRoot, file.fullPath);
                     context.invoke('editor.insertImage', fullImagePath);
                 }
                 dialog.modal('hide');
