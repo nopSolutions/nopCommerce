@@ -2,9 +2,7 @@
 using Nop.Core.Infrastructure.Mapper;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper;
 using NUnit.Framework;
-
 namespace Nop.Tests.Nop.Web.Tests.Admin.Infrastructure;
-
 [TestFixture]
 public class AutoMapperConfigurationTest
 {
