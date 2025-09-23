@@ -138,7 +138,6 @@
 		text-decoration: underline;
 		font-size: 0.7rem;
 		display: block;
-		color: #@await HtmlHelpers.GetPavilionPrimaryColorAsync();
 		background-color: transparent;
 		border: 0;
 		margin: 1rem auto 0 auto;
@@ -153,13 +152,58 @@
 
 	@@media (min-width: 811px) {
 		td.product {
-			width: 100%
+			width: 100%;
 		}
 
 		button.remove-link {
 			margin: 1rem 0 0 0;
 		}
 	}
+
+     @* trashcan *@
+     @@media (max-width: 768px) {
+     .remove-item-btn {
+         padding: 3px;
+     }
+     
+     .remove-item-btn svg {
+         width: 18px;
+         height: 18px;
+     }
+     
+     /* Hide desktop buttons on mobile */
+     .desktop-cart-buttons {
+         display: none;
+     }
+     
+     /* Style mobile cart action buttons after order summary */
+     .cart-action-buttons {
+         margin-top: 1rem;
+         text-align: center;
+     }
+     
+     .cart-action-buttons .common-buttons {
+         display: flex;
+         gap: 1rem;
+         justify-content: center;
+         flex-wrap: wrap;
+     }
+ }
+ 
+ /* Show desktop buttons on larger screens */
+ @@media (min-width: 769px) {
+     .desktop-cart-buttons {
+         display: block;
+     }
+     
+     .cart-action-buttons {
+         display: none;
+     }
+ }
+
+
+
+
 </style>
 <script>
     $(document).on('click', '.change-delivery-method', function () {
@@ -383,20 +427,38 @@
                                 <td>
 		                            <span class="item-count">@counter</span>
 		                        </td>
-                                @if (Model.IsEditable)
-                                {
-                                    <td class="remove-from-cart">
-                                        @if (item.DisableRemoval)
-                                        {
-                                            <text>&nbsp;</text>
-                                        }
-                                        else
-                                        {
-                                            <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
-											<button name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true);"></button>
-                                        }
-                                    </td>
-                                }
+
+
+
+
+
+                               @if (Model.IsEditable)
+            {
+                <td class="remove-from-cart">
+                    @if (item.DisableRemoval)
+                    {
+                        <text>&nbsp;</text>
+                    }
+                    else
+                    {
+                        <!-- Hide the checkbox but keep it for the functionality that is happening in the background -->
+                        <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" style="display: none;" />
+                        
+                        <!-- Add trashcan icon that triggers removal -->
+                        <button type="button" class="remove-item-btn" data-item-id="@item.Id" aria-label="@T("ShoppingCart.Remove")">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M10 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    }
+                </td>
+            }
+
+
+
                                 @if (Model.ShowSku)
                                 {
                                     <td class="sku">
@@ -430,7 +492,8 @@
                                     @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                     {
                                         <div class="attributes">
-                                            <!-- ABC: use custom attribute info listing -->
+                                        <!-- ABC: use custom attribute info listing -->
+                                            
                                             <!-- @Html.Raw(item.AttributeInfo) -->
                                             
                                             @await Html.PartialAsync("_AttributeInfo", (item.Id, item.AttributeInfo))
@@ -505,28 +568,54 @@
                                 <td class="unit-price">
                                     <span class="product-unit-price">@adjustedUnitPriceString</span>
                                 </td>
+
+
                                 <td class="quantity">
-                                    @if (Model.IsEditable)
-                                    {
-                                        if (item.AllowedQuantities.Count > 0)
-                                        {
-                                            <select name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" class="qty-dropdown">
-                                                @foreach (var qty in item.AllowedQuantities)
-                                                {
-                                                    <option selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
-                                                }
-                                            </select>
-                                        }
-                                        else
-                                        {
-                                            <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" aria-label="@T("ShoppingCart.Quantity")" />
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <span>@item.Quantity</span>
-                                    }
-                                </td>
+    @if (Model.IsEditable)
+    {
+        <div class="qty-control" data-item-id="@item.Id">
+            <button type="button" formnovalidate
+                    class="qty-btn qty-minus"
+                    aria-label="Decrease quantity"
+                    data-item-id="@item.Id">−</button>
+
+            @if (item.AllowedQuantities.Count > 0)
+            {
+                <select name="itemquantity@(item.Id)"
+                        id="itemquantity@(item.Id)"
+                        class="qty-dropdown"
+                        aria-label="@T("ShoppingCart.Quantity")">
+                    @foreach (var qty in item.AllowedQuantities)
+                    {
+                        <option selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
+                    }
+                </select>
+            }
+            else
+            {
+                <input  name="itemquantity@(item.Id)"
+                        id="itemquantity@(item.Id)"
+                        type="text"
+                        value="@(item.Quantity)"
+                        class="qty-input"
+                        aria-label="@T("ShoppingCart.Quantity")" />
+            }
+
+            <button type="button" formnovalidate
+                    class="qty-btn qty-plus"
+                    aria-label="Increase quantity"
+                    data-item-id="@item.Id">+</button>
+        </div>
+    }
+    else
+    {
+        <span>@item.Quantity</span>
+    }
+</td>
+
+
+
+                                
                                 <td class="subtotal">
                                     <span class="product-subtotal">@item.SubTotal</span>
                                     @if (!string.IsNullOrEmpty(item.Discount))
@@ -569,8 +658,9 @@
             <div class="cart-options">
                 @if (Model.IsEditable)
                 {
-                    <div class="common-buttons">
-                        <button type="submit" name="updatecart" class="button-2 update-cart-button">@T("ShoppingCart.UpdateCart")</button>
+                    <div class="common-buttons desktop-cart-buttons">
+                        <button type="button" class="button-2 empty-cart-button">Empty cart</button>
+                        <button type="submit" name="updatecart" class="button-2 update-cart-button" style="display:none">@T("ShoppingCart.UpdateCart")</button>
                         <button type="submit" name="continueshopping" class="button-2 continue-shopping-button">@T("ShoppingCart.ContinueShopping")</button>
                     </div>
                 }
@@ -738,6 +828,19 @@
                     }
                 </div>
             </div>
+            
+            @* Cart action buttons moved after order summary *@
+            @if (Model.IsEditable)
+            {
+                <div class="cart-action-buttons">
+                    <div class="common-buttons">
+                        <button type="button" class="button-2 empty-cart-button">Empty cart</button>
+                        <button type="submit" name="updatecart" class="button-2 update-cart-button" style="display:none">@T("ShoppingCart.UpdateCart")</button>
+                        <button type="submit" name="continueshopping" class="button-2 continue-shopping-button">@T("ShoppingCart.ContinueShopping")</button>
+                    </div>
+                </div>
+            }
+            
             @if (Model.IsEditable)
             {
                 @await Component.InvokeAsync("CrossSellProducts")
@@ -763,21 +866,193 @@
             return;
         }
 
-        var i = 1;
-        function expandCartItems() {
-            setTimeout(function() {
-                for (button of document.getElementsByClassName("footable-toggle")) {
-                    button.click();
-                    i = 20;
-                }
-                i++;
-                // will attempt for 10 seconds
-                if (i < 10) {
-                    expandCartItems();
-                }
-            }, 1000)
-        }
-
-        expandCartItems();
+        // Expand only the first cart item once (mobile only)
+        setTimeout(function () {
+            var toggles = document.getElementsByClassName("footable-toggle");
+            if (toggles && toggles.length > 0) {
+                // Click only the first toggle
+                toggles[0].click();
+            }
+        }, 600);
     });
+</script>
+
+
+
+<script>
+(function () {
+  // Debounce to avoid multiple rapid submits
+  let submitTimer = null;
+
+  function submitCartUpdate() {
+    if (submitTimer) { clearTimeout(submitTimer); }
+    submitTimer = setTimeout(function () {
+      $('.spinner').removeClass('hidden-loading').show();
+      $('.qty-btn').prop('disabled', true);
+      $('#shopping-cart-form .update-cart-button').trigger('click');
+    }, 250);
+  }
+
+  // NEW: direct remove using your existing AJAX endpoint & handlers
+  function removeCartItem(itemId) {
+    $('.spinner').removeClass('hidden-loading').show();
+    $.ajax({
+      cache: false,
+      url: '/ShoppingCart/RemoveItem',
+      data: { 'shoppingCartItemId': itemId },
+      type: 'post',
+      success: success, 
+      error: error      
+    });
+  }
+
+  function adjustInput($input, delta) {
+    const current = parseInt($input.val(), 10);
+    let next = isNaN(current) ? 1 : current + delta;
+    if (next < 1) next = 1;
+    $input.val(next);
+    submitCartUpdate();
+  }
+
+  function adjustSelect($select, delta) {
+    const idx = $select.prop('selectedIndex');
+    let nextIdx = idx + delta;
+    const maxIdx = $select[0].options.length - 1;
+    if (nextIdx < 0) nextIdx = 0;
+    if (nextIdx > maxIdx) nextIdx = maxIdx;
+    if (nextIdx !== idx) {
+      $select.prop('selectedIndex', nextIdx).trigger('change');
+      submitCartUpdate();
+    }
+  }
+
+  (function () {
+  
+  // Deduplicate touchend → click on mobile
+  let lastTouchTs = 0;
+  function isTouchDedup(e) {
+    const now = Date.now();
+    if (e.type === 'touchend') { lastTouchTs = now; return false; }
+    if (e.type === 'click' && now - lastTouchTs < 400) return true;
+    return false;
+  }
+
+  // MOBILE-SAFE, HANDLER
+  $(document).on('touchend click', '.qty-minus, .qty-plus', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();      // block theme form-submit handlers
+    if (isTouchDedup(e)) return;
+
+    const $btn  = $(this);
+    if ($btn.prop('disabled')) return; // “minus disabled at 1”
+
+    const $wrap = $btn.closest('.qty-control');
+    // find the input/select inside THIS qty-control only (no global IDs)
+    const $ctrl = $wrap.find('.qty-input, .qty-dropdown').first();
+    if (!$ctrl.length) return;
+
+    const isPlus  = $btn.hasClass('qty-plus');
+    const isMinus = !isPlus;
+
+    // Enforce: minus is inactive at 1 (do nothing)
+    const val = parseInt($ctrl.val(), 10);
+    if (isMinus && (( $ctrl.is('select') && !isNaN(val) && val <= 1 )
+                 || ( !$ctrl.is('select') && (isNaN(val) || val <= 1) ))) {
+      return;
+    }
+
+    if ($ctrl.is('select')) {
+      adjustSelect($ctrl, isPlus ? 1 : -1);
+    } else {
+      adjustInput($ctrl, isPlus ? 1 : -1);
+    }
+  });
+})();
+
+
+
+
+
+
+  // this is for manual edits if someone types a number for the quantity it will still register
+  $(document).on('blur keydown', '.qty-input', function (e) {
+    if (e.type === 'keydown' && e.key !== 'Enter') return;
+    let v = parseInt(this.value, 10);
+    if (isNaN(v) || v < 1) v = 1;
+    this.value = v;
+    submitCartUpdate();
+  });
+})();
+</script>
+
+
+
+
+@* Disables the minus button when the quantity is at 1 to prevent people from emoving an item from cart by mistake *@
+<script>
+(function(){
+  function getVal($ctrl){
+    // Works for both input and select
+    var v = parseInt(($ctrl.val() || '').toString(), 10);
+    return isNaN(v) ? 1 : v;
+  }
+
+  function syncMinus($wrap){
+    var $minus = $wrap.find('.qty-minus');
+    var itemId = $minus.data('item-id');
+    var $ctrl  = $('#itemquantity' + itemId);
+    if (!$ctrl.length) return;
+
+    var val = getVal($ctrl);
+    var disable = val <= 1;
+
+    // Disable/enable the minus button + ARIA
+    $minus.prop('disabled', disable)
+          .attr('aria-disabled', disable ? 'true' : 'false')
+          .attr('title', disable ? 'Minimum quantity is 1' : 'Decrease');
+  }
+
+  function syncAll(){
+    $('.qty-control').each(function(){ syncMinus($(this)); });
+  }
+
+  // Initial sync
+  $(document).ready(syncAll);
+
+  // When user types or chooses a new quantity
+  $(document).on('input change', '.qty-input, .qty-dropdown', function(){
+    syncMinus($(this).closest('.qty-control'));
+  });
+
+  // After +/− is clicked (value is changed by your other handler)
+  $(document).on('click', '.qty-plus, .qty-minus', function(){
+    var $wrap = $(this).closest('.qty-control');
+    // let your existing handler run first, then re-check
+    setTimeout(function(){ syncMinus($wrap); }, 0);
+  });
+})();
+</script>
+
+<script>
+// Empty cart: checks all remove checkboxes and triggers submit
+$(document).on('click', '.empty-cart-button', function (e) {
+    e.preventDefault();
+    $('#shopping-cart-form input[name="removefromcart"]').prop('checked', true);
+    $('.spinner').removeClass('hidden-loading').show();
+    $('#shopping-cart-form .update-cart-button').trigger('click');
+});
+
+
+
+$(document).on('click', '.remove-item-btn', function () {
+    var itemId = $(this).data('item-id');
+    $('.spinner').show();
+    
+    // Check the hidden checkbox
+    $('#removefromcart' + itemId).prop('checked', true);
+    
+    // Submit the form to remove the item
+    $('#shopping-cart-form .update-cart-button').trigger('click');
+});
 </script>

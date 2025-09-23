@@ -791,7 +791,6 @@ label, label + * {
 	height: 37px;
 	margin: auto;
 	border: none;
-	background: #777 url('../img/account-sprite.png') center -37px no-repeat;
 	transition: all 0.2s ease;
 }
 .cart .remove-from-cart button:hover {
@@ -825,6 +824,70 @@ label, label + * {
 }
 .cart th.subtotal {
 	text-transform: uppercase;
+}
+
+/* Cart Plus and Minus Button */
+
+.quantity .qty-btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.quantity .qty-control{
+  display:inline-flex;
+  align-items:center;
+  flex-wrap:nowrap;
+  white-space:nowrap;
+  gap:.35rem;
+}
+
+.quantity .qty-btn{
+  width:2rem; height:2rem; line-height:2rem;
+  border:1px solid #ddd; border-radius:.4rem;
+  font-weight:700; background:#fff; cursor:pointer;
+}
+
+.quantity .qty-btn:disabled{ opacity:.5; cursor:not-allowed; }
+
+.quantity .qty-input,
+.quantity .qty-dropdown{
+  display:inline-block;
+  min-width:3.2rem;
+  text-align:center;
+  margin:0;
+  vertical-align:middle;
+}
+
+@media (max-width:600px){
+  .cart td.quantity { overflow:visible; }
+}
+
+/* Mobile */
+@media (max-width:1024px){
+button.qty-btn.qty-plus
+ {
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    border: 1px solid #ddd;
+    border-radius: .4rem;
+    font-weight: 700;
+    background: #fff;
+    cursor: pointer;
+}
+
+button.qty-btn.qty-minus
+ {
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    border: 1px solid #ddd;
+    border-radius: .4rem;
+    font-weight: 700;
+    background: #fff;
+    cursor: pointer;
+}
+
 }
 
 
@@ -4656,6 +4719,7 @@ input#sli_search_1 {
 	text-transform: uppercase;
 	outline: 2px solid transparent;
 	transition: all 0.2s ease;
+    background: #e4e4e494;
 }
 
 .cart-options {
