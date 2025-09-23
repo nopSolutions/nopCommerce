@@ -714,8 +714,8 @@ public partial class CustomerService : ICustomerService
                                   && !_forumPostRepository.Table.Any(fp => fp.CustomerId == id)
                             select id;
 
-            var guestIds = guestIdsQuery.Take(batchSize).ToList();
-            if (!guestIds.Any())
+            var guestIds = guestIdsQuery.Take(batchSize);
+            if (await guestIds.CountAsync() == 0)
                 break;
 
             // Step 2: Delete related data in batch
