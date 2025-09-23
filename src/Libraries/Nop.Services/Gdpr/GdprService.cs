@@ -32,6 +32,7 @@ public partial class GdprService : IGdprService
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
     protected readonly INewsService _newsService;
+    protected readonly IProductReviewService _productReviewService;
     protected readonly IProductService _productService;
     protected readonly IRepository<GdprConsent> _gdprConsentRepository;
     protected readonly IRepository<GdprLog> _gdprLogRepository;
@@ -51,6 +52,7 @@ public partial class GdprService : IGdprService
         IGenericAttributeService genericAttributeService,
         INewsService newsService,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
+        IProductReviewService productReviewService,
         IProductService productService,
         IRepository<GdprConsent> gdprConsentRepository,
         IRepository<GdprLog> gdprLogRepository,
@@ -66,6 +68,7 @@ public partial class GdprService : IGdprService
         _genericAttributeService = genericAttributeService;
         _newsService = newsService;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
+        _productReviewService = productReviewService;
         _productService = productService;
         _gdprConsentRepository = gdprConsentRepository;
         _gdprLogRepository = gdprLogRepository;
@@ -274,12 +277,12 @@ public partial class GdprService : IGdprService
             await _backInStockSubscriptionService.DeleteSubscriptionAsync(backInStockSubscription);
 
         //product review
-        var productReviews = await _productService.GetAllProductReviewsAsync(customer.Id);
+        var productReviews = await _productReviewService.GetAllProductReviewsAsync(customer.Id);
         var reviewedProducts = await _productService.GetProductsByIdsAsync(productReviews.Select(p => p.ProductId).Distinct().ToArray());
-        await _productService.DeleteProductReviewsAsync(productReviews);
+        await _productReviewService.DeleteProductReviewsAsync(productReviews);
         //update product totals
         foreach (var product in reviewedProducts)
-            await _productService.UpdateProductReviewTotalsAsync(product);
+            await _productReviewService.UpdateProductReviewTotalsAsync(product);
 
         //external authentication record
         foreach (var ear in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))

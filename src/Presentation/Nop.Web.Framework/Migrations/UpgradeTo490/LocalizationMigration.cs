@@ -165,7 +165,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.Products.Fields.MinimumAgeToPurchase"] = "Minimum age to purchase",
             ["Admin.Catalog.Products.Fields.MinimumAgeToPurchase.Hint"] = "Enter the minimum age for purchasing this product.",
             ["Admin.Catalog.Products.Fields.MinimumAgeToPurchase.ShouldBeGreaterThanZero"] = "The minimum age for purchasing should be greater 0",
-            ["ShoppingCart.DateOfBirthRequired"] = "This product has age restrictions. Please specify your age in the account details",
+            ["ShoppingCart.DateOfBirthRequired"] = "This product has age restrictions. Please specify your age in the account details.",
             ["ShoppingCart.MinimumAgeToPurchase"] = "This product is available to customers who are {0} years of age or older",
             ["Admin.Configuration.Settings.ProductEditor.AgeVerification"] = "Age verification",
 
@@ -187,8 +187,8 @@ public class LocalizationMigration : MigrationBase
             ["ActivityLog.PublicStore.PasswordChanged"] = "Public store. Customer has changed the password",
 
             //#7498
-            ["Admin.Configuration.AppSettings.Common.PermitLimit.Hint"] = "Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the limitation is off.",
-            ["Admin.Configuration.AppSettings.Common.QueueCount.Hint"] = "Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the Queue is off.",
+            ["Admin.Configuration.AppSettings.Common.PermitLimit.Hint"] = "Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0, then the limitation is off.",
+            ["Admin.Configuration.AppSettings.Common.QueueCount.Hint"] = "Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0, then the Queue is off.",
 
             //#4170
             ["Admin.Promotions.Campaigns.Copy.Name"] = "New campaign name",
@@ -266,8 +266,8 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType.Hint"] = "Enter the type of subscription.",
             ["Admin.Promotions.NewsLetterSubscription.Fields.Active.Hint"] = "A value indicating whether the subscription is active.",
             ["Admin.Promotions.NewsLetterSubscription.Fields.Email.Hint"] = "Enter the email of subscription.",
-            ["Admin.Promotions.NewsLetterSubscription.Fields.Store.Hint"] = "Choose store to subscribe to newsletter.",
-            ["Admin.Promotions.NewsLetterSubscription.Fields.Language.Hint"] = "Choose language to subscribe to newsletter.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Store.Hint"] = "Choose the store to subscribe to newsletter.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Language.Hint"] = "Choose the language to subscribe to newsletter.",
             ["Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn.Hint"] = "Date/Time the newsletter subscriptions entry was created.",
 
             //#820
@@ -315,7 +315,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Tax.HmrcApiUrl"] = "HMRC API URL",
             ["Admin.Configuration.Settings.Tax.HmrcApiUrl.Hint"] = "The base HMRC access API URL.",
             ["Admin.Configuration.Settings.Tax.HmrcClientId"] = "HMRC API client ID",
-            ["Admin.Configuration.Settings.Tax.HmrcClientId.Hint"] = "Your HMRC API client ID is a unique identifier which created when you added your application.",
+            ["Admin.Configuration.Settings.Tax.HmrcClientId.Hint"] = "Your HMRC API client ID is a unique identifier that was created when you added your application.",
             ["Admin.Configuration.Settings.Tax.HmrcClientSecret"] = "HMRC API client secret",
             ["Admin.Configuration.Settings.Tax.HmrcClientSecret.Hint"] = "Your client secret is a unique passphrase that you generate to authorise your application.",
 
@@ -325,7 +325,7 @@ public class LocalizationMigration : MigrationBase
             ["Account.EmailUsernameErrors.EmailTooLong"] = "Email address is too long",
             ["Account.ForumSubscriptions.Description"] = "You will receive an email when a new forum topic/post is created.",
             ["Admin.ContentManagement.MessageTemplates.Fields.BccEmailAddresses.Hint"] = "The blind carbon copy (BCC) recipients for this email message.",
-            ["BackInStockSubscriptions.Tooltip"] = "You'll receive a onetime email when this product is available for ordering again. We will not send you any other emails or add you to our newsletter; you will only be emailed about this product!",
+            ["BackInStockSubscriptions.Tooltip"] = "You'll receive a one-time email when this product is available for ordering again. We will not send you any other emails or add you to our newsletter; you will only be emailed about this product!",
 
             //#7390
             ["ActivityLog.AddNewMenu"] = "Added a new menu ('{0}')",

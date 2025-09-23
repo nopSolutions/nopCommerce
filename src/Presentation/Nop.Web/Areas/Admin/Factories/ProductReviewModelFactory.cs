@@ -28,6 +28,7 @@ public partial class ProductReviewModelFactory : IProductReviewModelFactory
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IHtmlFormatter _htmlFormatter;
     protected readonly ILocalizationService _localizationService;
+    protected readonly IProductReviewService _productReviewService;
     protected readonly IProductService _productService;
     protected readonly IReviewTypeService _reviewTypeService;
     protected readonly IStoreService _storeService;
@@ -43,6 +44,7 @@ public partial class ProductReviewModelFactory : IProductReviewModelFactory
         IDateTimeHelper dateTimeHelper,
         IHtmlFormatter htmlFormatter,
         ILocalizationService localizationService,
+        IProductReviewService productReviewService,
         IProductService productService,
         IReviewTypeService reviewTypeService,
         IStoreService storeService,
@@ -54,6 +56,7 @@ public partial class ProductReviewModelFactory : IProductReviewModelFactory
         _dateTimeHelper = dateTimeHelper;
         _htmlFormatter = htmlFormatter;
         _localizationService = localizationService;
+        _productReviewService = productReviewService;
         _productService = productService;
         _reviewTypeService = reviewTypeService;
         _storeService = storeService;
@@ -128,7 +131,7 @@ public partial class ProductReviewModelFactory : IProductReviewModelFactory
         var vendorId = vendor?.Id ?? 0;
 
         //get product reviews
-        var productReviews = await _productService.GetAllProductReviewsAsync(showHidden: true,
+        var productReviews = await _productReviewService.GetAllProductReviewsAsync(showHidden: true,
             customerId: 0,
             approved: isApprovedOnly,
             fromUtc: createdOnFromValue,

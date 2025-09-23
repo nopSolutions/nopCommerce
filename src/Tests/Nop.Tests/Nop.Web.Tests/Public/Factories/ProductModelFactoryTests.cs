@@ -34,6 +34,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories;
 public class ProductModelFactoryTests : WebTest
 {
     private IProductModelFactory _productModelFactory;
+    private IProductReviewService _productReviewService;
     private IProductService _productService;
     private IUrlRecordService _urlRecordService;
 
@@ -43,6 +44,7 @@ public class ProductModelFactoryTests : WebTest
     public void SetUp()
     {
         _productModelFactory = GetService<IProductModelFactory>();
+        _productReviewService = GetService<IProductReviewService>();
         _productService = GetService<IProductService>();
         _urlRecordService = GetService<IUrlRecordService>();
         _productModelFactoryForTest = GetService<ProductModelFactoryForTest>();
@@ -103,7 +105,7 @@ public class ProductModelFactoryTests : WebTest
     [Test]
     public async Task CanPrepareProductReviewsModel()
     {
-        var pId = (await _productService.GetProductReviewByIdAsync(1)).ProductId;
+        var pId = (await _productReviewService.GetProductReviewByIdAsync(1)).ProductId;
         var product = await _productService.GetProductByIdAsync(pId);
         var model = await _productModelFactory.PrepareProductReviewsModelAsync(product);
 
@@ -153,7 +155,7 @@ public class ProductModelFactoryTests : WebTest
 
     public class ProductModelFactoryForTest : ProductModelFactory
     {
-        public ProductModelFactoryForTest(CaptchaSettings captchaSettings, CatalogSettings catalogSettings, CustomerSettings customerSettings, ICategoryService categoryService, ICurrencyService currencyService, ICustomerService customerService, ICustomWishlistService customWishlistService, IDateRangeService dateRangeService, IDateTimeHelper dateTimeHelper, IDownloadService downloadService, IGenericAttributeService genericAttributeService, IJsonLdModelFactory jsonLdModelFactory, ILocalizationService localizationService, IManufacturerService manufacturerService, IPermissionService permissionService, IPictureService pictureService, IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter, IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService, IProductService productService, IProductTagService productTagService, IProductTemplateService productTemplateService, IReviewTypeService reviewTypeService, IShoppingCartService shoppingCartService, ISpecificationAttributeService specificationAttributeService, IStaticCacheManager staticCacheManager, IStoreContext storeContext, IStoreService storeService, IShoppingCartModelFactory shoppingCartModelFactory, ITaxService taxService, IUrlRecordService urlRecordService, IVendorService vendorService, IVideoService videoService, IWebHelper webHelper, IWorkContext workContext, MediaSettings mediaSettings, OrderSettings orderSettings, SeoSettings seoSettings, ShippingSettings shippingSettings, VendorSettings vendorSettings) : base(captchaSettings, catalogSettings, customerSettings, categoryService, currencyService, customerService, customWishlistService, dateRangeService, dateTimeHelper, downloadService, genericAttributeService, jsonLdModelFactory, localizationService, manufacturerService, permissionService, pictureService, priceCalculationService, priceFormatter, productAttributeParser, productAttributeService, productService, productTagService, productTemplateService, reviewTypeService, shoppingCartService, specificationAttributeService, staticCacheManager, storeContext, storeService, shoppingCartModelFactory, taxService, urlRecordService, vendorService, videoService, webHelper, workContext, mediaSettings, orderSettings, seoSettings, shippingSettings, vendorSettings)
+        public ProductModelFactoryForTest(CaptchaSettings captchaSettings, CatalogSettings catalogSettings, CustomerSettings customerSettings, ICategoryService categoryService, ICurrencyService currencyService, ICustomerService customerService, ICustomWishlistService customWishlistService, IDateRangeService dateRangeService, IDateTimeHelper dateTimeHelper, IDownloadService downloadService, IGenericAttributeService genericAttributeService, IJsonLdModelFactory jsonLdModelFactory, ILocalizationService localizationService, IManufacturerService manufacturerService, IPermissionService permissionService, IPictureService pictureService, IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter, IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService, IProductReviewService productReviewService, IProductService productService, IProductTagService productTagService, IProductTemplateService productTemplateService, IReviewTypeService reviewTypeService, IShoppingCartService shoppingCartService, ISpecificationAttributeService specificationAttributeService, IStaticCacheManager staticCacheManager, IStoreContext storeContext, IStoreService storeService, IShoppingCartModelFactory shoppingCartModelFactory, ITaxService taxService, IUrlRecordService urlRecordService, IVendorService vendorService, IVideoService videoService, IWebHelper webHelper, IWorkContext workContext, MediaSettings mediaSettings, OrderSettings orderSettings, SeoSettings seoSettings, ShippingSettings shippingSettings, VendorSettings vendorSettings) : base(captchaSettings, catalogSettings, customerSettings, categoryService, currencyService, customerService, customWishlistService, dateRangeService, dateTimeHelper, downloadService, genericAttributeService, jsonLdModelFactory, localizationService, manufacturerService, permissionService, pictureService, priceCalculationService, priceFormatter, productAttributeParser, productAttributeService, productReviewService, productService, productTagService, productTemplateService, reviewTypeService, shoppingCartService, specificationAttributeService, staticCacheManager, storeContext, storeService, shoppingCartModelFactory, taxService, urlRecordService, vendorService, videoService, webHelper, workContext, mediaSettings, orderSettings, seoSettings, shippingSettings, vendorSettings)
         {
         }
 

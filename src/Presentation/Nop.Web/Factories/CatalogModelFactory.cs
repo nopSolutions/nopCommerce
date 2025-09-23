@@ -49,6 +49,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
     protected readonly INopUrlHelper _nopUrlHelper;
     protected readonly IPictureService _pictureService;
     protected readonly IProductModelFactory _productModelFactory;
+    protected readonly IProductReviewService _productReviewService;
     protected readonly IProductService _productService;
     protected readonly IProductTagService _productTagService;
     protected readonly ISearchTermService _searchTermService;
@@ -86,6 +87,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         INopUrlHelper nopUrlHelper,
         IPictureService pictureService,
         IProductModelFactory productModelFactory,
+        IProductReviewService productReviewService,
         IProductService productService,
         IProductTagService productTagService,
         ISearchTermService searchTermService,
@@ -118,6 +120,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         _nopUrlHelper = nopUrlHelper;
         _pictureService = pictureService;
         _productModelFactory = productModelFactory;
+        _productReviewService = productReviewService;
         _productService = productService;
         _productTagService = productTagService;
         _searchTermService = searchTermService;
@@ -1271,7 +1274,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorReviewsModelKey, vendor, currentStore);
         var vendorReviewModels = await _staticCacheManager.GetAsync(cacheKey, async () =>
         {
-            var vendorReviews = await _productService.GetAllProductReviewsAsync(
+            var vendorReviews = await _productReviewService.GetAllProductReviewsAsync(
                 vendorId: vendor.Id,
                 approved: true,
                 storeId: currentStore.Id);

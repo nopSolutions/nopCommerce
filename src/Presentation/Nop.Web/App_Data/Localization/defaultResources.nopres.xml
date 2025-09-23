@@ -4768,13 +4768,13 @@
     <Value>Permit limit</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.PermitLimit.Hint">
-    <Value>Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 than limitation is off.</Value>
+    <Value>Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0, then the limitation is off.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.QueueCount">
     <Value>Queue count</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.QueueCount.Hint">
-    <Value>Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the Queue is off.</Value>
+    <Value>Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0, then the Queue is off.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.RejectionStatusCode">
     <Value>Rejection status code</Value>
@@ -9602,7 +9602,7 @@
     <Value>HMRC API client ID</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcClientId.Hint">
-    <Value>Your HMRC API client ID is a unique identifier which created when you added your application.</Value>
+    <Value>Your HMRC API client ID is a unique identifier that was created when you added your application.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcClientSecret">
     <Value>HMRC API client secret</Value>
@@ -15168,13 +15168,13 @@
     <Value>Language</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Language.Hint">
-    <Value>Choose language to subscribe to newsletter.</Value>
+    <Value>Choose the language to subscribe to newsletter.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Store">
     <Value>Store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Store.Hint">
-    <Value>Choose store to subscribe to newsletter.</Value>
+    <Value>Choose the store to subscribe to newsletter.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType">
     <Value>Subscription type</Value>
@@ -17382,7 +17382,7 @@
     <Value>Receive an email when this arrives in stock</Value>
   </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.Tooltip">
-    <Value>You'll receive a onetime email when this product is available for ordering again. We will not send you any other emails or add you to our newsletter; you will only be emailed about this product!</Value>
+    <Value>You'll receive a one-time email when this product is available for ordering again. We will not send you any other emails or add you to our newsletter; you will only be emailed about this product!</Value>
   </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.Unsubscribe">
     <Value>Unsubscribe</Value>
@@ -20886,7 +20886,7 @@
     <Value>The price must be from {0} to {1}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.DateOfBirthRequired">
-    <Value>This product has age restrictions. Please specify your age in the account details</Value>
+    <Value>This product has age restrictions. Please specify your age in the account details.</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Discount.CannotBeUsed">
     <Value>You cannot use this discount coupon because the validation conditions are not met</Value>

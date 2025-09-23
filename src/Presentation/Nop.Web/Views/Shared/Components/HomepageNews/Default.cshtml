@@ -13,7 +13,7 @@
             {
                 <article class="news-item">
                     <header class="news-head">
-                        <a class="news-title" href="@(Url.RouteUrl<NewsItem>(new { SeName = item.SeName }))">
+                        <a class="news-title" href="@(await NopUrl.RouteGenericUrlAsync<NewsItem>(new { SeName = item.SeName }))">
                             <h3>@item.Title</h3>
                         </a>
                         <time datetime="@item.CreatedOn.ToString("yyyy-MM-dd")" class="news-date">-@item.CreatedOn.ToString("D")</time>
@@ -22,7 +22,7 @@
                         @Html.Raw(item.Short)
                     </section>
                     <footer class="buttons">
-                        <a href="@(Url.RouteUrl<NewsItem>(new { SeName = item.SeName }))" class="read-more">@T("News.MoreInfo")</a>
+                        <a href="@(await NopUrl.RouteGenericUrlAsync<NewsItem>(new { SeName = item.SeName }))" class="read-more">@T("News.MoreInfo")</a>
                     </footer>
                 </article>
             }

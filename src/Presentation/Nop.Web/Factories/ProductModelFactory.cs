@@ -63,6 +63,7 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly IPriceFormatter _priceFormatter;
     protected readonly IProductAttributeParser _productAttributeParser;
     protected readonly IProductAttributeService _productAttributeService;
+    protected readonly IProductReviewService _productReviewService;
     protected readonly IProductService _productService;
     protected readonly IProductTagService _productTagService;
     protected readonly IProductTemplateService _productTemplateService;
@@ -110,6 +111,7 @@ public partial class ProductModelFactory : IProductModelFactory
         IPriceFormatter priceFormatter,
         IProductAttributeParser productAttributeParser,
         IProductAttributeService productAttributeService,
+        IProductReviewService productReviewService,
         IProductService productService,
         IProductTagService productTagService,
         IProductTemplateService productTemplateService,
@@ -152,6 +154,7 @@ public partial class ProductModelFactory : IProductModelFactory
         _priceFormatter = priceFormatter;
         _productAttributeParser = productAttributeParser;
         _productAttributeService = productAttributeService;
+        _productReviewService = productReviewService;
         _productService = productService;
         _productTagService = productTagService;
         _productTemplateService = productTemplateService;
@@ -599,7 +602,7 @@ public partial class ProductModelFactory : IProductModelFactory
 
             productReview = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var productReviews = await _productService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: currentStore.Id);
+                var productReviews = await _productReviewService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: currentStore.Id);
 
                 return new ProductReviewOverviewModel
                 {
@@ -622,7 +625,7 @@ public partial class ProductModelFactory : IProductModelFactory
             productReview.ProductId = product.Id;
             productReview.AllowCustomerReviews = product.AllowCustomerReviews;
             productReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync());
-            productReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
+            productReview.CanAddNewReview = await _productReviewService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
         }
 
         return productReview;
@@ -1690,7 +1693,7 @@ public partial class ProductModelFactory : IProductModelFactory
 
         var currentStore = await _storeContext.GetCurrentStoreAsync();
 
-        var productReviews = await _productService.GetAllProductReviewsAsync(
+        var productReviews = await _productReviewService.GetAllProductReviewsAsync(
             approved: true,
             productId: product.Id,
             storeId: _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
@@ -1798,7 +1801,7 @@ public partial class ProductModelFactory : IProductModelFactory
 
         model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !await _customerService.IsGuestAsync(currentCustomer);
         model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
-        model.AddProductReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
+        model.AddProductReview.CanAddNewReview = await _productReviewService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
 
         return model;
     }
@@ -1824,7 +1827,7 @@ public partial class ProductModelFactory : IProductModelFactory
         var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();
 
-        var list = await _productService.GetAllProductReviewsAsync(
+        var list = await _productReviewService.GetAllProductReviewsAsync(
             customerId: customer.Id,
             approved: null,
             storeId: _catalogSettings.ShowProductReviewsPerStore ? store.Id : 0,

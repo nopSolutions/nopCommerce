@@ -33,7 +33,7 @@
                 <div class="swiper-wrapper">
                     @foreach (var picture in Model.PictureModels)
                     {
-                        <a class="swiper-slide" href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" title="@picture.Title">
+                        <a class="swiper-slide" href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = Model.SeName }))" title="@picture.Title">
                             <img alt="@picture.AlternateText" src="@picture.ImageUrl" title="@picture.Title" />
                         </a>
                     }
@@ -54,14 +54,14 @@
         else
         {
             var picture = Model.PictureModels.FirstOrDefault();
-            <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" title="@picture?.Title">
+            <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = Model.SeName }))" title="@picture?.Title">
                 <img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" />
             </a>
         }
     </div>
     <div class="details">
         <h2 class="product-title">
-            <a href="@(Url.RouteUrl<Product>(new {SeName = Model.SeName }))">@Model.Name</a>
+            <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new {SeName = Model.SeName }))">@Model.Name</a>
         </h2>
         @if (catalogSettings.ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
         {
@@ -100,7 +100,7 @@
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                     //of course, you can modify appropriate locales to include VAT info there
                     <span class="tax-shipping-info">
-                        @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteTopicUrl("shippinginfo"))
+                        @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", await NopUrl.RouteTopicUrlAsync("shippinginfo"))
                     </span>
                 }
                 @if (!string.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))

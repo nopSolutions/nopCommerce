@@ -21,7 +21,7 @@
                 @foreach (var item in Model.Tags)
                 {
                     <li>
-                        <a href="@(Url.RouteUrl<ProductTag>(new { SeName = item.SeName }))" class="producttag" style="font-size:@(Model.GetFontSize(item))%;">
+                        <a href="@(await NopUrl.RouteGenericUrlAsync<ProductTag>(new { SeName = item.SeName }))" class="producttag" style="font-size:@(Model.GetFontSize(item))%;">
                             @item.Name
                         </a>
                     </li>
