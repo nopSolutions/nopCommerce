@@ -681,7 +681,9 @@ i.false-icon {
 
 /*override font-awesome styles*/
 .fa, .far, .fas {
-  font-size: 1.01em;
+  display: inline;
+  padding-right: 5px;
+  font-size: 1.0em;
 }
 
 /*typeahead*/
@@ -1828,8 +1830,7 @@ span.grid-report-item {
 }
 
   .table > tbody > tr > td.button-column .btn {
-    margin-top: 1px;
-    margin-bottom: 1px;
+    margin: 10px;
     padding: 5px 12px;
     white-space: nowrap;
   }

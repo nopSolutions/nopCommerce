@@ -691,7 +691,9 @@ i.false-icon {
 
 /*override font-awesome styles*/
 .fa, .far, .fas {
-  font-size: 1.01em;
+  display: inline;
+  padding-left: 5px;
+  font-size: 1.0em;
 }
 
 /*typeahead*/
@@ -1872,12 +1874,11 @@ span.grid-report-item.red {
   padding: 2px;
 }
 
-.table > tbody > tr > td.button-column .btn {
-  margin-top: 1px;
-  margin-bottom: 1px;
-  padding: 5px 12px;
-  white-space: nowrap;
-}
+  .table > tbody > tr > td.button-column .btn {
+    margin: 10px;
+    padding: 5px 12px;
+    white-space: nowrap;
+  }
 
 div.dt-container .data-tables-refresh > div {
   float: none;
