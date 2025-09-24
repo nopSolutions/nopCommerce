@@ -226,7 +226,7 @@ public partial class OrderModelFactory : IOrderModelFactory
 
         var model = new CustomerOrderListModel
         {
-            AvailableLimits = new SelectList(periods, "ID", "Name", limit.ToString()),
+            AvailableLimits = new SelectList(periods, "ID", "Name", limit.ToString()).ToList(),
             PagerModel = new PagerModel(_localizationService)
             {
                 PageSize = orders.PageSize,
