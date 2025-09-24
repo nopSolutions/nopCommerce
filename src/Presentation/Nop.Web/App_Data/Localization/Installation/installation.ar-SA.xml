@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="عربي" IsDefault="false" IsRightToLeft="true">
   <LocaleResource Name="AdminEmail">
     <Value>البريد الالكتروني لمدير الموقع</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>ادخل كلمة المرور لحساب المدير</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>مجموعة الأحرف</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>التجميع</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>الترتيب مطلوب</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>الحساب '{0}' لا يملك حقوق التعديل على المجلد '{1}'. الرجاء منح حقوق التعديل على هذا المجلد</Value>

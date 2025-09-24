@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Српски" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Адреса е-поште администратора</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Унесите лозинку администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Сет знакова</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Collation је обавезна</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>Рачун '{0}' није одобрен са дозволом за промену у мапи '{1}'. конфигуришите ове дозволе.</Value>
@@ -34,10 +43,10 @@
     <Value>Погрешан формат SQL везе</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Земља</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Одабери земљу...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Креирајте базу података ако не постоји</Value>
@@ -133,7 +142,7 @@
     <Value>Информације о продавцу</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Претплатите се на билтен nopCommerce-а</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce инсталација</Value>

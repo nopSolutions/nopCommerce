@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="বাংলা (বাংলাদেশ)" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>অ্যাডমিন ইমেইল</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>অ্যাডমিন পাসওয়ার্ড লিখুন</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>অক্ষর সেট</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>কোলেশন</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>সংগ্রহ প্রয়োজন</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>'{1}' ফোল্ডারটি পরিবর্তনের অনুমতি '{0}' অ্যাকাউন্টের নেই। অনুগ্রহ করে অনুমতিগুলো কনফিগার করে নিন। </Value>

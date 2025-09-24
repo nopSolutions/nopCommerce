@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Հայերեն" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Ադմինիստրատորի էլ. փոստ</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Մուտքագրեք ադմինիստրատորի գաղտնաբառը</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Նիշերի հավաքածու</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Համադրում</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Համադրում պարտադիր է</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>Համակարգի '{0}' օգտագործողը չունի '{1}' թղթապանակում գրելու համար անհրաժեշտ թույլտվություններ: Խնդրում ենք կարգավորել այդ թույլտվությունները:</Value>

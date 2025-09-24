@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Français" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>E-mail l'utilisateur Admin</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Entrez mot de passe admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Jeu de caractères</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Classement</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Le classement est requis</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>Le '{0}'compte n'est pas accordé avec l'autorisation de modification sur le dossier '{1}'. S'il vous plaît configurer ces autorisations</Value>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Italiano" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email amministratore</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Inserire la password dell'amministratore</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Set di caratteri</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Regole di confronto</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>È richiesta la confronto</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>All'account '{0}' non è concessa l'autorizzazione Modifica alla cartella '{1}'. Si prega di configurare queste autorizzazioni.</Value>

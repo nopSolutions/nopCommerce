@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Català" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Adreça de correu d’usuari administrador</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Introdueix contrasenya d'usuari administrador</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Joc de caràcters</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Las intercalaciones</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Es requereix las intercalaciones</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>El compte '{0}' no està configurat amb el permís Modificar a la carpeta '{1}'. Si us plau, configureu aquests permisos.</Value>

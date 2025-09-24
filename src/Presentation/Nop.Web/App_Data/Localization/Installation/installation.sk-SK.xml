@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Slovensky" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email administrátora</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Zadajte heslo administrátora</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Znaková sada</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Zoradenie</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Zoradenie je potrebná</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>Účet '{0}' nemá oprávnenie ku zmenám v adresári '{1}'. Prosím, nastavte oprávnenie.</Value>
@@ -133,7 +142,7 @@
     <Value>Informácie o obchode</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Prihláste sa na odber noviniek nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>Inštalácia nopCommerce</Value>
