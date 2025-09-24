@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
 using Nop.Services.Common;
@@ -10,11 +11,11 @@ namespace Nop.Services.Reminders;
 /// <summary>
 /// Represents a reminder event consumer
 /// </summary>
-public partial class RemindersEventConsumer :
+public partial class ReminderEventConsumer :
     IConsumer<EntityDeletedEvent<ShoppingCartItem>>,
     IConsumer<EntityInsertedEvent<ShoppingCartItem>>,
     IConsumer<EntityUpdatedEvent<ShoppingCartItem>>,
-    IConsumer<CustomerRegisteredEvent>,
+    IConsumer<CustomerActivatedEvent>,
     IConsumer<OrderStatusChangedEvent>
 {
     #region Fields
@@ -26,7 +27,8 @@ public partial class RemindersEventConsumer :
 
     #region Ctor
 
-    public RemindersEventConsumer(ICustomerService customerService, IGenericAttributeService genericAttributeService)
+    public ReminderEventConsumer(ICustomerService customerService,
+        IGenericAttributeService genericAttributeService)
     {
         _customerService = customerService;
         _genericAttributeService = genericAttributeService;
@@ -36,10 +38,20 @@ public partial class RemindersEventConsumer :
 
     #region Utilities
 
-    protected virtual async Task RemoveFollowUpAttribute(Customer customer, string followUpAttributeName)
+    /// <summary>
+    /// Remove attribute
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <param name="entity">Entity entry</param>
+    /// <param name="attributeName">Attribute name</param>
+    /// <param name="storeId">Store identifier</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task RemoveFollowUpAttributeAsync<TEntity>(TEntity entity, string attributeName, int storeId = 0) where TEntity : BaseEntity
     {
-        if (customer is not null)
-            await _genericAttributeService.SaveAttributeAsync<int?>(customer, followUpAttributeName, null);
+        if (entity is null)
+            return;
+
+        await _genericAttributeService.SaveAttributeAsync<int?>(entity, attributeName, null, storeId);
     }
 
     #endregion
@@ -51,10 +63,10 @@ public partial class RemindersEventConsumer :
     /// </summary>
     /// <param name="eventMessage">The event message.</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<ShoppingCartItem> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<ShoppingCartItem> eventMessage)
     {
         var customer = await _customerService.GetCustomerByIdAsync(eventMessage.Entity.CustomerId);
-        await RemoveFollowUpAttribute(customer, RemindersDefaults.AbandonedCarts.FollowUpAttributeName);
+        await RemoveFollowUpAttributeAsync(customer, NopReminderDefaults.AbandonedCarts.FollowUpAttributeName, eventMessage.Entity.StoreId);
     }
 
     /// <summary>
@@ -62,10 +74,10 @@ public partial class RemindersEventConsumer :
     /// </summary>
     /// <param name="eventMessage">The event message.</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<ShoppingCartItem> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<ShoppingCartItem> eventMessage)
     {
         var customer = await _customerService.GetCustomerByIdAsync(eventMessage.Entity.CustomerId);
-        await RemoveFollowUpAttribute(customer, RemindersDefaults.AbandonedCarts.FollowUpAttributeName);
+        await RemoveFollowUpAttributeAsync(customer, NopReminderDefaults.AbandonedCarts.FollowUpAttributeName, eventMessage.Entity.StoreId);
     }
 
     /// <summary>
@@ -73,10 +85,10 @@ public partial class RemindersEventConsumer :
     /// </summary>
     /// <param name="eventMessage">The event message.</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
     {
         var customer = await _customerService.GetCustomerByIdAsync(eventMessage.Entity.CustomerId);
-        await RemoveFollowUpAttribute(customer, RemindersDefaults.AbandonedCarts.FollowUpAttributeName);
+        await RemoveFollowUpAttributeAsync(customer, NopReminderDefaults.AbandonedCarts.FollowUpAttributeName, eventMessage.Entity.StoreId);
     }
 
     #endregion
@@ -84,13 +96,14 @@ public partial class RemindersEventConsumer :
     #region Registration
 
     /// <summary>
-    /// Handle customer registered event
+    /// Handle customer activated event
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(CustomerRegisteredEvent eventMessage)
+    public virtual async Task HandleEventAsync(CustomerActivatedEvent eventMessage)
     {
-        await RemoveFollowUpAttribute(eventMessage?.Customer, RemindersDefaults.IncompleteRegistrations.FollowUpAttributeName);
+        var customer = eventMessage?.Customer;
+        await RemoveFollowUpAttributeAsync(customer, NopReminderDefaults.IncompleteRegistrations.FollowUpAttributeName, customer?.RegisteredInStoreId ?? 0);
     }
 
     #endregion
@@ -102,16 +115,15 @@ public partial class RemindersEventConsumer :
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(OrderStatusChangedEvent eventMessage)
+    public virtual async Task HandleEventAsync(OrderStatusChangedEvent eventMessage)
     {
-        if (eventMessage?.Order == null)
+        if (eventMessage?.Order is null)
             return;
 
-        if (eventMessage.Order.OrderStatus != OrderStatus.Complete)
+        if (eventMessage.Order.OrderStatus != OrderStatus.Complete && eventMessage.Order.OrderStatus != OrderStatus.Processing)
             return;
 
-        var customer = await _customerService.GetCustomerByIdAsync(eventMessage.Order.CustomerId);
-        await RemoveFollowUpAttribute(customer, RemindersDefaults.PendingOrders.FollowUpAttributeName);
+        await RemoveFollowUpAttributeAsync(eventMessage.Order, NopReminderDefaults.PendingOrders.FollowUpAttributeName);
     }
 
     #endregion

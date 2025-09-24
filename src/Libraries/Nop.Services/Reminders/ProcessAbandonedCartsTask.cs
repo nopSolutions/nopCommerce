@@ -1,10 +1,12 @@
-﻿using Nop.Core.Domain.Messages;
+﻿using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Reminders;
+using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Messages;
-using Nop.Services.Orders;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Stores;
 
@@ -20,10 +22,14 @@ public partial class ProcessAbandonedCartsTask : IScheduleTask
     protected readonly ICustomerService _customerService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IMessageTemplateService _messageTemplateService;
-    protected readonly IShoppingCartService _shoppingCartService;
+    protected readonly IRepository<Customer> _customerRepository;
+    protected readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
+    protected readonly IRepository<GenericAttribute> _genericAttributeRepository;
+    protected readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
     protected readonly IStoreService _storeService;
     protected readonly IWorkflowMessageService _workflowMessageService;
-    protected readonly RemindersSettings _remindersSettings;
+    protected readonly ReminderSettings _reminderSettings;
+    protected readonly ShoppingCartSettings _shoppingCartSettings;
 
     #endregion
 
@@ -32,18 +38,26 @@ public partial class ProcessAbandonedCartsTask : IScheduleTask
     public ProcessAbandonedCartsTask(ICustomerService customerService,
         IGenericAttributeService genericAttributeService,
         IMessageTemplateService messageTemplateService,
-        IShoppingCartService shoppingCartService,
+        IRepository<Customer> customerRepository,
+        IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
+        IRepository<GenericAttribute> genericAttributeRepository,
+        IRepository<ShoppingCartItem> shoppingCartRepository,
         IStoreService storeService,
         IWorkflowMessageService workflowMessageService,
-        RemindersSettings remindersSettings)
+        ReminderSettings reminderSettings,
+        ShoppingCartSettings shoppingCartSettings)
     {
         _customerService = customerService;
         _genericAttributeService = genericAttributeService;
         _messageTemplateService = messageTemplateService;
-        _shoppingCartService = shoppingCartService;
+        _customerRepository = customerRepository;
+        _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
+        _genericAttributeRepository = genericAttributeRepository;
+        _shoppingCartRepository = shoppingCartRepository;
         _storeService = storeService;
         _workflowMessageService = workflowMessageService;
-        _remindersSettings = remindersSettings;
+        _reminderSettings = reminderSettings;
+        _shoppingCartSettings = shoppingCartSettings;
     }
 
     #endregion
@@ -55,50 +69,87 @@ public partial class ProcessAbandonedCartsTask : IScheduleTask
     /// </summary>
     public virtual async Task ExecuteAsync()
     {
-        if (!_remindersSettings.AbandonedCartEnabled)
+        if (!_reminderSettings.AbandonedCartEnabled)
+            return;
+
+        var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
+        var attributeName = NopReminderDefaults.AbandonedCarts.FollowUpAttributeName;
+
+        //get registered customers with abandoned carts
+        var customersWithItems = _shoppingCartRepository.Table
+            .Join(_customerRepository.Table, item => item.CustomerId, customer => customer.Id,
+                (item, customer) => new { Customer = customer, Item = item })
+            .Join(_customerCustomerRoleMappingRepository.Table, item => item.Customer.Id, role => role.CustomerId,
+                (item, role) => new { Customer = item.Customer, Item = item.Item, Role = role })
+            .SelectMany(item => _genericAttributeRepository.Table
+                .Where(attribute => attribute.EntityId == item.Customer.Id && attribute.KeyGroup == nameof(Customer) && attribute.Key == attributeName)
+                .DefaultIfEmpty(),
+                (item, attribute) => new { Customer = item.Customer, Item = item.Item, Role = item.Role, Attribute = attribute })
+            .Where(item => !item.Customer.Deleted && item.Role.CustomerRoleId != guestRole.Id)
+            .Where(item => item.Item.ShoppingCartTypeId == (int)ShoppingCartType.ShoppingCart)
+            .Select(item => new { Customer = item.Customer, Item = item.Item, Attribute = item.Attribute })
+            .ToList();
+
+        if (!customersWithItems.Any())
             return;
 
         foreach (var store in await _storeService.GetAllStoresAsync())
         {
-            //get registered customers with abandoned carts
-            var customersWithCart = await (await _customerService
-                .GetCustomersWithShoppingCartsAsync(ShoppingCartType.ShoppingCart, storeId: store.Id))
-                .WhereAwait(async customer => await _customerService.IsRegisteredAsync(customer))
+            //get customers with abandoned carts for the current store
+            var customersWithCart = customersWithItems
+                .GroupBy(customerItem => customerItem.Customer.Id)
+                .Select(group => new
+                {
+                    Customer = group.Select(item => item.Customer).FirstOrDefault(customer => customer.Id == group.Key),
+                    Attribute = group.Select(item => item.Attribute).FirstOrDefault(attribute => attribute?.StoreId == store.Id),
+                    Cart = group
+                        .Select(item => item.Item)
+                        .Where(item => _shoppingCartSettings.CartsSharedBetweenStores || item.StoreId == store.Id)
+                        .DistinctBy(item => item.Id)
+                        .ToList()
+                })
+                .Where(customer => customer.Cart.Any())
+                .ToList();
+
+            if (!customersWithCart.Any())
+                continue;
+
+            //get message templates
+            var messageTemplates = await NopReminderDefaults.AbandonedCarts.FollowUpList
+                .SelectManyAwait(async followUp => await _messageTemplateService.GetMessageTemplatesByNameAsync(followUp, store.Id))
                 .ToListAsync();
 
-            for (var followUpNumber = 1; followUpNumber <= RemindersDefaults.AbandonedCarts.FollowUpList.Length; followUpNumber++)
+            foreach (var customer in customersWithCart)
             {
-                var followUpMessageName = RemindersDefaults.AbandonedCarts.FollowUpList[followUpNumber - 1];
-                var followUpMessage = (await _messageTemplateService.GetMessageTemplatesByNameAsync(followUpMessageName))
-                    .FirstOrDefault();
+                MessageTemplate followUpMessage = null;
+                _ = int.TryParse(customer.Attribute?.Value ?? string.Empty, out var lastFollowUp);
 
-                if (followUpMessage is null || !followUpMessage.IsActive)
-                    continue;
-
-                if (followUpMessage.DelayBeforeSend is null)
+                while (followUpMessage is null && lastFollowUp < NopReminderDefaults.AbandonedCarts.FollowUpList.Length)
+                {
+                    lastFollowUp++;
+                    followUpMessage = messageTemplates
+                        .FirstOrDefault(template => template.Name == NopReminderDefaults.AbandonedCarts.FollowUpList[lastFollowUp - 1]
+                            && template.IsActive
+                            && template.DelayBeforeSend is not null);
+                }
+                if (followUpMessage is null)
                     continue;
 
                 var timeToFollowUp = DateTime.UtcNow - TimeSpan.FromHours(followUpMessage.DelayPeriod.ToHours(followUpMessage.DelayBeforeSend.Value));
 
-                foreach (var customer in customersWithCart)
-                {
-                    var lastFollowUp = await _genericAttributeService.GetAttributeAsync<int>(customer, RemindersDefaults.AbandonedCarts.FollowUpAttributeName);
+                //check the last updated date or the last follow up sent date
+                var lastUpdatedDate = customer.Cart.Max(item => item.UpdatedOnUtc);
+                if (customer.Attribute?.CreatedOrUpdatedDateUTC is not null && customer.Attribute.CreatedOrUpdatedDateUTC.Value > lastUpdatedDate)
+                    lastUpdatedDate = customer.Attribute.CreatedOrUpdatedDateUTC.Value;
+                if (lastUpdatedDate > timeToFollowUp)
+                    continue;
 
-                    if (lastFollowUp >= followUpNumber)
-                        continue;
+                var emailIds = await _workflowMessageService
+                    .SendAbandonedCartFollowUpCustomerNotificationAsync(customer.Customer, customer.Cart, store.Id, followUpMessage.Name);
 
-                    var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart);
-                    if (!cart.Any())
-                        continue;
-
-                    if (cart.Max(ci => ci.CreatedOnUtc) < timeToFollowUp)
-                    {
-                        var emailIds = await _workflowMessageService.SendAbandonedCartFollowUpCustomerNotificationAsync(customer, cart, followUpMessageName);
-
-                        if (emailIds.Any())
-                            await _genericAttributeService.SaveAttributeAsync(customer, RemindersDefaults.AbandonedCarts.FollowUpAttributeName, followUpNumber);
-                    }
-                }
+                //the follow up has been sent
+                if (emailIds.Any())
+                    await _genericAttributeService.SaveAttributeAsync(customer.Customer, attributeName, lastFollowUp, store.Id);
             }
         }
     }

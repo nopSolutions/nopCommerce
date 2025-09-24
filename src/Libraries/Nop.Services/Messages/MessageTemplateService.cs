@@ -114,8 +114,7 @@ public partial class MessageTemplateService : IMessageTemplateService
                 templatesQuery = await _storeMappingService.ApplyStoreMapping(templatesQuery, storeId.Value);
             }
 
-            return await templatesQuery.OrderBy(messageTemplate => messageTemplate.Id)
-            .ToListAsync();
+            return await templatesQuery.OrderBy(messageTemplate => messageTemplate.Id).ToListAsync();
         });
     }
 

@@ -748,7 +748,10 @@ public partial interface IWorkflowMessageService
     /// Sends a registration activation follow up to a customer
     /// </summary>
     /// <param name="customer">Customer</param>
-    /// <returns>Queued email identifiers</returns>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifiers
+    /// </returns>
     Task<IList<int>> SendIncompleteRegistrationNotificationMessageAsync(Customer customer);
 
     /// <summary>
@@ -756,9 +759,14 @@ public partial interface IWorkflowMessageService
     /// </summary>
     /// <param name="customer">Customer</param>
     /// <param name="cart">Shopping cart</param>
+    /// <param name="storeId">Store identifier</param>
     /// <param name="messageTemplateName">Follow up message name</param>
-    /// <returns>Queued email identifiers</returns>
-    Task<IList<int>> SendAbandonedCartFollowUpCustomerNotificationAsync(Customer customer, IList<ShoppingCartItem> cart, string messageTemplateName);
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifiers
+    /// </returns>
+    Task<IList<int>> SendAbandonedCartFollowUpCustomerNotificationAsync(Customer customer,
+        IList<ShoppingCartItem> cart, int storeId, string messageTemplateName);
 
     /// <summary>
     /// Sends a pending order follow up to a customer
@@ -766,7 +774,10 @@ public partial interface IWorkflowMessageService
     /// <param name="customer">Customer</param>
     /// <param name="order">Order</param>
     /// <param name="messageTemplateName">Follow up message name</param>
-    /// <returns>Queued email identifiers</returns>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifiers
+    /// </returns>
     Task<IList<int>> SendPendingOrderFollowUpCustomerNotificationAsync(Customer customer, Order order, string messageTemplateName);
 
     #endregion

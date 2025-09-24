@@ -5,9 +5,9 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Validators.Reminders;
 
-public partial class RemindersValidator : BaseNopValidator<RemindersModel>
+public partial class ReminderValidator : BaseNopValidator<RemindersModel>
 {
-    public RemindersValidator(ILocalizationService localizationService)
+    public ReminderValidator(ILocalizationService localizationService)
     {
         RuleForEach(x => x.AbandonedCartFollowUps).ChildRules(rulesForFollowUp);
         RuleForEach(x => x.PendingOrdersFollowUps).ChildRules(rulesForFollowUp);

@@ -1325,7 +1325,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         var passwordRecoveryUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.PASSWORD_RECOVERY_CONFIRM, routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
         var accountActivationUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.ACCOUNT_ACTIVATION, routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
         var emailRevalidationUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.EMAIL_REVALIDATION, routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
-        
+
         tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
         tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
         tokens.Add(new Token("Customer.EmailRevalidationURL", emailRevalidationUrl, true));
@@ -1593,8 +1593,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     /// Add shopping cart tokens
     /// </summary>
     /// <param name="tokens">List of already added tokens</param>
-    /// <param name="shoppingCart">Shopping cart</param>
-    /// <param name="store">Store</param>
+    /// <param name="cart">Shopping cart</param>
     /// <param name="languageId">Language identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task AddShoppingCartTokensAsync(IList<Token> tokens, IList<ShoppingCartItem> cart, int languageId)
@@ -1719,6 +1718,10 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             MessageTemplateSystemNames.CUSTOMER_EMAIL_VALIDATION_MESSAGE or
             MessageTemplateSystemNames.CUSTOMER_EMAIL_REVALIDATION_MESSAGE or
             MessageTemplateSystemNames.CUSTOMER_PASSWORD_RECOVERY_MESSAGE or
+            MessageTemplateSystemNames.REMINDER_REGISTRATION_FOLLOW_UP_MESSAGE or
+            MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_1_MESSAGE or
+            MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_2_MESSAGE or
+            MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_3_MESSAGE or
             MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens },
 
             MessageTemplateSystemNames.ORDER_PLACED_VENDOR_NOTIFICATION or
@@ -1733,8 +1736,10 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             MessageTemplateSystemNames.ORDER_COMPLETED_CUSTOMER_NOTIFICATION or
             MessageTemplateSystemNames.ORDER_COMPLETED_STORE_OWNER_NOTIFICATION or
             MessageTemplateSystemNames.ORDER_CANCELLED_VENDOR_NOTIFICATION or
+            MessageTemplateSystemNames.REMINDER_PENDING_ORDER_FOLLOW_UP_1_MESSAGE or
+            MessageTemplateSystemNames.REMINDER_PENDING_ORDER_FOLLOW_UP_2_MESSAGE or
             MessageTemplateSystemNames.ORDER_CANCELLED_CUSTOMER_NOTIFICATION or
-            MessageTemplateSystemNames.ORDER_CANCELLED_STORE_OWNER_NOTIFICATION=> [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
+            MessageTemplateSystemNames.ORDER_CANCELLED_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
 
             MessageTemplateSystemNames.SHIPMENT_SENT_CUSTOMER_NOTIFICATION or
             MessageTemplateSystemNames.SHIPMENT_READY_FOR_PICKUP_CUSTOMER_NOTIFICATION or

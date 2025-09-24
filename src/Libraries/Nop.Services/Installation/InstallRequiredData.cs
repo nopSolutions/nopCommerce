@@ -2197,7 +2197,7 @@ public partial class InstallationService
             MaximumMainMenuLevels = 2
         });
 
-        await SaveSettingAsync(dictionary, new RemindersSettings
+        await SaveSettingAsync(dictionary, new ReminderSettings
         {
             AbandonedCartEnabled = true,
             PendingOrdersEnabled = true,
@@ -3490,93 +3490,106 @@ public partial class InstallationService
     {
         var lastEnabledUtc = DateTime.UtcNow;
         var tasks = new List<ScheduleTask>
+        {
+            new()
             {
-                new() {
-                    Name = "Send emails",
-                    Seconds = 60,
-                    Type = "Nop.Services.Messages.QueuedMessagesSendTask, Nop.Services",
-                    Enabled = true,
-                    LastEnabledUtc = lastEnabledUtc,
-                    StopOnError = false
-                },
-                new() {
-                    Name = "Keep alive",
-                    Seconds = 300,
-                    Type = "Nop.Services.Common.KeepAliveTask, Nop.Services",
-                    Enabled = true,
-                    LastEnabledUtc = lastEnabledUtc,
-                    StopOnError = false
-                },
-                new() {
-                    Name = nameof(ResetLicenseCheckTask),
-                    Seconds = 2073600,
-                    Type = "Nop.Services.Common.ResetLicenseCheckTask, Nop.Services",
-                    Enabled = true,
-                    LastEnabledUtc = lastEnabledUtc,
-                    StopOnError = false
-                },
-                new() {
-                    Name = "Delete guests",
-                    Seconds = 600,
-                    Type = "Nop.Services.Customers.DeleteGuestsTask, Nop.Services",
-                    Enabled = true,
-                    LastEnabledUtc = lastEnabledUtc,
-                    StopOnError = false
-                },
-                new() {
-                    Name = "Clear cache",
-                    Seconds = 600,
-                    Type = "Nop.Services.Caching.ClearCacheTask, Nop.Services",
-                    Enabled = false,
-                    StopOnError = false
-                },
-                new() {
-                    Name = "Clear log",
-                    //60 minutes
-                    Seconds = 3600,
-                    Type = "Nop.Services.Logging.ClearLogTask, Nop.Services",
-                    Enabled = false,
-                    StopOnError = false
-                },
-                new() {
-                    Name = "Update currency exchange rates",
-                    //60 minutes
-                    Seconds = 3600,
-                    Type = "Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services",
-                    Enabled = true,
-                    LastEnabledUtc = lastEnabledUtc,
-                    StopOnError = false
-                },
-                new() {
-                    Name = "Delete inactive customers (GDPR)",
-                    //24 hours
-                    Seconds = 86400,
-                    Type = "Nop.Services.Gdpr.DeleteInactiveCustomersTask, Nop.Services",
-                    Enabled = false,
-                    StopOnError = false
-                },
-                new() {
-                    Name = "Process abandoned carts",
-                    Seconds = 60 * 20,
-                    Type = RemindersDefaults.AbandonedCarts.ProcessTaskTypeFullName,
-                    Enabled = true,
-                    StopOnError = false
-                },
-                new() {
-                    Name = "Process incomplete orders",
-                    Seconds = 60 * 60,
-                    Type = RemindersDefaults.PendingOrders.ProcessTaskTypeFullName,
-                    Enabled = true,
-                    StopOnError = false
-                },
-                new() {
-                    Name = "Process incomplete registrations",
-                    Seconds = 60 * 60,
-                    Type = RemindersDefaults.IncompleteRegistrations.ProcessTaskTypeFullName,
-                    Enabled = true,
-                    StopOnError = false
-                }
-            };
+                Name = "Send emails",
+                Seconds = 60,
+                Type = "Nop.Services.Messages.QueuedMessagesSendTask, Nop.Services",
+                Enabled = true,
+                LastEnabledUtc = lastEnabledUtc,
+                StopOnError = false
+            },
+            new()
+            {
+                Name = "Keep alive",
+                Seconds = 300,
+                Type = "Nop.Services.Common.KeepAliveTask, Nop.Services",
+                Enabled = true,
+                LastEnabledUtc = lastEnabledUtc,
+                StopOnError = false
+            },
+            new()
+            {
+                Name = nameof(ResetLicenseCheckTask),
+                Seconds = 2073600,
+                Type = "Nop.Services.Common.ResetLicenseCheckTask, Nop.Services",
+                Enabled = true,
+                LastEnabledUtc = lastEnabledUtc,
+                StopOnError = false
+            },
+            new()
+            {
+                Name = "Delete guests",
+                Seconds = 600,
+                Type = "Nop.Services.Customers.DeleteGuestsTask, Nop.Services",
+                Enabled = true,
+                LastEnabledUtc = lastEnabledUtc,
+                StopOnError = false
+            },
+            new()
+            {
+                Name = "Clear cache",
+                Seconds = 600,
+                Type = "Nop.Services.Caching.ClearCacheTask, Nop.Services",
+                Enabled = false,
+                LastEnabledUtc = lastEnabledUtc,
+                StopOnError = false
+            },
+            new()
+            {
+                Name = "Clear log",
+                Seconds = 3600,
+                Type = "Nop.Services.Logging.ClearLogTask, Nop.Services",
+                Enabled = false,
+                LastEnabledUtc = lastEnabledUtc,
+                StopOnError = false
+            },
+            new()
+            {
+                Name = "Update currency exchange rates",
+                Seconds = 3600,
+                Type = "Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services",
+                Enabled = true,
+                LastEnabledUtc = lastEnabledUtc,
+                StopOnError = false
+            },
+            new()
+            {
+                Name = "Delete inactive customers (GDPR)",
+                Seconds = 86400,
+                Type = "Nop.Services.Gdpr.DeleteInactiveCustomersTask, Nop.Services",
+                Enabled = false,
+                StopOnError = false
+            },
+            new()
+            {
+                Name = "Process abandoned carts",
+                Seconds = 60 * 20,
+                Type = NopReminderDefaults.AbandonedCarts.ProcessTaskTypeFullName,
+                Enabled = true,
+                LastEnabledUtc = lastEnabledUtc,
+                StopOnError = false
+            },
+            new()
+            {
+                Name = "Process incomplete orders",
+                Seconds = 60 * 60,
+                Type = NopReminderDefaults.PendingOrders.ProcessTaskTypeFullName,
+                Enabled = true,
+                LastEnabledUtc = lastEnabledUtc,
+                StopOnError = false
+            },
+            new()
+            {
+                Name = "Process incomplete registrations",
+                Seconds = 60 * 60,
+                Type = NopReminderDefaults.IncompleteRegistrations.ProcessTaskTypeFullName,
+                Enabled = true,
+                LastEnabledUtc = lastEnabledUtc,
+                StopOnError = false
+            }
+        };
 
         await _dataProvider.BulkInsertEntitiesAsync(tasks);
     }

@@ -1222,7 +1222,7 @@ public partial class ShoppingCartController : BasePublicController
         if (!await _customerService.IsRegisteredAsync(customer))
             return Challenge();
 
-        return RedirectToAction(nameof(Cart));
+        return RedirectToRoute(NopRouteNames.General.CART);
     }
 
     [HttpPost, ActionName("Cart")]

@@ -36,7 +36,6 @@ public class RemindersMigration : Migration
     /// </summary>
     public override void Up()
     {
-
         var eaGeneral = _emailAccountRepository.Table.FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
 
         #region Abandoned cart
@@ -83,14 +82,14 @@ public class RemindersMigration : Migration
             });
         }
 
-        if (!_scheduleTaskRepository.Table.Any(st => string.Compare(st.Type, RemindersDefaults.AbandonedCarts.ProcessTaskTypeFullName, StringComparison.InvariantCultureIgnoreCase) == 0))
+        if (!_scheduleTaskRepository.Table.Any(st => string.Compare(st.Type, NopReminderDefaults.AbandonedCarts.ProcessTaskTypeFullName, StringComparison.InvariantCultureIgnoreCase) == 0))
         {
             _scheduleTaskRepository.Insert(
                 new ScheduleTask
                 {
                     Name = "Process abandoned carts",
                     Seconds = 20 * 60,
-                    Type = RemindersDefaults.AbandonedCarts.ProcessTaskTypeFullName,
+                    Type = NopReminderDefaults.AbandonedCarts.ProcessTaskTypeFullName,
                     Enabled = false,
                     StopOnError = false
                 }
@@ -129,14 +128,14 @@ public class RemindersMigration : Migration
             });
         }
 
-        if (!_scheduleTaskRepository.Table.Any(st => string.Compare(st.Type, RemindersDefaults.PendingOrders.ProcessTaskTypeFullName, StringComparison.InvariantCultureIgnoreCase) == 0))
+        if (!_scheduleTaskRepository.Table.Any(st => string.Compare(st.Type, NopReminderDefaults.PendingOrders.ProcessTaskTypeFullName, StringComparison.InvariantCultureIgnoreCase) == 0))
         {
             _scheduleTaskRepository.Insert(
                 new ScheduleTask
                 {
                     Name = "Process incomplete orders",
                     Seconds = 60 * 60,
-                    Type = RemindersDefaults.PendingOrders.ProcessTaskTypeFullName,
+                    Type = NopReminderDefaults.PendingOrders.ProcessTaskTypeFullName,
                     Enabled = false,
                     StopOnError = false
                 }
@@ -161,14 +160,14 @@ public class RemindersMigration : Migration
             });
         }
 
-        if (!_scheduleTaskRepository.Table.Any(st => string.Compare(st.Type, RemindersDefaults.IncompleteRegistrations.ProcessTaskTypeFullName, StringComparison.InvariantCultureIgnoreCase) == 0))
+        if (!_scheduleTaskRepository.Table.Any(st => string.Compare(st.Type, NopReminderDefaults.IncompleteRegistrations.ProcessTaskTypeFullName, StringComparison.InvariantCultureIgnoreCase) == 0))
         {
             _scheduleTaskRepository.Insert(
                 new ScheduleTask
                 {
                     Name = "Process incomplete registrations",
                     Seconds = 60 * 60,
-                    Type = RemindersDefaults.IncompleteRegistrations.ProcessTaskTypeFullName,
+                    Type = NopReminderDefaults.IncompleteRegistrations.ProcessTaskTypeFullName,
                     Enabled = false,
                     StopOnError = false
                 }
@@ -176,7 +175,6 @@ public class RemindersMigration : Migration
         }
 
         #endregion
-
     }
 
     /// <summary>Collects the DOWN migration expressions</summary>

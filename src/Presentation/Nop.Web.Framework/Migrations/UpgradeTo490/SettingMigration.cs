@@ -427,25 +427,23 @@ public class SettingMigration : MigrationBase
         }
 
         //#7743
-        var remindersSettings = settingService.LoadSetting<RemindersSettings>();
-        if (!settingService.SettingExists(remindersSettings, settings => settings.AbandonedCartEnabled))
+        var reminderSettings = settingService.LoadSetting<ReminderSettings>();
+        if (!settingService.SettingExists(reminderSettings, settings => settings.AbandonedCartEnabled))
         {
-            remindersSettings.AbandonedCartEnabled = false;
-            settingService.SaveSetting(remindersSettings, settings => settings.AbandonedCartEnabled);
+            reminderSettings.AbandonedCartEnabled = false;
+            settingService.SaveSetting(reminderSettings, settings => settings.AbandonedCartEnabled);
         }
 
-
-        if (!settingService.SettingExists(remindersSettings, settings => settings.PendingOrdersEnabled))
+        if (!settingService.SettingExists(reminderSettings, settings => settings.PendingOrdersEnabled))
         {
-            remindersSettings.PendingOrdersEnabled = false;
-            settingService.SaveSetting(remindersSettings, settings => settings.PendingOrdersEnabled);
+            reminderSettings.PendingOrdersEnabled = false;
+            settingService.SaveSetting(reminderSettings, settings => settings.PendingOrdersEnabled);
         }
 
-
-        if (!settingService.SettingExists(remindersSettings, settings => settings.IncompleteRegistrationEnabled))
+        if (!settingService.SettingExists(reminderSettings, settings => settings.IncompleteRegistrationEnabled))
         {
-            remindersSettings.IncompleteRegistrationEnabled = false;
-            settingService.SaveSetting(remindersSettings, settings => settings.IncompleteRegistrationEnabled);
+            reminderSettings.IncompleteRegistrationEnabled = false;
+            settingService.SaveSetting(reminderSettings, settings => settings.IncompleteRegistrationEnabled);
         }
     }
 

@@ -210,7 +210,8 @@ public partial interface IMessageTokenProvider
     /// Add shopping cart tokens
     /// </summary>
     /// <param name="tokens">List of already added tokens</param>
-    /// <param name="subscription">BackInStock subscription</param>
+    /// <param name="cart">Shopping cart</param>
+    /// <param name="languageId">Language identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task AddShoppingCartTokensAsync(IList<Token> tokens, IList<ShoppingCartItem> cart, int languageId);
 

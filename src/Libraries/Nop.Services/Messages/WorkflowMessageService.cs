@@ -2947,12 +2947,15 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     /// Sends a registration activation follow up to a customer
     /// </summary>
     /// <param name="customer">Customer</param>
-    /// <returns>Queued email identifiers</returns>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifiers
+    /// </returns>
     public virtual async Task<IList<int>> SendIncompleteRegistrationNotificationMessageAsync(Customer customer)
     {
         ArgumentNullException.ThrowIfNull(customer);
 
-        var store = await _storeContext.GetCurrentStoreAsync();
+        var store = await _storeService.GetStoreByIdAsync(customer.RegisteredInStoreId) ?? await _storeContext.GetCurrentStoreAsync();
         var languageId = await EnsureLanguageIsActiveAsync(customer.LanguageId ?? 0, store.Id);
 
         var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.REMINDER_REGISTRATION_FOLLOW_UP_MESSAGE, store.Id);
@@ -2986,9 +2989,14 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     /// </summary>
     /// <param name="customer">Customer</param>
     /// <param name="cart">Shopping cart</param>
+    /// <param name="storeId">Store identifier</param>
     /// <param name="messageTemplateName">Follow up message name</param>
-    /// <returns>Queued email identifiers</returns>
-    public async Task<IList<int>> SendAbandonedCartFollowUpCustomerNotificationAsync(Customer customer, IList<ShoppingCartItem> cart, string messageTemplateName)
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifiers
+    /// </returns>
+    public virtual async Task<IList<int>> SendAbandonedCartFollowUpCustomerNotificationAsync(Customer customer, 
+        IList<ShoppingCartItem> cart, int storeId, string messageTemplateName)
     {
         ArgumentNullException.ThrowIfNull(customer);
         ArgumentNullException.ThrowIfNull(cart);
@@ -2998,7 +3006,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         var commonTokens = new List<Token>();
         await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
-        var store = await _storeService.GetStoreByIdAsync(cart.FirstOrDefault()?.StoreId ?? 0) ?? await _storeContext.GetCurrentStoreAsync();
+        var store = await _storeService.GetStoreByIdAsync(storeId) ?? await _storeContext.GetCurrentStoreAsync();
         var languageId = await EnsureLanguageIsActiveAsync(customer.LanguageId ?? 0, store.Id);
 
         var messageTemplates = await GetActiveMessageTemplatesAsync(messageTemplateName, store.Id);
@@ -3032,8 +3040,11 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     /// <param name="customer">Customer</param>
     /// <param name="order">Order</param>
     /// <param name="messageTemplateName">Follow up message name</param>
-    /// <returns>Queued email identifiers</returns>
-    public async Task<IList<int>> SendPendingOrderFollowUpCustomerNotificationAsync(Customer customer, Order order, string messageTemplateName)
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifiers
+    /// </returns>
+    public virtual async Task<IList<int>> SendPendingOrderFollowUpCustomerNotificationAsync(Customer customer, Order order, string messageTemplateName)
     {
         ArgumentNullException.ThrowIfNull(customer);
         ArgumentNullException.ThrowIfNull(order);
@@ -3067,7 +3078,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var toEmail = billingAddress.Email;
             var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
-            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName, ignoreDelayBeforeSend: true);
         }).ToListAsync();
     }
 

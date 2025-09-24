@@ -681,9 +681,9 @@ public class LocalizationMigration : MigrationBase
             ["Products.CompatibleWith.Items"] = "{0} items are compatible with this product",
             ["Search.FilterLevelValues"] = "Search by Year Make Model",
 
-
             //#7743
             ["Admin.Promotions.Reminder.AbandonedCartEnabled"] = "Abandoned сart reminders enabled",
+            ["Admin.Promotions.Reminder.AbandonedCartEnabled.Hint"] = "Check to enable abandoned сart reminders.",
             ["Admin.Promotions.Reminder.FollowUp.DelayBeforeSend"] = "Delay send",
             ["Admin.Promotions.Reminder.FollowUp.DelayBeforeSend.Hint"] = "A delay before sending the follow up.",
             ["Admin.Promotions.Reminder.FollowUp.DelayBeforeSend.MustBeGreaterThanZero"] = "The delay must be greater than '0'.",
@@ -691,7 +691,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.Reminder.FollowUp.Enabled"] = "Follow up #{0}",
             ["Admin.Promotions.Reminder.FollowUp.Enabled.Hint"] = "Check to enable reminder.",
             ["Admin.Promotions.Reminder.IncompleteRegistrationEnabled"] = "Incomplete registration reminder enabled",
+            ["Admin.Promotions.Reminder.IncompleteRegistrationEnabled.Hint"] = "Check to enable incomplete registration reminders.",
             ["Admin.Promotions.Reminder.PendingOrdersEnabled"] = "Pending orders reminders enabled",
+            ["Admin.Promotions.Reminder.PendingOrdersEnabled.Hint"] = "Check to enable pending orders reminders.",
             ["Admin.Promotions.Reminders"] = "Reminders",
             [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_1_MESSAGE}"] = "This message template is used to send the follow-up #1 for a abandoned cart.",
             [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_2_MESSAGE}"] = "This message template is used to send the follow-up #2 for a abandoned cart.",

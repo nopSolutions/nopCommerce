@@ -358,7 +358,7 @@ public partial class AdminMenu : IAdminMenu
                             SystemName = "Reminders",
                             Title = await _localizationService.GetResourceAsync("Admin.Promotions.Reminders"),
                             PermissionNames = new List<string> { StandardPermission.Promotions.REMINDERS_MANAGE },
-                            Url = GetMenuItemUrl("Reminders", "Index"),
+                            Url = GetMenuItemUrl("Reminder", "Index"),
                             IconClass = "far fa-dot-circle"
                         }
                     }

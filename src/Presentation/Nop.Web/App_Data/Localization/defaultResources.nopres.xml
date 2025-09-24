@@ -15314,6 +15314,9 @@
   <LocaleResource Name="Admin.Promotions.Reminder.AbandonedCartEnabled">
     <Value>Abandoned сart reminders enabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.AbandonedCartEnabled.Hint">
+    <Value>Check to enable abandoned сart reminders.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Reminder.FollowUp.DelayBeforeSend">
     <Value>Delay send</Value>
   </LocaleResource>
@@ -15335,8 +15338,14 @@
   <LocaleResource Name="Admin.Promotions.Reminder.IncompleteRegistrationEnabled">
     <Value>Incomplete registration reminder enabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.IncompleteRegistrationEnabled.Hint">
+    <Value>Check to enable incomplete registration reminders.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Reminder.PendingOrdersEnabled">
     <Value>Pending orders reminders enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Reminder.PendingOrdersEnabled.Hint">
+    <Value>Check to enable pending orders reminders.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Reminders">
     <Value>Reminders</Value>

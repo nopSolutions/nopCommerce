@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Reminders;
@@ -22,9 +23,10 @@ public partial class ProcessPendingOrdersTask : IScheduleTask
     protected readonly IMessageTemplateService _messageTemplateService;
     protected readonly IRepository<Customer> _customerRepository;
     protected readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
+    protected readonly IRepository<GenericAttribute> _genericAttributeRepository;
     protected readonly IRepository<Order> _orderRepository;
     protected readonly IWorkflowMessageService _workflowMessageService;
-    protected readonly RemindersSettings _remindersSettings;
+    protected readonly ReminderSettings _reminderSettings;
 
     #endregion
 
@@ -35,18 +37,20 @@ public partial class ProcessPendingOrdersTask : IScheduleTask
         IMessageTemplateService messageTemplateService,
         IRepository<Customer> customerRepository,
         IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
+        IRepository<GenericAttribute> genericAttributeRepository,
         IRepository<Order> orderRepository,
         IWorkflowMessageService workflowMessageService,
-        RemindersSettings remindersSettings)
+        ReminderSettings reminderSettings)
     {
         _customerService = customerService;
         _genericAttributeService = genericAttributeService;
         _messageTemplateService = messageTemplateService;
         _customerRepository = customerRepository;
         _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
+        _genericAttributeRepository = genericAttributeRepository;
         _orderRepository = orderRepository;
         _workflowMessageService = workflowMessageService;
-        _remindersSettings = remindersSettings;
+        _reminderSettings = reminderSettings;
     }
 
     #endregion
@@ -58,54 +62,91 @@ public partial class ProcessPendingOrdersTask : IScheduleTask
     /// </summary>
     public virtual async Task ExecuteAsync()
     {
-        if (!_remindersSettings.PendingOrdersEnabled)
+        if (!_reminderSettings.PendingOrdersEnabled)
             return;
 
         var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
-        var followUpCount = RemindersDefaults.PendingOrders.FollowUpList.Length;
+        var attributeName = NopReminderDefaults.PendingOrders.FollowUpAttributeName;
 
-        for (var followUpNumber = 1; followUpNumber <= followUpCount; followUpNumber++)
-        {
-            var followUpMessageName = RemindersDefaults.PendingOrders.FollowUpList[followUpNumber - 1];
-            var followUpMessage = (await _messageTemplateService.GetMessageTemplatesByNameAsync(followUpMessageName))
-                .FirstOrDefault();
+        //get registered customers with pending orders
+        var pendingOrders = _orderRepository.Table
+            .Join(_customerRepository.Table, order => order.CustomerId, customer => customer.Id,
+                (order, customer) => new { Customer = customer, Order = order })
+            .Join(_customerCustomerRoleMappingRepository.Table, item => item.Customer.Id, role => role.CustomerId,
+                (item, role) => new { Customer = item.Customer, Order = item.Order, Role = role })
+            .SelectMany(item => _genericAttributeRepository.Table
+                .Where(attribute => attribute.EntityId == item.Order.Id && attribute.KeyGroup == nameof(Order) && attribute.Key == attributeName)
+                .DefaultIfEmpty(),
+                (item, attribute) => new { Customer = item.Customer, Order = item.Order, Role = item.Role, Attribute = attribute })
+            .Where(item => !item.Customer.Deleted && item.Role.CustomerRoleId != guestRole.Id)
+            .Where(item => !item.Order.Deleted && new int[] { (int)OrderStatus.Pending }.Contains(item.Order.OrderStatusId))
+            .Select(item => new { Customer = item.Customer, Order = item.Order, Attribute = item.Attribute })
+            .OrderBy(item => item.Order.CreatedOnUtc)
+            .ToList();
 
-            if (followUpMessage.DelayBeforeSend is null)
-                continue;
-
-            var timeToFollowUp = DateTime.UtcNow - TimeSpan.FromHours(followUpMessage.DelayPeriod.ToHours(followUpMessage.DelayBeforeSend.Value));
-
-            //get all incomplete orders to follow up
-            var incompleteOrdersInfo = from c in _customerRepository.Table
-                                       join ccrm in _customerCustomerRoleMappingRepository.Table on c.Id equals ccrm.CustomerId
-                                       join o in _orderRepository.Table on c.Id equals o.CustomerId
-                                       orderby o.CreatedOnUtc
-                                       where !c.Deleted && !o.Deleted
-                                            && ccrm.CustomerRoleId != guestRole.Id
-                                            && timeToFollowUp >= o.CreatedOnUtc
-                                            && new int[] { (int)OrderStatus.Pending }.Contains(o.OrderStatusId)
-                                       group o by c into orderGrouped
-                                       select new { Customer = orderGrouped.Key, Orders = orderGrouped.Where(og => og.CreatedOnUtc <= timeToFollowUp) };
-
-            if (!incompleteOrdersInfo.Any())
-                return;
-
-            foreach (var customerOrders in incompleteOrdersInfo)
+        var customersWithOrders = pendingOrders
+            .GroupBy(customerItem => customerItem.Customer.Id)
+            .Select(group => new
             {
-                var followUps = await _genericAttributeService.GetAttributeAsync(customerOrders.Customer, RemindersDefaults.PendingOrders.FollowUpAttributeName, defaultValue: new Dictionary<int, int>());
-                var orderToFollowUp = customerOrders.Orders.FirstOrDefault(x => followUps.GetValueOrDefault(x.Id) < followUpNumber);
+                Customer = group.Select(item => item.Customer).FirstOrDefault(customer => customer.Id == group.Key),
+                Orders = group.Select(item => item.Order).DistinctBy(order => order.Id).OrderBy(order => order.CreatedOnUtc).ToList()
+            })
+            .Where(customer => customer.Orders.Any())
+            .ToList();
 
-                if (orderToFollowUp is not null)
+        if (!customersWithOrders.Any())
+            return;
+
+        //prepare attributes
+        var attributes = pendingOrders
+            .Select(item => item.Attribute)
+            .Where(attribute => attribute is not null)
+            .DistinctBy(attribute => attribute.Id)
+            .ToList();
+
+        //get message templates
+        var messageTemplates = await NopReminderDefaults.PendingOrders.FollowUpList
+            .SelectManyAwait(async followUp => await _messageTemplateService.GetMessageTemplatesByNameAsync(followUp))
+            .ToListAsync();
+
+        foreach (var customer in customersWithOrders)
+        {
+            foreach (var order in customer.Orders)
+            {
+                var orderAttribute = attributes.FirstOrDefault(attribute => attribute.EntityId == order.Id);
+                MessageTemplate followUpMessage = null;
+                _ = int.TryParse(orderAttribute?.Value ?? string.Empty, out var lastFollowUp);
+
+                while (followUpMessage is null && lastFollowUp < NopReminderDefaults.PendingOrders.FollowUpList.Length)
                 {
-                    var emailIds = await _workflowMessageService.SendPendingOrderFollowUpCustomerNotificationAsync(customerOrders.Customer, orderToFollowUp, followUpMessageName);
+                    lastFollowUp++;
+                    followUpMessage = messageTemplates
+                        .FirstOrDefault(template => template.Name == NopReminderDefaults.PendingOrders.FollowUpList[lastFollowUp - 1]
+                            && template.IsActive
+                            && template.DelayBeforeSend is not null);
+                }
+                if (followUpMessage is null)
+                    continue;
 
-                    if (emailIds.Any())
-                    {
-                        if (!followUps.TryAdd(orderToFollowUp.Id, followUpNumber))
-                            followUps[orderToFollowUp.Id] = followUpNumber;
+                var timeToFollowUp = DateTime.UtcNow - TimeSpan.FromHours(followUpMessage.DelayPeriod.ToHours(followUpMessage.DelayBeforeSend.Value));
 
-                        await _genericAttributeService.SaveAttributeAsync(customerOrders.Customer, RemindersDefaults.PendingOrders.FollowUpAttributeName, followUps);
-                    }
+                //check the order created date or the last follow up sent date
+                var date = order.CreatedOnUtc;
+                if (orderAttribute?.CreatedOrUpdatedDateUTC is not null && orderAttribute.CreatedOrUpdatedDateUTC.Value > date)
+                    date = orderAttribute.CreatedOrUpdatedDateUTC.Value;
+                if (date > timeToFollowUp)
+                    continue;
+
+                var emailIds = await _workflowMessageService
+                    .SendPendingOrderFollowUpCustomerNotificationAsync(customer.Customer, order, followUpMessage.Name);
+
+                //the follow up has been sent
+                if (emailIds.Any())
+                {
+                    await _genericAttributeService.SaveAttributeAsync(order, attributeName, lastFollowUp);
+
+                    //send only one follow up to a customer at a time to avoid being annoying
+                    break;
                 }
             }
         }

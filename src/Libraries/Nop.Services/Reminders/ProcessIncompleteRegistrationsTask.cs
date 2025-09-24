@@ -22,20 +22,19 @@ public partial class ProcessIncompleteRegistrationsTask : IScheduleTask
     protected readonly IRepository<Customer> _customerRepository;
     protected readonly IRepository<GenericAttribute> _genericAttributeRepository;
     protected readonly IWorkflowMessageService _workflowMessageService;
-    protected readonly RemindersSettings _remindersSettings;
+    protected readonly ReminderSettings _reminderSettings;
 
     #endregion
 
     #region Ctor
 
-    public ProcessIncompleteRegistrationsTask(
-        CustomerSettings customerSettings,
+    public ProcessIncompleteRegistrationsTask(CustomerSettings customerSettings,
         IGenericAttributeService genericAttributeService,
         IMessageTemplateService messageTemplateService,
         IRepository<Customer> customerRepository,
         IRepository<GenericAttribute> genericAttributeRepository,
         IWorkflowMessageService workflowMessageService,
-        RemindersSettings remindersSettings)
+        ReminderSettings reminderSettings)
     {
         _customerSettings = customerSettings;
         _genericAttributeService = genericAttributeService;
@@ -43,7 +42,7 @@ public partial class ProcessIncompleteRegistrationsTask : IScheduleTask
         _customerRepository = customerRepository;
         _genericAttributeRepository = genericAttributeRepository;
         _workflowMessageService = workflowMessageService;
-        _remindersSettings = remindersSettings;
+        _reminderSettings = reminderSettings;
     }
 
     #endregion
@@ -55,22 +54,21 @@ public partial class ProcessIncompleteRegistrationsTask : IScheduleTask
     /// </summary>
     public virtual async Task ExecuteAsync()
     {
-        if (!_remindersSettings.IncompleteRegistrationEnabled)
+        if (!_reminderSettings.IncompleteRegistrationEnabled)
             return;
 
         //ensure the email validation currently enabled after registration
         if (_customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation)
             return;
 
-        var followUpMessage = (await _messageTemplateService.GetMessageTemplatesByNameAsync(MessageTemplateSystemNames.REMINDER_REGISTRATION_FOLLOW_UP_MESSAGE))
-            .FirstOrDefault();
+        var messageTemplates = await _messageTemplateService
+            .GetMessageTemplatesByNameAsync(MessageTemplateSystemNames.REMINDER_REGISTRATION_FOLLOW_UP_MESSAGE);
+        var followUpMessage = messageTemplates.FirstOrDefault(template => template.IsActive && template.DelayBeforeSend is not null);
 
-        if (followUpMessage is null || !followUpMessage.IsActive)
+        if (followUpMessage is null)
             return;
 
-        if (followUpMessage.DelayBeforeSend is null)
-            return;
-
+        var attributeName = NopReminderDefaults.IncompleteRegistrations.FollowUpAttributeName;
         var timeToFollowUp = DateTime.UtcNow - TimeSpan.FromHours(followUpMessage.DelayPeriod.ToHours(followUpMessage.DelayBeforeSend.Value));
 
         //find customers to follow-up about registration activation
@@ -80,10 +78,9 @@ public partial class ProcessIncompleteRegistrationsTask : IScheduleTask
                 customer => new { CustomerId = customer.Id, KeyGroup = nameof(Customer) },
                 (attribute, customer) => new { Customer = customer, attribute.Key, attribute.CreatedOrUpdatedDateUTC })
             .Where(customerAttribute => !customerAttribute.Customer.Deleted && !customerAttribute.Customer.Active)
-            .Where(customerAttribute => 
-                !_genericAttributeRepository.Table.Any(ga => ga.KeyGroup == nameof(Customer)
+            .Where(customerAttribute => !_genericAttributeRepository.Table.Any(ga => ga.KeyGroup == nameof(Customer)
                 && ga.EntityId == customerAttribute.Customer.Id
-                && ga.Key == RemindersDefaults.IncompleteRegistrations.FollowUpAttributeName))
+                && ga.Key == attributeName))
             .Where(customerAttribute => customerAttribute.Key == NopCustomerDefaults.AccountActivationTokenAttribute)
             .Where(customerAttribute => customerAttribute.CreatedOrUpdatedDateUTC != null && customerAttribute.CreatedOrUpdatedDateUTC.Value < timeToFollowUp)
             .Select(customerAttribute => customerAttribute.Customer)
@@ -95,7 +92,7 @@ public partial class ProcessIncompleteRegistrationsTask : IScheduleTask
 
             //the follow up has been sent
             if (emailIds.Any())
-                await _genericAttributeService.SaveAttributeAsync(customerToFollowUp, RemindersDefaults.IncompleteRegistrations.FollowUpAttributeName, DateTime.UtcNow);
+                await _genericAttributeService.SaveAttributeAsync(customerToFollowUp, attributeName, DateTime.UtcNow, customerToFollowUp.RegisteredInStoreId);
         }
     }
 

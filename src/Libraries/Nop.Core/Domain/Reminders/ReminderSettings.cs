@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Reminders;
 /// <summary>
 /// Reminders settings
 /// </summary>
-public partial class RemindersSettings : ISettings
+public partial class ReminderSettings : ISettings
 {
     /// <summary>
     /// Gets or sets a value that indicates whether abandoned cart reminders are enabled

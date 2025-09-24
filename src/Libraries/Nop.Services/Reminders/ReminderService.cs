@@ -29,18 +29,21 @@ public partial class ReminderService : IReminderService
     /// Updates the message template parameters of the reminder
     /// </summary>
     /// <param name="templateName">Name of the message template</param>
+    /// <param name="storeId">Store identifier</param>
     /// <param name="enabled">Value indicating that the template is active</param>
     /// <param name="delayBeforeSend">Delay before sending message</param>
     /// <param name="delayPeriod">Period of message delay</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task UpdateFollowUpAsync(string templateName, bool enabled, int delayBeforeSend, MessageDelayPeriod delayPeriod)
+    public virtual async Task UpdateFollowUpAsync(string templateName, int storeId, bool enabled, int delayBeforeSend, MessageDelayPeriod delayPeriod)
     {
         ArgumentException.ThrowIfNullOrEmpty(templateName);
 
         if (enabled)
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(delayBeforeSend);
 
-        var followUp = (await _messageTemplateService.GetMessageTemplatesByNameAsync(templateName)).FirstOrDefault();
+        //we update only the first message template
+        var messageTemplates = await _messageTemplateService.GetMessageTemplatesByNameAsync(templateName, storeId);
+        var followUp = messageTemplates.FirstOrDefault();
         if (followUp is null)
             return;
 

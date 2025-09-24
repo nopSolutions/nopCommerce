@@ -5,7 +5,7 @@ namespace Nop.Services.Reminders;
 /// <summary>
 /// Represents default values related to reminders
 /// </summary>
-public static partial class RemindersDefaults
+public static partial class NopReminderDefaults
 {
     /// <summary>
     /// Represents defaults related to carts reminders
