@@ -356,7 +356,7 @@ function getCookie(cookieName) {
     })
     return cookie[cookieName] ?? '';
 }
-
+ 
 function AddToCart() {
     cartSlideoutBackButton.style.display = "none";
     deliveryOptions.style.display = "none";
@@ -411,7 +411,6 @@ function AddToCart() {
 // Helper: submits cart to Listrak with retry if _ltk not ready
 function submitListrak(cart, attempt = 0) {
     if (typeof _ltk !== 'undefined' && _ltk.SCA) {
-        _ltk.SCA.ClearCart();
         cart.items.forEach(function (item) {
             _ltk.SCA.AddItemWithLinks(
                 item.sku,
