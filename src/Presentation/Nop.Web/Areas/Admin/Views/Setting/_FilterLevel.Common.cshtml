@@ -1,6 +1,7 @@
 ﻿@model FilterLevelSettingsModel
 
 <div class="card-body">
+    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.FilterLevels", Docs.FilterLevels + Utm.OnAdmin)" />
     <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="FilterLevelEnabled" />
@@ -11,7 +12,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="FilterLevelEnabled" disable-auto-generation="true">
-        <div class="form-group row advanced-setting" id="pnlDisplayOnHomePage">
+        <div class="form-group row" id="pnlDisplayOnHomePage">
             <div class="col-md-3">
                 <nop-label asp-for="DisplayOnHomePage" />
             </div>
@@ -20,7 +21,7 @@
                 <span asp-validation-for="DisplayOnHomePage"></span>
             </div>
         </div>
-        <div class="form-group row advanced-setting" id="pnlDisplayOnProductDetailsPage">
+        <div class="form-group row" id="pnlDisplayOnProductDetailsPage">
             <div class="col-md-3">
                 <nop-label asp-for="DisplayOnProductDetailsPage" />
             </div>

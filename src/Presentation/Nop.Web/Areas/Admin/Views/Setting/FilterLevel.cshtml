@@ -38,7 +38,7 @@
 
                 <nop-cards id="filterlevelsettings-cards">
                     <nop-card asp-name="filterlevelsettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.FilterLevel.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_FilterLevel.Common", Model)</nop-card>
-                    <nop-card asp-name="filterlevelsettings-levels" asp-icon="fas fa-sitemap" asp-title="@T("Admin.Configuration.Settings.FilterLevel.BlockTitle.Levels")" asp-hide-block-attribute-name="@hideFilterLevelsBlockAttributeName" asp-hide="@hideFilterLevelsBlock" asp-advanced="true">@await Html.PartialAsync("_FilterLevel.FilterLevels", Model)</nop-card>
+                    <nop-card asp-name="filterlevelsettings-levels" asp-icon="fas fa-sitemap" asp-title="@T("Admin.Configuration.Settings.FilterLevel.BlockTitle.Levels")" asp-hide-block-attribute-name="@hideFilterLevelsBlockAttributeName" asp-hide="@hideFilterLevelsBlock" asp-advanced="false">@await Html.PartialAsync("_FilterLevel.FilterLevels", Model)</nop-card>
 
                     @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.FilterLevelSettingsDetailsBlock, additionalData = Model })
                 </nop-cards>

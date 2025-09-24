@@ -68,7 +68,7 @@ public partial class FilterLevelValueModelFactory : IFilterLevelValueModelFactor
 
         //insert special item for the default value
         var defaultItemText = await _localizationService.GetResourceAsync("Admin.Common.Select");
-        items.Insert(0, new SelectListItem { Text = defaultItemText, Value = "0" });
+        items.Insert(0, new SelectListItem { Text = defaultItemText, Value = "" });
     }
 
     #endregion

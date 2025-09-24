@@ -2,6 +2,7 @@
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
@@ -48,6 +49,7 @@ public partial class CatalogController : BasePublicController
     protected readonly IVendorService _vendorService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
+    protected readonly FilterLevelSettings _filterLevelSettings;
     protected readonly MediaSettings _mediaSettings;
     protected readonly VendorSettings _vendorSettings;
 
@@ -75,6 +77,7 @@ public partial class CatalogController : BasePublicController
         IVendorService vendorService,
         IWebHelper webHelper,
         IWorkContext workContext,
+        FilterLevelSettings filterLevelSettings,
         MediaSettings mediaSettings,
         VendorSettings vendorSettings)
     {
@@ -98,6 +101,7 @@ public partial class CatalogController : BasePublicController
         _vendorService = vendorService;
         _webHelper = webHelper;
         _workContext = workContext;
+        _filterLevelSettings = filterLevelSettings;
         _mediaSettings = mediaSettings;
         _vendorSettings = vendorSettings;
     }
@@ -456,19 +460,74 @@ public partial class CatalogController : BasePublicController
     [CheckLanguageSeoCode(ignore: true)]
     public virtual async Task<IActionResult> GetFilterLevelValues(string filterLevel1Value = "", string filterLevel2Value = "", string filterLevel3Value = "")
     {
-        var values = await _filterLevelValueService.GetAllFilterLevelValuesAsync(filterLevel1Value, filterLevel2Value, filterLevel3Value);
-        var result = values.Select(f => new
-        {
-            filterLevel1Value = f.FilterLevel1Value,
-            filterLevel2Value = f.FilterLevel2Value,
-            filterLevel3Value = f.FilterLevel3Value
-        });
+        var values = await _filterLevelValueService.GetAllFilterLevelValuesAsync(
+            filterLevel1Value, filterLevel2Value, filterLevel3Value);
 
-        return Json(result);
+        var defaultItemText = await _localizationService.GetResourceAsync("Admin.Common.Select");
+
+        if (string.IsNullOrEmpty(filterLevel1Value))
+        {
+            var result = values
+                .Select(f => new 
+                { 
+                    filterLevel1Value = f.FilterLevel1Value, 
+                    defaultItemText = defaultItemText 
+                })
+                .Distinct();
+            return Json(result);
+        }
+
+        if (string.IsNullOrEmpty(filterLevel2Value))
+        {
+            var result = values
+                .Where(f => f.FilterLevel1Value == filterLevel1Value)
+                .Select(f => new
+                {
+                    filterLevel1Value = f.FilterLevel1Value,
+                    filterLevel2Value = f.FilterLevel2Value,
+                    defaultItemText = defaultItemText
+                })
+                .Distinct();
+            return Json(result);
+        }
+
+        if (string.IsNullOrEmpty(filterLevel3Value))
+        {
+            var result = values
+                .Where(f => f.FilterLevel1Value == filterLevel1Value &&
+                            f.FilterLevel2Value == filterLevel2Value)
+                .Select(f => new
+                {
+                    filterLevel1Value = f.FilterLevel1Value,
+                    filterLevel2Value = f.FilterLevel2Value,
+                    filterLevel3Value = f.FilterLevel3Value,
+                    defaultItemText = defaultItemText
+                })
+                .Distinct();
+            return Json(result);
+        }
+
+        var finalResult = values
+            .Where(f => f.FilterLevel1Value == filterLevel1Value &&
+                        f.FilterLevel2Value == filterLevel2Value &&
+                        f.FilterLevel3Value == filterLevel3Value)
+            .Select(f => new
+            {
+                filterLevel1Value = f.FilterLevel1Value,
+                filterLevel2Value = f.FilterLevel2Value,
+                filterLevel3Value = f.FilterLevel3Value,
+                defaultItemText = defaultItemText
+            })
+            .Distinct();
+
+        return Json(finalResult);
     }
 
     public virtual async Task<IActionResult> SearchByFilterLevelValues(SearchFilterLevelValueModel model, CatalogProductsCommand command)
     {
+        if (!_filterLevelSettings.FilterLevelEnabled)
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
+
         var store = await _storeContext.GetCurrentStoreAsync();
 
         //'Continue shopping' URL

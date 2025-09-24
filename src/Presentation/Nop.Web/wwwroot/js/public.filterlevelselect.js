@@ -29,13 +29,15 @@
                 'filterLevel3Value': ''
             },
             success: function (data, textStatus, jqXHR) {
-                filterLevel2.html('');
-                filterLevel2.append($('<option></option>').val('0').html('---'));
-                $.each(data, function (index, item) {
-                    if (selectedItem === item.filterLevel1Value) {
-                        filterLevel2.append($('<option></option>').val(item.filterLevel2Value).html(item.filterLevel2Value));
-                    }
-                });
+              filterLevel2.html('');
+              if (selectedItem != '') {
+                filterLevel2.append($('<option></option>').val('').html(data[0].defaultItemText));
+              }                
+              $.each(data, function (index, item) {
+                if (selectedItem === item.filterLevel1Value) {
+                  filterLevel2.append($('<option></option>').val(item.filterLevel2Value).html(item.filterLevel2Value));
+                }
+              });
 
                 // Clear level 3 dropdown
                 filterLevel3.html('');
@@ -74,7 +76,7 @@
             },
             success: function (data, textStatus, jqXHR) {
                 filterLevel3.html('');
-                filterLevel3.append($('<option></option>').val('0').html('---'));
+                filterLevel3.append($('<option></option>').val('').html(data[0].defaultItemText));
                 $.each(data, function (index, item) {
                     if (selectedLevel1 === item.filterLevel1Value && selectedItem === item.filterLevel2Value) {
                         filterLevel3.append($('<option></option>').val(item.filterLevel3Value).html(item.filterLevel3Value));
