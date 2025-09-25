@@ -7435,7 +7435,7 @@
     <Value>Display on product details page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.DisplayOnProductDetailsPage.Hint">
-    <Value>Check to display filter levels on the product details page.</Value>
+    <Value>Check to display compatible items (filter levels) on the product details page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.Edit">
     <Value>Edit filter level</Value>

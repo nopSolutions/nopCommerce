@@ -639,7 +639,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.FilterLevel.DisplayOnHomePage"] = "Display on home page",
             ["Admin.Configuration.Settings.FilterLevel.DisplayOnHomePage.Hint"] = "Check to display filter levels on the home page.",
             ["Admin.Configuration.Settings.FilterLevel.DisplayOnProductDetailsPage"] = "Display on product details page",
-            ["Admin.Configuration.Settings.FilterLevel.DisplayOnProductDetailsPage.Hint"] = "Check to display filter levels on the product details page.",
+            ["Admin.Configuration.Settings.FilterLevel.DisplayOnProductDetailsPage.Hint"] = "Check to display compatible items (filter levels) on the product details page.",
 
             ["Admin.Configuration.Settings.FilterLevel.BlockTitle.Common"] = "Common",
             ["Admin.Configuration.Settings.FilterLevel.BlockTitle.Levels"] = "Levels",
