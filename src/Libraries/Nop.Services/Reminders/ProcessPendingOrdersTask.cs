@@ -65,20 +65,20 @@ public partial class ProcessPendingOrdersTask : IScheduleTask
         if (!_reminderSettings.PendingOrdersEnabled)
             return;
 
-        var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
+        var registeredRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
         var attributeName = NopReminderDefaults.PendingOrders.FollowUpAttributeName;
 
         //get registered customers with pending orders
         var pendingOrders = _orderRepository.Table
             .Join(_customerRepository.Table, order => order.CustomerId, customer => customer.Id,
                 (order, customer) => new { Customer = customer, Order = order })
-            .Join(_customerCustomerRoleMappingRepository.Table, item => item.Customer.Id, role => role.CustomerId,
+            .Join(_customerCustomerRoleMappingRepository.Table, item => new { customerId = item.Customer.Id, roleId = registeredRole.Id }, role => new { customerId = role.CustomerId, roleId = role.CustomerRoleId },
                 (item, role) => new { Customer = item.Customer, Order = item.Order, Role = role })
             .SelectMany(item => _genericAttributeRepository.Table
                 .Where(attribute => attribute.EntityId == item.Order.Id && attribute.KeyGroup == nameof(Order) && attribute.Key == attributeName)
                 .DefaultIfEmpty(),
                 (item, attribute) => new { Customer = item.Customer, Order = item.Order, Role = item.Role, Attribute = attribute })
-            .Where(item => !item.Customer.Deleted && item.Role.CustomerRoleId != guestRole.Id)
+            .Where(item => !item.Customer.Deleted)
             .Where(item => !item.Order.Deleted && new int[] { (int)OrderStatus.Pending }.Contains(item.Order.OrderStatusId))
             .Select(item => new { Customer = item.Customer, Order = item.Order, Attribute = item.Attribute })
             .OrderBy(item => item.Order.CreatedOnUtc)

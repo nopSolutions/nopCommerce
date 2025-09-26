@@ -72,20 +72,20 @@ public partial class ProcessAbandonedCartsTask : IScheduleTask
         if (!_reminderSettings.AbandonedCartEnabled)
             return;
 
-        var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
+        var registeredRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
         var attributeName = NopReminderDefaults.AbandonedCarts.FollowUpAttributeName;
 
         //get registered customers with abandoned carts
         var customersWithItems = _shoppingCartRepository.Table
             .Join(_customerRepository.Table, item => item.CustomerId, customer => customer.Id,
                 (item, customer) => new { Customer = customer, Item = item })
-            .Join(_customerCustomerRoleMappingRepository.Table, item => item.Customer.Id, role => role.CustomerId,
+            .Join(_customerCustomerRoleMappingRepository.Table, item => new { customerId = item.Customer.Id, roleId = registeredRole.Id }, role => new { customerId = role.CustomerId, roleId = role.CustomerRoleId },
                 (item, role) => new { Customer = item.Customer, Item = item.Item, Role = role })
             .SelectMany(item => _genericAttributeRepository.Table
                 .Where(attribute => attribute.EntityId == item.Customer.Id && attribute.KeyGroup == nameof(Customer) && attribute.Key == attributeName)
                 .DefaultIfEmpty(),
                 (item, attribute) => new { Customer = item.Customer, Item = item.Item, Role = item.Role, Attribute = attribute })
-            .Where(item => !item.Customer.Deleted && item.Role.CustomerRoleId != guestRole.Id)
+            .Where(item => !item.Customer.Deleted)
             .Where(item => item.Item.ShoppingCartTypeId == (int)ShoppingCartType.ShoppingCart)
             .Select(item => new { Customer = item.Customer, Item = item.Item, Attribute = item.Attribute })
             .ToList();
