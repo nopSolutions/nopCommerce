@@ -79,7 +79,7 @@ public partial class ProcessPendingOrdersTask : IScheduleTask
                 .DefaultIfEmpty(),
                 (item, attribute) => new { Customer = item.Customer, Order = item.Order, Role = item.Role, Attribute = attribute })
             .Where(item => !item.Customer.Deleted)
-            .Where(item => !item.Order.Deleted && new int[] { (int)OrderStatus.Pending }.Contains(item.Order.OrderStatusId))
+            .Where(item => !item.Order.Deleted && item.Order.OrderStatusId == (int)OrderStatus.Pending)
             .Select(item => new { Customer = item.Customer, Order = item.Order, Attribute = item.Attribute })
             .OrderBy(item => item.Order.CreatedOnUtc)
             .ToList();

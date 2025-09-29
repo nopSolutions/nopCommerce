@@ -90,7 +90,8 @@ public class RemindersMigration : Migration
                     Name = "Process abandoned carts",
                     Seconds = 20 * 60,
                     Type = NopReminderDefaults.AbandonedCarts.ProcessTaskTypeFullName,
-                    Enabled = false,
+                    Enabled = true,
+                    LastEnabledUtc = DateTime.UtcNow,
                     StopOnError = false
                 }
             );
@@ -136,7 +137,8 @@ public class RemindersMigration : Migration
                     Name = "Process incomplete orders",
                     Seconds = 60 * 60,
                     Type = NopReminderDefaults.PendingOrders.ProcessTaskTypeFullName,
-                    Enabled = false,
+                    Enabled = true,
+                    LastEnabledUtc = DateTime.UtcNow,
                     StopOnError = false
                 }
             );
@@ -168,7 +170,8 @@ public class RemindersMigration : Migration
                     Name = "Process incomplete registrations",
                     Seconds = 60 * 60,
                     Type = NopReminderDefaults.IncompleteRegistrations.ProcessTaskTypeFullName,
-                    Enabled = false,
+                    Enabled = true,
+                    LastEnabledUtc = DateTime.UtcNow,
                     StopOnError = false
                 }
             );
