@@ -14,6 +14,7 @@ using Newtonsoft.Json.Serialization;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Security;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Core.Security;
@@ -118,17 +119,32 @@ public static class ServiceCollectionExtensions
         builder.Services.AddRateLimiter(options =>
         {
             var settings = Singleton<AppSettings>.Instance.Get<CommonConfig>();
+            var securitySettings = Singleton<SecuritySettings>.Instance;
 
             options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-                RateLimitPartition.GetFixedWindowLimiter(
-                    partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
+            {
+                var username = httpContext.User.Identity?.Name;
+                var ip = httpContext.Connection.RemoteIpAddress?.ToString();
+
+                if (settings.RateLimitWhitelist.Contains(ip) || //allow from configured IP addresses
+                    securitySettings.AdminAreaAllowedIpAddresses.Contains(ip) || //allow from admin area allowed IP addresses
+                    httpContext.Connection.LocalIpAddress == httpContext.Connection.RemoteIpAddress) //allow from localhost
+                {
+                    return RateLimitPartition.GetNoLimiter("");
+                }
+
+                var partitionKey = username ?? ip ?? httpContext.Session?.Id ?? httpContext.Request.Headers.Host;
+
+                return RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: partitionKey,
                     factory: partition => new FixedWindowRateLimiterOptions
                     {
                         AutoReplenishment = true,
                         PermitLimit = settings.PermitLimit,
                         QueueLimit = settings.QueueCount,
                         Window = TimeSpan.FromMinutes(1)
-                    }));
+                    });
+            });
 
             options.RejectionStatusCode = settings.RejectionStatusCode;
         });
