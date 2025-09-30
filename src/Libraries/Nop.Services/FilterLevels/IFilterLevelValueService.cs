@@ -53,14 +53,11 @@ public partial interface IFilterLevelValueService
     /// Gets filter level values by product identifier
     /// </summary>
     /// <param name="productId">Product identifier</param>
-    /// <param name="pageIndex">Page index</param>
-    /// <param name="pageSize">Page size</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the filter level values
     /// </returns>
-    Task<IList<FilterLevelValue>> GetFilterLevelValuesByProductIdAsync(int productId,
-        int pageIndex = 0, int pageSize = int.MaxValue);
+    Task<IList<FilterLevelValue>> GetFilterLevelValuesByProductIdAsync(int productId);
    
     /// <summary>
     /// Gets filter level values by identifier

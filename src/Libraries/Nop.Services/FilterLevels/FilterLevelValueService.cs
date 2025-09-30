@@ -133,14 +133,11 @@ public partial class FilterLevelValueService : IFilterLevelValueService
     /// Gets filter level values by product identifier
     /// </summary>
     /// <param name="productId">Product identifier</param>
-    /// <param name="pageIndex">Page index</param>
-    /// <param name="pageSize">Page size</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the filter level values
     /// </returns>
-    public virtual async Task<IList<FilterLevelValue>> GetFilterLevelValuesByProductIdAsync(int productId,
-        int pageIndex = 0, int pageSize = int.MaxValue)
+    public virtual async Task<IList<FilterLevelValue>> GetFilterLevelValuesByProductIdAsync(int productId)
     {
         var query = from flv_map in _filterLevelValueProductMappingRepository.Table
                     join flv in _filterLevelValueRepository.Table on flv_map.FilterLevelValueId equals flv.Id
@@ -148,7 +145,7 @@ public partial class FilterLevelValueService : IFilterLevelValueService
                     orderby flv.Id
                     select flv;
 
-        return await query.ToPagedListAsync(pageIndex, pageSize);
+        return await  query.ToListAsync();
     }
 
     /// <summary>
