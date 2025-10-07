@@ -16904,6 +16904,9 @@
   <LocaleResource Name="Admin.System.Templates.Topic.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Translation.Translated.NothingToTranslate">
+    <Value>Nothing to translate as all fields contain text</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Translation.Translated.Success">
     <Value>Pre-translation has been completed (all possible fields are pre-filled)</Value>
   </LocaleResource>
