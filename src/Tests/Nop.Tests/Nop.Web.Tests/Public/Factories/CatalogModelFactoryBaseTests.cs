@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
-using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Models.Catalog;
@@ -20,7 +19,6 @@ public class CatalogModelFactoryBaseTests : WebTest
     private ICategoryService _categoryService;
     private Manufacturer _manufacturer;
     private Vendor _vendor;
-    private ITopicService _topicService;
     private IHttpContextAccessor _httpContextAccessor;
     private ProductTag _productTag;
     private CatalogSettings _catalogSettings;
@@ -35,7 +33,6 @@ public class CatalogModelFactoryBaseTests : WebTest
         _product = await GetService<IProductService>().GetProductByIdAsync(1);
         _manufacturer = await GetService<IManufacturerService>().GetManufacturerByIdAsync(1);
         _vendor = await GetService<IVendorService>().GetVendorByIdAsync(1);
-        _topicService = GetService<ITopicService>();
         _httpContextAccessor = GetService<IHttpContextAccessor>();
 
         _productTag = await GetService<IProductTagService>().GetProductTagByIdAsync(1);
@@ -356,32 +353,6 @@ public class CatalogModelFactoryBaseTests : WebTest
 
         Assert.Throws<NullReferenceException>(() =>
             _catalogModelFactory.PreparePageSizeOptionsAsync(new CatalogProductsModel(), null, false, "10, 15, 20", 0).Wait());
-    }
-
-    [Test]
-    public async Task CanPrepareCategorySimpleModels()
-    {
-        var model = await _catalogModelFactory.PrepareCategorySimpleModelsAsync();
-        model.Any().Should().BeTrue();
-        model.Count.Should().Be(7);
-
-        model = await _catalogModelFactory.PrepareCategorySimpleModelsAsync(_category.Id);
-
-        model.Any().Should().BeTrue();
-        model.Count.Should().Be(3);
-
-        var categories = new[] { "Desktops", "Notebooks", "Software" };
-
-        foreach (var categoryModel in model)
-            categoryModel.Name.Should().BeOneOf(categories);
-
-        model = await _catalogModelFactory.PrepareCategorySimpleModelsAsync(_category.Id, false);
-
-        model.Any().Should().BeTrue();
-        model.Count.Should().Be(3);
-
-        foreach (var categoryModel in model)
-            categoryModel.Name.Should().BeOneOf(categories);
     }
 
     [Test]

@@ -60,27 +60,7 @@ public partial interface ICatalogModelFactory
     /// The task result contains the category products model
     /// </returns>
     Task<CatalogProductsModel> PrepareCategoryProductsModelAsync(Category category, CatalogProductsCommand command);
-
-    /// <summary>
-    /// Prepare category (simple) models
-    /// </summary>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the list of category (simple) models
-    /// </returns>
-    Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync();
-
-    /// <summary>
-    /// Prepare category (simple) models
-    /// </summary>
-    /// <param name="rootCategoryId">Root category identifier</param>
-    /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the list of category (simple) models
-    /// </returns>
-    Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId, bool loadSubCategories = true);
-
+    
     #endregion
 
     #region Manufacturers

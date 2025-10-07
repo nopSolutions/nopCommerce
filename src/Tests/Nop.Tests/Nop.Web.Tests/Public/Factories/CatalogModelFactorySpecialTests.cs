@@ -113,15 +113,4 @@ public class CatalogModelFactorySpecialTests : WebTest
         model.AvailableViewModes.Count.Should().Be(0);
         model.ViewMode.Should().Be("list");
     }
-
-    [Test]
-    public async Task PrepareCategorySimpleModelsShouldDependOnSettings()
-    {
-        var model = await _catalogModelFactory.PrepareCategorySimpleModelsAsync();
-
-        var numberOfProducts = model
-            .FirstOrDefault(p => p.Id == _category.Id)?.NumberOfProducts;
-
-        numberOfProducts.Should().Be(12);
-    }
 }
