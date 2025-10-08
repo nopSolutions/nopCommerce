@@ -31,8 +31,6 @@
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            <nop-action-confirmation asp-button-id="shipment-save" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />
-            <nop-action-confirmation asp-button-id="shipment-save-continue" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderShipmentAddButtons, additionalData = Model })
         </div>
     </div>
@@ -296,3 +294,6 @@
         </div>
    </section>
 </form>
+
+<nop-action-confirmation asp-button-id="shipment-save" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />
+<nop-action-confirmation asp-button-id="shipment-save-continue" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />

@@ -52,7 +52,6 @@
                     <i class="fas fa-ban"></i>
                     @T("Admin.Common.Cancel")
                 </button>
-                <nop-action-confirmation asp-button-id="cancel-request" />
             }
             @if (Model.DisplayDeleteRequestButton)
             {
@@ -65,7 +64,6 @@
                     <i class="far fa-trash-alt"></i>
                     @T("Admin.Common.Delete")
                 </button>
-                <nop-action-confirmation asp-button-id="delete-request" />
             }
             @if (Model.DisplaySaveButtons)
             {
@@ -166,3 +164,6 @@
         </div>
     </section>
 </form>
+
+<nop-action-confirmation asp-button-id="cancel-request" />
+<nop-action-confirmation asp-button-id="delete-request" />

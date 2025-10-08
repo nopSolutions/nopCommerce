@@ -46,7 +46,6 @@
                     <i class="far fa-share-square"></i>
                     @T("Plugins.Misc.RFQ.SendQuote")
                 </button>
-                <nop-action-confirmation asp-button-id="send-request" />
             }
             @if (Model.DisplayDeleteQuoteButton)
             {
@@ -59,7 +58,6 @@
                     <i class="far fa-trash-alt"></i>
                     @T("Admin.Common.Delete")
                 </button>
-                <nop-action-confirmation asp-button-id="delete-quote" />
             }
             @if (Model.DisplaySaveButtons)
             {
@@ -178,3 +176,7 @@
         </div>
     </section>
 </form>
+
+<nop-action-confirmation asp-button-id="send-request" />
+<nop-action-confirmation asp-button-id="delete-quote" />
+

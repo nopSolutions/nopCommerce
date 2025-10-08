@@ -28,7 +28,6 @@
             <i class="far fa-trash-can"></i>
             @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.DeleteSelected")
         </button>
-        <nop-action-confirmation asp-button-id="delete-selected-specification-attributes" />
     </div>
 </div>
 
@@ -234,11 +233,13 @@
                                 });
                             });
                         </script>
-                        <nop-alert asp-alert-id="delete-selected-specification-attributes-alert" />
-                        <nop-alert asp-alert-id="nothingSelectedAlert" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<nop-alert asp-alert-id="delete-selected-specification-attributes-alert" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected-specification-attributes" />

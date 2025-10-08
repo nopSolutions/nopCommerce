@@ -22,12 +22,10 @@
                 <i class="far fa-trash-can"></i>
                 @T("Admin.System.Log.DeleteSelected")
             </button>
-            <nop-action-confirmation asp-button-id="delete-selected" />
             <button type="submit" id="clearall" name="clearall" class="btn btn-danger">
                 <i class="far fa-trash-can"></i>
                 @T("Admin.System.Log.ClearLog")
             </button>
-            <nop-action-confirmation asp-button-id="clearall" asp-action="ClearAll" />
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.LogListButtons, additionalData = Model })
         </div>
     </div>
@@ -196,3 +194,5 @@
 </form>
 <nop-alert asp-alert-id="deleteSelectedFailed" />
 <nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected" />
+<nop-action-confirmation asp-button-id="clearall" asp-action="ClearAll" />

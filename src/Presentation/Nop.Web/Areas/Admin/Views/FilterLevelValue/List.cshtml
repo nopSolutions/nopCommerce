@@ -48,7 +48,6 @@
             <i class="far fa-trash-can"></i>
             @T("Admin.Common.Delete.Selected")
         </button>
-        <nop-action-confirmation asp-button-id="delete-selected" />
     </div>
 </div>
 
@@ -185,8 +184,6 @@
                                 });
                             });
                         </script>
-                        <nop-alert asp-alert-id="deleteSelectedFailed" />
-                        <nop-alert asp-alert-id="nothingSelectedAlert" />
                     </div>
                 </div>
             </div>
@@ -236,3 +233,7 @@
         </div>
     </div>
 </div>
+
+<nop-alert asp-alert-id="deleteSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected" />
