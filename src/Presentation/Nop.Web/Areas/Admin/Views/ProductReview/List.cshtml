@@ -34,7 +34,6 @@
                 <i class="far fa-trash-can"></i>
                 @T("Admin.Catalog.ProductReviews.DeleteSelected")
             </button>
-            <nop-action-confirmation asp-button-id="delete-selected" />
         }
         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductReviewListButtons, additionalData = Model })
     </div>
@@ -341,3 +340,5 @@
 <nop-alert asp-alert-id="disapproveSelectedFailed" />
 <nop-alert asp-alert-id="deleteSelectedFailed" />
 <nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected" />
+

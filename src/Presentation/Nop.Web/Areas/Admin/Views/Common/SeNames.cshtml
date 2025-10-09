@@ -21,7 +21,6 @@
             <i class="far fa-trash-can"></i>
             @T("Admin.System.SeNames.DeleteSelected")
         </button>
-        <nop-action-confirmation asp-button-id="delete-selected" />
         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SenamesButtons, additionalData = Model })
     </div>
 </div>
@@ -194,3 +193,4 @@
 </script>
 <nop-alert asp-alert-id="deleteSelectedSeNamesFailed" />
 <nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected" />

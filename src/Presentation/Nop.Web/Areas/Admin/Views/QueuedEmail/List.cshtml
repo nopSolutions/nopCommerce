@@ -22,17 +22,14 @@
                 <i class="far fa-clone"></i>
                 @T("Admin.System.QueuedEmails.RequeueSelected")
             </button>
-            <nop-action-confirmation asp-button-id="requeue-selected" />
             <button type="button" id="delete-selected" class="btn btn-danger">
                 <i class="far fa-trash-can"></i>
                 @T("Admin.System.QueuedEmails.DeleteSelected")
             </button>
-            <nop-action-confirmation asp-button-id="delete-selected" />
             <button type="button" id="delete-all" name="delete-all" class="btn btn-danger">
                 <i class="far fa-trash-can"></i>
                 @T("Admin.System.QueuedEmails.DeleteAll")
             </button>
-            <nop-action-confirmation asp-button-id="delete-all" />
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.QueuedEmailListButtons, additionalData = Model })
         </div>
     </div>
@@ -291,3 +288,7 @@
 <nop-alert asp-alert-id="requeueSelectedFailed" />
 <nop-alert asp-alert-id="deleteSelectedFailed" />
 <nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="requeue-selected" />
+<nop-action-confirmation asp-button-id="delete-selected" />
+<nop-action-confirmation asp-button-id="delete-all" />
+
