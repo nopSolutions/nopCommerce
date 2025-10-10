@@ -681,7 +681,7 @@ i.false-icon {
 
 /*override font-awesome styles*/
 .fa, .far, .fas {
-  display: inline;
+  width: auto;
   padding-right: 5px;
   font-size: 1.0em;
 }
