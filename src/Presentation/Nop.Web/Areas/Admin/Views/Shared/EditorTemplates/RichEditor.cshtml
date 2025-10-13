@@ -133,6 +133,12 @@
             },
             spellCheck: true,
             maxHeight: 800,
+            callbacks: {
+                onBlurCodeview: function(code) {
+                    // Sync CodeView content when switching back to normal view
+                    $(this).summernote('code', $(this).summernote('code'));
+                }
+            },
             @if (!string.IsNullOrEmpty(language))
             {
                 <text>
