@@ -284,6 +284,7 @@ public partial class BaseNopTest
         //services
         services.AddTransient<IBackInStockSubscriptionService, BackInStockSubscriptionService>();
         services.AddTransient<ICategoryService, CategoryService>();
+        services.AddTransient<IFilterLevelValueService, FilterLevelValueService>();
         services.AddTransient<ICompareProductsService, CompareProductsService>();
         services.AddTransient<IRecentlyViewedProductsService, RecentlyViewedProductsService>();
         services.AddTransient<IManufacturerService, ManufacturerService>();
