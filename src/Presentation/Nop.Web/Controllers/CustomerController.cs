@@ -523,6 +523,8 @@ public partial class CustomerController : BasePublicController
     /// A task that represents the asynchronous operation
     /// The task result contains the user verification page for Multi-factor authentication. Served by an authentication provider.
     /// </returns>
+    [CheckAccessClosedStore(ignore: true)]
+    [CheckAccessPublicStore(ignore: true)]
     public virtual async Task<IActionResult> MultiFactorVerification()
     {
         if (!await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
