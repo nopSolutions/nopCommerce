@@ -1,14 +1,12 @@
 ﻿using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Globalization;
-using System.Resources;
 using FluentAssertions;
 using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
 using FluentMigrator.Runner.Generators;
 using FluentMigrator.Runner.Initialization;
-using FluentMigrator.Runner.Processors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +51,7 @@ using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.ExportImport;
+using Nop.Services.FilterLevels;
 using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
@@ -98,7 +97,6 @@ namespace Nop.Tests;
 public partial class BaseNopTest
 {
     private static readonly ServiceProvider _serviceProvider;
-    private static readonly ResourceManager _resourceManager;
 
     protected BaseNopTest()
     {
@@ -158,7 +156,6 @@ public partial class BaseNopTest
 
     static BaseNopTest()
     {
-        _resourceManager = Connections.ResourceManager;
         SetDataProviderType(DataProviderType.Unknown);
 
         TypeDescriptor.AddAttributes(typeof(List<int>),
@@ -587,29 +584,22 @@ public partial class BaseNopTest
         dataConfig.DataProvider = type;
         dataConfig.ConnectionString = string.Empty;
 
-        try
+        switch (type)
         {
-            switch (type)
-            {
-                case DataProviderType.SqlServer:
-                    dataConfig.ConnectionString = _resourceManager.GetString("sql server connection string");
-                    break;
-                case DataProviderType.MySql:
-                    dataConfig.ConnectionString = _resourceManager.GetString("MySql server connection string");
-                    break;
-                case DataProviderType.PostgreSQL:
-                    dataConfig.ConnectionString = _resourceManager.GetString("PostgreSql server connection string");
-                    break;
-                case DataProviderType.Unknown:
-                    dataConfig.ConnectionString = "Data Source=nopCommerceTest.sqlite;Mode=Memory;Cache=Shared";
-                    break;
-            }
+            case DataProviderType.SqlServer:
+                dataConfig.ConnectionString = NopTestConfiguration.SqlServerConnectionString;
+                break;
+            case DataProviderType.MySql:
+                dataConfig.ConnectionString = NopTestConfiguration.MySqlServerConnectionString;
+                break;
+            case DataProviderType.PostgreSQL:
+                dataConfig.ConnectionString = NopTestConfiguration.PostgreSqlServerConnectionString;
+                break;
+            case DataProviderType.Unknown:
+                dataConfig.ConnectionString = NopTestConfiguration.SqliteConnectionString;
+                break;
         }
-        catch (MissingManifestResourceException)
-        {
-            //ignore
-        }
-
+       
         Singleton<DataConfig>.Instance = dataConfig;
         var flag = !string.IsNullOrEmpty(dataConfig.ConnectionString);
 
