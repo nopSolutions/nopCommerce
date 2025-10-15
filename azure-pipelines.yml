@@ -44,7 +44,8 @@ stages:
           key: 'nuget | "$(Agent.OS)" | **/*.sln | **/*.csproj'
           restoreKeys: |
             nuget | "$(Agent.OS)"
-          path: ~/.nuget/packages
+          path: '$(HOME)/.nuget/packages'   # or: $(NUGET_PACKAGES)
+
 
       # Restore
       - script: dotnet restore ./src/NopCommerce.sln
