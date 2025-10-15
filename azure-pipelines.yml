@@ -1,0 +1,116 @@
+# azure-pipelines.yml
+# Build-only pipeline for NopCommerce (segregated Build/Release).
+# - Restores, builds, tests (non-blocking), publishes Nop.Web
+# - Publishes a zipped artifact for downstream Release
+
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+      - feature/*
+
+pr:
+  branches:
+    include:
+      - main
+      - develop
+
+variables:
+  buildConfiguration: 'Release'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build & Package
+  jobs:
+  - job: BuildJob
+    displayName: Restore, Build, Test, Package
+    steps:
+      # Ensure .NET 9 SDK is available (matches your Dockerfile)
+      - task: UseDotNet@2
+        displayName: 'Install .NET SDK 9.x'
+        inputs:
+          packageType: 'sdk'
+          version: '9.x'
+          includePreview: false
+
+      # Optional: speed up restores between runs
+      - task: Cache@2
+        displayName: 'Cache NuGet packages'
+        inputs:
+          key: 'nuget | "$(Agent.OS)" | **/*.sln | **/*.csproj'
+          restoreKeys: |
+            nuget | "$(Agent.OS)"
+          path: ~/.nuget/packages
+
+      # Restore
+      - script: dotnet restore ./src/NopCommerce.sln
+        displayName: 'Restore solution'
+
+      # Build
+      - script: dotnet build ./src/NopCommerce.sln --no-restore -c $(buildConfiguration)
+        displayName: 'Build solution ($(buildConfiguration))'
+
+      # Test (do not fail the build if tests fail) + write TRX to a known folder
+      - script: |
+          dotnet test ./src/NopCommerce.sln \
+            --no-build \
+            -c $(buildConfiguration) \
+            --logger "trx;LogFileName=test_results.trx" \
+            --results-directory "$(Agent.TempDirectory)/test-results"
+        displayName: 'Test (non-blocking)'
+        continueOnError: true
+
+      # Publish test results regardless of pass/fail, and don't fail task on failures
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFormat: 'VSTest'
+          testResultsFiles: '**/*.trx'
+          searchFolder: '$(Agent.TempDirectory)/test-results'
+          mergeTestResults: true
+          testRunTitle: 'NopCommerce Unit Tests'
+          failTaskOnFailedTests: false
+
+      # Publish web project to artifact staging directory
+      - script: |
+          echo "Publishing Nop.Web to $(Build.ArtifactStagingDirectory)/published"
+          dotnet publish ./src/Presentation/Nop.Web/Nop.Web.csproj -c $(buildConfiguration) -o "$(Build.ArtifactStagingDirectory)/published"
+
+          echo "Ensuring required runtime folders exist (to mirror Dockerfile expectations)"
+          mkdir -p "$(Build.ArtifactStagingDirectory)/published/bin"
+          mkdir -p "$(Build.ArtifactStagingDirectory)/published/logs"
+          mkdir -p "$(Build.ArtifactStagingDirectory)/published/Plugins"
+          mkdir -p "$(Build.ArtifactStagingDirectory)/published/App_Data"
+          mkdir -p "$(Build.ArtifactStagingDirectory)/published/App_Data/DataProtectionKeys"
+          mkdir -p "$(Build.ArtifactStagingDirectory)/published/wwwroot/bundles"
+          mkdir -p "$(Build.ArtifactStagingDirectory)/published/wwwroot/db_backups"
+          mkdir -p "$(Build.ArtifactStagingDirectory)/published/wwwroot/files/exportimport"
+          mkdir -p "$(Build.ArtifactStagingDirectory)/published/wwwroot/icons"
+          mkdir -p "$(Build.ArtifactStagingDirectory)/published/wwwroot/images"
+          mkdir -p "$(Build.ArtifactStagingDirectory)/published/wwwroot/images/thumbs"
+          mkdir -p "$(Build.ArtifactStagingDirectory)/published/wwwroot/images/uploaded"
+          mkdir -p "$(Build.ArtifactStagingDirectory)/published/wwwroot/sitemaps"
+        displayName: 'Publish Nop.Web & prepare payload'
+
+      # Zip the published payload (nice for classic Releases or deployment jobs)
+      - task: ArchiveFiles@2
+        displayName: 'Archive published output'
+        inputs:
+          rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/published'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/nop-web-$(Build.BuildNumber).zip'
+          replaceExistingArchive: true
+
+      # Publish the artifact for the Release pipeline to consume
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish artifact: drop'
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
