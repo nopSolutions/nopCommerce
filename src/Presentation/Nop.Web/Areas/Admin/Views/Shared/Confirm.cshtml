@@ -16,10 +16,28 @@
             @T("Admin.Common.ActionConfirmation")
         </div>
         <div class="modal-footer">
-            <button type="submit" id="@(Model.WindowId)-submit-button" class="btn btn-primary float-right">
+            <button type="button" id="@(Model.WindowId)-submit-button" class="btn btn-primary float-right">
                 @T("Admin.Common.Yes")
             </button>
             <span class="btn btn-default float-right margin-r-5" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
         </div>
     </div>
-</div> 
+</div>
+
+<script>
+    $(function(){
+        const openerBtn = document.getElementById('@Model.ButtonId');
+
+        openerBtn.type = "button";
+        openerBtn.setAttribute("data-toggle", "modal");
+        openerBtn.setAttribute("data-target", "#@Model.WindowId")
+
+        $('#@(Model.WindowId)-submit-button').on('click', function() {
+            if (!openerBtn.name)
+                return;
+
+            openerBtn.type = "submit";
+            openerBtn.click();
+        });
+    });
+</script>

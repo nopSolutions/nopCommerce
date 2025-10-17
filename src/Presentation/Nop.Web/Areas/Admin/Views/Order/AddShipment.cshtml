@@ -111,8 +111,6 @@
                                         $("#shipment-save-action-confirmation").remove();
                                         $(this).attr("name", "save").attr("type", "submit");
                                     }
-                                }).on("click", function () {
-                                    return validateWarehouseAvailability("save");
                                 });
 
                                 $("#shipment-save-continue").on("focus", function () {
@@ -120,8 +118,6 @@
                                         $("#shipment-save-continue-action-confirmation").remove();
                                         $(this).attr("name", "save-continue").attr("type", "submit");
                                     }
-                                }).on("click", function () {
-                                    return validateWarehouseAvailability("continue");
                                 });
                             });
 
