@@ -8,20 +8,12 @@
 }
 
 @{
-    var showTour = ViewBag.ShowTour ?? false;
-
     const string hideCommonBlockAttributeName = "GeneralCommonSettingsPage.HideCommonBlock";
     var customer = await workContext.GetCurrentCustomerAsync();
-    var hideCommonBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName) && !await Html.IsTourActiveAsync();
 
     const string hideFaviconBlockAttributeName = "GeneralCommonSettingsPage.HideFaviconBlock";
     var hideFaviconBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideFaviconBlockAttributeName);
-
-    const string hideTopMenuItemsBlockAttributeName = "GeneralCommonSettingsPage.HideTopMenuItemsBlock";
-    var hideTopMenuItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTopMenuItemsBlockAttributeName);
-
-    const string hideFooterItemsBlockAttributeName = "GeneralCommonSettingsPage.HideFooterItemsBlock";
-    var hideFooterItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideFooterItemsBlockAttributeName);
 
     const string hideSocialMediaBlockAttributeName = "GeneralCommonSettingsPage.HideSocialMediaBlock";
     var hideSocialMediaBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSocialMediaBlockAttributeName);
@@ -49,7 +41,10 @@
 
     const string hideLocalizationBlockAttributeName = "GeneralCommonSettingsPage.HideLocalizationBlock";
     var hideLocalizationBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideLocalizationBlockAttributeName);
-    
+
+    const string hideTranslationBlockAttributeName = "GeneralCommonSettingsPage.HideTranslationBlock";
+    var hideTranslationBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTranslationBlockAttributeName);
+
     const string hideCustomHtmlBlockAttributeName = "GeneralCommonSettingsPage.HideCustomHtmlBlock";
     var hideCustomHtmlBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCustomHtmlBlockAttributeName);
 
@@ -80,8 +75,6 @@
 
                 <nop-cards id="generalcommon-cards">
                     <nop-card asp-name="generalcommon-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.Common", Model)</nop-card>
-                    <nop-card asp-name="generalcommon-top-menu-items" asp-icon="fas fa-turn-up" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.TopMenuItems")" asp-hide-block-attribute-name="@hideTopMenuItemsBlockAttributeName" asp-hide="@hideTopMenuItemsBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.TopMenuItems", Model)</nop-card>
-                    <nop-card asp-name="generalcommon-footeritems" asp-icon="fas fa-turn-down" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FooterItems")" asp-hide-block-attribute-name="@hideFooterItemsBlockAttributeName" asp-hide="@hideFooterItemsBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.FooterItems", Model)</nop-card>
                     <nop-card asp-name="generalcommon-socialmedia" asp-icon="fas fa-share-from-square" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia")" asp-hide-block-attribute-name="@hideSocialMediaBlockAttributeName" asp-hide="@hideSocialMediaBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.SocialMedia", Model)</nop-card>
                     <nop-card asp-name="generalcommon-favicon" asp-icon="far fa-images" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FaviconAndAppIcons")" asp-hide-block-attribute-name="@hideFaviconBlockAttributeName" asp-hide="@hideFaviconBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.Favicon", Model)</nop-card>
                     <nop-card asp-name="generalcommon-sitemap" asp-icon="fas fa-sitemap" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Sitemap")" asp-hide-block-attribute-name="@hideSitemapBlockAttributeName" asp-hide="@hideSitemapBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Sitemap", Model)</nop-card>
@@ -92,6 +85,7 @@
                     <nop-card asp-name="generalcommon-captcha" asp-icon="fas fa-fingerprint" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Captcha")" asp-hide-block-attribute-name="@hideCaptchaBlockAttributeName" asp-hide="@hideCaptchaBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Captcha", Model)</nop-card>
                     <nop-card asp-name="generalcommon-pdf" asp-icon="far fa-file-pdf" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf")" asp-hide-block-attribute-name="@hidePDFBlockAttributeName" asp-hide="@hidePDFBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Pdf", Model)</nop-card>
                     <nop-card asp-name="generalcommon-localization" asp-icon="fas fa-language" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization")" asp-hide-block-attribute-name="@hideLocalizationBlockAttributeName" asp-hide="@hideLocalizationBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Localization", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-translation" asp-icon="fas fa-globe" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Translation")" asp-hide-block-attribute-name="@hideTranslationBlockAttributeName" asp-hide="@hideTranslationBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Translation", Model)</nop-card>
                     <nop-card asp-name="generalcommon-customhtml" asp-icon="fas fa-code" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.CustomHtml")" asp-hide-block-attribute-name="@hideCustomHtmlBlockAttributeName" asp-hide="@hideCustomHtmlBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.CustomHtml", Model)</nop-card>
                     <nop-card asp-name="generalcommon-adminarea" asp-icon="fas fa-clipboard" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.AdminArea")" asp-hide-block-attribute-name="@hideAdminAreaBlockAttributeName" asp-hide="@hideAdminAreaBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.AdminArea", Model)</nop-card>
 

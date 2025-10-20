@@ -50,7 +50,7 @@
         }
         <form asp-controller="Customer" asp-action="CheckGiftCardBalance" method="post">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
-            <div class="fieldset">
+            <section class="fieldset">
                 <div class="form-fields">
                     <div class="inputs">
                         <label asp-for="GiftCardCode" asp-postfix=":"></label>
@@ -58,10 +58,13 @@
                         <nop-required />
                         <span asp-validation-for="GiftCardCode"></span>
                     </div>
-                    <nop-captcha />
+                    @if (Model.DisplayCaptcha)
+                    {
+                        <nop-captcha />
+                    }
                 </div>
-            </div>
-            <div class="buttons">
+            </section>
+            <section class="buttons">
                 <button type="submit" name="checkbalancegiftcard" id="checkbalancegiftcard" class="button-1 check-gift-card-balance-button">@T("CheckGiftCard.GiftCardCouponCode.Button")</button>
                 <script asp-location="Footer">
                     $(function() {
@@ -73,7 +76,7 @@
                         });
                     });
                 </script>
-            </div>
+            </section>
         </form>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerCheckGiftCardBalanceBottom, additionalData = Model })
     </div>

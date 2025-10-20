@@ -24,11 +24,11 @@
     </div>
     <div class="page-body">
         <div class="terms-of-agreement">
-            <input id="agreement-agree" type="checkbox" value="@T("DownloadableProducts.IAgree")" />
+            <input id="agreement-agree" type="checkbox" value="@T("DownloadableProducts.IAgree")" aria-label="@T("DownloadableProducts.IAgree")" />
             @Html.Raw(Model.UserAgreementText)
         </div>
         <div class="buttons">
-            <button type="submit" id="continue-downloading" class="button-1 user-agreement-button" onclick="setLocation('@Url.RouteUrl("GetDownload", new { orderItemId = Model.OrderItemGuid, agree = true })')">@T("Common.Continue")</button>
+            <button type="submit" id="continue-downloading" class="button-1 user-agreement-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.GET_DOWNLOAD, new { orderItemId = Model.OrderItemGuid, agree = true })')">@T("Common.Continue")</button>
         </div>
     </div>
 </div>

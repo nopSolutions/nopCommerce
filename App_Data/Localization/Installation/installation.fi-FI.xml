@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Suomi" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Järjestelmänvalvojan sähköpostit</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Syötä ylläpitäjän sähköposti</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Ylläpitäjän salasana</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Syötä järjestelmänvalvojan salasana</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Merkistö</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Collation vaaditaan</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Tilille {0} ei myönnetä kansion {1} muokkausoikeutta. Määritä nämä käyttöoikeudet</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Tilille {0} ei myönnetä tiedoston {1} muokkausoikeutta. Määritä nämä käyttöoikeudet.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Vahvista salasanasi</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Syötä vahvistussalasana</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Yhteysmerkkijono</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>SQL-yhteyden merkkijono vaaditaan</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Väärä SQL-yhteyden merkkijono</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Maa</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Valitse maasi...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Luo tietokanta, jos sitä ei ole olemassa</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Luo näytetiedot</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Määritä mukautettu koodaus</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Tietokanta</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Tietokannan luomisessa tapahtui virhe: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Tietokannan tiedot</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Tietokannan nimi</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Tietokantaa ei ole, tai sinulla ei ole oikeutta yhdistää siihen</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Valitse tietolähde</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Jos tarvitset tietoa nopCommercen käyttöön, käy</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>dokumentaatiosektio nopCommerce.com:issa</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Esimerkki</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Asenna</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Asennetaan nopCommercea...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Käytä Windows-autentikaatiota</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Salasanat ei täsmää</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Syötä raaka yhteysmerkkijono (edistynyt)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Uudelleenkäynnistä asennus</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Napsauta käynnistääksesi asennusprosessin uudelleen (tyhjennä kaikki välimuistissa olevat arvot)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Käynnistetään uudelleen...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>SQL-palvelimen nimi</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>SQL-palvelimen nimi on pakollinen</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Asennus epäonnistui: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL-palvelimen salasana</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL-palvelimen salasana on pakollinen</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL-palvelimen käyttäjätunnus</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL-palvelimen käyttäjätunnus on pakollinen</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Kaupan tiedot</Value>
+  </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>Tilaa nopCommerce uutiskirje</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce asennus</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Täydentääksesi tämän ohjatun toiminnon, sinun täytyy tietää joitakin tietoja tietokantapalvelimestasi ("Yhteysmerkkijono"). Ota tarvittaessa yhteyttä palveluntarjoajaasi. Jos olet asentamassa paikalliseen koneeseen tai palvelimeen, saatat tarvita tietoja järjestelmänvalvojaltasi.</Value>
+  </LocaleResource>
+</Language>

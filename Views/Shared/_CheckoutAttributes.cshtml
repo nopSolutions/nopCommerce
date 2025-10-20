@@ -16,8 +16,9 @@
             {
                 var controlId = $"checkout_attribute_{attribute.Id}";
                 var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+                var textPromptId = $"checkout_attribute_{attribute.Id}_textprompt";
                 <dt id="@($"checkout_attribute_label_{attribute.Id}")">
-                    <label class="text-prompt">
+                    <label id="@textPromptId" class="text-prompt">
                         @textPrompt
                     </label>
                     @if (attribute.IsRequired)
@@ -30,7 +31,7 @@
                     {
                         case AttributeControlType.DropdownList:
                             {
-                        <select name="@(controlId)" id="@(controlId)">
+                        <select name="@(controlId)" id="@(controlId)" aria-labelledby="@textPromptId">
                             @if (!attribute.IsRequired)
                             {
                                 <option value="0">---</option>
@@ -83,12 +84,12 @@
                             break;
                         case AttributeControlType.TextBox:
                             {
-                                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@(attribute.DefaultValue)" />
+                                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@(attribute.DefaultValue)" aria-labelledby="@textPromptId" />
                             }
                             break;
                         case AttributeControlType.MultilineTextbox:
                             {
-                                <textarea id="@(controlId)" name="@(controlId)">@(attribute.DefaultValue)</textarea>
+                                <textarea id="@(controlId)" name="@(controlId)" aria-labelledby="@textPromptId">@(attribute.DefaultValue)</textarea>
                             }
                             break;
                         case AttributeControlType.Datepicker:
@@ -155,7 +156,7 @@
                                                             options: {
                                                                 type: 'local',
                                                                 metadata: {
-                                                                    url: '@(Url.RouteUrl("DownloadGetFileUpload", new { downloadId = download.DownloadGuid }))' 
+                                                                    url: '@(Url.RouteUrl(NopRouteNames.Standard.DOWNLOAD_GET_FILE_UPLOAD, new { downloadId = download.DownloadGuid }))'
                                                                 }
                                                             },
                                                         }
@@ -164,7 +165,7 @@
                                             }
                                             server: {
                                                 process: {
-                                                    url: '@(Url.RouteUrl("UploadFileCheckoutAttribute", new {attributeId = attribute.Id}))',
+                                                url: '@(Url.RouteUrl(NopRouteNames.Ajax.UPLOAD_FILE_CHECKOUT_ATTRIBUTE, new { attributeId = attribute.Id }))',
                                                     onload: function(response) {
                                                         $("#@(controlId)").val(JSON.parse(response).downloadGuid);
                                                     }
@@ -240,7 +241,7 @@
         function checkoutAttributeChange() {
             $.ajax({
                 cache: false,
-                url: "@Html.Raw(Url.RouteUrl("CheckoutAttributeChange", new { isEditable = Model.IsEditable }))",
+                url: "@Html.Raw(Url.RouteUrl(NopRouteNames.Ajax.CHECKOUT_ATTRIBUTE_CHANGE, new { isEditable = Model.IsEditable }))",
                 data: $('#shopping-cart-form').serialize(),
                 type: "POST",
                 success: function (data, textStatus, jqXHR) {

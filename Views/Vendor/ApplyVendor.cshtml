@@ -23,9 +23,9 @@
         }
         else
         {
-            <form asp-route="ApplyVendorAccount" method="post" enctype="multipart/form-data">
+            <form asp-route="@NopRouteNames.General.APPLY_VENDOR_ACCOUNT" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                <div class="fieldset">
+                <section class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
                             <label asp-for="Name" asp-postfix=":"></label>
@@ -44,8 +44,8 @@
                             <textarea asp-for="Description" class="description"></textarea>
                         </div>
                         <div class="inputs">
-                            <label>@T("Vendors.ApplyAccount.Picture"):</label>
-                            <input name="uploadedFile" type="file" accept="image/*" />
+                            <label for="picture-fileupload">@T("Vendors.ApplyAccount.Picture"):</label>
+                            <input id="picture-fileupload" name="uploadedFile" type="file" accept="image/*" />
                         </div>
                         @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
                         @if (Model.DisplayCaptcha)
@@ -79,7 +79,7 @@
                                             $('#read-acceptterms').on('click',
                                                 function (e) {
                                                     displayPopupContentFromUrl(
-                                                        '@Url.RouteUrl("TopicPopup", new {SystemName = "VendorTermsOfService"})',
+                                                        '@Url.RouteUrl(NopRouteNames.Ajax.TOPIC_POPUP, new { SystemName = "VendorTermsOfService" })',
                                                         '@T("Vendors.ApplyAccount.AcceptTermsOfService")');
                                                 });
                                         });
@@ -87,15 +87,15 @@
                                 }
                                 else
                                 {
-                                    <a class="read" id="read-acceptterms" href="@Url.RouteTopicUrl("VendorTermsOfService")">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
+                                    <a class="read" id="read-acceptterms" href="@await NopUrl.RouteTopicUrlAsync("VendorTermsOfService")">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
                                 }
                             </div>
                         }
                     </div>
-                </div>
-                <div class="buttons">
+                </section>
+                <section class="buttons">
                     <button type="submit" id="apply-vendor" name="apply-vendor" class="button-1 apply-vendor-button">@T("Vendors.ApplyAccount.Button")</button>
-                </div>
+                </section>
             </form>
         }
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ApplyVendorBottom, additionalData = Model })

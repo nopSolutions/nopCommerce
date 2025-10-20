@@ -1,4 +1,11 @@
-﻿@model ActiveDiscussionsModel
+﻿@using Nop.Core
+@using Nop.Core.Domain.Seo
+
+@model ActiveDiscussionsModel
+
+@inject SeoSettings seoSettings
+@inject IWebHelper webHelper
+
 @{
     Layout = "_ColumnsOne";
 
@@ -6,6 +13,16 @@
     NopHtml.AddTitleParts(T("Forum.PageTitle.ActiveDiscussions").Text);
     //page class
     NopHtml.AppendPageCssClassParts("html-active-discussions-page");
+
+    //canonical URL
+    if (seoSettings.CanonicalUrlsEnabled)
+    {
+        var activeDiscussionsUrl = Model.TopicPageIndex > 0 ?
+            Url.RouteUrl(NopRouteNames.Standard.ACTIVE_DISCUSSIONS_PAGED, new { pageNumber = Model.TopicPageIndex + 1 }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant() :
+            Url.RouteUrl(NopRouteNames.Standard.ACTIVE_DISCUSSIONS, null, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+
+        NopHtml.AddCanonicalUrlParts(activeDiscussionsUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
+    }
 }
 <div class="page active-discussions-page">
     @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent))

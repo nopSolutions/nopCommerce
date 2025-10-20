@@ -1,4 +1,4 @@
-﻿@model NewsletterSubscriptionSearchModel
+﻿@model NewsLetterSubscriptionSearchModel
 
 @using Nop.Services.Stores
 
@@ -22,7 +22,11 @@
             @T("Admin.Promotions.NewsLetterSubscriptions")
         </h1>
         <div class="float-right">
-            <button asp-action="ExportCSV"type="submit" name="exportcsv" class="btn btn-success">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-square-plus"></i>
+                @T("Admin.Common.AddNew")
+            </a>
+            <button asp-action="ExportCSV" type="submit" name="exportcsv" class="btn btn-success">
                 <i class="fas fa-download"></i>
                 @T("Admin.Common.ExportToCsv")
             </button>
@@ -99,6 +103,14 @@
                                             <nop-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles" />
                                         </div>
                                     </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SubscriptionTypeId" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-select asp-for="SubscriptionTypeId" asp-items="Model.AvailableSubscriptionTypes" />
+                                            </div>
+                                        </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -120,9 +132,7 @@
                         @await Html.PartialAsync("Table", new DataTablesModel
                         {
                             Name = "newsletter-subscriptions-grid",
-                            UrlRead = new DataUrl("SubscriptionList", "NewsLetterSubscription", null),
-                            UrlDelete = new DataUrl("SubscriptionDelete", "NewsLetterSubscription", null),
-                            UrlUpdate = new DataUrl("SubscriptionUpdate", "NewsLetterSubscription", null),
+                            UrlRead = new DataUrl("List", "NewsLetterSubscription", null),
                             SearchButtonId = "search-subscriptions",
                             Length = Model.PageSize,
                             LengthMenu = Model.AvailablePageSizes,
@@ -133,56 +143,55 @@
                                 new FilterParameter(nameof(Model.SearchEmail)),
                                 new FilterParameter(nameof(Model.ActiveId)),
                                 new FilterParameter(nameof(Model.StoreId)),
-                                new FilterParameter(nameof(Model.CustomerRoleId))
+                                new FilterParameter(nameof(Model.CustomerRoleId)),
+                                new FilterParameter(nameof(Model.SubscriptionTypeId))
                             },
                             ColumnCollection = new List<ColumnProperty>
                                 {
-                                    new ColumnProperty(nameof(NewsletterSubscriptionModel.Email))
+                                    new ColumnProperty(nameof(NewsLetterSubscriptionModel.Email))
                                     {
-                                        Title = T("Admin.Promotions.NewsLetterSubscriptions.Fields.Email").Text,
+                                        Title = T("Admin.Promotions.NewsLetterSubscription.Fields.Email").Text,
                                         Width = "300",
                                         Editable = true,
                                         EditType = EditType.String
                                     },
-                                    new ColumnProperty(nameof(NewsletterSubscriptionModel.Active))
+                                    new ColumnProperty(nameof(NewsLetterSubscriptionModel.SubscriptionTypeName))
                                     {
-                                        Title = T("Admin.Promotions.NewsLetterSubscriptions.Fields.Active").Text,
+                                        Title = T("Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType").Text,
+                                        Width = "100"
+                                    },
+                                    new ColumnProperty(nameof(NewsLetterSubscriptionModel.Active))
+                                    {
+                                        Title = T("Admin.Promotions.NewsLetterSubscription.Fields.Active").Text,
                                         Width = "100",
                                         ClassName = NopColumnClassDefaults.CenterAll,
                                         Render = new RenderBoolean(),
                                         Editable = true,
                                         EditType = EditType.Checkbox
                                     },
-                                    new ColumnProperty(nameof(NewsletterSubscriptionModel.StoreName))
+                                    new ColumnProperty(nameof(NewsLetterSubscriptionModel.StoreName))
                                     {
-                                        Title = T("Admin.Promotions.NewsLetterSubscriptions.Fields.Store").Text,
+                                        Title = T("Admin.Promotions.NewsLetterSubscription.Fields.Store").Text,
                                         Width = "150",
                                         Visible = (await storeService.GetAllStoresAsync()).Count > 1
                                     },
-                                    new ColumnProperty(nameof(NewsletterSubscriptionModel.LanguageName))
+                                    new ColumnProperty(nameof(NewsLetterSubscriptionModel.LanguageName))
                                     {
-                                        Title = T("Admin.Promotions.NewsLetterSubscriptions.Fields.Language").Text,
+                                        Title = T("Admin.Promotions.NewsLetterSubscription.Fields.Language").Text,
                                         Width = "150"
                                     },
-                                    new ColumnProperty(nameof(NewsletterSubscriptionModel.CreatedOn))
+                                    new ColumnProperty(nameof(NewsLetterSubscriptionModel.CreatedOn))
                                     {
-                                        Title = T("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn").Text,
+                                        Title = T("Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn").Text,
                                         Width = "200"
                                     },
-                                    new ColumnProperty(nameof(NewsletterSubscriptionModel.Id))
+                                    new ColumnProperty(nameof(NewsLetterSubscriptionModel.Id))
                                     {
                                         Title = T("Admin.Common.Edit").Text,
                                         Width = "200",
                                         ClassName =  NopColumnClassDefaults.Button,
-                                        Render = new RenderButtonsInlineEdit()
-                                    },
-                                    new ColumnProperty(nameof(NewsletterSubscriptionModel.Id))
-                                    {
-                                        Title = T("Admin.Common.Delete").Text,
-                                        Width = "100",
-                                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
-                                        ClassName = NopColumnClassDefaults.Button
-                                    }
+                                        Render = new RenderButtonEdit(new DataUrl("~/Admin/NewsLetterSubscription/Edit/"))
+                                    }                                    
                                 }
                         })
                     </div>

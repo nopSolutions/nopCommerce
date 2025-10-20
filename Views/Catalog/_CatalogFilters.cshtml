@@ -7,7 +7,7 @@
     return;
 }
 
-<div class="block product-filters">
+<section class="block product-filters">
     @if (Model.PriceRangeFilter.Enabled)
     {
         @await Html.PartialAsync("_FilterPriceBox", Model.PriceRangeFilter)
@@ -22,7 +22,7 @@
     {
         @await Html.PartialAsync("_FilterManufacturerBox", Model.ManufacturerFilter)
     }
-</div>
+</section>
 
 <script asp-location="Footer">
     $(function() {

@@ -21,9 +21,9 @@
         }
         else
         {
-            <form asp-route="ContactVendor" method="post">
+            <form asp-route="@NopRouteNames.Standard.CONTACT_VENDOR" method="post">
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                <div class="fieldset">
+                <section class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
                             <label asp-for="FullName" asp-postfix=":"></label>
@@ -57,10 +57,10 @@
                             <nop-captcha />
                         }
                     </div>
-                </div>
-                <div class="buttons">
+                </section>
+                <section class="buttons">
                     <button type="submit" name="send-email" class="button-1 contact-us-button">@T("ContactVendor.Button")</button>
-                </div>
+                </section>
             </form>
         }
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContactVendorBottom, additionalData = Model })

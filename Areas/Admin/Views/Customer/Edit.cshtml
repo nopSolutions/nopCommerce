@@ -44,7 +44,6 @@
                     <i class="far fa-smile"></i>
                     @T("Admin.Customers.Customers.SendWelcomeMessage")
                 </button>
-                <nop-action-confirmation asp-button-id="send-welcome-message" />
             }
             @if (Model.AllowReSendingOfActivationMessage)
             {
@@ -52,7 +51,6 @@
                     <i class="fas fa-check-circle"></i>
                     @T("Admin.Customers.Customers.ReSendActivationMessage")
                 </button>
-                <nop-action-confirmation asp-button-id="resend-activation-message" />
             }
             @if (Model.GdprEnabled)
             {
@@ -91,15 +89,6 @@
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
 </form>
-<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="customer-delete" />
-@if (Model.GdprEnabled)
-{
-    <nop-delete-confirmation asp-model-id="@Model.Id" asp-action="GdprDelete" asp-button-id="customer-gdpr-delete" />
-}
-@if (!string.IsNullOrEmpty(Model.MultiFactorAuthenticationProvider))
-{
-    <nop-delete-confirmation asp-model-id="@Model.Id" asp-action="RemoveBindMFA" asp-button-id="mfa-bind-delete" />
-}
 
 @*send email form*@
 <div id="sendemail-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendemail-window-title">
@@ -223,3 +212,21 @@
         </div>
     </div>
 </div>
+
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="customer-delete" />
+@if (Model.GdprEnabled)
+{
+    <nop-delete-confirmation asp-model-id="@Model.Id" asp-action="GdprDelete" asp-button-id="customer-gdpr-delete" />
+}
+@if (!string.IsNullOrEmpty(Model.MultiFactorAuthenticationProvider))
+{
+    <nop-delete-confirmation asp-model-id="@Model.Id" asp-action="RemoveBindMFA" asp-button-id="mfa-bind-delete" />
+}
+@if (Model.AllowSendingOfWelcomeMessage)
+{
+    <nop-action-confirmation asp-button-id="send-welcome-message" />
+}
+@if (Model.AllowReSendingOfActivationMessage)
+{
+    <nop-action-confirmation asp-button-id="resend-activation-message" />
+}

@@ -20,9 +20,9 @@
         }
         else
         {
-            <form asp-route="EmailWishlist" method="post">
+            <form asp-route="@NopRouteNames.Standard.EMAIL_WISHLIST" method="post">
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                <div class="fieldset">
+                <section class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
                             <label asp-for="FriendEmail" asp-postfix=":"></label>
@@ -44,10 +44,11 @@
                             <nop-captcha />
                         }
                     </div>
-                </div>
-                <div class="buttons">
+                </section>
+                <section class="buttons">
                     <button type="submit" name="send-email" class="button-1 send-email-a-friend-button">@T("Wishlist.EmailAFriend.Button")</button>
-                </div>
+                </section>
+                <input type="hidden" name="listId" value="@Model.ListId" />
             </form>
         }
     </div>

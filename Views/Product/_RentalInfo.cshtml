@@ -17,7 +17,7 @@
 
             <div class="attribute-item">
                 <div class="attribute-label">
-                    <label class="text-prompt">
+                    <label class="text-prompt" for="@(startDateControlId)">
                         @T("Products.RentalStartDate"):
                     </label>
                     <span class="required">*</span>
@@ -33,7 +33,7 @@
             </div>
             <div class="attribute-item">
                 <div class="attribute-label">
-                    <label class="text-prompt">
+                    <label class="text-prompt" for="@(endDateControlId)">
                         @T("Products.RentalEndDate"):
                     </label>
                     <span class="required">*</span>
@@ -59,7 +59,7 @@
                         <text>
                         $.ajax({
                             cache: false,
-                            url: "@Html.Raw(Url.RouteUrl("ProductDetailsAttributeChange", new {productId = productId, validateAttributeConditions = false, loadPicture = false }))",
+                            url: "@Html.Raw(Url.RouteUrl(NopRouteNames.Ajax.PRODUCT_DETAILS_ATTRIBUTE_CHANGE, new {productId = productId, validateAttributeConditions = false, loadPicture = false }))",
                             data: $('#product-details-form').serialize(),
                             type: "POST",
                             success: function (data, textStatus, jqXHR) {

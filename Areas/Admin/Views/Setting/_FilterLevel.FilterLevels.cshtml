@@ -1,0 +1,34 @@
+﻿@model FilterLevelSettingsModel
+
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "filter-levels-grid",
+        UrlRead = new DataUrl("FilterLevelList", "Setting", null),
+        Length = Model.FilterLevelSearchModel.PageSize,
+        LengthMenu = Model.FilterLevelSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(FilterLevelModel.Name))
+                {
+                    Title = T("Admin.Configuration.Settings.FilterLevel.Name").Text
+                },
+                new ColumnProperty(nameof(FilterLevelModel.Enabled))
+                {
+                    Title = T("Admin.Configuration.Settings.FilterLevel.Enabled").Text,
+                    Width = "50",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean(),
+                    Editable = true,
+                    EditType = EditType.Checkbox
+                },
+                new ColumnProperty(nameof(FilterLevelModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "50",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/Setting/EditFilterLevel/"))
+                }
+            }
+    })
+</div>

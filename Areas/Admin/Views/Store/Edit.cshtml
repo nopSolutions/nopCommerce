@@ -1,16 +1,11 @@
 @model StoreModel
-@using Nop.Web.Framework.Models.AdminAreaTour
 
 @{
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Stores.EditStoreDetails").Text;
-    //tour step
-    ViewBag.TourStep = TourStep.Store;
     //active menu item (system name)
     NopHtml.SetActiveMenuItemSystemName("Stores");
 }
-
-@await Html.PartialAsync("_AdminTour")
 
 <form asp-controller="Store" asp-action="Edit" method="post">
     <div class="content-header clearfix">
@@ -40,3 +35,8 @@
     @await Html.PartialAsync("_CreateOrUpdate", Model)
 </form>
 <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="store-delete" />
+
+@if(await Html.IsTourActiveAsync())
+{
+    @await Html.PartialAsync("_Edit.Tour")
+}

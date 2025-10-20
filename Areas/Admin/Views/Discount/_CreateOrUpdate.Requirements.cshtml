@@ -20,7 +20,7 @@
                 loadRequirements();
 
                 //adding requirement event
-                $("#discountRequirementContainer").bind('nopnewdiscountruleadded', function(event, newRequirementId) {
+                $("#discountRequirementContainer").on('nopnewdiscountruleadded', function(event, newRequirementId) {
                     var parentId = $("#@Html.IdFor(model => model.RequirementGroupId)").val();
                     loadRequirements(newRequirementId, parentId);
                 });

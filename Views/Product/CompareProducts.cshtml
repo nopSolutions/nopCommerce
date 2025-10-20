@@ -31,7 +31,7 @@
     <div class="page-body">
         @if (Model.Products.Count > 0)
         {
-            <a href="#" onclick="setLocation('@Url.RouteUrl("ClearCompareList")')" class="clear-list">@T("Products.Compare.Clear")</a>
+            <a href="#" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.CLEAR_COMPARE_LIST)')" class="clear-list">@T("Products.Compare.Clear")</a>
             <div class="table-wrapper">
                 <table class="compare-products-table">
                     <tbody>
@@ -40,7 +40,7 @@
                             @foreach (var product in Model.Products)
                             {
                                 <td style="width: @columnWidth;">
-                                    <button type="button" class="button-2 remove-button" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')">@T("Common.Remove")</button>
+                                    <button type="button" class="button-2 remove-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.REMOVE_PRODUCT_FROM_COMPARE_LIST, new { productId = product.Id })')">@T("Common.Remove")</button>
                                 </td>
                             }
                         </tr>
@@ -50,7 +50,7 @@
                             {
                                 var picture = product.PictureModels.FirstOrDefault();
                                 <td style="width: @columnWidth;">
-                                    <a class="picture" href="@(Url.RouteUrl<Product>(new { SeName = product.SeName }))"><img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" /></a>
+                                    <a class="picture" href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = product.SeName }))"><img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" /></a>
                                 </td>
                             }
                         </tr>
@@ -61,7 +61,7 @@
                             @foreach (var product in Model.Products)
                             {
                                 <td style="width: @columnWidth;">
-                                    <a href="@(Url.RouteUrl<Product>(new { SeName = product.SeName }))">@product.Name</a>
+                                    <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = product.SeName }))">@product.Name</a>
                                 </td>
                             }
                         </tr>

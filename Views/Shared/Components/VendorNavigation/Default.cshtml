@@ -4,25 +4,25 @@
 
 @if (Model.Vendors.Count > 0)
 {
-    <div class="block block-vendor-navigation">
-        <div class="title">
-            <strong>@T("Vendors")</strong>
-        </div>
+    <section class="block block-vendor-navigation">
+        <h2 class="title">
+            @T("Vendors")
+        </h2>
         <div class="listbox">
             <ul class="list">
                 @foreach (var vendor in Model.Vendors)
                 {
                     <li>
-                        <a href="@(Url.RouteUrl<Vendor>(new { SeName = vendor.SeName }))">@vendor.Name</a>
+                        <a href="@(await NopUrl.RouteGenericUrlAsync<Vendor>(new { SeName = vendor.SeName }))">@vendor.Name</a>
                     </li>
                 }
             </ul>
             @if (Model.TotalVendors > Model.Vendors.Count)
             {
                 <div class="view-all">
-                    <a href="@Url.RouteUrl("VendorList")">@T("Vendors.ViewAll")</a>
+                    <a href="@Url.RouteUrl(NopRouteNames.General.VENDORS)">@T("Vendors.ViewAll")</a>
                 </div>
             }
         </div>
-    </div>
+    </section>
 }

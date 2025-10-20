@@ -5,9 +5,9 @@
 @if (Model.Groups.SelectMany(g => g.Attributes).ToList().Count > 0)
 {
     <div class="product-specs-box">
-        <div class="title">
-            <strong>@T("Products.Specs")</strong>
-        </div>
+        <h2 class="title">
+            @T("Products.Specs")
+        </h2>
         <div class="table-wrapper">
             <table class="data-table">
                 <thead>

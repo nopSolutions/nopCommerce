@@ -1,0 +1,32 @@
+﻿@await Html.PartialAsync("_AdminTour");
+
+<script asp-location="Footer">
+    const steps = [{
+        element: '#store-name-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Store.Name.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Store.Name.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }}, {
+        element: '#store-url-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Store.Url.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Store.Url.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }}, {
+        element: '#ssl-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Store.Ssl.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Store.Ssl.Text", Docs.SslInstall + Utm.OnAdminTourDocs).Text)',
+            side: "bottom",
+            align: 'start'
+        }},
+    ];
+
+    AdminTourBuilder
+        .init(localized_data, '', '@Url.Action("Providers", "Shipping", new { showtour = true })', steps)
+        .drive();
+
+</script>

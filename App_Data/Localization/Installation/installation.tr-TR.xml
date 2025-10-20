@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Türkçe" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Yönetici e-posta adresi</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Yönetici şifresini girin</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Karakter seti</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Sıralama (collation)</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Sıralama gereklidir</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>'{0}' hesabı, '{1}' klasöründe Değiştirme iznine sahip değil. Lütfen bu izinleri yapılandırın.</Value>
@@ -46,7 +55,7 @@
     <Value>Örnek verileri oluştur</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Konum Belirt</Value>
+    <Value>Özel karşılaştırmayı girin</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Veritabanı</Value>

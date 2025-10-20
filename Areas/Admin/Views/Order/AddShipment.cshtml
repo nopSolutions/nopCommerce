@@ -31,8 +31,6 @@
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            <nop-action-confirmation asp-button-id="shipment-save" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />
-            <nop-action-confirmation asp-button-id="shipment-save-continue" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderShipmentAddButtons, additionalData = Model })
         </div>
     </div>
@@ -108,23 +106,19 @@
                         </div>
                         <script>
                             $(function() {
-                                $("#shipment-save").bind("focus", function () {
+                                $("#shipment-save").on("focus", function () {
                                     if (validateWarehouseAvailability("save")) {
                                         $("#shipment-save-action-confirmation").remove();
                                         $(this).attr("name", "save").attr("type", "submit");
                                     }
-                                }).bind("click", function () {
-                                    return validateWarehouseAvailability("save");
-                                });;
+                                });
 
-                                $("#shipment-save-continue").bind("focus", function () {
+                                $("#shipment-save-continue").on("focus", function () {
                                     if (validateWarehouseAvailability("continue")) {
                                         $("#shipment-save-continue-action-confirmation").remove();
                                         $(this).attr("name", "save-continue").attr("type", "submit");
                                     }
-                                }).bind("click", function () {
-                                    return validateWarehouseAvailability("continue");
-                                });;
+                                });
                             });
 
                             function validateWarehouseAvailability(action) {
@@ -296,3 +290,6 @@
         </div>
    </section>
 </form>
+
+<nop-action-confirmation asp-button-id="shipment-save" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />
+<nop-action-confirmation asp-button-id="shipment-save-continue" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />

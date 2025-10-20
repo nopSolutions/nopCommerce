@@ -4,13 +4,8 @@
     Layout = "_ConfigurePlugin";
     NopHtml.SetActiveMenuItemSystemName($"{PayPalCommerceDefaults.SystemName} Configuration");
 
-    //tour step
-    ViewBag.TourStep = TourStep.PaymentPayPal;
-
     var learnMore = "<p>Learn more about the PayPal Commerce plugin configuration <a href='https://docs.nopcommerce.com/getting-started/configure-payments/payment-methods/paypal-commerce.html' target='_blank'>here</a>.</p>";
 }
-
-@await Html.PartialAsync("_AdminTour")
 
 @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
@@ -481,3 +476,8 @@
 </form>
 
 <nop-alert asp-alert-id="signUpFailed" />
+
+@if (await Html.IsTourActiveAsync())
+{
+    @await Html.PartialAsync("~/Plugins/Payments.PayPalCommerce/Views/Admin/_Configure.Tour.cshtml")
+}

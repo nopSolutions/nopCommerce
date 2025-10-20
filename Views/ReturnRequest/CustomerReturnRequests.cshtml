@@ -26,13 +26,13 @@
         @foreach (var item in Model.Items)
         {
             <div class="section request-item">
-                <div class="title">
-                    <strong>@string.Format(T("Account.CustomerReturnRequests.Title").Text, item.CustomNumber, item.ReturnRequestStatus)</strong>
-                </div>
+                <h2 class="title">
+                    @string.Format(T("Account.CustomerReturnRequests.Title").Text, item.CustomNumber, item.ReturnRequestStatus)
+                </h2>
                 <ul class="details">
                     <li class="product">
                         <label>@T("Account.CustomerReturnRequests.Item")</label>
-                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a>
+                        <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a>
                         <span>x @item.Quantity</span>
                     </li>
                     <li class="reason">
@@ -52,7 +52,7 @@
                         <li class="uploaded-file">
                             <label>@T("Account.CustomerReturnRequests.UploadedFile")</label>
                             <span>
-                                <a href="@Url.RouteUrl("DownloadGetFileUpload", new {downloadId = item.UploadedFileGuid.ToString()})">
+                                <a href="@Url.RouteUrl(NopRouteNames.Standard.DOWNLOAD_GET_FILE_UPLOAD, new { downloadId = item.UploadedFileGuid.ToString() })">
                                     @T("Account.CustomerReturnRequests.UploadedFile.Download")
                                 </a>
                             </span>

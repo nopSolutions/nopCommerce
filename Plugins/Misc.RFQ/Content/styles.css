@@ -1,0 +1,79 @@
+﻿.request-list-page .info {
+  margin: 0 0 10px;
+  border-top: 1px solid #e6e6e6;
+  background-color: #f9f9f9;
+  padding: 20px;
+  line-height: 26px;
+  color: #444;
+}
+
+.request-list-page .button-2 {
+  display: inline-block;
+  margin: 0 0 0 10px;
+  border: none;
+  padding: 0 0 0 18px;
+  font-size: 12px;
+  color: #444;
+  background-color: white;
+  background: url('~/images/details.png') left center no-repeat
+}
+
+  .request-list-page .button-2:hover,
+  .request-list-page .button-2:focus {
+    color: #4ab2f1;
+  }
+
+.request-list-page .section {
+  display: block;
+  width: auto;
+  margin: 0 0 40px;
+  vertical-align: top;
+}
+
+.request-list-page .buttons {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+
+.request-options .common-buttons,
+.quote-options .common-buttons {
+  text-align: center;
+}
+
+.request-page .fieldset .title {
+  text-align: left
+}
+
+textarea {
+  resize: vertical;
+  overflow: auto;
+  min-height: 70px;
+  max-height: 250px;
+  width: 97%;
+  margin: 10px;
+}
+
+.rfq-button-2 {
+  cursor: pointer;
+  border: none;
+  background-color: #aaa;
+  padding: 10px 15px;
+  color: #fff;
+  text-transform: uppercase;
+  display: inline-block;
+  margin: 10px 0;
+  font-size: 15px;
+}
+
+  .rfq-button-2:hover,
+  .rfq-button-2:focus {
+    background-color: #999;
+  }
+
+input[type="number"] {
+  height: 36px; /*safari padding fix*/
+  border: 1px solid #ddd;
+  padding: 8px;
+  vertical-align: middle;
+}

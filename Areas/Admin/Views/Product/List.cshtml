@@ -85,7 +85,6 @@
                     <i class="far fa-trash-can"></i>
                     @T("Admin.Common.Delete.Selected")
                 </button>
-                <nop-action-confirmation asp-button-id="delete-selected" />
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductListButtons, additionalData = Model })
             </div>
         </div>
@@ -283,7 +282,7 @@
                               <script>                           
 
                             $(function() {
-                                $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                                $('#delete-selected-action-confirmation-submit-button').on('click', function () {
                                     var postData = {
                                         selectedIds: selectedIds
                                     };
@@ -311,8 +310,6 @@
                             });
 
                               </script>
-                              <nop-alert asp-alert-id="deleteSelectedFailed" />
-                              <nop-alert asp-alert-id="nothingSelectedAlert" />
                           </div>
                       </div>
                 </div>
@@ -438,7 +435,6 @@
         });
     });
 </script>
-<nop-alert asp-alert-id="exportXmlSelected" />
 
     @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
     <form asp-controller="Product" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
@@ -464,3 +460,7 @@
         });
     </script>
 <nop-alert asp-alert-id="exportExcelSelected" />
+<nop-alert asp-alert-id="exportXmlSelected" />
+<nop-alert asp-alert-id="deleteSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected" />

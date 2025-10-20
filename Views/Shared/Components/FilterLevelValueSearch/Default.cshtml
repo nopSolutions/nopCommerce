@@ -1,0 +1,84 @@
+﻿@model FilterLevelValueSearchModel
+
+<form asp-route="@NopRouteNames.Standard.PRODUCT_SEARCH_BY_FILTER_LEVEL_VALUES" method="get">
+    <div class="search-input">
+        <div class="form-fields">
+            <div class="page-title">
+                <h1>@T("Search.FilterLevelValues")</h1>
+            </div>
+            <div class="advanced-search">
+                @if (!Model.HideSearchFilterValue1)
+                {
+                    <div class="inputs">
+                        <label asp-for="fl1id">@T("Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel1"):</label>
+                        <select asp-for="fl1id" asp-items="Model.AvailableFilterLevel1Values" class="filter-level-select"
+                                data-trigger="filter-level1-select"
+                                data-url="@(Url.RouteUrl(NopRouteNames.Ajax.GET_FILTER_LEVEL_VALUES))"
+                                data-filterlevel2="#@Html.IdFor(model => model.fl2id)"
+                                data-filterlevel3="#@Html.IdFor(model => model.fl3id)"
+                                data-loading="#filter-levels-loading-progress">
+                        </select>
+                    </div>
+                }
+                @if (!Model.HideSearchFilterValue2)
+                {
+                    <div class="inputs">
+                        <label asp-for="fl2id">@T("Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel2"):</label>
+                        <select asp-for="fl2id" asp-items="Model.AvailableFilterLevel2Values" class="filter-level-select"
+                                data-trigger="filter-level2-select"
+                                data-url="@(Url.RouteUrl(NopRouteNames.Ajax.GET_FILTER_LEVEL_VALUES))"
+                                data-filterlevel1="#@Html.IdFor(model => model.fl1id)"
+                                data-filterlevel3="#@Html.IdFor(model => model.fl3id)"
+                                data-loading="#filter-levels-loading-progress">
+                        </select>
+                    </div>
+                }
+                @if (!Model.HideSearchFilterValue3)
+                {
+                    <div class="inputs">
+                        <label asp-for="fl3id">@T("Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel3"):</label>
+                        <select asp-for="fl3id" asp-items="Model.AvailableFilterLevel3Values" class="filter-level-select"></select>
+                        <span id="filter-levels-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
+                    </div>
+                }
+            </div>
+            <div class="buttons">
+                <button type="button" id="filter-level-values-search" class="button-1 search-button-flv" disabled>@T("Search")</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script asp-location="Footer">
+    $(function() {
+        // Function to check if all visible filter levels have values selected
+        function checkFilterSelections() {
+            var searchButton = $('.search-button-flv');
+            var allSelected = true;
+
+            $('.filter-level-select:visible').each(function() {
+                if (!$(this).val() || $(this).val() === 0 || $(this).val() === "0") {
+                    allSelected = false;
+                    return false;
+                }
+            });
+            searchButton.prop('disabled', !allSelected);
+        }
+
+        // Check initial state
+        checkFilterSelections();
+
+        // Add change event listener to all filter selects
+        $('.filter-level-select').on('change', function() {
+            checkFilterSelections();
+        });
+        
+    });
+
+    $("#filter-level-values-search").on("click", function () {
+        var form = $(this).closest('form');
+        var formData = new FormData(form[0]);
+        
+        window.location.href = `@Url.RouteUrl(NopRouteNames.Standard.PRODUCT_SEARCH_BY_FILTER_LEVEL_VALUES)?${new URLSearchParams(formData).toString()}`;
+    });
+</script>

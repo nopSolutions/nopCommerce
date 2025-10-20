@@ -17,7 +17,7 @@
     </div>
     <div class="page-body">
         <div class="title">
-            <h2><a href="@(Url.RouteUrl<Product>(new { SeName = Model.ProductSeName }))" class="product">@Model.ProductName</a></h2>
+            <h2><a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = Model.ProductSeName }))" class="product">@Model.ProductName</a></h2>
         </div>
         @if (Model.SuccessfullySent)
         {
@@ -27,9 +27,9 @@
         }
         else
         {
-            <form asp-route="ProductEmailAFriend" method="post">
+            <form asp-route="@NopRouteNames.Standard.PRODUCT_EMAIL_FRIEND" method="post">
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                <div class="fieldset">
+                <section class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
                             <label asp-for="FriendEmail" asp-postfix=":"></label>
@@ -53,10 +53,10 @@
                             <nop-captcha />
                         }
                     </div>
-                </div>
-                <div class="buttons">
+                </section>
+                <section class="buttons">
                     <button type="submit" name="send-email" class="button-1 send-email-a-friend-button">@T("Products.EmailAFriend.Button")</button>
-                </div>
+                </section>
             </form>
         }
     </div>

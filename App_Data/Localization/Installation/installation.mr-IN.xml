@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="मराठी" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>प्रशासन वापरकर्ता ईमेल</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>प्रशासक संकेतशब्द प्रविष्ट करा</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>वर्ण संच</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>संकलन</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>संकलन आवश्यक आहे</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>फोल्डर '{1}' वर '{0}' खाते सुधारित परवानग्यासह मंजूर केलेले नाही. कृपया या परवानग्या कॉन्फिगर करा.</Value>

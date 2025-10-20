@@ -1,10 +1,10 @@
 ﻿@model IList<BlogPostYearModel>
 @if (Model.Count > 0)
 {
-    <div class="block block-blog-archive">
-        <div class="title">
-            <strong>@T("Blog.Archive")</strong>
-        </div>
+    <section class="block block-blog-archive">
+        <h2 class="title">
+            @T("Blog.Archive")
+        </h2>
         <div class="listbox">
             <ul class="list" id="blog-month-list">
                 @foreach (var yearItem in Model)
@@ -15,7 +15,7 @@
                             @foreach (var monthItem in yearItem.Months)
                             {
                                 <li class="month">
-                                    <a href="@Url.RouteUrl("BlogByMonth", new { month = yearItem.Year + "-" + monthItem.Month })">@(new DateTime(yearItem.Year, monthItem.Month, 1).ToString("MMMM"))
+                                    <a href="@Url.RouteUrl(NopRouteNames.Standard.BLOG_BY_MONTH, new { month = yearItem.Year + "-" + monthItem.Month })">@(new DateTime(yearItem.Year, monthItem.Month, 1).ToString("MMMM"))
                                     (@(monthItem.BlogPostCount))</a>
                                 </li>
                             }
@@ -24,5 +24,5 @@
                 }
             </ul>
         </div>
-    </div>
+    </section>
 }

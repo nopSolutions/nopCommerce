@@ -21,6 +21,9 @@
     const string hidePerformanceBlockAttributeName = "CatalogSettingsPage.HidePerformanceBlock";
     var hidePerformanceBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePerformanceBlockAttributeName);
 
+    const string hideArtificialIntelligenceBlockAttributeName = "CatalogSettingsPage.HideArtificialIntelligenceBlock";
+    var hideArtificialIntelligenceBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideArtificialIntelligenceBlockAttributeName);
+    
     const string hideShareBlockAttributeName = "CatalogSettingsPage.HideShareBlock";
     var hideShareBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideShareBlockAttributeName);
 
@@ -75,6 +78,7 @@
                 <div asp-validation-summary="All"></div>
 
                 <nop-cards id="catalogsettings-cards">
+                    <nop-card asp-name="catalogsettings-artificial-intelligence" asp-icon="fa fa-cogs" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.ArtificialIntelligence")" asp-hide-block-attribute-name="@hideArtificialIntelligenceBlockAttributeName" asp-hide="@hideArtificialIntelligenceBlock">@await Html.PartialAsync("_Catalog.ArtificialIntelligence", Model)</nop-card>
                     <nop-card asp-name="catalogsettings-search" asp-icon="fas fa-magnifying-glass" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.Search")" asp-hide-block-attribute-name="@hideSearchBlockAttributeName" asp-hide="@hideSearchBlock" asp-advanced="false">@await Html.PartialAsync("_Catalog.Search", Model)</nop-card>
                     <nop-card asp-name="catalogsettings-product-reviews" asp-icon="far fa-comment" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.ProductReviews")" asp-hide-block-attribute-name="@hideProductReviewsBlockAttributeName" asp-hide="@hideProductReviewsBlock" asp-advanced="false">@await Html.PartialAsync("_Catalog.ProductReviews", Model)</nop-card>
                     <nop-card asp-name="catalogsettings-review-types" asp-icon="far fa-comments" asp-title="@T("Admin.Settings.ReviewType")" asp-hide-block-attribute-name="@hideReviewTypesBlockAttributeName" asp-hide="@hideReviewTypesBlock" asp-advanced="true">@await Html.PartialAsync("../ReviewType/List", Model.ReviewTypeSearchModel)</nop-card>

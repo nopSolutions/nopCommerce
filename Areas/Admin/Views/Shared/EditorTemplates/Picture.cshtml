@@ -16,7 +16,7 @@
     const int pictureSize = 100;
 
     var allowedMimeTypes = new List<string> { MimeTypes.ImagePng, MimeTypes.ImageBmp, MimeTypes.ImageGif, MimeTypes.ImageJpeg, MimeTypes.ImagePJpeg, MimeTypes.ImageTiff, MimeTypes.ImageWebp };
-    if (mediaSettings.AllowSVGUploads)
+    if (mediaSettings.AllowSvgUploads)
         allowedMimeTypes.Add(MimeTypes.ImageSvg);
 
     var picture = await pictureService.GetPictureByIdAsync(Model);

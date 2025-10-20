@@ -19,25 +19,16 @@
 
   Contact: Lyubomir Arsov, liubo (at) web-lobby.com
 */
-function FileSelected(file){
-  /**
-   * file is an object containing following properties:
-   * 
-   * fullPath - path to the file - absolute from your site root
-   * path - directory in which the file is located - absolute from your site root
-   * size - size of the file in bytes
-   * time - timestamo of last modification
-   * name - file name
-   * ext - file extension
-   * width - if the file is image, this will be the width of the original image, 0 otherwise
-   * height - if the file is image, this will be the height of the original image, 0 otherwise
-   * 
-   */
-  //alert('"' + file.fullPath + "\" selected.\n To integrate with CKEditor or TinyMCE change INTEGRATION setting in conf.json. For more details see the Installation instructions at http://www.roxyfileman.com/install.");
-  window.parent.postMessage({
-    mceAction: 'FileSelected',
-    content: getInsertPath(file.fullPath)
-  }, '*');
+function FileSelected(file) {
+  if (window.opener && window.opener.ROXY_CALLBACK) {
+    window.opener.ROXY_CALLBACK(file);
+    window.close();
+  } else if (window.ROXY_CALLBACK) {
+    window.ROXY_CALLBACK(file);
+    window.close();
+  } else {
+    alert('"' + file.fullPath + '" selected. Integration callback not found.');
+  }
 }
 
 function getInsertPath(insertPath) {

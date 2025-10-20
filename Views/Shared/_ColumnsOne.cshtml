@@ -4,8 +4,8 @@
 
 @await RenderSectionAsync("Breadcrumb", false)
 
-<div class="center-1">
+<section class="center-1">
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.MainColumnBefore })
     @RenderBody()
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.MainColumnAfter })
-</div>
+</section>

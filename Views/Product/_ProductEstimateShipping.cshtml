@@ -44,7 +44,7 @@
                         City: address.city
                     });
 
-                    return '@Html.Raw(Url.RouteUrl("ProductEstimateShipping", new { ProductId = Model.ProductId }))&' + params;
+                    return '@Html.Raw(Url.RouteUrl(NopRouteNames.Ajax.PRODUCT_ESTIMATE_SHIPPING, new { ProductId = Model.ProductId }))&' + params;
                 },
                 handlers: {
                     openPopUp: function () {

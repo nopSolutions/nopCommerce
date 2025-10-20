@@ -1,4 +1,5 @@
 ﻿@model OrderConfirmModel
+@inject INopUrlHelper NopUrl
 
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
@@ -61,14 +62,14 @@
                                     $(function () {
                                         $('#read-terms').on('click', function (e) {
                                             e.preventDefault();
-                                            displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofuse" })', '@T("Checkout.TermsOfService")');
+                                            displayPopupContentFromUrl('@Url.RouteUrl(NopRouteNames.Ajax.TOPIC_POPUP, new { SystemName = "conditionsofuse" })', '@T("Checkout.TermsOfService")');
                                         });
                                     });
                                 </script>
                             }
                             else
                             {
-                                <a class="read" id="read-terms" href="@Url.RouteTopicUrl("conditionsofuse")">@T("Checkout.TermsOfService.Read")</a>
+                                <a class="read" id="read-terms" href="@await NopUrl.RouteTopicUrlAsync("conditionsofuse")">@T("Checkout.TermsOfService.Read")</a>
                             }
                         </div>
                     }

@@ -1,8 +1,7 @@
-@model OrderDetailsModel
-
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Media
-
+@using Nop.Services.Orders
+@model OrderDetailsModel
 @inject MediaSettings mediaSettings
 
 @{
@@ -32,10 +31,22 @@
     {
         <div class="page-title">
             <h1>@T("Order.OrderInformation")</h1>
-            <a href="@Url.RouteUrl("PrintOrderDetails", new { orderId = Model.Id })" target="_blank" class="button-2 print-order-button">@T("Order.Print")</a>
+            <a href="@Url.RouteUrl(NopRouteNames.Standard.PRINT_ORDER_DETAILS, new { orderId = Model.Id })" target="_blank" class="button-2 print-order-button">@T("Order.Print")</a>
             @if (!Model.PdfInvoiceDisabled)
             {
-                <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="button-2 pdf-invoice-button">@T("Order.GetPDFInvoice")</a>
+                <a href="@Url.RouteUrl(NopRouteNames.Standard.GET_ORDER_PDF_INVOICE, new { orderId = Model.Id })" class="button-2 pdf-invoice-button">@T("Order.GetPDFInvoice")</a>
+            }
+            @if (Model.CanCancelOrder)
+            {
+                <a id="cancel_order" href="@Url.RouteUrl("CancelOrder", new { orderId = Model.Id })" class="button-2 cancel-order-button">@T("Order.Cancel")</a>
+
+                <script asp-location="Footer">
+                    $(function() {
+                        $('#cancel_order').on('click', function() {
+                            return confirm('@T("Common.AreYouSure")');
+                        });
+                    });
+                </script>
             }
         </div>
     }
@@ -50,7 +61,7 @@
                     @T("Order.OrderDate"): @Model.CreatedOn.ToString("D")
                 </li>
                 <li class="order-status">
-                    @T("Order.OrderStatus"): @Model.OrderStatus
+                    @T("Order.OrderStatus"): @Model.OrderStatusText
                 </li>
                 <li class="order-total">
                     @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
@@ -61,9 +72,9 @@
         <div class="order-details-area">
             <div class="billing-info-wrap">
                 <div class="billing-info">
-	                <div class="title">
-	                    <strong>@T("Order.BillingAddress")</strong>
-	                </div>
+	                <h2 class="title">
+	                    @T("Order.BillingAddress")
+	                </h2>
                     <ul class="info-list">
                         <li class="name">
                             @Model.BillingAddress.FirstName @Model.BillingAddress.LastName
@@ -110,15 +121,16 @@
                                 @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
                             </li>
                         }
+                        @await Html.PartialAsync("_OrderCustomValues", Model.CustomValues?.GetValuesByDisplayLocation(CustomValueDisplayLocation.BillingAddress))
                         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsBillingAddress, additionalData = Model })
                     </ul>
                 </div>
                 @if (!string.IsNullOrEmpty(Model.PaymentMethod))
                 {
                     <div class="payment-method-info">
-                        <div class="title">
-                            <strong>@T("Order.Payment")</strong>
-                        </div>
+                        <h2 class="title">
+                            @T("Order.Payment")
+                        </h2>
                         <ul class="info-list">
                             <li class="payment-method">
                                 <span class="label">
@@ -143,7 +155,7 @@
                             {
                                 @*Complete payment (for redirection payment methods)*@
                                 <li class="repost">
-                                    <form asp-route="OrderDetails" method="post">
+                                    <form asp-route="@NopRouteNames.Standard.ORDER_DETAILS" method="post">
                                         <button type="submit" name="repost-payment" class="button-2 re-order-button">@T("Order.RetryPayment")</button>
                                         <p class="hint">
                                             <em>@T("Order.RetryPayment.Hint")</em>
@@ -151,20 +163,7 @@
                                     </form>
                                 </li>
                             }
-                            @if (Model.CustomValues != null)
-                            {
-                                foreach (var item in Model.CustomValues)
-                                {
-                                    <li class="custom-value">
-                                        <span class="label">
-                                            @item.Key:
-                                        </span>
-                                        <span class="value">
-                                            @(item.Value != null ? item.Value.ToString() : "")
-                                        </span>
-                                    </li>
-                                }
-                            }
+                            @await Html.PartialAsync("_OrderCustomValues", Model.CustomValues?.GetValuesByDisplayLocation(CustomValueDisplayLocation.Payment))
                         </ul>
                     </div>
                 }
@@ -173,9 +172,9 @@
             {
                 <div class="shipping-info-wrap">
                     <div class="shipping-info">
-	                    <div class="title">
-	                        <strong>@(Model.PickupInStore ? T("Order.PickupAddress") : T("Order.ShippingAddress"))</strong>
-	                    </div>
+                        <h2 class="title">
+	                        @(Model.PickupInStore ? T("Order.PickupAddress") : T("Order.ShippingAddress"))
+	                    </h2>
                         <ul class="info-list">
                             @if (!Model.PickupInStore)
                             {
@@ -222,12 +221,13 @@
                                     <li class=@item.Key.ToString().ToLower()>@item.Value</li>
                                 }
                             }
+                            @await Html.PartialAsync("_OrderCustomValues", Model.CustomValues?.GetValuesByDisplayLocation(CustomValueDisplayLocation.ShippingAddress))
                         </ul>
                     </div>
                     <div class="shipping-method-info">
-                        <div class="title">
-                            <strong>@T("Order.Shipping")</strong>
-                        </div>
+                        <h2 class="title">
+                            @T("Order.Shipping")
+                        </h2>
                         <ul class="info-list">
                             <li class="shipping-method">
                                 <span class="label">
@@ -248,6 +248,7 @@
                                     </span>
                                 </li>
                             }
+                            @await Html.PartialAsync("_OrderCustomValues", Model.CustomValues?.GetValuesByDisplayLocation(CustomValueDisplayLocation.Shipping))
                         </ul>
                     </div>
                 </div>
@@ -256,9 +257,9 @@
         @if (!Model.PrintMode && Model.Shipments.Count > 0)
         {
             <div class="section shipments">
-                <div class="title">
-                    <strong>@T("Order.Shipments")</strong>
-                </div>
+                <h2 class="title">
+                    @T("Order.Shipments")
+                </h2>
                 <div class="table-wrapper">
                     <table class="data-table">
                         <colgroup>
@@ -348,7 +349,7 @@
                                         }
                                     </td>
                                     <td class="view-details">
-                                        <a href="@Url.RouteUrl("ShipmentDetails", new { shipmentId = item.Id })" title="@T("Order.Shipments.ViewDetails")">@T("Order.Shipments.ViewDetails")</a>
+                                        <a href="@Url.RouteUrl(NopRouteNames.Standard.SHIPMENT_DETAILS, new { shipmentId = item.Id })" title="@T("Order.Shipments.ViewDetails")">@T("Order.Shipments.ViewDetails")</a>
                                     </td>
                                 </tr>
                             }
@@ -362,9 +363,9 @@
             if (!Model.PrintMode && Model.OrderNotes.Count > 0)
             {
                 <div class="section order-notes">
-                    <div class="title">
-                        <strong>@T("Order.Notes")</strong>
-                    </div>
+                    <h2 class="title">
+                        @T("Order.Notes")
+                    </h2>
                     <div class="table-wrapper">
                         <table class="data-table">
                             <colgroup>
@@ -393,7 +394,7 @@
                                             @if (item.HasDownload)
                                             {
                                                 <p class="download">
-                                                    <a href="@Url.RouteUrl("GetOrderNoteFile", new { ordernoteid = item.Id })">@T("Order.Notes.Download")</a>
+                                                    <a href="@Url.RouteUrl(NopRouteNames.Standard.GET_ORDER_NOTE_FILE, new { ordernoteid = item.Id })">@T("Order.Notes.Download")</a>
                                                 </p>
                                             }
                                         </td>
@@ -406,9 +407,9 @@
             }
             @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsPageBeforeproducts, additionalData = Model })
             <div class="section products">
-                <div class="title">
-                    <strong>@T("Order.Product(s)")</strong>
-                </div>
+                <h2 class="title">
+                    @T("Order.Product(s)")
+                </h2>
                 <div class="table-wrapper">
                     <table class="data-table">
                         <colgroup>
@@ -477,7 +478,7 @@
                                     @if (Model.ShowProductThumbnail)
                                     {
                                         <td class="picture">
-                                            <a href="@(Url.RouteUrl<Product>(new {SeName = item.ProductSeName}))">
+                                            <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new {SeName = item.ProductSeName}))">
                                                 <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.DefaultImageQuality" />
                                             </a>
                                         </td>
@@ -485,7 +486,7 @@
                                     <td class="product">
                                         @if (!Model.PrintMode)
                                         {
-                                            <em><a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a></em>
+                                            <em><a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a></em>
                                         }
                                         else
                                         {
@@ -506,13 +507,13 @@
                                         @if (item.DownloadId > 0)
                                         {
                                             <div class="download">
-                                                <a href="@Url.RouteUrl("GetDownload", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.Download")</a>
+                                                <a href="@Url.RouteUrl(NopRouteNames.Standard.GET_DOWNLOAD, new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.Download")</a>
                                             </div>
                                         }
                                         @if (item.LicenseId > 0)
                                         {
                                             <div class="download license">
-                                                <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
+                                                <a href="@Url.RouteUrl(NopRouteNames.Standard.GET_LICENSE, new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.DownloadLicense")</a>
                                             </div>
                                         }
                                         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderDetailsProductLine, additionalData = item })
@@ -547,7 +548,7 @@
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                     //of course, you can modify appropriate locales to include VAT info there
                     <div class="tax-shipping-info">
-                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", Url.RouteTopicUrl("shippinginfo"))
+                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", await NopUrl.RouteTopicUrlAsync("shippinginfo"))
                     </div>
                 }
             </div>
@@ -682,11 +683,11 @@
                     <div class="actions">
                         @if (Model.IsReOrderAllowed)
                         {
-                            <button type="button" class="button-1 re-order-button" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = Model.Id })')">@T("Order.Reorder")</button>
+                            <button type="button" class="button-1 re-order-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.RE_ORDER, new { orderId = Model.Id })')">@T("Order.Reorder")</button>
                         }
                         @if (Model.IsReturnRequestAllowed)
                         {
-                            <button type="button" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = Model.Id })')">@T("Order.ReturnItems")</button>
+                            <button type="button" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.RETURN_REQUEST, new { orderId = Model.Id })')">@T("Order.ReturnItems")</button>
                         }
                     </div>
                 }

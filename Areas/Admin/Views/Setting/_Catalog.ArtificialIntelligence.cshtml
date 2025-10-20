@@ -1,0 +1,177 @@
+@using Nop.Core.Domain.ArtificialIntelligence
+@model CatalogSettingsModel
+
+<div class="card-body">
+    @Html.Raw(T("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.Info"))
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ArtificialIntelligenceSettingsModel.Enabled"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ArtificialIntelligenceSettingsModel.Enabled"/>
+            <span asp-validation-for="ArtificialIntelligenceSettingsModel.Enabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="ArtificialIntelligenceSettingsModel.Enabled">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.ProviderTypeId"/>
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="ArtificialIntelligenceSettingsModel.ProviderTypeId" asp-items="Model.ArtificialIntelligenceSettingsModel.AvailableProviderType"/>
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.ProviderTypeId"></span>
+            </div>
+        </div>
+        <div id="pnlGeminiApiKey" class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.GeminiApiKey"/>
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.GeminiApiKey" html-attributes="@(new { value = Model.ArtificialIntelligenceSettingsModel.GeminiApiKey })"/>
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.GeminiApiKey"></span>
+                @Html.Raw(T("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.GeminiApiKey.Instruction"))
+            </div>
+        </div>
+        <div id="pnlChatGptApiKey" class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.ChatGptApiKey"/>
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.ChatGptApiKey" html-attributes="@(new { value = Model.ArtificialIntelligenceSettingsModel.ChatGptApiKey })"/>
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.ChatGptApiKey"></span>
+                @Html.Raw(T("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ChatGptApiKey.Instruction"))
+            </div>
+        </div>
+        <div id="pnlDeepSeekApiKey" class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.DeepSeekApiKey"/>
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.DeepSeekApiKey" html-attributes="@(new { value = Model.ArtificialIntelligenceSettingsModel.DeepSeekApiKey })"/>
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.DeepSeekApiKey"></span>
+                @Html.Raw(T("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.DeepSeekApiKey.Instruction"))
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.AllowProductDescriptionGeneration" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.AllowProductDescriptionGeneration" />
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.AllowProductDescriptionGeneration"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="ArtificialIntelligenceSettingsModel.AllowProductDescriptionGeneration">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ArtificialIntelligenceSettingsModel.ProductDescriptionQuery" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ArtificialIntelligenceSettingsModel.ProductDescriptionQuery" />
+                    <span asp-validation-for="ArtificialIntelligenceSettingsModel.ProductDescriptionQuery"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+        
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.AllowMetaTitleGeneration" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.AllowMetaTitleGeneration" />
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.AllowMetaTitleGeneration"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="ArtificialIntelligenceSettingsModel.AllowMetaTitleGeneration">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ArtificialIntelligenceSettingsModel.MetaTitleQuery" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ArtificialIntelligenceSettingsModel.MetaTitleQuery" />
+                    <span asp-validation-for="ArtificialIntelligenceSettingsModel.MetaTitleQuery"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+        
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration"/>
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration" />
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="ArtificialIntelligenceSettingsModel.AllowMetaKeywordsGeneration">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ArtificialIntelligenceSettingsModel.MetaKeywordsQuery"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ArtificialIntelligenceSettingsModel.MetaKeywordsQuery" />
+                    <span asp-validation-for="ArtificialIntelligenceSettingsModel.MetaKeywordsQuery"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+        
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.AllowMetaDescriptionGeneration" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.AllowMetaDescriptionGeneration" />
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.AllowMetaDescriptionGeneration"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="ArtificialIntelligenceSettingsModel.AllowMetaDescriptionGeneration">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ArtificialIntelligenceSettingsModel.MetaDescriptionQuery" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ArtificialIntelligenceSettingsModel.MetaDescriptionQuery" />
+                    <span asp-validation-for="ArtificialIntelligenceSettingsModel.MetaDescriptionQuery"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+    </nop-nested-setting>
+</div>
+
+<script asp-location="Footer">
+    $(function() {
+        $("#@Html.IdFor(model => model.ArtificialIntelligenceSettingsModel.ProviderTypeId)").change(function () {
+            var selectedItem = $(this).val();
+            showApiSetting(selectedItem);
+        });
+    });
+
+    $(function () {
+        showApiSetting($("#@Html.IdFor(model => model.ArtificialIntelligenceSettingsModel.ProviderTypeId)").val());
+    });
+
+    function showApiSetting(selectedItem)
+    {        
+        switch(selectedItem)
+        {
+            case "@((int)ArtificialIntelligenceProviderType.Gemini)":
+            {                
+                $("#pnlGeminiApiKey").showElement();
+                $("#pnlChatGptApiKey").hideElement();
+                $("#pnlDeepSeekApiKey").hideElement();
+            }break;
+            case "@((int)ArtificialIntelligenceProviderType.ChatGpt)":
+            {
+                $("#pnlGeminiApiKey").hideElement();
+                $("#pnlChatGptApiKey").showElement();
+                $("#pnlDeepSeekApiKey").hideElement();
+            }break;
+             case "@((int)ArtificialIntelligenceProviderType.DeepSeek)":
+            {
+                $("#pnlGeminiApiKey").hideElement();
+                $("#pnlChatGptApiKey").hideElement();
+                $("#pnlDeepSeekApiKey").showElement();
+            }break;
+        }
+    }
+</script>

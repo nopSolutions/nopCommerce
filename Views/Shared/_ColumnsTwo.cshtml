@@ -29,7 +29,7 @@
 
 @await RenderSectionAsync("Breadcrumb", false)
 
-<div class="side-2">
+<aside class="side-2">
     @if (IsSectionDefined("left"))
     {
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.LeftSideColumnBefore })
@@ -49,9 +49,9 @@
         @await Component.InvokeAsync(typeof(PollBlockViewComponent), new { systemKeyword = "LeftColumnPoll" })
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.LeftSideColumnAfter })
     }
-</div>
-<div class="center-2">
+</aside>
+<section class="center-2">
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.MainColumnBefore })
     @RenderBody()
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.MainColumnAfter })
-</div>
+</section>

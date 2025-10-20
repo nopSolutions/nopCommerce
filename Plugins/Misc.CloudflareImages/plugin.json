@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Cloudflare Images",
+  "SystemName": "Misc.CloudflareImages",
+  "Version": "4.90.1",
+  "SupportedVersions": [ "4.90" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.CloudflareImages.dll",
+  "Description": "This plugin allow you to use Cloudflare Images to store pictures (thumbs)"
+}

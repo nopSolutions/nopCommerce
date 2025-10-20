@@ -30,6 +30,11 @@
     const string hideDeleteMinificationFilesBlockAttributeName = "MaintenancePage.HideDeleteMinificationFilesBlock";
     var hideDeleteMinificationFilesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDeleteMinificationFilesBlockAttributeName);
 
+    const string hideShrinkDatabaseBlockAttributeName = "MaintenancePage.HideShrinkDatabaseBlock";
+    var hideShrinkDatabaseBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideShrinkDatabaseBlockAttributeName);
+
+    const string hideDeleteThumbFilesBlockAttributeName = "MaintenancePage.HideDeleteThumbFilesBlock";
+    var hideDeleteThumbFilesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDeleteThumbFilesBlockAttributeName);
 }
 
 <div class="content-header clearfix">
@@ -67,6 +72,10 @@
                     </div>
                     <div class="row">
                         <nop-card class="col-md-6 col-xs-12 margin-t-5" asp-name="delete-minification-files" asp-icon="fas fa-trash-alt" asp-title="@T("Admin.System.Maintenance.DeleteMinificationFiles")" asp-hide-block-attribute-name="@hideDeleteMinificationFilesBlockAttributeName" asp-hide="@hideDeleteMinificationFilesBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.DeleteMinificationCacheFiles", Model)</nop-card>
+                        <nop-card class="col-md-6 col-xs-12 margin-t-5" asp-name="maintenance-shrink-database" asp-icon="fas fa-trash-alt" asp-title="@T("Admin.System.Maintenance.ShrinkDatabase")" asp-hide-block-attribute-name="@hideShrinkDatabaseBlockAttributeName" asp-hide="@hideShrinkDatabaseBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.ShrinkDatabase", Model)</nop-card>
+                    </div>
+                    <div class="row">
+                        <nop-card class="col-md-6 col-xs-12 margin-t-5" asp-name="delete-thumb-files" asp-icon="fas fa-trash-alt" asp-title="@T("Admin.System.Maintenance.DeleteThumbFiles")" asp-hide-block-attribute-name="@hideDeleteThumbFilesBlockAttributeName" asp-hide="@hideDeleteThumbFilesBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.DeleteThumbFiles", Model)</nop-card>
                     </div>
                     @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MaintenanceDetailsBlock, additionalData = Model })
                 </nop-cards>

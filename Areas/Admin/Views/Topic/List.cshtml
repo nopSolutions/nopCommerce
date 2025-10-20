@@ -5,17 +5,9 @@
 @{
     //page title
     ViewBag.PageTitle = T("Admin.ContentManagement.Topics").Text;
-    //tour step
-    ViewBag.TourStep = TourStep.TopicList;
+
     //active menu item (system name)
     NopHtml.SetActiveMenuItemSystemName("Topics");
-
-    string editQueryString = string.Empty;
-    var showTour = ViewBag.ShowTour ?? false;
-    if (showTour)
-    {
-        editQueryString = "?showtour=true";
-    }
 
     const string hideSearchBlockAttributeName = "TopicsPage.HideSearchBlock";
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
@@ -125,34 +117,6 @@
                                 ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
-                            new ColumnProperty(nameof(TopicModel.IncludeInTopMenu))
-                            {
-                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu").Text,
-                                Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn1))
-                            {
-                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1").Text,
-                                Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll + " column-footer-column1",
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn2))
-                            {
-                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2").Text,
-                                Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn3))
-                            {
-                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3").Text,
-                                Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
                             new ColumnProperty(nameof(TopicModel.DisplayOrder))
                             {
                                 Title = T("Admin.ContentManagement.Topics.Fields.DisplayOrder").Text,
@@ -177,6 +141,11 @@
 
 <script>
     function renderColumnEdit(data, type, row, meta) {
-        return '<a href="@Url.Content("~/Admin/Topic/Edit/")' + data + '@(editQueryString)" class="btn btn-default"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
+        return '<a href="@Url.Content("~/Admin/Topic/Edit/")' + data + '" class="btn btn-default"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
     }
 </script>
+
+@if (await Html.IsTourActiveAsync())
+{
+    @await Html.PartialAsync("_List.Tour")
+}

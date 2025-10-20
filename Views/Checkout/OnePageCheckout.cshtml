@@ -61,7 +61,8 @@
                         </div>
                     </form>
                     <script asp-location="Footer">
-                        Billing.init('#co-billing-form', '@(storeLocation)checkout/OpcSaveBilling/',
+                        Billing.init('#co-billing-form', '@(storeLocation)checkout/GetAddressById/',
+                            '@(storeLocation)checkout/OpcSaveBilling/',
                             @(Model.DisableBillingAddressCheckoutStep.ToString().ToLowerInvariant()),
                             @((await _customerService.IsGuestAsync(await workContext.GetCurrentCustomerAsync())).ToString().ToLowerInvariant()));
                         if ($("#billing-address-select").length > 0) {
@@ -201,7 +202,7 @@
                         @*confirm order content will be loaded here*@
                     </div>
                     <script asp-location="Footer">
-                        ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@Url.RouteUrl("CheckoutCompleted")', @Model.DisplayCaptcha.ToString().ToLowerInvariant(), @Model.IsReCaptchaV3.ToString().ToLowerInvariant(), '@Model.ReCaptchaPublicKey', '#checkout-step-confirm-order');
+                        ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@Url.RouteUrl(NopRouteNames.Standard.CHECKOUT_COMPLETED)', @Model.DisplayCaptcha.ToString().ToLowerInvariant(), @Model.IsReCaptchaV3.ToString().ToLowerInvariant(), '@Model.ReCaptchaPublicKey', '#checkout-step-confirm-order');
                     </script>
                     <div class="buttons" id="confirm-order-buttons-container">
                         <p class="back-link">

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="ქართული" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>ადმინის ელ-ფოსტა</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>შეიყვანეთ ადმინის პაროლი</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>სიმბოლოების ნაკრები</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>შესაბამისობა</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>შეიყვანეთ შესაბამისობა</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>'{0}' მომხმარებელს არ აქვს ნებართვა შეცვალოს უფლებები '{1}' საქაღალდეზე. გთხოვთ დააკონფიგურიროთ მომხმარებლის უფლებები.</Value>

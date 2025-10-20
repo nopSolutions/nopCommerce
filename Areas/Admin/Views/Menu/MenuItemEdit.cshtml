@@ -1,0 +1,36 @@
+@model MenuItemModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.ContentManagement.Menus.MenuItem.EditDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Menus");
+}
+
+<form asp-controller="Menu" asp-action="MenuItemEdit" method="post" id="menuitem-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.ContentManagement.Menus.MenuItem.EditDetails") - @Model.Title
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="Edit" asp-route-id="@Model.MenuId">@T("Admin.ContentManagement.Menus.MenuItem.BackToMenu")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="menu-item-delete" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+    @await Html.PartialAsync("_MenuItemCreateOrUpdate", Model)
+</form>
+<nop-delete-confirmation asp-action="MenuItemDelete" asp-model-id="@Model.Id" asp-button-id="menu-item-delete" />

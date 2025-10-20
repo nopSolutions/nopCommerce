@@ -198,10 +198,9 @@
                                 },
                                 new ColumnProperty(nameof(PluginModel.LogoUrl))
                                 {
-                                    Title = T("Admin.Configuration.Plugins.Fields.Logo").Text,
-                                    Width = "200",
+                                    Title = T("Admin.Configuration.Plugins.Fields.Logo").Text,                                    
                                     ClassName = NopColumnClassDefaults.CenterAll,
-                                    Render = new RenderPicture()
+                                    Render = new RenderPicture(width: 120)
                                 },
                                 new ColumnProperty(nameof(PluginModel.Description))
                                 {
