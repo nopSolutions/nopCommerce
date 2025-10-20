@@ -1,13 +1,10 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Models;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Services;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -35,14 +32,12 @@ public class FixedByWeightByTotalController : BasePluginController
     protected readonly ICurrencyService _currencyService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IMeasureService _measureService;
-    protected readonly IPermissionService _permissionService;
     protected readonly ISettingService _settingService;
     protected readonly IShippingByWeightByTotalService _shippingByWeightService;
-    protected readonly IShippingService _shippingService;
+    protected readonly IShippingMethodsService _shippingMethodsService;
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStoreService _storeService;
-    protected readonly IGenericAttributeService _genericAttributeService;
-    protected readonly IWorkContext _workContext;
+    protected readonly IWarehouseService _warehouseService;
     protected readonly MeasureSettings _measureSettings;
 
     #endregion
@@ -55,14 +50,12 @@ public class FixedByWeightByTotalController : BasePluginController
         ICurrencyService currencyService,
         ILocalizationService localizationService,
         IMeasureService measureService,
-        IPermissionService permissionService,
         ISettingService settingService,
         IShippingByWeightByTotalService shippingByWeightService,
-        IShippingService shippingService,
+        IShippingMethodsService shippingMethodsService,
         IStateProvinceService stateProvinceService,
         IStoreService storeService,
-        IGenericAttributeService genericAttributeService,
-        IWorkContext workContext,
+        IWarehouseService warehouseService,
         MeasureSettings measureSettings)
     {
         _currencySettings = currencySettings;
@@ -71,14 +64,12 @@ public class FixedByWeightByTotalController : BasePluginController
         _currencyService = currencyService;
         _localizationService = localizationService;
         _measureService = measureService;
-        _permissionService = permissionService;
         _settingService = settingService;
         _shippingByWeightService = shippingByWeightService;
         _stateProvinceService = stateProvinceService;
-        _shippingService = shippingService;
+        _shippingMethodsService = shippingMethodsService;
         _storeService = storeService;
-        _genericAttributeService = genericAttributeService;
-        _workContext = workContext;
+        _warehouseService = warehouseService;
         _measureSettings = measureSettings;
     }
 
@@ -87,7 +78,7 @@ public class FixedByWeightByTotalController : BasePluginController
     #region Methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
-    public async Task<IActionResult> Configure(bool showtour = false)
+    public async Task<IActionResult> Configure()
     {
         var model = new ConfigurationModel
         {
@@ -101,11 +92,11 @@ public class FixedByWeightByTotalController : BasePluginController
             model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
         //warehouses
         model.AvailableWarehouses.Add(new SelectListItem { Text = "*", Value = "0" });
-        foreach (var warehouses in await _shippingService.GetAllWarehousesAsync())
+        foreach (var warehouses in await _warehouseService.GetAllWarehousesAsync())
             model.AvailableWarehouses.Add(new SelectListItem { Text = warehouses.Name, Value = warehouses.Id.ToString() });
         //shipping methods
         model.AvailableShippingMethods.Add(new SelectListItem { Text = "*", Value = "0" });
-        foreach (var sm in await _shippingService.GetAllShippingMethodsAsync())
+        foreach (var sm in await _shippingMethodsService.GetAllShippingMethodsAsync())
             model.AvailableShippingMethods.Add(new SelectListItem { Text = sm.Name, Value = sm.Id.ToString() });
         //countries
         model.AvailableCountries.Add(new SelectListItem { Text = "*", Value = "0" });
@@ -116,17 +107,6 @@ public class FixedByWeightByTotalController : BasePluginController
         model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "0" });
 
         model.SetGridPageSize();
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View("~/Plugins/Shipping.FixedByWeightByTotal/Views/Configure.cshtml", model);
     }
@@ -159,7 +139,7 @@ public class FixedByWeightByTotalController : BasePluginController
     [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
     public async Task<IActionResult> FixedShippingRateList(ConfigurationModel searchModel)
     {
-        var shippingMethods = (await _shippingService.GetAllShippingMethodsAsync()).ToPagedList(searchModel);
+        var shippingMethods = (await _shippingMethodsService.GetAllShippingMethodsAsync()).ToPagedList(searchModel);
 
         var gridModel = await new FixedRateListModel().PrepareToGridAsync(searchModel, shippingMethods, () =>
         {
@@ -222,9 +202,9 @@ public class FixedByWeightByTotalController : BasePluginController
                     StoreId = record.StoreId,
                     StoreName = (await _storeService.GetStoreByIdAsync(record.StoreId))?.Name ?? "*",
                     WarehouseId = record.WarehouseId,
-                    WarehouseName = (await _shippingService.GetWarehouseByIdAsync(record.WarehouseId))?.Name ?? "*",
+                    WarehouseName = (await _warehouseService.GetWarehouseByIdAsync(record.WarehouseId))?.Name ?? "*",
                     ShippingMethodId = record.ShippingMethodId,
-                    ShippingMethodName = (await _shippingService.GetShippingMethodByIdAsync(record.ShippingMethodId))?.Name ?? "Unavailable",
+                    ShippingMethodName = (await _shippingMethodsService.GetShippingMethodByIdAsync(record.ShippingMethodId))?.Name ?? "Unavailable",
                     CountryId = record.CountryId,
                     CountryName = (await _countryService.GetCountryByIdAsync(record.CountryId))?.Name ?? "*",
                     StateProvinceId = record.StateProvinceId,
@@ -294,7 +274,7 @@ public class FixedByWeightByTotalController : BasePluginController
             OrderSubtotalTo = 1000000
         };
 
-        var shippingMethods = await _shippingService.GetAllShippingMethodsAsync();
+        var shippingMethods = await _shippingMethodsService.GetAllShippingMethodsAsync();
         if (!shippingMethods.Any())
             return Content("No shipping methods can be loaded");
 
@@ -304,7 +284,7 @@ public class FixedByWeightByTotalController : BasePluginController
             model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
         //warehouses
         model.AvailableWarehouses.Add(new SelectListItem { Text = "*", Value = "0" });
-        foreach (var warehouses in await _shippingService.GetAllWarehousesAsync())
+        foreach (var warehouses in await _warehouseService.GetAllWarehousesAsync())
             model.AvailableWarehouses.Add(new SelectListItem { Text = warehouses.Name, Value = warehouses.Id.ToString() });
         //shipping methods
         foreach (var sm in shippingMethods)
@@ -378,13 +358,13 @@ public class FixedByWeightByTotalController : BasePluginController
             TransitDays = sbw.TransitDays
         };
 
-        var shippingMethods = await _shippingService.GetAllShippingMethodsAsync();
+        var shippingMethods = await _shippingMethodsService.GetAllShippingMethodsAsync();
         if (!shippingMethods.Any())
             return Content("No shipping methods can be loaded");
 
         var selectedStore = await _storeService.GetStoreByIdAsync(sbw.StoreId);
-        var selectedWarehouse = await _shippingService.GetWarehouseByIdAsync(sbw.WarehouseId);
-        var selectedShippingMethod = await _shippingService.GetShippingMethodByIdAsync(sbw.ShippingMethodId);
+        var selectedWarehouse = await _warehouseService.GetWarehouseByIdAsync(sbw.WarehouseId);
+        var selectedShippingMethod = await _shippingMethodsService.GetShippingMethodByIdAsync(sbw.ShippingMethodId);
         var selectedCountry = await _countryService.GetCountryByIdAsync(sbw.CountryId);
         var selectedState = await _stateProvinceService.GetStateProvinceByIdAsync(sbw.StateProvinceId);
         //stores
@@ -393,7 +373,7 @@ public class FixedByWeightByTotalController : BasePluginController
             model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString(), Selected = (selectedStore != null && store.Id == selectedStore.Id) });
         //warehouses
         model.AvailableWarehouses.Add(new SelectListItem { Text = "*", Value = "0" });
-        foreach (var warehouse in await _shippingService.GetAllWarehousesAsync())
+        foreach (var warehouse in await _warehouseService.GetAllWarehousesAsync())
             model.AvailableWarehouses.Add(new SelectListItem { Text = warehouse.Name, Value = warehouse.Id.ToString(), Selected = (selectedWarehouse != null && warehouse.Id == selectedWarehouse.Id) });
         //shipping methods
         foreach (var sm in shippingMethods)

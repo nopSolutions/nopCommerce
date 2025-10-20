@@ -16,6 +16,9 @@ public partial record LicenseCheckModel : BaseNopModel
     [JsonProperty(PropertyName = "block_pages")]
     public bool? BlockPages { get; set; }
 
+    [JsonProperty(PropertyName = "accepted_license_terms")]
+    public bool? AcceptedLicenseTerms { get; set; }
+
     [JsonProperty(PropertyName = "warning_text")]
     public string WarningText { get; set; }
 

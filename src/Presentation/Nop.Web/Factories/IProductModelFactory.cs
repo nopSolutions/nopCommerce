@@ -17,7 +17,7 @@ public partial interface IProductModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the view path
     /// </returns>
-    Task<string> PrepareProductTemplateViewPathAsync(Product product);
+    Task<string> PrepareProductTemplateViewPathAsync(Product product);    
 
     /// <summary>
     /// Prepare the product overview models

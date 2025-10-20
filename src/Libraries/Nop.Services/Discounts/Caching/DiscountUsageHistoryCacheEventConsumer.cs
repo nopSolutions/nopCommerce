@@ -6,6 +6,4 @@ namespace Nop.Services.Discounts.Caching;
 /// <summary>
 /// Represents a discount usage history cache event consumer
 /// </summary>
-public partial class DiscountUsageHistoryCacheEventConsumer : CacheEventConsumer<DiscountUsageHistory>
-{
-}
+public partial class DiscountUsageHistoryCacheEventConsumer : CacheEventConsumer<DiscountUsageHistory>;

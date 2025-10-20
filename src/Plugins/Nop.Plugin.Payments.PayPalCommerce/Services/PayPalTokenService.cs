@@ -61,6 +61,22 @@ public class PayPalTokenService
     }
 
     /// <summary>
+    /// Get a customer payment token
+    /// </summary>
+    /// <param name="clientId">Client identifier</param>
+    /// <param name="customerId">Customer identifier; pass 0 to load all tokens</param>
+    /// <param name="vaultId">Vault identifier; pass null to load all tokens</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the payment token
+    /// </returns>
+    public async Task<PayPalToken> GetTokenAsync(string clientId, int customerId = 0, string vaultId = null)
+    {
+        var tokens = await GetAllTokensAsync(clientId, customerId, vaultId);
+        return tokens.FirstOrDefault();
+    }
+
+    /// <summary>
     /// Get a payment token by identifier
     /// </summary>
     /// <param name="id">Token identifier</param>

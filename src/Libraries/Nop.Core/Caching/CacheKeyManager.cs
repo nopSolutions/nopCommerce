@@ -21,7 +21,7 @@ public partial class CacheKeyManager : ICacheKeyManager
     /// Add the key
     /// </summary>
     /// <param name="key">The key to add</param>
-    public void AddKey(string key)
+    public virtual void AddKey(string key)
     {
         _keys.Add(key, default);
     }
@@ -30,7 +30,7 @@ public partial class CacheKeyManager : ICacheKeyManager
     /// Remove the key
     /// </summary>
     /// <param name="key">The key to remove</param>
-    public void RemoveKey(string key)
+    public virtual void RemoveKey(string key)
     {
         _keys.Remove(key);
     }
@@ -38,7 +38,7 @@ public partial class CacheKeyManager : ICacheKeyManager
     /// <summary>
     /// Remove all keys
     /// </summary>
-    public void Clear()
+    public virtual void Clear()
     {
         _keys.Clear();
     }
@@ -48,7 +48,7 @@ public partial class CacheKeyManager : ICacheKeyManager
     /// </summary>
     /// <param name="prefix">Prefix to delete keys</param>
     /// <returns>The list of removed keys</returns>
-    public IEnumerable<string> RemoveByPrefix(string prefix)
+    public virtual IEnumerable<string> RemoveByPrefix(string prefix)
     {
         if (!_keys.Prune(prefix, out var subtree) || subtree?.Keys == null)
             return Enumerable.Empty<string>();

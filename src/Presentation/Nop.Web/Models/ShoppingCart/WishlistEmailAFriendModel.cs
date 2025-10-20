@@ -19,6 +19,8 @@ public partial record WishlistEmailAFriendModel : BaseNopModel
 
     public bool SuccessfullySent { get; set; }
     public string Result { get; set; }
+    public int? ListId { get; set; }
+
 
     public bool DisplayCaptcha { get; set; }
 }

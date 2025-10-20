@@ -20,7 +20,7 @@ public partial interface IImportManager
     /// A task that represents the asynchronous operation
     /// The task result contains the number of imported subscribers
     /// </returns>
-    Task<int> ImportNewsletterSubscribersFromTxtAsync(Stream stream);
+    Task<int> ImportNewsLetterSubscribersFromTxtAsync(Stream stream);
 
     /// <summary>
     /// Import states from TXT file
@@ -60,4 +60,11 @@ public partial interface IImportManager
     /// <param name="stream">Stream</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task ImportCustomersFromXlsxAsync(Stream stream);
+
+    /// <summary>
+    /// Import filter level values from XLSX file
+    /// </summary>
+    /// <param name="stream">Stream</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task ImportFilterLevelValuesFromXlsxAsync(Stream stream);
 }

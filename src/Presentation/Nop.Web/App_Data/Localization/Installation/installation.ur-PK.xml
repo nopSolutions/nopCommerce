@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="اردو" IsDefault="false" IsRightToLeft="true">
   <LocaleResource Name="AdminEmail">
     <Value>ایڈمن یوزر کا ای میل</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>ایڈمن یوزر کا پاس ورڈ سے ضروری ہے</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>کریکٹر سیٹ</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>کولیشن</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>کولیشن درکار ہے۔</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>فولڈر '{1}' پر '{0}' اکاؤنٹ میں ترمیم کی اجازت نہیں دی گئی ہے۔  براہ کرم ان اجازتوں کو ترتیب دیں۔</Value>

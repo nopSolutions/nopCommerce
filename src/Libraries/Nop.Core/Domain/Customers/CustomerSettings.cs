@@ -188,11 +188,6 @@ public partial class CustomerSettings : ISettings
     public bool NewsletterEnabled { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether 'Newsletter' checkbox is ticked by default on the registration page
-    /// </summary>
-    public bool NewsletterTickedByDefault { get; set; }
-
-    /// <summary>
     /// Gets or sets a value indicating whether to hide newsletter box
     /// </summary>
     public bool HideNewsletterBlock { get; set; }
@@ -403,6 +398,11 @@ public partial class CustomerSettings : ISettings
     /// Gets or sets a value indicating whether privacy policy should accepted during registration
     /// </summary>
     public bool AcceptPrivacyPolicyEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether notification message should be sent to customer on failed login attempt
+    /// </summary>
+    public bool NotifyFailedLoginAttempt { get; set; }
 
     #endregion
 }

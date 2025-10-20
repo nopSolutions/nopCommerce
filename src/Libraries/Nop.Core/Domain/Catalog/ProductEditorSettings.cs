@@ -273,6 +273,11 @@ public partial class ProductEditorSettings : ISettings
     public bool CrossSellsProducts { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether 'Filter level values products' block is shown
+    /// </summary>
+    public bool FilterLevelValuesProducts { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether 'SEO' tab is shown
     /// </summary>
     public bool Seo { get; set; }
@@ -301,4 +306,9 @@ public partial class ProductEditorSettings : ISettings
     /// Gets or sets a value indicating whether 'Stock quantity history' tab is shown
     /// </summary>
     public bool StockQuantityHistory { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether 'Age verification' field is shown
+    /// </summary>
+    public bool AgeVerification { get; set; }
 }

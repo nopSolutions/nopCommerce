@@ -2,15 +2,17 @@
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Core.Rss;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.FilterLevels;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
@@ -32,6 +34,8 @@ public partial class CatalogController : BasePublicController
     protected readonly ICatalogModelFactory _catalogModelFactory;
     protected readonly ICategoryService _categoryService;
     protected readonly ICustomerActivityService _customerActivityService;
+    protected readonly IFilterLevelValueModelFactory _filterLevelValueModelFactory;
+    protected readonly IFilterLevelValueService _filterLevelValueService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IManufacturerService _manufacturerService;
@@ -42,10 +46,10 @@ public partial class CatalogController : BasePublicController
     protected readonly IProductTagService _productTagService;
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVendorService _vendorService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
+    protected readonly FilterLevelSettings _filterLevelSettings;
     protected readonly MediaSettings _mediaSettings;
     protected readonly VendorSettings _vendorSettings;
 
@@ -58,6 +62,8 @@ public partial class CatalogController : BasePublicController
         ICatalogModelFactory catalogModelFactory,
         ICategoryService categoryService,
         ICustomerActivityService customerActivityService,
+        IFilterLevelValueModelFactory filterLevelValueModelFactory,
+        IFilterLevelValueService filterLevelValueService,
         IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
         IManufacturerService manufacturerService,
@@ -68,10 +74,10 @@ public partial class CatalogController : BasePublicController
         IProductTagService productTagService,
         IStoreContext storeContext,
         IStoreMappingService storeMappingService,
-        IUrlRecordService urlRecordService,
         IVendorService vendorService,
         IWebHelper webHelper,
         IWorkContext workContext,
+        FilterLevelSettings filterLevelSettings,
         MediaSettings mediaSettings,
         VendorSettings vendorSettings)
     {
@@ -80,6 +86,8 @@ public partial class CatalogController : BasePublicController
         _catalogModelFactory = catalogModelFactory;
         _categoryService = categoryService;
         _customerActivityService = customerActivityService;
+        _filterLevelValueModelFactory = filterLevelValueModelFactory;
+        _filterLevelValueService = filterLevelValueService;
         _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
         _manufacturerService = manufacturerService;
@@ -90,10 +98,10 @@ public partial class CatalogController : BasePublicController
         _productTagService = productTagService;
         _storeContext = storeContext;
         _storeMappingService = storeMappingService;
-        _urlRecordService = urlRecordService;
         _vendorService = vendorService;
         _webHelper = webHelper;
         _workContext = workContext;
+        _filterLevelSettings = filterLevelSettings;
         _mediaSettings = mediaSettings;
         _vendorSettings = vendorSettings;
     }
@@ -144,22 +152,6 @@ public partial class CatalogController : BasePublicController
         var model = await _catalogModelFactory.PrepareCategoryProductsModelAsync(category, command);
 
         return PartialView("_ProductsInGridOrLines", model);
-    }
-
-    [HttpPost]
-    public virtual async Task<IActionResult> GetCatalogRoot()
-    {
-        var model = await _catalogModelFactory.PrepareRootCategoriesAsync();
-
-        return Json(model);
-    }
-
-    [HttpPost]
-    public virtual async Task<IActionResult> GetCatalogSubCategories(int id)
-    {
-        var model = await _catalogModelFactory.PrepareSubCategoriesAsync(id);
-
-        return Json(model);
     }
 
     #endregion
@@ -276,7 +268,7 @@ public partial class CatalogController : BasePublicController
     {
         //we don't allow viewing of vendors if "vendors" block is hidden
         if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = await _catalogModelFactory.PrepareVendorAllModelsAsync();
         return View(model);
@@ -364,8 +356,7 @@ public partial class CatalogController : BasePublicController
 
         foreach (var product in products)
         {
-            var seName = await _urlRecordService.GetSeNameAsync(product);
-            var productUrl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = seName }, _webHelper.GetCurrentRequestProtocol());
+            var productUrl = await _nopUrlHelper.RouteGenericUrlAsync(product, _webHelper.GetCurrentRequestProtocol());
             var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
             var productDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription);
             var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{store.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);
@@ -423,7 +414,7 @@ public partial class CatalogController : BasePublicController
 
         var categoryIds = new List<int>();
         if (categoryId > 0)
-            categoryIds.AddRange([categoryId, ..await _categoryService.GetChildCategoryIdsAsync(categoryId, store.Id)]);
+            categoryIds.AddRange([categoryId, .. await _categoryService.GetChildCategoryIdsAsync(categoryId, store.Id)]);
 
         var products = await _productService.SearchProductsAsync(0,
             categoryIds: categoryIds,
@@ -440,7 +431,7 @@ public partial class CatalogController : BasePublicController
                 select new
                 {
                     label = p.Name,
-                    producturl = Url.RouteUrl<Product>(new { SeName = p.SeName }),
+                    producturl = _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = p.SeName }).Result,
                     productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
                     showlinktoresultsearch = showLinkToResultSearch
                 })
@@ -455,6 +446,111 @@ public partial class CatalogController : BasePublicController
             searchModel = new SearchModel();
 
         var model = await _catalogModelFactory.PrepareSearchProductsModelAsync(searchModel, command);
+
+        return PartialView("_ProductsInGridOrLines", model);
+    }
+
+    #endregion
+
+    #region Filter level values
+
+    //available even when navigation is not allowed
+    [CheckAccessPublicStore(ignore: true)]
+    //ignore SEO friendly URLs checks
+    [CheckLanguageSeoCode(ignore: true)]
+    public virtual async Task<IActionResult> GetFilterLevelValues(string filterLevel1Value = "", string filterLevel2Value = "", string filterLevel3Value = "")
+    {
+        var values = await _filterLevelValueService.GetAllFilterLevelValuesAsync(
+            filterLevel1Value, filterLevel2Value, filterLevel3Value);
+
+        var defaultItemText = await _localizationService.GetResourceAsync("Admin.Common.Select");
+
+        if (string.IsNullOrEmpty(filterLevel1Value))
+        {
+            var result = values
+                .Select(f => new 
+                { 
+                    filterLevel1Value = f.FilterLevel1Value, 
+                    defaultItemText = defaultItemText 
+                })
+                .Distinct();
+            return Json(result);
+        }
+
+        if (string.IsNullOrEmpty(filterLevel2Value))
+        {
+            var result = values
+                .Where(f => f.FilterLevel1Value == filterLevel1Value)
+                .Select(f => new
+                {
+                    filterLevel1Value = f.FilterLevel1Value,
+                    filterLevel2Value = f.FilterLevel2Value,
+                    defaultItemText = defaultItemText
+                })
+                .Distinct();
+            return Json(result);
+        }
+
+        if (string.IsNullOrEmpty(filterLevel3Value))
+        {
+            var result = values
+                .Where(f => f.FilterLevel1Value == filterLevel1Value &&
+                            f.FilterLevel2Value == filterLevel2Value)
+                .Select(f => new
+                {
+                    filterLevel1Value = f.FilterLevel1Value,
+                    filterLevel2Value = f.FilterLevel2Value,
+                    filterLevel3Value = f.FilterLevel3Value,
+                    defaultItemText = defaultItemText
+                })
+                .Distinct();
+            return Json(result);
+        }
+
+        var finalResult = values
+            .Where(f => f.FilterLevel1Value == filterLevel1Value &&
+                        f.FilterLevel2Value == filterLevel2Value &&
+                        f.FilterLevel3Value == filterLevel3Value)
+            .Select(f => new
+            {
+                filterLevel1Value = f.FilterLevel1Value,
+                filterLevel2Value = f.FilterLevel2Value,
+                filterLevel3Value = f.FilterLevel3Value,
+                defaultItemText = defaultItemText
+            })
+            .Distinct();
+
+        return Json(finalResult);
+    }
+
+    public virtual async Task<IActionResult> SearchByFilterLevelValues(SearchFilterLevelValueModel model, CatalogProductsCommand command)
+    {
+        if (!_filterLevelSettings.FilterLevelEnabled)
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
+
+        var store = await _storeContext.GetCurrentStoreAsync();
+
+        //'Continue shopping' URL
+        await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
+            NopCustomerDefaults.LastContinueShoppingPageAttribute,
+            _webHelper.GetThisPageUrl(true),
+            store.Id);
+
+        if (model == null)
+            model = new SearchFilterLevelValueModel();
+
+        model = await _filterLevelValueModelFactory.PrepareSearchFilterLevelValueModelAsync(model, command);
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public virtual async Task<IActionResult> SearchProductsByFilterLevelValues(SearchFilterLevelValueModel searchModel, CatalogProductsCommand command)
+    {
+        if (searchModel == null)
+            searchModel = new SearchFilterLevelValueModel();
+
+        var model = await _catalogModelFactory.PrepareSearchProductsByFilterLevelValuesModelAsync(searchModel, command);
 
         return PartialView("_ProductsInGridOrLines", model);
     }

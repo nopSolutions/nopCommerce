@@ -37,6 +37,11 @@ public static partial class MessageTemplateSystemNames
     /// </summary>
     public const string DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION = "Customer.Gdpr.DeleteRequest";
 
+    /// <summary>
+    /// Represents system name of the failed login attempt notification
+    /// </summary>
+    public const string CUSTOMER_FAILED_LOGIN_ATTEMPT_NOTIFICATION = "Customer.FailedLoginAttempt";
+
     #endregion
 
     #region Order
@@ -107,9 +112,19 @@ public static partial class MessageTemplateSystemNames
     public const string ORDER_COMPLETED_CUSTOMER_NOTIFICATION = "OrderCompleted.CustomerNotification";
 
     /// <summary>
+    /// Represents system name of notification store owner about completed order
+    /// </summary>
+    public const string ORDER_COMPLETED_STORE_OWNER_NOTIFICATION = "OrderCompleted.StoreOwnerNotification";
+
+    /// <summary>
     /// Represents system name of notification customer about cancelled order
     /// </summary>
     public const string ORDER_CANCELLED_CUSTOMER_NOTIFICATION = "OrderCancelled.CustomerNotification";
+
+    /// <summary>
+    /// Represents system name of notification store owner about cancelled order
+    /// </summary>
+    public const string ORDER_CANCELLED_STORE_OWNER_NOTIFICATION = "OrderCancelled.StoreOwnerNotification";
 
     /// <summary>
     /// Represents system name of notification vendor about cancelled order

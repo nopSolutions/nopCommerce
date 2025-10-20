@@ -13,6 +13,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -31,6 +32,7 @@ using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
+using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Factories;
 
@@ -47,6 +49,7 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly ICategoryService _categoryService;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
+    protected readonly ICustomWishlistService _customWishlistService;
     protected readonly IDateRangeService _dateRangeService;
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IDownloadService _downloadService;
@@ -60,6 +63,7 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly IPriceFormatter _priceFormatter;
     protected readonly IProductAttributeParser _productAttributeParser;
     protected readonly IProductAttributeService _productAttributeService;
+    protected readonly IProductReviewService _productReviewService;
     protected readonly IProductService _productService;
     protected readonly IProductTagService _productTagService;
     protected readonly IProductTemplateService _productTemplateService;
@@ -93,6 +97,7 @@ public partial class ProductModelFactory : IProductModelFactory
         ICategoryService categoryService,
         ICurrencyService currencyService,
         ICustomerService customerService,
+        ICustomWishlistService customWishlistService,
         IDateRangeService dateRangeService,
         IDateTimeHelper dateTimeHelper,
         IDownloadService downloadService,
@@ -106,6 +111,7 @@ public partial class ProductModelFactory : IProductModelFactory
         IPriceFormatter priceFormatter,
         IProductAttributeParser productAttributeParser,
         IProductAttributeService productAttributeService,
+        IProductReviewService productReviewService,
         IProductService productService,
         IProductTagService productTagService,
         IProductTemplateService productTemplateService,
@@ -134,6 +140,7 @@ public partial class ProductModelFactory : IProductModelFactory
         _categoryService = categoryService;
         _currencyService = currencyService;
         _customerService = customerService;
+        _customWishlistService = customWishlistService;
         _dateRangeService = dateRangeService;
         _dateTimeHelper = dateTimeHelper;
         _downloadService = downloadService;
@@ -147,6 +154,7 @@ public partial class ProductModelFactory : IProductModelFactory
         _priceFormatter = priceFormatter;
         _productAttributeParser = productAttributeParser;
         _productAttributeService = productAttributeService;
+        _productReviewService = productReviewService;
         _productService = productService;
         _productTagService = productTagService;
         _productTemplateService = productTemplateService;
@@ -249,7 +257,7 @@ public partial class ProductModelFactory : IProductModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the minimum possible product price
     /// </returns>
-    protected async Task<(bool hasMultiplePrices, decimal minPossiblePriceWithoutDiscount, decimal minPossiblePriceWithDiscount)> GetFromPriceAsync(Product product, Customer customer, Store store)
+    protected virtual async Task<(bool hasMultiplePrices, decimal minPossiblePriceWithoutDiscount, decimal minPossiblePriceWithDiscount)> GetFromPriceAsync(Product product, Customer customer, Store store)
     {
         var hasMultiplePrices = false;
 
@@ -594,7 +602,7 @@ public partial class ProductModelFactory : IProductModelFactory
 
             productReview = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var productReviews = await _productService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: currentStore.Id);
+                var productReviews = await _productReviewService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: currentStore.Id);
 
                 return new ProductReviewOverviewModel
                 {
@@ -617,7 +625,7 @@ public partial class ProductModelFactory : IProductModelFactory
             productReview.ProductId = product.Id;
             productReview.AllowCustomerReviews = product.AllowCustomerReviews;
             productReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync());
-            productReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
+            productReview.CanAddNewReview = await _productReviewService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
         }
 
         return productReview;
@@ -718,7 +726,6 @@ public partial class ProductModelFactory : IProductModelFactory
                 Id = catBr.Id,
                 Name = await _localizationService.GetLocalizedAsync(catBr, x => x.Name),
                 SeName = await _urlRecordService.GetSeNameAsync(catBr),
-                IncludeInTopMenu = catBr.IncludeInTopMenu
             });
         }
 
@@ -758,6 +765,37 @@ public partial class ProductModelFactory : IProductModelFactory
                 ProductCount = await _productTagService.GetProductCountByProductTagIdAsync(x.Id, store.Id)
             }).ToListAsync();
 
+        return model;
+    }
+
+    /// <summary>
+    /// Prepare the product to wishlist model
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the product add to wishlist model
+    /// </returns>
+    protected virtual async Task<ProductToWishlistModel> PrepareProductToWishlistModelAsync(Product product)
+    {
+        ArgumentNullException.ThrowIfNull(product);
+
+        var model = new ProductToWishlistModel
+        {
+            ProductId = product.Id
+        };
+        //custom wishlists
+        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+        var currentWishlists = await _customWishlistService.GetAllCustomWishlistsAsync(currentCustomer.Id);
+        foreach (var wishlist in currentWishlists)
+        {
+            var customWishlistModel = new CustomWishlistModel
+            {
+                Id = wishlist.Id,
+                Name = wishlist.Name
+            };
+            model.CustomWishlistItems.Add(customWishlistModel);
+        }
         return model;
     }
 
@@ -812,6 +850,10 @@ public partial class ProductModelFactory : IProductModelFactory
             model.DisableBuyButton = true;
             model.DisableWishlistButton = true;
         }
+
+        //custom wishlist items
+        model.ProductToWishlist = await PrepareProductToWishlistModelAsync(product);
+
         //pre-order
         if (product.AvailableForPreOrder)
         {
@@ -1313,6 +1355,9 @@ public partial class ProductModelFactory : IProductModelFactory
             //reviews
             model.ReviewOverviewModel = await PrepareProductReviewOverviewModelAsync(product);
 
+            //custom wishlist items
+            model.ProductToWishlist = await PrepareProductToWishlistModelAsync(product);
+
             models.Add(model);
         }
 
@@ -1648,7 +1693,7 @@ public partial class ProductModelFactory : IProductModelFactory
 
         var currentStore = await _storeContext.GetCurrentStoreAsync();
 
-        var productReviews = await _productService.GetAllProductReviewsAsync(
+        var productReviews = await _productReviewService.GetAllProductReviewsAsync(
             approved: true,
             productId: product.Id,
             storeId: _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
@@ -1674,6 +1719,8 @@ public partial class ProductModelFactory : IProductModelFactory
         {
             var customer = await _customerService.GetCustomerByIdAsync(pr.CustomerId);
 
+            var writeOn = await _dateTimeHelper.ConvertToUserTimeAsync(pr.CreatedOnUtc, DateTimeKind.Utc);
+
             var productReviewModel = new ProductReviewModel
             {
                 Id = pr.Id,
@@ -1690,7 +1737,8 @@ public partial class ProductModelFactory : IProductModelFactory
                     HelpfulYesTotal = pr.HelpfulYesTotal,
                     HelpfulNoTotal = pr.HelpfulNoTotal,
                 },
-                WrittenOnStr = (await _dateTimeHelper.ConvertToUserTimeAsync(pr.CreatedOnUtc, DateTimeKind.Utc)).ToString("g"),
+                WrittenOnStr = writeOn.ToString("g"),
+                WrittenOn = writeOn
             };
 
             if (_customerSettings.AllowCustomersToUploadAvatars)
@@ -1753,7 +1801,7 @@ public partial class ProductModelFactory : IProductModelFactory
 
         model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !await _customerService.IsGuestAsync(currentCustomer);
         model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
-        model.AddProductReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
+        model.AddProductReview.CanAddNewReview = await _productReviewService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
 
         return model;
     }
@@ -1779,7 +1827,7 @@ public partial class ProductModelFactory : IProductModelFactory
         var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();
 
-        var list = await _productService.GetAllProductReviewsAsync(
+        var list = await _productReviewService.GetAllProductReviewsAsync(
             customerId: customer.Id,
             approved: null,
             storeId: _catalogSettings.ShowProductReviewsPerStore ? store.Id : 0,
@@ -1833,7 +1881,7 @@ public partial class ProductModelFactory : IProductModelFactory
             TotalRecords = list.TotalCount,
             PageIndex = list.PageIndex,
             ShowTotalSummary = false,
-            RouteActionName = "CustomerProductReviewsPaged",
+            RouteActionName = NopRouteNames.Standard.CUSTOMER_PRODUCT_REVIEWS_PAGED,
             UseRouteLinks = true,
             RouteValues = new CustomerProductReviewsModel.CustomerProductReviewsRouteValues { PageNumber = pageIndex }
         };

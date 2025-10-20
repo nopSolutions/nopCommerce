@@ -49,7 +49,7 @@
                         $.ajax({
                             cache: false,
                             type: "POST",
-                            url: "@(Url.RouteUrl("PollVote"))",
+                            url: "@(Url.RouteUrl(NopRouteNames.Ajax.POLL_VOTE))",
                             data: postData,
                             success: function (data, textStatus, jqXHR) {
                                 if (data.error) {

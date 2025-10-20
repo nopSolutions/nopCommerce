@@ -26,9 +26,7 @@ public partial class NewsController : BaseAdminController
     protected readonly INewsModelFactory _newsModelFactory;
     protected readonly INewsService _newsService;
     protected readonly INotificationService _notificationService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IStoreService _storeService;
     protected readonly IUrlRecordService _urlRecordService;
 
     #endregion
@@ -41,9 +39,7 @@ public partial class NewsController : BaseAdminController
         INewsModelFactory newsModelFactory,
         INewsService newsService,
         INotificationService notificationService,
-        IPermissionService permissionService,
         IStoreMappingService storeMappingService,
-        IStoreService storeService,
         IUrlRecordService urlRecordService)
     {
         _customerActivityService = customerActivityService;
@@ -52,39 +48,8 @@ public partial class NewsController : BaseAdminController
         _newsModelFactory = newsModelFactory;
         _newsService = newsService;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
         _urlRecordService = urlRecordService;
-    }
-
-    #endregion
-
-    #region Utilities
-
-    protected virtual async Task SaveStoreMappingsAsync(NewsItem newsItem, NewsItemModel model)
-    {
-        newsItem.LimitedToStores = model.SelectedStoreIds.Any();
-        await _newsService.UpdateNewsAsync(newsItem);
-
-        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(newsItem);
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            if (model.SelectedStoreIds.Contains(store.Id))
-            {
-                //new store
-                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
-                    await _storeMappingService.InsertStoreMappingAsync(newsItem, store.Id);
-            }
-            else
-            {
-                //remove store
-                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
-                if (storeMappingToDelete != null)
-                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
-            }
-        }
     }
 
     #endregion
@@ -145,7 +110,7 @@ public partial class NewsController : BaseAdminController
             await _urlRecordService.SaveSlugAsync(newsItem, seName, newsItem.LanguageId);
 
             //Stores
-            await SaveStoreMappingsAsync(newsItem, model);
+            await _storeMappingService.SaveStoreMappingsAsync(newsItem, model.SelectedStoreIds);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.News.NewsItems.Added"));
 
@@ -199,7 +164,7 @@ public partial class NewsController : BaseAdminController
             await _urlRecordService.SaveSlugAsync(newsItem, seName, newsItem.LanguageId);
 
             //stores
-            await SaveStoreMappingsAsync(newsItem, model);
+            await _storeMappingService.SaveStoreMappingsAsync(newsItem, model.SelectedStoreIds);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.News.NewsItems.Updated"));
 
@@ -319,11 +284,8 @@ public partial class NewsController : BaseAdminController
         await _newsService.DeleteNewsCommentsAsync(comments);
 
         //activity log
-        foreach (var newsComment in comments)
-        {
-            await _customerActivityService.InsertActivityAsync("DeleteNewsComment",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteNewsComment"), newsComment.Id), newsComment);
-        }
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteNewsComment");
+        await _customerActivityService.InsertActivitiesAsync("DeleteNewsComment", comments, newsComment => string.Format(activityLogFormat, newsComment.Id));
 
         return Json(new { Result = true });
     }
@@ -336,7 +298,7 @@ public partial class NewsController : BaseAdminController
             return NoContent();
 
         //filter not approved comments
-        var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved);
+        var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved).ToList();
 
         foreach (var newsComment in newsComments)
         {
@@ -346,11 +308,11 @@ public partial class NewsController : BaseAdminController
 
             //raise event 
             await _eventPublisher.PublishAsync(new NewsCommentApprovedEvent(newsComment));
-
-            //activity log
-            await _customerActivityService.InsertActivityAsync("EditNewsComment",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
         }
+
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment");
+        await _customerActivityService.InsertActivitiesAsync("EditNewsComment", newsComments, newsComment => string.Format(activityLogFormat, newsComment.Id));
 
         return Json(new { Result = true });
     }
@@ -363,18 +325,18 @@ public partial class NewsController : BaseAdminController
             return NoContent();
 
         //filter approved comments
-        var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved);
+        var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved).ToList();
 
         foreach (var newsComment in newsComments)
         {
             newsComment.IsApproved = false;
 
             await _newsService.UpdateNewsCommentAsync(newsComment);
-
-            //activity log
-            await _customerActivityService.InsertActivityAsync("EditNewsComment",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment"), newsComment.Id), newsComment);
         }
+
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment");
+        await _customerActivityService.InsertActivitiesAsync("EditNewsComment", newsComments, newsComment => string.Format(activityLogFormat, newsComment.Id));
 
         return Json(new { Result = true });
     }

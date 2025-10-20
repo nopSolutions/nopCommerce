@@ -12,7 +12,7 @@ public partial class NopMetadataProvider : IDisplayMetadataProvider
     /// Sets the values for properties of isplay metadata
     /// </summary>
     /// <param name="context">Display metadata provider context</param>
-    public void CreateDisplayMetadata(DisplayMetadataProviderContext context)
+    public virtual void CreateDisplayMetadata(DisplayMetadataProviderContext context)
     {
         //get all custom attributes
         var additionalValues = context.Attributes.OfType<IModelAttribute>().ToList();

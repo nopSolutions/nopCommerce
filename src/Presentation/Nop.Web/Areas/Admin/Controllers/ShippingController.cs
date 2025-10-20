@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Nop.Core;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
 using Nop.Services.Common;
@@ -36,14 +34,12 @@ public partial class ShippingController : BaseAdminController
     protected readonly ILocalizationService _localizationService;
     protected readonly ILocalizedEntityService _localizedEntityService;
     protected readonly INotificationService _notificationService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IPickupPluginManager _pickupPluginManager;
     protected readonly ISettingService _settingService;
     protected readonly IShippingModelFactory _shippingModelFactory;
     protected readonly IShippingPluginManager _shippingPluginManager;
-    protected readonly IShippingService _shippingService;
-    protected readonly IGenericAttributeService _genericAttributeService;
-    protected readonly IWorkContext _workContext;
+    protected readonly IShippingMethodsService _shippingMethodsService;
+    protected readonly IWarehouseService _warehouseService;
     protected readonly ShippingSettings _shippingSettings;
     private static readonly char[] _separator = [','];
 
@@ -59,14 +55,12 @@ public partial class ShippingController : BaseAdminController
         ILocalizationService localizationService,
         ILocalizedEntityService localizedEntityService,
         INotificationService notificationService,
-        IPermissionService permissionService,
         IPickupPluginManager pickupPluginManager,
         ISettingService settingService,
         IShippingModelFactory shippingModelFactory,
         IShippingPluginManager shippingPluginManager,
-        IShippingService shippingService,
-        IGenericAttributeService genericAttributeService,
-        IWorkContext workContext,
+        IShippingMethodsService shippingMethodsService,
+        IWarehouseService warehouseService,
         ShippingSettings shippingSettings)
     {
         _addressService = addressService;
@@ -77,14 +71,12 @@ public partial class ShippingController : BaseAdminController
         _localizationService = localizationService;
         _localizedEntityService = localizedEntityService;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _pickupPluginManager = pickupPluginManager;
         _settingService = settingService;
         _shippingModelFactory = shippingModelFactory;
         _shippingPluginManager = shippingPluginManager;
-        _shippingService = shippingService;
-        _genericAttributeService = genericAttributeService;
-        _workContext = workContext;
+        _shippingMethodsService = shippingMethodsService;
+        _warehouseService = warehouseService;
         _shippingSettings = shippingSettings;
     }
 
@@ -122,21 +114,10 @@ public partial class ShippingController : BaseAdminController
     #region Shipping rate computation methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SHIPPING_SETTINGS)]
-    public virtual async Task<IActionResult> Providers(bool showtour = false)
+    public virtual async Task<IActionResult> Providers()
     {
         //prepare model
         var model = await _shippingModelFactory.PrepareShippingProviderSearchModelAsync(new ShippingProviderSearchModel());
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }
@@ -287,7 +268,7 @@ public partial class ShippingController : BaseAdminController
         if (ModelState.IsValid)
         {
             var sm = model.ToEntity<ShippingMethod>();
-            await _shippingService.InsertShippingMethodAsync(sm);
+            await _shippingMethodsService.InsertShippingMethodAsync(sm);
 
             //locales
             await UpdateLocalesAsync(sm, model);
@@ -307,7 +288,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> EditMethod(int id)
     {
         //try to get a shipping method with the specified id
-        var shippingMethod = await _shippingService.GetShippingMethodByIdAsync(id);
+        var shippingMethod = await _shippingMethodsService.GetShippingMethodByIdAsync(id);
         if (shippingMethod == null)
             return RedirectToAction("Methods");
 
@@ -322,14 +303,14 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> EditMethod(ShippingMethodModel model, bool continueEditing)
     {
         //try to get a shipping method with the specified id
-        var shippingMethod = await _shippingService.GetShippingMethodByIdAsync(model.Id);
+        var shippingMethod = await _shippingMethodsService.GetShippingMethodByIdAsync(model.Id);
         if (shippingMethod == null)
             return RedirectToAction("Methods");
 
         if (ModelState.IsValid)
         {
             shippingMethod = model.ToEntity(shippingMethod);
-            await _shippingService.UpdateShippingMethodAsync(shippingMethod);
+            await _shippingMethodsService.UpdateShippingMethodAsync(shippingMethod);
 
             //locales
             await UpdateLocalesAsync(shippingMethod, model);
@@ -351,11 +332,11 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> DeleteMethod(int id)
     {
         //try to get a shipping method with the specified id
-        var shippingMethod = await _shippingService.GetShippingMethodByIdAsync(id);
+        var shippingMethod = await _shippingMethodsService.GetShippingMethodByIdAsync(id);
         if (shippingMethod == null)
             return RedirectToAction("Methods");
 
-        await _shippingService.DeleteShippingMethodAsync(shippingMethod);
+        await _shippingMethodsService.DeleteShippingMethodAsync(shippingMethod);
 
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Methods.Deleted"));
 
@@ -633,7 +614,7 @@ public partial class ShippingController : BaseAdminController
             var warehouse = model.ToEntity<Warehouse>();
             warehouse.AddressId = address.Id;
 
-            await _shippingService.InsertWarehouseAsync(warehouse);
+            await _warehouseService.InsertWarehouseAsync(warehouse);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("AddNewWarehouse",
@@ -655,7 +636,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> EditWarehouse(int id)
     {
         //try to get a warehouse with the specified id
-        var warehouse = await _shippingService.GetWarehouseByIdAsync(id);
+        var warehouse = await _warehouseService.GetWarehouseByIdAsync(id);
         if (warehouse == null)
             return RedirectToAction("Warehouses");
 
@@ -670,7 +651,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> EditWarehouse(WarehouseModel model, bool continueEditing)
     {
         //try to get a warehouse with the specified id
-        var warehouse = await _shippingService.GetWarehouseByIdAsync(model.Id);
+        var warehouse = await _warehouseService.GetWarehouseByIdAsync(model.Id);
         if (warehouse == null)
             return RedirectToAction("Warehouses");
 
@@ -692,7 +673,7 @@ public partial class ShippingController : BaseAdminController
 
             warehouse.AddressId = address.Id;
 
-            await _shippingService.UpdateWarehouseAsync(warehouse);
+            await _warehouseService.UpdateWarehouseAsync(warehouse);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditWarehouse",
@@ -715,11 +696,11 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> DeleteWarehouse(int id)
     {
         //try to get a warehouse with the specified id
-        var warehouse = await _shippingService.GetWarehouseByIdAsync(id);
+        var warehouse = await _warehouseService.GetWarehouseByIdAsync(id);
         if (warehouse == null)
             return RedirectToAction("Warehouses");
 
-        await _shippingService.DeleteWarehouseAsync(warehouse);
+        await _warehouseService.DeleteWarehouseAsync(warehouse);
 
         //activity log
         await _customerActivityService.InsertActivityAsync("DeleteWarehouse",
@@ -752,7 +733,7 @@ public partial class ShippingController : BaseAdminController
     public virtual async Task<IActionResult> RestrictionSave(ShippingMethodRestrictionModel model, IFormCollection form)
     {
         var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
-        var shippingMethods = await _shippingService.GetAllShippingMethodsAsync();
+        var shippingMethods = await _shippingMethodsService.GetAllShippingMethodsAsync();
 
         foreach (var shippingMethod in shippingMethods)
         {
@@ -767,23 +748,23 @@ public partial class ShippingController : BaseAdminController
             {
                 var restrict = countryIdsToRestrict.Contains(country.Id);
                 var shippingMethodCountryMappings =
-                    await _shippingService.GetShippingMethodCountryMappingAsync(shippingMethod.Id, country.Id);
+                    await _shippingMethodsService.GetShippingMethodCountryMappingAsync(shippingMethod.Id, country.Id);
 
                 if (restrict)
                 {
                     if (shippingMethodCountryMappings.Any())
                         continue;
 
-                    await _shippingService.InsertShippingMethodCountryMappingAsync(new ShippingMethodCountryMapping { CountryId = country.Id, ShippingMethodId = shippingMethod.Id });
-                    await _shippingService.UpdateShippingMethodAsync(shippingMethod);
+                    await _shippingMethodsService.InsertShippingMethodCountryMappingAsync(new ShippingMethodCountryMapping { CountryId = country.Id, ShippingMethodId = shippingMethod.Id });
+                    await _shippingMethodsService.UpdateShippingMethodAsync(shippingMethod);
                 }
                 else
                 {
                     if (!shippingMethodCountryMappings.Any())
                         continue;
 
-                    await _shippingService.DeleteShippingMethodCountryMappingAsync(shippingMethodCountryMappings.FirstOrDefault());
-                    await _shippingService.UpdateShippingMethodAsync(shippingMethod);
+                    await _shippingMethodsService.DeleteShippingMethodCountryMappingAsync(shippingMethodCountryMappings.FirstOrDefault());
+                    await _shippingMethodsService.UpdateShippingMethodAsync(shippingMethod);
                 }
             }
         }

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
+﻿using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Tax;
 using Nop.Plugin.Tax.Avalara.Components;
@@ -13,6 +11,7 @@ using Nop.Services.Plugins;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Infrastructure;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Tax.Avalara;
 
@@ -24,12 +23,12 @@ public class AvalaraTaxProvider : BasePlugin, ITaxProvider, IWidgetPlugin
     #region Fields
 
     protected readonly AvalaraTaxManager _avalaraTaxManager;
-    protected readonly IActionContextAccessor _actionContextAccessor;
+    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILocalizationService _localizationService;
+    protected readonly INopUrlHelper _nopUrlHelper;
     protected readonly IScheduleTaskService _scheduleTaskService;
     protected readonly ISettingService _settingService;
     protected readonly ITaxPluginManager _taxPluginManager;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly TaxSettings _taxSettings;
     protected readonly WidgetSettings _widgetSettings;
 
@@ -38,22 +37,22 @@ public class AvalaraTaxProvider : BasePlugin, ITaxProvider, IWidgetPlugin
     #region Ctor
 
     public AvalaraTaxProvider(AvalaraTaxManager avalaraTaxManager,
-        IActionContextAccessor actionContextAccessor,
+        IHttpContextAccessor httpContextAccessor,
         ILocalizationService localizationService,
+        INopUrlHelper nopUrlHelper,
         IScheduleTaskService scheduleTaskService,
         ISettingService settingService,
         ITaxPluginManager taxPluginManager,
-        IUrlHelperFactory urlHelperFactory,
         TaxSettings taxSettings,
         WidgetSettings widgetSettings)
     {
         _avalaraTaxManager = avalaraTaxManager;
-        _actionContextAccessor = actionContextAccessor;
+        _httpContextAccessor = httpContextAccessor;
         _localizationService = localizationService;
+        _nopUrlHelper = nopUrlHelper;
         _scheduleTaskService = scheduleTaskService;
         _settingService = settingService;
         _taxPluginManager = taxPluginManager;
-        _urlHelperFactory = urlHelperFactory;
         _taxSettings = taxSettings;
         _widgetSettings = widgetSettings;
     }
@@ -68,19 +67,19 @@ public class AvalaraTaxProvider : BasePlugin, ITaxProvider, IWidgetPlugin
     /// <param name="taxRateRequest">Tax rate request</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the ax
+    /// The task result contains the tax
     /// </returns>
     public async Task<TaxRateResult> GetTaxRateAsync(TaxRateRequest taxRateRequest)
     {
-        if (taxRateRequest.Address == null)
-            return new TaxRateResult { Errors = new List<string> { "Address is not set" } };
+        if (taxRateRequest?.Address is null)
+            return new TaxRateResult { Errors = new List<string> { "Address not set" } };
 
         //get tax rate
-        var taxRate = await _avalaraTaxManager.GetTaxRateAsync(taxRateRequest);
-        if (!taxRate.HasValue)
-            return new TaxRateResult { Errors = new List<string> { "No response from the service" } };
+        var (taxRate, error) = await _avalaraTaxManager.GetTaxRateAsync(taxRateRequest);
+        if (!string.IsNullOrEmpty(error))
+            return new TaxRateResult { Errors = new List<string> { error } };
 
-        return new TaxRateResult { TaxRate = taxRate.Value };
+        return new TaxRateResult { TaxRate = taxRate };
     }
 
     /// <summary>
@@ -89,38 +88,42 @@ public class AvalaraTaxProvider : BasePlugin, ITaxProvider, IWidgetPlugin
     /// <param name="taxTotalRequest">Tax total request</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the ax total
+    /// The task result contains the tax total
     /// </returns>
     public async Task<TaxTotalResult> GetTaxTotalAsync(TaxTotalRequest taxTotalRequest)
     {
-        ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
-        
         //cache tax total within the request
         var key = $"nop.TaxTotal-{taxTotalRequest.UsePaymentMethodAdditionalFee}";
-        
-        if (_actionContextAccessor.ActionContext.HttpContext.Items.TryGetValue(key, out var result) && result is TaxTotalResult taxTotalResult) 
+
+        if (_httpContextAccessor.HttpContext.Items.TryGetValue(key, out var result) && result is TaxTotalResult taxTotalResult)
             return taxTotalResult;
 
         //create a transaction
-        var transaction = await _avalaraTaxManager.CreateTaxTotalTransactionAsync(taxTotalRequest);
-        if (transaction?.totalTax == null)
-            return new TaxTotalResult { Errors = new List<string> { "No response from the service" } };
+        taxTotalResult = new();
+        var (transaction, error) = await _avalaraTaxManager.CreateTaxTotalTransactionAsync(taxTotalRequest);
+        if (string.IsNullOrEmpty(error))
+        {
+            //and get tax details
+            taxTotalResult.TaxTotal = transaction.totalTax.Value;
+            var taxRates = transaction.summary?
+                .Where(summary => summary.rate.HasValue && summary.tax.HasValue)
+                .Select(summary => new { Rate = summary.rate.Value * 100, Value = summary.tax.Value })
+                .ToList();
 
-        //and get tax details
-        taxTotalResult = new TaxTotalResult { TaxTotal = transaction.totalTax.Value };
-        var taxRates = transaction.summary?
-            .Where(summary => summary.rate.HasValue && summary.tax.HasValue)
-            .Select(summary => new { Rate = summary.rate.Value * 100, Value = summary.tax.Value })
-            .ToList();
-
-        if (taxRates != null)
-            foreach (var taxRate in taxRates)
+            foreach (var taxRate in taxRates ?? new())
+            {
                 if (taxTotalResult.TaxRates.ContainsKey(taxRate.Rate))
                     taxTotalResult.TaxRates[taxRate.Rate] += taxRate.Value;
                 else
                     taxTotalResult.TaxRates.Add(taxRate.Rate, taxRate.Value);
+            }
+        }
+        else
+        {
+            taxTotalResult.Errors.Add(error);
+        }
 
-        _actionContextAccessor.ActionContext.HttpContext.Items.TryAdd(key, taxTotalResult);
+        _httpContextAccessor.HttpContext.Items.TryAdd(key, taxTotalResult);
 
         return taxTotalResult;
     }
@@ -130,9 +133,7 @@ public class AvalaraTaxProvider : BasePlugin, ITaxProvider, IWidgetPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
-
-        return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).RouteUrl(AvalaraTaxDefaults.ConfigurationRouteName);
+        return _nopUrlHelper.RouteUrl(AvalaraTaxDefaults.ConfigurationRouteName);
     }
 
     /// <summary>
@@ -162,15 +163,13 @@ public class AvalaraTaxProvider : BasePlugin, ITaxProvider, IWidgetPlugin
     /// <returns>View component type</returns>
     public Type GetWidgetViewComponent(string widgetZone)
     {
-        if (widgetZone.Equals(AdminWidgetZones.CustomerDetailsBlock) ||
-            widgetZone.Equals(AdminWidgetZones.CustomerRoleDetailsTop))
+        if (widgetZone.Equals(AdminWidgetZones.CustomerDetailsBlock) || widgetZone.Equals(AdminWidgetZones.CustomerRoleDetailsTop))
             return typeof(EntityUseCodeViewComponent);
 
         if (widgetZone.Equals(AdminWidgetZones.ProductListButtons))
             return typeof(ExportItemsViewComponent);
 
-        if (widgetZone.Equals(PublicWidgetZones.CheckoutConfirmTop) ||
-            widgetZone.Equals(PublicWidgetZones.OpCheckoutConfirmTop))
+        if (widgetZone.Equals(PublicWidgetZones.CheckoutConfirmTop) || widgetZone.Equals(PublicWidgetZones.OpCheckoutConfirmTop))
             return typeof(AddressValidationViewComponent);
 
         if (widgetZone.Equals(PublicWidgetZones.OrderSummaryContentBefore))
@@ -210,6 +209,7 @@ public class AvalaraTaxProvider : BasePlugin, ITaxProvider, IWidgetPlugin
 
         //schedule task
         if (await _scheduleTaskService.GetTaskByTypeAsync(AvalaraTaxDefaults.DownloadTaxRatesTask.Type) is null)
+        {
             await _scheduleTaskService.InsertTaskAsync(new()
             {
                 Enabled = true,
@@ -218,6 +218,7 @@ public class AvalaraTaxProvider : BasePlugin, ITaxProvider, IWidgetPlugin
                 Name = AvalaraTaxDefaults.DownloadTaxRatesTask.Name,
                 Type = AvalaraTaxDefaults.DownloadTaxRatesTask.Type
             });
+        }
 
         //locales
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>

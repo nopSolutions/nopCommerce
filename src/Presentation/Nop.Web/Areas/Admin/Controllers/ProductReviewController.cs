@@ -26,6 +26,7 @@ public partial class ProductReviewController : BaseAdminController
     protected readonly INotificationService _notificationService;
     protected readonly IPermissionService _permissionService;
     protected readonly IProductReviewModelFactory _productReviewModelFactory;
+    protected readonly IProductReviewService _productReviewService;
     protected readonly IProductService _productService;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
@@ -42,6 +43,7 @@ public partial class ProductReviewController : BaseAdminController
         INotificationService notificationService,
         IPermissionService permissionService,
         IProductReviewModelFactory productReviewModelFactory,
+        IProductReviewService productReviewService,
         IProductService productService,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService)
@@ -54,6 +56,7 @@ public partial class ProductReviewController : BaseAdminController
         _notificationService = notificationService;
         _permissionService = permissionService;
         _productReviewModelFactory = productReviewModelFactory;
+        _productReviewService = productReviewService;
         _productService = productService;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
@@ -91,7 +94,7 @@ public partial class ProductReviewController : BaseAdminController
     public virtual async Task<IActionResult> Edit(int id)
     {
         //try to get a product review with the specified id
-        var productReview = await _productService.GetProductReviewByIdAsync(id);
+        var productReview = await _productReviewService.GetProductReviewByIdAsync(id);
         if (productReview == null)
             return RedirectToAction("List");
 
@@ -111,7 +114,7 @@ public partial class ProductReviewController : BaseAdminController
     public virtual async Task<IActionResult> Edit(ProductReviewModel model, bool continueEditing)
     {
         //try to get a product review with the specified id
-        var productReview = await _productService.GetProductReviewByIdAsync(model.Id);
+        var productReview = await _productReviewService.GetProductReviewByIdAsync(model.Id);
         if (productReview == null)
             return RedirectToAction("List");
 
@@ -148,7 +151,7 @@ public partial class ProductReviewController : BaseAdminController
                     productReview.CustomerNotifiedOfReply = true;
             }
 
-            await _productService.UpdateProductReviewAsync(productReview);
+            await _productReviewService.UpdateProductReviewAsync(productReview);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditProductReview",
@@ -159,7 +162,7 @@ public partial class ProductReviewController : BaseAdminController
             {
                 var product = await _productService.GetProductByIdAsync(productReview.ProductId);
                 //update product totals
-                await _productService.UpdateProductReviewTotalsAsync(product);
+                await _productReviewService.UpdateProductReviewTotalsAsync(product);
 
                 //raise event (only if it wasn't approved before and is approved now)
                 if (!previousIsApproved && productReview.IsApproved)
@@ -183,7 +186,7 @@ public partial class ProductReviewController : BaseAdminController
     public virtual async Task<IActionResult> Delete(int id)
     {
         //try to get a product review with the specified id
-        var productReview = await _productService.GetProductReviewByIdAsync(id);
+        var productReview = await _productReviewService.GetProductReviewByIdAsync(id);
         if (productReview == null)
             return RedirectToAction("List");
 
@@ -191,7 +194,7 @@ public partial class ProductReviewController : BaseAdminController
         if (await _workContext.GetCurrentVendorAsync() != null)
             return RedirectToAction("List");
 
-        await _productService.DeleteProductReviewAsync(productReview);
+        await _productReviewService.DeleteProductReviewAsync(productReview);
 
         //activity log
         await _customerActivityService.InsertActivityAsync("DeleteProductReview",
@@ -200,7 +203,7 @@ public partial class ProductReviewController : BaseAdminController
         var product = await _productService.GetProductByIdAsync(productReview.ProductId);
 
         //update product totals
-        await _productService.UpdateProductReviewTotalsAsync(product);
+        await _productReviewService.UpdateProductReviewTotalsAsync(product);
 
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.ProductReviews.Deleted"));
 
@@ -219,17 +222,17 @@ public partial class ProductReviewController : BaseAdminController
             return NoContent();
 
         //filter not approved reviews
-        var productReviews = (await _productService.GetProductReviewsByIdsAsync(selectedIds.ToArray())).Where(review => !review.IsApproved);
+        var productReviews = (await _productReviewService.GetProductReviewsByIdsAsync(selectedIds.ToArray())).Where(review => !review.IsApproved);
 
         foreach (var productReview in productReviews)
         {
             productReview.IsApproved = true;
-            await _productService.UpdateProductReviewAsync(productReview);
+            await _productReviewService.UpdateProductReviewAsync(productReview);
 
             var product = await _productService.GetProductByIdAsync(productReview.ProductId);
 
             //update product totals
-            await _productService.UpdateProductReviewTotalsAsync(product);
+            await _productReviewService.UpdateProductReviewTotalsAsync(product);
 
             //raise event 
             await _eventPublisher.PublishAsync(new ProductReviewApprovedEvent(productReview));
@@ -250,17 +253,17 @@ public partial class ProductReviewController : BaseAdminController
             return NoContent();
 
         //filter approved reviews
-        var productReviews = (await _productService.GetProductReviewsByIdsAsync(selectedIds.ToArray())).Where(review => review.IsApproved);
+        var productReviews = (await _productReviewService.GetProductReviewsByIdsAsync(selectedIds.ToArray())).Where(review => review.IsApproved);
 
         foreach (var productReview in productReviews)
         {
             productReview.IsApproved = false;
-            await _productService.UpdateProductReviewAsync(productReview);
+            await _productReviewService.UpdateProductReviewAsync(productReview);
 
             var product = await _productService.GetProductByIdAsync(productReview.ProductId);
 
             //update product totals
-            await _productService.UpdateProductReviewTotalsAsync(product);
+            await _productReviewService.UpdateProductReviewTotalsAsync(product);
         }
 
         return Json(new { Result = true });
@@ -277,22 +280,19 @@ public partial class ProductReviewController : BaseAdminController
         if (selectedIds == null || !selectedIds.Any())
             return NoContent();
 
-        var productReviews = await _productService.GetProductReviewsByIdsAsync(selectedIds.ToArray());
+        var productReviews = await _productReviewService.GetProductReviewsByIdsAsync(selectedIds.ToArray());
         var products = await _productService.GetProductsByIdsAsync(productReviews.Select(p => p.ProductId).Distinct().ToArray());
 
-        await _productService.DeleteProductReviewsAsync(productReviews);
+        await _productReviewService.DeleteProductReviewsAsync(productReviews);
 
         //activity log
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteProductReview");
-
-        foreach (var productReview in productReviews)
-            await _customerActivityService.InsertActivityAsync("DeleteProductReview",
-                string.Format(activityLogFormat, productReview.Id), productReview);
+        await _customerActivityService.InsertActivitiesAsync("DeleteProductReview", productReviews, productReview => string.Format(activityLogFormat, productReview.Id));
 
         //update product totals
         foreach (var product in products)
         {
-            await _productService.UpdateProductReviewTotalsAsync(product);
+            await _productReviewService.UpdateProductReviewTotalsAsync(product);
         }
 
         return Json(new { Result = true });
@@ -302,7 +302,7 @@ public partial class ProductReviewController : BaseAdminController
     [CheckPermission(StandardPermission.Catalog.PRODUCT_REVIEWS_VIEW)]
     public virtual async Task<IActionResult> ProductReviewReviewTypeMappingList(ProductReviewReviewTypeMappingSearchModel searchModel)
     {
-        var productReview = await _productService.GetProductReviewByIdAsync(searchModel.ProductReviewId)
+        var productReview = await _productReviewService.GetProductReviewByIdAsync(searchModel.ProductReviewId)
             ?? throw new ArgumentException("No product review found with the specified id");
 
         //prepare model

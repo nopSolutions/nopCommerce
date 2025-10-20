@@ -400,7 +400,7 @@
             $.ajax({
                 async: false,
                 type: 'POST',
-                url: '@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })',
+                url: '@Url.RouteUrl(NopRouteNames.Ajax.ADD_PRODUCT_TO_CART_DETAILS, new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })',
                 data: $('#product-details-form').serialize(),
                 success: function (response, textStatus, jqXHR) {
                     if (response.success || response.redirect) {
@@ -576,7 +576,7 @@
                     redirectUrl = data.redirect;
                 } else {
                     displayBarNotification(data.error, 'error', 0);
-                    redirectUrl = '@Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart)';
+                    redirectUrl = '@Url.RouteUrl(NopRouteNames.General.CART)';
                 }
             },
             complete: function (jqXHR, textStatus) {
@@ -596,7 +596,7 @@
 
     function cancelCallback(data) {
         if (isProductPage) {
-            setLocation('@Url.RouteUrl(PayPalCommerceDefaults.Route.ShoppingCart)');
+            setLocation('@Url.RouteUrl(NopRouteNames.General.CART)');
         }
     }
 

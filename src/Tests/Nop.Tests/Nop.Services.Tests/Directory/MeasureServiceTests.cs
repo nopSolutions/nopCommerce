@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Services.Tests.Directory;
 
 [TestFixture]
-public class MeasureServiceTests: ServiceTest
+public class MeasureServiceTests : ServiceTest
 {
     private IMeasureService _measureService;
 
@@ -68,7 +68,7 @@ public class MeasureServiceTests: ServiceTest
         newWeight = await _measureService.ConvertWeightAsync(10, _measureWeightKg, _measureWeightGrams);
         newWeight.Should().Be(10000);
     }
-    
+
 }
 
 [TestFixture]
@@ -122,7 +122,7 @@ public class MeasureWeightCrudTests : ServiceTest<MeasureWeight>
     {
         _measureService = GetService<IMeasureService>();
     }
-    
+
     protected override CrudData<MeasureWeight> CrudData
     {
         get

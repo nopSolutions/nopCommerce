@@ -5,6 +5,4 @@ namespace Nop.Plugin.Misc.Brevo.Models;
 /// <summary>
 /// Represents SMS search model
 /// </summary>
-public record SmsSearchModel : BaseSearchModel
-{
-}
+public record SmsSearchModel : BaseSearchModel;

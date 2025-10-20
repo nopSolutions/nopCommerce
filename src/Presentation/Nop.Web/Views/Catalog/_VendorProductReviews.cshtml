@@ -10,9 +10,9 @@
 @if (Model.Count > 0)
 {
     <div class="vendor-product-reviews">
-        <div class="vendor-product-reviews-title">
-            <strong>@T("Vendors.ExistingReviews")</strong>
-        </div>
+        <h2 class="vendor-product-reviews-title">
+            @T("Vendors.ExistingReviews")
+        </h2>
         @foreach (var review in Model)
         {
             var ratingPercent = review.Rating * 20;
@@ -21,7 +21,7 @@
                     <div class="review-item-info">
                         <div class="product-info">
                             <div class="review-product-name">
-                                <a href="@(Url.RouteUrl<Product>(new { SeName = review.ProductSeName }))">@review.ProductName</a>
+                                <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = review.ProductSeName }))">@review.ProductName</a>
                             </div>
                         </div>
                         <div class="product-review-box">
@@ -43,7 +43,7 @@
                             <div class="avatar">
                                 @if (review.AllowViewingProfiles)
                                 {
-                                    <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })" class="avatar-img-link">
+                                    <a href="@Url.RouteUrl(NopRouteNames.Standard.CUSTOMER_PROFILE, new { id = review.CustomerId })" class="avatar-img-link">
                                         <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
                                     </a>
                                 }
@@ -62,7 +62,7 @@
                             <label>@T("Reviews.From"):</label>
                             @if (review.AllowViewingProfiles)
                             {
-                                <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })">@(review.CustomerName)</a>
+                                <a href="@Url.RouteUrl(NopRouteNames.Standard.CUSTOMER_PROFILE, new { id = review.CustomerId })">@(review.CustomerName)</a>
                             }
                             else
                             {

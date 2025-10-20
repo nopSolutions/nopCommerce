@@ -14,9 +14,8 @@ public partial interface INopDataProvider
     /// <summary>
     /// Create the database
     /// </summary>
-    /// <param name="collation">Collation</param>
     /// <param name="triesToConnect">Count of tries to connect to the database after creating; set 0 if no need to connect after creating</param>
-    void CreateDatabase(string collation, int triesToConnect = 10);
+    void CreateDatabase(int triesToConnect = 10);
 
     /// <summary>
     /// Creates a new temporary storage and populate it using data from provided query
@@ -228,6 +227,12 @@ public partial interface INopDataProvider
     Task ReIndexTablesAsync();
 
     /// <summary>
+    /// Shrinks database
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task ShrinkDatabaseAsync();
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>
@@ -296,6 +301,15 @@ public partial interface INopDataProvider
     /// <param name="resetIdentity">Performs reset identity column</param>
     Task TruncateAsync<TEntity>(bool resetIdentity = false) where TEntity : BaseEntity;
 
+    /// <summary>
+    /// Gets the name of the database collation
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the collation name
+    /// </returns>
+    Task<string> GetDataBaseCollationAsync();
+    
     #endregion
 
     #region Properties
@@ -314,6 +328,6 @@ public partial interface INopDataProvider
     /// Gets a value indicating whether this data provider supports backup
     /// </summary>
     bool BackupSupported { get; }
-
+    
     #endregion
 }

@@ -312,6 +312,55 @@ public class Indexes : ForwardOnlyMigration
             .OnTable(nameof(Topic))
             .OnColumn(nameof(Topic.SystemName)).Ascending()
             .WithOptions().NonClustered();
+
+        Create.Index("IX_Topic_Availability")
+            .OnTable(nameof(Topic))
+            .OnColumn(nameof(Topic.AvailableEndDateTimeUtc)).Descending()
+            .OnColumn(nameof(Topic.AvailableStartDateTimeUtc)).Descending()
+            .WithOptions().NonClustered();
+
+        const string databaseType = "sqlserver";
+
+        IfDatabase(databaseType).Create.Index("IX_Product_Search")
+            .OnTable(nameof(Product))
+            .OnColumn(nameof(Product.Name)).Ascending()
+            .OnColumn(nameof(Product.Sku)).Ascending()
+            .OnColumn(nameof(Product.ManufacturerPartNumber)).Ascending()
+            .OnColumn(nameof(Product.Deleted)).Ascending()
+            .WithOptions().NonClustered()
+            .Include(nameof(Product.Id));
+
+        Create.Index("IX_ProductAttributeCombination_Sku")
+            .OnTable(nameof(ProductAttributeCombination))
+            .OnColumn(nameof(ProductAttributeCombination.Sku)).Ascending()
+            .WithOptions().NonClustered()
+            .Include(nameof(ProductAttributeCombination.ProductId));
+
+        Create.Index("IX_Category_Name_Deleted")
+            .OnTable(nameof(Category))
+            .OnColumn(nameof(Category.Name)).Ascending()
+            .OnColumn(nameof(Category.Deleted)).Ascending()
+            .WithOptions().NonClustered()
+            .Include(nameof(Category.Id));
+
+        Create.Index("IX_Manufacturer_Name_Deleted")
+            .OnTable(nameof(Manufacturer))
+            .OnColumn(nameof(Manufacturer.Name)).Ascending()
+            .OnColumn(nameof(Manufacturer.Deleted)).Ascending()
+            .WithOptions().NonClustered()
+            .Include(nameof(Manufacturer.Id));
+
+        Create.Index("IX_ProductCategoryMapping_CategoryId")
+            .OnTable(NameCompatibilityManager.GetTableName(typeof(ProductCategory)))
+            .OnColumn(nameof(ProductCategory.CategoryId)).Ascending()
+            .WithOptions().NonClustered()
+            .Include(nameof(ProductCategory.ProductId));
+
+        Create.Index("IX_ProductManufacturerMapping_ManufacturerId")
+            .OnTable(NameCompatibilityManager.GetTableName(typeof(ProductManufacturer)))
+            .OnColumn(nameof(ProductManufacturer.ManufacturerId)).Ascending()
+            .WithOptions().NonClustered()
+            .Include(nameof(ProductManufacturer.ProductId));
     }
 
     #endregion

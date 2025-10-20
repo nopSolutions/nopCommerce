@@ -160,6 +160,13 @@ public partial interface ICategoryService
     Task DeleteProductCategoryAsync(ProductCategory productCategory);
 
     /// <summary>
+    /// Deletes a list of product category mapping
+    /// </summary>
+    /// <param name="productCategories">Product category</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task DeleteProductCategoriesAsync(IList<ProductCategory> productCategories);
+
+    /// <summary>
     /// Get a discount-category mapping record
     /// </summary>
     /// <param name="categoryId">Category identifier</param>

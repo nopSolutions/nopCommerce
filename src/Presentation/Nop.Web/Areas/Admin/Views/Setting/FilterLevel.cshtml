@@ -1,0 +1,48 @@
+﻿@model FilterLevelSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.FilterLevel").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Filter (YMM) settings");
+}
+
+@{
+    const string hideCommonBlockAttributeName = "FilterLevelSettingsPage.HideCommonBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+
+    const string hideFilterLevelsBlockAttributeName = "FilterLevelSettingsPage.HideFilterLevelsBlock";
+    var hideFilterLevelsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideFilterLevelsBlockAttributeName);
+}
+
+<form asp-controller="Setting" asp-action="FilterLevel" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Settings.FilterLevel")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.FilterLevelSettingsButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
+                <div asp-validation-summary="All"></div>
+
+                <nop-cards id="filterlevelsettings-cards">
+                    <nop-card asp-name="filterlevelsettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.FilterLevel.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_FilterLevel.Common", Model)</nop-card>
+                    <nop-card asp-name="filterlevelsettings-levels" asp-icon="fas fa-sitemap" asp-title="@T("Admin.Configuration.Settings.FilterLevel.BlockTitle.Levels")" asp-hide-block-attribute-name="@hideFilterLevelsBlockAttributeName" asp-hide="@hideFilterLevelsBlock" asp-advanced="false">@await Html.PartialAsync("_FilterLevel.FilterLevels", Model)</nop-card>
+
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.FilterLevelSettingsDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+</form>

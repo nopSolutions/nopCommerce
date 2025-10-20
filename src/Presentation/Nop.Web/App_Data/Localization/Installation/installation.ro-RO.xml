@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Română" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email-ul utilizatorului admin</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Introduce-ți parola administratorului</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Set de caractere</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Colaţionare</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Colaționarea este necesară</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>Contul '{0}' nu are drepturi de modificare pentru directorul '{1}'. Va rugăm configurați aceaste drepturi.</Value>

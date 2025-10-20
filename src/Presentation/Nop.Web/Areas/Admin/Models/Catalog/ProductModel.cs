@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Models.Translation;
+using Nop.Web.Framework.Models.ArtificialIntelligence;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog;
@@ -10,7 +12,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog;
 /// Represents a product model
 /// </summary>
 public partial record ProductModel : BaseNopEntityModel,
-    IAclSupportedModel, IDiscountSupportedModel, ILocalizedModel<ProductLocalizedModel>, IStoreMappingSupportedModel
+    IAclSupportedModel, IDiscountSupportedModel, ITranslationSupportedModel, ILocalizedModel<ProductLocalizedModel>, IStoreMappingSupportedModel, IMetaTagsSupportedModel
 {
     #region Ctor
 
@@ -57,6 +59,7 @@ public partial record ProductModel : BaseNopEntityModel,
 
         RelatedProductSearchModel = new RelatedProductSearchModel();
         CrossSellProductSearchModel = new CrossSellProductSearchModel();
+        FilterLevelValueSearchModel = new FilterLevelValueSearchModel();
         AssociatedProductSearchModel = new AssociatedProductSearchModel();
         ProductPictureSearchModel = new ProductPictureSearchModel();
         ProductVideoSearchModel = new ProductVideoSearchModel();
@@ -312,6 +315,12 @@ public partial record ProductModel : BaseNopEntityModel,
     [UIHint("DateTimeNullable")]
     public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
 
+    [NopResourceDisplayName("Admin.Catalog.Products.Fields.AgeVerification")]
+    public bool AgeVerification { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Products.Fields.MinimumAgeToPurchase")]
+    public int MinimumAgeToPurchase { get; set; }
+
     [NopResourceDisplayName("Admin.Catalog.Products.Fields.CallForPrice")]
     public bool CallForPrice { get; set; }
 
@@ -448,6 +457,8 @@ public partial record ProductModel : BaseNopEntityModel,
     //specification attributes
     public bool HasAvailableSpecificationAttributes { get; set; }
 
+    public bool PreTranslationAvailable { get; set; }
+
     //copy product
     public CopyProductModel CopyProductModel { get; set; }
 
@@ -460,6 +471,8 @@ public partial record ProductModel : BaseNopEntityModel,
     public RelatedProductSearchModel RelatedProductSearchModel { get; set; }
 
     public CrossSellProductSearchModel CrossSellProductSearchModel { get; set; }
+
+    public FilterLevelValueSearchModel FilterLevelValueSearchModel { get; set; }
 
     public AssociatedProductSearchModel AssociatedProductSearchModel { get; set; }
 
@@ -482,7 +495,7 @@ public partial record ProductModel : BaseNopEntityModel,
     #endregion
 }
 
-public partial record ProductLocalizedModel : ILocalizedLocaleModel
+public partial record ProductLocalizedModel : ILocalizedLocaleModel, IMetaTagsSupportedModel
 {
     public int LanguageId { get; set; }
 

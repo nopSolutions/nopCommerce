@@ -2,8 +2,14 @@
 using System.Text.Encodings.Web;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Events;
+using Nop.Core.Http;
+using Nop.Services.Customers;
+using Nop.Services.Forums;
+using Nop.Services.Helpers;
 using Nop.Web.Framework.Mvc.Routing;
+using Nop.Web.Models.Boards;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.JsonLD;
 
@@ -16,7 +22,11 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
 {
     #region Fields
 
+    protected readonly ForumSettings _forumSettings;
+    protected readonly ICustomerService _customerService;
+    protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IEventPublisher _eventPublisher;
+    protected readonly IForumService _forumService;
     protected readonly INopUrlHelper _nopUrlHelper;
     protected readonly IWebHelper _webHelper;
 
@@ -24,11 +34,19 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
 
     #region Ctor
 
-    public JsonLdModelFactory(IEventPublisher eventPublisher,
+    public JsonLdModelFactory(ForumSettings forumSettings,
+        ICustomerService customerService,
+        IDateTimeHelper dateTimeHelper,
+        IEventPublisher eventPublisher,
+        IForumService forumService,
         INopUrlHelper nopUrlHelper,
         IWebHelper webHelper)
     {
+        _forumSettings = forumSettings;
+        _customerService = customerService;
+        _dateTimeHelper = dateTimeHelper;
         _eventPublisher = eventPublisher;
+        _forumService = forumService;
         _nopUrlHelper = nopUrlHelper;
         _webHelper = webHelper;
     }
@@ -36,6 +54,16 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
     #endregion
 
     #region Utilities
+
+    /// <summary>
+    /// Convert datetime to an ISO 8601 string
+    /// </summary>
+    /// <param name="dateTime">Datetime object to convert</param>
+    /// <returns>Datetime string in the ISO 8601 format</returns>
+    protected virtual string ConvertDateTimeToIso8601String(DateTime? dateTime)
+    {
+        return dateTime == null ? null : new DateTimeOffset(dateTime.Value).ToString("O", CultureInfo.InvariantCulture);
+    }
 
     /// <summary>
     /// Prepare JSON-LD category breadcrumb model
@@ -142,7 +170,7 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
                 Url = productUrl.ToLowerInvariant(),
                 Price = model.ProductPrice.CallForPrice ? null : productPrice?.ToString("0.00", CultureInfo.InvariantCulture),
                 PriceCurrency = model.ProductPrice.CurrencyCode,
-                PriceValidUntil = model.AvailableEndDate,
+                PriceValidUntil = ConvertDateTimeToIso8601String(model.AvailableEndDate),
                 Availability = @"https://schema.org/" + (model.InStock ? "InStock" : "OutOfStock")
             },
             Brand = model.ProductManufacturers?.Select(manufacturer => new JsonLdBrandModel { Name = manufacturer.Name }).ToList()
@@ -169,7 +197,7 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
                     RatingValue = review.Rating
                 },
                 Author = new JsonLdPersonModel { Name = JavaScriptEncoder.Default.Encode(review.CustomerName) },
-                DatePublished = review.WrittenOnStr
+                DatePublished = ConvertDateTimeToIso8601String(review.WrittenOn)
             }).ToList();
         }
 
@@ -182,6 +210,87 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
         await _eventPublisher.PublishAsync(new JsonLdCreatedEvent<JsonLdProductModel>(product));
 
         return product;
+    }
+
+    /// <summary>
+    /// Prepare JSON-LD forum topic model
+    /// </summary>
+    /// <param name="forumTopic">Forum topic</param>
+    /// <param name="firstPost">The first post on forum topic</param>
+    /// <param name="model">Forum topic page model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains JSON-LD forum topic model
+    /// </returns>
+    public virtual async Task<JsonLdForumTopicModel> PrepareJsonLdForumTopicAsync(ForumTopic forumTopic,
+        ForumPost firstPost,
+        ForumTopicPageModel model)
+    {
+        var forumTopicCustomer = await _customerService.GetCustomerByIdAsync(forumTopic.CustomerId);
+        var customerName = await _customerService.FormatUsernameAsync(forumTopicCustomer);
+        var createdOn = await _dateTimeHelper.ConvertToUserTimeAsync(forumTopic.CreatedOnUtc, DateTimeKind.Utc);
+
+        var forumTopicModel = new JsonLdForumTopicModel
+        {
+            Author = new()
+            {
+                Name = JavaScriptEncoder.Default.Encode(customerName),
+                Url =
+                    _nopUrlHelper.RouteUrl(NopRouteNames.Standard.CUSTOMER_PROFILE, new { id = forumTopic.CustomerId },
+                        _webHelper.GetCurrentRequestProtocol()),
+            },
+            DatePublished = ConvertDateTimeToIso8601String(createdOn),
+            Subject = JavaScriptEncoder.Default.Encode(model.Subject),
+            Text = _forumService.FormatPostText(firstPost),
+            Url = _nopUrlHelper.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG, new { id = model.Id, slug = model.SeName },
+                _webHelper.GetCurrentRequestProtocol()),
+            Comments = model.ForumPostModels.Where(pm => pm.Id != firstPost.Id).Select(postModel =>
+            {
+                var commentModel = new JsonLdForumTopicCommentModel
+                {
+                    Author = new()
+                    {
+                        Name = JavaScriptEncoder.Default.Encode(postModel.CustomerName),
+                        Url = _nopUrlHelper.RouteUrl(NopRouteNames.Standard.CUSTOMER_PROFILE, new { id = postModel.CustomerId },
+                            _webHelper.GetCurrentRequestProtocol()),
+                    },
+                    DatePublished = ConvertDateTimeToIso8601String(postModel.PostCreatedOn),
+                    Url = postModel.CurrentTopicPage > 1
+                        ? _nopUrlHelper.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG_PAGED, new { id = model.Id, slug = model.SeName, pageNumber = postModel.CurrentTopicPage }, _webHelper.GetCurrentRequestProtocol(), null, postModel.Id.ToString())
+                        : _nopUrlHelper.RouteUrl( NopRouteNames.Standard.TOPIC_SLUG, new { id = model.Id, slug = model.SeName }, _webHelper.GetCurrentRequestProtocol(), null, postModel.Id.ToString()),
+                    Text = postModel.FormattedText
+                };
+
+                if (_forumSettings.AllowPostVoting)
+                {
+                    commentModel.InteractionStatistic = new()
+                    {
+                        InteractionType =
+                            postModel.VoteCount >= 0
+                                ? "https://schema.org/LikeAction"
+                                : "https://schema.org/DislikeAction",
+                        UserInteractionCount = Math.Abs(postModel.VoteCount)
+                    };
+                }
+
+                return commentModel;
+            }).ToList(),
+            InteractionStatistic = new List<JsonLdInteractionStatisticModel>
+            {
+                new()
+                {
+                    InteractionType = "https://schema.org/CommentAction", UserInteractionCount = Math.Max(forumTopic.NumPosts - 1, 0)
+                },
+                new()
+                {
+                    InteractionType = "https://schema.org/ViewAction", UserInteractionCount = forumTopic.Views
+                }
+            }
+        };
+
+        await _eventPublisher.PublishAsync(new JsonLdCreatedEvent<JsonLdForumTopicModel>(forumTopicModel));
+
+        return forumTopicModel;
     }
 
     #endregion

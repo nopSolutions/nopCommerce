@@ -8,7 +8,7 @@ namespace Nop.Services.Customers;
 /// <summary>
 /// Represents a customer event consumer
 /// </summary>
-public class CustomerEventConsumer : IConsumer<CustomerChangeWorkingLanguageEvent>
+public partial class CustomerEventConsumer : IConsumer<CustomerChangeWorkingLanguageEvent>
 {
     #region Fields
 
@@ -37,7 +37,7 @@ public class CustomerEventConsumer : IConsumer<CustomerChangeWorkingLanguageEven
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(CustomerChangeWorkingLanguageEvent eventMessage)
+    public virtual async Task HandleEventAsync(CustomerChangeWorkingLanguageEvent eventMessage)
     {
         if (eventMessage.Customer is not Customer customer)
             return;
@@ -45,10 +45,14 @@ public class CustomerEventConsumer : IConsumer<CustomerChangeWorkingLanguageEven
         if (await _customerService.IsGuestAsync(customer))
             return;
 
+        //change language for all customer subscriptions
         var store = await _storeContext.GetCurrentStoreAsync();
-        var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-        if (subscription != null && subscription.LanguageId != customer.LanguageId)
+        var subscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(customer.Email, storeId: store.Id);
+        foreach (var subscription in subscriptions)
         {
+            if (subscription.LanguageId == customer.LanguageId)
+                continue;
+
             subscription.LanguageId = customer.LanguageId ?? 0;
             await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
         }

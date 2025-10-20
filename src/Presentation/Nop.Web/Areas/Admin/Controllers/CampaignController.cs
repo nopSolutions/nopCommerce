@@ -218,8 +218,9 @@ public partial class CampaignController : BaseAdminController
         {
             var emailAccount = await GetEmailAccountAsync(model.EmailAccountId);
             var store = await _storeContext.GetCurrentStoreAsync();
-            var subscription = await _newsLetterSubscriptionService
-                .GetNewsLetterSubscriptionByEmailAndStoreIdAsync(model.TestEmail, store.Id);
+            var subscription = (await _newsLetterSubscriptionService
+                .GetNewsLetterSubscriptionsByEmailAsync(model.TestEmail, storeId: store.Id, subscriptionTypeId: model.NewsLetterSubscriptionTypeId))
+                .FirstOrDefault();
             if (subscription != null)
             {
                 //there's a subscription. let's use it
@@ -268,9 +269,10 @@ public partial class CampaignController : BaseAdminController
 
             //subscribers of certain store?
             var storeId = (await _storeService.GetStoreByIdAsync(campaign.StoreId))?.Id ?? 0;
-            var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(storeId: storeId,
+            var subscriptions = (await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(storeId: storeId,
                 customerRoleId: model.CustomerRoleId,
-                isActive: true);
+                subscriptionTypeId: model.NewsLetterSubscriptionTypeId,
+                isActive: true)).DistinctBy(x => x.Email);
             var totalEmailsSent = await _campaignService.SendCampaignAsync(campaign, emailAccount, subscriptions);
 
             _notificationService.SuccessNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent));
@@ -307,6 +309,34 @@ public partial class CampaignController : BaseAdminController
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.Campaigns.Deleted"));
 
         return RedirectToAction("List");
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Promotions.CAMPAIGNS_CREATE_EDIT)]
+    public virtual async Task<IActionResult> CopyCampaign(CampaignModel model)
+    {
+        var copyModel = model.CopyCampaignModel;
+        if (copyModel is null)
+            return RedirectToAction("List");
+
+        try
+        {
+            var originalCampaign = await _campaignService.GetCampaignByIdAsync(copyModel.OriginalCampaignId);
+
+            if (originalCampaign is null)
+                return RedirectToAction("List");
+
+            var newCampaign = await _campaignService.CopyCampaignAsync(originalCampaign, copyModel.Name);
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.Campaigns.Copied"));
+
+            return RedirectToAction("Edit", new { id = newCampaign.Id });
+        }
+        catch (Exception exc)
+        {
+            _notificationService.ErrorNotification(exc.Message);
+            return RedirectToAction("Edit", new { id = copyModel.OriginalCampaignId });
+        }
     }
 
     #endregion

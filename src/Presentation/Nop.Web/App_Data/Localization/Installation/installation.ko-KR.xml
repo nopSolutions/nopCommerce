@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="한국어" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>관리자 이메일</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>관리자 비밀번호를 입력하세요</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>캐릭터 집합</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>대조</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>정렬이 필요합니다</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>'{1}'폴더에 대한 수정 권한이있는 '{0}'계정이 부여되지 않았습니다. 이 권한을 구성하십시오.</Value>
@@ -34,10 +43,10 @@
     <Value>잘못된 SQL 연결 문자열 형식</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>컨트리</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>국가 선택...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>존재하지 않는 경우 데이터베이스 생성</Value>
@@ -46,7 +55,7 @@
     <Value>샘플 데이터 생성</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom collation</Value>
+    <Value>사용자 정의 정렬 지정</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>데이터베이스</Value>
@@ -103,13 +112,13 @@
     <Value>설치 프로세스를 다시 시작하려면 클릭하십시오 (캐시 된 모든 값 지우기)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Restarting...</Value>
+    <Value>재시작 중...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Server name</Value>
+    <Value>서버 이름</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Server name is required</Value>
+    <Value>서버 이름이 필요합니다</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>설치 실패: {0}</Value>
@@ -133,7 +142,7 @@
     <Value>상점 정보</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>nopCommerce 뉴스레터 구독하기</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce 설치</Value>

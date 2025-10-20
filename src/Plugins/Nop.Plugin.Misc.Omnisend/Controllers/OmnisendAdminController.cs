@@ -104,6 +104,7 @@ public class OmnisendAdminController : BasePluginController
         }
 
         //_omnisendSettings.UseTracking = model.UseTracking;
+        //recommended not to change this setting
         _omnisendSettings.UseTracking = true;
 
         await _settingService.SaveSettingAsync(_omnisendSettings);

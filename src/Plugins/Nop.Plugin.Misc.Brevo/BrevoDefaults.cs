@@ -31,7 +31,7 @@ public static class BrevoDefaults
     /// <summary>
     /// Gets the plugin version (only major versions)
     /// </summary>
-    public static string PluginVersion => "4.80";
+    public static string PluginVersion => "4.90";
 
     /// <summary>
     /// Gets a URL to edit message template on Brevo account
@@ -317,11 +317,6 @@ public static class BrevoDefaults
     /// Gets a key of the attribute to store phone type
     /// </summary>
     public static string PhoneTypeAttribute => "PhoneTypeId";
-
-    /// <summary>
-    /// Gets a name of custom email header 
-    /// </summary>
-    public static string EmailCustomHeader => "X-Mailin-Tag";
 
     /// <summary>
     /// Gets a name of the cart updated event

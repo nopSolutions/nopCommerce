@@ -440,4 +440,69 @@ public class AddressValidatorTests : BaseNopTest
         };
         validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.FaxNumber);
     }
+
+    [Test]
+    public void ShouldHaveErrorWhenCountryIdIsNullOrZeroAnd()
+    {
+        var validator = new AddressValidator(_localizationService, _stateProvinceService,
+            new AddressSettings
+            {
+                CountryEnabled = true
+            }, new CustomerSettings());
+
+        var model = new AddressModel
+        {
+            CountryId = null
+        };
+        validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.CountryId);
+        model.CountryId = 0;
+        validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.CountryId);
+        model.CountryId = 1;
+        validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.CountryId);
+    }
+
+    [Test]
+    public void ShouldHaveErrorWhenStateIdIsNullOrZeroAnd()
+    {
+        var validator = new AddressValidator(_localizationService, _stateProvinceService,
+            new AddressSettings
+            {
+                CountryEnabled = true,
+                StateProvinceEnabled = true
+            }, new CustomerSettings());
+
+        var model = new AddressModel
+        {
+            CountryId = 237, //USA
+            StateProvinceId = null
+        };
+        validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.StateProvinceId);
+        model.StateProvinceId = 0;
+        validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.StateProvinceId);
+        model.StateProvinceId = 1828; //New York
+        validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.StateProvinceId);
+    }
+
+    [Test]
+    public void ShouldHaveErrorWhenCountyIsNullOrEmptyAnd()
+    {
+        var validator = new AddressValidator(_localizationService, _stateProvinceService,
+            new AddressSettings
+            {
+                CountyEnabled = true,
+                CountyRequired = true
+            }, new CustomerSettings());
+
+        var model = new AddressModel
+        {
+            County = string.Empty
+        };
+        validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.County);
+        model.County = null;
+        validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.County);
+        model.County = "Test county";
+        validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.County);
+    }
+
+    
 }

@@ -20,6 +20,7 @@ public static class UrlHelperExtensions
     /// <param name="host">The host name for the URL</param>
     /// <param name="fragment">The fragment for the URL</param>
     /// <returns>The generated URL</returns>
+    [Obsolete("Following the ticket #7818, this extension method is no longer used and will be removed in the next version of nopCommerce")]
     public static string RouteUrl<TEntity>(this IUrlHelper urlHelper, object values = null, string protocol = null, string host = null, string fragment = null)
         where TEntity : BaseEntity, ISlugSupported
     {
@@ -36,6 +37,7 @@ public static class UrlHelperExtensions
     /// <param name="host">The host name for the URL</param>
     /// <param name="fragment">The fragment for the URL</param>
     /// <returns>The generated URL</returns>
+    [Obsolete("Following the ticket #7818, this extension method is no longer used and will be removed in the next version of nopCommerce")]
     public static string RouteTopicUrl(this IUrlHelper urlHelper, string systemName, string protocol = null, string host = null, string fragment = null)
     {
         var nopUrlHelper = EngineContext.Current.Resolve<INopUrlHelper>();

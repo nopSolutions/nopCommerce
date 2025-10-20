@@ -1,3 +1,4 @@
+﻿using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
@@ -8,7 +9,7 @@ namespace Nop.Core.Domain.Topics;
 /// <summary>
 /// Represents a topic
 /// </summary>
-public partial class Topic : BaseEntity, ILocalizedEntity, ISlugSupported, IStoreMappingSupported, IAclSupported
+public partial class Topic : BaseEntity, ILocalizedEntity, ISlugSupported, IStoreMappingSupported, IAclSupported, IMetaTagsSupported
 {
     /// <summary>
     /// Gets or sets the name
@@ -19,26 +20,6 @@ public partial class Topic : BaseEntity, ILocalizedEntity, ISlugSupported, IStor
     /// Gets or sets the value indicating whether this topic should be included in sitemap
     /// </summary>
     public bool IncludeInSitemap { get; set; }
-
-    /// <summary>
-    /// Gets or sets the value indicating whether this topic should be included in top menu
-    /// </summary>
-    public bool IncludeInTopMenu { get; set; }
-
-    /// <summary>
-    /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
-    /// </summary>
-    public bool IncludeInFooterColumn1 { get; set; }
-
-    /// <summary>
-    /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
-    /// </summary>
-    public bool IncludeInFooterColumn2 { get; set; }
-
-    /// <summary>
-    /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
-    /// </summary>
-    public bool IncludeInFooterColumn3 { get; set; }
 
     /// <summary>
     /// Gets or sets the display order
@@ -104,4 +85,14 @@ public partial class Topic : BaseEntity, ILocalizedEntity, ISlugSupported, IStor
     /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
     /// </summary>
     public bool LimitedToStores { get; set; }
+
+    /// <summary>
+    /// Gets or sets the available start date and time
+    /// </summary>
+    public DateTime? AvailableStartDateTimeUtc { get; set; }
+
+    /// <summary>
+    /// Gets or sets the available end date and time
+    /// </summary>
+    public DateTime? AvailableEndDateTimeUtc { get; set; }
 }

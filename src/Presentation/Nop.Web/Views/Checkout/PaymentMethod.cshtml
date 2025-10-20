@@ -16,7 +16,7 @@
     <div class="page-body checkout-data">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutPaymentMethodTop, additionalData = Model })
         <div class="section payment-method">
-            <form asp-route="CheckoutPaymentMethod" method="post">
+            <form asp-route="@NopRouteNames.Standard.CHECKOUT_PAYMENT_METHOD" method="post">
                 @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
                 {
                     <div class="use-reward-points">
@@ -89,9 +89,9 @@
         </div>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutPaymentMethodBottom, additionalData = Model })
         <div class="section order-summary">
-            <div class="title">
-                <strong>@T("Checkout.OrderSummary")</strong>
-            </div>
+            <h2 class="title">
+                @T("Checkout.OrderSummary")
+            </h2>
             @await Component.InvokeAsync(typeof(OrderSummaryViewComponent))
         </div>
     </div>

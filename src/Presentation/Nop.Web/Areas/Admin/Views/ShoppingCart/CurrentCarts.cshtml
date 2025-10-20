@@ -247,6 +247,11 @@
                         if (row.AttributeInfo && row.AttributeInfo.length > 0)
                             div = "<div>" + row.AttributeInfo + "</div>";
 
+                        if (row.CustomWishlistName && row.CustomWishlistName.length > 0)
+                        {
+                            div += "<div>" + "@T("Enums.Nop.Core.Domain.Orders.ShoppingCartType.Wishlist")" + ": " + $('<div/>').text(row.CustomWishlistName).html() + "</div>";
+                        }
+
                         return '<a href="' + link + '">' + data + '</a>'+div;
                     }
                 </script>

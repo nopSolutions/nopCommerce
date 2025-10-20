@@ -3,9 +3,7 @@
 /// <summary>
 /// Represents localized model
 /// </summary>
-public partial interface ILocalizedModel
-{
-}
+public partial interface ILocalizedModel;
 
 /// <summary>
 /// Represents generic localized model

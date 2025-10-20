@@ -31,9 +31,7 @@ public partial class CheckoutAttributeController : BaseAdminController
     protected readonly ILocalizedEntityService _localizedEntityService;
     protected readonly INotificationService _notificationService;
     protected readonly IMeasureService _measureService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IStoreService _storeService;
     protected readonly MeasureSettings _measureSettings;
 
     #endregion
@@ -50,9 +48,7 @@ public partial class CheckoutAttributeController : BaseAdminController
         ILocalizedEntityService localizedEntityService,
         INotificationService notificationService,
         IMeasureService measureService,
-        IPermissionService permissionService,
         IStoreMappingService storeMappingService,
-        IStoreService storeService,
         MeasureSettings measureSettings)
     {
         _currencySettings = currencySettings;
@@ -65,9 +61,7 @@ public partial class CheckoutAttributeController : BaseAdminController
         _localizedEntityService = localizedEntityService;
         _notificationService = notificationService;
         _measureService = measureService;
-        _permissionService = permissionService;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
         _measureSettings = measureSettings;
     }
 
@@ -104,31 +98,6 @@ public partial class CheckoutAttributeController : BaseAdminController
                 x => x.Name,
                 localized.Name,
                 localized.LanguageId);
-        }
-    }
-
-    protected virtual async Task SaveStoreMappingsAsync(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
-    {
-        checkoutAttribute.LimitedToStores = model.SelectedStoreIds.Any();
-        await _checkoutAttributeService.UpdateAttributeAsync(checkoutAttribute);
-
-        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(checkoutAttribute);
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            if (model.SelectedStoreIds.Contains(store.Id))
-            {
-                //new store
-                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
-                    await _storeMappingService.InsertStoreMappingAsync(checkoutAttribute, store.Id);
-            }
-            else
-            {
-                //remove store
-                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
-                if (storeMappingToDelete != null)
-                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
-            }
         }
     }
 
@@ -241,7 +210,7 @@ public partial class CheckoutAttributeController : BaseAdminController
             await UpdateAttributeLocalesAsync(checkoutAttribute, model);
 
             //stores
-            await SaveStoreMappingsAsync(checkoutAttribute, model);
+            await _storeMappingService.SaveStoreMappingsAsync(checkoutAttribute, model.SelectedStoreIds);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("AddNewCheckoutAttribute",
@@ -295,7 +264,7 @@ public partial class CheckoutAttributeController : BaseAdminController
             await UpdateAttributeLocalesAsync(checkoutAttribute, model);
 
             //stores
-            await SaveStoreMappingsAsync(checkoutAttribute, model);
+            await _storeMappingService.SaveStoreMappingsAsync(checkoutAttribute, model.SelectedStoreIds);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditCheckoutAttribute",
@@ -346,12 +315,9 @@ public partial class CheckoutAttributeController : BaseAdminController
         var checkoutAttributes = await _checkoutAttributeService.GetAttributeByIdsAsync(selectedIds.ToArray());
         await _checkoutAttributeService.DeleteAttributesAsync(checkoutAttributes);
 
-        foreach (var checkoutAttribute in checkoutAttributes)
-        {
-            //activity log
-            await _customerActivityService.InsertActivityAsync("DeleteCheckoutAttribute",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteCheckoutAttribute"), checkoutAttribute.Name), checkoutAttribute);
-        }
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteCheckoutAttribute");
+        await _customerActivityService.InsertActivitiesAsync("DeleteCheckoutAttribute", checkoutAttributes, checkoutAttribute => string.Format(activityLogFormat, checkoutAttribute.Name));
 
         return Json(new { Result = true });
     }

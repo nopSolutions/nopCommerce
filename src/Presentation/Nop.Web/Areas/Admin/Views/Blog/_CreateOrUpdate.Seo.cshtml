@@ -1,3 +1,4 @@
+@using Nop.Core.Domain.Blogs
 @model BlogPostModel
 
 <div class="card-body">
@@ -37,6 +38,12 @@
             <span asp-validation-for="MetaDescription"></span>
         </div>
     </div>
+    @await Component.InvokeAsync(typeof(MetaTagsGeneratorViewComponent), new MetaTagsGeneratorModel(Model, nameof(BlogPost))
+    {
+        TitleFieldId = Html.IdFor(model => model.Title),
+        TextFieldId = Html.IdFor(model => model.Body),
+        LanguageId = Model.LanguageId
+    })
     <script>
         $(function() {
             $('#@Html.IdFor(model => model.SeName)').on('input change', function () {

@@ -5,6 +5,4 @@ namespace Nop.Plugin.Misc.Brevo.Models;
 /// <summary>
 /// Represents message template search model
 /// </summary>
-public record BrevoMessageTemplateSearchModel : BaseSearchModel
-{
-}
+public record BrevoMessageTemplateSearchModel : BaseSearchModel;

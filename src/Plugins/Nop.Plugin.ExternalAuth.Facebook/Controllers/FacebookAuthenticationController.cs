@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Nop.Core;
+using Nop.Core.Http;
 using Nop.Plugin.ExternalAuth.Facebook.Models;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
@@ -118,7 +119,7 @@ public class FacebookAuthenticationController : BasePluginController
         {
             RedirectUri = Url.Action("LoginCallback", "FacebookAuthentication", new { returnUrl = returnUrl })
         };
-        authenticationProperties.SetString(FacebookAuthenticationDefaults.ErrorCallback, Url.RouteUrl("Login", new { returnUrl }));
+        authenticationProperties.SetString(FacebookAuthenticationDefaults.ErrorCallback, Url.RouteUrl(NopRouteNames.General.LOGIN, new { returnUrl }));
 
         return Challenge(authenticationProperties, FacebookDefaults.AuthenticationScheme);
     }
@@ -128,7 +129,7 @@ public class FacebookAuthenticationController : BasePluginController
         //authenticate Facebook user
         var authenticateResult = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
         if (!authenticateResult.Succeeded || !authenticateResult.Principal.Claims.Any())
-            return RedirectToRoute("Login");
+            return RedirectToRoute(NopRouteNames.General.LOGIN);
 
         //create external authentication parameters
         var authenticationParameters = new ExternalAuthenticationParameters
@@ -153,7 +154,7 @@ public class FacebookAuthenticationController : BasePluginController
         else
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.ExternalAuth.Facebook.AuthenticationDataDeletedSuccessfully"));
 
-        return RedirectToRoute("CustomerInfo");
+        return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
     }
 
     #endregion

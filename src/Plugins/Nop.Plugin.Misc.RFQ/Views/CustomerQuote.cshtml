@@ -1,0 +1,112 @@
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Media
+
+@model Nop.Plugin.Misc.RFQ.Models.Customer.QuoteModel
+@inject MediaSettings mediaSettings
+@inject INopUrlHelper nopUrlHelper
+
+@{
+
+    Layout = "_ColumnsTwo";
+    var title = string.Format(T("Plugins.Misc.RFQ.QuoteNumber").Text, Model.Id);
+
+    //title
+    NopHtml.AddTitleParts(title);
+
+    NopHtml.AddCssFileParts(@"~/Plugins/Misc.RFQ/Content/styles.css", null);
+
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-rfq-request-page");
+}
+
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = RfqDefaults.QuotesTabId })
+}
+
+<div class="page account-page request-page">
+
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @title</h1>
+    </div>
+
+    <form asp-controller="RfqCustomer" asp-action="CustomerQuote" method="post">
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="CustomerId" type="hidden" />
+        <div class="page-body">
+            <div class="quote-options">
+                <div class="common-buttons">
+                    @if (Model.DisplayCreateOrderButton)
+                    {
+                        <button type="submit" name="createOrder" class="button-1">@T("Plugins.Misc.RFQ.CreateOrder")</button>
+                    }
+                </div>
+            </div>
+
+            <section class="fieldset">
+                <h2 class="title">
+                    @T("Plugins.Misc.RFQ.CustomerQuote.Info")
+                </h2>
+                <div class="form-fields">
+                    <div class="inputs">
+                        <label asp-for="CreatedOn" asp-postfix=":"></label>
+                        <label>@Model.CreatedOn</label>
+                    </div>
+                    @if (Model.ExpirationDate.HasValue)
+                    {
+                        <div class="inputs">
+                            <label asp-for="ExpirationDate" asp-postfix=":"></label>
+                            <label>@Model.ExpirationDate</label>
+                        </div>
+                    }
+                    <div class="inputs">
+                        <label asp-for="Status" asp-postfix=":"></label>
+                        <label>
+                            @Model.Status
+                            @if (Model.Order.HasValue)
+                            {
+                                <text> (</text><a class="rfq-link" href="@Url.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = Model.Order })">@T("Account.CustomerOrders.OrderDetails")</a><text>)</text>
+                            }
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="fieldset">
+                <h2 class="title">
+                    @T("Plugins.Misc.RFQ.Products")
+                </h2>
+                <div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th width="@(mediaSettings.CartThumbPictureSize)px">@T("Plugins.Misc.RFQ.Image")</th>
+                                <th>@T("Plugins.Misc.RFQ.Product(s)")</th>
+                                <th>@T("Plugins.Misc.RFQ.OfferedQty")</th>
+                                <th>@T("Plugins.Misc.RFQ.OfferedUnitPrice")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.CustomerItems)
+                            {
+                                <tr>
+                                    <td class="picture"><img src="@item.PictureUrl" /></td>
+                                    <td class="product">
+                                        <a href="@(await nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">
+                                            @item.ProductName
+                                        </a>
+                                        <br />
+                                        @Html.Raw(item.AttributeInfo)
+                                    </td>
+                                    <td>@item.Quantity</td>
+                                    <td>@item.UnitPrice</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </form>
+</div>

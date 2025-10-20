@@ -19,4 +19,9 @@ public struct NotifyData
     /// Get a sets a value indicating whether the message should not be HTML encoded
     /// </summary>
     public bool Encode { get; set; }
+
+    /// <summary>
+    /// Get or sets the time, in milliseconds, on which notification will close automatically
+    /// </summary>
+    public int Timeout { get; set; }
 }

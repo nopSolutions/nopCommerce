@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Nop.Core.Http;
 using Nop.Plugin.Payments.PayPalCommerce.Domain;
 using Nop.Plugin.Payments.PayPalCommerce.Factories;
 using Nop.Plugin.Payments.PayPalCommerce.Services;
@@ -60,7 +61,7 @@ public class MessagesViewComponent : NopViewComponent
 
         //get messages placement
         var routeName = HttpContext.GetEndpoint()?.Metadata.GetMetadata<RouteNameMetadata>()?.RouteName;
-        var isCartPage = routeName == PayPalCommerceDefaults.Route.ShoppingCart;
+        var isCartPage = routeName == NopRouteNames.General.CART;
         var isPaymentMethodPage = routeName == PayPalCommerceDefaults.Route.PaymentInfo;
         var isCheckoutPage = (HttpContext.Request.RouteValues?.TryGetValue("controller", out var controller) ?? false) &&
             string.Equals(controller.ToString(), "Checkout", StringComparison.InvariantCultureIgnoreCase);

@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Http;
 using Nop.Plugin.Misc.Omnisend.DTO;
 using Nop.Plugin.Misc.Omnisend.DTO.Events;
 using Nop.Services.Catalog;
@@ -21,6 +19,7 @@ using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Events;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Misc.Omnisend.Services;
 
@@ -31,7 +30,6 @@ public class OmnisendEventsService
 {
     #region Fields
 
-    private readonly IActionContextAccessor _actionContextAccessor;
     private readonly IAddressService _addressService;
     private readonly ICategoryService _categoryService;
     private readonly ICountryService _countryService;
@@ -41,6 +39,7 @@ public class OmnisendEventsService
     private readonly ILocalizationService _localizationService;
     private readonly IManufacturerService _manufacturerService;
     private readonly IMeasureService _measureService;
+    private readonly INopUrlHelper _nopUrlHelper;
     private readonly IOrderService _orderService;
     private readonly IOrderTotalCalculationService _orderTotalCalculationService;
     private readonly IPaymentPluginManager _paymentPluginManager;
@@ -52,7 +51,6 @@ public class OmnisendEventsService
     private readonly IStateProvinceService _stateProvinceService;
     private readonly IStoreContext _storeContext;
     private readonly ITaxService _taxService;
-    private readonly IUrlHelperFactory _urlHelperFactory;
     private readonly IWebHelper _webHelper;
     private readonly IWorkContext _workContext;
     private readonly OmnisendCustomerService _omnisendCustomerService;
@@ -63,8 +61,7 @@ public class OmnisendEventsService
 
     #region Ctor
 
-    public OmnisendEventsService(IActionContextAccessor actionContextAccessor,
-        IAddressService addressService,
+    public OmnisendEventsService(IAddressService addressService,
         ICategoryService categoryService,
         ICountryService countryService,
         ICustomerService customerService,
@@ -73,6 +70,7 @@ public class OmnisendEventsService
         ILocalizationService localizationService,
         IManufacturerService manufacturerService,
         IMeasureService measureService,
+        INopUrlHelper nopUrlHelper,
         IOrderService orderService,
         IOrderTotalCalculationService orderTotalCalculationService,
         IPaymentPluginManager paymentPluginManager,
@@ -84,14 +82,12 @@ public class OmnisendEventsService
         IStateProvinceService stateProvinceService,
         IStoreContext storeContext,
         ITaxService taxService,
-        IUrlHelperFactory urlHelperFactory,
         IWebHelper webHelper,
         IWorkContext workContext,
         OmnisendCustomerService omnisendCustomerService,
         OmnisendHelper omnisendHelper,
         OmnisendHttpClient omnisendHttpClient)
     {
-        _actionContextAccessor = actionContextAccessor;
         _addressService = addressService;
         _categoryService = categoryService;
         _countryService = countryService;
@@ -101,6 +97,7 @@ public class OmnisendEventsService
         _localizationService = localizationService;
         _manufacturerService = manufacturerService;
         _measureService = measureService;
+        _nopUrlHelper = nopUrlHelper;
         _orderService = orderService;
         _orderTotalCalculationService = orderTotalCalculationService;
         _paymentPluginManager = paymentPluginManager;
@@ -112,7 +109,6 @@ public class OmnisendEventsService
         _stateProvinceService = stateProvinceService;
         _storeContext = storeContext;
         _taxService = taxService;
-        _urlHelperFactory = urlHelperFactory;
         _webHelper = webHelper;
         _workContext = workContext;
         _omnisendCustomerService = omnisendCustomerService;
@@ -327,8 +323,6 @@ public class OmnisendEventsService
 
     private async Task FillOrderEventBaseAsync(OrderEventBaseProperty property, Order order)
     {
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-
         var items = await _orderService.GetOrderItemsAsync(order.Id);
         var appliedDiscounts = await _discountService.GetAllDiscountUsageHistoryAsync(orderId: order.Id);
 
@@ -356,7 +350,7 @@ public class OmnisendEventsService
         property.Note = null;
         property.OrderId = order.CustomOrderNumber;
         property.OrderNumber = order.Id;
-        property.OrderStatusURL = urlHelper.RouteUrl("OrderDetails", new { orderId = order.Id }, _webHelper.GetCurrentRequestProtocol());
+        property.OrderStatusURL = _nopUrlHelper.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = order.Id }, _webHelper.GetCurrentRequestProtocol());
         property.PaymentMethod = paymentMethodName;
         property.PaymentStatus = order.PaymentStatus.ToString();
         property.ShippingAddress = await GetAddressItemDataAsync(order.ShippingAddressId);
@@ -564,8 +558,8 @@ public class OmnisendEventsService
     public async Task SendStartedCheckoutEventAsync(PageRenderingEvent eventMessage)
     {
         var routeName = eventMessage.GetRouteName();
-        if (!routeName.Equals("CheckoutOnePage", StringComparison.InvariantCultureIgnoreCase) &&
-            !routeName.Equals("CheckoutBillingAddress", StringComparison.InvariantCultureIgnoreCase))
+        if (!routeName.Equals(NopRouteNames.Standard.CHECKOUT_ONE_PAGE, StringComparison.InvariantCultureIgnoreCase) &&
+            !routeName.Equals(NopRouteNames.Standard.CHECKOUT_BILLING_ADDRESS, StringComparison.InvariantCultureIgnoreCase))
             return;
 
         await SendEventAsync(await CreateStartedCheckoutEventAsync());

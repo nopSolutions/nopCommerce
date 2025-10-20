@@ -1,0 +1,29 @@
+﻿@model int
+
+<div id="addWishlistModal_@Model" title="@T("Wishlist.AddNewWishlist")" style="display:none;">
+    <div class="add-wishlist-content">
+        <input type="text" id="wishlistName_@Model" placeholder="@T("Wishlist.EnterWishlistName")" />
+        <button type="button" class="wishlist-add-custom-button" onclick="addWishlist(@Model)">@T("Common.OK")</button>
+    </div>
+</div>
+
+<script asp-location="Footer">
+    function showAddWishlistModal(productId) {
+        $('#addWishlistModal_' + productId).dialog();
+    }
+
+    function closeAddWishlistModal(productId) {
+        $('#addWishlistModal_' + productId).dialog('close');
+    }
+
+    function addWishlist(productId) {
+        const wishlistName = document.getElementById('wishlistName_' + productId).value;
+        if (!wishlistName) {
+            alert('@T("Wishlist.NameRequired")');
+            return;
+        }
+
+        AjaxCart.createCustomWishlist('@Url.RouteUrl(NopRouteNames.Ajax.ADD_WISHLIST)', wishlistName, productId);
+        $('#addWishlistModal_' + productId).dialog('close');
+    }
+</script>

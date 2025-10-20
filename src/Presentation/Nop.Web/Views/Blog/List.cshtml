@@ -19,7 +19,7 @@
 }
 <div class="page blog-page">
     <div class="page-title">
-        <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss" title="@T("Blog.RSS.Hint")">@T("Blog.RSS")</a>
+        <a href="@Url.RouteUrl(NopRouteNames.Standard.BLOG_RSS, new { languageId = Model.WorkingLanguageId })" class="link-rss" title="@T("Blog.RSS.Hint")">@T("Blog.RSS")</a>
         <h1>
             @if (string.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
             {
@@ -44,26 +44,28 @@
             @foreach (var item in Model.BlogPosts)
             {
                 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageBeforePost, additionalData = item })
-                <div class="post">
-                    <div class="post-head">
-                        <a class="post-title" href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }))">@item.Title</a>
-                        <span class="post-date">@item.CreatedOn.ToString("D")</span>
-                    </div>
+                <article class="post">
+                    <header class="post-head">
+                        <a class="post-title" href="@(await NopUrl.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }))">
+                            <h2>@item.Title</h2>
+                        </a>
+                        <time datetime="@item.CreatedOn.ToString("yyyy-MM-dd")"  class="post-date">@item.CreatedOn.ToString("D")</time>
+                    </header>
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageBeforePostBody, additionalData = item })
                     <div class="post-body">
                         @Html.Raw(!string.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
                     </div>
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageAfterPostBody, additionalData = item })
-                    <div class="blog-details">
+                    <div role="navigation" class="blog-details">
                         @if (item.Tags.Count > 0)
                         {
                             <div class="tags">
-                                <label>@T("Blog.Tags"):</label>
+                                <h3>@T("Blog.Tags"):</h3>
                                 <ul>
                                     @for (var i = 0; i < item.Tags.Count; i++)
                                     {
                                         var tag = item.Tags[i];
-                                        <li><a href="@Url.RouteUrl("BlogByTag", new {tag = tag})">@tag</a></li>
+                                        <li><a href="@Url.RouteUrl(NopRouteNames.Standard.BLOG_BY_TAG, new { tag = tag })">@tag</a></li>
                                         if (i != item.Tags.Count - 1)
                                         {
                                             <li class="separator">,</li>
@@ -75,13 +77,13 @@
                         <div class="buttons">
                             @if (item.AllowComments)
                             {
-                                <a href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }, fragment: "comments"))" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
+                                <a href="@(await NopUrl.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }, fragment: "comments"))" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
                             }
-                            <a href="@(Url.RouteUrl<BlogPost>(new { SeName = item.SeName }))" class="read-more">@T("Blog.MoreInfo")</a>
+                            <a href="@(await NopUrl.RouteGenericUrlAsync<BlogPost>(new { SeName = item.SeName }))" class="read-more">@T("Blog.MoreInfo")</a>
                         </div>
                     </div>
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageInsidePost, additionalData = item })
-                </div>
+                </article>
                 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BlogListPageAfterPost, additionalData = item })
             }
         </div>

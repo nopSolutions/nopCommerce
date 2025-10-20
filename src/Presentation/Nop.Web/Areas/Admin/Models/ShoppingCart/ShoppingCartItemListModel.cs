@@ -5,6 +5,4 @@ namespace Nop.Web.Areas.Admin.Models.ShoppingCart;
 /// <summary>
 /// Represents a shopping cart item list model
 /// </summary>
-public partial record ShoppingCartItemListModel : BasePagedListModel<ShoppingCartItemModel>
-{
-}
+public partial record ShoppingCartItemListModel : BasePagedListModel<ShoppingCartItemModel>;

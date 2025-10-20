@@ -1,0 +1,33 @@
+﻿@model Nop.Plugin.Misc.RFQ.Models.Admin.ProductSearchModel
+
+@{
+    Layout = "_AdminLayout";
+    //page title
+    ViewBag.PageTitle = string.Format(T("Plugins.Misc.RFQ.AdminQuote.Products.AddNew.Title1").Text, Model.EntityId);
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName(RfqDefaults.QuotesAdminMenuSystemName);
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @string.Format(T("Plugins.Misc.RFQ.AdminQuote.Products.AddNew.Title1").Text, Model.EntityId)
+        <small>
+            <i class="fas fa-arrow-circle-left"></i>
+            <a asp-action="AdminQuote" asp-route-id="@Model.EntityId">@T("Plugins.Misc.RFQ.AdminQuote.Products.AddNew.BackToQuote")</a>
+        </small>
+    </h1>
+    <div class="float-right">
+        &nbsp;
+    </div>
+</div>
+
+@await Html.PartialAsync("_SelectProductToAdd.cshtml", Model)
+
+<script>
+    function addProductToRequest(productId) {
+        //load "product details page" block
+        var productDetailsActionUrl = '@Html.Raw(Url.Action("AddProductDetails", "RfqAdmin", new { quoteId = Model.EntityId, productId = "productidplaceholder" }))';
+        productDetailsActionUrl = productDetailsActionUrl.replace("productidplaceholder", productId);
+        setLocation(productDetailsActionUrl);
+    }
+</script>

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Configuration;
@@ -97,7 +98,7 @@ public partial class InstallController : Controller
         {
             model.AvailableLanguages.Add(new SelectListItem
             {
-                Value = Url.RouteUrl("InstallationChangeLanguage", new { language = lang.Code }),
+                Value = Url.RouteUrl(NopRouteNames.Standard.INSTALLATION_CHANGE_LANGUAGE, new { language = lang.Code }),
                 Text = lang.Name,
                 Selected = _locService.Value.GetCurrentLanguage().Code == lang.Code
             });
@@ -127,7 +128,7 @@ public partial class InstallController : Controller
     public virtual IActionResult Index()
     {
         if (DataSettingsManager.IsDatabaseInstalled())
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = new InstallModel
         {
@@ -152,7 +153,7 @@ public partial class InstallController : Controller
     public virtual async Task<IActionResult> Index(InstallModel model)
     {
         if (DataSettingsManager.IsDatabaseInstalled())
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         model.DisableSampleDataOption = _appSettings.Get<InstallationConfig>().DisableSampleData;
         model.InstallRegionalResources = _appSettings.Get<InstallationConfig>().InstallRegionalResources;
@@ -201,14 +202,16 @@ public partial class InstallController : Controller
             DataSettingsManager.SaveSettings(new DataConfig
             {
                 DataProvider = model.DataProvider,
-                ConnectionString = connectionString
+                ConnectionString = connectionString,
+                Collation = model.Collation,
+                CharacterSet = model.CharacterSet
             }, _fileProvider);
 
             if (model.CreateDatabaseIfNotExists && !await dataProvider.DatabaseExistsAsync())
             {
                 try
                 {
-                    dataProvider.CreateDatabase(model.Collation);
+                    dataProvider.CreateDatabase();
                 }
                 catch (Exception ex)
                 {
@@ -274,7 +277,7 @@ public partial class InstallController : Controller
             {
                 try
                 {
-                    var resultRequest = await _nopHttpClient.Value.SubscribeNewslettersAsync(model.AdminEmail);
+                    var resultRequest = await _nopHttpClient.Value.SubscribeNewsLettersAsync(model.AdminEmail);
                 }
                 catch
                 {
@@ -282,12 +285,18 @@ public partial class InstallController : Controller
                 }
             }
 
-            //now resolve installation service
-            await _installationService.Value.InstallRequiredDataAsync(model.AdminEmail, model.AdminPassword, languagePackInfo, regionInfo, cultureInfo);
-
-            if (model.InstallSampleData)
-                await _installationService.Value.InstallSampleDataAsync(model.AdminEmail);
-
+            //now resolve installation service and install nopCommerce
+            await _installationService.Value.InstallAsync(new InstallationSettings
+            {
+               AdminEmail = model.AdminEmail,
+               AdminPassword = model.AdminPassword,
+               LanguagePackDownloadLink = languagePackInfo.DownloadUrl,
+               LanguagePackProgress = languagePackInfo.Progress,
+               RegionInfo = regionInfo,
+               CultureInfo = cultureInfo,
+               InstallSampleData = model.InstallSampleData
+            });
+            
             //prepare plugins to install
             _pluginService.Value.ClearInstalledPluginsList();
 
@@ -308,7 +317,7 @@ public partial class InstallController : Controller
                 await _pluginService.Value.PreparePluginToInstallAsync(plugin.SystemName, checkDependencies: false);
             }
 
-            return View(new InstallModel { RestartUrl = Url.RouteUrl("Homepage") });
+            return View(new InstallModel { RestartUrl = Url.RouteUrl(NopRouteNames.General.HOMEPAGE) });
 
         }
         catch (Exception exception)
@@ -327,7 +336,7 @@ public partial class InstallController : Controller
     public virtual IActionResult ChangeLanguage(string language)
     {
         if (DataSettingsManager.IsDatabaseInstalled())
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         _locService.Value.SaveCurrentLanguage(language);
 
@@ -339,15 +348,15 @@ public partial class InstallController : Controller
     public virtual IActionResult RestartInstall()
     {
         if (DataSettingsManager.IsDatabaseInstalled())
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
-        return View("Index", new InstallModel { RestartUrl = Url.RouteUrl("Installation") });
+        return View("Index", new InstallModel { RestartUrl = Url.RouteUrl(NopRouteNames.Standard.INSTALLATION) });
     }
 
     public virtual IActionResult RestartApplication()
     {
         if (DataSettingsManager.IsDatabaseInstalled())
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         //restart application
         _webHelper.Value.RestartAppDomain();

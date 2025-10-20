@@ -1,0 +1,31 @@
+﻿@model ForumPostTextModel
+
+<div class="markdown-editor-container" id="md-editor">
+    <script asp-location="Footer" src="~/lib_npm/marked/marked.umd.js"></script>
+    <script asp-location="Footer" src="~/js/mdeditor/script.js"></script>
+    <link rel="stylesheet" href="~/js/mdeditor/style.css" />
+
+    <div class="editor-header">
+        <div class="editor-tabs">
+            <button type="button" class="tab-button active" data-tab="write">@T("MarkdownEditor.TabWrite")</button>
+            <button type="button" class="tab-button" data-tab="preview">@T("MarkdownEditor.TabPreview")</button>
+        </div>
+        <div class="toolbar" id="editor-toolbar"></div>
+    </div>
+    <div class="editor-content">
+        <div class="tab-panel active" id="write-panel">
+            <textarea asp-for="Text" class="forum-post-text"></textarea>
+            <span asp-validation-for="Text"></span>
+        </div>
+        <div class="tab-panel" id="preview-panel">
+            <div class="preview-output" id="html-output"></div>
+        </div>
+    </div>
+    
+    <script asp-location="Footer">
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeMarkdownEditor('@Html.IdFor(model => model.Text)','@Url.Content("~/js/mdeditor/icons/")');
+            setupTabs('md-editor', '@Html.IdFor(model => model.Text)');
+        });
+    </script>
+</div>

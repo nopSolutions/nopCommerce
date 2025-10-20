@@ -1,0 +1,130 @@
+﻿@model FilterLevelValueSearchModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Products.FilterLevelValues.AddNew").Text;
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+else
+{
+    <form asp-controller="Product" asp-action="FilterLevelValuesAddPopup"
+          asp-route-productId="@Context.Request.Query["productId"]"
+          asp-route-btnId="@Context.Request.Query["btnId"]"
+          asp-route-formId="@Context.Request.Query["formId"]">
+        <div class="content-header clearfix">
+            <h1 class="float-left">
+                @T("Admin.Catalog.Products.FilterLevelValues.AddNew")
+            </h1>
+            <div class="float-right">
+                &nbsp;
+            </div>
+        </div>
+         <section class="content">
+            <div class="container-fluid">
+                <div class="form-horizontal">
+                    <div class="cards-group">
+                        <div class="card card-default card-search card-popup">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row" @(Model.HideSearchFilterValue1? Html.Raw("style=\"display:none\"") : null)>
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchFilterValue1Id" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-select asp-for="SearchFilterValue1Id" asp-items="Model.AvailableFilterLevel1Values" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row" @(Model.HideSearchFilterValue2? Html.Raw("style=\"display:none\"") : null)>
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchFilterValue2Id" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-select asp-for="SearchFilterValue2Id" asp-items="Model.AvailableFilterLevel2Values" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row" @(Model.HideSearchFilterValue3? Html.Raw("style=\"display:none\"") : null)>
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchFilterValue3Id" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-select asp-for="SearchFilterValue3Id" asp-items="Model.AvailableFilterLevel3Values" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="text-center col-12">
+                                        <button type="button" id="search-filter-level-values" class="btn btn-primary btn-search"><i class="fas fa-magnifying-glass"></i>@T("Admin.Common.Search")</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-default">
+                            <div class="card-body">
+                                @await Html.PartialAsync("Table", new DataTablesModel
+                                {
+                                    Name = "filter-level-values-grid",
+                                    UrlRead = new DataUrl("FilterLevelValuesAddPopupList", "Product", null),
+                                    SearchButtonId = "search-filter-level-values",
+                                    Length = Model.PageSize,
+                                    LengthMenu = Model.AvailablePageSizes,
+                                    Filters = new List<FilterParameter>
+                                    {
+                                        new FilterParameter(nameof(Model.SearchFilterValue1Id)),
+                                        new FilterParameter(nameof(Model.SearchFilterValue2Id)),
+                                        new FilterParameter(nameof(Model.SearchFilterValue3Id))
+                                    },
+                                    ColumnCollection = new List<ColumnProperty>
+                                    {
+                                        new ColumnProperty(nameof(FilterLevelValueModel.Id))
+                                        {
+                                            IsMasterCheckBox = true,
+                                            Render = new RenderCheckBox(nameof(AddFilterLevelValueModel.SelectedFilterLevelValueIds)),
+                                            ClassName =  NopColumnClassDefaults.CenterAll,
+                                            Width = "50"
+                                        },
+                                        new ColumnProperty(nameof(FilterLevelValueModel.FilterLevel1Value))
+                                        {
+                                            Title = T("Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel1").Text,
+                                            Visible = !Model.HideSearchFilterValue1,
+                                            Width = "100"
+                                        },
+                                        new ColumnProperty(nameof(FilterLevelValueModel.FilterLevel2Value))
+                                        {
+                                            Title = T("Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel2").Text,
+                                            Visible = !Model.HideSearchFilterValue2,
+                                            Width = "100",
+                                        },
+                                        new ColumnProperty(nameof(FilterLevelValueModel.FilterLevel3Value))
+                                        {
+                                            Title = T("Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel3").Text,
+                                            Visible = !Model.HideSearchFilterValue3,
+                                            Width = "100",
+                                        },
+                                    }
+                                })
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" name="save" class="btn btn-primary">
+                                    <i class="far fa-floppy-disk"></i>
+                                    @T("Admin.Common.Save")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+}

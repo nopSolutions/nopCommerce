@@ -6,6 +6,4 @@ namespace Nop.Services.Gdpr.Caching;
 /// <summary>
 /// Represents a GDPR log cache event consumer
 /// </summary>
-public partial class GdprLogCacheEventConsumer : CacheEventConsumer<GdprLog>
-{
-}
+public partial class GdprLogCacheEventConsumer : CacheEventConsumer<GdprLog>;

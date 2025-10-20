@@ -15,6 +15,7 @@ public partial class ProductAttributeModelFactory : IProductAttributeModelFactor
 {
     #region Fields
 
+    protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILocalizedModelFactory _localizedModelFactory;
     protected readonly IProductAttributeService _productAttributeService;
@@ -24,11 +25,13 @@ public partial class ProductAttributeModelFactory : IProductAttributeModelFactor
 
     #region Ctor
 
-    public ProductAttributeModelFactory(ILocalizationService localizationService,
+    public ProductAttributeModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+        ILocalizationService localizationService,
         ILocalizedModelFactory localizedModelFactory,
         IProductAttributeService productAttributeService,
         IProductService productService)
     {
+        _baseAdminModelFactory = baseAdminModelFactory;
         _localizationService = localizationService;
         _localizedModelFactory = localizedModelFactory;
         _productAttributeService = productAttributeService;
@@ -116,8 +119,10 @@ public partial class ProductAttributeModelFactory : IProductAttributeModelFactor
         ArgumentNullException.ThrowIfNull(searchModel);
 
         //get product attributes
-        var productAttributes = await _productAttributeService
-            .GetAllProductAttributesAsync(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+        var productAttributes = await _productAttributeService.GetAllProductAttributesAsync(
+            name: searchModel.SearchProductAttributeName,
+            pageIndex: searchModel.Page - 1,
+            pageSize: searchModel.PageSize);
 
         //prepare list model
         var model = new ProductAttributeListModel().PrepareToGrid(searchModel, productAttributes, () =>
@@ -165,6 +170,8 @@ public partial class ProductAttributeModelFactory : IProductAttributeModelFactor
         //prepare localized models
         if (!excludeProperties)
             model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
+
+        await _baseAdminModelFactory.PreparePreTranslationSupportModelAsync(model);
 
         return model;
     }

@@ -33,8 +33,8 @@
     </div>
     <div class="page-body">
         <div class="search-input">
-            <form asp-route="ProductSearch" method="get">
-                <div class="fieldset">
+            <form asp-route="@NopRouteNames.General.SEARCH" method="get">
+                <section class="fieldset">
                     <div class="form-fields">
                         <div class="basic-search">
                             <div class="inputs">
@@ -77,13 +77,17 @@
                                 <input asp-for="sid" />
                                 <label asp-for="sid">@T("Search.SearchInDescriptions")</label>
                             </div>
+                            <div class="inputs reversed">
+                                <input asp-for="sit" />
+                                <label asp-for="sit">@T("Search.SearchInTags")</label>
+                            </div>
                             @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductSearchPageAdvanced, additionalData = Model })
                         </div>
                     </div>
-                </div>
-                <div class="buttons">
+                </section>
+                <section class="buttons">
                     <button type="submit" class="button-1 search-button">@T("Search.Button")</button>
-                </div>
+                </section>
             </form>
         </div>
         @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
@@ -91,7 +95,7 @@
         <div class="search-results">
             @{
                 var catalogProductsViewData = new ViewDataDictionary(ViewData);
-                catalogProductsViewData["fetchUrl"] = Html.Raw(Url.RouteUrl("SearchProducts"));
+                catalogProductsViewData["fetchUrl"] = Html.Raw(Url.RouteUrl(NopRouteNames.Ajax.SEARCH_PRODUCTS));
             }
             @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
             <script asp-location="Footer">
@@ -109,7 +113,8 @@
                                 .addParameter('isc', $('#@Html.IdFor(model => model.isc)').is(':checked'))
                                 .addParameter('mid', $('#@Html.IdFor(model => model.mid)').val())
                                 .addParameter('vid', $('#@Html.IdFor(model => model.vid)').val())
-                                .addParameter('sid', $('#@Html.IdFor(model => model.sid)').is(':checked'));
+                                .addParameter('sid', $('#@Html.IdFor(model => model.sid)').is(':checked'))
+                                .addParameter('sit', $('#@Html.IdFor(model => model.sit)').is(':checked'));
                         }
                     });
                 });

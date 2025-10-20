@@ -22,6 +22,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Attributes;
 using Nop.Services.Blogs;
@@ -588,7 +589,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             //add download link
             if (await _orderService.IsDownloadAllowedAsync(orderItem))
             {
-                var downloadUrl = await RouteUrlAsync(order.StoreId, "GetDownload", new { orderItemId = orderItem.OrderItemGuid });
+                var downloadUrl = await RouteUrlAsync(order.StoreId, NopRouteNames.Standard.GET_DOWNLOAD, new { orderItemId = orderItem.OrderItemGuid });
                 var downloadLink = $"<a class=\"link\" href=\"{downloadUrl}\">{await _localizationService.GetResourceAsync("Messages.Order.Product(s).Download", languageId)}</a>";
                 sb.AppendLine("<br />");
                 sb.AppendLine(downloadLink);
@@ -596,7 +597,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             //add download link
             if (await _orderService.IsLicenseDownloadAllowedAsync(orderItem))
             {
-                var licenseUrl = await RouteUrlAsync(order.StoreId, "GetLicense", new { orderItemId = orderItem.OrderItemGuid });
+                var licenseUrl = await RouteUrlAsync(order.StoreId, NopRouteNames.Standard.GET_LICENSE, new { orderItemId = orderItem.OrderItemGuid });
                 var licenseLink = $"<a class=\"link\" href=\"{licenseUrl}\">{await _localizationService.GetResourceAsync("Messages.Order.Product(s).License", languageId)}</a>";
                 sb.AppendLine("<br />");
                 sb.AppendLine(licenseLink);
@@ -1100,14 +1101,13 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Order.PaymentMethod", paymentMethodName));
         tokens.Add(new Token("Order.VatNumber", order.VatNumber));
         var sbCustomValues = new StringBuilder();
-        var customValues = _paymentService.DeserializeCustomValues(order);
-        if (customValues != null)
+        var customValues = new CustomValues();
+        customValues.FillByXml(order.CustomValuesXml, true);
+
+        foreach (var item in customValues)
         {
-            foreach (var item in customValues)
-            {
-                sbCustomValues.AppendFormat("{0}: {1}", WebUtility.HtmlEncode(item.Key), WebUtility.HtmlEncode(item.Value != null ? item.Value.ToString() : string.Empty));
-                sbCustomValues.Append("<br />");
-            }
+            sbCustomValues.AppendFormat("{0}: {1}", WebUtility.HtmlEncode(item.Name), WebUtility.HtmlEncode(item.Value ?? string.Empty));
+            sbCustomValues.Append("<br />");
         }
 
         tokens.Add(new Token("Order.CustomValues", sbCustomValues.ToString(), true));
@@ -1126,7 +1126,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             tokens.Add(new Token("Order.CreatedOn", order.CreatedOnUtc.ToString("D")));
         }
 
-        var orderUrl = await RouteUrlAsync(order.StoreId, "OrderDetails", new { orderId = order.Id });
+        var orderUrl = await RouteUrlAsync(order.StoreId, NopRouteNames.Standard.ORDER_DETAILS, new { orderId = order.Id });
         tokens.Add(new Token("Order.OrderURLForCustomer", orderUrl, true));
 
         //event notification
@@ -1178,7 +1178,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Shipment.TrackingNumberURL", trackingNumberUrl, true));
         tokens.Add(new Token("Shipment.Product(s)", await ProductListToHtmlTableAsync(shipment, languageId), true));
 
-        var shipmentUrl = await RouteUrlAsync((await _orderService.GetOrderByIdAsync(shipment.OrderId)).StoreId, "ShipmentDetails", new { shipmentId = shipment.Id });
+        var shipmentUrl = await RouteUrlAsync((await _orderService.GetOrderByIdAsync(shipment.OrderId)).StoreId, NopRouteNames.Standard.SHIPMENT_DETAILS, new { shipmentId = shipment.Id });
         tokens.Add(new Token("Shipment.URLForCustomer", shipmentUrl, true));
 
         //event notification
@@ -1196,7 +1196,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         var order = await _orderService.GetOrderByIdAsync(orderNote.OrderId);
 
         tokens.Add(new Token("Order.NewNoteText", _orderService.FormatOrderNoteText(orderNote), true));
-        var orderNoteAttachmentUrl = await RouteUrlAsync(order.StoreId, "GetOrderNoteFile", new { ordernoteid = orderNote.Id });
+        var orderNoteAttachmentUrl = await RouteUrlAsync(order.StoreId, NopRouteNames.Standard.GET_ORDER_NOTE_FILE, new { ordernoteid = orderNote.Id });
         tokens.Add(new Token("Order.OrderNoteAttachmentUrl", orderNoteAttachmentUrl, true));
 
         //event notification
@@ -1310,14 +1310,14 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Customer.CustomAttributes", await _customerAttributeFormatter.FormatAttributesAsync(customAttributesXml), true));
 
         //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)
-        var passwordRecoveryUrl = await RouteUrlAsync(routeName: "PasswordRecoveryConfirm", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
-        var accountActivationUrl = await RouteUrlAsync(routeName: "AccountActivation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
-        var emailRevalidationUrl = await RouteUrlAsync(routeName: "EmailRevalidation", routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
-        var wishlistUrl = await RouteUrlAsync(routeName: "Wishlist", routeValues: new { customerGuid = customer.CustomerGuid });
+        var passwordRecoveryUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.PASSWORD_RECOVERY_CONFIRM, routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
+        var accountActivationUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.ACCOUNT_ACTIVATION, routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
+        var emailRevalidationUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.EMAIL_REVALIDATION, routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
+        
         tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
         tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
         tokens.Add(new Token("Customer.EmailRevalidationURL", emailRevalidationUrl, true));
-        tokens.Add(new Token("Wishlist.URLForCustomer", wishlistUrl, true));
+        tokens.Add(new Token("Customer.Company", customer.Company));
 
         //event notification
         await _eventPublisher.EntityTokensAddedAsync(customer, tokens);
@@ -1351,10 +1351,10 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     {
         tokens.Add(new Token("NewsLetterSubscription.Email", subscription.Email));
 
-        var activationUrl = await RouteUrlAsync(routeName: "NewsletterActivation", routeValues: new { token = subscription.NewsLetterSubscriptionGuid, active = "true" });
+        var activationUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.NEWSLETTER_ACTIVATION, routeValues: new { token = subscription.NewsLetterSubscriptionGuid, active = "true" });
         tokens.Add(new Token("NewsLetterSubscription.ActivationUrl", activationUrl, true));
 
-        var deactivationUrl = await RouteUrlAsync(routeName: "NewsletterActivation", routeValues: new { token = subscription.NewsLetterSubscriptionGuid, active = "false" });
+        var deactivationUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.NEWSLETTER_ACTIVATION, routeValues: new { token = subscription.NewsLetterSubscriptionGuid, active = "false" });
         tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deactivationUrl, true));
 
         //event notification
@@ -1484,9 +1484,9 @@ public partial class MessageTokenProvider : IMessageTokenProvider
 
         string topicUrl;
         if (friendlyForumTopicPageIndex.HasValue && friendlyForumTopicPageIndex.Value > 1)
-            topicUrl = await RouteUrlAsync(routeName: "TopicSlugPaged", routeValues: new { id = forumTopic.Id, slug = await forumService.GetTopicSeNameAsync(forumTopic), pageNumber = friendlyForumTopicPageIndex.Value });
+            topicUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.TOPIC_SLUG_PAGED, routeValues: new { id = forumTopic.Id, slug = await forumService.GetTopicSeNameAsync(forumTopic), pageNumber = friendlyForumTopicPageIndex.Value });
         else
-            topicUrl = await RouteUrlAsync(routeName: "TopicSlug", routeValues: new { id = forumTopic.Id, slug = await forumService.GetTopicSeNameAsync(forumTopic) });
+            topicUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.TOPIC_SLUG, routeValues: new { id = forumTopic.Id, slug = await forumService.GetTopicSeNameAsync(forumTopic) });
         if (appendedPostIdentifierAnchor.HasValue && appendedPostIdentifierAnchor.Value > 0)
             topicUrl = $"{topicUrl}#{appendedPostIdentifierAnchor.Value}";
         tokens.Add(new Token("Forums.TopicURL", topicUrl, true));
@@ -1531,7 +1531,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         //that's why we resolve it here this way
         var forumService = EngineContext.Current.Resolve<IForumService>();
 
-        var forumUrl = await RouteUrlAsync(routeName: "ForumSlug", routeValues: new { id = forum.Id, slug = await forumService.GetForumSeNameAsync(forum) });
+        var forumUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.FORUM_SLUG, routeValues: new { id = forum.Id, slug = await forumService.GetForumSeNameAsync(forum) });
         tokens.Add(new Token("Forums.ForumURL", forumUrl, true));
         tokens.Add(new Token("Forums.ForumName", forum.Name));
 
@@ -1603,11 +1603,11 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     /// A task that represents the asynchronous operation
     /// The task result contains the collection of allowed message tokens
     /// </returns>
-    public virtual async Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IEnumerable<string> tokenGroups = null)
+    public virtual async Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IList<string> tokenGroups = null)
     {
         var additionalTokens = new AdditionalTokensAddedEvent
         {
-            TokenGroups = tokenGroups
+            TokenGroups = tokenGroups ?? new List<string>()
         };
         await _eventPublisher.PublishAsync(additionalTokens);
 
@@ -1630,69 +1630,71 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         return messageTemplate.Name switch
         {
             MessageTemplateSystemNames.CUSTOMER_REGISTERED_STORE_OWNER_NOTIFICATION or
-                MessageTemplateSystemNames.CUSTOMER_WELCOME_MESSAGE or
-                MessageTemplateSystemNames.CUSTOMER_EMAIL_VALIDATION_MESSAGE or
-                MessageTemplateSystemNames.CUSTOMER_EMAIL_REVALIDATION_MESSAGE or
-                MessageTemplateSystemNames.CUSTOMER_PASSWORD_RECOVERY_MESSAGE or
-                MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens },
+            MessageTemplateSystemNames.CUSTOMER_WELCOME_MESSAGE or
+            MessageTemplateSystemNames.CUSTOMER_EMAIL_VALIDATION_MESSAGE or
+            MessageTemplateSystemNames.CUSTOMER_EMAIL_REVALIDATION_MESSAGE or
+            MessageTemplateSystemNames.CUSTOMER_PASSWORD_RECOVERY_MESSAGE or
+            MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens },
 
             MessageTemplateSystemNames.ORDER_PLACED_VENDOR_NOTIFICATION or
-                MessageTemplateSystemNames.ORDER_PLACED_STORE_OWNER_NOTIFICATION or
-                MessageTemplateSystemNames.ORDER_PLACED_AFFILIATE_NOTIFICATION or
-                MessageTemplateSystemNames.ORDER_PAID_STORE_OWNER_NOTIFICATION or
-                MessageTemplateSystemNames.ORDER_PAID_CUSTOMER_NOTIFICATION or
-                MessageTemplateSystemNames.ORDER_PAID_VENDOR_NOTIFICATION or
-                MessageTemplateSystemNames.ORDER_PAID_AFFILIATE_NOTIFICATION or
-                MessageTemplateSystemNames.ORDER_PLACED_CUSTOMER_NOTIFICATION or
-                MessageTemplateSystemNames.ORDER_PROCESSING_CUSTOMER_NOTIFICATION or
-                MessageTemplateSystemNames.ORDER_COMPLETED_CUSTOMER_NOTIFICATION or
-                MessageTemplateSystemNames.ORDER_CANCELLED_VENDOR_NOTIFICATION or
-                MessageTemplateSystemNames.ORDER_CANCELLED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
+            MessageTemplateSystemNames.ORDER_PLACED_STORE_OWNER_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_PLACED_AFFILIATE_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_PAID_STORE_OWNER_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_PAID_CUSTOMER_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_PAID_VENDOR_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_PAID_AFFILIATE_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_PLACED_CUSTOMER_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_PROCESSING_CUSTOMER_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_COMPLETED_CUSTOMER_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_COMPLETED_STORE_OWNER_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_CANCELLED_VENDOR_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_CANCELLED_CUSTOMER_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_CANCELLED_STORE_OWNER_NOTIFICATION=> [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
 
-        MessageTemplateSystemNames.SHIPMENT_SENT_CUSTOMER_NOTIFICATION or
-        MessageTemplateSystemNames.SHIPMENT_READY_FOR_PICKUP_CUSTOMER_NOTIFICATION or
-        MessageTemplateSystemNames.SHIPMENT_DELIVERED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ShipmentTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
+            MessageTemplateSystemNames.SHIPMENT_SENT_CUSTOMER_NOTIFICATION or
+            MessageTemplateSystemNames.SHIPMENT_READY_FOR_PICKUP_CUSTOMER_NOTIFICATION or
+            MessageTemplateSystemNames.SHIPMENT_DELIVERED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ShipmentTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
 
-        MessageTemplateSystemNames.ORDER_REFUNDED_STORE_OWNER_NOTIFICATION or
-        MessageTemplateSystemNames.ORDER_REFUNDED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.RefundedOrderTokens, TokenGroupNames.CustomerTokens],
+            MessageTemplateSystemNames.ORDER_REFUNDED_STORE_OWNER_NOTIFICATION or
+            MessageTemplateSystemNames.ORDER_REFUNDED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.RefundedOrderTokens, TokenGroupNames.CustomerTokens],
 
-        MessageTemplateSystemNames.NEW_ORDER_NOTE_ADDED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderNoteTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
+            MessageTemplateSystemNames.NEW_ORDER_NOTE_ADDED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderNoteTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
 
-        MessageTemplateSystemNames.RECURRING_PAYMENT_CANCELLED_STORE_OWNER_NOTIFICATION or
-        MessageTemplateSystemNames.RECURRING_PAYMENT_CANCELLED_CUSTOMER_NOTIFICATION or
-        MessageTemplateSystemNames.RECURRING_PAYMENT_FAILED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.RecurringPaymentTokens],
+            MessageTemplateSystemNames.RECURRING_PAYMENT_CANCELLED_STORE_OWNER_NOTIFICATION or
+            MessageTemplateSystemNames.RECURRING_PAYMENT_CANCELLED_CUSTOMER_NOTIFICATION or
+            MessageTemplateSystemNames.RECURRING_PAYMENT_FAILED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.RecurringPaymentTokens],
 
-        MessageTemplateSystemNames.NEWSLETTER_SUBSCRIPTION_ACTIVATION_MESSAGE or
-        MessageTemplateSystemNames.NEWSLETTER_SUBSCRIPTION_DEACTIVATION_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens],
+            MessageTemplateSystemNames.NEWSLETTER_SUBSCRIPTION_ACTIVATION_MESSAGE or
+            MessageTemplateSystemNames.NEWSLETTER_SUBSCRIPTION_DEACTIVATION_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens],
 
-        MessageTemplateSystemNames.EMAIL_A_FRIEND_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductTokens, TokenGroupNames.EmailAFriendTokens],
-        MessageTemplateSystemNames.WISHLIST_TO_FRIEND_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.WishlistToFriendTokens],
+            MessageTemplateSystemNames.EMAIL_A_FRIEND_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductTokens, TokenGroupNames.EmailAFriendTokens],
+            MessageTemplateSystemNames.WISHLIST_TO_FRIEND_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.WishlistToFriendTokens],
 
-        MessageTemplateSystemNames.NEW_RETURN_REQUEST_STORE_OWNER_NOTIFICATION or
-        MessageTemplateSystemNames.NEW_RETURN_REQUEST_CUSTOMER_NOTIFICATION or
-        MessageTemplateSystemNames.RETURN_REQUEST_STATUS_CHANGED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ReturnRequestTokens],
+            MessageTemplateSystemNames.NEW_RETURN_REQUEST_STORE_OWNER_NOTIFICATION or
+            MessageTemplateSystemNames.NEW_RETURN_REQUEST_CUSTOMER_NOTIFICATION or
+            MessageTemplateSystemNames.RETURN_REQUEST_STATUS_CHANGED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ReturnRequestTokens],
 
-        MessageTemplateSystemNames.NEW_FORUM_TOPIC_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens],
-        MessageTemplateSystemNames.NEW_FORUM_POST_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ForumPostTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens],
-        MessageTemplateSystemNames.PRIVATE_MESSAGE_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.PrivateMessageTokens, TokenGroupNames.CustomerTokens],
-        MessageTemplateSystemNames.NEW_VENDOR_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VendorTokens],
-        MessageTemplateSystemNames.VENDOR_INFORMATION_CHANGE_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.VendorTokens],
-        MessageTemplateSystemNames.GIFT_CARD_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.GiftCardTokens],
+            MessageTemplateSystemNames.NEW_FORUM_TOPIC_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens],
+            MessageTemplateSystemNames.NEW_FORUM_POST_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ForumPostTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens],
+            MessageTemplateSystemNames.PRIVATE_MESSAGE_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.PrivateMessageTokens, TokenGroupNames.CustomerTokens],
+            MessageTemplateSystemNames.NEW_VENDOR_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VendorTokens],
+            MessageTemplateSystemNames.VENDOR_INFORMATION_CHANGE_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.VendorTokens],
+            MessageTemplateSystemNames.GIFT_CARD_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.GiftCardTokens],
 
-        MessageTemplateSystemNames.PRODUCT_REVIEW_STORE_OWNER_NOTIFICATION or
-        MessageTemplateSystemNames.PRODUCT_REVIEW_REPLY_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductReviewTokens, TokenGroupNames.CustomerTokens],
+            MessageTemplateSystemNames.PRODUCT_REVIEW_STORE_OWNER_NOTIFICATION or
+            MessageTemplateSystemNames.PRODUCT_REVIEW_REPLY_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductReviewTokens, TokenGroupNames.CustomerTokens],
 
-        MessageTemplateSystemNames.QUANTITY_BELOW_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens],
-        MessageTemplateSystemNames.QUANTITY_BELOW_VENDOR_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens],
-        MessageTemplateSystemNames.QUANTITY_BELOW_ATTRIBUTE_COMBINATION_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens, TokenGroupNames.AttributeCombinationTokens],
-        MessageTemplateSystemNames.QUANTITY_BELOW_ATTRIBUTE_COMBINATION_VENDOR_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens, TokenGroupNames.AttributeCombinationTokens],
-        MessageTemplateSystemNames.NEW_VAT_SUBMITTED_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VatValidation],
-        MessageTemplateSystemNames.BLOG_COMMENT_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.BlogCommentTokens, TokenGroupNames.CustomerTokens],
-        MessageTemplateSystemNames.NEWS_COMMENT_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.NewsCommentTokens, TokenGroupNames.CustomerTokens],
-        MessageTemplateSystemNames.BACK_IN_STOCK_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductBackInStockTokens],
-        MessageTemplateSystemNames.CONTACT_US_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactUs],
-        MessageTemplateSystemNames.CONTACT_VENDOR_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactVendor],
-        _ => [],
+            MessageTemplateSystemNames.QUANTITY_BELOW_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens],
+            MessageTemplateSystemNames.QUANTITY_BELOW_VENDOR_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens],
+            MessageTemplateSystemNames.QUANTITY_BELOW_ATTRIBUTE_COMBINATION_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens, TokenGroupNames.AttributeCombinationTokens],
+            MessageTemplateSystemNames.QUANTITY_BELOW_ATTRIBUTE_COMBINATION_VENDOR_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens, TokenGroupNames.AttributeCombinationTokens],
+            MessageTemplateSystemNames.NEW_VAT_SUBMITTED_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VatValidation],
+            MessageTemplateSystemNames.BLOG_COMMENT_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.BlogCommentTokens, TokenGroupNames.CustomerTokens],
+            MessageTemplateSystemNames.NEWS_COMMENT_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.NewsCommentTokens, TokenGroupNames.CustomerTokens],
+            MessageTemplateSystemNames.BACK_IN_STOCK_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductBackInStockTokens],
+            MessageTemplateSystemNames.CONTACT_US_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactUs],
+            MessageTemplateSystemNames.CONTACT_VENDOR_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactVendor],
+            _ => [],
         };
     }
 

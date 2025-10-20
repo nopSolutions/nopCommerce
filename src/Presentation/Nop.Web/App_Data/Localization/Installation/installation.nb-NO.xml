@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Engelsk" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Admin e-post</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Skriv inn admin passord</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Tegnsett</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Collation er nødvendig</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>'{0}' kontoen har ikke endringstillatelse i mappe '{1}'. Konfigurer disse tillatelsene.</Value>

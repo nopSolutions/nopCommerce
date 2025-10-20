@@ -2,6 +2,4 @@
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Models;
 
-public record FixedTaxRateListModel : BasePagedListModel<FixedTaxRateModel>
-{
-}
+public record FixedTaxRateListModel : BasePagedListModel<FixedTaxRateModel>;

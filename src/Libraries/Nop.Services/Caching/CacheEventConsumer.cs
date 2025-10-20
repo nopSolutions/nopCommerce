@@ -80,7 +80,7 @@ public abstract partial class CacheEventConsumer<TEntity> :
     /// <param name="cacheKey">Cache key</param>
     /// <param name="cacheKeyParameters">Parameters to create cache key</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
+    public virtual async Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
     {
         _shortTermCacheManager.Remove(cacheKey.Key, cacheKeyParameters);
         await _staticCacheManager.RemoveAsync(cacheKey, cacheKeyParameters);

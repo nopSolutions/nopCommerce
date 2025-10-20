@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Nop.Plugin.Payments.PayPalCommerce.Services.Api.Models.Enums;
 
 namespace Nop.Plugin.Payments.PayPalCommerce.Services.Api.Models;
 
@@ -62,6 +63,14 @@ public class PaymentToken : IWebhookResource
     /// </summary>
     [JsonIgnore]
     public string CustomId { get; set; }
+
+    /// <summary>
+    /// Gets the payer-action URL.
+    /// </summary>
+    [JsonIgnore]
+    public string PayerActionUrl => Status?.ToUpper() == PaymentTokenStatusType.PAYER_ACTION_REQUIRED.ToString()
+        ? Links?.FirstOrDefault(link => string.Equals(link.Rel, "approve", StringComparison.InvariantCultureIgnoreCase))?.Href
+        : null;
 
     #endregion
 }

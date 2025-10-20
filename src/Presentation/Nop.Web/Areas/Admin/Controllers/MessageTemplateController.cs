@@ -23,9 +23,7 @@ public partial class MessageTemplateController : BaseAdminController
     protected readonly IMessageTemplateModelFactory _messageTemplateModelFactory;
     protected readonly IMessageTemplateService _messageTemplateService;
     protected readonly INotificationService _notificationService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IStoreService _storeService;
     protected readonly IWorkflowMessageService _workflowMessageService;
 
     #endregion Fields
@@ -38,9 +36,7 @@ public partial class MessageTemplateController : BaseAdminController
         IMessageTemplateModelFactory messageTemplateModelFactory,
         IMessageTemplateService messageTemplateService,
         INotificationService notificationService,
-        IPermissionService permissionService,
         IStoreMappingService storeMappingService,
-        IStoreService storeService,
         IWorkflowMessageService workflowMessageService)
     {
         _customerActivityService = customerActivityService;
@@ -49,9 +45,7 @@ public partial class MessageTemplateController : BaseAdminController
         _messageTemplateModelFactory = messageTemplateModelFactory;
         _messageTemplateService = messageTemplateService;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
         _workflowMessageService = workflowMessageService;
     }
 
@@ -82,31 +76,6 @@ public partial class MessageTemplateController : BaseAdminController
                 x => x.EmailAccountId,
                 localized.EmailAccountId,
                 localized.LanguageId);
-        }
-    }
-
-    protected virtual async Task SaveStoreMappingsAsync(MessageTemplate messageTemplate, MessageTemplateModel model)
-    {
-        messageTemplate.LimitedToStores = model.SelectedStoreIds.Any();
-        await _messageTemplateService.UpdateMessageTemplateAsync(messageTemplate);
-
-        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(messageTemplate);
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            if (model.SelectedStoreIds.Contains(store.Id))
-            {
-                //new store
-                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
-                    await _storeMappingService.InsertStoreMappingAsync(messageTemplate, store.Id);
-            }
-            else
-            {
-                //remove store
-                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
-                if (storeMappingToDelete != null)
-                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
-            }
         }
     }
 
@@ -178,7 +147,7 @@ public partial class MessageTemplateController : BaseAdminController
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditMessageTemplate"), messageTemplate.Id), messageTemplate);
 
             //stores
-            await SaveStoreMappingsAsync(messageTemplate, model);
+            await _storeMappingService.SaveStoreMappingsAsync(messageTemplate, model.SelectedStoreIds);
 
             //locales
             await UpdateLocalesAsync(messageTemplate, model);

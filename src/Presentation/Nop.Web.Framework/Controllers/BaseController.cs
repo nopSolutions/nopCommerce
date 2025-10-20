@@ -84,28 +84,9 @@ public abstract partial class BaseController : Controller
         //partial view are not part of the controller life cycle.
         //hence, we could no use action filters to intercept the Models being returned
         //as we do in the /Nop.Web.Framework/Mvc/Filters/PublishModelEventsAttribute.cs for controllers
-        switch (model)
-        {
-            case BaseNopModel nopModel:
-            {
-                var eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
-
-                //we publish the ModelPrepared event for all models as the BaseNopModel, 
-                //so you need to implement IConsumer<ModelPrepared<BaseNopModel>> interface to handle this event
-                eventPublisher.ModelPreparedAsync(nopModel).Wait();
-                break;
-            }
-            case IEnumerable<BaseNopModel> modelCollection:
-            {
-                var eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
-
-                //we publish the ModelPrepared event for collection as the IEnumerable<BaseNopModel>, 
-                //so you need to implement IConsumer<ModelPrepared<IEnumerable<BaseNopModel>>> interface to handle this event
-                eventPublisher.ModelPreparedAsync(modelCollection).Wait();
-                break;
-            }
-        }
-
+        var eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
+        await eventPublisher.ModelPreparedAsync(model);
+        
         //set model
         ViewData.Model = model;
 

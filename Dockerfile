@@ -1,5 +1,8 @@
 # create the build instance 
-FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
+
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
 
 WORKDIR /src                                                                    
 COPY ./src ./
@@ -39,11 +42,7 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 # installs required packages
 RUN apk add tiff --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/main/ --allow-untrusted
 RUN apk add libgdiplus --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community/ --allow-untrusted
-RUN apk add libc-dev tzdata --no-cache
-
-# copy entrypoint script
-COPY ./entrypoint.sh /entrypoint.sh
-RUN chmod 755 /entrypoint.sh
+RUN apk add libc-dev tzdata gcompat --no-cache
 
 WORKDIR /app
 
@@ -52,4 +51,4 @@ COPY --from=build /app/published .
 ENV ASPNETCORE_URLS=http://+:80
 EXPOSE 80
                             
-ENTRYPOINT "/entrypoint.sh"
+ENTRYPOINT ["dotnet", "Nop.Web.dll"]

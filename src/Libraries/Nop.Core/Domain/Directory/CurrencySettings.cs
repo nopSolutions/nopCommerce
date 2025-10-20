@@ -31,4 +31,9 @@ public partial class CurrencySettings : ISettings
     /// A value indicating whether to enable automatic currency rate updates
     /// </summary>
     public bool AutoUpdateEnabled { get; set; }
+
+    /// <summary>
+    /// A value indicating whether to show currency symbol in the currency selector
+    /// </summary>
+    public bool DisplayCurrencySymbolInCurrencySelector { get; set; }
 }

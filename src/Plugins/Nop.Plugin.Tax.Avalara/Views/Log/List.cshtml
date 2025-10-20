@@ -85,7 +85,7 @@
 
                                                <script>
                 $(function() {
-                    $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                    $('#delete-selected-action-confirmation-submit-button').on('click', function () {
                         var postData = {
                             selectedIds: selectedIds
                         };
@@ -112,7 +112,7 @@
                         return false;
                     });
 
-                    $('#clear-all-action-confirmation-submit-button').bind('click', function () {
+                    $('#clear-all-action-confirmation-submit-button').on('click', function () {
                         $.ajax({
                             cache: false,
                             type: 'GET',

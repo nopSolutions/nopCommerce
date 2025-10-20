@@ -47,7 +47,7 @@ public partial class InvariantNumberModelBinder : IModelBinder
     /// Attempts to bind a model
     /// </summary>
     /// <param name="bindingContext">Model binding context</param>
-    public Task BindModelAsync(ModelBindingContext bindingContext)
+    public virtual Task BindModelAsync(ModelBindingContext bindingContext)
     {
         ArgumentNullException.ThrowIfNull(bindingContext);
 

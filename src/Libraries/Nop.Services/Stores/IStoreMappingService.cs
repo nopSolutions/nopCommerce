@@ -101,4 +101,15 @@ public partial interface IStoreMappingService
     /// True - authorized; otherwise, false
     /// </returns>
     bool Authorize<TEntity>(TEntity entity, int storeId) where TEntity : BaseEntity, IStoreMappingSupported;
+
+    /// <summary>
+    /// Save store mappings for the passed entity
+    /// </summary>
+    /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
+    /// <param name="entity">Entity</param>
+    /// <param name="storeIds">Store identifiers</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// </returns>
+    Task SaveStoreMappingsAsync<TEntity>(TEntity entity, IEnumerable<int> storeIds) where TEntity : BaseEntity, IStoreMappingSupported;
 }

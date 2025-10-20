@@ -17,6 +17,11 @@
     //page class
     NopHtml.AppendPageCssClassParts("html-wishlist-page");
 }
+
+@{
+    var urlDeleteWishlist = Url.RouteUrl(NopRouteNames.Ajax.DELETE_CUSTOM_WISHLIST, new { wishlistId = Model.ListId });
+}
+
 <div class="page wishlist-page">
     <div class="page-title">
         <h1>
@@ -28,10 +33,36 @@
             {
                 @string.Format(T("Wishlist.WishlistOf").Text, Model.CustomerFullname)
             }
+            @if (!string.IsNullOrEmpty(Model.CustomWishlistName))
+            {
+                <text> - </text>@Model.CustomWishlistName
+            }
         </h1>
     </div>
     <div class="page-body">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.WishlistTop, additionalData = Model })
+
+        @if (Model.IsEditable && Model.AllowMultipleWishlist)
+        {
+            <div class="button-row" style="text-align: left;">
+                <button type="button" class="button-2 custom-wishlist-button add-new" onclick="showAddWishlistModal(0)">
+                    @T("Wishlist.AddCustomWishlist")
+                </button>
+                @if (Model.CustomWishlistItems.Any())
+                {
+                    <button type="button" class="button-2 custom-wishlist-button" onclick="setLocation('@(Url.RouteUrl(NopRouteNames.General.WISHLIST))')">
+                        @T("Wishlist.Default")
+                    </button>
+                }
+                @foreach (var customWishlist in Model.CustomWishlistItems)
+                {
+                    <button type="button" class="button-2 custom-wishlist-button" onclick="setLocation('@(Url.RouteUrl(NopRouteNames.General.WISHLIST, new { list = customWishlist.Id }))')">@customWishlist.Name</button>
+                }
+            </div>
+
+            @await Html.PartialAsync("_AddWishlistModal", 0)
+        }
+
         @if (Model.Items.Count > 0)
         {
             <div class="wishlist-content">
@@ -46,7 +77,7 @@
                         </ul>
                     </div>
                 }
-                <form asp-route="Wishlist" method="post">
+                <form asp-route="@NopRouteNames.General.WISHLIST" method="post" id="wishlist-form" asp-route-list="@Model.ListId">
                     <div class="table-wrapper">
                         <table class="cart">
                             <colgroup>
@@ -75,7 +106,7 @@
                                 <tr>
                                     @if (Model.DisplayAddToCart)
                                     {
-                                        <th class="add-to-cart">
+                                        <th id="add-to-cart-caption" class="add-to-cart">
                                             @T("ShoppingCart.AddToCart")
                                         </th>
                                     }
@@ -118,8 +149,8 @@
                                         @if (Model.DisplayAddToCart)
                                         {
                                             <td class="add-to-cart">
-                                                <label class="td-title">@T("ShoppingCart.AddToCart"):</label>
-                                                <input type="checkbox" name="addtocart" value="@(item.Id)" />
+                                                <label for="addtocart-@item.Id" class="td-title">@T("ShoppingCart.AddToCart"):</label>
+                                                <input type="checkbox" id="addtocart-@item.Id" name="addtocart" value="@(item.Id)" aria-labelledby="add-to-cart-caption" />
                                             </td>
                                         }
                                         @if (Model.ShowSku)
@@ -132,13 +163,13 @@
                                         @if (Model.ShowProductImages)
                                         {
                                             <td class="product-picture">
-                                                <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">
+                                                <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">
                                                     <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.DefaultImageQuality" />
                                                 </a>
                                             </td>
                                         }
                                         <td class="product">
-                                            <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))" class="product-name">@item.ProductName</a>
+                                            <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))" class="product-name">@item.ProductName</a>
                                             @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                             {
                                                 <div class="attributes">
@@ -159,7 +190,7 @@
                                             }
                                             @if (Model.IsEditable && item.AllowItemEditing)
                                             {
-                                                var editCartItemUrl = Url.RouteUrl<Product>(new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
+                                                var editCartItemUrl = await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
                                                 editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid", item.Id.ToString());
                                                 <div class="edit-item">
                                                     <a href="@editCartItemUrl">@T("Common.Edit")</a>
@@ -174,6 +205,22 @@
                                                             <li>@Html.Raw(warning)</li>
                                                         }
                                                     </ul>
+                                                </div>
+                                            }
+                                            @if (Model.IsEditable && Model.AllowMultipleWishlist && Model.CustomWishlistItems.Any())
+                                            {
+                                                <div class="custom-wishlist">
+                                                    <div class="td-title">@T("Wishlist.MoveToCustomWishlist"):</div>
+                                                    <select name="moveToCustomWishlist@(item.Id)"
+                                                            class="custom-wishlist-dropdown"
+                                                            onchange="AjaxCart.moveToCustomWishlist('@Url.RouteUrl(NopRouteNames.Ajax.MOVE_CART_TO_CUSTOM_WISHLIST)', @item.Id, this.value);return false;">
+                                                        <option value="0">@T("Wishlist.Default")</option>
+                                                        @foreach (var customWishlist in Model.CustomWishlistItems)
+                                                        {
+                                                            var isCurrentWishlist = Model.ListId == customWishlist.Id;
+                                                            <option value="@customWishlist.Id" selected="@isCurrentWishlist">@customWishlist.Name</option>
+                                                        }
+                                                    </select>
                                                 </div>
                                             }
                                         </td>
@@ -224,7 +271,7 @@
                                         {
                                             <td class="remove-from-cart">
                                                 <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
-                                                <button type="button" name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true); $('#updatecart').trigger('click');"></button>
+                                                <button type="button" name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true); $('#updatecart').trigger('click');" aria-labelledby="removefromcart@(item.Id)"></button>
                                             </td>
                                         }
                                     </tr>
@@ -238,7 +285,7 @@
                         //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                         //of course, you can modify appropriate locales to include VAT info there
                         <div class="tax-shipping-info">
-                            @T(inclTax ? "Wishlist.TaxShipping.InclTax" : "Wishlist.TaxShipping.ExclTax", Url.RouteTopicUrl("shippinginfo"))
+                            @T(inclTax ? "Wishlist.TaxShipping.InclTax" : "Wishlist.TaxShipping.ExclTax", await NopUrl.RouteTopicUrlAsync("shippinginfo"))
                         </div>
                     }
                     <div class="buttons">
@@ -252,9 +299,16 @@
                         }
                         @if (Model.IsEditable && Model.EmailWishlistEnabled)
                         {
-                            <button type="button" class="button-2 email-a-friend-wishlist-button" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')">@T("Wishlist.EmailAFriend")</button>
+                            <button type="button" class="button-2 email-a-friend-wishlist-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.EMAIL_WISHLIST, new { wishlistId = Model.ListId })')">@T("Wishlist.EmailAFriend")</button>
+                        }
+                        @if (Model.IsEditable && Model.AllowMultipleWishlist && Model.ListId > 0)
+                        {
+                            <button type="button" name="deletewishlistbutton" class="button-2 delete-wishlist-button" onclick="deleteCustomWishlist()">
+                                @T("Wishlist.DeleteWishlist")
+                            </button>
                         }
                     </div>
+                    <input type="hidden" name="listId" value="@Model.ListId"/>
                 </form>
             </div>
         }
@@ -263,10 +317,29 @@
             <div class="no-data">
                 @T("Wishlist.CartIsEmpty")
             </div>
+            @if (Model.IsEditable && Model.AllowMultipleWishlist && Model.ListId > 0)
+            {
+                <div class="wishlist-content">
+                    <div class="buttons">
+                        <button type="button" name="deletewishlistbutton" class="button-2 delete-wishlist-button" onclick="deleteCustomWishlist()">@T("Wishlist.DeleteWishlist")</button>
+                    </div>
+                </div>
+            }
+        }
+        @if (Model.IsEditable && Model.AllowMultipleWishlist && Model.ListId > 0)
+        {
+            <script asp-location="Footer">
+                function deleteCustomWishlist() {
+                    if (confirm('@T("Common.AreYouSure")'))
+                    {
+                        AjaxCart.deleteCustomWishlist('@urlDeleteWishlist');return false;
+                    }
+                }
+            </script>
         }
         @if (Model.IsEditable && Model.Items.Count > 0)
         {
-            var wishlistUrl = Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, webHelper.GetCurrentRequestProtocol());
+            var wishlistUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST, new { customerGuid = Model.CustomerGuid, list = Model.ListId }, webHelper.GetCurrentRequestProtocol());
             <div class="share-info">
                 <span class="share-label">@T("Wishlist.YourWishlistURL"):</span>
                 <a href="@wishlistUrl" class="share-link">@wishlistUrl</a>

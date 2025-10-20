@@ -1,0 +1,3264 @@
+﻿{
+  "Customers": [
+    {
+      "FirstName": "Steve",
+      "LastName": "Gates",
+      "PhoneNumber": "87654321",
+      "Email": "steve_gates@nopCommerce.com",
+      "FaxNumber": "",
+      "Company": "Steve Company",
+      "Address1": "750 Bel Air Rd.",
+      "Address2": "",
+      "City": "Los Angeles",
+      "StateProvince": "California",
+      "CountryThreeLetterIsoCode": "USA",
+      "ZipPostalCode": "90077",
+      "Active": true,
+      "CustomerRoleSystemNames": [ "Registered" ],
+      "Password": "123456",
+      "PasswordFormat": "Clear",
+      "PasswordSalt": ""
+    },
+    {
+      "FirstName": "Arthur",
+      "LastName": "Holmes",
+      "PhoneNumber": "111222333",
+      "Email": "arthur_holmes@nopCommerce.com",
+      "FaxNumber": "",
+      "Company": "Holmes Company",
+      "Address1": "221B Baker Street",
+      "Address2": "",
+      "City": "London",
+      "CountryThreeLetterIsoCode": "GBR",
+      "ZipPostalCode": "NW1 6XE",
+      "Active": true,
+      "CustomerRoleSystemNames": [ "Registered" ],
+      "Password": "123456",
+      "PasswordFormat": "Clear",
+      "PasswordSalt": ""
+    },
+    {
+      "FirstName": "James",
+      "LastName": "Pan",
+      "PhoneNumber": "369258147",
+      "Email": "james_pan@nopCommerce.com",
+      "FaxNumber": "",
+      "Company": "Pan Company",
+      "Address1": "St Katharine's West 16",
+      "Address2": "",
+      "City": "St Andrews",
+      "CountryThreeLetterIsoCode": "GBR",
+      "ZipPostalCode": "KY16 9AX",
+      "Active": true,
+      "CustomerRoleSystemNames": [ "Registered" ],
+      "Password": "123456",
+      "PasswordFormat": "Clear",
+      "PasswordSalt": ""
+    },
+    {
+      "FirstName": "Brenda",
+      "LastName": "Lindgren",
+      "PhoneNumber": "14785236",
+      "Email": "brenda_lindgren@nopCommerce.com",
+      "FaxNumber": "",
+      "Company": "Brenda Company",
+      "Address1": "1249 Tongass Avenue, Suite B",
+      "Address2": "",
+      "City": "Ketchikan",
+      "StateProvince": "Alaska",
+      "CountryThreeLetterIsoCode": "USA",
+      "ZipPostalCode": "99901",
+      "Active": true,
+      "CustomerRoleSystemNames": [ "Registered" ],
+      "Password": "123456",
+      "PasswordFormat": "Clear",
+      "PasswordSalt": ""
+    },
+    {
+      "FirstName": "Victoria",
+      "LastName": "Terces",
+      "PhoneNumber": "45612378",
+      "Email": "victoria_victoria@nopCommerce.com",
+      "FaxNumber": "",
+      "Company": "Terces Company",
+      "Address1": "201 1st Avenue South",
+      "Address2": "",
+      "City": "Saskatoon",
+      "StateProvince": "Saskatchewan",
+      "CountryThreeLetterIsoCode": "CAN",
+      "ZipPostalCode": "S7K 1J9",
+      "Active": true,
+      "CustomerRoleSystemNames": [ "Registered" ],
+      "Password": "123456",
+      "PasswordFormat": "Clear",
+      "PasswordSalt": ""
+    }
+  ],
+  "CheckoutAttributes": [
+    {
+      "Name": "Gift wrapping",
+      "IsRequired": true,
+      "ShippableProductRequired": true,
+      "AttributeControlType": "DropdownList",
+      "DisplayOrder": 1,
+      "AttributeValues": [
+        {
+          "Name": "No",
+          "PriceAdjustment": 0,
+          "DisplayOrder": 1,
+          "IsPreSelected": true
+        },
+        {
+          "Name": "Yes",
+          "PriceAdjustment": 10,
+          "DisplayOrder": 2
+        }
+      ]
+    }
+  ],
+  "SpecificationAttributes": {
+    "Attributes": [
+      {
+        "Name": "Screensize",
+        "DisplayOrder": 1,
+        "AttributeOptions": [
+          {
+            "Name": "13.0''",
+            "DisplayOrder": 2
+          },
+          {
+            "Name": "13.3''",
+            "DisplayOrder": 3
+          },
+          {
+            "Name": "14.0''",
+            "DisplayOrder": 4
+          },
+          {
+            "Name": "15.0''",
+            "DisplayOrder": 4
+          },
+          {
+            "Name": "15.6''",
+            "DisplayOrder": 5
+          }
+        ]
+      },
+      {
+        "Name": "Color",
+        "DisplayOrder": 1,
+        "AttributeOptions": [
+          {
+            "Name": "Grey",
+            "DisplayOrder": 2,
+            "ColorSquaresRgb": "#8a97a8"
+          },
+          {
+            "Name": "Red",
+            "DisplayOrder": 3,
+            "ColorSquaresRgb": "#8a374a"
+          },
+          {
+            "Name": "Blue",
+            "DisplayOrder": 4,
+            "ColorSquaresRgb": "#47476f"
+          }
+        ]
+      }
+    ],
+    "AttributeGroups": [
+      {
+        "Name": "System unit",
+        "Attributes": [
+          {
+            "Name": "CPU Type",
+            "DisplayOrder": 2,
+            "AttributeOptions": [
+              {
+                "Name": "Intel Core i5",
+                "DisplayOrder": 1
+              },
+              {
+                "Name": "Intel Core i7",
+                "DisplayOrder": 2
+              }
+            ]
+          },
+          {
+            "Name": "Memory",
+            "DisplayOrder": 3,
+            "AttributeOptions": [
+              {
+                "Name": "4 GB",
+                "DisplayOrder": 1
+              },
+              {
+                "Name": "8 GB",
+                "DisplayOrder": 2
+              },
+              {
+                "Name": "16 GB",
+                "DisplayOrder": 3
+              }
+            ]
+          },
+          {
+            "Name": "Hard drive",
+            "DisplayOrder": 5,
+            "AttributeOptions": [
+              {
+                "Name": "128 GB",
+                "DisplayOrder": 7
+              },
+              {
+                "Name": "500 GB",
+                "DisplayOrder": 4
+              },
+              {
+                "Name": "1 TB",
+                "DisplayOrder": 3
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ProductAttributes": [
+    { "Name": "Color" },
+    { "Name": "Print" },
+    { "Name": "Custom Text" },
+    { "Name": "HDD" },
+    { "Name": "OS" },
+    { "Name": "Processor" },
+    { "Name": "RAM" },
+    { "Name": "Size" },
+    { "Name": "Software" }
+  ],
+  "Categories": [
+    {
+      "Name": "Computers",
+      "ImageFileName": "category_computers.jpeg",
+      "DisplayOrder": 1,
+      "PriceRangeFiltering": false,
+      "PageSize": 6,
+      "AllowCustomersToSelectPageSize": true,
+      "PageSizeOptions": "6, 3, 9",
+      "Published": true,
+      "PriceFrom": 0,
+      "PriceTo": 10000,
+      "ManuallyPriceRange": true,
+      "SubCategories": [
+        {
+          "Name": "Desktops",
+          "ImageFileName": "category_desktops.jpg",
+          "DisplayOrder": 1,
+          "PageSize": 6,
+          "AllowCustomersToSelectPageSize": true,
+          "PageSizeOptions": "6, 3, 9",
+          "Published": true,
+          "PriceFrom": 0,
+          "PriceTo": 10000,
+          "ManuallyPriceRange": true
+        },
+        {
+          "Name": "Notebooks",
+          "ImageFileName": "category_notebooks.jpg",
+          "DisplayOrder": 2,
+          "PriceRangeFiltering": false,
+          "PageSize": 6,
+          "AllowCustomersToSelectPageSize": true,
+          "PageSizeOptions": "6, 3, 9",
+          "Published": true,
+          "PriceFrom": 0,
+          "PriceTo": 10000,
+          "ManuallyPriceRange": true
+        },
+        {
+          "Name": "Software",
+          "ImageFileName": "category_software.jpg",
+          "DisplayOrder": 3,
+          "PriceRangeFiltering": false,
+          "PageSize": 6,
+          "AllowCustomersToSelectPageSize": true,
+          "PageSizeOptions": "6, 3, 9",
+          "Published": true,
+          "PriceFrom": 0,
+          "PriceTo": 10000,
+          "ManuallyPriceRange": true
+        }
+      ]
+    },
+    {
+      "Name": "Electronics",
+      "ImageFileName": "category_electronics.jpeg",
+      "DisplayOrder": 2,
+      "PriceRangeFiltering": false,
+      "ShowOnHomepage": true,
+      "PageSize": 6,
+      "AllowCustomersToSelectPageSize": true,
+      "PageSizeOptions": "6, 3, 9",
+      "Published": true,
+      "PriceFrom": 0,
+      "PriceTo": 10000,
+      "ManuallyPriceRange": true,
+      "SubCategories": [
+        {
+          "Name": "Camera & photo",
+          "ImageFileName": "category_camera_photo.jpeg",
+          "DisplayOrder": 1,
+          "PageSize": 6,
+          "AllowCustomersToSelectPageSize": true,
+          "PageSizeOptions": "6, 3, 9",
+          "Published": true,
+          "PriceFrom": 0,
+          "PriceTo": 10000,
+          "ManuallyPriceRange": true
+        },
+        {
+          "Name": "Cell phones",
+          "ImageFileName": "category_cell_phones.jpeg",
+          "DisplayOrder": 2,
+          "PriceRangeFiltering": false,
+          "PageSize": 6,
+          "AllowCustomersToSelectPageSize": true,
+          "PageSizeOptions": "6, 3, 9",
+          "Published": true,
+          "PriceFrom": 0,
+          "PriceTo": 10000,
+          "ManuallyPriceRange": true
+        },
+        {
+          "Name": "Others",
+          "ImageFileName": "category_accessories.jpg",
+          "DisplayOrder": 3,
+          "PageSize": 6,
+          "AllowCustomersToSelectPageSize": true,
+          "PageSizeOptions": "6, 3, 9",
+          "Published": true,
+          "PriceFrom": 0,
+          "PriceTo": 10000,
+          "ManuallyPriceRange": true
+        }
+      ]
+    },
+    {
+      "Name": "Apparel",
+      "ImageFileName": "category_apparel.jpeg",
+      "DisplayOrder": 3,
+      "PriceRangeFiltering": false,
+      "ShowOnHomepage": true,
+      "PageSize": 6,
+      "AllowCustomersToSelectPageSize": true,
+      "PageSizeOptions": "6, 3, 9",
+      "Published": true,
+      "PriceFrom": 0,
+      "PriceTo": 10000,
+      "ManuallyPriceRange": true,
+      "SubCategories": [
+        {
+          "Name": "Shoes",
+          "ImageFileName": "category_shoes.jpeg",
+          "DisplayOrder": 1,
+          "PageSize": 6,
+          "AllowCustomersToSelectPageSize": true,
+          "PageSizeOptions": "6, 3, 9",
+          "Published": true,
+          "PriceFrom": 0,
+          "PriceTo": 10000,
+          "ManuallyPriceRange": true
+        },
+        {
+          "Name": "Clothing",
+          "ImageFileName": "category_clothing.jpeg",
+          "DisplayOrder": 2,
+          "PriceRangeFiltering": false,
+          "PageSize": 6,
+          "AllowCustomersToSelectPageSize": true,
+          "PageSizeOptions": "6, 3, 9",
+          "Published": true,
+          "PriceFrom": 0,
+          "PriceTo": 10000,
+          "ManuallyPriceRange": true
+        },
+        {
+          "Name": "Accessories",
+          "ImageFileName": "category_apparel_accessories.jpg",
+          "DisplayOrder": 3,
+          "PageSize": 6,
+          "AllowCustomersToSelectPageSize": true,
+          "PageSizeOptions": "6, 3, 9",
+          "Published": true,
+          "PriceFrom": 0,
+          "PriceTo": 10000,
+          "ManuallyPriceRange": true
+        }
+      ]
+    },
+    {
+      "Name": "Digital downloads",
+      "ImageFileName": "category_digital_downloads.jpeg",
+      "DisplayOrder": 4,
+      "PriceRangeFiltering": false,
+      "ShowOnHomepage": true,
+      "PageSize": 6,
+      "AllowCustomersToSelectPageSize": true,
+      "PageSizeOptions": "6, 3, 9",
+      "Published": true,
+      "PriceFrom": 0,
+      "PriceTo": 10000,
+      "ManuallyPriceRange": true
+    },
+    {
+      "Name": "Books",
+      "ImageFileName": "category_book.jpeg",
+      "DisplayOrder": 5,
+      "PageSize": 6,
+      "AllowCustomersToSelectPageSize": true,
+      "PageSizeOptions": "6, 3, 9",
+      "Published": true,
+      "PriceFrom": 0,
+      "PriceTo": 10000,
+      "ManuallyPriceRange": true
+    },
+    {
+      "Name": "Jewelry",
+      "ImageFileName": "category_jewelry.jpeg",
+      "DisplayOrder": 6,
+      "PageSize": 6,
+      "AllowCustomersToSelectPageSize": true,
+      "PageSizeOptions": "6, 3, 9",
+      "Published": true,
+      "PriceFrom": 0,
+      "PriceTo": 10000,
+      "ManuallyPriceRange": true
+    },
+    {
+      "Name": "Gift Cards",
+      "ImageFileName": "category_gift_cards.jpeg",
+      "DisplayOrder": 7,
+      "PriceRangeFiltering": false,
+      "PageSize": 6,
+      "AllowCustomersToSelectPageSize": true,
+      "PageSizeOptions": "6, 3, 9",
+      "Published": true,
+      "PriceFrom": 0,
+      "PriceTo": 10000,
+      "ManuallyPriceRange": true
+    }
+  ],
+  "Manufacturers": [
+    {
+      "Name": "Apple",
+      "ImageFileName": "manufacturer_apple.jpg",
+      "DisplayOrder": 1,
+      "PageSize": 6,
+      "AllowCustomersToSelectPageSize": true,
+      "PageSizeOptions": "6, 3, 9",
+      "Published": true,
+      "PriceRangeFiltering": true,
+      "PriceFrom": 0,
+      "PriceTo": 10000,
+      "ManuallyPriceRange": true
+    },
+    {
+      "Name": "HP",
+      "ImageFileName": "manufacturer_hp.jpg",
+      "DisplayOrder": 5,
+      "PageSize": 6,
+      "AllowCustomersToSelectPageSize": true,
+      "PageSizeOptions": "6, 3, 9",
+      "Published": true,
+      "PriceRangeFiltering": true,
+      "PriceFrom": 0,
+      "PriceTo": 10000,
+      "ManuallyPriceRange": true
+    },
+    {
+      "Name": "Nike",
+      "ImageFileName": "manufacturer_nike.jpg",
+      "DisplayOrder": 5,
+      "PageSize": 6,
+      "AllowCustomersToSelectPageSize": true,
+      "PageSizeOptions": "6, 3, 9",
+      "Published": true,
+      "PriceRangeFiltering": false
+    }
+  ],
+  "Products": {
+    "Products": [
+      {
+        "Name": "Build your own computer",
+        "Sku": "COMP_CUST",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Build it",
+        "FullDescription": "<p>Fight back against cluttered workspaces with the stylish IBM zBC12 All-in-One desktop PC, featuring powerful computing resources and a stunning 20.1-inch widescreen display with stunning XBRITE-HiColor LCD technology. The black IBM zBC12 has a built-in microphone and MOTION EYE camera with face-tracking technology that allows for easy communication with friends and family. And it has a built-in DVD burner and Sony's Movie Store software so you can create a digital entertainment library for personal viewing at your convenience. Easy to setup and even easier to use, this JS-series All-in-One includes an elegantly designed keyboard and a USB mouse.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 1200,
+        "IsFreeShipping": true,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Electronics & Software",
+        "ShowOnHomepage": true,
+        "MarkAsNew": true,
+        "CategoryName": "Desktops",
+        "ProductPictures": [ "product_Desktops_1.jpeg", "product_Desktops_2.jpeg" ],
+        "ProductAttributeMapping": [
+          {
+            "ProductAttributeName": "Processor",
+            "AttributeControlType": "DropdownList",
+            "IsRequired": true,
+            "AttributeValues": [
+              {
+                "Name": "2.2 GHz Intel Pentium Dual-Core E2200",
+                "DisplayOrder": 1
+              },
+              {
+                "Name": "2.5 GHz Intel Pentium Dual-Core E2200",
+                "IsPreSelected": true,
+                "PriceAdjustment": 15,
+                "DisplayOrder": 2
+              }
+            ]
+          },
+          {
+            "ProductAttributeName": "RAM",
+            "AttributeControlType": "DropdownList",
+            "IsRequired": true,
+            "AttributeValues": [
+              {
+                "Name": "2 GB",
+                "DisplayOrder": 1
+              },
+              {
+                "Name": "4GB",
+                "PriceAdjustment": 20,
+                "DisplayOrder": 2
+              },
+              {
+                "Name": "8GB",
+                "PriceAdjustment": 60,
+                "DisplayOrder": 3
+              }
+            ]
+          },
+          {
+            "ProductAttributeName": "HDD",
+            "AttributeControlType": "RadioList",
+            "IsRequired": true,
+            "AttributeValues": [
+              {
+                "Name": "320 GB",
+                "DisplayOrder": 1
+              },
+              {
+                "Name": "400 GB",
+                "PriceAdjustment": 100,
+                "DisplayOrder": 2
+              }
+            ]
+          },
+          {
+            "ProductAttributeName": "OS",
+            "AttributeControlType": "RadioList",
+            "IsRequired": true,
+            "AttributeValues": [
+              {
+                "Name": "Vista Home",
+                "PriceAdjustment": 50,
+                "IsPreSelected": true,
+                "DisplayOrder": 1
+              },
+              {
+                "Name": "Vista Premium",
+                "PriceAdjustment": 60,
+                "DisplayOrder": 2
+              }
+            ]
+          },
+          {
+            "ProductAttributeName": "Software",
+            "AttributeControlType": "Checkboxes",
+            "AttributeValues": [
+              {
+                "Name": "Microsoft Office",
+                "PriceAdjustment": 50,
+                "IsPreSelected": true,
+                "DisplayOrder": 1
+              },
+              {
+                "Name": "Acrobat Reader",
+                "PriceAdjustment": 10,
+                "DisplayOrder": 2
+              },
+              {
+                "Name": "Total Commander",
+                "PriceAdjustment": 5,
+                "DisplayOrder": 2
+              }
+            ]
+          }
+        ],
+        "ProductTags": [ "awesome", "computer" ]
+      },
+      {
+        "Name": "Digital Storm VANQUISH Custom Performance PC",
+        "Sku": "DS_VA3_PC",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Digital Storm Vanquish 3 Desktop PC",
+        "FullDescription": "<p>Blow the doors off today’s most demanding games with maximum detail, speed, and power for an immersive gaming experience without breaking the bank.</p><p>Stay ahead of the competition, VANQUISH 3 is fully equipped to easily handle future upgrades, keeping your system on the cutting edge for years to come.</p><p>Each system is put through an extensive stress test, ensuring you experience zero bottlenecks and get the maximum performance from your hardware.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 1259,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Desktops",
+        "ProductTags": [ "cool", "computer" ],
+        "ProductPictures": [ "product_DigitalStorm.jpeg" ]
+      },
+      {
+        "Name": "Lenovo IdeaCentre",
+        "Sku": "LE_IC_600",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "",
+        "FullDescription": "<p>The A600 features a 21.5in screen, DVD or optional Blu-Ray drive, support for the full beans 1920 x 1080 HD, Dolby Home Cinema certification and an optional hybrid analogue/digital TV tuner.</p><p>Connectivity is handled by 802.11a/b/g - 802.11n is optional - and an ethernet port. You also get four USB ports, a Firewire slot, a six-in-one card reader and a 1.3- or two-megapixel webcam.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 500,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Desktops",
+        "ProductPictures": [ "product_LenovoIdeaCentre.jpeg" ],
+        "ProductTags": [ "awesome", "computer" ]
+      },
+      {
+        "Name": "Apple MacBook Pro",
+        "Sku": "AP_MBP_13",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "A groundbreaking Retina display. A new force-sensing trackpad. All-flash architecture. Powerful dual-core and quad-core Intel processors. Together, these features take the notebook to a new level of performance. And they will do the same for you in everything you create.",
+        "FullDescription": "<p>With fifth-generation Intel Core processors, the latest graphics, and faster flash storage, the incredibly advanced MacBook Pro with Retina display moves even further ahead in performance and battery life.* *Compared with the previous generation.</p><p>Retina display with 2560-by-1600 resolution</p><p>Fifth-generation dual-core Intel Core i5 processor</p><p>Intel Iris Graphics</p><p>Up to 9 hours of battery life1</p><p>Faster flash storage2</p><p>802.11ac Wi-Fi</p><p>Two Thunderbolt 2 ports for connecting high-performance devices and transferring data at lightning speed</p><p>Two USB 3 ports (compatible with USB 2 devices) and HDMI</p><p>FaceTime HD camera</p><p>Pages, Numbers, Keynote, iPhoto, iMovie, GarageBand included</p><p>OS X, the world's most advanced desktop operating system</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 1800,
+        "IsFreeShipping": true,
+        "Weight": 3,
+        "Length": 3,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Electronics & Software",
+        "OrderMinimumQuantity": 2,
+        "ShowOnHomepage": true,
+        "CategoryName": "Notebooks",
+        "ManufacturerName": "Apple",
+        "ProductPictures": [ "product_macbook_1.jpeg", "product_macbook_2.jpeg" ],
+        "ProductTags": [ "compact", "awesome", "computer" ],
+        "ProductSpecificationAttribute": [
+          {
+            "AllowFiltering": false,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 1,
+            "SpecAttributeName": "Screensize",
+            "SpecAttributeOptionName": "13.0''"
+          },
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 2,
+            "SpecAttributeName": "CPU Type",
+            "SpecAttributeOptionName": "Intel Core i5"
+          },
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 3,
+            "SpecAttributeName": "Memory",
+            "SpecAttributeOptionName": "4 GB"
+          }
+        ]
+      },
+      {
+        "Name": "Asus Laptop",
+        "Sku": "AS_551_LP",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Laptop Asus N551JK Intel Core i7-4710HQ 2.5 GHz, RAM 16GB, HDD 1TB, Video NVidia GTX 850M 4GB, BluRay, 15.6, Full HD, Win 8.1",
+        "FullDescription": "<p>The ASUS N550JX combines cutting-edge audio and visual technology to deliver an unsurpassed multimedia experience. A full HD wide-view IPS panel is tailor-made for watching movies and the intuitive touchscreen makes for easy, seamless navigation. ASUS has paired the N550JX’s impressive display with SonicMaster Premium, co-developed with Bang & Olufsen ICEpower® audio experts, for true surround sound. A quad-speaker array and external subwoofer combine for distinct vocals and a low bass that you can feel.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 1500,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Notebooks",
+        "ProductPictures": [ "product_asuspc_N551JK.jpeg" ],
+        "ProductTags": [ "compact", "awesome", "computer" ],
+        "ProductSpecificationAttribute": [
+          {
+            "AllowFiltering": false,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 1,
+            "SpecAttributeName": "Screensize",
+            "SpecAttributeOptionName": "15.6''"
+          },
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 2,
+            "SpecAttributeName": "CPU Type",
+            "SpecAttributeOptionName": "Intel Core i7"
+          },
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 3,
+            "SpecAttributeName": "Memory",
+            "SpecAttributeOptionName": "16 GB"
+          },
+          {
+            "AllowFiltering": false,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 4,
+            "SpecAttributeName": "Hard drive",
+            "SpecAttributeOptionName": "1 TB"
+          }
+        ]
+      },
+      {
+        "Name": "Samsung Premium Ultrabook",
+        "Sku": "SM_900_PU",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Samsung Series 9 NP900X4C-A06US 15-Inch Ultrabook (1.70 GHz Intel Core i5-3317U Processor, 8GB DDR3, 128GB SSD, Windows 8) Ash Black",
+        "FullDescription": "<p>Designed with mobility in mind, Samsung's durable, ultra premium, lightweight Series 9 laptop (model NP900X4C-A01US) offers mobile professionals and power users a sophisticated laptop equally suited for work and entertainment. Featuring a minimalist look that is both simple and sophisticated, its polished aluminum uni-body design offers an iconic look and feel that pushes the envelope with an edge just 0.58 inches thin. This Series 9 laptop also includes a brilliant 15-inch SuperBright Plus display with HD+ technology, 128 GB Solid State Drive (SSD), 8 GB of system memory, and up to 10 hours of battery life.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 1590,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Notebooks",
+        "ProductPictures": [ "product_SamsungNP900X4C.jpeg" ],
+        "ProductTags": [ "nice", "computer", "compact" ],
+        "ProductSpecificationAttribute": [
+          {
+            "AllowFiltering": false,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 1,
+            "SpecAttributeName": "Screensize",
+            "SpecAttributeOptionName": "15.0''"
+          },
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 2,
+            "SpecAttributeName": "CPU Type",
+            "SpecAttributeOptionName": "Intel Core i5"
+          },
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 3,
+            "SpecAttributeName": "Memory",
+            "SpecAttributeOptionName": "8 GB"
+          },
+          {
+            "AllowFiltering": false,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 4,
+            "SpecAttributeName": "Hard drive",
+            "SpecAttributeOptionName": "128 GB"
+          }
+        ]
+      },
+      {
+        "Name": "HP Spectre XT Pro UltraBook",
+        "Sku": "HP_SPX_UB",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "HP Spectre XT Pro UltraBook / Intel Core i5-2467M / 13.3 / 4GB / 128GB / Windows 7 Professional / Laptop",
+        "FullDescription": "<p>Introducing HP ENVY Spectre XT, the Ultrabook designed for those who want style without sacrificing substance. It's sleek. It's thin. And with Intel. Corer i5 processor and premium materials, it's designed to go anywhere from the bistro to the boardroom, it's unlike anything you've ever seen from HP.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 1350,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Notebooks",
+        "ManufacturerName": "HP",
+        "ProductPictures": [ "product_HPSpectreXT_1.jpeg", "product_HPSpectreXT_2.jpeg" ],
+        "ProductTags": [ "nice", "computer" ],
+        "ProductSpecificationAttribute": [
+          {
+            "AllowFiltering": false,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 1,
+            "SpecAttributeName": "Screensize",
+            "SpecAttributeOptionName": "13.3''"
+          },
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 2,
+            "SpecAttributeName": "CPU Type",
+            "SpecAttributeOptionName": "Intel Core i5"
+          },
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 3,
+            "SpecAttributeName": "Memory",
+            "SpecAttributeOptionName": "4 GB"
+          },
+          {
+            "AllowFiltering": false,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 4,
+            "SpecAttributeName": "Hard drive",
+            "SpecAttributeOptionName": "128 GB"
+          }
+        ]
+      },
+      {
+        "Name": "HP Envy 15.6-Inch Sleekbook",
+        "Sku": "HP_ESB_15",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "HP ENVY 6-1202ea Ultrabook Beats Audio, 3rd generation Intel® CoreTM i7-3517U processor, 8GB RAM, 500GB HDD, Microsoft Windows 8, AMD Radeon HD 8750M (2 GB DDR3 dedicated)",
+        "FullDescription": "The UltrabookTM that's up for anything. Thin and light, the HP ENVY is the large screen UltrabookTM with Beats AudioTM. With a soft-touch base that makes it easy to grab and go, it's a laptop that's up for anything.<br /><br /><b>Features</b><br /><br />- Windows 8 or other operating systems available<br /><br /><b>Top performance. Stylish design. Take notice.</b><br /><br />- At just 19.8 mm (0.78 in) thin, the HP ENVY UltrabookTM is slim and light enough to take anywhere. It's the laptop that gets you noticed with the power to get it done.<br />- With an eye-catching metal design, it's a laptop that you want to carry with you. The soft-touch, slip-resistant base gives you the confidence to carry it with ease.<br /><br /><b>More entertaining. More gaming. More fun.</b><br /><br />- Own the UltrabookTM with Beats AudioTM, dual speakers, a subwoofer, and an awesome display. Your music, movies and photo slideshows will always look and sound their best.<br />- Tons of video memory let you experience incredible gaming and multimedia without slowing down. Create and edit videos in a flash. And enjoy more of what you love to the fullest.<br />- The HP ENVY UltrabookTM is loaded with the ports you'd expect on a world-class laptop, but on a Sleekbook instead. Like HDMI, USB, RJ-45, and a headphone jack. You get all the right connections without compromising size.<br /><br /><b>Only from HP.</b><br /><br />- Life heats up. That's why there's HP CoolSense technology, which automatically adjusts your notebook's temperature based on usage and conditions. It stays cool. You stay comfortable.<br />- With HP ProtectSmart, your notebook's data stays safe from accidental bumps and bruises. It senses motion and plans ahead, stopping your hard drive and protecting your entire digital life.<br />- Keep playing even in dimly lit rooms or on red eye flights. The optional backlit keyboard[1] is full-size so you don't compromise comfort. Backlit keyboard. Another bright idea.<br /><br />",
+        "ProductTemplateName": "Simple product",
+        "Price": 1460,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Notebooks",
+        "ManufacturerName": "HP",
+        "ProductPictures": [ "product_HpEnvy6.jpeg" ],
+        "ProductTags": [ "computer", "cool", "compact" ],
+        "ProductSpecificationAttribute": [
+          {
+            "AllowFiltering": false,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 1,
+            "SpecAttributeName": "Screensize",
+            "SpecAttributeOptionName": "15.6''"
+          },
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 2,
+            "SpecAttributeName": "CPU Type",
+            "SpecAttributeOptionName": "Intel Core i7"
+          },
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 3,
+            "SpecAttributeName": "Memory",
+            "SpecAttributeOptionName": "8 GB"
+          },
+          {
+            "AllowFiltering": false,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 4,
+            "SpecAttributeName": "Hard drive",
+            "SpecAttributeOptionName": "500 GB"
+          }
+        ]
+      },
+      {
+        "Name": "Lenovo Thinkpad Carbon Laptop",
+        "Sku": "LE_TX1_CL",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Lenovo Thinkpad X1 Carbon Touch Intel Core i7 14 Ultrabook",
+        "FullDescription": "<p>The X1 Carbon brings a new level of quality to the ThinkPad legacy of high standards and innovation. It starts with the durable, carbon fiber-reinforced roll cage, making for the best Ultrabook construction available, and adds a host of other new features on top of the old favorites. Because for 20 years, we haven't stopped innovating. And you shouldn't stop benefiting from that.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 1360,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Notebooks",
+        "ProductPictures": [ "product_LenovoThinkpad.jpeg" ],
+        "ProductTags": [ "awesome", "computer", "compact" ],
+        "ProductSpecificationAttribute": [
+          {
+            "AllowFiltering": false,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 1,
+            "SpecAttributeName": "Screensize",
+            "SpecAttributeOptionName": "14.0''"
+          },
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": true,
+            "DisplayOrder": 2,
+            "SpecAttributeName": "CPU Type",
+            "SpecAttributeOptionName": "Intel Core i7"
+          }
+        ]
+      },
+      {
+        "Name": "Adobe Photoshop",
+        "Sku": "AD_CS4_PH",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Easily find and view all your photos",
+        "FullDescription": "<p>Adobe Photoshop CS4 software combines power and simplicity so you can make ordinary photos extraordinary; tell engaging stories in beautiful, personalized creations for print and web; and easily find and view all your photos. New Photoshop.com membership* works with Photoshop CS4 so you can protect your photos with automatic online backup and 2 GB of storage; view your photos anywhere you are; and share your photos in fun, interactive ways with invitation-only Online Albums.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 75,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 3,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Software",
+        "ProductPictures": [ "product_AdobePhotoshop.jpeg" ],
+        "ProductTags": [ "computer", "awesome" ]
+      },
+      {
+        "Name": "Microsoft Windows OS",
+        "Sku": "MS_WIN_8P",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Windows 8 is a Microsoft operating system that was released in 2012 as part of the company's Windows NT OS family. ",
+        "FullDescription": "<p>Windows 8 Pro is comparable to Windows 7 Professional and Ultimate and is targeted towards enthusiasts and business users; it includes all the features of Windows 8. Additional features include the ability to receive Remote Desktop connections, the ability to participate in a Windows Server domain, Encrypting File System, Hyper-V, and Virtual Hard Disk Booting, Group Policy as well as BitLocker and BitLocker To Go. Windows Media Center functionality is available only for Windows 8 Pro as a separate software package.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 65,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 3,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Software",
+        "ProductPictures": [ "product_Windows.jpeg" ],
+        "ProductTags": [ "awesome", "computer" ]
+      },
+      {
+        "Name": "Sound Forge Pro (recurring)",
+        "Sku": "SF_PRO_11",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Advanced audio waveform editor.",
+        "FullDescription": "<p>Sound Forge™ Pro is the application of choice for a generation of creative and prolific artists, producers, and editors. Record audio quickly on a rock-solid platform, address sophisticated audio processing tasks with surgical precision, and render top-notch master files with ease. New features include one-touch recording, metering for the new critical standards, more repair and restoration tools, and exclusive round-trip interoperability with SpectraLayers Pro. Taken together, these enhancements make this edition of Sound Forge Pro the deepest and most advanced audio editing platform available.</p>",
+        "ProductTemplateName": "Simple product",
+        "IsRecurring": true,
+        "RecurringCycleLength": 30,
+        "RecurringCyclePeriod": "Months",
+        "RecurringTotalCycles": 12,
+        "Price": 54.99,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Software",
+        "ProductPictures": [ "product_SoundForge.jpeg" ],
+        "ProductTags": [ "game", "computer", "cool" ]
+      },
+      {
+        "ProductType": "GroupedProduct",
+        "Name": "Nikon D5500 DSLR",
+        "Sku": "N5500DS_0",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Slim, lightweight Nikon D5500 packs a vari-angle touchscreen",
+        "FullDescription": "Nikon has announced its latest DSLR, the D5500. A lightweight, compact DX-format camera with a 24.2MP sensor, it’s the first of its type to offer a vari-angle touchscreen. The D5500 replaces the D5300 in Nikon’s range, and while it offers much the same features the company says it’s a much slimmer and lighter prospect. There’s a deep grip for easier handling and built-in Wi-Fi that lets you transfer and share shots via your phone or tablet.",
+        "ProductTemplateName": "Grouped product (with variants)",
+        "Price": 670,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Camera & photo",
+        "ProductPictures": [ "product_NikonCamera_1.jpeg", "product_NikonCamera_2.jpeg" ],
+        "ProductTags": [ "cool", "camera" ],
+        "GroupedProducts": [
+          {
+            "VisibleIndividually": false,
+            "Name": "Nikon D5500 DSLR - Black",
+            "Sku": "N5500DS_B",
+            "AllowCustomerReviews": true,
+            "UnlimitedDownloads": true,
+            "IsShipEnabled": true,
+            "StockQuantity": 10000,
+            "DisplayStockAvailability": true,
+            "NotifyAdminForQuantityBelow": 1,
+            "OrderMinimumQuantity": 1,
+            "OrderMaximumQuantity": 10000,
+            "Published": true,
+            "ProductType": "SimpleProduct",
+            "BackorderMode": "NoBackorders",
+            "LowStockActivity": "DisableBuyButton",
+            "ManageInventoryMethod": "ManageStock",
+            "ProductTemplateName": "Simple product",
+            "Price": 670,
+            "Weight": 2,
+            "Length": 2,
+            "Width": 2,
+            "Height": 2,
+            "TaxCategoryName": "Electronics & Software",
+            "ProductPictures": [ "product_NikonCamera_black.jpeg" ]
+          },
+          {
+            "VisibleIndividually": false,
+            "Name": "Nikon D5500 DSLR - Red",
+            "Sku": "N5500DS_R",
+            "AllowCustomerReviews": true,
+            "UnlimitedDownloads": true,
+            "IsShipEnabled": true,
+            "StockQuantity": 10000,
+            "DisplayStockAvailability": true,
+            "NotifyAdminForQuantityBelow": 1,
+            "OrderMinimumQuantity": 1,
+            "OrderMaximumQuantity": 10000,
+            "Published": true,
+            "ProductType": "SimpleProduct",
+            "BackorderMode": "NoBackorders",
+            "LowStockActivity": "DisableBuyButton",
+            "ManageInventoryMethod": "ManageStock",
+            "ProductTemplateName": "Simple product",
+            "Price": 630,
+            "Weight": 2,
+            "Length": 2,
+            "Width": 2,
+            "Height": 2,
+            "TaxCategoryName": "Electronics & Software",
+            "ProductPictures": [ "product_NikonCamera_red.jpeg" ]
+          }
+        ]
+      },
+      {
+        "Name": "Leica T Mirrorless Digital Camera",
+        "Sku": "LT_MIR_DC",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Leica T (Typ 701) Silver",
+        "FullDescription": "<p>The new Leica T offers a minimalist design that's crafted from a single block of aluminum. Made in Germany and assembled by hand, this 16.3 effective mega pixel camera is easy to use. With a massive 3.7 TFT LCD intuitive touch screen control, the user is able to configure and save their own menu system. The Leica T has outstanding image quality and also has 16GB of built in memory. This is Leica's first system camera to use Wi-Fi. Add the T-App to your portable iOS device and be able to transfer and share your images (free download from the Apple App Store)</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 530,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Camera & photo",
+        "ProductPictures": [ "product_LeicaT.jpeg" ],
+        "ProductTags": [ "camera", "cool" ]
+      },
+      {
+        "Name": "Apple iCam",
+        "Sku": "APPLE_CAM",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Photography becomes smart",
+        "FullDescription": "<p>A few months ago we featured the amazing WVIL camera, by many considered the future of digital photography. This is another very good looking concept, iCam is the vision of Italian designer Antonio DeRosa, the idea is to have a device that attaches to the iPhone 5, which then allows the user to have a camera with interchangeable lenses. The device would also feature a front-touch screen and a projector. Would be great if apple picked up on this and made it reality.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 1300,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Camera & photo",
+        "ProductPictures": [ "product_iCam.jpeg" ],
+        "ManufacturerName": "Apple"
+      },
+      {
+        "Name": "HTC smartphone",
+        "Sku": "M8_HTC_5L",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "HTC - One (M8) 4G LTE Cell Phone with 32GB Memory - Gunmetal (Sprint)",
+        "FullDescription": "<p><b>HTC One (M8) Cell Phone for Sprint:</b> With its brushed-metal design and wrap-around unibody frame, the HTC One (M8) is designed to fit beautifully in your hand. It's fun to use with amped up sound and a large Full HD touch screen, and intuitive gesture controls make it seem like your phone almost knows what you need before you do. <br /><br />Sprint Easy Pay option available in store.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 245,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Electronics & Software",
+        "ShowOnHomepage": true,
+        "MarkAsNew": true,
+        "CategoryName": "Cell phones",
+        "ProductPictures": [ "product_HTC_One_M8.jpeg" ],
+        "ProductTags": [ "cell", "compact", "awesome" ]
+      },
+      {
+        "Name": "HTC One Mini Blue",
+        "Sku": "OM_HTC_BL",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "HTC One and HTC One Mini now available in bright blue hue",
+        "FullDescription": "<p>HTC One mini smartphone with 4.30-inch 720x1280 display powered by 1.4GHz processor alongside 1GB RAM and 4-Ultrapixel rear camera.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 100,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "MarkAsNew": true,
+        "CategoryName": "Cell phones",
+        "ProductPictures": [ "product_HTC_One_Mini_1.jpeg", "product_HTC_One_Mini_2.jpeg" ],
+        "ProductTags": [ "awesome", "compact", "cell" ]
+      },
+      {
+        "Name": "Nokia Lumia 1020",
+        "Sku": "N_1020_LU",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Nokia Lumia 1020 4G Cell Phone (Unlocked)",
+        "FullDescription": "<p>Capture special moments for friends and family with this Nokia Lumia 1020 32GB WHITE cell phone that features an easy-to-use 41.0MP rear-facing camera and a 1.2MP front-facing camera. The AMOLED touch screen offers 768 x 1280 resolution for crisp visuals.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 349,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Cell phones",
+        "ProductPictures": [ "product_Lumia1020.jpeg" ],
+        "ProductTags": [ "awesome", "cool", "camera" ]
+      },
+      {
+        "Name": "Apple iPhone 16 128GB",
+        "Sku": "A_16_128T",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Apple iPhone 16 128GB Teal with 6.1 inches screen and 48 megapixels rear-facing camera",
+        "FullDescription": "<p>iPhone 16 brings you Dynamic Island, a 48MP Main camera and USB-C — all in a durable colour-infused glass and aluminium design. iPhone 16 has the Dynamic Island, an innovative way to interact with important alerts and Live Activities.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 799,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "MarkAsNew": true,
+        "CategoryName": "Cell phones",
+        "ProductPictures": [ "product_iphone_16_128.png" ],
+        "ProductTags": [ "cool", "cell" ]
+      },
+      {
+        "Name": "Samsung Galaxy S24 256GB",
+        "Sku": "SG_24_256B",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Samsung - Galaxy S24 256GB - Onyx Black with Dynamic LTPO AMOLED 2X, 120Hz, HDR10+",
+        "FullDescription": "<p>The Samsung Galaxy S24 combines a fast processor, a bright display, sharp cameras, and helpful AI tools in a pocket-friendly size for a reasonable price. In addition to a top-end Qualcomm processor and excellent cameras, the Galaxy S24 gets all of Samsung’s cutting-edge AI features.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 859,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "MarkAsNew": true,
+        "CategoryName": "Cell phones",
+        "ProductPictures": [ "product_samsung_galaxy_s24.png" ],
+        "ProductTags": [ "awesome", "cell" ]
+      },
+      {
+        "Name": "Beats Pill Wireless Speaker",
+        "Sku": "BP_20_WSP",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "<b>Pill 2.0 Portable Bluetooth Speaker (1-Piece):</b> Watch your favorite movies and listen to music with striking sound quality. This lightweight, portable speaker is easy to take with you as you travel to any destination, keeping you entertained wherever you are. ",
+        "FullDescription": "<ul><li>Pair and play with your Bluetooth® device with 30 foot range</li><li>Built-in speakerphone</li><li>7 hour rechargeable battery</li><li>Power your other devices with USB charge out</li><li>Tap two Beats Pills™ together for twice the sound with Beats Bond™</li></ul>",
+        "ProductTemplateName": "Simple product",
+        "Price": 79.99,
+        "IsFreeShipping": true,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 3,
+        "TaxCategoryName": "Electronics & Software",
+        "MarkAsNew": true,
+        "CategoryName": "Others",
+        "ProductPictures": [ "product_PillBeats_1.jpeg", "product_PillBeats_2.jpeg" ],
+        "TierPrices": [
+          {
+            "Quantity": 2,
+            "Price": 19
+          },
+          {
+            "Quantity": 5,
+            "Price": 17
+          },
+          {
+            "Quantity": 10,
+            "Price": 15
+          }
+        ],
+        "ProductTags": [ "computer", "cool" ]
+      },
+      {
+        "Name": "Universal 7-8 Inch Tablet Cover",
+        "Sku": "TC_78I_UN",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Universal protection for 7-inch & 8-inch tablets",
+        "FullDescription": "<p>Made of durable polyurethane, our Universal Cover is slim, lightweight, and strong, with protective corners that stretch to hold most 7 and 8-inch tablets securely. This tough case helps protects your tablet from bumps, scuffs, and dings.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 39,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 3,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Others",
+        "ProductPictures": [ "product_TabletCover.jpeg" ],
+        "ProductTags": [ "computer", "cool" ]
+      },
+      {
+        "Name": "Portable Sound Speakers",
+        "Sku": "PT_SPK_SN",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Universall portable sound speakers",
+        "FullDescription": "<p>Your phone cut the cord, now it's time for you to set your music free and buy a Bluetooth speaker. Thankfully, there's one suited for everyone out there.</p><p>Some Bluetooth speakers excel at packing in as much functionality as the unit can handle while keeping the price down. Other speakers shuck excess functionality in favor of premium build materials instead. Whatever path you choose to go down, you'll be greeted with many options to suit your personal tastes.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 37,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Electronics & Software",
+        "CategoryName": "Others",
+        "ProductPictures": [ "product_Speakers.jpeg" ]
+      },
+      {
+        "Name": "Nike Floral Roshe Customized Running Shoes",
+        "Sku": "NK_FRC_RS",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "When you ran across these shoes, you will immediately fell in love and needed a pair of these customized beauties.",
+        "FullDescription": "<p>Each Rosh Run is personalized and exclusive, handmade in our workshop Custom. Run Your Rosh creations born from the hand of an artist specialized in sneakers, more than 10 years of experience.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 40,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Apparel",
+        "CategoryName": "Shoes",
+        "ManufacturerName": "Nike",
+        "ProductPictures": [ "product_NikeFloralShoe_1.jpg", "product_NikeFloralShoe_2.jpg" ],
+        "ProductSpecificationAttribute": [
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": false,
+            "DisplayOrder": 1,
+            "SpecAttributeName": "Color",
+            "SpecAttributeOptionName": "Grey"
+          }
+        ],
+        "ProductAttributeMapping": [
+          {
+            "ProductAttributeName": "Size",
+            "AttributeControlType": "DropdownList",
+            "IsRequired": true,
+            "AttributeValues": [
+              {
+                "Name": "8",
+                "DisplayOrder": 1
+              },
+              {
+                "Name": "9",
+                "DisplayOrder": 2
+              },
+              {
+                "Name": "10",
+                "DisplayOrder": 3
+              },
+              {
+                "Name": "11",
+                "DisplayOrder": 4
+              }
+            ]
+          },
+          {
+            "ProductAttributeName": "Color",
+            "AttributeControlType": "DropdownList",
+            "IsRequired": true,
+            "AttributeValues": [
+              {
+                "Name": "White/Blue",
+                "DisplayOrder": 1
+              },
+              {
+                "Name": "White/Black",
+                "DisplayOrder": 2
+              }
+            ]
+          },
+          {
+            "ProductAttributeName": "Print",
+            "AttributeControlType": "ImageSquares",
+            "IsRequired": true,
+            "AttributeValues": [
+              {
+                "Name": "Natural",
+                "DisplayOrder": 1,
+                "ImageSquaresPictureName": "p_attribute_print_2.jpg"
+              },
+              {
+                "Name": "Fresh",
+                "DisplayOrder": 2,
+                "ImageSquaresPictureName": "p_attribute_print_1.jpg"
+              }
+            ]
+          }
+        ],
+        "ProductTags": [ "cool", "shoes", "apparel" ]
+      },
+      {
+        "Name": "adidas Consortium Campus 80s Running Shoes",
+        "Sku": "AD_C80_RS",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "adidas Consortium Campus 80s Primeknit Light Maroon/Running Shoes",
+        "FullDescription": "<p>One of three colorways of the adidas Consortium Campus 80s Primeknit set to drop alongside each other. This pair comes in light maroon and running white. Featuring a maroon-based primeknit upper with white accents. A limited release, look out for these at select adidas Consortium accounts worldwide.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 27.56,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Apparel",
+        "CategoryName": "Shoes",
+        "ProductSpecificationAttribute": [
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": false,
+            "DisplayOrder": 1,
+            "SpecAttributeName": "Color",
+            "SpecAttributeOptionName": "Grey"
+          },
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": false,
+            "DisplayOrder": 2,
+            "SpecAttributeName": "Color",
+            "SpecAttributeOptionName": "Red"
+          },
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": false,
+            "DisplayOrder": 3,
+            "SpecAttributeName": "Color",
+            "SpecAttributeOptionName": "Blue"
+          }
+        ],
+        "ProductAttributeMapping": [
+          {
+            "ProductAttributeName": "Size",
+            "AttributeControlType": "DropdownList",
+            "IsRequired": true,
+            "AttributeValues": [
+              {
+                "Name": "8",
+                "DisplayOrder": 1
+              },
+              {
+                "Name": "9",
+                "DisplayOrder": 2
+              },
+              {
+                "Name": "10",
+                "DisplayOrder": 3
+              },
+              {
+                "Name": "11",
+                "DisplayOrder": 4
+              }
+            ]
+          },
+          {
+            "ProductAttributeName": "Color",
+            "AttributeControlType": "ColorSquares",
+            "IsRequired": true,
+            "AttributeValues": [
+              {
+                "Name": "Red",
+                "IsPreSelected": true,
+                "ColorSquaresRgb": "#663030",
+                "DisplayOrder": 1,
+                "AttributeValuePictures": [ "product_adidas.jpg" ]
+              },
+              {
+                "Name": "Blue",
+                "ColorSquaresRgb": "#363656",
+                "DisplayOrder": 2,
+                "AttributeValuePictures": [ "product_adidas_2.jpg" ]
+              },
+              {
+                "Name": "Silver",
+                "ColorSquaresRgb": "#c5c5d5",
+                "DisplayOrder": 3,
+                "AttributeValuePictures": [ "product_adidas_3.jpg" ]
+              }
+            ]
+          }
+        ],
+        "ProductTags": [ "cool", "shoes", "apparel" ]
+      },
+      {
+        "Name": "Nike SB Zoom Stefan Janoski \"Medium Mint\"",
+        "Sku": "NK_ZSJ_MM",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Nike SB Zoom Stefan Janoski Dark Grey Medium Mint Teal ...",
+        "FullDescription": "The newly Nike SB Zoom Stefan Janoski gets hit with a \"Medium Mint\" accents that sits atop a Dark Grey suede. Expected to drop in October.",
+        "ProductTemplateName": "Simple product",
+        "Price": 30,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Apparel",
+        "CategoryName": "Shoes",
+        "ManufacturerName": "Nike",
+        "ProductPictures": [ "product_NikeZoom.jpg" ],
+        "ProductSpecificationAttribute": [
+          {
+            "AllowFiltering": true,
+            "ShowOnProductPage": false,
+            "DisplayOrder": 1,
+            "SpecAttributeName": "Color",
+            "SpecAttributeOptionName": "Grey"
+          }
+        ],
+        "ProductTags": [ "jeans", "cool", "apparel" ]
+      },
+      {
+        "Name": "Nike Tailwind Loose Short-Sleeve Running Shirt",
+        "Sku": "NK_TLS_RS",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "",
+        "FullDescription": "<p>Boost your adrenaline with the Nike® Women's Tailwind Running Shirt. The lightweight, slouchy fit is great for layering, and moisture-wicking fabrics keep you feeling at your best. This tee has a notched hem for an enhanced range of motion, while flat seams with reinforcement tape lessen discomfort and irritation over longer distances. Put your keys and card in the side zip pocket and take off in your Nike® running t-shirt.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 15,
+        "Weight": 1,
+        "Length": 2,
+        "Width": 3,
+        "Height": 3,
+        "TaxCategoryName": "Apparel",
+        "CategoryName": "Clothing",
+        "ManufacturerName": "Nike",
+        "ProductPictures": [ "product_NikeShirt.jpg" ],
+        "ProductAttributeMapping": [
+          {
+            "ProductAttributeName": "Size",
+            "AttributeControlType": "DropdownList",
+            "IsRequired": true,
+            "AttributeValues": [
+              {
+                "Name": "Small",
+                "DisplayOrder": 1
+              },
+              {
+                "Name": "1X",
+                "DisplayOrder": 2
+              },
+              {
+                "Name": "2X",
+                "DisplayOrder": 3
+              },
+              {
+                "Name": "3X",
+                "DisplayOrder": 4
+              },
+              {
+                "Name": "4X",
+                "DisplayOrder": 5
+              },
+              {
+                "Name": "5X",
+                "DisplayOrder": 6
+              }
+            ]
+          }
+        ],
+        "ProductTags": [ "cool", "apparel", "shirt" ]
+      },
+      {
+        "Name": "Oversized Women T-Shirt",
+        "Sku": "WM_OVR_TS",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "",
+        "FullDescription": "<p>This oversized women t-Shirt needs minimum ironing. It is a great product at a great value!</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 24,
+        "Weight": 4,
+        "Length": 3,
+        "Width": 3,
+        "Height": 3,
+        "TaxCategoryName": "Apparel",
+        "CategoryName": "Clothing",
+        "ProductPictures": [ "product_WomenTShirt.jpg" ],
+        "TierPrices": [
+          {
+            "Quantity": 3,
+            "Price": 21
+          },
+          {
+            "Quantity": 7,
+            "Price": 19
+          },
+          {
+            "Quantity": 10,
+            "Price": 16
+          }
+        ],
+        "ProductTags": [ "cool", "apparel", "shirt" ]
+      },
+      {
+        "Name": "Custom T-Shirt",
+        "Sku": "CS_TSHIRT",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "T-Shirt - Add Your Content",
+        "FullDescription": "<p>Comfort comes in all shapes and forms, yet this tee out does it all. Rising above the rest, our classic cotton crew provides the simple practicality you need to make it through the day. Tag-free, relaxed fit wears well under dress shirts or stands alone in laid-back style. Reinforced collar and lightweight feel give way to long-lasting shape and breathability. One less thing to worry about, rely on this tee to provide comfort and ease with every wear.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 15,
+        "Weight": 4,
+        "Length": 3,
+        "Width": 3,
+        "Height": 3,
+        "TaxCategoryName": "Apparel",
+        "CategoryName": "Clothing",
+        "ProductPictures": [ "product_CustomTShirt.jpeg" ],
+        "ProductAttributeMapping": [
+          {
+            "ProductAttributeName": "Custom Text",
+            "AttributeControlType": "TextBox",
+            "TextPrompt": "Enter your text:",
+            "IsRequired": true,
+            "AttributeValues": []
+          }
+        ],
+        "ProductTags": [ "cool", "shirt", "apparel" ]
+      },
+      {
+        "Name": "Levi's 511 Jeans",
+        "Sku": "LV_511_JN",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Levi's Faded Black 511 Jeans ",
+        "FullDescription": "<p>Between a skinny and straight fit, our 511&trade; slim fit jeans are cut close without being too restricting. Slim throughout the thigh and leg opening for a long and lean look.</p><ul><li>Slouch1y at top; sits below the waist</li><li>Slim through the leg, close at the thigh and straight to the ankle</li><li>Stretch for added comfort</li><li>Classic five-pocket styling</li><li>99% Cotton, 1% Spandex, 11.2 oz. - Imported</li></ul>",
+        "ProductTemplateName": "Simple product",
+        "Price": 43.5,
+        "OldPrice": 55,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Apparel",
+        "CategoryName": "Clothing",
+        "ProductPictures": [ "product_LeviJeans_1.jpg", "product_LeviJeans_2.jpg" ],
+        "TierPrices": [
+          {
+            "Quantity": 3,
+            "Price": 40
+          },
+          {
+            "Quantity": 6,
+            "Price": 38
+          },
+          {
+            "Quantity": 10,
+            "Price": 35
+          }
+        ],
+        "ProductTags": [ "cool", "jeans", "apparel" ]
+      },
+      {
+        "Name": "Obey Propaganda Hat",
+        "Sku": "OB_HAT_PR",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "",
+        "FullDescription": "<p>Printed poplin 5 panel camp hat with debossed leather patch and web closure</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 30,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Apparel",
+        "CategoryName": "Accessories",
+        "ProductPictures": [ "product_hat.jpg" ],
+        "ProductAttributeMapping": [
+          {
+            "ProductAttributeName": "Size",
+            "AttributeControlType": "DropdownList",
+            "IsRequired": true,
+            "AttributeValues": [
+              {
+                "Name": "Small",
+                "DisplayOrder": 1
+              },
+              {
+                "Name": "Medium",
+                "DisplayOrder": 2
+              },
+              {
+                "Name": "Large",
+                "DisplayOrder": 3
+              },
+              {
+                "Name": "X-Large",
+                "DisplayOrder": 4
+              }
+            ]
+          }
+        ],
+        "ProductTags": [ "apparel", "cool" ]
+      },
+      {
+        "Name": "Reversible Horseferry Check Belt",
+        "Sku": "RH_CHK_BL",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Reversible belt in Horseferry check with smooth leather trim",
+        "FullDescription": "<p>Reversible belt in Horseferry check with smooth leather trim</p><p>Leather lining, polished metal buckle</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 45,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Apparel",
+        "ProductAvailabilityRange": "2-4 days",
+        "StockQuantity": 0,
+        "CategoryName": "Accessories",
+        "ProductPictures": [ "product_Belt.jpeg" ]
+      },
+      {
+        "Name": "Ray Ban Aviator Sunglasses",
+        "Sku": "RB_AVR_SG",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Aviator sunglasses are one of the first widely popularized styles of modern day sunwear.",
+        "FullDescription": "<p>Since 1937, Ray-Ban can genuinely claim the title as the world's leading sunglasses and optical eyewear brand. Combining the best of fashion and sports performance, the Ray-Ban line of Sunglasses delivers a truly classic style that will have you looking great today and for years to come.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 25,
+        "Weight": 7,
+        "Length": 7,
+        "Width": 7,
+        "Height": 7,
+        "TaxCategoryName": "Apparel",
+        "CategoryName": "Accessories",
+        "ProductPictures": [ "product_Sunglasses.jpg" ],
+        "ProductTags": [ "apparel", "cool" ]
+      },
+      {
+        "Name": "Fahrenheit 451 by Ray Bradbury",
+        "Sku": "FR_451_RB",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Fahrenheit 451 is a dystopian novel by Ray Bradbury published in 1953. It is regarded as one of his best works.",
+        "FullDescription": "<p>The novel presents a future American society where books are outlawed and firemen burn any that are found. The title refers to the temperature that Bradbury understood to be the autoignition point of paper.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 27,
+        "OldPrice": 30,
+        "IsFreeShipping": true,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Books",
+        "CategoryName": "Books",
+        "ProductPictures": [ "product_Fahrenheit451.jpeg" ],
+        "ProductTags": [ "awesome", "book", "nice" ]
+      },
+      {
+        "Name": "First Prize Pies",
+        "Sku": "FIRST_PRP",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Allison Kave made pies as a hobby, until one day her boyfriend convinced her to enter a Brooklyn pie-making contest. She won. In fact, her pies were such a hit that she turned pro.",
+        "FullDescription": "<p>First Prize Pies, a boutique, made-to-order pie business that originated on New York's Lower East Side, has become synonymous with tempting and unusual confections. For the home baker who is passionate about seasonal ingredients and loves a creative approach to recipes, First Prize Pies serves up 52 weeks of seasonal and eclectic pastries in an interesting pie-a-week format. Clear instructions, technical tips and creative encouragement guide novice bakers as well as pie mavens. With its nostalgia-evoking photos of homemade pies fresh out of the oven, First Prize Pies will be as giftable as it is practical.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 51,
+        "OldPrice": 67,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Books",
+        "CategoryName": "Books",
+        "ProductPictures": [ "product_FirstPrizePies.jpeg" ],
+        "ProductTags": [ "book" ]
+      },
+      {
+        "Name": "Pride and Prejudice",
+        "Sku": "PRIDE_PRJ",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Pride and Prejudice is a novel of manners by Jane Austen, first published in 1813.",
+        "FullDescription": "<p>Set in England in the early 19th century, Pride and Prejudice tells the story of Mr and Mrs Bennet's five unmarried daughters after the rich and eligible Mr Bingley and his status-conscious friend, Mr Darcy, have moved into their neighbourhood. While Bingley takes an immediate liking to the eldest Bennet daughter, Jane, Darcy has difficulty adapting to local society and repeatedly clashes with the second-eldest Bennet daughter, Elizabeth.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 24,
+        "OldPrice": 35,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Books",
+        "CategoryName": "Books",
+        "ProductPictures": [ "product_PrideAndPrejudice.jpeg" ],
+        "ProductTags": [ "book" ]
+      },
+      {
+        "Name": "Elegant Gemstone Necklace (rental)",
+        "Sku": "EG_GEM_NL",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Classic and elegant gemstone necklace now available in our store",
+        "FullDescription": "<p>For those who like jewelry, creating their ownelegant jewelry from gemstone beads provides an economical way to incorporate genuine gemstones into your jewelry wardrobe. Manufacturers create beads from all kinds of precious gemstones and semi-precious gemstones, which are available in bead shops, craft stores, and online marketplaces.</p>",
+        "ProductTemplateName": "Simple product",
+        "IsRental": true,
+        "RentalPriceLength": 1,
+        "RentalPricePeriod": "Days",
+        "Price": 30,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Jewelry",
+        "MarkAsNew": true,
+        "CategoryName": "Jewelry",
+        "ProductPictures": [ "product_GemstoneNecklaces.jpg" ],
+        "ProductTags": [ "jewelry", "awesome" ]
+      },
+      {
+        "Name": "Flower Girl Bracelet",
+        "Sku": "FL_GIRL_B",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "Personalised Flower Braceled",
+        "FullDescription": "<p>This is a great gift for your flower girl to wear on your wedding day. A delicate bracelet that is made with silver plated soldered cable chain, gives this bracelet a dainty look for young wrist. A Swarovski heart, shown in Rose, hangs off a silver plated flower. Hanging alongside the heart is a silver plated heart charm with Flower Girl engraved on both sides. This is a great style for the younger flower girl.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 360,
+        "IsFreeShipping": true,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Jewelry",
+        "CategoryName": "Jewelry",
+        "ProductPictures": [ "product_FlowerBracelet.jpg" ],
+        "ProductTags": [ "awesome", "jewelry" ]
+      },
+      {
+        "Name": "Vintage Style Engagement Ring",
+        "Sku": "VS_ENG_RN",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ManageInventoryMethod": "ManageStock",
+        "ShortDescription": "1.24 Carat (ctw) in 14K White Gold (Certified)",
+        "FullDescription": "<p>Dazzle her with this gleaming 14 karat white gold vintage proposal. A ravishing collection of 11 decadent diamonds come together to invigorate a superbly ornate gold shank. Total diamond weight on this antique style engagement ring equals 1 1/4 carat (ctw). Item includes diamond certificate.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 2100,
+        "Weight": 2,
+        "Length": 2,
+        "Width": 2,
+        "Height": 2,
+        "TaxCategoryName": "Jewelry",
+        "CategoryName": "Jewelry",
+        "ProductPictures": [ "product_EngagementRing_1.jpg" ],
+        "ProductTags": [ "jewelry", "awesome" ]
+      },
+      {
+        "Name": "$25 Virtual Gift Card",
+        "Sku": "VG_CR_025",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ShortDescription": "$25 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
+        "FullDescription": "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 25,
+        "IsGiftCard": true,
+        "GiftCardType": "Virtual",
+        "ManageInventoryMethod": "DontManageStock",
+        "ShowOnHomepage": true,
+        "CategoryName": "Gift Cards",
+        "ProductPictures": [ "product_25giftcart.jpeg" ],
+        "ProductTags": [ "nice", "gift" ]
+      },
+      {
+        "Name": "$50 Physical Gift Card",
+        "Sku": "PG_CR_050",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ShortDescription": "$50 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
+        "FullDescription": "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 50,
+        "IsGiftCard": true,
+        "GiftCardType": "Physical",
+        "IsFreeShipping": true,
+        "DeliveryDate": "1-2 days",
+        "Weight": 1,
+        "Length": 1,
+        "Width": 1,
+        "Height": 1,
+        "ManageInventoryMethod": "DontManageStock",
+        "MarkAsNew": true,
+        "CategoryName": "Gift Cards",
+        "ProductPictures": [ "product_50giftcart.jpeg" ]
+      },
+      {
+        "Name": "$100 Physical Gift Card",
+        "Sku": "PG_CR_100",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ShortDescription": "$100 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
+        "FullDescription": "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 100,
+        "IsGiftCard": true,
+        "GiftCardType": "Physical",
+        "DeliveryDate": "1-2 days",
+        "Weight": 1,
+        "Length": 1,
+        "Width": 1,
+        "Height": 1,
+        "ManageInventoryMethod": "DontManageStock",
+        "CategoryName": "Gift Cards",
+        "ProductPictures": [ "product_100giftcart.jpeg" ]
+      },
+      {
+        "Name": "Night Visions",
+        "Sku": "NIGHT_VSN",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ShortDescription": "Night Visions is the debut studio album by American rock band Imagine Dragons.",
+        "FullDescription": "<p>Original Release Date: September 4, 2012</p><p>Release Date: September 4, 2012</p><p>Genre - Alternative rock, indie rock, electronic rock</p><p>Label - Interscope/KIDinaKORNER</p><p>Copyright: (C) 2011 Interscope Records</p>",
+        "ProductTemplateName": "Simple product",
+        "Price": 2.8,
+        "TaxCategoryName": "Downloadable Products",
+        "ManageInventoryMethod": "DontManageStock",
+        "IsDownload": true,
+        "Download": {
+          "ContentType": "application/x-zip-co",
+          "DownloadFileName": "product_NightVision_1.zip",
+          "Extension": ".zip",
+          "FileName": "Night_Vision_1",
+          "IsNew": true
+        },
+        "DownloadActivationType": "WhenOrderIsPaid",
+        "SampleDownload": {
+          "ContentType": "text/plain",
+          "DownloadFileName": "product_NightVision_2.txt",
+          "Extension": ".txt",
+          "FileName": "Night_Vision_1",
+          "IsNew": true
+        },
+        "CategoryName": "Digital downloads",
+        "ProductPictures": [ "product_NightVisions.jpeg" ],
+        "ProductTags": [ "awesome", "digital" ]
+      },
+      {
+        "Name": "If You Wait (donation)",
+        "Sku": "IF_YOU_WT",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ShortDescription": "If You Wait is the debut studio album by English indie pop band London Grammar",
+        "FullDescription": "<p>Original Release Date: September 6, 2013</p><p>Genre - Electronica, dream pop downtempo, pop</p><p>Label - Metal & Dust/Ministry of Sound</p><p>Producer - Tim Bran, Roy Kerr London, Grammar</p><p>Length - 43:22</p>",
+        "ProductTemplateName": "Simple product",
+        "CustomerEntersPrice": true,
+        "MinimumCustomerEnteredPrice": 0.5,
+        "MaximumCustomerEnteredPrice": 100,
+        "TaxCategoryName": "Downloadable Products",
+        "ManageInventoryMethod": "DontManageStock",
+        "IsDownload": true,
+        "Download": {
+          "ContentType": "application/x-zip-co",
+          "DownloadFileName": "product_IfYouWait_1.zip",
+          "Extension": ".zip",
+          "FileName": "If_You_Wait_1",
+          "IsNew": true
+        },
+        "DownloadActivationType": "WhenOrderIsPaid",
+        "HasSampleDownload": true,
+        "SampleDownload": {
+          "ContentType": "text/plain",
+          "DownloadFileName": "product_IfYouWait_2.txt",
+          "Extension": ".txt",
+          "FileName": "If_You_Wait_1",
+          "IsNew": true
+        },
+        "CategoryName": "Digital downloads",
+        "ProductPictures": [ "product_IfYouWait.jpeg" ],
+        "ProductTags": [ "digital", "awesome" ]
+      },
+      {
+        "Name": "Science & Faith",
+        "Sku": "SCI_FAITH",
+        "VisibleIndividually": true,
+        "AllowCustomerReviews": true,
+        "UnlimitedDownloads": true,
+        "IsShipEnabled": true,
+        "StockQuantity": 10000,
+        "DisplayStockAvailability": true,
+        "NotifyAdminForQuantityBelow": 1,
+        "OrderMinimumQuantity": 1,
+        "OrderMaximumQuantity": 10000,
+        "Published": true,
+        "ProductType": "SimpleProduct",
+        "BackorderMode": "NoBackorders",
+        "LowStockActivity": "DisableBuyButton",
+        "ShortDescription": "Science & Faith is the second studio album by Irish pop rock band The Script.",
+        "FullDescription": "<p># Original Release Date: September 10, 2010<br /># Label: RCA, Epic/Phonogenic(America)<br /># Copyright: 2010 RCA Records.</p>",
+        "ProductTemplateName": "Simple product",
+        "CustomerEntersPrice": true,
+        "MinimumCustomerEnteredPrice": 0.5,
+        "MaximumCustomerEnteredPrice": 1000,
+        "Price": 0,
+        "TaxCategoryName": "Downloadable Products",
+        "ManageInventoryMethod": "DontManageStock",
+        "IsDownload": true,
+        "Download": {
+          "ContentType": "application/x-zip-co",
+          "DownloadFileName": "product_ScienceAndFaith_1.zip",
+          "Extension": ".zip",
+          "FileName": "Science_And_Faith",
+          "IsNew": true
+        },
+        "DownloadActivationType": "WhenOrderIsPaid",
+        "CategoryName": "Digital downloads",
+        "ProductPictures": [ "product_ScienceAndFaith.jpeg" ],
+        "ProductTags": [ "digital", "awesome" ]
+      }
+    ],
+    "RelatedProducts": [
+      {
+        "FirstProductSku": "LE_IC_600",
+        "SecondProductSku": "DS_VA3_PC"
+      },
+      {
+        "FirstProductSku": "DS_VA3_PC",
+        "SecondProductSku": "COMP_CUST"
+      },
+      {
+        "FirstProductSku": "DS_VA3_PC",
+        "SecondProductSku": "LE_IC_600"
+      },
+      {
+        "FirstProductSku": "DS_VA3_PC",
+        "SecondProductSku": "LE_TX1_CL"
+      },
+      {
+        "FirstProductSku": "DS_VA3_PC",
+        "SecondProductSku": "AP_MBP_13"
+      },
+      {
+        "FirstProductSku": "LE_IC_600",
+        "SecondProductSku": "COMP_CUST"
+      },
+      {
+        "FirstProductSku": "AS_551_LP",
+        "SecondProductSku": "LE_TX1_CL"
+      },
+      {
+        "FirstProductSku": "AS_551_LP",
+        "SecondProductSku": "AP_MBP_13"
+      },
+      {
+        "FirstProductSku": "AS_551_LP",
+        "SecondProductSku": "SM_900_PU"
+      },
+      {
+        "FirstProductSku": "AS_551_LP",
+        "SecondProductSku": "HP_SPX_UB"
+      },
+      {
+        "FirstProductSku": "LE_TX1_CL",
+        "SecondProductSku": "AS_551_LP"
+      },
+      {
+        "FirstProductSku": "LE_TX1_CL",
+        "SecondProductSku": "AP_MBP_13"
+      },
+      {
+        "FirstProductSku": "LE_TX1_CL",
+        "SecondProductSku": "SM_900_PU"
+      },
+      {
+        "FirstProductSku": "LE_TX1_CL",
+        "SecondProductSku": "HP_ESB_15"
+      },
+      {
+        "FirstProductSku": "AP_MBP_13",
+        "SecondProductSku": "LE_TX1_CL"
+      },
+      {
+        "FirstProductSku": "AP_MBP_13",
+        "SecondProductSku": "SM_900_PU"
+      },
+      {
+        "FirstProductSku": "AP_MBP_13",
+        "SecondProductSku": "AS_551_LP"
+      },
+      {
+        "FirstProductSku": "AP_MBP_13",
+        "SecondProductSku": "HP_SPX_UB"
+      },
+      {
+        "FirstProductSku": "HP_SPX_UB",
+        "SecondProductSku": "LE_TX1_CL"
+      },
+      {
+        "FirstProductSku": "HP_SPX_UB",
+        "SecondProductSku": "SM_900_PU"
+      },
+      {
+        "FirstProductSku": "HP_SPX_UB",
+        "SecondProductSku": "AS_551_LP"
+      },
+      {
+        "FirstProductSku": "HP_SPX_UB",
+        "SecondProductSku": "HP_ESB_15"
+      },
+      {
+        "FirstProductSku": "HP_ESB_15",
+        "SecondProductSku": "AS_551_LP"
+      },
+      {
+        "FirstProductSku": "HP_ESB_15",
+        "SecondProductSku": "AP_MBP_13"
+      },
+      {
+        "FirstProductSku": "HP_ESB_15",
+        "SecondProductSku": "HP_SPX_UB"
+      },
+      {
+        "FirstProductSku": "HP_ESB_15",
+        "SecondProductSku": "SM_900_PU"
+      },
+      {
+        "FirstProductSku": "SM_900_PU",
+        "SecondProductSku": "AS_551_LP"
+      },
+      {
+        "FirstProductSku": "SM_900_PU",
+        "SecondProductSku": "AP_MBP_13"
+      },
+      {
+        "FirstProductSku": "SM_900_PU",
+        "SecondProductSku": "HP_ESB_15"
+      },
+      {
+        "FirstProductSku": "SM_900_PU",
+        "SecondProductSku": "HP_SPX_UB"
+      },
+      {
+        "FirstProductSku": "LE_IC_600",
+        "SecondProductSku": "LE_TX1_CL"
+      },
+      {
+        "FirstProductSku": "LE_IC_600",
+        "SecondProductSku": "AP_MBP_13"
+      },
+      {
+        "FirstProductSku": "LT_MIR_DC",
+        "SecondProductSku": "OM_HTC_BL"
+      },
+      {
+        "FirstProductSku": "LT_MIR_DC",
+        "SecondProductSku": "N5500DS_0"
+      },
+      {
+        "FirstProductSku": "LT_MIR_DC",
+        "SecondProductSku": "APPLE_CAM"
+      },
+      {
+        "FirstProductSku": "LT_MIR_DC",
+        "SecondProductSku": "N_1020_LU"
+      },
+      {
+        "FirstProductSku": "M8_HTC_5L",
+        "SecondProductSku": "OM_HTC_BL"
+      },
+      {
+        "FirstProductSku": "M8_HTC_5L",
+        "SecondProductSku": "N_1020_LU"
+      },
+      {
+        "FirstProductSku": "M8_HTC_5L",
+        "SecondProductSku": "BP_20_WSP"
+      },
+      {
+        "FirstProductSku": "M8_HTC_5L",
+        "SecondProductSku": "PT_SPK_SN"
+      },
+      {
+        "FirstProductSku": "OM_HTC_BL",
+        "SecondProductSku": "M8_HTC_5L"
+      },
+      {
+        "FirstProductSku": "OM_HTC_BL",
+        "SecondProductSku": "N_1020_LU"
+      },
+      {
+        "FirstProductSku": "OM_HTC_BL",
+        "SecondProductSku": "BP_20_WSP"
+      },
+      {
+        "FirstProductSku": "OM_HTC_BL",
+        "SecondProductSku": "PT_SPK_SN"
+      },
+      {
+        "FirstProductSku": "N_1020_LU",
+        "SecondProductSku": "M8_HTC_5L"
+      },
+      {
+        "FirstProductSku": "N_1020_LU",
+        "SecondProductSku": "OM_HTC_BL"
+      },
+      {
+        "FirstProductSku": "N_1020_LU",
+        "SecondProductSku": "BP_20_WSP"
+      },
+      {
+        "FirstProductSku": "N_1020_LU",
+        "SecondProductSku": "PT_SPK_SN"
+      },
+      {
+        "FirstProductSku": "AD_C80_RS",
+        "SecondProductSku": "LV_511_JN"
+      },
+      {
+        "FirstProductSku": "AD_C80_RS",
+        "SecondProductSku": "NK_FRC_RS"
+      },
+      {
+        "FirstProductSku": "AD_C80_RS",
+        "SecondProductSku": "NK_ZSJ_MM"
+      },
+      {
+        "FirstProductSku": "AD_C80_RS",
+        "SecondProductSku": "NK_TLS_RS"
+      },
+      {
+        "FirstProductSku": "LV_511_JN",
+        "SecondProductSku": "AD_C80_RS"
+      },
+      {
+        "FirstProductSku": "LV_511_JN",
+        "SecondProductSku": "NK_FRC_RS"
+      },
+      {
+        "FirstProductSku": "LV_511_JN",
+        "SecondProductSku": "NK_ZSJ_MM"
+      },
+      {
+        "FirstProductSku": "LV_511_JN",
+        "SecondProductSku": "NK_TLS_RS"
+      },
+
+      {
+        "FirstProductSku": "CS_TSHIRT",
+        "SecondProductSku": "LV_511_JN"
+      },
+      {
+        "FirstProductSku": "CS_TSHIRT",
+        "SecondProductSku": "NK_TLS_RS"
+      },
+      {
+        "FirstProductSku": "CS_TSHIRT",
+        "SecondProductSku": "WM_OVR_TS"
+      },
+      {
+        "FirstProductSku": "CS_TSHIRT",
+        "SecondProductSku": "OB_HAT_PR"
+      },
+      {
+        "FirstProductSku": "PRIDE_PRJ",
+        "SecondProductSku": "FIRST_PRP"
+      },
+      {
+        "FirstProductSku": "PRIDE_PRJ",
+        "SecondProductSku": "FR_451_RB"
+      },
+      {
+        "FirstProductSku": "FIRST_PRP",
+        "SecondProductSku": "PRIDE_PRJ"
+      },
+      {
+        "FirstProductSku": "FIRST_PRP",
+        "SecondProductSku": "FR_451_RB"
+      },
+      {
+        "FirstProductSku": "FR_451_RB",
+        "SecondProductSku": "FIRST_PRP"
+      },
+      {
+        "FirstProductSku": "FR_451_RB",
+        "SecondProductSku": "PRIDE_PRJ"
+      },
+      {
+        "FirstProductSku": "FL_GIRL_B",
+        "SecondProductSku": "VS_ENG_RN"
+      },
+      {
+        "FirstProductSku": "FL_GIRL_B",
+        "SecondProductSku": "EG_GEM_NL"
+      },
+      {
+        "FirstProductSku": "VS_ENG_RN",
+        "SecondProductSku": "FL_GIRL_B"
+      },
+      {
+        "FirstProductSku": "VS_ENG_RN",
+        "SecondProductSku": "EG_GEM_NL"
+      },
+      {
+        "FirstProductSku": "EG_GEM_NL",
+        "SecondProductSku": "FL_GIRL_B"
+      },
+      {
+        "FirstProductSku": "EG_GEM_NL",
+        "SecondProductSku": "VS_ENG_RN"
+      },
+      {
+        "FirstProductSku": "IF_YOU_WT",
+        "SecondProductSku": "NIGHT_VSN"
+      },
+      {
+        "FirstProductSku": "IF_YOU_WT",
+        "SecondProductSku": "SCI_FAITH"
+      },
+      {
+        "FirstProductSku": "NIGHT_VSN",
+        "SecondProductSku": "IF_YOU_WT"
+      },
+      {
+        "FirstProductSku": "NIGHT_VSN",
+        "SecondProductSku": "SCI_FAITH"
+      }
+    ]
+  },
+  "ForumGroups": [
+    {
+      "Name": "General",
+      "DisplayOrder": 5,
+      "Forums": [
+        {
+          "Name": "New Products",
+          "Description": "Discuss new products and industry trends",
+          "DisplayOrder": 1
+        },
+        {
+          "Name": "Mobile Devices Forum",
+          "Description": "Discuss the mobile phone market",
+          "DisplayOrder": 10
+        },
+        {
+          "Name": "Packaging & Shipping",
+          "Description": "Discuss packaging & shipping",
+          "DisplayOrder": 20
+        }
+      ]
+    }
+  ],
+  "Discounts": [
+    {
+      "Name": "Sample discount with coupon code",
+      "DiscountType": "AssignedToSkus",
+      "DiscountLimitation": "Unlimited",
+      "UsePercentage": false,
+      "DiscountAmount": 10,
+      "RequiresCouponCode": true,
+      "CouponCode": "123",
+      "IsActive": true
+    },
+    {
+      "Name": "'20% order total' discount",
+      "DiscountType": "AssignedToOrderTotal",
+      "DiscountLimitation": "Unlimited",
+      "UsePercentage": true,
+      "DiscountPercentage": 20,
+      "RequiresCouponCode": true,
+      "CouponCode": "456",
+      "IsActive": true
+    }
+  ],
+  "BlogPosts": [
+    {
+      "Title": "How a blog can help your growing e-Commerce business",
+      "BodyOverview": "<p>When you start an online business, your main aim is to sell the products, right? As a business owner, you want to showcase your store to more audience. So, you decide to go on social media, why? Because everyone is doing it, then why shouldn&rsquo;t you? It is tempting as everyone is aware of the hype that it is the best way to market your brand.</p><p>Do you know having a blog for your online store can be very helpful? Many businesses do not understand the importance of having a blog because they don&rsquo;t have time to post quality content.</p><p>Today, we will talk about how a blog can play an important role for the growth of your e-Commerce business. Later, we will also discuss some tips that will be helpful to you for writing business related blog posts.</p>",
+      "Body": "<p>When you start an online business, your main aim is to sell the products, right? As a business owner, you want to showcase your store to more audience. So, you decide to go on social media, why? Because everyone is doing it, then why shouldn&rsquo;t you? It is tempting as everyone is aware of the hype that it is the best way to market your brand.</p><p>Do you know having a blog for your online store can be very helpful? Many businesses do not understand the importance of having a blog because they don&rsquo;t have time to post quality content.</p><p>Today, we will talk about how a blog can play an important role for the growth of your e-Commerce business. Later, we will also discuss some tips that will be helpful to you for writing business related blog posts.</p><h3>1) Blog is useful in educating your customers</h3><p>Blogging is one of the best way by which you can educate your customers about your products/services that you offer. This helps you as a business owner to bring more value to your brand. When you provide useful information to the customers about your products, they are more likely to buy products from you. You can use your blog for providing tutorials in regard to the use of your products.</p><p><strong>For example:</strong> If you have an online store that offers computer parts. You can write tutorials about how to build a computer or how to make your computer&rsquo;s performance better. While talking about these things, you can mention products in the tutorials and provide link to your products within the blog post from your website. Your potential customers might get different ideas of using your product and will likely to buy products from your online store.</p><h3>2) Blog helps your business in Search Engine Optimization (SEO)</h3><p>Blog posts create more internal links to your website which helps a lot in SEO. Blog is a great way to have quality content on your website related to your products/services which is indexed by all major search engines like Google, Bing and Yahoo. The more original content you write in your blog post, the better ranking you will get in search engines. SEO is an on-going process and posting blog posts regularly keeps your site active all the time which is beneficial when it comes to search engine optimization.</p><p><strong>For example:</strong> Let&rsquo;s say you sell &ldquo;Sony Television Model XYZ&rdquo; and you regularly publish blog posts about your product. Now, whenever someone searches for &ldquo;Sony Television Model XYZ&rdquo;, Google will crawl on your website knowing that you have something to do with this particular product. Hence, your website will show up on the search result page whenever this item is being searched.</p><h3>3) Blog helps in boosting your sales by convincing the potential customers to buy</h3><p>If you own an online business, there are so many ways you can share different stories with your audience in regard your products/services that you offer. Talk about how you started your business, share stories that educate your audience about what&rsquo;s new in your industry, share stories about how your product/service was beneficial to someone or share anything that you think your audience might find interesting (it does not have to be related to your product). This kind of blogging shows that you are an expert in your industry and interested in educating your audience. It sets you apart in the competitive market. This gives you an opportunity to showcase your expertise by educating the visitors and it can turn your audience into buyers.</p><p><strong>Fun Fact:</strong> Did you know that 92% of companies who decided to blog acquired customers through their blog?</p><p><a href=\"https://www.nopcommerce.com/\">nopCommerce</a> is great e-Commerce solution that also offers a variety of CMS features including blog. A store owner has full access for managing the blog posts and related comments.</p>",
+      "Tags": "e-commerce, blog, money",
+      "Comments": [ "This is a sample comment for this blog post" ]
+    },
+    {
+      "Title": "Why your online store needs a wish list",
+      "BodyOverview": "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p>",
+      "Body": "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p><p>Does every e-Commerce store needs a wish list? The answer to this question in most cases is yes, because of the following reasons:</p><p><strong>Understanding the needs of your customers</strong> - A wish list is a great way to know what is in your customer&rsquo;s mind. Try to think the purchase history as a small portion of the customer&rsquo;s preferences. But, the wish list is like a wide open door that can give any online business a lot of valuable information about their customer and what they like or desire.</p><p><strong>Shoppers like to share their wish list with friends and family</strong> - Providing your customers a way to email their wish list to their friends and family is a pleasant way to make online shopping enjoyable for the shoppers. It is always a good idea to make the wish list sharable by a unique link so that it can be easily shared though different channels like email or on social media sites.</p><p><strong>Wish list can be a great marketing tool</strong> &ndash; Another way to look at wish list is a great marketing tool because it is extremely targeted and the recipients are always motivated to use it. For example: when your younger brother tells you that his wish list is on a certain e-Commerce store. What is the first thing you are going to do? You are most likely to visit the e-Commerce store, check out the wish list and end up buying something for your younger brother.</p><p>So, how a wish list is a marketing tool? The reason is quite simple, it introduce your online store to new customers just how it is explained in the above example.</p><p><strong>Encourage customers to return to the store site</strong> &ndash; Having a feature of wish list on the store site can increase the return traffic because it encourages customers to come back and buy later. Allowing the customers to save the wish list to their online accounts gives them a reason return to the store site and login to the account at any time to view or edit the wish list items.</p><p><strong>Wish list can be used for gifts for different occasions like weddings or birthdays. So, what kind of benefits a gift-giver gets from a wish list?</strong></p><ul><li>It gives them a surety that they didn&rsquo;t buy a wrong gift</li><li>It guarantees that the recipient will like the gift</li><li>It avoids any awkward moments when the recipient unwraps the gift and as a gift-giver you got something that the recipient do not want</li></ul><p><strong>Wish list is a great feature to have on a store site &ndash; So, what kind of benefits a business owner gets from a wish list</strong></p><ul><li>It is a great way to advertise an online store as many people do prefer to shop where their friend or family shop online</li><li>It allows the current customers to return to the store site and open doors for the new customers</li><li>It allows store admins to track what&rsquo;s in customers wish list and run promotions accordingly to target specific customer segments</li></ul><p><a href=\"https://www.nopcommerce.com/\">nopCommerce</a> offers the feature of wish list that allows customers to create a list of products that they desire or planning to buy in future.</p>",
+      "Tags": "e-commerce, nopCommerce, sample tag, money",
+      "Comments": [ "This is a sample comment for this blog post" ]
+    }
+  ],
+  "NewsItems": [
+    {
+      "Title": "About nopCommerce",
+      "Short": "It's stable and highly usable. From downloads to documentation, www.nopCommerce.com offers a comprehensive base of information, resources, and support to the nopCommerce community.",
+      "Full": "<p>For full feature list go to <a href=\"https://www.nopCommerce.com\">nopCommerce.com</a></p><p>Providing outstanding custom search engine optimization, web development services and e-commerce development solutions to our clients at a fair price in a professional manner.</p>",
+      "NewsComments": [
+        {
+          "CommentTitle": "Sample comment title",
+          "CommentText": "This is a sample comment...",
+          "IsApproved": true
+        }
+      ],
+      "Published": true,
+      "AllowComments": true
+    },
+    {
+      "Title": "nopCommerce new release!",
+      "Short": "nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included! nopCommerce is a fully customizable shopping cart",
+      "Full": "<p>nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!</p>",
+      "NewsComments": [
+        {
+          "CommentTitle": "Sample comment title",
+          "CommentText": "This is a sample comment...",
+          "IsApproved": true
+        }
+      ],
+      "Published": true,
+      "AllowComments": true
+    },
+    {
+      "Title": "New online store is open!",
+      "Short": "The new nopCommerce store is open now! We are very excited to offer our new range of products. We will be constantly adding to our range so please register on our site.",
+      "Full": "<p>Our online store is officially up and running. Stock up for the holiday season! We have a great selection of items. We will be constantly adding to our range so please register on our site, this will enable you to keep up to date with any new products.</p><p>All shipping is worldwide and will leave the same day an order is placed! Happy Shopping and spread the word!!</p>",
+      "NewsComments": [
+        {
+          "CommentTitle": "Sample comment title",
+          "CommentText": "This is a sample comment...",
+          "IsApproved": true
+        }
+      ],
+      "Published": true,
+      "AllowComments": true
+    }
+  ],
+  "Polls": [
+    {
+      "Name": "Do you like nopCommerce?",
+      "DisplayOrder": 1,
+      "Answers": [
+        {
+          "Name": "Excellent",
+          "DisplayOrder": 1
+        },
+        {
+          "Name": "Good",
+          "DisplayOrder": 2
+        },
+        {
+          "Name": "Poor",
+          "DisplayOrder": 3
+        },
+        {
+          "Name": "Very bad",
+          "DisplayOrder": 4
+        }
+      ],
+      "Published": true,
+      "ShowOnHomepage": true
+    }
+  ],
+  "Warehouses": [
+    {
+      "Name": "Warehouse 1 (New York)",
+      "Address1": "21 West 52nd Street",
+      "City": "New York",
+      "StateProvince": "New York",
+      "CountryThreeLetterIsoCode": "USA",
+      "ZipPostalCode": "10021"
+    },
+    {
+      "Name": "Warehouse 2 (Los Angeles)",
+      "Address1": "300 South Spring Stree",
+      "City": "Los Angeles",
+      "StateProvince": "California",
+      "CountryThreeLetterIsoCode": "USA",
+      "ZipPostalCode": "90013"
+    }
+  ],
+  "Vendors": [
+    {
+      "Name": "Vendor 1",
+      "Email": "vendor1email@gmail.com",
+      "Description": "Some description...",
+      "DisplayOrder": 1,
+      "PriceRangeFiltering": true,
+      "ManuallyPriceRange": true,
+      "PriceFrom": 0,
+      "PriceTo": 10000,
+      "Active": true,
+      "PageSize": 6,
+      "AllowCustomersToSelectPageSize": true,
+      "PageSizeOptions": "6, 3, 9, 18"
+    },
+    {
+      "Name": "Vendor 2",
+      "Email": "vendor2email@gmail.com",
+      "Description": "Some description...",
+      "DisplayOrder": 2,
+      "Active": true,
+      "PageSize": 6,
+      "AllowCustomersToSelectPageSize": true,
+      "PageSizeOptions": "6, 3, 9, 18"
+    }
+  ],
+  "Affiliates": [
+    {
+      "Active": true,
+      "FirstName": "John",
+      "LastName": "Smith",
+      "Email": "affiliate_email@gmail.com",
+      "Company": "Company name here...",
+      "City": "New York",
+      "Address1": "21 West 52nd Street",
+      "ZipPostalCode": "10021",
+      "PhoneNumber": "123456789",
+      "StateProvince": "New York",
+      "CountryThreeLetterIsoCode": "USA"
+    }
+  ],
+  "Orders": [
+    {
+      "CustomerEmail": "steve_gates@nopCommerce.com",
+      "OrderSubtotalInclTax": 1855,
+      "OrderSubtotalExclTax": 1855,
+      "OrderTotal": 1855,
+      "OrderStatus": "Processing",
+      "PaymentMethodSystemName": "Payments.CheckMoneyOrder",
+      "PaymentStatus": "Paid",
+      "ShippingStatus": "NotYetShipped",
+      "ShippingMethod": "Ground",
+      "PickupInStore": false,
+      "ShippingRateComputationMethodSystemName": "Shipping.FixedByWeightByTotal",
+      "CustomerCurrencyCode": "USD",
+      "TaxRates": "0:0;",
+      "CurrencyRate": 1,
+      "CustomerIp": "127.0.0.1",
+      "OrderNotes": [ "Order placed", "Order paid" ],
+      "OrderItems": [
+        {
+          "ProductName": "Apple iCam",
+          "Quantity": 1,
+          "UnitPriceInclTax": 1300,
+          "UnitPriceExclTax": 1300,
+          "PriceInclTax": 1300,
+          "PriceExclTax": 1300
+        },
+        {
+          "ProductName": "Leica T Mirrorless Digital Camera",
+          "Quantity": 1,
+          "UnitPriceInclTax": 530,
+          "UnitPriceExclTax": 530,
+          "PriceInclTax": 530,
+          "PriceExclTax": 530
+        },
+        {
+          "ProductName": "$25 Virtual Gift Card",
+          "Quantity": 1,
+          "UnitPriceInclTax": 25,
+          "UnitPriceExclTax": 25,
+          "PriceInclTax": 25,
+          "PriceExclTax": 25,
+          "AttributeDescription": "From: Steve Gates &lt;steve_gates@nopCommerce.com&gt;<br />For: Brenda Lindgren &lt;brenda_lindgren@nopCommerce.com&gt;",
+          "AttributesXml": "<Attributes><GiftCardInfo><RecipientName>Brenda Lindgren</RecipientName><RecipientEmail>brenda_lindgren@nopCommerce.com</RecipientEmail><SenderName>Steve Gates</SenderName><SenderEmail>steve_gates@gmail.com</SenderEmail><Message></Message></GiftCardInfo></Attributes>"
+        }
+      ]
+    },
+    {
+      "CustomerEmail": "arthur_holmes@nopCommerce.com",
+      "OrderSubtotalInclTax": 2460,
+      "OrderSubtotalExclTax": 2460,
+      "OrderTotal": 2460,
+      "OrderStatus": "Pending",
+      "PaymentMethodSystemName": "Payments.CheckMoneyOrder",
+      "PaymentStatus": "Pending",
+      "PaidDateUtc": null,
+      "ShippingStatus": "NotYetShipped",
+      "ShippingMethod": "Next Day Air",
+      "PickupInStore": false,
+      "ShippingRateComputationMethodSystemName": "Shipping.FixedByWeightByTotal",
+      "CustomerCurrencyCode": "USD",
+      "TaxRates": "0:0;",
+      "CurrencyRate": 1,
+      "CustomerIp": "127.0.0.1",
+      "OrderNotes": [ "Order placed" ],
+      "OrderItems": [
+        {
+          "ProductName": "Vintage Style Engagement Ring",
+          "Quantity": 1,
+          "UnitPriceInclTax": 2100,
+          "UnitPriceExclTax": 2100,
+          "PriceInclTax": 2100,
+          "PriceExclTax": 2100
+        },
+        {
+          "ProductName": "Flower Girl Bracelet",
+          "Quantity": 1,
+          "UnitPriceInclTax": 360,
+          "UnitPriceExclTax": 360,
+          "PriceInclTax": 360,
+          "PriceExclTax": 360
+        }
+      ]
+    },
+    {
+      "CustomerEmail": "james_pan@nopCommerce.com",
+      "OrderSubtotalInclTax": 8.80,
+      "OrderSubtotalExclTax": 8.80,
+      "OrderTotal": 8.80,
+      "OrderStatus": "Pending",
+      "PaymentMethodSystemName": "Payments.CheckMoneyOrder",
+      "PaymentStatus": "Pending",
+      "PaidDateUtc": null,
+      "ShippingStatus": "ShippingNotRequired",
+      "PickupInStore": false,
+      "CustomerCurrencyCode": "USD",
+      "TaxRates": "0:0;",
+      "CurrencyRate": 1,
+      "CustomerIp": "127.0.0.1",
+      "OrderNotes": [ "Order placed" ],
+      "OrderItems": [
+        {
+          "ProductName": "If You Wait (donation)",
+          "Quantity": 1,
+          "UnitPriceInclTax": 3,
+          "UnitPriceExclTax": 3,
+          "PriceInclTax": 3,
+          "PriceExclTax": 3
+        },
+        {
+          "ProductName": "Night Visions",
+          "Quantity": 1,
+          "UnitPriceInclTax": 2.8,
+          "UnitPriceExclTax": 2.8,
+          "PriceInclTax": 2.8,
+          "PriceExclTax": 2.8
+        },
+        {
+          "ProductName": "Science & Faith",
+          "Quantity": 1,
+          "UnitPriceInclTax": 3,
+          "UnitPriceExclTax": 3,
+          "PriceInclTax": 3,
+          "PriceExclTax": 3
+        }
+      ]
+    },
+    {
+      "CustomerEmail": "brenda_lindgren@nopCommerce.com",
+      "OrderSubtotalInclTax": 102,
+      "OrderSubtotalExclTax": 102,
+      "OrderTotal": 102,
+      "OrderStatus": "Processing",
+      "PaymentMethodSystemName": "Payments.CheckMoneyOrder",
+      "PaymentStatus": "Paid",
+      "ShippingStatus": "Shipped",
+      "ShippingMethod": "Pickup in store",
+      "PickupInStore": true,
+      "PickupAddressId": "fourthCustomerPickupAddress.Id",
+      "ShippingRateComputationMethodSystemName": "Pickup.PickupInStore",
+      "CustomerCurrencyCode": "USD",
+      "TaxRates": "0:0;",
+      "CurrencyRate": 1,
+      "CustomerIp": "127.0.0.1",
+      "OrderNotes": [ "Order placed", "Order paid", "Order shipped" ],
+      "OrderItems": [
+        {
+          "ProductName": "Pride and Prejudice",
+          "Quantity": 1,
+          "UnitPriceInclTax": 24,
+          "UnitPriceExclTax": 24,
+          "PriceInclTax": 24,
+          "PriceExclTax": 24
+        },
+        {
+          "ProductName": "First Prize Pies",
+          "Quantity": 1,
+          "UnitPriceInclTax": 51,
+          "UnitPriceExclTax": 51,
+          "PriceInclTax": 51,
+          "PriceExclTax": 51
+        },
+        {
+          "ProductName": "Fahrenheit 451 by Ray Bradbury",
+          "Quantity": 1,
+          "UnitPriceInclTax": 27,
+          "UnitPriceExclTax": 27,
+          "PriceInclTax": 27,
+          "PriceExclTax": 27
+        }
+      ],
+      "Shipments": [
+        {
+          "TotalWeight": 4,
+          "ShipmentItems": [
+
+            {
+              "ProductName": "Pride and Prejudice",
+              "Quantity": 1
+            },
+            {
+              "ProductName": "First Prize Pies",
+              "Quantity": 1
+            }
+
+          ]
+        },
+        {
+          "TotalWeight": 2,
+          "ShipmentItems": [
+            {
+              "Quantity": 1,
+              "ProductName": "Fahrenheit 451 by Ray Bradbury"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "CustomerEmail": "victoria_victoria@nopCommerce.com",
+      "OrderSubtotalInclTax": 43.50,
+      "OrderSubtotalExclTax": 43.50,
+      "OrderTotal": 43.50,
+      "OrderStatus": "Complete",
+      "PaymentMethodSystemName": "Payments.CheckMoneyOrder",
+      "PaymentStatus": "Paid",
+      "ShippingStatus": "Delivered",
+      "ShippingMethod": "Ground",
+      "PickupInStore": false,
+      "CustomerCurrencyCode": "USD",
+      "TaxRates": "0:0;",
+      "CurrencyRate": 1,
+      "CustomerIp": "127.0.0.1",
+      "ShippingRateComputationMethodSystemName": "Shipping.FixedByWeightByTotal",
+      "OrderNotes": [ "Order placed", "Order paid", "Order shipped", "Order delivered" ],
+      "OrderItems": [
+        {
+          "ProductName": "Levi's 511 Jeans",
+          "Quantity": 1,
+          "UnitPriceInclTax": 43.50,
+          "UnitPriceExclTax": 43.50,
+          "PriceInclTax": 43.50,
+          "PriceExclTax": 43.50
+        }
+      ],
+      "Shipments": [
+        {
+          "TotalWeight": 2,
+          "ShipmentItems": [
+            {
+              "Quantity": 1,
+              "ProductName": "Levi's 511 Jeans"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "ActivityLogs": [
+    {
+      "ActivityLogType": "EditCategory",
+      "Comment": "Edited a category ('Computers')",
+      "IpAddress": "127.0.0.1"
+    },
+    {
+      "ActivityLogType": "EditDiscount",
+      "Comment": "Edited a discount ('Sample discount with coupon code')",
+      "IpAddress": "127.0.0.1"
+    },
+    {
+      "ActivityLogType": "EditSpecAttribute",
+      "Comment": "Edited a specification attribute ('CPU Type')",
+      "IpAddress": "127.0.0.1"
+    },
+    {
+      "ActivityLogType": "AddNewProductAttribute",
+      "Comment": "Added a new product attribute ('Some attribute')",
+      "IpAddress": "127.0.0.1"
+    },
+    {
+      "ActivityLogType": "DeleteGiftCard",
+      "Comment": "Deleted a gift card ('bdbbc0ef-be57')",
+      "IpAddress": "127.0.0.1"
+    }
+  ],
+  "SearchTerms": [
+    {
+      "Count": 34,
+      "Keyword": "computer"
+    },
+    {
+      "Count": 30,
+      "Keyword": "camera"
+    },
+    {
+      "Count": 27,
+      "Keyword": "jewelry"
+    },
+    {
+      "Count": 26,
+      "Keyword": "shoes"
+    },
+    {
+      "Count": 19,
+      "Keyword": "jeans"
+    },
+    {
+      "Count": 10,
+      "Keyword": "gift"
+    }
+  ]
+}

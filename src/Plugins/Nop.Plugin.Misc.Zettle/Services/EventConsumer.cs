@@ -57,7 +57,7 @@ public class EventConsumer :
         IProductService productService,
         ZettleRecordService zettleRecordService,
         ZettleService zettleService,
-        ZettleSettings zettleSettings):
+        ZettleSettings zettleSettings) :
         base(pluginManager)
     {
         _categoryService = categoryService;

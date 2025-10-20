@@ -12,7 +12,7 @@
     NopHtml.AppendPageCssClassParts("html-login-page");
 
     //register URL with return URL (if specified)
-    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] }, webHelper.GetCurrentRequestProtocol());
+    var registerUrl = Url.RouteUrl(NopRouteNames.Standard.REGISTER, new { returnUrl = this.Context.Request.Query["returnUrl"] }, webHelper.GetCurrentRequestProtocol());
 }
 <div class="page login-page">
     <div class="page-title">
@@ -25,9 +25,9 @@
             @if (Model.RegistrationType == UserRegistrationType.Disabled)
             {
                 <div class="new-wrapper">
-                    <div class="title">
+                    <h2 class="title">
                         @T("Account.Register")
-                    </div>
+                    </h2>
                     <div class="text">
                         @T("Account.Register.Result.Disabled")
                     </div>
@@ -36,14 +36,14 @@
             else if (Model.CheckoutAsGuest)
             {
                 <div class="new-wrapper checkout-as-guest-or-register-block">
-                    <div class="title">
-                        <strong>@T("Account.Login.CheckoutAsGuestOrRegister")</strong>
-                    </div>
+                    <h2 class="title">
+                        @T("Account.Login.CheckoutAsGuestOrRegister")
+                    </h2>
                     <div class="text">
                         @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "CheckoutAsGuestOrRegister" })
                     </div>
                     <div class="buttons">
-                        <button type="button" class="button-1 checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'">@T("Account.Login.CheckoutAsGuest")</button>
+                        <button type="button" class="button-1 checkout-as-guest-button" onclick="location.href='@Url.RouteUrl(NopRouteNames.Standard.CHECKOUT)'">@T("Account.Login.CheckoutAsGuest")</button>
                         <button type="button" class="button-1 register-button" onclick="location.href='@registerUrl'">@T("Account.Register")</button>
                     </div>
                 </div>
@@ -51,9 +51,9 @@
             else
             {
                 <div class="new-wrapper register-block">
-                    <div class="title">
-                        <strong>@T("Account.Login.NewCustomer")</strong>
-                    </div>
+                    <h2 class="title">
+                        @T("Account.Login.NewCustomer")
+                    </h2>
                     <div class="text">
                         @T("Account.Login.NewCustomerText")
                     </div>
@@ -63,11 +63,11 @@
                 </div>
             }
             <div class="returning-wrapper fieldset">
-                <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post" autocomplete="off">
+                <form asp-route="@NopRouteNames.General.LOGIN" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post" autocomplete="off">
                     <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
-                    <div class="title">
-                        <strong>@T("Account.Login.ReturningCustomer")</strong>
-                    </div>
+                    <h2 class="title">
+                        @T("Account.Login.ReturningCustomer")
+                    </h2>
                     <div class="form-fields">
                         @if (Model.UsernamesEnabled)
                         {
@@ -97,7 +97,7 @@
                             <input asp-for="RememberMe" />
                             <label asp-for="RememberMe"></label>
                             <span class="forgot-password">
-                                <a asp-route="PasswordRecovery">@T("Account.Login.ForgotPassword")</a>
+                                <a asp-route="@NopRouteNames.Standard.PASSWORD_RECOVERY">@T("Account.Login.ForgotPassword")</a>
                             </span>
                         </div>
                         @if (Model.DisplayCaptcha)

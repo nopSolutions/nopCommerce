@@ -24,7 +24,7 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     /// </summary>
     protected readonly ICacheKeyManager _keyManager;
 
-    protected static CancellationTokenSource _clearToken = new();
+    protected CancellationTokenSource _clearToken = new();
 
     #endregion
 
@@ -87,6 +87,19 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
         }
     }
 
+    // Protected implementation of Dispose pattern.
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+            // don't dispose of the MemoryCache, as it is injected
+            _clearToken.Dispose();
+
+        _disposed = true;
+    }
+
     #endregion
 
     #region Methods
@@ -97,7 +110,7 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     /// <param name="cacheKey">Cache key</param>
     /// <param name="cacheKeyParameters">Parameters to create cache key</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
+    public virtual Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
     {
         var key = PrepareKey(cacheKey, cacheKeyParameters).Key;
         _memoryCache.Remove(key);
@@ -116,7 +129,7 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     /// A task that represents the asynchronous operation
     /// The task result contains the cached value associated with the specified key
     /// </returns>
-    public async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
+    public virtual async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
     {
         if ((key?.CacheTime ?? 0) <= 0)
             return await acquire();
@@ -161,7 +174,7 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     /// A task that represents the asynchronous operation
     /// The task result contains the cached value associated with the specified key, or the default value if none was found
     /// </returns>
-    public async Task<T> GetAsync<T>(CacheKey key, T defaultValue = default)
+    public virtual async Task<T> GetAsync<T>(CacheKey key, T defaultValue = default)
     {
         var value = _memoryCache.Get<Lazy<Task<T>>>(key.Key)?.Value;
 
@@ -188,7 +201,7 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     /// A task that represents the asynchronous operation
     /// The task result contains the cached value associated with the specified key
     /// </returns>
-    public async Task<T> GetAsync<T>(CacheKey key, Func<T> acquire)
+    public virtual async Task<T> GetAsync<T>(CacheKey key, Func<T> acquire)
     {
         return await GetAsync(key, () => Task.FromResult(acquire()));
     }
@@ -201,7 +214,7 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     /// A task that represents the asynchronous operation
     /// The task result contains the cached value associated with the specified key, or null if none was found
     /// </returns>
-    public async Task<object> GetAsync(CacheKey key)
+    public virtual async Task<object> GetAsync(CacheKey key)
     {
         var entry = _memoryCache.Get(key.Key);
         if (entry == null)
@@ -230,7 +243,7 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     /// <param name="key">Key of cached item</param>
     /// <param name="data">Value for caching</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public Task SetAsync<T>(CacheKey key, T data)
+    public virtual Task SetAsync<T>(CacheKey key, T data)
     {
         if (data != null && (key?.CacheTime ?? 0) > 0)
             _memoryCache.Set(
@@ -247,45 +260,35 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     /// <param name="prefix">Cache key prefix</param>
     /// <param name="prefixParameters">Parameters to create cache key prefix</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
+    public virtual async Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
     {
-        foreach (var key in _keyManager.RemoveByPrefix(PrepareKeyPrefix(prefix, prefixParameters)))
+        var deletePrefix = PrepareKeyPrefix(prefix, prefixParameters);
+        foreach (var key in _keyManager.RemoveByPrefix(deletePrefix))
             _memoryCache.Remove(key);
 
-        return Task.CompletedTask;
+        if (_memoryCache is ISynchronizedMemoryCache cache)
+            await cache.RemoveByPrefixAsync(deletePrefix);
     }
 
     /// <summary>
     /// Clear all cache data
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public Task ClearAsync()
+    public virtual async Task ClearAsync()
     {
-        _clearToken.Cancel();
+        await _clearToken.CancelAsync();
         _clearToken.Dispose();
         _clearToken = new CancellationTokenSource();
         _keyManager.Clear();
 
-        return Task.CompletedTask;
+        if (_memoryCache is ISynchronizedMemoryCache cache)
+            await cache.ClearCacheAsync();
     }
 
-    public void Dispose()
+    public virtual void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
-    }
-
-    // Protected implementation of Dispose pattern.
-    protected virtual void Dispose(bool disposing)
-    {
-        if (_disposed)
-            return;
-
-        if (disposing)
-            // don't dispose of the MemoryCache, as it is injected
-            _clearToken.Dispose();
-
-        _disposed = true;
     }
 
     #endregion

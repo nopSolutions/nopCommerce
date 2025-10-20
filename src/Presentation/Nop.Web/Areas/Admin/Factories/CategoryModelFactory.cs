@@ -215,7 +215,6 @@ public partial class CategoryModelFactory : ICategoryModelFactory
             model.PageSize = _catalogSettings.DefaultCategoryPageSize;
             model.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
             model.Published = true;
-            model.IncludeInTopMenu = true;
             model.AllowCustomersToSelectPageSize = true;
             model.PriceRangeFiltering = true;
             model.ManuallyPriceRange = true;
@@ -239,9 +238,11 @@ public partial class CategoryModelFactory : ICategoryModelFactory
         //prepare model discounts
         var availableDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToCategories, showHidden: true, isActive: null);
         await _discountSupportedModelFactory.PrepareModelDiscountsAsync(model, category, availableDiscounts, excludeProperties);
-        
+
         //prepare model stores
         await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, category, excludeProperties);
+
+        await _baseAdminModelFactory.PreparePreTranslationSupportModelAsync(model);
 
         return model;
     }

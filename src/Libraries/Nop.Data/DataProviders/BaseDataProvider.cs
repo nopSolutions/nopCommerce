@@ -8,6 +8,7 @@ using LinqToDB.DataProvider;
 using LinqToDB.Tools;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Data.Configuration;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 
@@ -56,7 +57,32 @@ public abstract partial class BaseDataProvider
     /// <returns>Connection to a database</returns>
     protected virtual DbConnection CreateDbConnection(string connectionString = null)
     {
-        return GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : GetCurrentConnectionString());
+        return GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : DataSettings.ConnectionString);
+    }
+
+    /// <summary>
+    /// Gets scalar value from the database
+    /// </summary>
+    /// <param name="sql">The text command to run</param>
+    /// <param name="parameters">Database parameters</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The first column of the first row in the first result set.
+    /// </returns>
+    protected virtual async Task<string> GetSqlStringValueAsync(string sql, params DataParameter[] parameters)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(sql);
+
+        await using var dbConnection = CreateDbConnection();
+        await using var command = dbConnection.CreateCommand();
+        command.Connection = dbConnection;
+        command.CommandText = sql;
+        command.Parameters.AddRange(parameters);
+        await dbConnection.OpenAsync();
+
+        var value = await command.ExecuteScalarAsync();
+
+        return value?.ToString() ?? string.Empty;
     }
 
     /// <summary>
@@ -164,7 +190,7 @@ public abstract partial class BaseDataProvider
     public virtual IQueryable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
     {
         var options = new DataOptions()
-            .UseConnectionString(LinqToDbDataProvider, GetCurrentConnectionString())
+            .UseConnectionString(LinqToDbDataProvider, DataSettings.ConnectionString)
             .UseMappingSchema(NopMappingSchema.GetMappingSchema(ConfigurationName, LinqToDbDataProvider));
 
         return new DataContext(options)
@@ -451,12 +477,9 @@ public abstract partial class BaseDataProvider
     protected abstract IDataProvider LinqToDbDataProvider { get; }
 
     /// <summary>
-    /// Database connection string
+    /// Gets the current data settings
     /// </summary>
-    protected static string GetCurrentConnectionString()
-    {
-        return DataSettingsManager.LoadSettings().ConnectionString;
-    }
+    protected DataConfig DataSettings => DataSettingsManager.LoadSettings();
 
     /// <summary>
     /// Name of database provider

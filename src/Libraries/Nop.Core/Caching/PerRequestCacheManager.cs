@@ -36,7 +36,7 @@ public partial class PerRequestCacheManager : CacheKeyService, IShortTermCacheMa
     /// A task that represents the asynchronous operation
     /// The task result contains the cached value associated with the specified key
     /// </returns>
-    public async Task<T> GetAsync<T>(Func<Task<T>> acquire, CacheKey cacheKey, params object[] cacheKeyParameters)
+    public virtual async Task<T> GetAsync<T>(Func<Task<T>> acquire, CacheKey cacheKey, params object[] cacheKeyParameters)
     {
         var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters).Key;
 

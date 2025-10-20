@@ -7,11 +7,13 @@ using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
@@ -72,6 +74,8 @@ public class SchemaMigration : ForwardOnlyMigration
         Create.TableFor<ProductTemplate>();
         Create.TableFor<BackInStockSubscription>();
         Create.TableFor<RelatedProduct>();
+        Create.TableFor<FilterLevelValue>();
+        Create.TableFor<FilterLevelValueProductMapping>();
         Create.TableFor<ReviewType>();
         Create.TableFor<SpecificationAttributeGroup>();
         Create.TableFor<SpecificationAttribute>();
@@ -88,6 +92,7 @@ public class SchemaMigration : ForwardOnlyMigration
         Create.TableFor<OrderNote>();
         Create.TableFor<RecurringPayment>();
         Create.TableFor<RecurringPaymentHistory>();
+        Create.TableFor<CustomWishlist>();
         Create.TableFor<ShoppingCartItem>();
         Create.TableFor<Store>();
         Create.TableFor<StoreMapping>();
@@ -146,6 +151,7 @@ public class SchemaMigration : ForwardOnlyMigration
         Create.TableFor<Campaign>();
         Create.TableFor<EmailAccount>();
         Create.TableFor<MessageTemplate>();
+        Create.TableFor<NewsLetterSubscriptionType>();
         Create.TableFor<NewsLetterSubscription>();
         Create.TableFor<QueuedEmail>();
         Create.TableFor<NewsItem>();
@@ -165,5 +171,7 @@ public class SchemaMigration : ForwardOnlyMigration
         Create.TableFor<VendorAttribute>();
         Create.TableFor<VendorAttributeValue>();
         Create.TableFor<VendorNote>();
+        Create.TableFor<Menu>();
+        Create.TableFor<MenuItem>();
     }
 }

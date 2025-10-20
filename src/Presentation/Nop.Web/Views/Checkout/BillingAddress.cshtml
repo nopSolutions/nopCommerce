@@ -24,7 +24,7 @@
         <h1>@T("Checkout.BillingAddress")</h1>
     </div>
     <div class="page-body checkout-data">
-        <form id="billing-form" asp-route="CheckoutBillingAddress" method="post">
+        <form id="billing-form" asp-route="@NopRouteNames.Standard.CHECKOUT_BILLING_ADDRESS" method="post">
             <div class="billing-addresses">
                 <div id="toggle-billing-address">
                     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutBillingAddressTop, additionalData = Model })
@@ -40,9 +40,9 @@
                     @if (Model.ExistingAddresses.Count > 0)
                     {
                         <div class="section select-billing-address">
-                            <div class="title">
-                                <strong>@T("Checkout.SelectBillingAddress")</strong>
-                            </div>
+                            <h2 class="title">
+                                @T("Checkout.SelectBillingAddress")
+                            </h2>
                             @if (Model.InvalidExistingAddresses.Count > 0)
                             {
                                 <label class="min-amount-warning">
@@ -157,10 +157,10 @@
                                                     if ($('#@Html.IdFor(model => model.ShipToSameAddress)')
                                                         .is(':checked')) {
                                                         setLocation(
-                                                            '@Html.Raw(Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id, shipToSameAddress = "true"}))');
+                                                            '@Html.Raw(Url.RouteUrl(NopRouteNames.Standard.CHECKOUT_SELECT_BILLING_ADDRESS, new { addressId = item.Id, shipToSameAddress = "true" }))');
                                                     } else {
                                                         setLocation(
-                                                            '@Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id})');
+                                                            '@Url.RouteUrl(NopRouteNames.Standard.CHECKOUT_SELECT_BILLING_ADDRESS, new { addressId = item.Id })');
                                                     }
                                                 }
                                             </script>
@@ -173,16 +173,9 @@
                 </div>
                 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutBillingAddressMiddle, additionalData = Model })
                 <div class="section new-billing-address" id="billingaddress-new-form">
-                    <div class="title">
-                        @if (Model.ExistingAddresses.Count > 0)
-                        {
-                            <strong class="title-text">@T("Checkout.OrEnterNewAddress")</strong>
-                        }
-                        else
-                        {
-                            <strong>@T("Checkout.EnterBillingAddress")</strong>
-                        }
-                    </div>
+                    <h2 class="title title-text">
+                        @(Model.ExistingAddresses.Count > 0 ? T("Checkout.OrEnterNewAddress") : T("Checkout.EnterBillingAddress"))
+                    </h2>
                     @if (Model.EuVatEnabled)
                     {
                         <div class="inputs">
@@ -195,7 +188,7 @@
                             else
                             {
                                 <span class="vat-number-warning">
-                                    @T("Checkout.VatNumber.Disabled", Url.RouteUrl("CustomerInfo"))
+                                    @T("Checkout.VatNumber.Disabled", Url.RouteUrl(NopRouteNames.General.CUSTOMER_INFO))
                                 </span>
                             }
                         </div>
@@ -214,7 +207,7 @@
             <div class="buttons">
                 <button id="billingaddress-save-button" type="button" class="button-1" style="display: none" onclick="CheckoutBilling.saveEditAddress('@(storeLocation)checkout/SaveEditBillingAddress/'); return false;">@T("Common.Save")</button>
 
-                <button id="billingaddress-cancel-button" type="button" class="button-1" style="display: none" onclick="setLocation('@Url.RouteUrl("CheckoutBillingAddress")')">@T("Common.Cancel")</button>
+                <button id="billingaddress-cancel-button" type="button" class="button-1" style="display: none" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.CHECKOUT_BILLING_ADDRESS)')">@T("Common.Cancel")</button>
 
                 <button id="billingaddress-next-button" type="submit" name="nextstep" class="button-1 new-address-next-step-button">@T("Checkout.NextButton")</button>
             </div>
@@ -225,9 +218,9 @@
             $('#delete-billing-address-button').show();
         </script>
         <div class="section order-summary">
-            <div class="title">
-                <strong>@T("Checkout.OrderSummary")</strong>
-            </div>
+            <h2 class="title">
+                @T("Checkout.OrderSummary")
+            </h2>
             @await Component.InvokeAsync(typeof(OrderSummaryViewComponent))
         </div>
     </div>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 
-namespace Nop.Web.Framework;
+namespace Nop.Web.Framework.Controllers;
 
 public partial class NullView : IView
 {
@@ -9,7 +9,7 @@ public partial class NullView : IView
 
     public string Path => string.Empty;
 
-    public Task RenderAsync(ViewContext context)
+    public virtual Task RenderAsync(ViewContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
 

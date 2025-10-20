@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Security;
+using Nop.Core.Http;
 using Nop.Core.Rss;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
@@ -64,7 +65,7 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> Index()
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = await _forumModelFactory.PrepareBoardsIndexModelAsync();
 
@@ -74,7 +75,7 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> ActiveDiscussions(int forumId = 0, int pageNumber = 1)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = await _forumModelFactory.PrepareActiveDiscussionsModelAsync(forumId, pageNumber);
 
@@ -85,13 +86,13 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> ActiveDiscussionsRss(int forumId = 0)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         if (!_forumSettings.ActiveDiscussionsFeedEnabled)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         var topics = await _forumService.GetActiveTopicsAsync(forumId, 0, _forumSettings.ActiveDiscussionsFeedCount);
-        var url = Url.RouteUrl("ActiveDiscussionsRSS", null, _webHelper.GetCurrentRequestProtocol());
+        var url = Url.RouteUrl(NopRouteNames.Standard.ACTIVE_DISCUSSIONS_RSS, null, _webHelper.GetCurrentRequestProtocol());
 
         var feedTitle = await _localizationService.GetResourceAsync("Forum.ActiveDiscussionsFeedTitle");
         var feedDescription = await _localizationService.GetResourceAsync("Forum.ActiveDiscussionsFeedDescription");
@@ -110,7 +111,7 @@ public partial class BoardsController : BasePublicController
 
         foreach (var topic in topics)
         {
-            var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, _webHelper.GetCurrentRequestProtocol());
+            var topicUrl = Url.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG, new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, _webHelper.GetCurrentRequestProtocol());
             var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
             items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl),
@@ -124,11 +125,11 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> ForumGroup(int id)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var forumGroup = await _forumService.GetForumGroupByIdAsync(id);
         if (forumGroup == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         var model = await _forumModelFactory.PrepareForumGroupModelAsync(forumGroup);
 
@@ -138,11 +139,11 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> Forum(int id, int pageNumber = 1)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var forum = await _forumService.GetForumByIdAsync(id);
         if (forum == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         var model = await _forumModelFactory.PrepareForumPageModelAsync(forum, pageNumber);
 
@@ -152,10 +153,10 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> ForumRss(int id)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         if (!_forumSettings.ForumFeedsEnabled)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         var topicLimit = _forumSettings.ForumFeedCount;
         var forum = await _forumService.GetForumByIdAsync(id);
@@ -166,7 +167,7 @@ public partial class BoardsController : BasePublicController
             var topics = await _forumService.GetAllTopicsAsync(forum.Id, 0, string.Empty,
                 ForumSearchType.All, 0, 0, topicLimit);
 
-            var url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, _webHelper.GetCurrentRequestProtocol());
+            var url = Url.RouteUrl(NopRouteNames.Standard.FORUM_RSS, new { id = forum.Id }, _webHelper.GetCurrentRequestProtocol());
 
             var feedTitle = await _localizationService.GetResourceAsync("Forum.ForumFeedTitle");
             var feedDescription = await _localizationService.GetResourceAsync("Forum.ForumFeedDescription");
@@ -185,7 +186,7 @@ public partial class BoardsController : BasePublicController
 
             foreach (var topic in topics)
             {
-                var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, _webHelper.GetCurrentRequestProtocol());
+                var topicUrl = Url.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG, new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, _webHelper.GetCurrentRequestProtocol());
                 var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
                 items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl), $"urn:store:{store.Id}:forum:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
@@ -243,16 +244,16 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> Topic(int id, int pageNumber = 1)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var forumTopic = await _forumService.GetTopicByIdAsync(id);
         if (forumTopic == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         var model = await _forumModelFactory.PrepareForumTopicPageModelAsync(forumTopic, pageNumber);
         //if no posts loaded, redirect to the first page
         if (!model.ForumPostModels.Any() && pageNumber > 1)
-            return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
+            return RedirectToRoute(NopRouteNames.Standard.TOPIC_SLUG, new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
 
         //update view count
         var customer = await _workContext.GetCurrentCustomerAsync();
@@ -309,11 +310,11 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> TopicMove(int id)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var forumTopic = await _forumService.GetTopicByIdAsync(id);
         if (forumTopic == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         if (!await _forumService.IsCustomerAllowedToMoveTopicAsync(await _workContext.GetCurrentCustomerAsync(), forumTopic))
             return Challenge();
@@ -327,12 +328,12 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> TopicMove(TopicMoveModel model)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var forumTopic = await _forumService.GetTopicByIdAsync(model.Id);
 
         if (forumTopic == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         var newForumId = model.ForumSelected;
         var forum = await _forumService.GetForumByIdAsync(newForumId);
@@ -340,7 +341,7 @@ public partial class BoardsController : BasePublicController
         if (forum != null && forumTopic.ForumId != newForumId)
             await _forumService.MoveTopicAsync(forumTopic.Id, newForumId);
 
-        return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
+        return RedirectToRoute(NopRouteNames.Standard.TOPIC_SLUG, new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
     }
 
     [HttpPost]
@@ -349,7 +350,7 @@ public partial class BoardsController : BasePublicController
         if (!_forumSettings.ForumsEnabled)
             return Json(new
             {
-                redirect = Url.RouteUrl("Homepage"),
+                redirect = Url.RouteUrl(NopRouteNames.General.HOMEPAGE),
             });
 
         var forumTopic = await _forumService.GetTopicByIdAsync(id);
@@ -365,24 +366,24 @@ public partial class BoardsController : BasePublicController
             if (forum != null)
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("ForumSlug", new { id = forum.Id, slug = await _forumService.GetForumSeNameAsync(forum) }),
+                    redirect = Url.RouteUrl(NopRouteNames.Standard.FORUM_SLUG, new { id = forum.Id, slug = await _forumService.GetForumSeNameAsync(forum) }),
                 });
         }
 
         return Json(new
         {
-            redirect = Url.RouteUrl("Boards"),
+            redirect = Url.RouteUrl(NopRouteNames.General.BOARDS),
         });
     }
 
     public virtual async Task<IActionResult> TopicCreate(int id)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var forum = await _forumService.GetForumByIdAsync(id);
         if (forum == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         if (await _forumService.IsCustomerAllowedToCreateTopicAsync(await _workContext.GetCurrentCustomerAsync(), forum) == false)
             return Challenge();
@@ -397,11 +398,11 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> TopicCreate(EditForumTopicModel model, bool captchaValid)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var forum = await _forumService.GetForumByIdAsync(model.ForumId);
         if (forum == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
@@ -486,7 +487,7 @@ public partial class BoardsController : BasePublicController
                     }
                 }
 
-                return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
+                return RedirectToRoute(NopRouteNames.Standard.TOPIC_SLUG, new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
             }
             catch (Exception ex)
             {
@@ -503,11 +504,11 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> TopicEdit(int id)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var forumTopic = await _forumService.GetTopicByIdAsync(id);
         if (forumTopic == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         if (!await _forumService.IsCustomerAllowedToEditTopicAsync(await _workContext.GetCurrentCustomerAsync(), forumTopic))
             return Challenge();
@@ -523,16 +524,16 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> TopicEdit(EditForumTopicModel model, bool captchaValid)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var forumTopic = await _forumService.GetTopicByIdAsync(model.Id);
 
         if (forumTopic == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId);
         if (forum == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
@@ -625,7 +626,7 @@ public partial class BoardsController : BasePublicController
                 }
 
                 // redirect to the topic page with the topic slug
-                return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
+                return RedirectToRoute(NopRouteNames.Standard.TOPIC_SLUG, new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
             }
             catch (Exception ex)
             {
@@ -645,13 +646,13 @@ public partial class BoardsController : BasePublicController
         if (!_forumSettings.ForumsEnabled)
             return Json(new
             {
-                redirect = Url.RouteUrl("Homepage"),
+                redirect = Url.RouteUrl(NopRouteNames.General.HOMEPAGE),
             });
 
         var forumPost = await _forumService.GetPostByIdAsync(id);
 
         if (forumPost == null)
-            return Json(new { redirect = Url.RouteUrl("Boards") });
+            return Json(new { redirect = Url.RouteUrl(NopRouteNames.General.BOARDS) });
 
         if (!await _forumService.IsCustomerAllowedToDeletePostAsync(await _workContext.GetCurrentCustomerAsync(), forumPost))
             return Challenge();
@@ -668,12 +669,12 @@ public partial class BoardsController : BasePublicController
         if (forumTopic == null)
             return Json(new
             {
-                redirect = Url.RouteUrl("ForumSlug", new { id = forumId, slug = forumSlug }),
+                redirect = Url.RouteUrl(NopRouteNames.Standard.FORUM_SLUG, new { id = forumId, slug = forumSlug }),
             });
 
         return Json(new
         {
-            redirect = Url.RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) }),
+            redirect = Url.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG, new { id = forumTopic.Id, slug = await _forumService.GetTopicSeNameAsync(forumTopic) }),
         });
 
     }
@@ -681,11 +682,11 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> PostCreate(int id, int? quote)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var forumTopic = await _forumService.GetTopicByIdAsync(id);
         if (forumTopic == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         if (!await _forumService.IsCustomerAllowedToCreatePostAsync(await _workContext.GetCurrentCustomerAsync(), forumTopic))
             return Challenge();
@@ -700,11 +701,11 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> PostCreate(EditForumPostModel model, bool captchaValid)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var forumTopic = await _forumService.GetTopicByIdAsync(model.ForumTopicId);
         if (forumTopic == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
@@ -772,9 +773,9 @@ public partial class BoardsController : BasePublicController
                 var pageIndex = await _forumService.CalculateTopicPageIndexAsync(forumPost.TopicId, pageSize, forumPost.Id) + 1;
                 string url;
                 if (pageIndex > 1)
-                    url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic), pageNumber = pageIndex });
+                    url = Url.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG_PAGED, new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic), pageNumber = pageIndex });
                 else
-                    url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
+                    url = Url.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG, new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
                 return LocalRedirect($"{url}#{forumPost.Id}");
             }
             catch (Exception ex)
@@ -792,11 +793,11 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> PostEdit(int id)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var forumPost = await _forumService.GetPostByIdAsync(id);
         if (forumPost == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         if (!await _forumService.IsCustomerAllowedToEditPostAsync(await _workContext.GetCurrentCustomerAsync(), forumPost))
             return Challenge();
@@ -811,11 +812,11 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> PostEdit(EditForumPostModel model, bool captchaValid)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var forumPost = await _forumService.GetPostByIdAsync(model.Id);
         if (forumPost == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (!await _forumService.IsCustomerAllowedToEditPostAsync(customer, forumPost))
@@ -823,11 +824,11 @@ public partial class BoardsController : BasePublicController
 
         var forumTopic = await _forumService.GetTopicByIdAsync(forumPost.TopicId);
         if (forumTopic == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         var forum = await _forumService.GetForumByIdAsync(forumTopic.ForumId);
         if (forum == null)
-            return RedirectToRoute("Boards");
+            return RedirectToRoute(NopRouteNames.General.BOARDS);
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
@@ -885,11 +886,11 @@ public partial class BoardsController : BasePublicController
                 string url;
                 if (pageIndex > 1)
                 {
-                    url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic), pageNumber = pageIndex });
+                    url = Url.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG_PAGED, new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic), pageNumber = pageIndex });
                 }
                 else
                 {
-                    url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
+                    url = Url.RouteUrl(NopRouteNames.Standard.TOPIC_SLUG, new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeNameAsync(forumTopic) });
                 }
                 return LocalRedirect($"{url}#{forumPost.Id}");
             }
@@ -909,7 +910,7 @@ public partial class BoardsController : BasePublicController
         string within, string limitDays, int pageNumber = 1)
     {
         if (!_forumSettings.ForumsEnabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = await _forumModelFactory.PrepareSearchModelAsync(searchterms, advs, forumId, within, limitDays, pageNumber);
 
@@ -919,7 +920,7 @@ public partial class BoardsController : BasePublicController
     public virtual async Task<IActionResult> CustomerForumSubscriptions(int? pageNumber)
     {
         if (!_forumSettings.AllowCustomersToManageSubscriptions)
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         var model = await _forumModelFactory.PrepareCustomerForumSubscriptionsModelAsync(pageNumber);
 
@@ -949,7 +950,7 @@ public partial class BoardsController : BasePublicController
             }
         }
 
-        return RedirectToRoute("CustomerForumSubscriptions");
+        return RedirectToRoute(NopRouteNames.Standard.CUSTOMER_FORUM_SUBSCRIPTIONS);
     }
 
     [HttpPost]

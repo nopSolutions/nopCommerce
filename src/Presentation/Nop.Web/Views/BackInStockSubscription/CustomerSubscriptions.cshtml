@@ -39,7 +39,7 @@
                     });
                 });
             </script>
-            <form asp-route="CustomerBackInStockSubscriptions" method="post">
+            <form asp-route="@NopRouteNames.Standard.CUSTOMER_BACK_IN_STOCK_SUBSCRIPTIONS" method="post">
                 <div class="subscription-list">
                     <div class="table-wrapper">
                         <table class="data-table">
@@ -66,7 +66,7 @@
                                         <input type="checkbox" name="biss@(item.Id)" class="rowcheckbox" />
                                     </td>
                                     <td class="product">
-                                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.SeName }))">@item.ProductName</a>
+                                            <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.SeName }))">@item.ProductName</a>
                                     </td>
                                 </tr>
                             }

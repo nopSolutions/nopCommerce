@@ -18,7 +18,7 @@ public class StorePickupPointService : IStorePickupPointService
     /// <remarks>
     /// {0} : current store ID
     /// </remarks>
-    protected readonly CacheKey _pickupPointAllKey = new("Nop.pickuppoint.all-{0}", PICKUP_POINT_PATTERN_KEY);
+    protected readonly CacheKey _pickupPointAllKey = new("Nop.pickuppoint.all-{0}");
     protected const string PICKUP_POINT_PATTERN_KEY = "Nop.pickuppoint.";
 
     #endregion

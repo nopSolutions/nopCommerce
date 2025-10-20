@@ -21,7 +21,6 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
-using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
@@ -57,13 +56,13 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly ICountryService _countryService;
     protected readonly ICustomerActivityService _customerActivityService;
     protected readonly ICustomerService _customerService;
+    protected readonly ICustomWishlistService _customWishlistService;
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IExternalAuthenticationService _externalAuthenticationService;
     protected readonly IGdprService _gdprService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IGeoLookupService _geoLookupService;
     protected readonly ILocalizationService _localizationService;
-    protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
     protected readonly IOrderService _orderService;
     protected readonly IPictureService _pictureService;
     protected readonly IPriceFormatter _priceFormatter;
@@ -101,13 +100,13 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         ICountryService countryService,
         ICustomerActivityService customerActivityService,
         ICustomerService customerService,
+        ICustomWishlistService customWishlistService,
         IDateTimeHelper dateTimeHelper,
         IExternalAuthenticationService externalAuthenticationService,
         IGdprService gdprService,
         IGenericAttributeService genericAttributeService,
         IGeoLookupService geoLookupService,
         ILocalizationService localizationService,
-        INewsLetterSubscriptionService newsLetterSubscriptionService,
         IOrderService orderService,
         IPictureService pictureService,
         IPriceFormatter priceFormatter,
@@ -141,13 +140,13 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _countryService = countryService;
         _customerActivityService = customerActivityService;
         _customerService = customerService;
+        _customWishlistService = customWishlistService;
         _dateTimeHelper = dateTimeHelper;
         _externalAuthenticationService = externalAuthenticationService;
         _gdprService = gdprService;
         _genericAttributeService = genericAttributeService;
         _geoLookupService = geoLookupService;
         _localizationService = localizationService;
-        _newsLetterSubscriptionService = newsLetterSubscriptionService;
         _orderService = orderService;
         _pictureService = pictureService;
         _priceFormatter = priceFormatter;
@@ -708,14 +707,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                     model.AffiliateId = affiliate.Id;
                     model.AffiliateName = await _affiliateService.GetAffiliateFullNameAsync(affiliate);
                 }
-
-                //prepare model newsletter subscriptions
-                if (!string.IsNullOrEmpty(customer.Email))
-                {
-                    model.SelectedNewsletterSubscriptionStoreIds = await (await _storeService.GetAllStoresAsync())
-                        .WhereAwait(async store => await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id) != null)
-                        .Select(store => store.Id).ToListAsync();
-                }
             }
             //prepare reward points model
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
@@ -774,14 +765,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
 
         //prepare model customer attributes
         await PrepareCustomerAttributeModelsAsync(model.CustomerAttributes, customer);
-
-        //prepare model stores for newsletter subscriptions
-        model.AvailableNewsletterSubscriptionStores = (await _storeService.GetAllStoresAsync()).Select(store => new SelectListItem
-        {
-            Value = store.Id.ToString(),
-            Text = store.Name,
-            Selected = model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id)
-        }).ToList();
 
         //prepare available customer roles
         var availableRoles = await _customerService.GetAllCustomerRolesAsync(showHidden: true);
@@ -998,12 +981,15 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         Customer customer)
     {
         ArgumentNullException.ThrowIfNull(searchModel);
-
         ArgumentNullException.ThrowIfNull(customer);
 
         //get customer shopping cart
-        var shoppingCart = (await _shoppingCartService.GetShoppingCartAsync(customer, (ShoppingCartType)searchModel.ShoppingCartTypeId))
+        var shoppingCart = (await _shoppingCartService
+            .GetShoppingCartAsync(customer, (ShoppingCartType)searchModel.ShoppingCartTypeId, customWishlistId: 0))
             .ToPagedList(searchModel);
+        var customWishlists = shoppingCart.Any(item => item.ShoppingCartType == ShoppingCartType.Wishlist)
+            ? await _customWishlistService.GetAllCustomWishlistsAsync(customer.Id)
+            : new List<CustomWishlist>();
 
         //prepare list model
         var model = await new CustomerShoppingCartListModel().PrepareToGridAsync(searchModel, shoppingCart, () =>
@@ -1028,6 +1014,14 @@ public partial class CustomerModelFactory : ICustomerModelFactory
 
                 //convert dates to the user time
                 shoppingCartItemModel.UpdatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(item.UpdatedOnUtc, DateTimeKind.Utc);
+
+                if (item.ShoppingCartType == ShoppingCartType.Wishlist)
+                {
+                    shoppingCartItemModel.CustomWishlistName = customWishlists
+                        .FirstOrDefault(wishlist => wishlist.Id == item.CustomWishlistId) is CustomWishlist customWishlist
+                        ? customWishlist.Name
+                        : await _localizationService.GetResourceAsync("Wishlist.Default");
+                }
 
                 return shoppingCartItemModel;
             });
@@ -1153,7 +1147,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         var lastActivityFrom = DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes);
 
         //get online customers
-        var customers = await _customerService.GetOnlineCustomersAsync(customerRoleIds: null,
+        var customers = await _customerService.GetOnlineCustomersAsync(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
             lastActivityFromUtc: lastActivityFrom,
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 

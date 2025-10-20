@@ -1,0 +1,32 @@
+@model MenuItemModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.ContentManagement.Menus.MenuItems.AddNew").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Menus");
+}
+
+<form asp-controller="Menu" asp-action="MenuItemCreate" method="post" id="menuitem-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.ContentManagement.Menus.MenuItems.AddNew")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="Edit" asp-route-id="@Model.MenuId">@T("Admin.ContentManagement.Menus.MenuItem.BackToMenu")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync("_MenuItemCreateOrUpdate", Model)
+</form>
+

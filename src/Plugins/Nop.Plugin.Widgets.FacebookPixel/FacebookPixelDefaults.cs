@@ -28,16 +28,6 @@ public class FacebookPixelDefaults
     public static string HideSearchBlockAttribute => "FacebookPixel.HideSearchBlock";
 
     /// <summary>
-    /// Gets the route name of checkout endpoint
-    /// </summary>
-    public static string CheckoutRouteName => "Checkout";
-
-    /// <summary>
-    /// Gets the route name of one page checkout endpoint
-    /// </summary>
-    public static string CheckoutOnePageRouteName => "CheckoutOnePage";
-
-    /// <summary>
     /// Gets the route name of area
     /// </summary>
     public static string AreaRouteName => "areaRoute";
@@ -50,7 +40,7 @@ public class FacebookPixelDefaults
     /// <remarks>
     /// {0} : configuration identifier
     /// </remarks>
-    public static CacheKey ConfigurationCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.Configuration-{0}", PrefixCacheKey);
+    public static CacheKey ConfigurationCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.Configuration-{0}");
 
     /// <summary>
     /// Gets the cache key for configurations
@@ -58,17 +48,17 @@ public class FacebookPixelDefaults
     /// <remarks>
     /// {0} : store identifier
     /// </remarks>
-    public static CacheKey ConfigurationsCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.Configurations-{0}", PrefixCacheKey);
+    public static CacheKey ConfigurationsCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.Configurations-{0}");
 
     /// <summary>
     /// Gets the cache key for custom events
     /// </summary>
-    public static CacheKey CustomEventsCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.CustomEvents-{0}", PrefixCacheKey);
+    public static CacheKey CustomEventsCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.CustomEvents-{0}");
 
     /// <summary>
     /// Gets the cache key for widget zones
     /// </summary>
-    public static CacheKey WidgetZonesCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.WidgetZones", PrefixCacheKey);
+    public static CacheKey WidgetZonesCacheKey => new("Nop.Plugin.Widgets.FacebookPixel.WidgetZones");
 
     /// <summary>
     /// Gets the prefix key to clear cache

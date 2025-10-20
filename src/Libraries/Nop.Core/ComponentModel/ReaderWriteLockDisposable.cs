@@ -49,14 +49,13 @@ public partial class ReaderWriteLockDisposable : IDisposable
     /// <summary>
     /// Protected implementation of Dispose pattern.
     /// </summary>
-    /// <param name="disposing">Specifies whether to disposing resources</param>
+    /// <param name="disposing">Specifies whether to dispose resources</param>
     protected virtual void Dispose(bool disposing)
     {
         if (_disposed)
             return;
 
         if (disposing)
-        {
             switch (_readerWriteLockType)
             {
                 case ReaderWriteLockType.Read:
@@ -69,7 +68,6 @@ public partial class ReaderWriteLockDisposable : IDisposable
                     _rwLock.ExitUpgradeableReadLock();
                     break;
             }
-        }
 
         _disposed = true;
     }
@@ -81,7 +79,7 @@ public partial class ReaderWriteLockDisposable : IDisposable
     /// <summary>
     /// Public implementation of Dispose pattern callable by consumers.
     /// </summary>
-    public void Dispose()
+    public virtual void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);

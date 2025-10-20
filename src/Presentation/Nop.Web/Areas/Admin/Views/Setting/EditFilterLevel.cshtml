@@ -1,0 +1,102 @@
+﻿@model FilterLevelModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.FilterLevel.Edit").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Filter (YMM) settings");
+}
+
+<form asp-controller="Setting" asp-action="EditFilterLevel" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Settings.FilterLevel.Edit")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="FilterLevel">@T("Admin.Configuration.Settings.FilterLevel.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.FilterLevelDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <div asp-validation-summary="ModelOnly"></div>
+    <input asp-for="Id" type="hidden" />
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.FilterLevelDetailsTop, additionalData = Model })
+                    <div class="card card-default">
+                        <div class="card-body">
+                            @(await Html.LocalizedEditorAsync<FilterLevelModel, FilterLevelLocalizedModel>("filter-level-localized",
+                                @<div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="@Model.Locales[item].Name" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="@Model.Locales[item].Name" asp-required="true" />
+                                            <span asp-validation-for="@Model.Locales[item].Name"></span>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                                </div>
+                                ,
+                                @<div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="Name" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="Name" asp-required="true" />
+                                            <span asp-validation-for="Name"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                              ))
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="Enabled" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="Enabled" />
+                                    <span asp-validation-for="Enabled"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.FilterLevelDetailsBottom, additionalData = Model })
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<script>
+    $(document).ready(function() {
+        $('[data-tab-name="filter-level-localized-standard-tab"]').parent('li').hide();
+        $('#filter-level-localized-standard-tab').hide();
+        
+        var firstTab = $('.nav-tabs li:visible:first a');
+        var firstTabId = firstTab.attr('href');
+        
+        $('.nav-tabs a').removeClass('active');
+        $('.tab-pane').removeClass('show active');
+        
+        firstTab.addClass('active');
+        $(firstTabId).addClass('show active');
+        
+        $('#selected-tab-name-filter-level-localized').val(firstTab.data('tab-name'));
+    });
+</script>

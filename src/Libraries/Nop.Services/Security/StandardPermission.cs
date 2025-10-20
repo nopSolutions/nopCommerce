@@ -64,6 +64,9 @@ public partial class StandardPermission
         public const string PRODUCT_REVIEWS_CREATE_EDIT_DELETE = $"{nameof(Catalog)}.ProductReviewsCreateEditDelete";
         public const string PRODUCT_TAGS_VIEW = $"{nameof(Catalog)}.ProductTagsView";
         public const string PRODUCT_TAGS_CREATE_EDIT_DELETE = $"{nameof(Catalog)}.ProductTagsCreateEditDelete";
+        public const string FILTER_LEVEL_VALUE_VIEW = $"{nameof(Catalog)}.FilterLevelValueView";
+        public const string FILTER_LEVEL_VALUE_CREATE_EDIT_DELETE = $"{nameof(Catalog)}.FilterLevelValueCreateEditDelete";
+        public const string FILTER_LEVEL_VALUE_IMPORT_EXPORT = $"{nameof(Catalog)}.FilterLevelValueImportExport";
         public const string PRODUCT_ATTRIBUTES_VIEW = $"{nameof(Catalog)}.ProductAttributesView";
         public const string PRODUCT_ATTRIBUTES_CREATE_EDIT_DELETE = $"{nameof(Catalog)}.ProductAttributesCreateEditDelete";
         public const string SPECIFICATION_ATTRIBUTES_VIEW = $"{nameof(Catalog)}.SpecificationAttributesView";
@@ -81,6 +84,8 @@ public partial class StandardPermission
         public const string SUBSCRIBERS_VIEW = $"{nameof(Promotions)}.SubscribersView";
         public const string SUBSCRIBERS_CREATE_EDIT_DELETE = $"{nameof(Promotions)}.SubscribersCreateEditDelete";
         public const string SUBSCRIBERS_IMPORT_EXPORT = $"{nameof(Promotions)}.SubscribersImportExport";
+        public const string SUBSCRIPTION_TYPE_VIEW = $"{nameof(Promotions)}.SubscriptionTypeView";
+        public const string SUBSCRIPTION_TYPE_CREATE_EDIT_DELETE = $"{nameof(Promotions)}.SubscriptionTypeCreateEditDelete";
         public const string CAMPAIGNS_VIEW = $"{nameof(Promotions)}.CampaignsView";
         public const string CAMPAIGNS_CREATE_EDIT = $"{nameof(Promotions)}.CampaignsCreateEdit";
         public const string CAMPAIGNS_DELETE = $"{nameof(Promotions)}.CampaignsDelete";
@@ -105,6 +110,8 @@ public partial class StandardPermission
         public const string POLLS_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.PollsCreateEditDelete";
         public const string FORUMS_VIEW = $"{nameof(ContentManagement)}.ForumsView";
         public const string FORUMS_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.ForumsCreateEditDelete";
+        public const string MENU_VIEW = $"{nameof(ContentManagement)}.MenusView";
+        public const string MENU_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.MenusCreateEditDelete";
     }
 
     public partial class Configuration

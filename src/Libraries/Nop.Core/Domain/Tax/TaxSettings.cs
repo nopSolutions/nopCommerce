@@ -151,4 +151,19 @@ public partial class TaxSettings : ISettings
     /// Gets or sets a value indicating whether to log tax providers errors
     /// </summary>
     public bool LogErrors { get; set; }
+
+    /// <summary>
+    /// Gets or sets the HMRC API URL
+    /// </summary>
+    public string HmrcApiUrl { get; set; }
+
+    /// <summary>
+    /// Gets or sets the HMRC API client id
+    /// </summary>
+    public string HmrcClientId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the HMRC API client secret
+    /// </summary>
+    public string HmrcClientSecret { get; set; }
 }

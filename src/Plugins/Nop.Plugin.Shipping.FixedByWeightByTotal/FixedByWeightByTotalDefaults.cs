@@ -28,7 +28,7 @@ public static class FixedByWeightByTotalDefaults
     /// 5 - Zip postal code
     /// </summary>
     public static CacheKey ShippingByWeightByTotalCacheKey =>
-        new("Nop.shippingbyweightbytotal.{0}-{1}-{2}-{3}-{4}-{5}", ShippingByWeightByTotalCachePrefix);
+        new("Nop.shippingbyweightbytotal.{0}-{1}-{2}-{3}-{4}-{5}");
 
     /// <summary>
     /// Gets a key pattern to clear cache

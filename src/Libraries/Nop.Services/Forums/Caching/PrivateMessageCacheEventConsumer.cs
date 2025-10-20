@@ -6,6 +6,4 @@ namespace Nop.Services.Forums.Caching;
 /// <summary>
 /// Represents a private message cache event consumer
 /// </summary>
-public partial class PrivateMessageCacheEventConsumer : CacheEventConsumer<PrivateMessage>
-{
-}
+public partial class PrivateMessageCacheEventConsumer : CacheEventConsumer<PrivateMessage>;

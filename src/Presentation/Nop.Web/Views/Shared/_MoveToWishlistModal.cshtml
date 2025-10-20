@@ -1,0 +1,31 @@
+﻿@model ProductToWishlistModel
+
+@{
+    var movetocustomwishlistlink = Url.RouteUrl(NopRouteNames.Ajax.MOVE_PRODUCT_TO_CUSTOM_WISHLIST, new { productId = Model.ProductId });
+}
+
+<!-- Modal for moved to custom wishlist -->
+<div id="moveToWishlistModal_@Model.ProductId" title="@T("Wishlist.SelectWishlist")" style="display:none;">
+    <div class="wishlist-buttons-container">
+        <button type="button" class="button-2 custom-wishlist-button add-new" onclick="showAddWishlistModal(@Model.ProductId);closeMoveToWishlistModal(@Model.ProductId);">
+            @T("Wishlist.AddCustomWishlist")
+        </button>
+
+        @foreach (var customWishlist in Model.CustomWishlistItems)
+        {
+            <button type="button" class="button-2 custom-wishlist-button" onclick="AjaxCart.moveproducttowishlist('@movetocustomwishlistlink', @customWishlist.Id);closeMoveToWishlistModal(@Model.ProductId);return false;">@customWishlist.Name</button>
+        }
+    </div>
+</div>
+
+@await Html.PartialAsync("_AddWishlistModal", Model.ProductId)
+
+<script asp-location="Footer">
+    function showMoveToWishlistModal(productId) {
+        $('#moveToWishlistModal_' + productId).dialog();
+    }
+
+    function closeMoveToWishlistModal(productId) {
+        $('#moveToWishlistModal_' + productId).dialog('close');
+    }
+</script>

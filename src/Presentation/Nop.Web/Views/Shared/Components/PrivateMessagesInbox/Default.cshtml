@@ -15,7 +15,7 @@
     </script>
     @if (Model.Messages.Count > 0)
     {
-        <form asp-route="PrivateMessagesInbox" method="post">
+        <form asp-route="@NopRouteNames.Standard.PRIVATE_MESSAGES_INBOX" method="post">
             <div class="table-wrapper">
                 <table class="data-table" id="pm-inbox-table">
                     <colgroup>
@@ -27,7 +27,7 @@
                     <thead>
                     <tr>
                         <th class="select">
-                            <input type="checkbox" id="select-all-inbox" />
+                            <input type="checkbox" id="select-all-inbox" aria-label="@T("PrivateMessages.Inbox")"/>
                         </th>
                         <th class="from">
                             @T("PrivateMessages.Inbox.FromColumn")
@@ -46,12 +46,12 @@
                         var item = Model.Messages[i];
                         <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
                             <td class="select">
-                                <input type="checkbox" name="pm@(item.Id)" class="rowcheckbox" />
+                                <input type="checkbox" name="pm@(item.Id)" class="rowcheckbox" aria-label="@T("PrivateMessages.PM")"/>
                             </td>
                             <td class="from">
                                 @if (item.AllowViewingFromProfile)
                                 {
-                                    @Html.RouteLink(item.CustomerFromName, "CustomerProfile", new { Id = item.FromCustomerId })
+                                    @Html.RouteLink(item.CustomerFromName, NopRouteNames.Standard.CUSTOMER_PROFILE, new { Id = item.FromCustomerId })
                                 }
                                 else
                                 {
@@ -59,7 +59,7 @@
                                 }
                             </td>
                             <td class="subject">
-                                @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = (item.IsRead) ? "pm-read" : "pm-unread" })
+                                    @Html.RouteLink(item.Subject, NopRouteNames.Standard.VIEW_PM, new { privateMessageId = item.Id }, new { @class = (item.IsRead) ? "pm-read" : "pm-unread" })
                             </td>
                             <td class="date">
                                 @item.CreatedOn

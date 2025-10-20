@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -73,6 +74,7 @@ public partial class OrderProcessingService : IOrderProcessingService
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStaticCacheManager _staticCacheManager;
+    protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly IStoreService _storeService;
     protected readonly ITaxService _taxService;
@@ -125,6 +127,7 @@ public partial class OrderProcessingService : IOrderProcessingService
         IShoppingCartService shoppingCartService,
         IStateProvinceService stateProvinceService,
         IStaticCacheManager staticCacheManager,
+        IStoreContext storeContext,
         IStoreMappingService storeMappingService,
         IStoreService storeService,
         ITaxService taxService,
@@ -173,6 +176,7 @@ public partial class OrderProcessingService : IOrderProcessingService
         _shoppingCartService = shoppingCartService;
         _stateProvinceService = stateProvinceService;
         _staticCacheManager = staticCacheManager;
+        _storeContext = storeContext;
         _storeMappingService = storeMappingService;
         _storeService = storeService;
         _taxService = taxService;
@@ -754,7 +758,7 @@ public partial class OrderProcessingService : IOrderProcessingService
             ShippingStatus = details.ShippingStatus,
             ShippingMethod = details.ShippingMethodName,
             ShippingRateComputationMethodSystemName = details.ShippingRateComputationMethodSystemName,
-            CustomValuesXml = _paymentService.SerializeCustomValues(processPaymentRequest),
+            CustomValuesXml = processPaymentRequest.CustomValues.SerializeToXml(),
             VatNumber = details.VatNumber,
             CreatedOnUtc = DateTime.UtcNow,
             CustomOrderNumber = string.Empty
@@ -1030,7 +1034,7 @@ public partial class OrderProcessingService : IOrderProcessingService
             os == OrderStatus.Complete
             && notifyCustomer)
         {
-            //notification
+            //notify customer
             var orderCompletedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                 await _pdfService.SaveOrderPdfToDiskAsync(order) : null;
             var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
@@ -1040,6 +1044,9 @@ public partial class OrderProcessingService : IOrderProcessingService
                     orderCompletedAttachmentFileName);
             if (orderCompletedCustomerNotificationQueuedEmailIds.Any())
                 await AddOrderNoteAsync(order, $"\"Order completed\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderCompletedCustomerNotificationQueuedEmailIds)}.");
+
+            //notify store owner
+            await _workflowMessageService.SendOrderCompletedStoreOwnerNotificationAsync(order, _localizationSettings.DefaultAdminLanguageId);
         }
 
         if (prevOrderStatus != OrderStatus.Cancelled &&
@@ -1302,6 +1309,8 @@ public partial class OrderProcessingService : IOrderProcessingService
             //inventory
             await _productService.AdjustInventoryAsync(product, -sc.Quantity, sc.AttributesXml,
                 string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
+
+            await _eventPublisher.PublishAsync(new ShoppingCartItemMovedToOrderItemEvent(sc, orderItem));
         }
 
         await _shoppingCartService.ClearShoppingCartAsync(details.Customer, order.StoreId);
@@ -1844,9 +1853,10 @@ public partial class OrderProcessingService : IOrderProcessingService
                 InitialOrder = initialOrder,
                 RecurringCycleLength = recurringPayment.CycleLength,
                 RecurringCyclePeriod = recurringPayment.CyclePeriod,
-                RecurringTotalCycles = recurringPayment.TotalCycles,
-                CustomValues = _paymentService.DeserializeCustomValues(initialOrder)
+                RecurringTotalCycles = recurringPayment.TotalCycles
             };
+
+            processPaymentRequest.CustomValues.FillByXml(initialOrder.CustomValuesXml);
 
             //prepare order details
             var details = await PrepareRecurringOrderDetailsAsync(processPaymentRequest);
@@ -2322,6 +2332,11 @@ public partial class OrderProcessingService : IOrderProcessingService
 
         //cancel order
         await SetOrderStatusAsync(order, OrderStatus.Cancelled, notifyCustomer);
+
+        //notify store owner
+        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+        if (order.CustomerId == currentCustomer.Id)
+            await _workflowMessageService.SendOrderCancelledStoreOwnerNotificationAsync(order, _localizationSettings.DefaultAdminLanguageId);
 
         //add a note
         await AddOrderNoteAsync(order, "Order has been cancelled");
@@ -3229,6 +3244,63 @@ public partial class OrderProcessingService : IOrderProcessingService
             result = 0;
 
         return result;
+    }
+
+    /// <summary>
+    /// Gets process payment request
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task contains the process payment request
+    /// </returns>
+    public virtual async Task<ProcessPaymentRequest> GetProcessPaymentRequestAsync()
+    {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var json = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ProcessPaymentRequestAttribute, store.Id);
+
+        return string.IsNullOrEmpty(json) ? null : JsonConvert.DeserializeObject<ProcessPaymentRequest>(json);
+    }
+
+    /// <summary>
+    /// Sets process payment request
+    /// </summary>
+    /// <param name="processPaymentRequest">Process payment request. Pass null for delete</param>
+    /// <param name="useNewOrderGuid">Whether to use new order GUID; pass false to set GUID according to PaymentSettings.RegenerateOrderGuidInterval value</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task SetProcessPaymentRequestAsync(ProcessPaymentRequest processPaymentRequest, bool useNewOrderGuid = false)
+    {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+
+        if (processPaymentRequest is null)
+        {
+            await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.ProcessPaymentRequestAttribute, null, store.Id);
+
+            return;
+        }
+
+        if (_paymentSettings.RegenerateOrderGuidInterval > 0 && !useNewOrderGuid)
+        {
+            //we should use the same GUID for multiple payment attempts
+            //this way a payment gateway can prevent security issues such as credit card brute-force attacks
+            //in order to avoid any possible limitations by payment gateway we reset GUID periodically
+            var previousPaymentRequest = await GetProcessPaymentRequestAsync();
+
+            //set previous order GUID (if exists)
+            if (previousPaymentRequest is { OrderGuidGeneratedOnUtc: not null })
+            {
+                var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
+                if (interval.TotalSeconds < _paymentSettings.RegenerateOrderGuidInterval)
+                {
+                    processPaymentRequest.OrderGuid = previousPaymentRequest.OrderGuid;
+                    processPaymentRequest.OrderGuidGeneratedOnUtc = previousPaymentRequest.OrderGuidGeneratedOnUtc;
+                }
+            }
+        }
+
+        var json = JsonConvert.SerializeObject(processPaymentRequest);
+        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.ProcessPaymentRequestAttribute, json, store.Id);
     }
 
     #endregion

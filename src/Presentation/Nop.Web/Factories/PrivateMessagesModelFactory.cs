@@ -1,6 +1,7 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Http;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
@@ -134,7 +135,7 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
             TotalRecords = list.TotalCount,
             PageIndex = list.PageIndex,
             ShowTotalSummary = false,
-            RouteActionName = "PrivateMessagesPaged",
+            RouteActionName = NopRouteNames.Standard.PRIVATE_MESSAGES_PAGED,
             UseRouteLinks = true,
             RouteValues = new PrivateMessageRouteValues { PageNumber = page, Tab = tab }
         };
@@ -180,7 +181,7 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
             TotalRecords = list.TotalCount,
             PageIndex = list.PageIndex,
             ShowTotalSummary = false,
-            RouteActionName = "PrivateMessagesPaged",
+            RouteActionName = NopRouteNames.Standard.PRIVATE_MESSAGES_PAGED,
             UseRouteLinks = true,
             RouteValues = new PrivateMessageRouteValues { PageNumber = page, Tab = tab }
         };

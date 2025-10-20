@@ -4,6 +4,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Services.Events;
 using Nop.Services.Messages;
 using Nop.Web.Framework;
@@ -19,7 +20,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services;
 public class EventConsumer :
     IConsumer<CustomerRegisteredEvent>,
     IConsumer<EntityInsertedEvent<ShoppingCartItem>>,
-    IConsumer<MessageTokensAddedEvent<Token>>,
+    IConsumer<MessageTokensAddedEvent>,
     IConsumer<ModelPreparedEvent<BaseNopModel>>,
     IConsumer<OrderPlacedEvent>,
     IConsumer<PageRenderingEvent>,
@@ -86,7 +87,7 @@ public class EventConsumer :
     public async Task HandleEventAsync(PageRenderingEvent eventMessage)
     {
         var routeName = eventMessage.GetRouteName() ?? string.Empty;
-        if (routeName == FacebookPixelDefaults.CheckoutRouteName || routeName == FacebookPixelDefaults.CheckoutOnePageRouteName)
+        if (routeName == NopRouteNames.Standard.CHECKOUT || routeName == NopRouteNames.Standard.CHECKOUT_ONE_PAGE)
             await _facebookPixelService.SendInitiateCheckoutEventAsync();
 
         if (_httpContextAccessor.HttpContext.GetRouteValue("area") is not string area || area != AreaNames.ADMIN)
@@ -109,7 +110,7 @@ public class EventConsumer :
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(MessageTokensAddedEvent<Token> eventMessage)
+    public async Task HandleEventAsync(MessageTokensAddedEvent eventMessage)
     {
         if (eventMessage?.Message?.Name == MessageTemplateSystemNames.CONTACT_US_MESSAGE)
             await _facebookPixelService.SendContactEventAsync();

@@ -16,12 +16,7 @@ public class PayPalCommerceDefaults
     /// Gets the user agent used to request third-party services
     /// </summary>
     public static string UserAgent => $"nopCommerce-{NopVersion.FULL_VERSION}";
-
-    /// <summary>
-    /// Gets the session key to get process payment request
-    /// </summary>
-    public static string PaymentRequestSessionKey => "OrderPaymentInfo";
-
+    
     /// <summary>
     /// Gets the name of a generic attribute to store the refund identifier
     /// </summary>
@@ -31,6 +26,11 @@ public class PayPalCommerceDefaults
     /// Gets the name of the generic attribute that is used to store shipment carrier
     /// </summary>
     public static string ShipmentCarrierAttribute => "PayPalCommerceShipmentCarrier";
+
+    /// <summary>
+    /// Gets the name of a generic attribute to store the payment token identifier
+    /// </summary>
+    public static string TokenIdAttributeName => "PayPalCommerceTokenId";
 
     /// <summary>
     /// Gets the service URL
@@ -139,24 +139,9 @@ public class PayPalCommerceDefaults
         public static string ConfirmOrder => "Plugin.Payments.PayPalCommerce.ConfirmOrder";
 
         /// <summary>
-        /// Gets the one page checkout route name
+        /// Gets the approve token route name
         /// </summary>
-        public static string OnePageCheckout => "CheckoutOnePage";
-
-        /// <summary>
-        /// Gets the shopping cart route name
-        /// </summary>
-        public static string ShoppingCart => "ShoppingCart";
-
-        /// <summary>
-        /// Gets the checkout completed route name
-        /// </summary>
-        public static string CheckoutCompleted => "CheckoutCompleted";
-
-        /// <summary>
-        /// Gets the customer info route name
-        /// </summary>
-        public static string CustomerInfo => "CustomerInfo";
+        public static string ApproveToken => "Plugin.Payments.PayPalCommerce.ApproveToken";
 
         /// <summary>
         /// Gets the payment tokens route name

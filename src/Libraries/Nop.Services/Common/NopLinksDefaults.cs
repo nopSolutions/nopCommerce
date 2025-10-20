@@ -87,6 +87,11 @@ public static partial class NopLinksDefaults
         public static string Categories => "https://docs.nopcommerce.com/running-your-store/catalog/categories.html";
 
         /// <summary>
+        /// Gets a URL of the Filter level values docs page
+        /// </summary>
+        public static string FilterLevels => "https://docs.nopcommerce.com/running-your-store/catalog/ymm.html";
+
+        /// <summary>
         /// Gets a URL of the manufacturers docs page
         /// </summary>
         public static string Manufacturers => "https://docs.nopcommerce.com/running-your-store/catalog/manufacturers.html";
@@ -142,6 +147,11 @@ public static partial class NopLinksDefaults
         public static string ShoppingCartsAndWishlists => "https://docs.nopcommerce.com/running-your-store/order-management/shopping-carts-and-wishlists.html";
 
         /// <summary>
+        /// Gets a URL of the RFQ docs page
+        /// </summary>
+        public static string RFQ => "https://docs.nopcommerce.com/running-your-store/order-management/rfq.html";
+
+        /// <summary>
         /// Gets a URL of the gift cards docs page
         /// </summary>
         public static string GiftCards => "https://docs.nopcommerce.com/running-your-store/promotional-tools/gift-cards.html";
@@ -195,6 +205,11 @@ public static partial class NopLinksDefaults
         /// Gets a URL of the topics and pages docs page
         /// </summary>
         public static string TopicsPages => "https://docs.nopcommerce.com/running-your-store/content-management/topics-pages.html";
+
+        /// <summary>
+        /// Gets a URL of the menu docs page
+        /// </summary>
+        public static string Menu => "https://docs.nopcommerce.com/running-your-store/content-management/menu.html";
 
         /// <summary>
         /// Gets a URL of the message templates docs page

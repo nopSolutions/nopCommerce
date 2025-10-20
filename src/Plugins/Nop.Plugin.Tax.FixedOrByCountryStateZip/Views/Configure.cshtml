@@ -2,9 +2,6 @@
 
 @{
     Layout = "_ConfigurePlugin";
-
-    //tour step
-    ViewBag.TourStep = TourStep.TaxManual;
 }
 
 @await Html.PartialAsync("_AdminTour")
@@ -49,7 +46,7 @@
         }
         checkAdvancedSettingsMode($("#advanced-settings-mode").is(':checked'));
         $(document).ready(function () {
-            $('#onoffswitch-rate-action-confirmation-submit-button').bind('click', function () {
+            $('#onoffswitch-rate-action-confirmation-submit-button').on('click', function () {
                 var postData = {
                     value: !($("#advanced-settings-mode").is(':checked'))
                 };

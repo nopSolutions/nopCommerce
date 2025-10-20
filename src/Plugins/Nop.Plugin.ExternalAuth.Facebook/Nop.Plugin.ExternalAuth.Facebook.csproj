@@ -21,7 +21,7 @@
   <ItemGroup>
     <None Remove="Content\facebookstyles.css" />
     <None Remove="Content\Images\facebook_logo.png" />
-    <None Remove="logo.jpg" />
+    <None Remove="logo.png" />
     <None Remove="plugin.json" />
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\PublicInfo.cshtml" />
@@ -35,7 +35,7 @@
     <Content Include="Content\Images\facebook_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="logo.jpg">
+    <Content Include="logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="plugin.json">
@@ -58,7 +58,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.9" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->

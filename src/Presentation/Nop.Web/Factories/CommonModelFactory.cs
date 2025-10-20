@@ -3,13 +3,14 @@ using System.Text;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
@@ -23,9 +24,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Security;
-using Nop.Services.Seo;
 using Nop.Services.Themes;
-using Nop.Services.Topics;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Cache;
@@ -40,12 +39,11 @@ public partial class CommonModelFactory : ICommonModelFactory
 {
     #region Fields
 
-    protected readonly BlogSettings _blogSettings;
     protected readonly CaptchaSettings _captchaSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CommonSettings _commonSettings;
+    protected readonly CurrencySettings _currencySettings;
     protected readonly CustomerSettings _customerSettings;
-    protected readonly DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
     protected readonly ForumSettings _forumSettings;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
@@ -63,29 +61,25 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IStoreContext _storeContext;
     protected readonly IThemeContext _themeContext;
     protected readonly IThemeProvider _themeProvider;
-    protected readonly ITopicService _topicService;
-    protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
     protected readonly LocalizationSettings _localizationSettings;
     protected readonly MediaSettings _mediaSettings;
+    protected readonly MessagesSettings _messagesSettings;
     protected readonly NewsSettings _newsSettings;
     protected readonly RobotsTxtSettings _robotsTxtSettings;
-    protected readonly SitemapSettings _sitemapSettings;
     protected readonly SitemapXmlSettings _sitemapXmlSettings;
     protected readonly StoreInformationSettings _storeInformationSettings;
-    protected readonly VendorSettings _vendorSettings;
 
     #endregion
 
     #region Ctor
 
-    public CommonModelFactory(BlogSettings blogSettings,
-        CaptchaSettings captchaSettings,
+    public CommonModelFactory(CaptchaSettings captchaSettings,
         CatalogSettings catalogSettings,
         CommonSettings commonSettings,
+        CurrencySettings currencySettings,
         CustomerSettings customerSettings,
-        DisplayDefaultFooterItemSettings displayDefaultFooterItemSettings,
         ForumSettings forumSettings,
         ICurrencyService currencyService,
         ICustomerService customerService,
@@ -103,25 +97,21 @@ public partial class CommonModelFactory : ICommonModelFactory
         IStoreContext storeContext,
         IThemeContext themeContext,
         IThemeProvider themeProvider,
-        ITopicService topicService,
-        IUrlRecordService urlRecordService,
         IWebHelper webHelper,
         IWorkContext workContext,
         LocalizationSettings localizationSettings,
         MediaSettings mediaSettings,
+        MessagesSettings messagesSettings,
         NewsSettings newsSettings,
         RobotsTxtSettings robotsTxtSettings,
-        SitemapSettings sitemapSettings,
         SitemapXmlSettings sitemapXmlSettings,
-        StoreInformationSettings storeInformationSettings,
-        VendorSettings vendorSettings)
+        StoreInformationSettings storeInformationSettings)
     {
-        _blogSettings = blogSettings;
         _captchaSettings = captchaSettings;
         _catalogSettings = catalogSettings;
         _commonSettings = commonSettings;
+        _currencySettings = currencySettings;
         _customerSettings = customerSettings;
-        _displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
         _forumSettings = forumSettings;
         _currencyService = currencyService;
         _customerService = customerService;
@@ -139,18 +129,15 @@ public partial class CommonModelFactory : ICommonModelFactory
         _storeContext = storeContext;
         _themeContext = themeContext;
         _themeProvider = themeProvider;
-        _topicService = topicService;
-        _urlRecordService = urlRecordService;
         _webHelper = webHelper;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
+        _messagesSettings = messagesSettings;
         _localizationSettings = localizationSettings;
         _newsSettings = newsSettings;
         _robotsTxtSettings = robotsTxtSettings;
-        _sitemapSettings = sitemapSettings;
         _sitemapXmlSettings = sitemapXmlSettings;
         _storeInformationSettings = storeInformationSettings;
-        _vendorSettings = vendorSettings;
     }
 
     #endregion
@@ -301,7 +288,8 @@ public partial class CommonModelFactory : ICommonModelFactory
         var model = new CurrencySelectorModel
         {
             CurrentCurrencyId = (await _workContext.GetWorkingCurrencyAsync()).Id,
-            AvailableCurrencies = availableCurrencies
+            AvailableCurrencies = availableCurrencies,
+            DisplayCurrencySymbol = _currencySettings.DisplayCurrencySymbolInCurrencySelector,
         };
 
         return model;
@@ -358,6 +346,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             IsAuthenticated = await _customerService.IsRegisteredAsync(customer),
             CustomerName = await _customerService.IsRegisteredAsync(customer) ? await _customerService.FormatUsernameAsync(customer) : string.Empty,
             ShoppingCartEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART),
+            UsePopupNotifications = _messagesSettings.UsePopupNotifications,
             WishlistEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST),
             AllowPrivateMessages = await _customerService.IsRegisteredAsync(customer) && _forumSettings.AllowPrivateMessages,
             UnreadPrivateMessages = unreadMessage,
@@ -429,59 +418,13 @@ public partial class CommonModelFactory : ICommonModelFactory
     /// </returns>
     public virtual async Task<FooterModel> PrepareFooterModelAsync()
     {
-        //footer topics
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var topicModels = await (await _topicService.GetAllTopicsAsync(store.Id))
-            .Where(t => t.IncludeInFooterColumn1 || t.IncludeInFooterColumn2 || t.IncludeInFooterColumn3)
-            .SelectAwait(async t => new FooterModel.FooterTopicModel
-            {
-                Id = t.Id,
-                Name = await _localizationService.GetLocalizedAsync(t, x => x.Title),
-                SeName = await _urlRecordService.GetSeNameAsync(t),
-                IncludeInFooterColumn1 = t.IncludeInFooterColumn1,
-                IncludeInFooterColumn2 = t.IncludeInFooterColumn2,
-                IncludeInFooterColumn3 = t.IncludeInFooterColumn3
-            }).ToListAsync();
-
-        //model
-        var model = new FooterModel
+        return new FooterModel
         {
-            StoreName = await _localizationService.GetLocalizedAsync(store, x => x.Name),
-            WishlistEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST),
-            ShoppingCartEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART),
-            SitemapEnabled = _sitemapSettings.SitemapEnabled,
-            SearchEnabled = _catalogSettings.ProductSearchEnabled,
-            WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id,
-            BlogEnabled = _blogSettings.Enabled,
-            CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
-            ForumEnabled = _forumSettings.ForumsEnabled,
-            NewsEnabled = _newsSettings.Enabled,
-            RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
-            NewProductsEnabled = _catalogSettings.NewProductsEnabled,
-            DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
+            StoreName = await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name),
             HidePoweredByNopCommerce = _storeInformationSettings.HidePoweredByNopCommerce,
-            IsHomePage = await IsHomePageAsync(),
-            AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
-            AllowCustomersToCheckGiftCardBalance = _customerSettings.AllowCustomersToCheckGiftCardBalance && _captchaSettings.Enabled,
-            Topics = topicModels,
-            DisplaySitemapFooterItem = _displayDefaultFooterItemSettings.DisplaySitemapFooterItem,
-            DisplayContactUsFooterItem = _displayDefaultFooterItemSettings.DisplayContactUsFooterItem,
-            DisplayProductSearchFooterItem = _displayDefaultFooterItemSettings.DisplayProductSearchFooterItem,
-            DisplayNewsFooterItem = _displayDefaultFooterItemSettings.DisplayNewsFooterItem,
-            DisplayBlogFooterItem = _displayDefaultFooterItemSettings.DisplayBlogFooterItem,
-            DisplayForumsFooterItem = _displayDefaultFooterItemSettings.DisplayForumsFooterItem,
-            DisplayRecentlyViewedProductsFooterItem = _displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem,
-            DisplayCompareProductsFooterItem = _displayDefaultFooterItemSettings.DisplayCompareProductsFooterItem,
-            DisplayNewProductsFooterItem = _displayDefaultFooterItemSettings.DisplayNewProductsFooterItem,
-            DisplayCustomerInfoFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerInfoFooterItem,
-            DisplayCustomerOrdersFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerOrdersFooterItem,
-            DisplayCustomerAddressesFooterItem = _displayDefaultFooterItemSettings.DisplayCustomerAddressesFooterItem,
-            DisplayShoppingCartFooterItem = _displayDefaultFooterItemSettings.DisplayShoppingCartFooterItem,
-            DisplayWishlistFooterItem = _displayDefaultFooterItemSettings.DisplayWishlistFooterItem,
-            DisplayApplyVendorAccountFooterItem = _displayDefaultFooterItemSettings.DisplayApplyVendorAccountFooterItem
+            DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
+            IsHomePage = await IsHomePageAsync()
         };
-
-        return model;
     }
 
     /// <summary>
@@ -631,7 +574,10 @@ public partial class CommonModelFactory : ICommonModelFactory
                 //URLs are localizable. Append SEO code
                 foreach (var language in await _languageService.GetAllLanguagesAsync(storeId: store.Id))
                     if (_robotsTxtSettings.DisallowLanguages.Contains(language.Id))
-                        sb.AppendLine($"Disallow: /{language.UniqueSeoCode}*");
+                    {
+                        sb.AppendLine($"Disallow: /{language.UniqueSeoCode}$");
+                        sb.AppendLine($"Disallow: /{language.UniqueSeoCode}/");
+                    }
                     else
                         foreach (var path in _robotsTxtSettings.LocalizableDisallowPaths)
                             sb.AppendLine($"Disallow: /{language.UniqueSeoCode}{path}");

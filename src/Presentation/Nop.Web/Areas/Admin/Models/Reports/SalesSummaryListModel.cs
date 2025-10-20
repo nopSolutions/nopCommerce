@@ -5,6 +5,4 @@ namespace Nop.Web.Areas.Admin.Models.Reports;
 /// <summary>
 /// Represents a sales summary list model
 /// </summary>
-public partial record SalesSummaryListModel : BasePagedListModel<SalesSummaryModel>
-{
-}
+public partial record SalesSummaryListModel : BasePagedListModel<SalesSummaryModel>;

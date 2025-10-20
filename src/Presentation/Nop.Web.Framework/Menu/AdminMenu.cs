@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
+using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Events;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
@@ -21,6 +22,7 @@ public partial class AdminMenu : IAdminMenu
     protected AdminMenuItem _baseRootMenuItem;
     protected AdminMenuItem _rootItem;
 
+    protected readonly FilterLevelSettings _filterLevelSettings;
     protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IEventPublisher _eventPublisher;
     protected readonly ILocalizationService _localizationService;
@@ -38,7 +40,8 @@ public partial class AdminMenu : IAdminMenu
     /// <summary>
     /// Ctor
     /// </summary>
-    public AdminMenu(IActionContextAccessor actionContextAccessor,
+    public AdminMenu(FilterLevelSettings filterLevelSettings,
+        IActionContextAccessor actionContextAccessor,
         IEventPublisher eventPublisher,
         ILocalizationService localizationService,
         IPermissionService permissionService,
@@ -48,6 +51,7 @@ public partial class AdminMenu : IAdminMenu
         IUrlHelperFactory urlHelperFactory,
         IWorkContext workContext)
     {
+        _filterLevelSettings = filterLevelSettings;
         _actionContextAccessor = actionContextAccessor;
         _eventPublisher = eventPublisher;
         _localizationService = localizationService;
@@ -131,6 +135,15 @@ public partial class AdminMenu : IAdminMenu
                             Title = await _localizationService.GetResourceAsync("Admin.Catalog.ProductTags"),
                             PermissionNames = new List<string> { StandardPermission.Catalog.PRODUCT_TAGS_VIEW },
                             Url = GetMenuItemUrl("Product", "ProductTags"),
+                            IconClass = "far fa-dot-circle"
+                        },
+                        new()
+                        {
+                            SystemName = "Filter level values",
+                            Title = await _localizationService.GetResourceAsync("Admin.Catalog.FilterLevelValues"),
+                            PermissionNames = new List<string> { StandardPermission.Catalog.FILTER_LEVEL_VALUE_VIEW },
+                            Url = GetMenuItemUrl("FilterLevelValue", "List"),
+                            Visible = _filterLevelSettings.FilterLevelEnabled,
                             IconClass = "far fa-dot-circle"
                         },
                         new()
@@ -326,6 +339,14 @@ public partial class AdminMenu : IAdminMenu
                         },
                         new()
                         {
+                            SystemName = "Newsletter subscription types",
+                            Title = await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptionType"),
+                            PermissionNames = new List<string> { StandardPermission.Promotions.SUBSCRIPTION_TYPE_VIEW },
+                            Url = GetMenuItemUrl("NewsLetterSubscriptionType", "List"),
+                            IconClass = "far fa-dot-circle"
+                        },
+                        new()
+                        {
                             SystemName = "Campaigns",
                             Title = await _localizationService.GetResourceAsync("Admin.Promotions.Campaigns"),
                             PermissionNames = new List<string> { StandardPermission.Promotions.CAMPAIGNS_VIEW },
@@ -348,6 +369,14 @@ public partial class AdminMenu : IAdminMenu
                             Title = await _localizationService.GetResourceAsync("Admin.ContentManagement.Topics"),
                             PermissionNames = new List<string> { StandardPermission.ContentManagement.TOPICS_VIEW },
                             Url = GetMenuItemUrl("Topic", "List"),
+                            IconClass = "far fa-dot-circle"
+                        },
+                        new()
+                        {
+                            SystemName = "Menus",
+                            Title = await _localizationService.GetResourceAsync("Admin.ContentManagement.Menus"),
+                            PermissionNames = new List<string> { StandardPermission.ContentManagement.MENU_VIEW },
+                            Url = GetMenuItemUrl("Menu", "List"),
                             IconClass = "far fa-dot-circle"
                         },
                         new()
@@ -477,6 +506,13 @@ public partial class AdminMenu : IAdminMenu
                                     SystemName = "Catalog settings",
                                     Title = await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Catalog"),
                                     Url = GetMenuItemUrl("Setting", "Catalog"),
+                                    IconClass = "far fa-circle"
+                                },
+                                new()
+                                {
+                                    SystemName = "Filter (YMM) settings",
+                                    Title = await _localizationService.GetResourceAsync("Admin.Configuration.Settings.FilterLevel"),
+                                    Url = GetMenuItemUrl("Setting", "FilterLevel"),
                                     IconClass = "far fa-circle"
                                 },
                                 new()
@@ -1042,8 +1078,8 @@ public partial class AdminMenu : IAdminMenu
 
         if (await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS, customer))
         {
-            await _eventPublisher.PublishAsync(new ThirdPartyPluginsMenuItemCreatedEvent(this, root.GetItemBySystem("Third party plugins")));
-            
+            await _eventPublisher.PublishAsync(new ThirdPartyPluginsMenuItemCreatedEvent(this, root.GetItemBySystemName("Third party plugins")));
+
             var adminMenuPlugins = await _adminMenuPluginManager.LoadAllPluginsAsync(customer);
 
             foreach (var adminMenuPlugin in adminMenuPlugins)
@@ -1054,10 +1090,13 @@ public partial class AdminMenu : IAdminMenu
 
         async Task checkPermissions(AdminMenuItem menuItem, AdminMenuItem rootItem = null)
         {
-            var permissions = (menuItem.PermissionNames.Any() ? menuItem.PermissionNames : (rootItem?.PermissionNames ?? new List<string>())).Distinct().Where(p => !string.IsNullOrEmpty(p)).ToList();
+            if (menuItem.Visible)
+            {
+                var permissions = (menuItem.PermissionNames.Any() ? menuItem.PermissionNames : (rootItem?.PermissionNames ?? new List<string>())).Distinct().Where(p => !string.IsNullOrEmpty(p)).ToList();
 
-            if (permissions.Any())
-                menuItem.Visible = menuItem.ChildNodes.Any() ? await permissions.AnyAwaitAsync(authorizePermission) : await permissions.AllAwaitAsync(authorizePermission);
+                if (permissions.Any())
+                    menuItem.Visible = menuItem.ChildNodes.Any() ? await permissions.AnyAwaitAsync(authorizePermission) : await permissions.AllAwaitAsync(authorizePermission);
+            }
 
             foreach (var childNode in menuItem.ChildNodes)
                 await checkPermissions(childNode, menuItem);
@@ -1100,7 +1139,7 @@ public partial class AdminMenu : IAdminMenu
     /// A task that represents the asynchronous operation
     /// The task result contains the root menu item
     /// </returns>
-    public async Task<AdminMenuItem> GetRootNodeAsync(bool showHidden = false)
+    public virtual async Task<AdminMenuItem> GetRootNodeAsync(bool showHidden = false)
     {
         if (_rootItem != null)
             return _rootItem;
@@ -1129,7 +1168,7 @@ public partial class AdminMenu : IAdminMenu
     /// <param name="controllerName">The name of the controller</param>
     /// <param name="actionName">The name of the action method</param>
     /// <returns>Menu item URL</returns>
-    public string GetMenuItemUrl(string controllerName, string actionName)
+    public virtual string GetMenuItemUrl(string controllerName, string actionName)
     {
         if (string.IsNullOrEmpty(controllerName) || string.IsNullOrEmpty(actionName))
             return null;

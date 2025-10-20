@@ -5,10 +5,8 @@ using Google.Apis.Auth.OAuth2.Web;
 using Google.Apis.Util.Store;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Infrastructure;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -33,7 +31,6 @@ public partial class EmailAccountController : BaseAdminController
     protected readonly IEmailAccountModelFactory _emailAccountModelFactory;
     protected readonly IEmailAccountService _emailAccountService;
     protected readonly IEmailSender _emailSender;
-    protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILocalizationService _localizationService;
     protected readonly INopFileProvider _fileProvider;
     protected readonly INotificationService _notificationService;
@@ -41,7 +38,6 @@ public partial class EmailAccountController : BaseAdminController
     protected readonly ISettingService _settingService;
     protected readonly IStoreContext _storeContext;
     protected readonly IWebHelper _webHelper;
-    protected readonly IWorkContext _workContext;
 
     #endregion
 
@@ -52,22 +48,19 @@ public partial class EmailAccountController : BaseAdminController
         IEmailAccountModelFactory emailAccountModelFactory,
         IEmailAccountService emailAccountService,
         IEmailSender emailSender,
-        IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
         INopFileProvider fileProvider,
         INotificationService notificationService,
         IPermissionService permissionService,
         ISettingService settingService,
         IStoreContext storeContext,
-        IWebHelper webHelper,
-        IWorkContext workContext)
+        IWebHelper webHelper)
     {
         _emailAccountSettings = emailAccountSettings;
         _customerActivityService = customerActivityService;
         _emailAccountModelFactory = emailAccountModelFactory;
         _emailAccountService = emailAccountService;
         _emailSender = emailSender;
-        _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
         _fileProvider = fileProvider;
         _notificationService = notificationService;
@@ -75,7 +68,6 @@ public partial class EmailAccountController : BaseAdminController
         _settingService = settingService;
         _storeContext = storeContext;
         _webHelper = webHelper;
-        _workContext = workContext;
     }
 
     #endregion
@@ -117,21 +109,10 @@ public partial class EmailAccountController : BaseAdminController
     #region Methods
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_EMAIL_ACCOUNTS)]
-    public virtual async Task<IActionResult> List(bool showtour = false)
+    public virtual async Task<IActionResult> List()
     {
         //prepare model
         var model = await _emailAccountModelFactory.PrepareEmailAccountSearchModelAsync(new EmailAccountSearchModel());
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }
@@ -197,7 +178,7 @@ public partial class EmailAccountController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_EMAIL_ACCOUNTS)]
-    public virtual async Task<IActionResult> Edit(int id, bool showtour = false)
+    public virtual async Task<IActionResult> Edit(int id)
     {
         //try to get an email account with the specified id
         var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(id);
@@ -209,17 +190,6 @@ public partial class EmailAccountController : BaseAdminController
 
         if (emailAccount.EmailAuthenticationMethod == EmailAuthenticationMethod.GmailOAuth2)
             model.AuthUrl = await PrepareOAuthUrlAsync(emailAccount);
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }
@@ -365,7 +335,7 @@ public partial class EmailAccountController : BaseAdminController
         }
     }
 
-    public async Task<IActionResult> AuthReturn(AuthorizationCodeResponseUrl authorizationCode)
+    public virtual async Task<IActionResult> AuthReturn(AuthorizationCodeResponseUrl authorizationCode)
     {
         if (string.IsNullOrEmpty(authorizationCode.State))
             return RedirectToAction(nameof(List));

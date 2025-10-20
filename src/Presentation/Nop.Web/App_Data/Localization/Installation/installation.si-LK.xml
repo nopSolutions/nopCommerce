@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="සිංහල" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>පරිපාලක පරිශීලක විද්‍යුත් තැපෑල</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>පරිපාලක මුරපදය ඇතුළත් කරන්න</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>චරිත කට්ටලය</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>එකතුව</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>එකතුව අවශ්‍යයි</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>මෙම '{0}' ගිණුම් ෆෝල්ඩරය මත Modify අවසරය ලබා නැත '{1}' '. කරුණාකර මෙම අවසරයන් වින්‍යාස කරන්න.</Value>

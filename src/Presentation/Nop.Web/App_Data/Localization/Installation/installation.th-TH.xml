@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Thai" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>อีเมลผู้ดูแลระบบ</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>กรุณากรอกรหัสผ่านผู้ดูแลระบบ</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>ชุดอักขระ</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>การตรวจเทียบ</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>จำเป็นต้องมีการจัดเรียง</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>บัญชีชื่อ '{0}' ไม่ได้รับสิทธิในการแก้ไขภายใต้แฟ้มชื่อ '{1}' กรุณากำหนดสิทธิการแก้ไขเสียก่อน</Value>

@@ -1,0 +1,65 @@
+﻿@inject Nop.Services.Topics.ITopicService topicService
+@{
+    var topicTour = await topicService.GetTopicBySystemNameAsync("ShippingInfo");
+}
+
+@await Html.PartialAsync("_AdminTour");
+
+<script asp-location="Footer">
+    $(function(){
+        let steps = [];
+
+        if ($.fn.dataTable.isDataTable("#topics-grid")) {
+            let topicDataTable = $("#topics-grid").DataTable();
+
+                topicDataTable.on('init.dt', function() {
+
+                if (topicDataTable.rows().count() > 0)
+                {
+                    var topicShipping = topicDataTable.row((idx, data) => data.Id == @(topicTour?.Id ?? 0) && data.Id !== 0);
+                    var topicTour = topicShipping.any() ? topicShipping : topicDataTable.row(0);
+
+                    steps.push({
+                        element: '#topics-area',
+                        popover: {
+                            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Topics1.Title").Text)',
+                            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Topics1.Text").Text)',
+                            side: "top",
+                            align: 'start'
+                        }}, {
+                        element: '#topics-area',
+                        popover: {
+                            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Topics2.Title").Text)',
+                            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Topics2.Text").Text)',
+                            side: "top",
+                            align: 'start'
+                        }});
+
+                    if (topicShipping.any()) {
+                        steps.push({
+                            element: topicShipping.node(),
+                            popover: {
+                                title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Shipping.Title").Text)',
+                                description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Shipping.Text").Text)',
+                                side: "bottom",
+                                align: 'start'
+                            }});
+                    }
+
+                    steps.push({
+                        element: topicTour.node().querySelector('.column-edit .btn'),
+                        popover: {
+                            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Edit.Title").Text)',
+                            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TopicList.Edit.Text").Text)',
+                            side: "left",
+                            align: 'start'
+                        }});
+                }
+
+                AdminTourBuilder
+                    .init(localized_data, "", "@Url.Action("Edit", "Topic", new { showtour = true, id = topicTour?.Id ?? 0 })", steps)
+                    .drive();
+            });
+        }
+    });
+</script>

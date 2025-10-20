@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Plugin.DiscountRules.CustomerRoles;
+﻿namespace Nop.Plugin.DiscountRules.CustomerRoles;
 
 /// <summary>
 /// Represents defaults for the discount requirement rule
@@ -20,4 +19,9 @@ public static class DiscountRequirementDefaults
     /// The HTML field prefix for discount requirements
     /// </summary>
     public static string HtmlFieldPrefix => "DiscountRulesCustomerRoles{0}";
+
+    /// <summary>
+    /// Gets the configuration route name
+    /// </summary>
+    public static string ConfigurationRouteName => "DiscountRequirement.MustBeAssignedToCustomerRole.Configure";
 }

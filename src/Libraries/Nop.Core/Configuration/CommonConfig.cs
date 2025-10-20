@@ -41,11 +41,6 @@ public partial class CommonConfig : IConfig
     public string StaticFilesCacheControl { get; protected set; } = "public,max-age=31536000";
 
     /// <summary>
-    /// Get or set the blacklist of static file extension for plugin directories
-    /// </summary>
-    public string PluginStaticFileExtensionsBlacklist { get; protected set; } = "";
-
-    /// <summary>
     /// Get or set a value indicating whether to serve files that don't have a recognized content-type
     /// </summary>
     public bool ServeUnknownFileTypes { get; protected set; } = false;

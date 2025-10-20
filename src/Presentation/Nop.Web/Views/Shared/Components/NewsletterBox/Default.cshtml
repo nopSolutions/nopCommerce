@@ -1,11 +1,11 @@
-﻿@model NewsletterBoxModel
-<div class="newsletter">
-    <div class="title">
-        <strong>@T("Newsletter.Title")</strong>
-    </div>
+﻿@model NewsLetterBoxModel
+<div class="newsletter" role="form">
+    <h2 class="title">
+        @T("Newsletter.Title")
+    </h2>
     <div class="newsletter-subscribe" id="newsletter-subscribe-block">
         <div class="newsletter-email">
-            <input asp-for="NewsletterEmail" id="newsletter-email" class="newsletter-subscribe-text" placeholder=@T("Newsletter.Email.Placeholder") aria-label="@T("Newsletter.Subscribe")" />
+            <input asp-for="NewsLetterEmail" id="newsletter-email" class="newsletter-subscribe-text" placeholder=@T("Newsletter.Email.Placeholder") aria-label="@T("Newsletter.Subscribe")" />
 
             <button type="button" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button">@T(Model.AllowToUnsubscribe ? "Newsletter.Options.Send" : "Newsletter.Options.Subscribe")</button>
 
@@ -29,7 +29,7 @@
         </div>
         <div class="newsletter-validation">
             <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
-            <span asp-validation-for="NewsletterEmail"></span>
+            <span asp-validation-for="NewsLetterEmail"></span>
         </div>
     </div>
     <div class="newsletter-result" id="newsletter-result-block"></div>
@@ -69,7 +69,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "@(Url.RouteUrl("SubscribeNewsletter"))",
+                url: "@(Url.RouteUrl(NopRouteNames.Ajax.SUBSCRIBE_NEWSLETTER))",
                 data: postData,
                 success: function (data, textStatus, jqXHR) {
                     $("#newsletter-result-block").html(data.Result);

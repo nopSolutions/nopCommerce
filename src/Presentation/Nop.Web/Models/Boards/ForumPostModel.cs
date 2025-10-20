@@ -19,6 +19,7 @@ public partial record ForumPostModel : BaseNopModel
     public string CustomerName { get; set; }
     public bool IsCustomerForumModerator { get; set; }
 
+    public DateTime PostCreatedOn { get; set; }
     public string PostCreatedOnStr { get; set; }
 
     public bool ShowCustomersPostCount { get; set; }

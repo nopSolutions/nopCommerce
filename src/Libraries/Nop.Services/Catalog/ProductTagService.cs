@@ -60,15 +60,15 @@ public partial class ProductTagService : IProductTagService
     /// Delete a product-product tag mapping
     /// </summary>
     /// <param name="productId">Product identifier</param>
-    /// <param name="productTagId">Product tag identifier</param>
+    /// <param name="productTagIds">Product tag identifiers</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task DeleteProductProductTagMappingAsync(int productId, int productTagId)
+    protected virtual async Task DeleteProductProductTagMappingAsync(int productId, IList<int> productTagIds)
     {
-        var mappingRecord = await _productProductTagMappingRepository.Table
-                                .FirstOrDefaultAsync(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId)
-                            ?? throw new Exception("Mapping record not found");
+        var mappingRecords = await _productProductTagMappingRepository.Table
+            .Where(pptm => pptm.ProductId == productId && productTagIds.Contains(pptm.ProductTagId))
+                                .ToListAsync();
 
-        await _productProductTagMappingRepository.DeleteAsync(mappingRecord);
+        await _productProductTagMappingRepository.DeleteAsync(mappingRecords);
     }
 
     /// <summary>
@@ -274,14 +274,12 @@ public partial class ProductTagService : IProductTagService
         return await _staticCacheManager.GetAsync(key, async () =>
         {
             var query = _productProductTagMappingRepository.Table;
-            var productsQuery = _productRepository.Table;
+            var productsQuery = _productRepository.Table.Where(p => !p.Deleted);
 
             if (!showHidden || storeId > 0)
             {
                 //apply store mapping constraints
                 productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
-
-                query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
             }
 
             if (!showHidden)
@@ -290,9 +288,9 @@ public partial class ProductTagService : IProductTagService
 
                 //apply ACL constraints
                 productsQuery = await _aclService.ApplyAcl(productsQuery, customerRoleIds);
-
-                query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
             }
+
+            query = query.Where(pc => productsQuery.Any(p => pc.ProductId == p.Id));
 
             var pTagCount = from pt in _productTagRepository.Table
                 join ptm in query on pt.Id equals ptm.ProductTagId
@@ -319,7 +317,7 @@ public partial class ProductTagService : IProductTagService
 
         //product tags
         var existingProductTags = await GetAllProductTagsByProductIdAsync(product.Id);
-        var productTagsToRemove = new List<ProductTag>();
+        var productTagIdsToRemove = new List<int>();
         foreach (var existingProductTag in existingProductTags)
         {
             var found = false;
@@ -333,11 +331,10 @@ public partial class ProductTagService : IProductTagService
             }
 
             if (!found)
-                productTagsToRemove.Add(existingProductTag);
+                productTagIdsToRemove.Add(existingProductTag.Id);
         }
-
-        foreach (var productTag in productTagsToRemove)
-            await DeleteProductProductTagMappingAsync(product.Id, productTag.Id);
+        
+        await DeleteProductProductTagMappingAsync(product.Id, productTagIdsToRemove);
 
         foreach (var productTagName in productTags)
         {

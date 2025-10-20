@@ -28,6 +28,14 @@ public partial record ShoppingCartSettingsModel : BaseNopModel, ISettingsModel
     public int MaximumWishlistItems { get; set; }
     public bool MaximumWishlistItems_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.AllowMultipleWishlist")]
+    public bool AllowMultipleWishlist { get; set; }
+    public bool AllowMultipleWishlist_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.MaximumNumberOfCustomWishlist")]
+    public int MaximumNumberOfCustomWishlist { get; set; }
+    public bool MaximumNumberOfCustomWishlist_OverrideForStore { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.AllowOutOfStockItemsToBeAddedToWishlist")]
     public bool AllowOutOfStockItemsToBeAddedToWishlist { get; set; }
     public bool AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore { get; set; }

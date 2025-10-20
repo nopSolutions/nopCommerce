@@ -1,0 +1,69 @@
+﻿@await Html.PartialAsync("_AdminTour");
+
+<script asp-location="Footer">
+    $(function(){
+        const steps = [{
+            element: "#shipping-methods-area",
+            popover: {
+                title: "@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Providers.Title").Text)",
+                description: "@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Providers.Text", OfficialSite.ShippingPlugins + Utm.OnAdminTourDocs.Replace('?', '&')).Text)",
+                side: "bottom",
+                align: "start"
+            }},
+        ];
+
+        if ($.fn.dataTable.isDataTable("#shippingproviders-grid")) {
+            let providersDataTable = $("#shippingproviders-grid").DataTable();
+
+                providersDataTable.on('init.dt', function() {
+                let nextPageUrl = "@Url.Action("Methods", "Payment", new { showtour = true })";
+
+                if (providersDataTable.rows().count() > 0)
+                {
+                    const manualShippingMethod = providersDataTable.row((idx, data) => data.SystemName === "Shipping.FixedByWeightByTotal");
+
+                    const tourProvider = manualShippingMethod.any() ? manualShippingMethod : providersDataTable.row(0);
+
+                    if (manualShippingMethod.any())
+                    {
+                        steps.push({
+                            element: "#" + manualShippingMethod.node().id,
+                            popover: {
+                                title: "@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Manual.Title").Text)",
+                                description: "@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Manual.Text").Text)",
+                                side: "bottom",
+                                align: "start"
+                            }});
+
+                        nextPageUrl = manualShippingMethod.data().ConfigurationUrl + '?showtour=true'; // Redirect to Manual
+                    }
+
+                    steps.push({
+                        element: "#" + tourProvider.node().id + " .column-edit .btn-default",
+                        popover: {
+                            title: "@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Activate.Title").Text)",
+                            description: "@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Activate.Text").Text)",
+                            side: "left",
+                            align: "start"
+                        }},{
+                        element: "#" + tourProvider.node().id + " .column-configure .btn-default",
+                        popover: {
+                            title: "@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Configure.Title").Text)",
+                            description: "@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.ShippingProviders.Configure.Text").Text)",
+                            side: "left",
+                            align: "start"
+                        }});
+                }
+
+                AdminTourBuilder
+                    .init(localized_data, "", nextPageUrl, steps)
+                    .drive();
+            });
+        }
+        else {
+            AdminTourBuilder
+                .init(localized_data, "", nextPageUrl, steps)
+                .drive();
+        }
+    });
+</script>

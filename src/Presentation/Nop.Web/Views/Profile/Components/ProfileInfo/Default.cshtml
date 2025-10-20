@@ -7,9 +7,9 @@
         </div>         
     }
     <div class="profile-stats">
-        <div class="title">
-            <strong>@T("Profile.Statistics")</strong>
-        </div>
+        <h2 class="title">
+            @T("Profile.Statistics")
+        </h2>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProfilePageInfoUserdetails, additionalData = Model })
         <ul class="stats">
             @if (Model.LocationEnabled)
@@ -46,7 +46,7 @@
     @if (Model.PMEnabled)
     {
         <div class="send-pm">
-            @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerProfileId }, new { @class = "pm-button" })
+            @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, NopRouteNames.Standard.SEND_PM, new { toCustomerId = Model.CustomerProfileId }, new { @class = "pm-button" })
         </div>
     }
 </div>

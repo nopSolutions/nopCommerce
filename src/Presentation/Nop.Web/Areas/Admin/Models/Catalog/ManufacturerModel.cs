@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Models.ArtificialIntelligence;
+using Nop.Web.Framework.Models.Translation;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog;
@@ -9,7 +11,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog;
 /// Represents a manufacturer model
 /// </summary>
 public partial record ManufacturerModel : BaseNopEntityModel, IAclSupportedModel, IDiscountSupportedModel,
-    ILocalizedModel<ManufacturerLocalizedModel>, IStoreMappingSupportedModel
+    ITranslationSupportedModel, ILocalizedModel<ManufacturerLocalizedModel>, IStoreMappingSupportedModel,
+    IMetaTagsSupportedModel
 {
     #region Ctor
 
@@ -19,6 +22,7 @@ public partial record ManufacturerModel : BaseNopEntityModel, IAclSupportedModel
         {
             PageSize = 5;
         }
+
         Locales = new List<ManufacturerLocalizedModel>();
         AvailableManufacturerTemplates = new List<SelectListItem>();
 
@@ -103,21 +107,25 @@ public partial record ManufacturerModel : BaseNopEntityModel, IAclSupportedModel
     //store mapping
     [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.LimitedToStores")]
     public IList<int> SelectedStoreIds { get; set; }
+
     public IList<SelectListItem> AvailableStores { get; set; }
 
     //discounts
     [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Discounts")]
     public IList<int> SelectedDiscountIds { get; set; }
+
     public IList<SelectListItem> AvailableDiscounts { get; set; }
 
     public ManufacturerProductSearchModel ManufacturerProductSearchModel { get; set; }
 
     public string PrimaryStoreCurrencyCode { get; set; }
 
+    public bool PreTranslationAvailable { get; set; }
+
     #endregion
 }
 
-public partial record ManufacturerLocalizedModel : ILocalizedLocaleModel
+public partial record ManufacturerLocalizedModel : ILocalizedLocaleModel, IMetaTagsSupportedModel
 {
     public int LanguageId { get; set; }
 

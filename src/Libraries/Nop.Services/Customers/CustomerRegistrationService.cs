@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Common;
@@ -12,7 +13,6 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
-using Nop.Services.Stores;
 
 namespace Nop.Services.Customers;
 
@@ -39,7 +39,6 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
     protected readonly IRewardPointService _rewardPointService;
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly IStoreContext _storeContext;
-    protected readonly IStoreService _storeService;
     protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
@@ -65,7 +64,6 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
         IRewardPointService rewardPointService,
         IShoppingCartService shoppingCartService,
         IStoreContext storeContext,
-        IStoreService storeService,
         IUrlHelperFactory urlHelperFactory,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
@@ -87,7 +85,6 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
         _rewardPointService = rewardPointService;
         _shoppingCartService = shoppingCartService;
         _storeContext = storeContext;
-        _storeService = storeService;
         _urlHelperFactory = urlHelperFactory;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
@@ -445,12 +442,13 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
         //sign in new customer
         await _authenticationService.SignInAsync(customer, isPersist);
 
-        //raise event       
-        await _eventPublisher.PublishAsync(new CustomerLoggedinEvent(customer));
+        //raise event
+        var guestCustomer = await _customerService.IsGuestAsync(currentCustomer) && currentCustomer?.Id != customer.Id ? currentCustomer : null;
+        await _eventPublisher.PublishAsync(new CustomerLoggedinEvent(customer, guestCustomer));
 
         //activity log
-        await _customerActivityService.InsertActivityAsync(customer, "PublicStore.Login",
-            await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login"), customer);
+        await _customerActivityService.InsertActivityAsync(customer, "PublicStore.SuccessfulLogin",
+            await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login.Success"), customer);
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
@@ -458,7 +456,7 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
         if (!string.IsNullOrEmpty(returnUrl) && urlHelper.IsLocalUrl(returnUrl))
             return new RedirectResult(returnUrl);
 
-        return new RedirectToRouteResult("Homepage", null);
+        return new RedirectToRouteResult(NopRouteNames.General.HOMEPAGE, null);
     }
 
     /// <summary>
@@ -506,16 +504,24 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
             if (string.IsNullOrEmpty(oldEmail) || oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase))
                 return;
 
-            //update newsletter subscription (if required)
-            foreach (var store in await _storeService.GetAllStoresAsync())
+            //copy active newsletter subscriptions and deactivate the old
+            var subscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(oldEmail, isActive: true);
+            var subscriptionGuid = Guid.NewGuid();
+            foreach (var subscription in subscriptions)
             {
-                var subscriptionOld = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(oldEmail, store.Id);
+                await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
+                {
+                    NewsLetterSubscriptionGuid = subscriptionGuid,
+                    Email = newEmail,
+                    Active = true,
+                    TypeId = subscription.TypeId,
+                    StoreId = subscription.StoreId,
+                    LanguageId = subscription.LanguageId,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
 
-                if (subscriptionOld == null)
-                    continue;
-
-                subscriptionOld.Email = newEmail;
-                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscriptionOld);
+                subscription.Active = false;
+                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
             }
         }
     }

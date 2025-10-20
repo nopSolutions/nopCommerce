@@ -2,6 +2,8 @@
 using System.Text;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Themes;
@@ -292,7 +294,7 @@ public static class HtmlExtensions
                 for (var x = 1; x <= totalPages; x++)
                 {
                     var link = html.RouteLink(x.ToString(),
-                        "TopicSlugPaged",
+                        NopRouteNames.Standard.TOPIC_SLUG_PAGED,
                         new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug },
                         new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), x.ToString()) });
                     links.Append(await link.RenderHtmlContentAsync());
@@ -303,7 +305,7 @@ public static class HtmlExtensions
             else
             {
                 var link1 = html.RouteLink("1",
-                    "TopicSlugPaged",
+                    NopRouteNames.Standard.TOPIC_SLUG_PAGED,
                     new { id = forumTopicId, pageNumber = 1, slug = forumTopicSlug },
                     new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), 1) });
                 links.Append(await link1.RenderHtmlContentAsync());
@@ -313,7 +315,7 @@ public static class HtmlExtensions
                 for (var x = totalPages - 2; x <= totalPages; x++)
                 {
                     var link2 = html.RouteLink(x.ToString(),
-                        "TopicSlugPaged",
+                        NopRouteNames.Standard.TOPIC_SLUG_PAGED,
                         new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug },
                         new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), x.ToString()) });
                     links.Append(await link2.RenderHtmlContentAsync());
@@ -363,5 +365,23 @@ public static class HtmlExtensions
         var theme = await EngineContext.Current.Resolve<IThemeProvider>().GetThemeBySystemNameAsync(themeName);
 
         return theme?.SupportRtl ?? false;
+    }
+
+    /// <summary>
+    /// Return a value indicating whether to display the admin tour
+    /// </summary>
+    /// <param name="html">HTML helper</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the value
+    /// </returns>
+    public static async Task<bool> IsTourActiveAsync(this IHtmlHelper html)
+    {
+        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+
+        if (webHelper.QueryString<bool?>("ShowTour") == true)
+            return await EngineContext.Current.Resolve<IWorkContext>().GetCurrentVendorAsync() is null;
+
+        return false;
     }
 }

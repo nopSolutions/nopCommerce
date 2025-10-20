@@ -6,6 +6,4 @@ namespace Nop.Web.Areas.Admin.Models.Customers;
 /// <summary>
 /// Represents a customer role product list model
 /// </summary>
-public partial record CustomerRoleProductListModel : BasePagedListModel<ProductModel>
-{
-}
+public partial record CustomerRoleProductListModel : BasePagedListModel<ProductModel>;

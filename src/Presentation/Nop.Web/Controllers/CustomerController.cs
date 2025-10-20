@@ -10,7 +10,6 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
-using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
@@ -217,24 +216,22 @@ public partial class CustomerController : BasePublicController
     {
         ArgumentNullException.ThrowIfNull(form);
 
+        if (!form.TryGetValue("mfa_provider", out var curProvider) || StringValues.IsNullOrEmpty(curProvider))
+            return string.Empty;
+
+        var selectedProvider = curProvider.ToString();
+        if (string.IsNullOrEmpty(selectedProvider))
+            return string.Empty;
+
         var store = await _storeContext.GetCurrentStoreAsync();
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var multiFactorAuthenticationProviders = await _multiFactorAuthenticationPluginManager
+            .LoadActivePluginsAsync(customer, store.Id);
+        
+        var isValidProvider = multiFactorAuthenticationProviders
+            .Any(p => p.PluginDescriptor.SystemName.Equals(selectedProvider, StringComparison.InvariantCultureIgnoreCase));
 
-        var multiFactorAuthenticationProviders = await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), store.Id);
-        foreach (var provider in multiFactorAuthenticationProviders)
-        {
-            var controlId = $"provider_{provider.PluginDescriptor.SystemName}";
-
-            var curProvider = form[controlId];
-            if (!StringValues.IsNullOrEmpty(curProvider))
-            {
-                var selectedProvider = curProvider.ToString();
-                if (!string.IsNullOrEmpty(selectedProvider))
-                {
-                    return selectedProvider;
-                }
-            }
-        }
-        return string.Empty;
+        return isValidProvider ? selectedProvider : string.Empty;
     }
 
     protected virtual async Task<string> ParseCustomCustomerAttributesAsync(IFormCollection form)
@@ -348,9 +345,11 @@ public partial class CustomerController : BasePublicController
             //newsletter subscriptions
             if (_gdprSettings.LogNewsletterConsent)
             {
-                if (oldCustomerInfoModel.Newsletter && !newCustomerInfoModel.Newsletter)
+                var oldNewsletter = oldCustomerInfoModel.NewsLetterSubscriptions.Any(subscriptionModel => subscriptionModel.IsActive);
+                var newNewsletter = newCustomerInfoModel.NewsLetterSubscriptions.Any(subscriptionModel => subscriptionModel.IsActive);
+                if (oldNewsletter && !newNewsletter)
                     await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentDisagree, await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter"));
-                if (!oldCustomerInfoModel.Newsletter && newCustomerInfoModel.Newsletter)
+                if (!oldNewsletter && newNewsletter)
                     await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter"));
             }
 
@@ -476,7 +475,7 @@ public partial class CustomerController : BasePublicController
                     await HttpContext.Session.SetAsync(
                         NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo,
                         customerMultiFactorAuthenticationInfo);
-                    return RedirectToRoute("MultiFactorVerification");
+                    return RedirectToRoute(NopRouteNames.Standard.MULTIFACTOR_VERIFICATION);
                 }
                 case CustomerLoginResults.CustomerNotExist:
                     ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.CustomerNotExist"));
@@ -498,6 +497,18 @@ public partial class CustomerController : BasePublicController
                     ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials"));
                     break;
             }
+
+            if (loginResult == CustomerLoginResults.WrongPassword && _customerSettings.NotifyFailedLoginAttempt)
+            {
+                var customer = _customerSettings.UsernamesEnabled
+                        ? await _customerService.GetCustomerByUsernameAsync(customerUserName)
+                        : await _customerService.GetCustomerByEmailAsync(customerEmail);
+
+                await _workflowMessageService.SendCustomerFailedLoginAttemptNotificationAsync(customer, customer.LanguageId ?? 0);
+            }
+
+            await _customerActivityService.InsertActivityAsync("PublicStore.FailedLogin",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login.Fail"), _customerSettings.UsernamesEnabled ? customerUserName : customerEmail));
         }
 
         //If we got this far, something failed, redisplay form
@@ -512,27 +523,29 @@ public partial class CustomerController : BasePublicController
     /// A task that represents the asynchronous operation
     /// The task result contains the user verification page for Multi-factor authentication. Served by an authentication provider.
     /// </returns>
+    [CheckAccessClosedStore(ignore: true)]
+    [CheckAccessPublicStore(ignore: true)]
     public virtual async Task<IActionResult> MultiFactorVerification()
     {
         if (!await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
-            return RedirectToRoute("Login");
+            return RedirectToRoute(NopRouteNames.General.LOGIN);
 
         var customerMultiFactorAuthenticationInfo = await HttpContext.Session.GetAsync<CustomerMultiFactorAuthenticationInfo>(
             NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);
         var userName = customerMultiFactorAuthenticationInfo?.UserName;
         if (string.IsNullOrEmpty(userName))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsernameAsync(userName) : await _customerService.GetCustomerByEmailAsync(userName);
         if (customer == null)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         if (!await _permissionService.AuthorizeAsync(StandardPermission.Security.ENABLE_MULTI_FACTOR_AUTHENTICATION, customer))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var selectedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
         if (string.IsNullOrEmpty(selectedProvider))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = new MultiFactorAuthenticationProviderModel();
         model = await _customerModelFactory.PrepareMultiFactorAuthenticationProviderModelAsync(model, selectedProvider, true);
@@ -590,7 +603,7 @@ public partial class CustomerController : BasePublicController
             TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"] = true;
         }
 
-        return RedirectToRoute("Homepage");
+        return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
     }
 
     #endregion
@@ -665,9 +678,9 @@ public partial class CustomerController : BasePublicController
                        ?? await _customerService.GetCustomerByGuidAsync(guid);
 
         if (customer == null)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
-        var model = new PasswordRecoveryConfirmModel { ReturnUrl = Url.RouteUrl("Homepage") };
+        var model = new PasswordRecoveryConfirmModel { ReturnUrl = Url.RouteUrl(NopRouteNames.General.HOMEPAGE) };
         if (string.IsNullOrEmpty(await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute)))
         {
             model.DisablePasswordChanging = true;
@@ -707,9 +720,9 @@ public partial class CustomerController : BasePublicController
                        ?? await _customerService.GetCustomerByGuidAsync(guid);
 
         if (customer == null)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
-        model.ReturnUrl = Url.RouteUrl("Homepage");
+        model.ReturnUrl = Url.RouteUrl(NopRouteNames.General.HOMEPAGE);
 
         //validate token
         if (!await _customerService.IsPasswordRecoveryTokenValidAsync(customer, token))
@@ -740,6 +753,9 @@ public partial class CustomerController : BasePublicController
 
         await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute, "");
 
+        await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await
+            _localizationService.GetResourceAsync("ActivityLog.PublicStore.PasswordChanged"));
+
         //authenticate customer after changing password
         await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
 
@@ -758,7 +774,7 @@ public partial class CustomerController : BasePublicController
     {
         //check whether registration is allowed
         if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
-            return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled, returnUrl });
+            return RedirectToRoute(NopRouteNames.Standard.REGISTER_RESULT, new { resultId = (int)UserRegistrationType.Disabled, returnUrl });
 
         var model = new RegisterModel();
         model = await _customerModelFactory.PrepareRegisterModelAsync(model, false, setDefaultValues: true);
@@ -775,9 +791,12 @@ public partial class CustomerController : BasePublicController
     {
         //check whether registration is allowed
         if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
-            return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled, returnUrl });
+            return RedirectToRoute(NopRouteNames.Standard.REGISTER_RESULT, new { resultId = (int)UserRegistrationType.Disabled, returnUrl });
 
+        var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();
+        var language = await _workContext.GetWorkingLanguageAsync();
+
         if (await _customerService.IsRegisteredAsync(customer))
         {
             //Already registered customer. 
@@ -792,7 +811,6 @@ public partial class CustomerController : BasePublicController
             await _workContext.SetCurrentCustomerAsync(customer);
         }
 
-        var store = await _storeContext.GetCurrentStoreAsync();
         customer.RegisteredInStoreId = store.Id;
 
         //custom customer attributes
@@ -884,52 +902,70 @@ public partial class CustomerController : BasePublicController
                 customer.CustomCustomerAttributesXML = customerAttributesXml;
                 await _customerService.UpdateCustomerAsync(customer);
 
-                //newsletter
+                //newsletter subscriptions
                 if (_customerSettings.NewsletterEnabled)
                 {
+                    var anyNewSubscriptions = false;
                     var isNewsletterActive = _customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation;
-
-                    //save newsletter value
-                    var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customerEmail, store.Id);
-                    if (newsletter != null)
+                    var activeSubscriptions = model.NewsLetterSubscriptions.Where(subscriptionModel => subscriptionModel.IsActive);
+                    var currentSubscriptions = await _newsLetterSubscriptionService
+                        .GetNewsLetterSubscriptionsByEmailAsync(customerEmail, storeId: store.Id);
+                    if (currentSubscriptions.Any())
                     {
-                        if (model.Newsletter)
+                        var subscriptionGuid = currentSubscriptions.FirstOrDefault().NewsLetterSubscriptionGuid;
+                        foreach (var activeSubscription in activeSubscriptions)
                         {
-                            newsletter.Active = isNewsletterActive;
-                            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(newsletter);
-
-                            //GDPR
-                            if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
+                            var existingSubscription = currentSubscriptions
+                                ?.FirstOrDefault(subscription => subscription.TypeId == activeSubscription.TypeId);
+                            if (existingSubscription is not null)
                             {
-                                await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter"));
+                                if (!existingSubscription.Active && isNewsletterActive)
+                                {
+                                    existingSubscription.Active = true;
+                                    existingSubscription.LanguageId = customer.LanguageId ?? language.Id;
+                                    await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(existingSubscription);
+                                }
+                            }
+                            else
+                            {
+                                await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
+                                {
+                                    NewsLetterSubscriptionGuid = subscriptionGuid,
+                                    Email = customer.Email,
+                                    Active = isNewsletterActive,
+                                    TypeId = activeSubscription.TypeId,
+                                    StoreId = store.Id,
+                                    LanguageId = customer.LanguageId ?? language.Id,
+                                    CreatedOnUtc = DateTime.UtcNow
+                                });
+                                anyNewSubscriptions = true;
                             }
                         }
-                        //else
-                        //{
-                        //When registering, not checking the newsletter check box should not take an existing email address off of the subscription list.
-                        //_newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
-                        //}
                     }
                     else
                     {
-                        if (model.Newsletter)
+                        var subscriptionGuid = Guid.NewGuid();
+                        foreach (var activeSubscription in activeSubscriptions)
                         {
-                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
+                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
                             {
-                                NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                Email = customerEmail,
+                                NewsLetterSubscriptionGuid = subscriptionGuid,
+                                Email = customer.Email,
                                 Active = isNewsletterActive,
+                                TypeId = activeSubscription.TypeId,
                                 StoreId = store.Id,
-                                LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
+                                LanguageId = customer.LanguageId ?? language.Id,
                                 CreatedOnUtc = DateTime.UtcNow
                             });
-
-                            //GDPR
-                            if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
-                            {
-                                await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter"));
-                            }
+                            anyNewSubscriptions = true;
                         }
+                    }
+
+                    //GDPR
+                    if (anyNewSubscriptions && _gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
+                    {
+                        var consentMessage = await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter");
+                        await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, consentMessage);
                     }
                 }
 
@@ -1013,33 +1049,32 @@ public partial class CustomerController : BasePublicController
 
                 //raise event       
                 await _eventPublisher.PublishAsync(new CustomerRegisteredEvent(customer));
-                var currentLanguage = await _workContext.GetWorkingLanguageAsync();
 
                 switch (_customerSettings.UserRegistrationType)
                 {
                     case UserRegistrationType.EmailValidation:
                         //email validation message
                         await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
-                        await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, currentLanguage.Id);
+                        await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, language.Id);
 
                         //result
-                        return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
+                        return RedirectToRoute(NopRouteNames.Standard.REGISTER_RESULT, new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
 
                     case UserRegistrationType.AdminApproval:
-                        return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval, returnUrl });
+                        return RedirectToRoute(NopRouteNames.Standard.REGISTER_RESULT, new { resultId = (int)UserRegistrationType.AdminApproval, returnUrl });
 
                     case UserRegistrationType.Standard:
                         //send customer welcome message
-                        await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, currentLanguage.Id);
+                        await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, language.Id);
 
                         //raise event       
                         await _eventPublisher.PublishAsync(new CustomerActivatedEvent(customer));
 
-                        returnUrl = Url.RouteUrl("RegisterResult", new { resultId = (int)UserRegistrationType.Standard, returnUrl });
+                        returnUrl = Url.RouteUrl(NopRouteNames.Standard.REGISTER_RESULT, new { resultId = (int)UserRegistrationType.Standard, returnUrl });
                         return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, true);
 
                     default:
-                        return RedirectToRoute("Homepage");
+                        return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
                 }
             }
 
@@ -1059,7 +1094,7 @@ public partial class CustomerController : BasePublicController
     public virtual async Task<IActionResult> RegisterResult(int resultId, string returnUrl)
     {
         if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
-            returnUrl = Url.RouteUrl("Homepage");
+            returnUrl = Url.RouteUrl(NopRouteNames.General.HOMEPAGE);
 
         var model = await _customerModelFactory.PrepareRegisterResultModelAsync(resultId, returnUrl);
         return View(model);
@@ -1109,9 +1144,9 @@ public partial class CustomerController : BasePublicController
                        ?? await _customerService.GetCustomerByGuidAsync(guid);
 
         if (customer == null)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
-        var model = new AccountActivationModel { ReturnUrl = Url.RouteUrl("Homepage") };
+        var model = new AccountActivationModel { ReturnUrl = Url.RouteUrl(NopRouteNames.General.HOMEPAGE) };
         var cToken = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute);
         if (string.IsNullOrEmpty(cToken))
         {
@@ -1120,7 +1155,7 @@ public partial class CustomerController : BasePublicController
         }
 
         if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         //activate user account
         customer.Active = true;
@@ -1136,13 +1171,14 @@ public partial class CustomerController : BasePublicController
         //authenticate customer after activation
         await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
 
-        //activating newsletter if need
+        //activating newsletter subscriptions
         var store = await _storeContext.GetCurrentStoreAsync();
-        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-        if (newsletter != null && !newsletter.Active)
+        var subscriptions = await _newsLetterSubscriptionService
+            .GetNewsLetterSubscriptionsByEmailAsync(customer.Email, storeId: store.Id, isActive: false);
+        foreach (var subscription in subscriptions)
         {
-            newsletter.Active = true;
-            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(newsletter);
+            subscription.Active = true;
+            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
         }
 
         model.Result = await _localizationService.GetResourceAsync("Account.AccountActivation.Activated");
@@ -1169,6 +1205,9 @@ public partial class CustomerController : BasePublicController
     public virtual async Task<IActionResult> Info(CustomerInfoModel model, IFormCollection form)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var language = await _workContext.GetWorkingLanguageAsync();
+
         if (!await _customerService.IsRegisteredAsync(customer))
             return Challenge();
 
@@ -1285,35 +1324,53 @@ public partial class CustomerController : BasePublicController
                 customer.CustomCustomerAttributesXML = customerAttributesXml;
                 await _customerService.UpdateCustomerAsync(customer);
 
-                //newsletter
+                //newsletter subscriptions
                 if (_customerSettings.NewsletterEnabled)
                 {
-                    //save newsletter value
-                    var store = await _storeContext.GetCurrentStoreAsync();
-                    var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
-                    if (newsletter != null)
+                    var currentSubscriptions = await _newsLetterSubscriptionService
+                        .GetNewsLetterSubscriptionsByEmailAsync(customer.Email, storeId: store.Id);
+                    if (currentSubscriptions.Any())
                     {
-                        if (model.Newsletter)
+                        var subscriptionGuid = currentSubscriptions.FirstOrDefault().NewsLetterSubscriptionGuid;
+                        foreach (var newsLetterSubscriptionModel in model.NewsLetterSubscriptions)
                         {
-                            newsletter.Active = true;
-                            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(newsletter);
-                        }
-                        else
-                        {
-                            await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletter);
+                            var existingSubscription = currentSubscriptions
+                                .FirstOrDefault(subscription => subscription.TypeId == newsLetterSubscriptionModel.TypeId);
+                            if (existingSubscription is not null && existingSubscription.Active != newsLetterSubscriptionModel.IsActive)
+                            {
+                                existingSubscription.Active = newsLetterSubscriptionModel.IsActive;
+                                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(existingSubscription);
+                            }
+
+                            if (existingSubscription is null && newsLetterSubscriptionModel.IsActive)
+                            {
+                                await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
+                                {
+                                    NewsLetterSubscriptionGuid = subscriptionGuid,
+                                    Email = customer.Email,
+                                    Active = true,
+                                    TypeId = newsLetterSubscriptionModel.TypeId,
+                                    StoreId = store.Id,
+                                    LanguageId = customer.LanguageId ?? language.Id,
+                                    CreatedOnUtc = DateTime.UtcNow
+                                });
+                            }
                         }
                     }
                     else
                     {
-                        if (model.Newsletter)
+                        var subscriptionGuid = Guid.NewGuid();
+                        var activeSubscriptions = model.NewsLetterSubscriptions.Where(subscriptionModel => subscriptionModel.IsActive);
+                        foreach (var activeSubscription in activeSubscriptions)
                         {
-                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
+                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
                             {
-                                NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                                NewsLetterSubscriptionGuid = subscriptionGuid,
                                 Email = customer.Email,
                                 Active = true,
                                 StoreId = store.Id,
-                                LanguageId = customer.LanguageId ?? store.DefaultLanguageId,
+                                TypeId = activeSubscription.TypeId,
+                                LanguageId = customer.LanguageId ?? language.Id,
                                 CreatedOnUtc = DateTime.UtcNow
                             });
                         }
@@ -1329,7 +1386,7 @@ public partial class CustomerController : BasePublicController
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.CustomerInfo.Updated"));
 
-                return RedirectToRoute("CustomerInfo");
+                return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
             }
         }
         catch (Exception exc)
@@ -1356,7 +1413,7 @@ public partial class CustomerController : BasePublicController
         {
             return Json(new
             {
-                redirect = Url.RouteUrl("CustomerInfo"),
+                redirect = Url.RouteUrl(NopRouteNames.General.CUSTOMER_INFO),
             });
         }
 
@@ -1364,7 +1421,7 @@ public partial class CustomerController : BasePublicController
 
         return Json(new
         {
-            redirect = Url.RouteUrl("CustomerInfo"),
+            redirect = Url.RouteUrl(NopRouteNames.General.CUSTOMER_INFO),
         });
     }
 
@@ -1377,9 +1434,9 @@ public partial class CustomerController : BasePublicController
                        ?? await _customerService.GetCustomerByGuidAsync(guid);
 
         if (customer == null)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
-        var model = new EmailRevalidationModel { ReturnUrl = Url.RouteUrl("Homepage") };
+        var model = new EmailRevalidationModel { ReturnUrl = Url.RouteUrl(NopRouteNames.General.HOMEPAGE) };
         var cToken = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute);
         if (string.IsNullOrEmpty(cToken))
         {
@@ -1388,13 +1445,13 @@ public partial class CustomerController : BasePublicController
         }
 
         if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         if (string.IsNullOrEmpty(customer.EmailToRevalidate))
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         if (_customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         //change email
         try
@@ -1452,7 +1509,7 @@ public partial class CustomerController : BasePublicController
         //redirect to the address list page
         return Json(new
         {
-            redirect = Url.RouteUrl("CustomerAddresses"),
+            redirect = Url.RouteUrl(NopRouteNames.General.CUSTOMER_ADDRESSES),
         });
     }
 
@@ -1504,7 +1561,7 @@ public partial class CustomerController : BasePublicController
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.CustomerAddresses.Added"));
 
-            return RedirectToRoute("CustomerAddresses");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_ADDRESSES);
         }
 
         //If we got this far, something failed, redisplay form
@@ -1528,7 +1585,7 @@ public partial class CustomerController : BasePublicController
         var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
         if (address == null)
             //address is not found
-            return RedirectToRoute("CustomerAddresses");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_ADDRESSES);
 
         var model = new CustomerAddressEditModel();
         await _addressModelFactory.PrepareAddressModelAsync(model.Address,
@@ -1551,7 +1608,7 @@ public partial class CustomerController : BasePublicController
         var address = await _customerService.GetCustomerAddressAsync(customer.Id, model.Address.Id);
         if (address == null)
             //address is not found
-            return RedirectToRoute("CustomerAddresses");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_ADDRESSES);
 
         //custom address attributes
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
@@ -1569,7 +1626,7 @@ public partial class CustomerController : BasePublicController
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.CustomerAddresses.Updated"));
 
-            return RedirectToRoute("CustomerAddresses");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_ADDRESSES);
         }
 
         //If we got this far, something failed, redisplay form
@@ -1593,7 +1650,7 @@ public partial class CustomerController : BasePublicController
             return Challenge();
 
         if (_customerSettings.HideDownloadableProductsTab)
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         var model = await _customerModelFactory.PrepareCustomerDownloadableProductsModelAsync();
 
@@ -1606,12 +1663,12 @@ public partial class CustomerController : BasePublicController
     {
         var orderItem = await _orderService.GetOrderItemByGuidAsync(orderItemId);
         if (orderItem == null)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
         if (product == null || !product.HasUserAgreement)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = await _customerModelFactory.PrepareUserAgreementModelAsync(orderItem, product);
 
@@ -1649,6 +1706,9 @@ public partial class CustomerController : BasePublicController
             {
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
 
+                await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await
+                    _localizationService.GetResourceAsync("ActivityLog.PublicStore.PasswordChanged"));
+
                 //authenticate customer after changing password
                 await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
 
@@ -1657,7 +1717,7 @@ public partial class CustomerController : BasePublicController
 
                 //prevent open redirection attack
                 if (!Url.IsLocalUrl(returnUrl))
-                    returnUrl = Url.RouteUrl("Homepage");
+                    returnUrl = Url.RouteUrl(NopRouteNames.General.HOMEPAGE);
 
                 return new RedirectResult(returnUrl);
             }
@@ -1683,7 +1743,7 @@ public partial class CustomerController : BasePublicController
             return Challenge();
 
         if (!_customerSettings.AllowCustomersToUploadAvatars)
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         var model = new CustomerAvatarModel();
         model = await _customerModelFactory.PrepareCustomerAvatarModelAsync(model);
@@ -1700,7 +1760,7 @@ public partial class CustomerController : BasePublicController
             return Challenge();
 
         if (!_customerSettings.AllowCustomersToUploadAvatars)
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         var contentType = uploadedFile?.ContentType.ToLowerInvariant();
 
@@ -1758,14 +1818,14 @@ public partial class CustomerController : BasePublicController
             return Challenge();
 
         if (!_customerSettings.AllowCustomersToUploadAvatars)
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         var customerAvatar = await _pictureService.GetPictureByIdAsync(await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute));
         if (customerAvatar != null)
             await _pictureService.DeletePictureAsync(customerAvatar);
         await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AvatarPictureIdAttribute, 0);
 
-        return RedirectToRoute("CustomerAvatar");
+        return RedirectToRoute(NopRouteNames.Standard.CUSTOMER_AVATAR);
     }
 
     #endregion
@@ -1778,7 +1838,7 @@ public partial class CustomerController : BasePublicController
             return Challenge();
 
         if (!_gdprSettings.GdprEnabled)
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         var model = await _customerModelFactory.PrepareGdprToolsModelAsync();
 
@@ -1794,7 +1854,7 @@ public partial class CustomerController : BasePublicController
             return Challenge();
 
         if (!_gdprSettings.GdprEnabled)
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         //log
         await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ExportData, await _localizationService.GetResourceAsync("Gdpr.Exported"));
@@ -1816,7 +1876,7 @@ public partial class CustomerController : BasePublicController
             return Challenge();
 
         if (!_gdprSettings.GdprEnabled)
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         //log
         await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.DeleteCustomer, await _localizationService.GetResourceAsync("Gdpr.DeleteRequested"));
@@ -1838,10 +1898,8 @@ public partial class CustomerController : BasePublicController
     [CheckAccessClosedStore(ignore: true)]
     public virtual async Task<IActionResult> CheckGiftCardBalance()
     {
-        if (!(_captchaSettings.Enabled && _customerSettings.AllowCustomersToCheckGiftCardBalance))
-        {
-            return RedirectToRoute("CustomerInfo");
-        }
+        if (!_customerSettings.AllowCustomersToCheckGiftCardBalance)
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         var model = await _customerModelFactory.PrepareCheckGiftCardBalanceModelAsync();
 
@@ -1853,11 +1911,12 @@ public partial class CustomerController : BasePublicController
     [ValidateCaptcha]
     public virtual async Task<IActionResult> CheckBalance(CheckGiftCardBalanceModel model, bool captchaValid)
     {
+        if (!_customerSettings.AllowCustomersToCheckGiftCardBalance)
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
+
         //validate CAPTCHA
-        if (_captchaSettings.Enabled && !captchaValid)
-        {
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnCheckGiftCardBalance && !captchaValid)
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         if (ModelState.IsValid)
         {
@@ -1886,11 +1945,11 @@ public partial class CustomerController : BasePublicController
     {
         if (!await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
         {
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
         }
 
         if (!await _permissionService.AuthorizeAsync(StandardPermission.Security.ENABLE_MULTI_FACTOR_AUTHENTICATION))
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         var model = new MultiFactorAuthenticationModel();
         model = await _customerModelFactory.PrepareMultiFactorAuthenticationModelAsync(model);
@@ -1905,7 +1964,7 @@ public partial class CustomerController : BasePublicController
             return Challenge();
 
         if (!await _permissionService.AuthorizeAsync(StandardPermission.Security.ENABLE_MULTI_FACTOR_AUTHENTICATION))
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         try
         {
@@ -1948,7 +2007,7 @@ public partial class CustomerController : BasePublicController
                     }
                 }
 
-                return RedirectToRoute("MultiFactorAuthenticationSettings");
+                return RedirectToRoute(NopRouteNames.Standard.MULTI_FACTOR_AUTHENTICATION_SETTINGS);
             }
         }
         catch (Exception exc)
@@ -1967,7 +2026,7 @@ public partial class CustomerController : BasePublicController
             return Challenge();
 
         if (!await _permissionService.AuthorizeAsync(StandardPermission.Security.ENABLE_MULTI_FACTOR_AUTHENTICATION))
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         var model = new MultiFactorAuthenticationProviderModel();
         model = await _customerModelFactory.PrepareMultiFactorAuthenticationProviderModelAsync(model, providerSysName);

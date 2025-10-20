@@ -10,7 +10,7 @@ namespace Nop.Core.Domain.Catalog;
 /// <summary>
 /// Represents a category
 /// </summary>
-public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountCategoryMapping>, ISoftDeletedEntity
+public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountCategoryMapping>, ISoftDeletedEntity, IMetaTagsSupported
 {
     /// <summary>
     /// Gets or sets the name
@@ -71,11 +71,6 @@ public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IA
     /// Gets or sets a value indicating whether to show the category on home page
     /// </summary>
     public bool ShowOnHomepage { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether to include this category in the top menu
-    /// </summary>
-    public bool IncludeInTopMenu { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the entity is subject to ACL

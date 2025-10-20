@@ -65,11 +65,11 @@ public partial class PermissionService : IPermissionService
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionRecordsAllCacheKey, customerRoleId);
 
         var query = from pr in _permissionRecordRepository.Table
-            join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm
-                .PermissionRecordId
-            where prcrm.CustomerRoleId == customerRoleId
-            orderby pr.Id
-            select pr;
+                    join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm
+                        .PermissionRecordId
+                    where prcrm.CustomerRoleId == customerRoleId
+                    orderby pr.Id
+                    select pr;
 
         return await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
     }
@@ -88,9 +88,9 @@ public partial class PermissionService : IPermissionService
             return null;
 
         var query = from pr in _permissionRecordRepository.Table
-            where pr.SystemName == systemName
-            orderby pr.Id
-            select pr;
+                    where pr.SystemName == systemName
+                    orderby pr.Id
+                    select pr;
 
         var permissionRecord = await query.FirstOrDefaultAsync();
         return permissionRecord;
@@ -142,7 +142,7 @@ public partial class PermissionService : IPermissionService
 
             foreach (var systemRoleName in config.DefaultCustomerRoles)
             {
-                var customerRole = await GetCustomerRoleBySystemNameAsync(systemRoleName);
+                var customerRole = await _customerService.GetCustomerRoleBySystemNameAsync(systemRoleName);
 
                 if (customerRole == null)
                 {
@@ -165,31 +165,6 @@ public partial class PermissionService : IPermissionService
         }
     }
 
-    /// <summary>
-    /// Gets a customer role
-    /// </summary>
-    /// <param name="systemName">Customer role system name</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the customer role
-    /// </returns>
-    protected virtual async Task<CustomerRole> GetCustomerRoleBySystemNameAsync(string systemName)
-    {
-        if (string.IsNullOrWhiteSpace(systemName))
-            return null;
-
-        var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesBySystemNameCacheKey, systemName);
-
-        var query = from cr in _customerRoleRepository.Table
-                    orderby cr.Id
-                    where cr.SystemName == systemName
-                    select cr;
-
-        var customerRole = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
-
-        return customerRole;
-    }
-    
     #endregion
 
     #region Methods
@@ -204,8 +179,8 @@ public partial class PermissionService : IPermissionService
     public virtual async Task<IList<PermissionRecord>> GetAllPermissionRecordsAsync()
     {
         var permissions = await _permissionRecordRepository.GetAllAsync(query => from pr in query
-            orderby pr.Name
-            select pr);
+                                                                                 orderby pr.Name
+                                                                                 select pr);
 
         return permissions;
     }

@@ -9,10 +9,6 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Components;
 /// </summary>
 public class GAVerificationViewComponent : NopViewComponent
 {
-    #region Fields
-
-    #endregion
-
     #region Ctor
 
     public GAVerificationViewComponent()

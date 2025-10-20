@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "\"Request for quote\" and \"Quotes\"",
+  "SystemName": "Misc.RFQ",
+  "Version": "4.90.6",
+  "SupportedVersions": ["4.90"],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.RFQ.dll",
+  "Description": ""
+}

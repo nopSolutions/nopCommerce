@@ -17,6 +17,7 @@ public partial record CatalogSettingsModel : BaseNopModel, ISettingsModel
         AvailableViewModes = new List<SelectListItem>();
         SortOptionSearchModel = new SortOptionSearchModel();
         ReviewTypeSearchModel = new ReviewTypeSearchModel();
+        ArtificialIntelligenceSettingsModel = new ArtificialIntelligenceSettingsModel();
     }
 
     #endregion
@@ -350,6 +351,10 @@ public partial record CatalogSettingsModel : BaseNopModel, ISettingsModel
     public bool ExportImportProductUseLimitedToStores { get; set; }
     public bool ExportImportProductUseLimitedToStores_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportCategoryUseLimitedToStores")]
+    public bool ExportImportCategoryUseLimitedToStores { get; set; }
+    public bool ExportImportCategoryUseLimitedToStores_OverrideForStore { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreDiscounts")]
     public bool IgnoreDiscounts { get; set; }
 
@@ -416,6 +421,8 @@ public partial record CatalogSettingsModel : BaseNopModel, ISettingsModel
     public int ProductUrlStructureTypeId { get; set; }
     public bool ProductUrlStructureTypeId_OverrideForStore { get; set; }
     public SelectList ProductUrlStructureTypes { get; set; }
+
+    public ArtificialIntelligenceSettingsModel ArtificialIntelligenceSettingsModel { get; set; }
 
     #endregion
 }

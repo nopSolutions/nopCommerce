@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -6,9 +7,11 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -194,20 +197,51 @@ public partial class OrderModelFactory : IOrderModelFactory
     /// <summary>
     /// Prepare the customer order list model
     /// </summary>
+    /// <param name="page">Page number</param>
+    /// <param name="limit">Order filtering period</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the customer order list model
     /// </returns>
-    public virtual async Task<CustomerOrderListModel> PrepareCustomerOrderListModelAsync()
+    public virtual async Task<CustomerOrderListModel> PrepareCustomerOrderListModelAsync(int? page, OrderHistoryPeriods limit)
     {
-        var model = new CustomerOrderListModel();
         var customer = await _workContext.GetCurrentCustomerAsync();
         var store = await _storeContext.GetCurrentStoreAsync();
+        var pageSize = _orderSettings.CustomerOrdersPageSize;
+        var pageIndex = Math.Max((page ?? 0) - 1, 0);
+
         var orders = await _orderService.SearchOrdersAsync(storeId: store.Id,
-            customerId: customer.Id);
+            customerId: customer.Id,
+            createdFromUtc: limit == OrderHistoryPeriods.All ? null : DateTime.UtcNow.AddDays((int)limit * -1),
+            createdToUtc: limit > 0 ? DateTime.UtcNow : null,
+            pageIndex: pageIndex,
+            pageSize: pageSize);
+
+        var periods = await Enum.GetValues<OrderHistoryPeriods>()
+            .SelectAwait(async enumValue => new
+            {
+                ID = enumValue.ToString().ToLower(),
+                Name = await _localizationService.GetLocalizedEnumAsync(enumValue)
+            }).ToListAsync();
+
+        var model = new CustomerOrderListModel
+        {
+            AvailableLimits = new SelectList(periods, "ID", "Name", limit.ToString()).ToList(),
+            PagerModel = new PagerModel(_localizationService)
+            {
+                PageSize = orders.PageSize,
+                TotalRecords = orders.TotalCount,
+                PageIndex = orders.PageIndex,
+                ShowTotalSummary = true,
+                RouteActionName = NopRouteNames.Standard.CUSTOMER_ORDERS_PAGED,
+                UseRouteLinks = true,
+                RouteValues = new CustomerOrdersRouteValues { PageNumber = orders.PageIndex, Limit = limit.ToString().ToLower() }
+            }
+        };
+
         foreach (var order in orders)
         {
-            var orderModel = new CustomerOrderListModel.OrderDetailsModel
+            var orderModel = new CustomerOrderModel
             {
                 Id = order.Id,
                 CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc),
@@ -224,13 +258,29 @@ public partial class OrderModelFactory : IOrderModelFactory
             model.Orders.Add(orderModel);
         }
 
+        return model;
+    }
+
+    /// <summary>
+    /// Prepare the customer recurring payment list model
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the customer recurring payment list model
+    /// </returns>
+    public virtual async Task<CustomerRecurringPaymentListModel> PrepareCustomerRecurringPaymentListModelAsync()
+    {
+        var model = new CustomerRecurringPaymentListModel();
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+
         var recurringPayments = await _orderService.SearchRecurringPaymentsAsync(store.Id,
             customer.Id);
         foreach (var recurringPayment in recurringPayments)
         {
             var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
 
-            var recurringPaymentModel = new CustomerOrderListModel.RecurringOrderModel
+            var recurringPaymentModel = new CustomerRecurringPaymentModel
             {
                 Id = recurringPayment.Id,
                 StartDate = (await _dateTimeHelper.ConvertToUserTimeAsync(recurringPayment.StartDateUtc, DateTimeKind.Utc)).ToString(),
@@ -244,7 +294,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                 CanRetryLastPayment = await _orderProcessingService.CanRetryLastRecurringPaymentAsync(customer, recurringPayment)
             };
 
-            model.RecurringOrders.Add(recurringPaymentModel);
+            model.RecurringPayments.Add(recurringPaymentModel);
         }
 
         return model;
@@ -265,7 +315,8 @@ public partial class OrderModelFactory : IOrderModelFactory
         {
             Id = order.Id,
             CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc),
-            OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus),
+            OrderStatus = order.OrderStatus,
+            OrderStatusText = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus),
             IsReOrderAllowed = _orderSettings.IsReOrderAllowed,
             IsReturnRequestAllowed = await _orderProcessingService.IsReturnRequestAllowedAsync(order),
             PdfInvoiceDisabled = _pdfSettings.DisablePdfInvoicesForPendingOrders && order.OrderStatus == OrderStatus.Pending,
@@ -347,10 +398,12 @@ public partial class OrderModelFactory : IOrderModelFactory
         var paymentMethod = await _paymentPluginManager
             .LoadPluginBySystemNameAsync(order.PaymentMethodSystemName, customer, order.StoreId);
         model.PaymentMethod = paymentMethod != null ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, languageId) : order.PaymentMethodSystemName;
+        model.PaymentStatus = order.PaymentStatus;
         model.PaymentMethodStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
         model.CanRePostProcessPayment = await _paymentService.CanRePostProcessPaymentAsync(order);
+
         //custom values
-        model.CustomValues = _paymentService.DeserializeCustomValues(order);
+        model.CustomValues.FillByXml(order.CustomValuesXml, true);
 
         //order subtotal
         if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
@@ -504,6 +557,11 @@ public partial class OrderModelFactory : IOrderModelFactory
                 CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(orderNote.CreatedOnUtc, DateTimeKind.Utc)
             });
         }
+
+        //can user cancel the order
+        model.CanCancelOrder = order.PaymentStatus == PaymentStatus.Pending
+            && order.OrderStatus != OrderStatus.Cancelled
+            && _orderSettings.AllowCustomersCancelOrders;
 
         //purchased products
         model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
@@ -713,7 +771,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                 TotalRecords = rewardPoints.TotalCount,
                 PageIndex = rewardPoints.PageIndex,
                 ShowTotalSummary = true,
-                RouteActionName = "CustomerRewardPointsPaged",
+                RouteActionName = NopRouteNames.Standard.CUSTOMER_REWARD_POINTS_PAGED,
                 UseRouteLinks = true,
                 RouteValues = new RewardPointsRouteValues { PageNumber = page ?? 0 }
             }
@@ -744,8 +802,14 @@ public partial class OrderModelFactory : IOrderModelFactory
     /// <summary>
     /// record that has only page for route value. Used for (My Account) Reward Points pagination
     /// </summary>
-    public partial record RewardPointsRouteValues : BaseRouteValues
+    public partial record RewardPointsRouteValues : BaseRouteValues;
+
+    /// <summary>
+    /// Record that has filter options for route values. Used for Customer orders pagination (My Account)
+    /// </summary>
+    public partial record CustomerOrdersRouteValues : BaseRouteValues
     {
+        public string Limit { get; set; }
     }
 
     #endregion

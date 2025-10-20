@@ -27,13 +27,14 @@ public partial interface IProductAttributeService
     /// <summary>
     /// Gets all product attributes
     /// </summary>
+    /// <param name="name">Filter by name</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the product attributes
     /// </returns>
-    Task<IPagedList<ProductAttribute>> GetAllProductAttributesAsync(int pageIndex = 0, int pageSize = int.MaxValue);
+    Task<IPagedList<ProductAttribute>> GetAllProductAttributesAsync(string name = null, int pageIndex = 0, int pageSize = int.MaxValue);
 
     /// <summary>
     /// Gets a product attribute 
@@ -174,11 +175,11 @@ public partial interface IProductAttributeService
     #region Product attribute value pictures
 
     /// <summary>
-    /// Deletes a product attribute value picture
+    /// Deletes a list of product attribute value picture
     /// </summary>
-    /// <param name="value">Product attribute value picture</param>
+    /// <param name="value">Product attribute value pictures</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    Task DeleteProductAttributeValuePictureAsync(ProductAttributeValuePicture valuePicture);
+    Task DeleteProductAttributeValuePicturesAsync(IList<ProductAttributeValuePicture> valuePictures);
 
     /// <summary>
     /// Inserts a product attribute value picture

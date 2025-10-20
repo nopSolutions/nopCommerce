@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -28,6 +29,7 @@ using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -96,6 +98,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreService _storeService;
     protected readonly ITaxPluginManager _taxPluginManager;
+    protected readonly IThumbService _thumbService;
     protected readonly ITopicService _topicService;
     protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IUrlRecordService _urlRecordService;
@@ -147,6 +150,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         IStoreContext storeContext,
         IStoreService storeService,
         ITaxPluginManager taxPluginManager,
+        IThumbService thumbService,
         ITopicService topicService,
         IUrlHelperFactory urlHelperFactory,
         IUrlRecordService urlRecordService,
@@ -194,6 +198,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _storeContext = storeContext;
         _storeService = storeService;
         _taxPluginManager = taxPluginManager;
+        _thumbService = thumbService;
         _topicService = topicService;
         _urlHelperFactory = urlHelperFactory;
         _urlRecordService = urlRecordService;
@@ -239,6 +244,34 @@ public partial class CommonModelFactory : ICommonModelFactory
             Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.URL.NoMatch"),
                 currentStoreUrl, _webHelper.GetStoreLocation(false))
         });
+    }
+
+    /// <summary>
+    /// Prepare recommendations/warnings model
+    /// </summary>
+    /// <param name="models">List of system warning models</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task PrepareRecommendationsModelAsync(IList<SystemWarningModel> models)
+    {
+        ArgumentNullException.ThrowIfNull(models);
+
+        var recommendations = new List<string>();
+        try
+        {
+            var text = await _nopHttpClient.GetRecommendationsAsync();
+            recommendations = JsonConvert.DeserializeObject<List<string>>(text);
+        }
+        catch { }
+
+        foreach (var recommendation in recommendations ?? new())
+        {
+            models.Add(new SystemWarningModel
+            {
+                Level = SystemWarningLevel.Recommendation,
+                Text = recommendation,
+                DontEncode = true
+            });
+        }
     }
 
     /// <summary>
@@ -516,6 +549,26 @@ public partial class CommonModelFactory : ICommonModelFactory
     }
 
     /// <summary>
+    /// Prepare delete thumb files model
+    /// </summary>
+    /// <param name="model">Delete thumb files model</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task PrepareDeleteThumbFilesModelAsync(MaintenanceModel.DeleteThumbFilesModel model)
+    {
+        if (_thumbService is not ThumbService thumbService)
+        {
+            model.IsDeleteThumbsSupported = false;
+            return;
+        }
+
+        var (filesCount, filesSize) = await thumbService.GetThumbsInfoAsync();
+
+        model.IsDeleteThumbsSupported = true;
+        model.FilesCountText = string.Format(await _localizationService.GetResourceAsync("Admin.System.Maintenance.DeleteThumbFiles.FilesCount"), filesCount);
+        model.FilesSizeText = string.Format(await _localizationService.GetResourceAsync("Admin.System.Maintenance.DeleteThumbFiles.FilesSize"), Math.Round(filesSize / 1024M / 1024M, 2));
+    }
+
+    /// <summary>
     /// Prepare plugins which try to override the same interface warning model
     /// </summary>
     /// <param name="models">List of system warning models</param>
@@ -725,8 +778,6 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected virtual async Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsForEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, ISlugSupported
     {
         var models = new List<MultistorePreviewModel>();
-
-        var seName = await _urlRecordService.GetSeNameAsync(entity, ensureTwoPublishedLanguages: false);
         var stores = await _storeService.GetAllStoresAsync();
 
         foreach (var store in stores)
@@ -738,7 +789,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             {
                 StoreName = store.Name,
                 Url = await _nopUrlHelper
-                    .RouteGenericUrlAsync<TEntity>(new { SeName = seName }, url.Scheme, url.IsDefaultPort ? url.Host : $"{url.Host}:{url.Port}"),
+                    .RouteGenericUrlAsync(entity, url.Scheme, url.IsDefaultPort ? url.Host : $"{url.Host}:{url.Port}", null, null, false),
             });
         }
 
@@ -771,6 +822,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         //ensure no exception is thrown
         try
         {
+            model.DatabaseCollation = await _dataProvider.GetDataBaseCollationAsync();
             model.OperatingSystem = Environment.OSVersion.VersionString;
             model.AspNetInfo = RuntimeInformation.FrameworkDescription;
             model.IsFullTrust = AppDomain.CurrentDomain.IsFullyTrusted;
@@ -818,7 +870,6 @@ public partial class CommonModelFactory : ICommonModelFactory
             model.LoadedAssemblies.Add(loadedAssemblyModel);
         }
 
-
         var currentStaticCacheManagerName = _staticCacheManager.GetType().Name;
 
         if (_appSettings.Get<DistributedCacheConfig>().Enabled)
@@ -826,8 +877,6 @@ public partial class CommonModelFactory : ICommonModelFactory
                 $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.Get<DistributedCacheConfig>().DistributedCacheType)})";
 
         model.CurrentStaticCacheManager = currentStaticCacheManagerName;
-
-        model.AzureBlobStorageEnabled = _appSettings.Get<AzureBlobConfig>().Enabled;
 
         return model;
     }
@@ -906,6 +955,9 @@ public partial class CommonModelFactory : ICommonModelFactory
         //store URL
         await PrepareStoreUrlWarningModelAsync(models);
 
+        //recommendations
+        await PrepareRecommendationsModelAsync(models);
+
         //primary exchange rate currency
         await PrepareExchangeRateCurrencyWarningModelAsync(models);
 
@@ -933,10 +985,9 @@ public partial class CommonModelFactory : ICommonModelFactory
         //proxy connection
         await PrepareProxyConnectionWarningModelAsync(models);
 
-        //publish event
+        //publish event and add another warnings (for example from plugins) 
         var warningEvent = new SystemWarningCreatedEvent();
         await _eventPublisher.PublishAsync(warningEvent);
-        //add another warnings (for example from plugins) 
         models.AddRange(warningEvent.SystemWarnings);
 
         return models;
@@ -950,7 +1001,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the maintenance model
     /// </returns>
-    public virtual Task<MaintenanceModel> PrepareMaintenanceModelAsync(MaintenanceModel model)
+    public virtual async Task<MaintenanceModel> PrepareMaintenanceModelAsync(MaintenanceModel model)
     {
         ArgumentNullException.ThrowIfNull(model);
 
@@ -965,7 +1016,10 @@ public partial class CommonModelFactory : ICommonModelFactory
         //prepare nested search model
         PrepareBackupFileSearchModel(model.BackupFileSearchModel);
 
-        return Task.FromResult(model);
+        //prepare nested DeleteThumbsFiles model
+        await PrepareDeleteThumbFilesModelAsync(model.DeleteThumbsFiles);
+
+        return model;
     }
 
     /// <summary>

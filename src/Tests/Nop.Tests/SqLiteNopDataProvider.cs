@@ -2,12 +2,10 @@
 using System.Data.Common;
 using System.Linq.Expressions;
 using System.Text;
-using DocumentFormat.OpenXml.Vml.Office;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.SQLite;
-using LinqToDB.Tools;
 using Microsoft.Data.Sqlite;
 using Nop.Core;
 using Nop.Core.ComponentModel;
@@ -32,7 +30,7 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
 
     #region Methods
 
-    public void CreateDatabase(string collation, int triesToConnect = 10)
+    public void CreateDatabase(int triesToConnect = 10)
     {
         ExecuteNonQueryAsync("PRAGMA journal_mode=WAL;").Wait();
     }
@@ -264,6 +262,18 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
     }
 
     /// <summary>
+    /// Shrinks database
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual Task ShrinkDatabaseAsync()
+    {
+        using (new ReaderWriteLockDisposable(_locker))
+            DataContext.Execute("VACUUM;");
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>
@@ -378,6 +388,18 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
             DataContext.GetTable<TEntity>().Truncate(resetIdentity);
 
         return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Gets the name of the database collation
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains an empty string
+    /// </returns>
+    public Task<string> GetDataBaseCollationAsync()
+    {
+        return Task.FromResult(string.Empty);
     }
 
     #endregion

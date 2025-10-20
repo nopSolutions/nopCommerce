@@ -6,6 +6,4 @@ namespace Nop.Services.Messages.Caching;
 /// <summary>
 /// Represents a campaign cache event consumer
 /// </summary>
-public partial class CampaignCacheEventConsumer : CacheEventConsumer<Campaign>
-{
-}
+public partial class CampaignCacheEventConsumer : CacheEventConsumer<Campaign>;

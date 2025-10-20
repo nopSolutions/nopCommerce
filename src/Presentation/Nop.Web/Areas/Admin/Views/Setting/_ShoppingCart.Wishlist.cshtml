@@ -45,6 +45,28 @@
     </nop-nested-setting>
     <div class="form-group row">
         <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowMultipleWishlist_OverrideForStore" asp-input="AllowMultipleWishlist" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowMultipleWishlist" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowMultipleWishlist" />
+            <span asp-validation-for="AllowMultipleWishlist"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="AllowMultipleWishlist">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="MaximumNumberOfCustomWishlist_OverrideForStore" asp-input="MaximumNumberOfCustomWishlist" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="MaximumNumberOfCustomWishlist" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="MaximumNumberOfCustomWishlist" />
+                <span asp-validation-for="MaximumNumberOfCustomWishlist"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group row">
+        <div class="col-md-3">
             <nop-override-store-checkbox asp-for="AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore" asp-input="AllowOutOfStockItemsToBeAddedToWishlist" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="AllowOutOfStockItemsToBeAddedToWishlist" />
         </div>

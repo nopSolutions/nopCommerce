@@ -91,18 +91,6 @@ public partial interface IPictureService
         PictureType defaultPictureType = PictureType.Entity);
 
     /// <summary>
-    /// Get a picture local path
-    /// </summary>
-    /// <param name="picture">Picture instance</param>
-    /// <param name="targetSize">The target picture size (longest side)</param>
-    /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the 
-    /// </returns>
-    Task<string> GetThumbLocalPathAsync(Picture picture, int targetSize = 0, bool showDefaultPicture = true);
-
-    /// <summary>
     /// Gets a picture
     /// </summary>
     /// <param name="pictureId">Picture identifier</param>
@@ -236,6 +224,13 @@ public partial interface IPictureService
     /// <param name="isStoreInDb">A value indicating whether the images should be stored in data base</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task SetIsStoreInDbAsync(bool isStoreInDb);
+
+    /// <summary>
+    /// Change path to store pictures
+    /// </summary>
+    /// <param name="path">New path</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task ChangePicturesPathAsync(string path);
 
     /// <summary>
     /// Get product picture (for shopping cart and order details pages)

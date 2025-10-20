@@ -6,6 +6,4 @@ namespace Nop.Plugin.Tax.Avalara.Models.ItemClassification;
 /// <summary>
 /// Represents a product list model to add for classification
 /// </summary>
-public record AddProductToClassificationListModel : BasePagedListModel<ProductModel>
-{
-}
+public record AddProductToClassificationListModel : BasePagedListModel<ProductModel>;

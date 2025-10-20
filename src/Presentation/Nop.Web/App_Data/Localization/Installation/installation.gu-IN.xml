@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="અંગ્રેજી" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>એડમિન વપરાશકર્તા ઇમેઇલ</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>એડમિન પાસવર્ડ દાખલ કરો</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>અક્ષર સમૂહ</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>સંગ્રહ</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>કોલેક્શન જરૂરી છે</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>આ '{0}' ફોલ્ડર પર ફેરફાર કરવાની પરવાનગી સાથે એકાઉન્ટને મંજૂરી આપવામાં આવતી નથી '{1}'. કૃપા કરીને આ પરવાનગીને ગોઠવો.</Value>

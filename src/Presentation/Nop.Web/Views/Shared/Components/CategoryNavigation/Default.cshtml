@@ -33,7 +33,8 @@
         }
 
         <li class="@liClass">
-            <a href="@(Url.RouteUrl<Category>(new { SeName = lineModel.Category.SeName }))">@lineModel.Category.Name
+            <a href="@(await NopUrl.RouteGenericUrlAsync<Category>(new { SeName = lineModel.Category.SeName }))">
+                @lineModel.Category.Name
                 @if (lineModel.Category.NumberOfProducts.HasValue)
                 {
                     <text> </text>@T("Categories.TotalProducts", lineModel.Category.NumberOfProducts.Value)
@@ -65,10 +66,10 @@
 
 @if (Model.Categories.Count > 0)
 {
-    <div class="block block-category-navigation">
-        <div class="title">
-            <strong>@T("Categories")</strong>
-        </div>
+    <section class="block block-category-navigation">
+        <h2 class="title">
+            @T("Categories")
+        </h2>
         <div class="listbox">
             <ul class="list">
                 @foreach (var category in Model.Categories)
@@ -82,5 +83,5 @@
                 }
             </ul>
         </div>
-    </div>
+    </section>
 }

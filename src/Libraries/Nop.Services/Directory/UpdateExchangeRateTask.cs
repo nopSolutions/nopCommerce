@@ -31,7 +31,7 @@ public partial class UpdateExchangeRateTask : IScheduleTask
     /// <summary>
     /// Executes a task
     /// </summary>
-    public async System.Threading.Tasks.Task ExecuteAsync()
+    public virtual async Task ExecuteAsync()
     {
         if (!_currencySettings.AutoUpdateEnabled)
             return;

@@ -13,7 +13,7 @@ public partial class InstallationConfig : IConfig
     /// <summary>
     /// Gets or sets a list of plugins ignored during nopCommerce installation
     /// </summary>
-    public string DisabledPlugins { get; protected set; } = string.Empty;
+    public string DisabledPlugins { get; protected set; } = "Misc.AzureBlob,Misc.CloudflareImages";
 
     /// <summary>
     /// Gets or sets a value indicating whether to download and setup the regional language pack during installation

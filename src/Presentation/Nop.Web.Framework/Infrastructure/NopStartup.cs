@@ -9,6 +9,7 @@ using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Affiliates;
+using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Attributes;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
@@ -24,6 +25,7 @@ using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.ExportImport;
+using Nop.Services.FilterLevels;
 using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
@@ -33,6 +35,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Media.RoxyFileman;
+using Nop.Services.Menus;
 using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Orders;
@@ -137,6 +140,7 @@ public partial class NopStartup : INopStartup
         //services
         services.AddScoped<IBackInStockSubscriptionService, BackInStockSubscriptionService>();
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<IFilterLevelValueService, FilterLevelValueService>();
         services.AddScoped<ICompareProductsService, CompareProductsService>();
         services.AddScoped<IRecentlyViewedProductsService, RecentlyViewedProductsService>();
         services.AddScoped<IManufacturerService, ManufacturerService>();
@@ -145,6 +149,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IProductAttributeParser, ProductAttributeParser>();
         services.AddScoped<IProductAttributeService, ProductAttributeService>();
         services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IProductReviewService, ProductReviewService>();
         services.AddScoped<ICopyProductService, CopyProductService>();
         services.AddScoped<ISpecificationAttributeService, SpecificationAttributeService>();
         services.AddScoped<IProductTemplateService, ProductTemplateService>();
@@ -154,6 +159,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IProductTagService, ProductTagService>();
         services.AddScoped<IAddressService, AddressService>();
         services.AddScoped<IAffiliateService, AffiliateService>();
+        services.AddScoped<IArtificialIntelligenceService, ArtificialIntelligenceService>();
         services.AddScoped<IVendorService, VendorService>();
         services.AddScoped<ISearchTermService, SearchTermService>();
         services.AddScoped<IGenericAttributeService, GenericAttributeService>();
@@ -179,6 +185,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IMessageTemplateService, MessageTemplateService>();
         services.AddScoped<IQueuedEmailService, QueuedEmailService>();
         services.AddScoped<INewsLetterSubscriptionService, NewsLetterSubscriptionService>();
+        services.AddScoped<INewsLetterSubscriptionTypeService, NewsLetterSubscriptionTypeService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<ICampaignService, CampaignService>();
         services.AddScoped<IEmailAccountService, EmailAccountService>();
@@ -196,6 +203,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IReturnRequestService, ReturnRequestService>();
         services.AddScoped<IRewardPointService, RewardPointService>();
         services.AddScoped<IShoppingCartService, ShoppingCartService>();
+        services.AddScoped<ICustomWishlistService, CustomWishlistService>();
         services.AddScoped<ICustomNumberFormatter, CustomNumberFormatter>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IEncryptionService, EncryptionService>();
@@ -203,6 +211,8 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IUrlRecordService, UrlRecordService>();
         services.AddScoped<IShipmentService, ShipmentService>();
         services.AddScoped<IShippingService, ShippingService>();
+        services.AddScoped<IWarehouseService, WarehouseService>();
+        services.AddScoped<IShippingMethodsService, ShippingMethodsService>();
         services.AddScoped<IDateRangeService, DateRangeService>();
         services.AddScoped<ITaxCategoryService, TaxCategoryService>();
         services.AddScoped<ICheckVatService, CheckVatService>();
@@ -234,6 +244,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IVideoService, VideoService>();
         services.AddScoped<INopUrlHelper, NopUrlHelper>();
         services.AddScoped<IWidgetModelFactory, WidgetModelFactory>();
+        services.AddScoped<IMenuService, MenuService>();
 
         //attribute services
         services.AddScoped(typeof(IAttributeService<,>), typeof(AttributeService<,>));
@@ -275,11 +286,11 @@ public partial class NopStartup : INopStartup
             });
         }
 
+        //picture thumb service
+        services.AddScoped<IThumbService, ThumbService>();
+
         //picture service
-        if (appSettings.Get<AzureBlobConfig>().Enabled)
-            services.AddScoped<IPictureService, AzurePictureService>();
-        else
-            services.AddScoped<IPictureService, PictureService>();
+        services.AddScoped<IPictureService, PictureService>();
 
         //roxy file manager
         services.AddScoped<IRoxyFilemanService, RoxyFilemanService>();
@@ -319,7 +330,7 @@ public partial class NopStartup : INopStartup
     /// Configure the using of added middleware
     /// </summary>
     /// <param name="application">Builder for configuring an application's request pipeline</param>
-    public void Configure(IApplicationBuilder application)
+    public virtual void Configure(IApplicationBuilder application)
     {
     }
 

@@ -143,7 +143,7 @@ public partial class RedisConnectionWrapper : IRedisConnectionWrapper
     /// Obtain an interactive connection to a database inside Redis
     /// </summary>
     /// <returns>Redis cache database</returns>
-    public async Task<IDatabase> GetDatabaseAsync()
+    public virtual async Task<IDatabase> GetDatabaseAsync()
     {
         return (await GetConnectionAsync()).GetDatabase();
     }
@@ -152,7 +152,7 @@ public partial class RedisConnectionWrapper : IRedisConnectionWrapper
     /// Obtain an interactive connection to a database inside Redis
     /// </summary>
     /// <returns>Redis cache database</returns>
-    public IDatabase GetDatabase()
+    public virtual IDatabase GetDatabase()
     {
         return GetConnection().GetDatabase();
     }
@@ -162,7 +162,7 @@ public partial class RedisConnectionWrapper : IRedisConnectionWrapper
     /// </summary>
     /// <param name="endPoint">The network endpoint</param>
     /// <returns>Redis server</returns>
-    public async Task<IServer> GetServerAsync(EndPoint endPoint)
+    public virtual async Task<IServer> GetServerAsync(EndPoint endPoint)
     {
         return (await GetConnectionAsync()).GetServer(endPoint);
     }
@@ -171,7 +171,7 @@ public partial class RedisConnectionWrapper : IRedisConnectionWrapper
     /// Gets all endpoints defined on the server
     /// </summary>
     /// <returns>Array of endpoints</returns>
-    public async Task<EndPoint[]> GetEndPointsAsync()
+    public virtual async Task<EndPoint[]> GetEndPointsAsync()
     {
         return (await GetConnectionAsync()).GetEndPoints();
     }
@@ -180,7 +180,7 @@ public partial class RedisConnectionWrapper : IRedisConnectionWrapper
     /// Gets a subscriber for the server
     /// </summary>
     /// <returns>Array of endpoints</returns>
-    public async Task<ISubscriber> GetSubscriberAsync()
+    public virtual async Task<ISubscriber> GetSubscriberAsync()
     {
         return (await GetConnectionAsync()).GetSubscriber();
     }
@@ -189,7 +189,7 @@ public partial class RedisConnectionWrapper : IRedisConnectionWrapper
     /// Gets a subscriber for the server
     /// </summary>
     /// <returns>Array of endpoints</returns>
-    public ISubscriber GetSubscriber()
+    public virtual ISubscriber GetSubscriber()
     {
         return GetConnection().GetSubscriber();
     }
@@ -197,7 +197,7 @@ public partial class RedisConnectionWrapper : IRedisConnectionWrapper
     /// <summary>
     /// Delete all the keys of the database
     /// </summary>
-    public async Task FlushDatabaseAsync()
+    public virtual async Task FlushDatabaseAsync()
     {
         var endPoints = await GetEndPointsAsync();
         await Task.WhenAll(endPoints.Select(async endPoint =>
@@ -213,7 +213,7 @@ public partial class RedisConnectionWrapper : IRedisConnectionWrapper
     /// <summary>
     /// Release all resources associated with this object
     /// </summary>
-    public void Dispose()
+    public virtual void Dispose()
     {
         //dispose ConnectionMultiplexer
         _connection?.Dispose();

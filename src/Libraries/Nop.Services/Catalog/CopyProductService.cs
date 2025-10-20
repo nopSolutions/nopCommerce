@@ -776,7 +776,9 @@ public partial class CopyProductService : ICopyProductService
             Published = isPublished,
             Deleted = product.Deleted,
             CreatedOnUtc = DateTime.UtcNow,
-            UpdatedOnUtc = DateTime.UtcNow
+            UpdatedOnUtc = DateTime.UtcNow,
+            AgeVerification = product.AgeVerification,
+            MinimumAgeToPurchase = product.MinimumAgeToPurchase
         };
 
         //validate search engine name

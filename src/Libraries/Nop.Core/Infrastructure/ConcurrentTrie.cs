@@ -399,6 +399,74 @@ public partial class ConcurrentTrie<TValue> : IConcurrentCollection<TValue>
             _structureLock.ExitWriteLock();
         }
     }
+    
+    protected virtual bool SearchOrPrune(string prefix, bool prune, out TrieNode subtreeRoot)
+    {
+        ArgumentNullException.ThrowIfNull(prefix);
+
+        if (prefix.Length == 0)
+        {
+            subtreeRoot = _root;
+            return true;
+        }
+
+        subtreeRoot = default;
+        var node = _root;
+        var parent = node;
+        var span = prefix.AsSpan();
+        var i = 0;
+
+        while (i < span.Length)
+        {
+            var c = span[i];
+            var parentLock = GetLock(parent);
+            parentLock.EnterUpgradeableReadLock();
+
+            try
+            {
+                if (!parent.Children.TryGetValue(c, out node))
+                    return false;
+
+                var label = node.Label.AsSpan();
+                var k = GetCommonPrefixLength(span[i..], label);
+
+                if (k == span.Length - i)
+                {
+                    subtreeRoot = new TrieNode(prefix[..i] + node.Label, node);
+                    if (!prune)
+                        return true;
+
+                    parentLock.EnterWriteLock();
+
+                    try
+                    {
+                        if (parent.Children.Remove(c, out node))
+                            return true;
+                    }
+                    finally
+                    {
+                        parentLock.ExitWriteLock();
+                    }
+
+                    // was removed by another thread
+                    return false;
+                }
+
+                if (k < label.Length)
+                    return false;
+
+                i += label.Length;
+            }
+            finally
+            {
+                parentLock.ExitUpgradeableReadLock();
+            }
+
+            parent = node;
+        }
+
+        return false;
+    }
 
     #endregion
 
@@ -488,7 +556,7 @@ public partial class ConcurrentTrie<TValue> : IConcurrentCollection<TValue>
     /// Removes the item with the given key, if present
     /// </summary>
     /// <param name="key">The key (case-sensitive) of the item to be removed</param>
-    public void Remove(string key)
+    public virtual void Remove(string key)
     {
         if (string.IsNullOrEmpty(key))
             throw new ArgumentException($"'{nameof(key)}' cannot be null or empty.", nameof(key));
@@ -509,74 +577,6 @@ public partial class ConcurrentTrie<TValue> : IConcurrentCollection<TValue>
         var succeeded = SearchOrPrune(prefix, true, out var subtreeRoot);
         subCollection = succeeded ? new ConcurrentTrie<TValue>(subtreeRoot) : default;
         return succeeded;
-    }
-
-    protected bool SearchOrPrune(string prefix, bool prune, out TrieNode subtreeRoot)
-    {
-        ArgumentNullException.ThrowIfNull(prefix);
-
-        if (prefix.Length == 0)
-        {
-            subtreeRoot = _root;
-            return true;
-        }
-
-        subtreeRoot = default;
-        var node = _root;
-        var parent = node;
-        var span = prefix.AsSpan();
-        var i = 0;
-
-        while (i < span.Length)
-        {
-            var c = span[i];
-            var parentLock = GetLock(parent);
-            parentLock.EnterUpgradeableReadLock();
-
-            try
-            {
-                if (!parent.Children.TryGetValue(c, out node))
-                    return false;
-
-                var label = node.Label.AsSpan();
-                var k = GetCommonPrefixLength(span[i..], label);
-
-                if (k == span.Length - i)
-                {
-                    subtreeRoot = new TrieNode(prefix[..i] + node.Label, node);
-                    if (!prune)
-                        return true;
-
-                    parentLock.EnterWriteLock();
-
-                    try
-                    {
-                        if (parent.Children.Remove(c, out node))
-                            return true;
-                    }
-                    finally
-                    {
-                        parentLock.ExitWriteLock();
-                    }
-
-                    // was removed by another thread
-                    return false;
-                }
-
-                if (k < label.Length)
-                    return false;
-
-                i += label.Length;
-            }
-            finally
-            {
-                parentLock.ExitUpgradeableReadLock();
-            }
-
-            parent = node;
-        }
-
-        return false;
     }
 
     #endregion

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
+using Nop.Core.Http;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
@@ -30,6 +32,7 @@ public partial class OrderController : BasePublicController
     protected readonly IShipmentService _shipmentService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
+    protected readonly OrderSettings _orderSettings;
     protected readonly RewardPointsSettings _rewardPointsSettings;
 
     #endregion
@@ -47,6 +50,7 @@ public partial class OrderController : BasePublicController
         IShipmentService shipmentService,
         IWebHelper webHelper,
         IWorkContext workContext,
+        OrderSettings orderSettings,
         RewardPointsSettings rewardPointsSettings)
     {
         _customerService = customerService;
@@ -60,6 +64,7 @@ public partial class OrderController : BasePublicController
         _shipmentService = shipmentService;
         _webHelper = webHelper;
         _workContext = workContext;
+        _orderSettings = orderSettings;
         _rewardPointsSettings = rewardPointsSettings;
     }
 
@@ -68,17 +73,27 @@ public partial class OrderController : BasePublicController
     #region Methods
 
     //My account / Orders
-    public virtual async Task<IActionResult> CustomerOrders()
+    public virtual async Task<IActionResult> CustomerOrders(int? pageNumber, OrderHistoryPeriods limit)
     {
         if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
             return Challenge();
 
-        var model = await _orderModelFactory.PrepareCustomerOrderListModelAsync();
+        var model = await _orderModelFactory.PrepareCustomerOrderListModelAsync(pageNumber, limit);
+        return View(model);
+    }
+
+    //My account / Recurring payments
+    public virtual async Task<IActionResult> CustomerRecurringPayments()
+    {
+        if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+            return Challenge();
+
+        var model = await _orderModelFactory.PrepareCustomerRecurringPaymentListModelAsync();
         return View(model);
     }
 
     //My account / Orders / Cancel recurring order
-    [HttpPost, ActionName("CustomerOrders")]
+    [HttpPost, ActionName("CustomerRecurringPayments")]
     [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
     public virtual async Task<IActionResult> CancelRecurringPayment(IFormCollection form)
     {
@@ -95,24 +110,24 @@ public partial class OrderController : BasePublicController
         var recurringPayment = await _orderService.GetRecurringPaymentByIdAsync(recurringPaymentId);
         if (recurringPayment == null)
         {
-            return RedirectToRoute("CustomerOrders");
+            return RedirectToRoute(NopRouteNames.Standard.CUSTOMER_RECURRING_PAYMENTS);
         }
 
         if (await _orderProcessingService.CanCancelRecurringPaymentAsync(customer, recurringPayment))
         {
             var errors = await _orderProcessingService.CancelRecurringPaymentAsync(recurringPayment);
 
-            var model = await _orderModelFactory.PrepareCustomerOrderListModelAsync();
-            model.RecurringPaymentErrors = errors;
+            var model = await _orderModelFactory.PrepareCustomerRecurringPaymentListModelAsync();
+            model.RecurringPaymentErrors = errors.ToList();
 
             return View(model);
         }
 
-        return RedirectToRoute("CustomerOrders");
+        return RedirectToRoute(NopRouteNames.Standard.CUSTOMER_RECURRING_PAYMENTS);
     }
 
     //My account / Orders / Retry last recurring order
-    [HttpPost, ActionName("CustomerOrders")]
+    [HttpPost, ActionName("CustomerRecurringPayments")]
     [FormValueRequired(FormValueRequirement.StartsWith, "retryLastPayment")]
     public virtual async Task<IActionResult> RetryLastRecurringPayment(IFormCollection form)
     {
@@ -125,18 +140,18 @@ public partial class OrderController : BasePublicController
         if (!form.Keys.Any(formValue => formValue.StartsWith("retryLastPayment", StringComparison.InvariantCultureIgnoreCase) &&
                                         int.TryParse(formValue[(formValue.IndexOf('_') + 1)..], out recurringPaymentId)))
         {
-            return RedirectToRoute("CustomerOrders");
+            return RedirectToRoute(NopRouteNames.Standard.CUSTOMER_RECURRING_PAYMENTS);
         }
 
         var recurringPayment = await _orderService.GetRecurringPaymentByIdAsync(recurringPaymentId);
         if (recurringPayment == null)
-            return RedirectToRoute("CustomerOrders");
+            return RedirectToRoute(NopRouteNames.Standard.CUSTOMER_RECURRING_PAYMENTS);
 
         if (!await _orderProcessingService.CanRetryLastRecurringPaymentAsync(customer, recurringPayment))
-            return RedirectToRoute("CustomerOrders");
+            return RedirectToRoute(NopRouteNames.Standard.CUSTOMER_RECURRING_PAYMENTS);
 
         var errors = await _orderProcessingService.ProcessNextRecurringPaymentAsync(recurringPayment);
-        var model = await _orderModelFactory.PrepareCustomerOrderListModelAsync();
+        var model = await _orderModelFactory.PrepareCustomerRecurringPaymentListModelAsync();
         model.RecurringPaymentErrors = errors.ToList();
 
         return View(model);
@@ -149,7 +164,7 @@ public partial class OrderController : BasePublicController
             return Challenge();
 
         if (!_rewardPointsSettings.Enabled)
-            return RedirectToRoute("CustomerInfo");
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
 
         var model = await _orderModelFactory.PrepareCustomerRewardPointsAsync(pageNumber);
         return View(model);
@@ -200,6 +215,33 @@ public partial class OrderController : BasePublicController
         return File(bytes, MimeTypes.ApplicationPdf, string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf");
     }
 
+    public async Task<IActionResult> CancelOrder(int orderId)
+    {
+        if(!_orderSettings.AllowCustomersCancelOrders)
+            return RedirectToRoute(NopRouteNames.Standard.ORDER_DETAILS, new { orderId });
+
+        var order = await _orderService.GetOrderByIdAsync(orderId);
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        if (order == null || customer.Id != order.CustomerId)
+            return Challenge();
+        
+        try
+        {
+            if (_orderProcessingService.CanCancelOrder(order))
+                await _orderProcessingService.CancelOrderAsync(order, false);
+        }
+        catch
+        {
+            _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Order.Cancel.Failed"));
+            return RedirectToRoute(NopRouteNames.Standard.ORDER_DETAILS, new { orderId });
+        }
+
+        await _orderService.UpdateOrderAsync(order);
+       _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Order.Cancelled"));
+
+        return RedirectToRoute(NopRouteNames.Standard.ORDER_DETAILS, new { orderId });
+    }
+
     //My account / Order details page / re-order
     public virtual async Task<IActionResult> ReOrder(int orderId)
     {
@@ -213,7 +255,7 @@ public partial class OrderController : BasePublicController
         if (warnings.Any())
             _notificationService.WarningNotification(await _localizationService.GetResourceAsync("ShoppingCart.ReorderWarning"));
 
-        return RedirectToRoute("ShoppingCart");
+        return RedirectToRoute(NopRouteNames.General.CART);
     }
 
     //My account / Order details page / Complete payment
@@ -228,7 +270,7 @@ public partial class OrderController : BasePublicController
             return Challenge();
 
         if (!await _paymentService.CanRePostProcessPaymentAsync(order))
-            return RedirectToRoute("OrderDetails", new { orderId = orderId });
+            return RedirectToRoute(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = orderId });
 
         var postProcessPaymentRequest = new PostProcessPaymentRequest
         {
@@ -244,7 +286,7 @@ public partial class OrderController : BasePublicController
 
         //if no redirection has been done (to a third-party payment page)
         //theoretically it's not possible
-        return RedirectToRoute("OrderDetails", new { orderId = orderId });
+        return RedirectToRoute(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = orderId });
     }
 
     //My account / Order details page / Shipment details page

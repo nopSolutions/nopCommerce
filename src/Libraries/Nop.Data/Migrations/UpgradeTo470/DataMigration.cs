@@ -192,9 +192,9 @@ public class DataMigration : Migration
         if (Schema.Table(newsLetterSubscriptionTableName).Column(languageIdColumnName).Exists())
         {
             var defaultLanguageId = _dataProvider.GetTable<Language>().FirstOrDefault()?.Id ?? 0;
-            
+
             _dataProvider.GetTable<NewsLetterSubscription>()
-                .Set(p=>p.LanguageId, defaultLanguageId)
+                .Set(p => p.LanguageId, defaultLanguageId)
                 .Update();
         }
     }

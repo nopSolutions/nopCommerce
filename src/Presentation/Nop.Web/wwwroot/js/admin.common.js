@@ -365,3 +365,44 @@ function prepareTableCheckboxes(masterCheckbox, childCheckbox) {
   //Determining the state of the master checkbox by the state of its children
   $(masterCheckbox).prop('checked', $(childCheckbox).length == $(childCheckbox + ':checked').length && $(childCheckbox).length > 0);
 }
+
+function displayBarNotification(message, notifyTypeId, timeout) {
+
+  var cssStyles = ["alert-success", "alert-danger", "alert-warning"]
+
+  cssStyle = notifyTypeId >= 0 && notifyTypeId <= 2 ? cssStyles[notifyTypeId] : cssStyles[0];
+
+  var htmlcode = document.createElement('div');
+  htmlcode.classList.add('alert', cssStyle, 'alert-dismissable');
+
+  var button = document.createElement('button');
+  button.classList.add('close');
+  button.setAttribute('data-dismiss', 'alert');
+  button.setAttribute('aria-hidden', 'true');
+  button.innerHTML = '&times;';
+  htmlcode.appendChild(button);
+
+  var html = document.createElement('span');
+  html.innerHTML = message;
+  htmlcode.appendChild(html);
+
+  $('#admin-notifications').append(htmlcode);
+
+  //callback for notification removing
+  var removeNoteItem = function () {
+    $(htmlcode).remove();
+  };
+
+  //timeout (if set)
+  if (timeout > 0) {
+    var notificationTimeout = setTimeout(function () {
+      $(htmlcode).fadeOut('slow', removeNoteItem);
+    }, timeout);
+
+    $(htmlcode)
+      .fadeIn('slow')
+      .on('mouseenter', function () {
+        clearTimeout(notificationTimeout);
+      });
+  }
+}

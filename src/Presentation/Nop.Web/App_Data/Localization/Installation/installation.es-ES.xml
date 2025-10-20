@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Español" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Correo electrónico del usuario admin</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Introduzca la contraseña de administrador</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Juego de caracteres</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Intercalación</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Intercalación es requerido</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>El '{0}' cuenta no se concede permiso para modificar la carpeta '{1}'. Por favor, configurar estos permisos</Value>

@@ -6,6 +6,4 @@ namespace Nop.Web.Areas.Admin.Models.Vendors;
 /// <summary>
 /// Represents a vendor customer list model
 /// </summary>
-public partial record VendorCustomerListModel : BasePagedListModel<CustomerModel>
-{
-}
+public partial record VendorCustomerListModel : BasePagedListModel<CustomerModel>;

@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Topics;
-using Nop.Services.Common;
-using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -22,55 +18,37 @@ public partial class TopicController : BaseAdminController
 {
     #region Fields
 
-    protected readonly IAclService _aclService;
     protected readonly ICustomerActivityService _customerActivityService;
-    protected readonly ICustomerService _customerService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILocalizedEntityService _localizedEntityService;
     protected readonly INotificationService _notificationService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IStoreService _storeService;
     protected readonly ITopicModelFactory _topicModelFactory;
     protected readonly ITopicService _topicService;
     protected readonly IUrlRecordService _urlRecordService;
-    protected readonly IGenericAttributeService _genericAttributeService;
-    protected readonly IWorkContext _workContext;
 
 
     #endregion Fields
 
     #region Ctor
 
-    public TopicController(IAclService aclService,
-        ICustomerActivityService customerActivityService,
-        ICustomerService customerService,
+    public TopicController(ICustomerActivityService customerActivityService,
         ILocalizationService localizationService,
         ILocalizedEntityService localizedEntityService,
         INotificationService notificationService,
-        IPermissionService permissionService,
         IStoreMappingService storeMappingService,
-        IStoreService storeService,
         ITopicModelFactory topicModelFactory,
         ITopicService topicService,
-        IUrlRecordService urlRecordService,
-        IGenericAttributeService genericAttributeService,
-        IWorkContext workContext)
+        IUrlRecordService urlRecordService)
     {
-        _aclService = aclService;
         _customerActivityService = customerActivityService;
-        _customerService = customerService;
         _localizationService = localizationService;
         _localizedEntityService = localizedEntityService;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
         _topicModelFactory = topicModelFactory;
         _topicService = topicService;
         _urlRecordService = urlRecordService;
-        _genericAttributeService = genericAttributeService;
-        _workContext = workContext;
     }
 
     #endregion
@@ -111,31 +89,6 @@ public partial class TopicController : BaseAdminController
             await _urlRecordService.SaveSlugAsync(topic, seName, localized.LanguageId);
         }
     }
-    
-    protected virtual async Task SaveStoreMappingsAsync(Topic topic, TopicModel model)
-    {
-        topic.LimitedToStores = model.SelectedStoreIds.Any();
-        await _topicService.UpdateTopicAsync(topic);
-
-        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(topic);
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            if (model.SelectedStoreIds.Contains(store.Id))
-            {
-                //new store
-                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
-                    await _storeMappingService.InsertStoreMappingAsync(topic, store.Id);
-            }
-            else
-            {
-                //remove store
-                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
-                if (storeMappingToDelete != null)
-                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
-            }
-        }
-    }
 
     #endregion
 
@@ -147,21 +100,10 @@ public partial class TopicController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.ContentManagement.TOPICS_VIEW)]
-    public virtual async Task<IActionResult> List(bool showtour = false)
+    public virtual async Task<IActionResult> List()
     {
         //prepare model
         var model = await _topicModelFactory.PrepareTopicSearchModelAsync(new TopicSearchModel());
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }
@@ -204,9 +146,9 @@ public partial class TopicController : BaseAdminController
             //search engine name
             model.SeName = await _urlRecordService.ValidateSeNameAsync(topic, model.SeName, topic.Title ?? topic.SystemName, true);
             await _urlRecordService.SaveSlugAsync(topic, model.SeName, 0);
-            
+
             //stores
-            await SaveStoreMappingsAsync(topic, model);
+            await _storeMappingService.SaveStoreMappingsAsync(topic, model.SelectedStoreIds);
 
             //locales
             await UpdateLocalesAsync(topic, model);
@@ -231,7 +173,7 @@ public partial class TopicController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.ContentManagement.TOPICS_VIEW)]
-    public virtual async Task<IActionResult> Edit(int id, bool showtour = false)
+    public virtual async Task<IActionResult> Edit(int id)
     {
         //try to get a topic with the specified id
         var topic = await _topicService.GetTopicByIdAsync(id);
@@ -240,17 +182,6 @@ public partial class TopicController : BaseAdminController
 
         //prepare model
         var model = await _topicModelFactory.PrepareTopicModelAsync(null, topic);
-
-        //show configuration tour
-        if (showtour)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.HideConfigurationStepsAttribute);
-            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
-
-            if (!hideCard && !closeCard)
-                ViewBag.ShowTour = true;
-        }
 
         return View(model);
     }
@@ -275,9 +206,9 @@ public partial class TopicController : BaseAdminController
             //search engine name
             model.SeName = await _urlRecordService.ValidateSeNameAsync(topic, model.SeName, topic.Title ?? topic.SystemName, true);
             await _urlRecordService.SaveSlugAsync(topic, model.SeName, 0);
-            
+
             //stores
-            await SaveStoreMappingsAsync(topic, model);
+            await _storeMappingService.SaveStoreMappingsAsync(topic, model.SelectedStoreIds);
 
             //locales
             await UpdateLocalesAsync(topic, model);

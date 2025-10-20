@@ -6,6 +6,4 @@ namespace Nop.Services.Directory.Caching;
 /// <summary>
 /// Represents a measure dimension cache event consumer
 /// </summary>
-public partial class MeasureDimensionCacheEventConsumer : CacheEventConsumer<MeasureDimension>
-{
-}
+public partial class MeasureDimensionCacheEventConsumer : CacheEventConsumer<MeasureDimension>;

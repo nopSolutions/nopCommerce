@@ -1,0 +1,111 @@
+@using Nop.Plugin.Misc.RFQ.Models.Admin
+@model RequestQuoteModel
+
+<table class="table table-hover table-bordered">
+    <thead>
+    <tr>
+        <th style="width: 30%">@T("Plugins.Misc.RFQ.Product")</th>
+        <th style="width: 7%">@T("Plugins.Misc.RFQ.OriginalProductPrice")</th>
+        <th style="width: 7%">@T("Plugins.Misc.RFQ.CustomerRequest.RequestedUnitPrice")</th>
+        <th style="width: 7%">@T("Plugins.Misc.RFQ.CustomerRequest.RequestedQty")</th>
+        <th>@T("Plugins.Misc.RFQ.Fields.AdminNotes")</th>
+        @if (Model.DisplaySaveButtons || Model.DisplayCreateQuoteButton)
+        {
+            <th style="width: 15%">@T("Admin.Common.Edit")</th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Items)
+    {
+        <script>
+		    $(function() {
+			    toggleItemEdit(@item.Id, false);
+		    });			
+		</script>
+	
+        <tr>
+            <td>
+                <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>
+                @if (!string.IsNullOrEmpty(item.ProductAttributeInfo))
+                {
+                    <p>
+                        @Html.Raw(item.ProductAttributeInfo)
+                    </p>
+                }
+            </td>
+            <td>
+                @item.OriginalProductPrice
+            </td>
+            <td>
+                <div>@item.RequestedUnitPrice</div>
+                <div id="pnlEditUnitPrice@(item.Id)">
+                    <input name="unitPrice@(item.Id)" type="text" value="@item.RequestedUnitPriceValue" id="unitPrice@(item.Id)" class="form-control input-sm"/>
+                </div>
+            </td>
+            <td>
+                <div>@item.RequestedQty</div>
+                <div id="pnlEditQuantity@(item.Id)">
+                    <input name="quantity@(item.Id)" type="text" value="@item.RequestedQty" id="quantity@(item.Id)" class="form-control input-sm"/>
+                </div>
+            </td>
+            <td>
+                @Html.Raw(item.AdminNotes.Replace(Environment.NewLine, "<br />"))
+            </td>
+            @if (Model.DisplaySaveButtons || Model.DisplayCreateQuoteButton)
+            {
+                <td>
+                    <button type="button" class="btn btn-default" onclick="toggleItemEdit(@item.Id, true)" id="btnEdit@(item.Id)">
+                        <i class="fas fa-pencil-alt"></i>
+                        @T("Admin.Common.Edit")
+                    </button>
+
+                    <button type="button" class="btn btn-default" name="btnDelete@(item.Id)" id="btnDelete@(item.Id)">
+                        <i class="far fa-trash-alt"></i>
+                        @T("Admin.Common.Delete")
+                    </button>
+                    <nop-action-confirmation asp-button-id="@("btnDelete" + item.Id)"/>
+
+                    <button type="button" name="btnSave@(item.Id)" class="btn btn-default" id="btnSave@(item.Id)">
+                        <i class="far fa-save"></i>
+                        @T("Admin.Common.Save")
+                    </button>
+                    <nop-action-confirmation asp-button-id="@("btnSave" + item.Id)"/>
+
+                    <button type="button" class="btn btn-default" onclick="toggleItemEdit(@item.Id, false)" id="btnCancel@(item.Id)">
+                        <i class="fas fa-times"></i>
+                        @T("Admin.Common.Cancel")
+                    </button>
+                </td>
+            }
+        </tr>
+    }
+    </tbody>
+</table>
+
+<script>
+    function toggleItemEdit(itemId, editMode) {
+        if (editMode) {                                                       
+            $('#btnSave'+itemId).showElement();
+            $('#btnCancel'+itemId).showElement();
+            $('#pnlEditQuantity'+itemId).showElement();
+            $('#quantity'+itemId).prop("disabled", false);
+            $('#pnlEditUnitPrice'+itemId).showElement();
+            $('#unitPrice'+itemId).prop("disabled", false);
+            $('#btnEdit'+itemId).hideElement();
+			$('#btnDelete'+itemId).hideElement();		
+			
+        } else {
+            $('#btnSave'+itemId).hideElement();
+            $('#btnCancel'+itemId).hideElement();
+            $('#pnlEditQuantity'+itemId).hideElement();
+            $('#quantity'+itemId).prop("disabled", true);
+            $('#pnlEditUnitPrice'+itemId).hideElement();
+            $('#unitPrice'+itemId).prop("disabled", true);
+            $('#btnEdit'+itemId).showElement();     
+			$('#btnDelete'+itemId).showElement();			
+        }
+        
+        return false;
+    }
+</script>

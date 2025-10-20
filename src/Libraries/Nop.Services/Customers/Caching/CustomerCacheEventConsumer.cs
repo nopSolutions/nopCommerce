@@ -17,7 +17,7 @@ public partial class CustomerCacheEventConsumer : CacheEventConsumer<Customer>, 
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(CustomerPasswordChangedEvent eventMessage)
+    public virtual async Task HandleEventAsync(CustomerPasswordChangedEvent eventMessage)
     {
         await RemoveAsync(NopCustomerServicesDefaults.CustomerPasswordLifetimeCacheKey, eventMessage.Password.CustomerId);
     }

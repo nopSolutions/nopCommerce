@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -16,6 +13,7 @@ using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Infrastructure;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Payments.PayPalCommerce;
 
@@ -26,11 +24,10 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
 {
     #region Fields
 
-    private readonly IActionContextAccessor _actionContextAccessor;
     private readonly ILocalizationService _localizationService;
+    private readonly INopUrlHelper _nopUrlHelper;
     private readonly ISettingService _settingService;
     private readonly IStoreService _storeService;
-    private readonly IUrlHelperFactory _urlHelperFactory;
     private readonly PaymentSettings _paymentSettings;
     private readonly PayPalCommerceServiceManager _serviceManager;
     private readonly PayPalCommerceSettings _settings;
@@ -40,21 +37,19 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
 
     #region Ctor
 
-    public PayPalCommercePaymentMethod(IActionContextAccessor actionContextAccessor,
-        ILocalizationService localizationService,
+    public PayPalCommercePaymentMethod(ILocalizationService localizationService,
+        INopUrlHelper nopUrlHelper,
         ISettingService settingService,
         IStoreService storeService,
-        IUrlHelperFactory urlHelperFactory,
         PaymentSettings paymentSettings,
         PayPalCommerceServiceManager serviceManager,
         PayPalCommerceSettings settings,
         WidgetSettings widgetSettings)
     {
-        _actionContextAccessor = actionContextAccessor;
         _localizationService = localizationService;
+        _nopUrlHelper = nopUrlHelper;
         _settingService = settingService;
         _storeService = storeService;
-        _urlHelperFactory = urlHelperFactory;
         _paymentSettings = paymentSettings;
         _serviceManager = serviceManager;
         _settings = settings;
@@ -162,9 +157,18 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// A task that represents the asynchronous operation
     /// The task result contains the process payment result
     /// </returns>
-    public Task<ProcessPaymentResult> ProcessRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest)
+    public async Task<ProcessPaymentResult> ProcessRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest)
     {
-        return Task.FromResult(new ProcessPaymentResult { Errors = new[] { "Recurring payment not supported" } });
+        //we process an initial order separately
+        if (processPaymentRequest.InitialOrder is null)
+            return new();
+
+        var (_, error) = await _serviceManager.ProcessNextRecurringPaymentAsync(_settings, processPaymentRequest);
+        if (!string.IsNullOrEmpty(error))
+            return new() { Errors = new[] { error }, RecurringPaymentFailed = true };
+
+        //request succeeded
+        return new();
     }
 
     /// <summary>
@@ -175,9 +179,13 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// A task that represents the asynchronous operation
     /// The task result contains the result
     /// </returns>
-    public Task<CancelRecurringPaymentResult> CancelRecurringPaymentAsync(CancelRecurringPaymentRequest cancelPaymentRequest)
+    public async Task<CancelRecurringPaymentResult> CancelRecurringPaymentAsync(CancelRecurringPaymentRequest cancelPaymentRequest)
     {
-        return Task.FromResult(new CancelRecurringPaymentResult { Errors = new[] { "Recurring payment not supported" } });
+        var (_, error) = await _serviceManager.CancelRecurringPaymentAsync(_settings, cancelPaymentRequest.Order);
+        if (!string.IsNullOrEmpty(error))
+            return new() { Errors = new[] { error } };
+
+        return new();
     }
 
     /// <summary>
@@ -251,7 +259,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).RouteUrl(PayPalCommerceDefaults.Route.Configuration);
+        return _nopUrlHelper.RouteUrl(PayPalCommerceDefaults.Route.Configuration);
     }
 
     /// <summary>
@@ -557,7 +565,7 @@ public class PayPalCommercePaymentMethod : BasePlugin, IPaymentMethod, IWidgetPl
     /// <summary>
     /// Gets a recurring payment type of payment method
     /// </summary>
-    public RecurringPaymentType RecurringPaymentType => RecurringPaymentType.NotSupported;
+    public RecurringPaymentType RecurringPaymentType => RecurringPaymentType.Manual;
 
     /// <summary>
     /// Gets a payment method type

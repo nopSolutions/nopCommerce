@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Seo;
+using Nop.Core.Http;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -35,10 +38,12 @@ public partial class ForumModelFactory : IForumModelFactory
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IForumService _forumService;
     protected readonly IGenericAttributeService _genericAttributeService;
+    protected readonly IJsonLdModelFactory _jsonLdModelFactory;
     protected readonly ILocalizationService _localizationService;
     protected readonly IPictureService _pictureService;
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
+    protected readonly SeoSettings _seoSettings;
 
     #endregion
 
@@ -53,10 +58,12 @@ public partial class ForumModelFactory : IForumModelFactory
         IDateTimeHelper dateTimeHelper,
         IForumService forumService,
         IGenericAttributeService genericAttributeService,
+        IJsonLdModelFactory jsonLdModelFactory,
         ILocalizationService localizationService,
         IPictureService pictureService,
         IWorkContext workContext,
-        MediaSettings mediaSettings)
+        MediaSettings mediaSettings,
+        SeoSettings seoSettings)
     {
         _captchaSettings = captchaSettings;
         _customerSettings = customerSettings;
@@ -67,10 +74,12 @@ public partial class ForumModelFactory : IForumModelFactory
         _dateTimeHelper = dateTimeHelper;
         _forumService = forumService;
         _genericAttributeService = genericAttributeService;
+        _jsonLdModelFactory = jsonLdModelFactory;
         _localizationService = localizationService;
         _pictureService = pictureService;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
+        _seoSettings = seoSettings;
     }
 
     #endregion
@@ -314,12 +323,19 @@ public partial class ForumModelFactory : IForumModelFactory
     {
         ArgumentNullException.ThrowIfNull(forumTopic);
 
+        //load first post
+        var firstPost = (await _forumService.GetAllPostsAsync(forumTopic.Id, 0, string.Empty,
+            0, 1)).FirstOrDefault();
+
         //load posts
         var posts = await _forumService.GetAllPostsAsync(forumTopic.Id, 0, string.Empty,
             page - 1, _forumSettings.PostsPageSize);
 
         //prepare model
         var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+
+        var firstPostText = posts.FirstOrDefault()?.Text?.Replace(Environment.NewLine, string.Empty);
+
         var model = new ForumTopicPageModel
         {
             Id = forumTopic.Id,
@@ -329,7 +345,10 @@ public partial class ForumModelFactory : IForumModelFactory
             IsCustomerAllowedToEditTopic = await _forumService.IsCustomerAllowedToEditTopicAsync(currentCustomer, forumTopic),
             IsCustomerAllowedToDeleteTopic = await _forumService.IsCustomerAllowedToDeleteTopicAsync(currentCustomer, forumTopic),
             IsCustomerAllowedToMoveTopic = await _forumService.IsCustomerAllowedToMoveTopicAsync(currentCustomer, forumTopic),
-            IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(currentCustomer)
+            IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(currentCustomer),
+
+            MetaTitle = forumTopic.Subject,
+            MetaDescription = CommonHelper.EnsureMaximumLength(firstPostText, _forumSettings.TopicMetaDescriptionLength, await _localizationService.GetResourceAsync("Forum.TruncatePostfix"))
         };
 
         if (model.IsCustomerAllowedToSubscribe)
@@ -342,6 +361,7 @@ public partial class ForumModelFactory : IForumModelFactory
                 model.WatchTopicText = await _localizationService.GetResourceAsync("Forum.UnwatchTopic");
             }
         }
+        model.ForumEditor = _forumSettings.ForumEditor;
         model.PostsPageIndex = posts.PageIndex;
         model.PostsPageSize = posts.PageSize;
         model.PostsTotalRecords = posts.TotalCount;
@@ -372,16 +392,20 @@ public partial class ForumModelFactory : IForumModelFactory
                 SignaturesEnabled = _forumSettings.SignaturesEnabled,
                 FormattedSignature = _forumService.FormatForumSignatureText(await _genericAttributeService.GetAttributeAsync<Customer, string>(post.CustomerId, NopCustomerDefaults.SignatureAttribute)),
             };
+
             //created on string
-            var languageCode = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
+            forumPostModel.PostCreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(post.CreatedOnUtc, DateTimeKind.Utc);
             if (_forumSettings.RelativeDateTimeFormattingEnabled)
             {
+                var languageCode = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
                 var postCreatedAgo = post.CreatedOnUtc.RelativeFormat(languageCode);
                 forumPostModel.PostCreatedOnStr = string.Format(await _localizationService.GetResourceAsync("Common.RelativeDateTime.Past"), postCreatedAgo);
             }
             else
-                forumPostModel.PostCreatedOnStr =
-                    (await _dateTimeHelper.ConvertToUserTimeAsync(post.CreatedOnUtc, DateTimeKind.Utc)).ToString("f");
+            {
+                forumPostModel.PostCreatedOnStr = forumPostModel.PostCreatedOn.ToString("f");
+            }
+
             //avatar
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
@@ -412,6 +436,12 @@ public partial class ForumModelFactory : IForumModelFactory
             // page number is needed for creating post link in _ForumPost partial view
             forumPostModel.CurrentTopicPage = page;
             model.ForumPostModels.Add(forumPostModel);
+        }
+
+        if (_seoSettings.MicrodataEnabled)
+        {
+            var jsonLdModel = await _jsonLdModelFactory.PrepareJsonLdForumTopicAsync(forumTopic, firstPost, model);
+            model.JsonLd = JsonConvert.SerializeObject(jsonLdModel, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
         }
 
         return model;
@@ -554,16 +584,20 @@ public partial class ForumModelFactory : IForumModelFactory
                 if (quotePost != null && quotePost.TopicId == forumTopic.Id)
                 {
                     var customer = await _customerService.GetCustomerByIdAsync(quotePost.CustomerId);
-
+                    var username = await _customerService.FormatUsernameAsync(customer);
                     var quotePostText = quotePost.Text;
 
                     switch (_forumSettings.ForumEditor)
                     {
                         case EditorType.SimpleTextBox:
-                            text = $"{await _customerService.FormatUsernameAsync(customer)}:\n{quotePostText}\n";
+                            text = $"{username}:\n{quotePostText}\n";
                             break;
                         case EditorType.BBCodeEditor:
-                            text = $"[quote={await _customerService.FormatUsernameAsync(customer)}]{_bbCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
+                            text = $"[quote={username}]{_bbCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
+                            break;
+                        case EditorType.MarkdownEditor:
+                            var quotedLines = quotePostText.Split('\n').Select(line => $"> {line}");
+                            text = $"**{username}:**\n\n{string.Join("\n", quotedLines)}\n\n";
                             break;
                     }
                     model.Text = text;
@@ -961,7 +995,7 @@ public partial class ForumModelFactory : IForumModelFactory
             TotalRecords = list.TotalCount,
             PageIndex = list.PageIndex,
             ShowTotalSummary = false,
-            RouteActionName = "CustomerForumSubscriptions",
+            RouteActionName = NopRouteNames.Standard.CUSTOMER_FORUM_SUBSCRIPTIONS,
             UseRouteLinks = true,
             RouteValues = new ForumSubscriptionsRouteValues { PageNumber = pageIndex }
         };
@@ -1037,9 +1071,7 @@ public partial class ForumModelFactory : IForumModelFactory
     /// <summary>
     /// record that has only page for route value. Used for (My Account) Forum Subscriptions pagination
     /// </summary>
-    public partial record ForumSubscriptionsRouteValues : BaseRouteValues
-    {
-    }
+    public partial record ForumSubscriptionsRouteValues : BaseRouteValues;
 
     /// <summary>
     /// record that has search options for route values. Used for Search result pagination
@@ -1056,9 +1088,7 @@ public partial class ForumModelFactory : IForumModelFactory
     /// <summary>
     /// record that has only page for route value. Used for Active Discussions (forums) pagination
     /// </summary>
-    public partial record ForumActiveDiscussionsRouteValues : BaseRouteValues
-    {
-    }
+    public partial record ForumActiveDiscussionsRouteValues : BaseRouteValues;
 
     #endregion
 }

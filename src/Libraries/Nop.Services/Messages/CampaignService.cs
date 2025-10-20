@@ -46,6 +46,36 @@ public partial class CampaignService : ICampaignService
     #region Methods
 
     /// <summary>
+    /// Copies campaign
+    /// </summary>
+    /// <param name="campaign">Campaign to copy</param>
+    /// <param name="newName">The new name of campaign copy</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the campaign copy
+    /// </returns>
+    public virtual async Task<Campaign> CopyCampaignAsync(Campaign campaign, string newName)
+    {
+        ArgumentNullException.ThrowIfNull(campaign);
+        ArgumentException.ThrowIfNullOrEmpty(newName);
+
+        var campaignCopy = new Campaign
+        {
+            Name = newName,
+            Subject = campaign.Subject,
+            Body = campaign.Body,
+            StoreId = campaign.StoreId,
+            CustomerRoleId = campaign.CustomerRoleId,
+            NewsLetterSubscriptionTypeId = campaign.NewsLetterSubscriptionTypeId,
+            CreatedOnUtc = DateTime.UtcNow
+        };
+
+        await _campaignRepository.InsertAsync(campaignCopy);
+
+        return campaignCopy;
+    }
+
+    /// <summary>
     /// Inserts a campaign
     /// </summary>
     /// <param name="campaign">Campaign</param>        

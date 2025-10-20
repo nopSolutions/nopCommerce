@@ -24,6 +24,7 @@
     <None Remove="Content\styles.css" />
     <None Remove="Views\Admin\Configure.cshtml" />
     <None Remove="Views\Admin\PayLater.cshtml" />
+    <None Remove="Views\Admin\_Configure.Tour.cshtml" />
     <None Remove="Views\Admin\_PaymentMethod.cshtml" />
     <None Remove="Views\Admin\_ShipmentCarrier.cshtml" />
     <None Remove="Views\Public\ConfirmOrder.cshtml" />
@@ -31,6 +32,7 @@
     <None Remove="Views\Public\PaymentTokens.cshtml" />
     <None Remove="Views\Public\PluginPaymentInfo.cshtml" />
     <None Remove="Views\Public\_Buttons.cshtml" />
+    <None Remove="Views\Public\_Buttons.Recurring.cshtml" />
     <None Remove="Views\Public\_Messages.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
   </ItemGroup>
@@ -51,6 +53,9 @@
     <Content Include="Views\Admin\PayLater.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Admin\_Configure.Tour.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\Admin\_PaymentMethod.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -67,6 +72,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Public\PluginPaymentInfo.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Public\_Buttons.Recurring.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Public\_Buttons.cshtml">

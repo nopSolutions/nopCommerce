@@ -2,6 +2,4 @@
 
 namespace Nop.Web.Models.News;
 
-public partial record NewsPagingFilteringModel : BasePageableModel
-{
-}
+public partial record NewsPagingFilteringModel : BasePageableModel;

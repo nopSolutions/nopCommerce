@@ -31,7 +31,6 @@
             <i class="far fa-trash-can"></i>
             @T("Admin.ContentManagement.Blog.Comments.DeleteSelected")
         </button>
-        <nop-action-confirmation asp-button-id="delete-selected" />
         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.BlogCommentListButtons, additionalData = Model })
     </div>
 </div>
@@ -188,7 +187,7 @@
                             <script>
                         $(function() {
                             //"delete selected" button
-                            $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
+                            $("#delete-selected-action-confirmation-submit-button").on("click", function () {
                                 var postData = {
                                     selectedIds: selectedIds
                                 };
@@ -286,3 +285,4 @@
 <nop-alert asp-alert-id="approveSelectedFailed" />
 <nop-alert asp-alert-id="disapproveSelectedFailed" />
 <nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected" />

@@ -70,7 +70,7 @@
     </div>
     <div class="page-body">
         <div class="description">
-            @Html.Raw(T("Plugins.Tax.Avalara.ExemptionCertificates.Description", Model.Link, Url.RouteUrl("ContactUs")))
+            @Html.Raw(T("Plugins.Tax.Avalara.ExemptionCertificates.Description", Model.Link, Url.RouteUrl(NopRouteNames.General.CONTACT_US)))
         </div>
         <div class="form-fields">
             <div class="exposure-zone">
@@ -87,9 +87,9 @@
         @if (Model.Certificates.Any())
         {
             <div class="section exemption-certificates">
-                <div class="title">
-                    <h3>@T("Plugins.Tax.Avalara.ExemptionCertificates")</h3>
-                </div>
+                <h2 class="title">
+                    @T("Plugins.Tax.Avalara.ExemptionCertificates")
+                </h2>
                 <form asp-route="ExemptionCertificates" method="post">
                     <div class="table-wrapper">
                         <table class="data-table">

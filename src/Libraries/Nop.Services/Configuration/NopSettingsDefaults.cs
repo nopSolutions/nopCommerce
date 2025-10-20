@@ -1,5 +1,4 @@
 ﻿using Nop.Core.Caching;
-using Nop.Core.Domain.Configuration;
 
 namespace Nop.Services.Configuration;
 
@@ -13,7 +12,7 @@ public static partial class NopSettingsDefaults
     /// <summary>
     /// Gets a key for caching
     /// </summary>
-    public static CacheKey SettingsAllAsDictionaryCacheKey => new("Nop.setting.all.dictionary.", NopEntityCacheDefaults<Setting>.Prefix);
+    public static CacheKey SettingsAllAsDictionaryCacheKey => new("Nop.setting.all.dictionary.");
 
     #endregion
 }

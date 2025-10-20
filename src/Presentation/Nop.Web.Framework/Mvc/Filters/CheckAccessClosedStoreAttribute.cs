@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Core.Http;
 using Nop.Data;
 using Nop.Services.Security;
 using Nop.Services.Topics;
@@ -106,12 +107,7 @@ public sealed class CheckAccessClosedStoreAttribute : TypeFilterAttribute
             var controllerName = actionDescriptor?.ControllerName;
 
             if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
-                return;
-
-            //two factor verification accessible when a store is closed
-            if (controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
-                actionName.Equals("MultiFactorVerification", StringComparison.InvariantCultureIgnoreCase))
-                return;
+                return;            
 
             //topics accessible when a store is closed
             if (controllerName.Equals("Topic", StringComparison.InvariantCultureIgnoreCase) &&
@@ -135,7 +131,7 @@ public sealed class CheckAccessClosedStoreAttribute : TypeFilterAttribute
                 return;
 
             //store is closed and no access, so redirect to 'StoreClosed' page
-            context.Result = new RedirectToRouteResult("StoreClosed", null);
+            context.Result = new RedirectToRouteResult(NopRouteNames.Standard.STORE_CLOSED, null);
         }
 
         #endregion

@@ -1,0 +1,40 @@
+﻿@model MaintenanceModel
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-12">
+                @if (Model.DeleteThumbsFiles.IsDeleteThumbsSupported)
+                {
+                    <input type="hidden" asp-for="DeleteThumbsFiles.FilesCountText"/>
+                    <input type="hidden" asp-for="DeleteThumbsFiles.FilesSizeText"/>
+                    <input type="hidden" asp-for="DeleteThumbsFiles.IsDeleteThumbsSupported" />
+                    <text>
+                        <p>
+                            @T("Admin.System.Maintenance.DeleteThumbFiles.Text")
+                        </p>
+                        <p>
+                            <ul>
+                                <li>@Model.DeleteThumbsFiles.FilesCountText</li>
+                                <li>@Model.DeleteThumbsFiles.FilesSizeText</li>
+                            </ul>
+                        </p>
+
+                        <div>
+                            <button type = "submit" name = "delete-thumb-files" class ="btn btn-default" >
+                                <i class ="far fa-trash-can" ></i >
+                                @T("Admin.Common.Delete")
+                            </button >
+                        </div>
+                        
+                    </text>
+                }
+                else
+                {
+                    <text>
+                        <p>
+                            @T("Admin.System.Maintenance.DeleteThumbFiles.IsNotSupported")
+                        </p>
+                    </text>
+                }
+            </div>
+    </div>
+</div>

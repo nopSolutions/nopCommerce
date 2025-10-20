@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Models.ArtificialIntelligence;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Topics;
@@ -7,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Topics;
 /// <summary>
 /// Represents a topic model
 /// </summary>
-public partial record TopicModel : BaseNopEntityModel, IAclSupportedModel, ILocalizedModel<TopicLocalizedModel>, IStoreMappingSupportedModel
+public partial record TopicModel : BaseNopEntityModel, IAclSupportedModel, ILocalizedModel<TopicLocalizedModel>, IStoreMappingSupportedModel, IMetaTagsSupportedModel
 {
     #region Ctor
 
@@ -32,18 +34,6 @@ public partial record TopicModel : BaseNopEntityModel, IAclSupportedModel, ILoca
 
     [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInSitemap")]
     public bool IncludeInSitemap { get; set; }
-
-    [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu")]
-    public bool IncludeInTopMenu { get; set; }
-
-    [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1")]
-    public bool IncludeInFooterColumn1 { get; set; }
-
-    [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2")]
-    public bool IncludeInFooterColumn2 { get; set; }
-
-    [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3")]
-    public bool IncludeInFooterColumn3 { get; set; }
 
     [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.DisplayOrder")]
     public int DisplayOrder { get; set; }
@@ -101,10 +91,18 @@ public partial record TopicModel : BaseNopEntityModel, IAclSupportedModel, ILoca
 
     public string TopicName { get; set; }
 
+    [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AvailableStartDateTime")]
+    [UIHint("DateTimeNullable")]
+    public DateTime? AvailableStartDateTimeUtc { get; set; }
+
+    [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AvailableEndDateTime")]
+    [UIHint("DateTimeNullable")]
+    public DateTime? AvailableEndDateTimeUtc { get; set; }
+
     #endregion
 }
 
-public partial record TopicLocalizedModel : ILocalizedLocaleModel
+public partial record TopicLocalizedModel : ILocalizedLocaleModel, IMetaTagsSupportedModel
 {
     public int LanguageId { get; set; }
 

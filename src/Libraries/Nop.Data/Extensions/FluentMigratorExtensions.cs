@@ -6,6 +6,7 @@ using FluentMigrator.Builders.Create;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Infrastructure.Extensions;
 using FluentMigrator.Model;
+using FluentMigrator.Runner;
 using LinqToDB.Mapping;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -27,7 +28,7 @@ public static class FluentMigratorExtensions
     {
         [typeof(int)] = c => c.AsInt32(),
         [typeof(long)] = c => c.AsInt64(),
-        [typeof(string)] = c => c.AsNopString(int.MaxValue).Nullable(),
+        [typeof(string)] = c => c.AsString(int.MaxValue).Nullable(),
         [typeof(bool)] = c => c.AsBoolean(),
         [typeof(decimal)] = c => c.AsDecimal(18, 4),
         [typeof(DateTime)] = c => c.AsNopDateTime2(),
@@ -57,6 +58,27 @@ public static class FluentMigratorExtensions
     #endregion
 
     /// <summary>
+    /// Adds database support for migrations
+    /// </summary>
+    /// <param name="builder">The builder to add the database engine(s) to</param>
+    /// <returns>The migration runner builder</returns>
+    public static IMigrationRunnerBuilder AddNopDbEngines(this IMigrationRunnerBuilder builder)
+    {        
+        if (!DataSettingsManager.IsDatabaseInstalled())
+            return builder.AddSqlServer().AddMySql5().AddPostgres92();
+
+        var dataSettings = DataSettingsManager.LoadSettings();
+
+        return dataSettings.DataProvider switch
+        {
+            DataProviderType.MySql => builder.AddMySql5(),
+            DataProviderType.SqlServer => builder.AddSqlServer(),
+            DataProviderType.PostgreSQL => builder.AddPostgres92(),
+            _ => throw new NotImplementedException(),
+        };
+    }
+
+    /// <summary>
     /// Defines the column type as date that is combined with a time of day and a specified precision
     /// </summary>
     public static ICreateTableColumnOptionOrWithColumnSyntax AsNopDateTime2(this ICreateTableColumnAsTypeSyntax syntax)
@@ -68,21 +90,6 @@ public static class FluentMigratorExtensions
             DataProviderType.MySql => syntax.AsCustom($"datetime({DATE_TIME_PRECISION})"),
             DataProviderType.SqlServer => syntax.AsCustom($"datetime2({DATE_TIME_PRECISION})"),
             _ => syntax.AsDateTime2()
-        };
-    }
-
-    /// <summary>
-    /// Defines the column type as string with specified size
-    /// </summary>
-    public static ICreateTableColumnOptionOrWithColumnSyntax AsNopString(this ICreateTableColumnAsTypeSyntax syntax, int size)
-    {
-        var dataSettings = DataSettingsManager.LoadSettings();
-
-        return dataSettings.DataProvider switch
-        {
-            DataProviderType.MySql when size == int.MaxValue => syntax.AsCustom($"LONGTEXT CHARACTER SET utf8mb4"),
-            DataProviderType.MySql => syntax.AsCustom($"NVARCHAR({size}) CHARACTER SET utf8mb4"),
-            _ => syntax.AsString(size)
         };
     }
 

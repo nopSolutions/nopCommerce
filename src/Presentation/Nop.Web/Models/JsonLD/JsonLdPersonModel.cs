@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.JsonLD;
 
-public record JsonLdPersonModel : JsonLdModel
+public partial record JsonLdPersonModel : JsonLdModel
 {
     #region Properties
 
@@ -11,6 +11,9 @@ public record JsonLdPersonModel : JsonLdModel
 
     [JsonProperty("name")]
     public string Name { get; set; }
+
+    [JsonProperty("url")]
+    public string Url { get; set; } 
 
     #endregion
 }

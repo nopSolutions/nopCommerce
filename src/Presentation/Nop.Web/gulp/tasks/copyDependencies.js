@@ -31,6 +31,11 @@ export default function copyDependencies()
     gulp
       .src(nodeModules + '{datatables.net,datatables.net-bs4,datatables.net-buttons,datatables.net-buttons-bs4}/**')
       .pipe(filter(['**/{css,js}/*.min*', '**/swf/*']))
+      .pipe(rename(function (path) {
+        if (path.dirname.includes("node_modules")) {
+          path.dirname = path.dirname.replace(/.*?node_modules[\\/]/, "");
+        }
+      }))
       .pipe(gulp.dest(targetPath)),
 
     //CLDR (unicode.org)
@@ -51,19 +56,20 @@ export default function copyDependencies()
       .src(`${nodeModules}moment/dist/**`)
       .pipe(gulp.dest(targetPath + '/moment')),
 
+    //Marked
+    gulp
+      .src(`${nodeModules}marked/lib/marked.umd.js`)
+      .pipe(gulp.dest(targetPath + '/marked')),
+
     //Ionicons
     gulp
       .src(`${nodeModules}ionicons/{css,fonts,png}/**`)
       .pipe(gulp.dest(targetPath + '/ionicons')),
 
-    //Tiny MCE
+    //Summernote
     gulp
-      .src(`${nodeModules}tinymce/**/*.min.*`)
-      .pipe(gulp.dest(targetPath + '/tinymce')),
-
-    gulp
-      .src(nodeModules + 'tinymce-langs/langs/*')
-      .pipe(gulp.dest(targetPath + '/tinymce/langs')),
+      .src(`${nodeModules}summernote/dist/{lang,font}/**`)
+      .pipe(gulp.dest(targetPath + '/summernote')),
 
     //OverlayScrollbars
     gulp
@@ -74,11 +80,6 @@ export default function copyDependencies()
     gulp
       .src(nodeModules + 'swiper/swiper-bundle.min.{css,js,js.map}')
       .pipe(gulp.dest(targetPath + '/swiper')),
-
-    //Shepherd.js
-    gulp
-      .src(nodeModules + 'shepherd.js/dist/**/shepherd.{css,min.js}')
-      .pipe(gulp.dest(targetPath + '/shepherd.js')),
 
     //JsRender
     gulp
@@ -136,5 +137,12 @@ export default function copyDependencies()
       .src(nodeModules + 'jquery-migrate/dist/*.{js,js.map}')
       .pipe(gulp.dest(`${targetPath}jquery-migrate`)),
 
+    //driver.js
+    gulp
+      .src(nodeModules + 'driver.js/dist/*.{css,iife.js}')
+      .pipe(rename({
+        suffix: '.min' //avoid minification
+      }))
+      .pipe(gulp.dest(`${targetPath}driver.js`)),
     ]);
 }

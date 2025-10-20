@@ -26,9 +26,7 @@ public partial class BlogController : BaseAdminController
     protected readonly IEventPublisher _eventPublisher;
     protected readonly ILocalizationService _localizationService;
     protected readonly INotificationService _notificationService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IStoreService _storeService;
     protected readonly IUrlRecordService _urlRecordService;
 
     #endregion
@@ -52,39 +50,8 @@ public partial class BlogController : BaseAdminController
         _eventPublisher = eventPublisher;
         _localizationService = localizationService;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
         _urlRecordService = urlRecordService;
-    }
-
-    #endregion
-
-    #region Utilities
-
-    protected virtual async Task SaveStoreMappingsAsync(BlogPost blogPost, BlogPostModel model)
-    {
-        blogPost.LimitedToStores = model.SelectedStoreIds.Any();
-        await _blogService.UpdateBlogPostAsync(blogPost);
-
-        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(blogPost);
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            if (model.SelectedStoreIds.Contains(store.Id))
-            {
-                //new store
-                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
-                    await _storeMappingService.InsertStoreMappingAsync(blogPost, store.Id);
-            }
-            else
-            {
-                //remove store
-                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
-                if (storeMappingToDelete != null)
-                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
-            }
-        }
     }
 
     #endregion
@@ -145,7 +112,7 @@ public partial class BlogController : BaseAdminController
             await _urlRecordService.SaveSlugAsync(blogPost, seName, blogPost.LanguageId);
 
             //Stores
-            await SaveStoreMappingsAsync(blogPost, model);
+            await _storeMappingService.SaveStoreMappingsAsync(blogPost, model.SelectedStoreIds);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Blog.BlogPosts.Added"));
 
@@ -199,7 +166,7 @@ public partial class BlogController : BaseAdminController
             await _urlRecordService.SaveSlugAsync(blogPost, seName, blogPost.LanguageId);
 
             //Stores
-            await SaveStoreMappingsAsync(blogPost, model);
+            await _storeMappingService.SaveStoreMappingsAsync(blogPost, model.SelectedStoreIds);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Blog.BlogPosts.Updated"));
 
@@ -316,12 +283,10 @@ public partial class BlogController : BaseAdminController
         var comments = await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray());
 
         await _blogService.DeleteBlogCommentsAsync(comments);
+
         //activity log
-        foreach (var blogComment in comments)
-        {
-            await _customerActivityService.InsertActivityAsync("DeleteBlogPostComment",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteBlogPostComment"), blogComment.Id), blogComment);
-        }
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteBlogPostComment");
+        await _customerActivityService.InsertActivitiesAsync("DeleteBlogPostComment", comments, blogComment => string.Format(activityLogFormat, blogComment.Id));
 
         return Json(new { Result = true });
     }
@@ -334,7 +299,7 @@ public partial class BlogController : BaseAdminController
             return NoContent();
 
         //filter not approved comments
-        var blogComments = (await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved);
+        var blogComments = (await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved).ToList();
 
         foreach (var blogComment in blogComments)
         {
@@ -344,11 +309,11 @@ public partial class BlogController : BaseAdminController
 
             //raise event 
             await _eventPublisher.PublishAsync(new BlogCommentApprovedEvent(blogComment));
-
-            //activity log
-            await _customerActivityService.InsertActivityAsync("EditBlogComment",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditBlogComment"), blogComment.Id), blogComment);
         }
+
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.EditBlogComment");
+        await _customerActivityService.InsertActivitiesAsync("EditBlogComment", blogComments, blogComment => string.Format(activityLogFormat, blogComment.Id));
 
         return Json(new { Result = true });
     }
@@ -361,18 +326,18 @@ public partial class BlogController : BaseAdminController
             return NoContent();
 
         //filter approved comments
-        var blogComments = (await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved);
+        var blogComments = (await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved).ToList();
 
         foreach (var blogComment in blogComments)
         {
             blogComment.IsApproved = false;
 
             await _blogService.UpdateBlogCommentAsync(blogComment);
-
-            //activity log
-            await _customerActivityService.InsertActivityAsync("EditBlogComment",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditBlogComment"), blogComment.Id), blogComment);
         }
+
+        //activity log
+        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.EditBlogComment");
+        await _customerActivityService.InsertActivitiesAsync("EditBlogComment", blogComments, blogComment => string.Format(activityLogFormat, blogComment.Id));
 
         return Json(new { Result = true });
     }

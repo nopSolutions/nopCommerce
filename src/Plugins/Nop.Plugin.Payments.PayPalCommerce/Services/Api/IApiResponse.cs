@@ -3,6 +3,4 @@
 /// <summary>
 /// Represents API response
 /// </summary>
-public interface IApiResponse
-{
-}
+public interface IApiResponse;

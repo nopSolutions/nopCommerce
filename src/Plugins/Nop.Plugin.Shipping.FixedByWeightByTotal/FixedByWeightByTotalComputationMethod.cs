@@ -23,6 +23,7 @@ public class FixedByWeightByTotalComputationMethod : BasePlugin, IShippingRateCo
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly ISettingService _settingService;
     protected readonly IShippingByWeightByTotalService _shippingByWeightByTotalService;
+    protected readonly IShippingMethodsService _shippingMethodsService;
     protected readonly IShippingService _shippingService;
     protected readonly IStoreContext _storeContext;
     protected readonly IWebHelper _webHelper;
@@ -36,6 +37,7 @@ public class FixedByWeightByTotalComputationMethod : BasePlugin, IShippingRateCo
         IShoppingCartService shoppingCartService,
         ISettingService settingService,
         IShippingByWeightByTotalService shippingByWeightByTotalService,
+        IShippingMethodsService shippingMethodsService,
         IShippingService shippingService,
         IStoreContext storeContext,
         IWebHelper webHelper)
@@ -45,6 +47,7 @@ public class FixedByWeightByTotalComputationMethod : BasePlugin, IShippingRateCo
         _shoppingCartService = shoppingCartService;
         _settingService = settingService;
         _shippingByWeightByTotalService = shippingByWeightByTotalService;
+        _shippingMethodsService = shippingMethodsService;
         _shippingService = shippingService;
         _storeContext = storeContext;
         _webHelper = webHelper;
@@ -163,7 +166,7 @@ public class FixedByWeightByTotalComputationMethod : BasePlugin, IShippingRateCo
             //get weight of shipped items (excluding items with free shipping)
             var weight = await _shippingService.GetTotalWeightAsync(getShippingOptionRequest, ignoreFreeShippedItems: true);
 
-            foreach (var shippingMethod in await _shippingService.GetAllShippingMethodsAsync(countryId))
+            foreach (var shippingMethod in await _shippingMethodsService.GetAllShippingMethodsAsync(countryId))
             {
                 int? transitDays = null;
                 var rate = decimal.Zero;
@@ -194,7 +197,7 @@ public class FixedByWeightByTotalComputationMethod : BasePlugin, IShippingRateCo
         {
             //shipping rate calculation by fixed rate
             var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.CountryId;
-            response.ShippingOptions = await (await _shippingService.GetAllShippingMethodsAsync(restrictByCountryId)).SelectAwait(async shippingMethod => new ShippingOption
+            response.ShippingOptions = await (await _shippingMethodsService.GetAllShippingMethodsAsync(restrictByCountryId)).SelectAwait(async shippingMethod => new ShippingOption
             {
                 Name = await _localizationService.GetLocalizedAsync(shippingMethod, x => x.Name),
                 Description = await _localizationService.GetLocalizedAsync(shippingMethod, x => x.Description),
@@ -223,7 +226,7 @@ public class FixedByWeightByTotalComputationMethod : BasePlugin, IShippingRateCo
             return null;
 
         var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.CountryId;
-        var rates = await (await _shippingService.GetAllShippingMethodsAsync(restrictByCountryId))
+        var rates = await (await _shippingMethodsService.GetAllShippingMethodsAsync(restrictByCountryId))
             .SelectAwait(async shippingMethod => await GetRateAsync(shippingMethod.Id)).Distinct().ToListAsync();
 
         //return default rate if all of them equal
@@ -322,7 +325,7 @@ public class FixedByWeightByTotalComputationMethod : BasePlugin, IShippingRateCo
         await _settingService.DeleteSettingAsync<FixedByWeightByTotalSettings>();
 
         //fixed rates
-        var fixedRates = await (await _shippingService.GetAllShippingMethodsAsync())
+        var fixedRates = await (await _shippingMethodsService.GetAllShippingMethodsAsync())
             .SelectAwait(async shippingMethod => await _settingService.GetSettingAsync(
                 string.Format(FixedByWeightByTotalDefaults.FIXED_RATE_SETTINGS_KEY, shippingMethod.Id)))
             .Where(setting => setting != null).ToListAsync();

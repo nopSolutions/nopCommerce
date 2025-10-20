@@ -1,6 +1,4 @@
-﻿using Nop.Core.Caching;
-
-namespace Nop.Services.Media;
+﻿namespace Nop.Services.Media;
 
 /// <summary>
 /// Represents default values related to media services
@@ -15,7 +13,12 @@ public static partial class NopMediaDefaults
     /// <summary>
     /// Gets a path to the image thumbs files
     /// </summary>
-    public static string ImageThumbsPath => @"images\thumbs";
+    public static string ImageThumbsPath => "thumbs";
+
+    /// <summary>
+    /// Gets a default path to the image files
+    /// </summary>
+    public static string DefaultImagesPath => "images";
 
     /// <summary>
     /// Gets a default avatar file name
@@ -26,21 +29,4 @@ public static partial class NopMediaDefaults
     /// Gets a default image file name
     /// </summary>
     public static string DefaultImageFileName => "default-image.png";
-
-    #region Caching defaults
-
-    /// <summary>
-    /// Gets a key to cache whether thumb exists
-    /// </summary>
-    /// <remarks>
-    /// {0} : thumb file name
-    /// </remarks>
-    public static CacheKey ThumbExistsCacheKey => new("Nop.azure.thumb.exists.{0}", ThumbsExistsPrefix);
-
-    /// <summary>
-    /// Gets a key pattern to clear cache
-    /// </summary>
-    public static string ThumbsExistsPrefix => "Nop.azure.thumb.exists.";
-
-    #endregion
 }

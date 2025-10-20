@@ -28,6 +28,7 @@ public partial record DataTablesModel : BaseNopModel
 
         Filters = new List<FilterParameter>();
         ColumnCollection = new List<ColumnProperty>();
+        LayoutCollection = new List<LayoutOption>();
     }
 
     #endregion
@@ -78,6 +79,11 @@ public partial record DataTablesModel : BaseNopModel
     /// Feature control DataTables' server-side processing mode
     /// </summary>
     public bool ServerSide { get; set; }
+
+    /// <summary>
+    /// Gets or sets how many items are in the initial data set to delay the loading of server-side data until second draw
+    /// </summary>
+    public int? DeferLoading { get; set; }
 
     /// <summary>
     /// Enable or disable table pagination.
@@ -166,6 +172,11 @@ public partial record DataTablesModel : BaseNopModel
     /// Gets or set column collection 
     /// </summary>
     public IList<ColumnProperty> ColumnCollection { get; set; }
+
+    /// <summary>
+    /// Gets or set layout option collection 
+    /// </summary>
+    public List<LayoutOption> LayoutCollection {  get; set; }
 
     #endregion
 }

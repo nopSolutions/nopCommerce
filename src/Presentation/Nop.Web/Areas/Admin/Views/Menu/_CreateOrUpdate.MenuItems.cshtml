@@ -1,0 +1,72 @@
+﻿@model MenuModel
+
+<div class="card-body">
+    <div class="form-group row row-main">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayAllCategories" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayAllCategories" />
+            <span asp-validation-for="DisplayAllCategories"></span>
+        </div>
+    </div>
+    @if(Model.Id > 0)
+    {
+        <div class="menu-items">
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+                Name = "menu-items-grid",
+                UrlRead = new DataUrl("MenuItemList", "Menu", new RouteValueDictionary { [nameof(Model.MenuItemSearchModel.MenuId)] = Model.MenuItemSearchModel.MenuId }),
+                Length = Model.MenuItemSearchModel.PageSize,
+                LengthMenu = Model.MenuItemSearchModel.AvailablePageSizes,
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(MenuItemModel.Breadcrumb))
+                    {
+                        Title = T("Admin.ContentManagement.Menus.MenuItem.Fields.Title").Text,
+                        Width = "250"
+                    },
+                    new ColumnProperty(nameof(MenuItemModel.MenuItemTypeName))
+                    {
+                        Title = T("Admin.ContentManagement.Menus.MenuItem.Fields.MenuItemType").Text,
+                        Width = "150"
+                    },
+                    new ColumnProperty(nameof(MenuItemModel.Published))
+                    {
+                        Title = T("Admin.ContentManagement.Menus.MenuItem.Fields.Published").Text,
+                        Width = "100",
+                        ClassName = NopColumnClassDefaults.CenterAll,
+                        Render = new RenderBoolean()
+                    },
+                    new ColumnProperty(nameof(MenuItemModel.DisplayOrder))
+                    {
+                        Title = T("Admin.ContentManagement.Menus.MenuItem.Fields.DisplayOrder").Text,
+                        Width = "100",
+                        ClassName = NopColumnClassDefaults.CenterAll
+                    },
+                    new ColumnProperty(nameof(MenuItemModel.Id))
+                    {
+                        Title = T("Admin.Common.Edit").Text,
+                        Width = "100",
+                        ClassName = $"{NopColumnClassDefaults.Button} {NopColumnClassDefaults.CenterAll} column-edit",
+                        Render = new RenderButtonEdit(new DataUrl("~/Admin/Menu/MenuItemEdit/"))
+                    }
+                }
+            })
+        </div>
+    }
+    else
+    {
+        @T("Admin.ContentManagement.Menus.MenuItems.SaveBeforeEdit")
+    }
+</div>
+
+@if(Model.Id > 0)
+{
+<div class="card-footer">
+    <a asp-action="MenuItemCreate" asp-route-menuId="@Model.Id" class="btn btn-primary">
+        <i class="fas fa-square-plus"></i>
+        @T("Admin.ContentManagement.Menus.MenuItems.AddNew")
+    </a>
+</div>
+}

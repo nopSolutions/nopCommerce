@@ -47,7 +47,7 @@ public partial class ModelCacheEventConsumer :
     #region Methods
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Setting> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Setting> eventMessage)
     {
         //clear models which depend on settings
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.OfficialNewsModelKey); //depends on AdminAreaSettings.HideAdvertisementsOnAdminArea
@@ -55,51 +55,51 @@ public partial class ModelCacheEventConsumer :
 
     //categories
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.CategoriesListKey);
     }
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Category> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Category> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.CategoriesListKey);
     }
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<Category> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Category> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.CategoriesListKey);
     }
 
     //manufacturers
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Manufacturer> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Manufacturer> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.ManufacturersListKey);
     }
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Manufacturer> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Manufacturer> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.ManufacturersListKey);
     }
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<Manufacturer> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Manufacturer> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.ManufacturersListKey);
     }
 
     //vendors
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Vendor> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Vendor> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorsListKey);
     }
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityUpdatedEvent<Vendor> eventMessage)
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Vendor> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorsListKey);
     }
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityDeletedEvent<Vendor> eventMessage)
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Vendor> eventMessage)
     {
         await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorsListKey);
     }
@@ -109,7 +109,7 @@ public partial class ModelCacheEventConsumer :
     /// </summary>
     /// <param name="eventMessage">Event</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(PluginUpdatedEvent eventMessage)
+    public virtual async Task HandleEventAsync(PluginUpdatedEvent eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopPluginDefaults.AdminNavigationPluginsPrefix);
     }

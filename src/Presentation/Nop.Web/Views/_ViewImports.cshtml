@@ -1,6 +1,7 @@
 ﻿@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
 
 @inject INopHtmlHelper NopHtml
+@inject INopUrlHelper NopUrl
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @*we remove the default InputTagHelper to prevent the checkbox duplicating: https://stackoverflow.com/questions/42544961/asp-net-core-custom-input-tag-helper-rendering-duplicate-checkboxes*@
@@ -13,6 +14,7 @@
 @using Microsoft.AspNetCore.StaticFiles
 @using Microsoft.Extensions.Primitives
 @using static Nop.Services.Common.NopLinksDefaults
+@using Nop.Core.Http;
 @using Nop.Web.Components
 @using Nop.Web.Extensions
 @using Nop.Web.Framework
@@ -33,6 +35,7 @@
 @using Nop.Web.Models.Common
 @using Nop.Web.Models.Customer
 @using Nop.Web.Models.Media
+@using Nop.Web.Models.Menus
 @using Nop.Web.Models.News
 @using Nop.Web.Models.Newsletter
 @using Nop.Web.Models.Order

@@ -22,7 +22,7 @@
         <h1>@T("Checkout.ShippingAddress")</h1>
     </div>
     <div class="page-body checkout-data">
-        <form id="shipping-form" asp-route="CheckoutShippingAddress" method="post">
+        <form id="shipping-form" asp-route="@NopRouteNames.Standard.CHECKOUT_SHIPPING_ADDRESS" method="post">
 
             @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
             {
@@ -30,7 +30,7 @@
                 <script asp-location="Footer">
                     $(function() {
                         $(document).unbind('checkout_toggle_pickup_in_store');
-                        $(document).on('checkout_toggle_pickup_in_store', function (e) {                            
+                        $(document).on('checkout_toggle_pickup_in_store', function (e) {
                             if (e.checked)
                             {
                                 $('#shipping-addresses-form').hide();
@@ -53,9 +53,9 @@
                     @if (Model.ExistingAddresses.Count > 0)
                     {
                         <div class="section select-shipping-address">
-                            <div class="title">
-                                <strong>@T("Checkout.SelectShippingAddress")</strong>
-                            </div>
+                            <h2 class="title">
+                                @T("Checkout.SelectShippingAddress")
+                            </h2>
                             @if (Model.InvalidExistingAddresses.Count > 0)
                             {
                                 <label class="min-amount-warning">
@@ -66,7 +66,7 @@
                                 @foreach (var item in Model.ExistingAddresses)
                                 {
                                     <div class="address-item">
-                                        <div class="address-list-page">                                            
+                                        <div class="address-list-page">
                                             @if (item.Id != Model.SelectedBillingAddress)
                                             {
                                                 <button id="edit-button-@(item.Id)" type="button" class="button-2 edit-address-button" onclick="CheckoutShipping.editAddress('@(storeLocation)checkout/GetAddressById/', @(item.Id), '@T("Checkout.EditAddress")'); return false;">@T("Common.Edit")</button>
@@ -114,17 +114,17 @@
                                                 </li>
                                             }
                                             @if (item.CityEnabled && !string.IsNullOrEmpty(item.City) ||
-                                                 item.CountyEnabled && !string.IsNullOrEmpty(item.County) ||
-                                                 item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
-                                                 item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                                            item.CountyEnabled && !string.IsNullOrEmpty(item.County) ||
+                                                                            item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
+                                                                            item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
                                             {
                                                 <li class="city-state-zip">
                                                     @if (item.CityEnabled && !string.IsNullOrEmpty(item.City))
                                                     {
                                                         @item.City
                                                         @if (item.CountyEnabled && !string.IsNullOrEmpty(item.County) ||
-                                                             item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
-                                                             item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                                                            item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
+                                                                                            item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
                                                         {
                                                             <text>,</text>
                                                         }
@@ -133,7 +133,7 @@
                                                     {
                                                         @item.County
                                                         @if (item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
-                                                             item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                                                            item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
                                                         {
                                                             <text>,</text>
                                                         }
@@ -166,56 +166,49 @@
                                             }
                                         </ul>
                                         <div class="select-button">
-                                            <button type="button" onclick="setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressid = item.Id })')" class="button-1 select-shipping-address-button">@T("Checkout.ShipToThisAddress")</button>
+                                            <button type="button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.CHECKOUT_SELECT_SHIPPING_ADDRESS, new { addressid = item.Id })')" class="button-1 select-shipping-address-button">@T("Checkout.ShipToThisAddress")</button>
                                         </div>
                                     </div>
                                 }
                             </div>
                         </div>
                     }
+                </div>
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutShippingAddressMiddle, additionalData = Model })
+                <div class="section new-shipping-address" id="shippingaddress-new-form">
+                    <h2 class="title title-text">
+                        @(Model.ExistingAddresses.Count > 0 ? T("Checkout.OrEnterNewAddress") : T("Checkout.EnterShippingAddress"))
+                    </h2>
+                    <div class="enter-address">
+                        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                        @{
+                            var dataDictAddress = new ViewDataDictionary(ViewData);
+                            dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
+                            @await Html.PartialAsync("_CreateOrUpdateAddress", Model.ShippingNewAddress, dataDictAddress)
+                        }
                     </div>
-                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutShippingAddressMiddle, additionalData = Model })
-                    <div class="section new-shipping-address" id="shippingaddress-new-form">
-                        <div class="title">
-                            @if (Model.ExistingAddresses.Count > 0)
-                            {
-                                <strong class="title-text">@T("Checkout.OrEnterNewAddress")</strong>
-                            }
-                            else
-                            {
-                                <strong>@T("Checkout.EnterShippingAddress")</strong>
-                            }
-                        </div>
-                        <div class="enter-address">
-                            <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                            @{
-                                var dataDictAddress = new ViewDataDictionary(ViewData);
-                                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
-                                @await Html.PartialAsync("_CreateOrUpdateAddress", Model.ShippingNewAddress, dataDictAddress)
-                            }
-                        </div>
-                    </div>
-                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutShippingAddressBottom, additionalData = Model })
-                
+                </div>
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutShippingAddressBottom, additionalData = Model })
+
             }
             <div class="buttons">
                 <button id="shippingaddress-save-button" type="button" class="button-1" style="display: none" onclick="CheckoutShipping.saveEditAddress('@(storeLocation)checkout/SaveEditShippingAddress/'); return false;">@T("Common.Save")</button>
 
-                <button id="shippingaddress-cancel-button" type="button" class="button-1" style="display: none" onclick="setLocation('@Url.RouteUrl("CheckoutShippingAddress")')">@T("Common.Cancel")</button>
+                <button id="shippingaddress-cancel-button" type="button" class="button-1" style="display: none" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.CHECKOUT_SHIPPING_ADDRESS)')">@T("Common.Cancel")</button>
 
                 <button id="shippingaddress-next-button" type="submit" name="nextstep" class="button-1 new-address-next-step-button">@T("Checkout.NextButton")</button>
             </div>
 
         </form>
         <script asp-location="Footer">
-            CheckoutShipping.init('#shipping-form');            
+            CheckoutShipping.init('#shipping-form');
             $('#edit-shipping-address-button').show();
             $('#delete-shipping-address-button').show();
         </script>
         <div class="section order-summary">
-            <div class="title">
-                <strong>@T("Checkout.OrderSummary")</strong>
-            </div>
+            <h2 class="title">
+                @T("Checkout.OrderSummary")
+            </h2>
             @await Component.InvokeAsync(typeof(OrderSummaryViewComponent))
         </div>
     </div>

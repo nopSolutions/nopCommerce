@@ -28,8 +28,9 @@ public partial class ShippingModelFactory : IShippingModelFactory
     protected readonly ILocalizedModelFactory _localizedModelFactory;
     protected readonly IPickupPluginManager _pickupPluginManager;
     protected readonly IShippingPluginManager _shippingPluginManager;
-    protected readonly IShippingService _shippingService;
+    protected readonly IShippingMethodsService _shippingMethodsService;
     protected readonly IStateProvinceService _stateProvinceService;
+    protected readonly IWarehouseService _warehouseService;
 
     #endregion
 
@@ -43,8 +44,9 @@ public partial class ShippingModelFactory : IShippingModelFactory
         ILocalizedModelFactory localizedModelFactory,
         IPickupPluginManager pickupPluginManager,
         IShippingPluginManager shippingPluginManager,
-        IShippingService shippingService,
-        IStateProvinceService stateProvinceService)
+        IShippingMethodsService shippingMethodsService,
+        IStateProvinceService stateProvinceService,
+        IWarehouseService warehouseService)
     {
         _addressModelFactory = addressModelFactory;
         _addressService = addressService;
@@ -54,8 +56,9 @@ public partial class ShippingModelFactory : IShippingModelFactory
         _localizedModelFactory = localizedModelFactory;
         _pickupPluginManager = pickupPluginManager;
         _shippingPluginManager = shippingPluginManager;
-        _shippingService = shippingService;
+        _shippingMethodsService = shippingMethodsService;
         _stateProvinceService = stateProvinceService;
+        _warehouseService = warehouseService;
     }
 
     #endregion
@@ -235,7 +238,7 @@ public partial class ShippingModelFactory : IShippingModelFactory
         ArgumentNullException.ThrowIfNull(searchModel);
 
         //get shipping methods
-        var shippingMethods = (await _shippingService.GetAllShippingMethodsAsync()).ToPagedList(searchModel);
+        var shippingMethods = (await _shippingMethodsService.GetAllShippingMethodsAsync()).ToPagedList(searchModel);
 
         //prepare grid model
         var model = new ShippingMethodListModel().PrepareToGrid(searchModel, shippingMethods, () =>
@@ -448,7 +451,7 @@ public partial class ShippingModelFactory : IShippingModelFactory
         ArgumentNullException.ThrowIfNull(searchModel);
 
         //get warehouses
-        var warehouses = (await _shippingService.GetAllWarehousesAsync(
+        var warehouses = (await _warehouseService.GetAllWarehousesAsync(
                 name: searchModel.SearchName))
             .ToPagedList(searchModel);
 
@@ -515,7 +518,7 @@ public partial class ShippingModelFactory : IShippingModelFactory
             return countryModel;
         }).ToListAsync();
 
-        foreach (var shippingMethod in await _shippingService.GetAllShippingMethodsAsync())
+        foreach (var shippingMethod in await _shippingMethodsService.GetAllShippingMethodsAsync())
         {
             model.AvailableShippingMethods.Add(shippingMethod.ToModel<ShippingMethodModel>());
             foreach (var country in countries)
@@ -523,7 +526,7 @@ public partial class ShippingModelFactory : IShippingModelFactory
                 if (!model.Restricted.ContainsKey(country.Id))
                     model.Restricted[country.Id] = new Dictionary<int, bool>();
 
-                model.Restricted[country.Id][shippingMethod.Id] = await _shippingService.CountryRestrictionExistsAsync(shippingMethod, country.Id);
+                model.Restricted[country.Id][shippingMethod.Id] = await _shippingMethodsService.CountryRestrictionExistsAsync(shippingMethod, country.Id);
             }
         }
 

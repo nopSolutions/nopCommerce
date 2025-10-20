@@ -5,15 +5,15 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components;
 
-public partial class NewsletterBoxViewComponent : NopViewComponent
+public partial class NewsLetterBoxViewComponent : NopViewComponent
 {
     protected readonly CustomerSettings _customerSettings;
-    protected readonly INewsletterModelFactory _newsletterModelFactory;
+    protected readonly INewsLetterModelFactory _newsLetterModelFactory;
 
-    public NewsletterBoxViewComponent(CustomerSettings customerSettings, INewsletterModelFactory newsletterModelFactory)
+    public NewsLetterBoxViewComponent(CustomerSettings customerSettings, INewsLetterModelFactory newsLetterModelFactory)
     {
         _customerSettings = customerSettings;
-        _newsletterModelFactory = newsletterModelFactory;
+        _newsLetterModelFactory = newsLetterModelFactory;
     }
 
     public async Task<IViewComponentResult> InvokeAsync()
@@ -21,7 +21,7 @@ public partial class NewsletterBoxViewComponent : NopViewComponent
         if (_customerSettings.HideNewsletterBlock)
             return Content("");
 
-        var model = await _newsletterModelFactory.PrepareNewsletterBoxModelAsync();
+        var model = await _newsLetterModelFactory.PrepareNewsLetterBoxModelAsync();
         return View(model);
     }
 }

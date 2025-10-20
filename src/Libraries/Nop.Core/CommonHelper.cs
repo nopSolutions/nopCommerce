@@ -39,18 +39,16 @@ public partial class CommonHelper
         output = EnsureMaximumLength(output, 255);
 
         if (!IsValidEmail(output))
-        {
             throw new NopException("Email is not valid.");
-        }
 
         return output;
     }
 
     /// <summary>
-    /// Verifies that a string is in valid e-mail format
+    /// Verifies that a string is in valid email format
     /// </summary>
     /// <param name="email">Email to verify</param>
-    /// <returns>true if the string is a valid e-mail address and false if it's not</returns>
+    /// <returns>true if the string is a valid email address and false if it's not</returns>
     public static bool IsValidEmail(string email)
     {
         if (string.IsNullOrEmpty(email))
@@ -116,9 +114,7 @@ public partial class CommonHelper
 
         var result = str[0..(maxLength - pLen)];
         if (!string.IsNullOrEmpty(postfix))
-        {
             result += postfix;
-        }
 
         return result;
     }
@@ -188,8 +184,8 @@ public partial class CommonHelper
         ArgumentNullException.ThrowIfNull(propertyName);
 
         var instanceType = instance.GetType();
-        var pi = instanceType.GetProperty(propertyName) 
-                 ?? throw new NopException("No property '{0}' found on the instance of type '{1}'.", propertyName, instanceType);
+        var pi = instanceType.GetProperty(propertyName)
+            ?? throw new NopException("No property '{0}' found on the instance of type '{1}'.", propertyName, instanceType);
 
         if (!pi.CanWrite)
             throw new NopException("The property '{0}' on the instance of type '{1}' does not have a setter.", propertyName, instanceType);
@@ -270,6 +266,23 @@ public partial class CommonHelper
         result = result.TrimStart();
 
         return result;
+    }
+
+    /// <summary>
+    /// Converts a string from <c>SNAKE_CASE</c> to <c>PascalCase</c>
+    /// </summary>
+    /// <param name="str">Input string</param>
+    /// <returns>Splitted <c>PascalCase</c></returns>
+    public static string SnakeCaseToPascalCase(string str)
+    {
+        if (string.IsNullOrEmpty(str))
+            return string.Empty;
+
+        var tempString = str.ToLower().Replace("_", " ");
+
+        return CultureInfo.InvariantCulture.TextInfo
+            .ToTitleCase(tempString)
+            .Replace(" ", string.Empty);
     }
 
     /// <summary>

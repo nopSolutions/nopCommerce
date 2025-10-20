@@ -4,7 +4,7 @@
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
-    <Version>4.80</Version>
+    <Version>4.90</Version>
     <Description>Nop.Web.Framework is a class library project containing some common presentation things for Nop.Web project</Description>
     <PackageLicenseUrl>https://www.nopcommerce.com/license</PackageLicenseUrl>
     <PackageProjectUrl>https://www.nopcommerce.com/</PackageProjectUrl>
@@ -12,10 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DeepL.net" Version="1.15.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.426" />
-    <PackageReference Include="WebMarkupMin.AspNetCoreLatest" Version="2.18.0" />
-    <PackageReference Include="WebMarkupMin.NUglify" Version="2.18.0" />
+    <PackageReference Include="Google.Cloud.Translation.V2" Version="3.4.0" />
+    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.477" />
+    <PackageReference Include="WebMarkupMin.AspNetCoreLatest" Version="2.19.0" />
+    <PackageReference Include="WebMarkupMin.NUglify" Version="2.19.0" />
   </ItemGroup>
 
   <ItemGroup>
