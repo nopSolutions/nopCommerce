@@ -145,6 +145,13 @@ public partial class SettingController : BaseAdminController
                 [$"Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.{filterLevel}"] = localized?.Name ?? ""
             }, localized.LanguageId);
         }
+        if (!model.Locales.Any())
+        {
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+            {
+                [$"Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.{filterLevel}"] = model.Name
+            });
+        }
     }
 
     protected virtual async Task UpdateGdprConsentLocalesAsync(GdprConsent gdprConsent, GdprConsentModel model)
