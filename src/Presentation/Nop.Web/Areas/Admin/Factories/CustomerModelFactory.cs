@@ -1169,7 +1169,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 customerModel.LastIpAddress = _customerSettings.StoreIpAddresses
                     ? customer.LastIpAddress
                     : await _localizationService.GetResourceAsync("Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled");
-                customerModel.Location = _geoLookupService.LookupCountryName(customer.LastIpAddress);
+                customerModel.Location = await _geoLookupService.LookupCountryNameAsync(customer.LastIpAddress);
                 customerModel.LastVisitedPage = _customerSettings.StoreLastVisitedPage
                     ? await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute)
                     : await _localizationService.GetResourceAsync("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled");

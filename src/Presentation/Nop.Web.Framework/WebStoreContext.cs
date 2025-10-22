@@ -70,31 +70,7 @@ public partial class WebStoreContext : IStoreContext
 
         return _cachedStore;
     }
-
-    /// <summary>
-    /// Gets the current store
-    /// </summary>
-    public virtual Store GetCurrentStore()
-    {
-        if (_cachedStore != null)
-            return _cachedStore;
-
-        //try to determine the current store by HOST header
-        string host = _httpContextAccessor.HttpContext?.Request.Headers[HeaderNames.Host];
-
-        //we cannot call async methods here. otherwise, an application can hang. so it's a workaround to avoid that
-        var allStores = _storeRepository.GetAll(query =>
-        {
-            return from s in query orderby s.DisplayOrder, s.Id select s;
-        }, _ => default, includeDeleted: false);
-
-        var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host)) ?? allStores.FirstOrDefault();
-
-        _cachedStore = store ?? throw new Exception("No store could be loaded");
-
-        return _cachedStore;
-    }
-
+    
     /// <summary>
     /// Gets active store scope configuration
     /// </summary>

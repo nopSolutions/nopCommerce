@@ -20,8 +20,8 @@ using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Common;
-using Nop.Services.Configuration;
 using Nop.Services.Media;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo490;
 
@@ -34,395 +34,392 @@ public class SettingMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        //do not use DI, because it produces exception on the installation process
-        var settingService = EngineContext.Current.Resolve<ISettingService>();
-
         //#6590
-        var adminAreaSettings = settingService.LoadSetting<AdminAreaSettings>();
-        if (!settingService.SettingExists(adminAreaSettings, settings => settings.UseStickyHeaderLayout))
+        var adminAreaSettings = this.LoadSetting<AdminAreaSettings>();
+        if (!this.SettingExists(adminAreaSettings, settings => settings.UseStickyHeaderLayout))
         {
             adminAreaSettings.UseStickyHeaderLayout = false;
-            settingService.SaveSetting(adminAreaSettings, settings => settings.UseStickyHeaderLayout);
+            this.SaveSetting(adminAreaSettings, settings => settings.UseStickyHeaderLayout);
         }
 
         //#7387
-        var productEditorSettings = settingService.LoadSetting<ProductEditorSettings>();
-        if (!settingService.SettingExists(productEditorSettings, settings => settings.AgeVerification))
+        var productEditorSettings = this.LoadSetting<ProductEditorSettings>();
+        if (!this.SettingExists(productEditorSettings, settings => settings.AgeVerification))
         {
             productEditorSettings.AgeVerification = false;
-            settingService.SaveSetting(productEditorSettings, settings => settings.AgeVerification);
+            this.SaveSetting(productEditorSettings, settings => settings.AgeVerification);
         }
 
         //#2184
-        var vendorSettings = settingService.LoadSetting<VendorSettings>();
-        if (!settingService.SettingExists(vendorSettings, settings => settings.MaximumProductPicturesNumber))
+        var vendorSettings = this.LoadSetting<VendorSettings>();
+        if (!this.SettingExists(vendorSettings, settings => settings.MaximumProductPicturesNumber))
         {
             vendorSettings.MaximumProductPicturesNumber = 5;
-            settingService.SaveSetting(vendorSettings, settings => settings.MaximumProductPicturesNumber);
+            this.SaveSetting(vendorSettings, settings => settings.MaximumProductPicturesNumber);
         }
 
         //#7571
-        var captchaSettings = settingService.LoadSetting<CaptchaSettings>();
-        if (!settingService.SettingExists(captchaSettings, settings => settings.ShowOnCheckGiftCardBalance))
+        var captchaSettings = this.LoadSetting<CaptchaSettings>();
+        if (!this.SettingExists(captchaSettings, settings => settings.ShowOnCheckGiftCardBalance))
         {
             captchaSettings.ShowOnCheckGiftCardBalance = true;
-            settingService.SaveSetting(captchaSettings, settings => settings.ShowOnCheckGiftCardBalance);
+            this.SaveSetting(captchaSettings, settings => settings.ShowOnCheckGiftCardBalance);
         }
 
         //#5818
-        var mediaSettings = settingService.LoadSetting<MediaSettings>();
-        if (!settingService.SettingExists(mediaSettings, settings => settings.AutoOrientImage))
+        var mediaSettings = this.LoadSetting<MediaSettings>();
+        if (!this.SettingExists(mediaSettings, settings => settings.AutoOrientImage))
         {
             mediaSettings.AutoOrientImage = false;
-            settingService.SaveSetting(mediaSettings, settings => settings.AutoOrientImage);
+            this.SaveSetting(mediaSettings, settings => settings.AutoOrientImage);
         }
 
         //#1892
-        if (!settingService.SettingExists(adminAreaSettings, settings => settings.MinimumDropdownItemsForSearch))
+        if (!this.SettingExists(adminAreaSettings, settings => settings.MinimumDropdownItemsForSearch))
         {
             adminAreaSettings.MinimumDropdownItemsForSearch = 50;
-            settingService.SaveSetting(adminAreaSettings, settings => settings.MinimumDropdownItemsForSearch);
+            this.SaveSetting(adminAreaSettings, settings => settings.MinimumDropdownItemsForSearch);
         }
 
         //#7405
-        var catalogSettings = settingService.LoadSetting<CatalogSettings>();
-        if (!settingService.SettingExists(catalogSettings, settings => settings.ExportImportCategoryUseLimitedToStores))
+        var catalogSettings = this.LoadSetting<CatalogSettings>();
+        if (!this.SettingExists(catalogSettings, settings => settings.ExportImportCategoryUseLimitedToStores))
         {
             catalogSettings.ExportImportCategoryUseLimitedToStores = false;
-            settingService.SaveSetting(catalogSettings, settings => settings.ExportImportCategoryUseLimitedToStores);
+            this.SaveSetting(catalogSettings, settings => settings.ExportImportCategoryUseLimitedToStores);
         }
 
         //#7477
-        var pdfSettings = settingService.LoadSetting<PdfSettings>();
-        var pdfSettingsFontFamily = settingService.GetSetting("pdfsettings.fontfamily");
+        var pdfSettings = this.LoadSetting<PdfSettings>();
+        var pdfSettingsFontFamily = this.GetSetting("pdfsettings.fontfamily");
         if (pdfSettingsFontFamily is not null)
-            settingService.DeleteSetting(pdfSettingsFontFamily);
+            this.DeleteSetting(pdfSettingsFontFamily);
 
-        if (!settingService.SettingExists(pdfSettings, settings => settings.RtlFontName))
+        if (!this.SettingExists(pdfSettings, settings => settings.RtlFontName))
         {
             pdfSettings.RtlFontName = NopCommonDefaults.PdfRtlFontName;
-            settingService.SaveSetting(pdfSettings, settings => pdfSettings.RtlFontName);
+            this.SaveSetting(pdfSettings, settings => pdfSettings.RtlFontName);
         }
 
-        if (!settingService.SettingExists(pdfSettings, settings => settings.LtrFontName))
+        if (!this.SettingExists(pdfSettings, settings => settings.LtrFontName))
         {
             pdfSettings.LtrFontName = NopCommonDefaults.PdfLtrFontName;
-            settingService.SaveSetting(pdfSettings, settings => pdfSettings.LtrFontName);
+            this.SaveSetting(pdfSettings, settings => pdfSettings.LtrFontName);
         }
 
-        if (!settingService.SettingExists(pdfSettings, settings => settings.BaseFontSize))
+        if (!this.SettingExists(pdfSettings, settings => settings.BaseFontSize))
         {
             pdfSettings.BaseFontSize = 10f;
-            settingService.SaveSetting(pdfSettings, settings => pdfSettings.BaseFontSize);
+            this.SaveSetting(pdfSettings, settings => pdfSettings.BaseFontSize);
         }
 
-        if (!settingService.SettingExists(pdfSettings, settings => settings.ImageTargetSize))
+        if (!this.SettingExists(pdfSettings, settings => settings.ImageTargetSize))
         {
             pdfSettings.ImageTargetSize = 200;
-            settingService.SaveSetting(pdfSettings, settings => pdfSettings.ImageTargetSize);
+            this.SaveSetting(pdfSettings, settings => pdfSettings.ImageTargetSize);
         }
 
         //#7397
-        var richEditorAllowJavaScript = settingService.GetSetting("adminareasettings.richeditorallowjavascript");
+        var richEditorAllowJavaScript = this.GetSetting("adminareasettings.richeditorallowjavascript");
         if (richEditorAllowJavaScript is not null)
-            settingService.DeleteSetting(richEditorAllowJavaScript);
+            this.DeleteSetting(richEditorAllowJavaScript);
 
-        var richEditorAllowStyleTag = settingService.GetSetting("adminareasettings.richeditorallowstyletag");
+        var richEditorAllowStyleTag = this.GetSetting("adminareasettings.richeditorallowstyletag");
         if (richEditorAllowStyleTag is not null)
-            settingService.DeleteSetting(richEditorAllowStyleTag);
+            this.DeleteSetting(richEditorAllowStyleTag);
 
-        if (settingService.SettingExists(adminAreaSettings, settings => settings.RichEditorAdditionalSettings))
+        if (this.SettingExists(adminAreaSettings, settings => settings.RichEditorAdditionalSettings))
         {
             adminAreaSettings.RichEditorAdditionalSettings = string.Empty;
-            settingService.SaveSetting(adminAreaSettings, settings => settings.RichEditorAdditionalSettings);
+            this.SaveSetting(adminAreaSettings, settings => settings.RichEditorAdditionalSettings);
         }
 
         //#6874
-        var newsletterTickedByDefault = settingService.GetSetting("customersettings.newslettertickedbydefault");
+        var newsletterTickedByDefault = this.GetSetting("customersettings.newslettertickedbydefault");
         if (newsletterTickedByDefault is not null)
-            settingService.DeleteSetting(newsletterTickedByDefault);
+            this.DeleteSetting(newsletterTickedByDefault);
 
         //#820
-        var currencySettings = settingService.LoadSetting<CurrencySettings>();
-        if (!settingService.SettingExists(currencySettings, settings => settings.DisplayCurrencySymbolInCurrencySelector))
+        var currencySettings = this.LoadSetting<CurrencySettings>();
+        if (!this.SettingExists(currencySettings, settings => settings.DisplayCurrencySymbolInCurrencySelector))
         {
             currencySettings.DisplayCurrencySymbolInCurrencySelector = false;
-            settingService.SaveSetting(currencySettings, settings => settings.DisplayCurrencySymbolInCurrencySelector);
+            this.SaveSetting(currencySettings, settings => settings.DisplayCurrencySymbolInCurrencySelector);
         }
 
         //#1779
-        var customerSettings = settingService.LoadSetting<CustomerSettings>();
-        if (!settingService.SettingExists(customerSettings, settings => settings.NotifyFailedLoginAttempt))
+        var customerSettings = this.LoadSetting<CustomerSettings>();
+        if (!this.SettingExists(customerSettings, settings => settings.NotifyFailedLoginAttempt))
         {
             customerSettings.NotifyFailedLoginAttempt = false;
-            settingService.SaveSetting(customerSettings, settings => settings.NotifyFailedLoginAttempt);
+            this.SaveSetting(customerSettings, settings => settings.NotifyFailedLoginAttempt);
         }
 
         //#7630
-        var taxSettings = settingService.LoadSetting<TaxSettings>();
+        var taxSettings = this.LoadSetting<TaxSettings>();
 
-        if (!settingService.SettingExists(taxSettings, settings => settings.HmrcApiUrl))
+        if (!this.SettingExists(taxSettings, settings => settings.HmrcApiUrl))
         {
             taxSettings.HmrcApiUrl = "https://api.service.hmrc.gov.uk";
-            settingService.SaveSetting(taxSettings, settings => taxSettings.HmrcApiUrl);
+            this.SaveSetting(taxSettings, settings => taxSettings.HmrcApiUrl);
         }
 
-        if (!settingService.SettingExists(taxSettings, settings => settings.HmrcClientId))
+        if (!this.SettingExists(taxSettings, settings => settings.HmrcClientId))
         {
             taxSettings.HmrcClientId = string.Empty;
-            settingService.SaveSetting(taxSettings, settings => taxSettings.HmrcClientId);
+            this.SaveSetting(taxSettings, settings => taxSettings.HmrcClientId);
         }
 
-        if (!settingService.SettingExists(taxSettings, settings => settings.HmrcClientSecret))
+        if (!this.SettingExists(taxSettings, settings => settings.HmrcClientSecret))
         {
             taxSettings.HmrcClientSecret = string.Empty;
-            settingService.SaveSetting(taxSettings, settings => taxSettings.HmrcClientSecret);
+            this.SaveSetting(taxSettings, settings => taxSettings.HmrcClientSecret);
         }
 
         //#1266
-        var orderSettings = settingService.LoadSetting<OrderSettings>();
-        if (!settingService.SettingExists(orderSettings, settings => settings.CustomerOrdersPageSize))
+        var orderSettings = this.LoadSetting<OrderSettings>();
+        if (!this.SettingExists(orderSettings, settings => settings.CustomerOrdersPageSize))
         {
             orderSettings.CustomerOrdersPageSize = 10;
-            settingService.SaveSetting(orderSettings, settings => settings.CustomerOrdersPageSize);
+            this.SaveSetting(orderSettings, settings => settings.CustomerOrdersPageSize);
         }
 
         //#7625
-        var addressSetting = settingService.LoadSetting<AddressSettings>();
-        if (!settingService.SettingExists(addressSetting, settings => settings.PrePopulateCountryByCustomer))
+        var addressSetting = this.LoadSetting<AddressSettings>();
+        if (!this.SettingExists(addressSetting, settings => settings.PrePopulateCountryByCustomer))
         {
             addressSetting.PrePopulateCountryByCustomer = true;
-            settingService.SaveSetting(addressSetting, settings => settings.PrePopulateCountryByCustomer);
+            this.SaveSetting(addressSetting, settings => settings.PrePopulateCountryByCustomer);
         }
 
         //#7747
-        var forumSettings = settingService.LoadSetting<ForumSettings>();
-        if (!settingService.SettingExists(forumSettings, settings => settings.TopicMetaDescriptionLength))
+        var forumSettings = this.LoadSetting<ForumSettings>();
+        if (!this.SettingExists(forumSettings, settings => settings.TopicMetaDescriptionLength))
         {
             forumSettings.TopicMetaDescriptionLength = 160;
-            settingService.SaveSetting(forumSettings, settings => settings.TopicMetaDescriptionLength);
+            this.SaveSetting(forumSettings, settings => settings.TopicMetaDescriptionLength);
         }
 
         //#7388
-        var translationSettings = settingService.LoadSetting<TranslationSettings>();
-        if (!settingService.SettingExists(translationSettings, settings => settings.AllowPreTranslate))
+        var translationSettings = this.LoadSetting<TranslationSettings>();
+        if (!this.SettingExists(translationSettings, settings => settings.AllowPreTranslate))
         {
             translationSettings.AllowPreTranslate = false;
-            settingService.SaveSetting(translationSettings, settings => settings.AllowPreTranslate);
+            this.SaveSetting(translationSettings, settings => settings.AllowPreTranslate);
         }
 
-        if (!settingService.SettingExists(translationSettings, settings => settings.TranslateFromLanguageId))
+        if (!this.SettingExists(translationSettings, settings => settings.TranslateFromLanguageId))
         {
             var languageRepository = EngineContext.Current.Resolve<IRepository<Language>>();
 
             translationSettings.TranslateFromLanguageId = languageRepository.Table.First().Id;
-            settingService.SaveSetting(translationSettings, settings => settings.TranslateFromLanguageId);
+            this.SaveSetting(translationSettings, settings => settings.TranslateFromLanguageId);
         }
 
-        if (!settingService.SettingExists(translationSettings, settings => settings.GoogleApiKey))
+        if (!this.SettingExists(translationSettings, settings => settings.GoogleApiKey))
         {
             translationSettings.GoogleApiKey = string.Empty;
-            settingService.SaveSetting(translationSettings, settings => settings.GoogleApiKey);
+            this.SaveSetting(translationSettings, settings => settings.GoogleApiKey);
         }
 
-        if (!settingService.SettingExists(translationSettings, settings => settings.DeepLAuthKey))
+        if (!this.SettingExists(translationSettings, settings => settings.DeepLAuthKey))
         {
             translationSettings.DeepLAuthKey = string.Empty;
-            settingService.SaveSetting(translationSettings, settings => settings.DeepLAuthKey);
+            this.SaveSetting(translationSettings, settings => settings.DeepLAuthKey);
         }
 
-        if (!settingService.SettingExists(translationSettings, settings => settings.NotTranslateLanguages))
+        if (!this.SettingExists(translationSettings, settings => settings.NotTranslateLanguages))
         {
             translationSettings.NotTranslateLanguages = new List<int>();
-            settingService.SaveSetting(translationSettings, settings => settings.NotTranslateLanguages);
+            this.SaveSetting(translationSettings, settings => settings.NotTranslateLanguages);
         }
 
-        if (!settingService.SettingExists(translationSettings, settings => settings.TranslationServiceId))
+        if (!this.SettingExists(translationSettings, settings => settings.TranslationServiceId))
         {
             translationSettings.TranslationServiceId = 0;
-            settingService.SaveSetting(translationSettings, settings => settings.TranslationServiceId);
+            this.SaveSetting(translationSettings, settings => settings.TranslationServiceId);
         }
 
         //#7779
-        var robotsTxtSettings = settingService.LoadSetting<RobotsTxtSettings>();
+        var robotsTxtSettings = this.LoadSetting<RobotsTxtSettings>();
         var newDisallowPaths = new List<string> { "/*?*returnurl=", "/*?*ReturnUrl=" };
 
         foreach (var newDisallowPath in newDisallowPaths.Where(newDisallowPath => !robotsTxtSettings.DisallowPaths.Contains(newDisallowPath)))
             robotsTxtSettings.DisallowPaths.Add(newDisallowPath);
 
         robotsTxtSettings.DisallowPaths.Sort();
-        settingService.SaveSetting(robotsTxtSettings, settings => settings.DisallowPaths);
+        this.SaveSetting(robotsTxtSettings, settings => settings.DisallowPaths);
 
         //#1921
-        var shoppingCartSettings = settingService.LoadSetting<ShoppingCartSettings>();
-        if (!settingService.SettingExists(shoppingCartSettings, settings => settings.AllowMultipleWishlist))
+        var shoppingCartSettings = this.LoadSetting<ShoppingCartSettings>();
+        if (!this.SettingExists(shoppingCartSettings, settings => settings.AllowMultipleWishlist))
         {
             shoppingCartSettings.AllowMultipleWishlist = true;
-            settingService.SaveSetting(shoppingCartSettings, settings => settings.AllowMultipleWishlist);
+            this.SaveSetting(shoppingCartSettings, settings => settings.AllowMultipleWishlist);
         }
-        if (!settingService.SettingExists(shoppingCartSettings, settings => settings.MaximumNumberOfCustomWishlist))
+        if (!this.SettingExists(shoppingCartSettings, settings => settings.MaximumNumberOfCustomWishlist))
         {
             shoppingCartSettings.MaximumNumberOfCustomWishlist = 10;
-            settingService.SaveSetting(shoppingCartSettings, settings => settings.MaximumNumberOfCustomWishlist);
+            this.SaveSetting(shoppingCartSettings, settings => settings.MaximumNumberOfCustomWishlist);
         }
 
         //#7730
-        var aiSettings = settingService.LoadSetting<ArtificialIntelligenceSettings>();
+        var aiSettings = this.LoadSetting<ArtificialIntelligenceSettings>();
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.Enabled))
+        if (!this.SettingExists(aiSettings, settings => settings.Enabled))
         {
             aiSettings.Enabled = false;
-            settingService.SaveSetting(aiSettings, settings => settings.Enabled);
+            this.SaveSetting(aiSettings, settings => settings.Enabled);
         }
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.ChatGptApiKey))
+        if (!this.SettingExists(aiSettings, settings => settings.ChatGptApiKey))
         {
             aiSettings.ChatGptApiKey = string.Empty;
-            settingService.SaveSetting(aiSettings, settings => settings.ChatGptApiKey);
+            this.SaveSetting(aiSettings, settings => settings.ChatGptApiKey);
         }
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.DeepSeekApiKey))
+        if (!this.SettingExists(aiSettings, settings => settings.DeepSeekApiKey))
         {
             aiSettings.DeepSeekApiKey = string.Empty;
-            settingService.SaveSetting(aiSettings, settings => settings.DeepSeekApiKey);
+            this.SaveSetting(aiSettings, settings => settings.DeepSeekApiKey);
         }
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.GeminiApiKey))
+        if (!this.SettingExists(aiSettings, settings => settings.GeminiApiKey))
         {
             aiSettings.GeminiApiKey = string.Empty;
-            settingService.SaveSetting(aiSettings, settings => settings.GeminiApiKey);
+            this.SaveSetting(aiSettings, settings => settings.GeminiApiKey);
         }
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.ProviderType))
+        if (!this.SettingExists(aiSettings, settings => settings.ProviderType))
         {
             aiSettings.ProviderType = ArtificialIntelligenceProviderType.Gemini;
-            settingService.SaveSetting(aiSettings, settings => settings.ProviderType);
+            this.SaveSetting(aiSettings, settings => settings.ProviderType);
         }
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.RequestTimeout))
+        if (!this.SettingExists(aiSettings, settings => settings.RequestTimeout))
         {
             aiSettings.RequestTimeout = ArtificialIntelligenceDefaults.RequestTimeout;
-            settingService.SaveSetting(aiSettings, settings => settings.RequestTimeout);
+            this.SaveSetting(aiSettings, settings => settings.RequestTimeout);
         }
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.ProductDescriptionQuery))
+        if (!this.SettingExists(aiSettings, settings => settings.ProductDescriptionQuery))
         {
             aiSettings.ProductDescriptionQuery = ArtificialIntelligenceDefaults.ProductDescriptionQuery;
-            settingService.SaveSetting(aiSettings, settings => settings.ProductDescriptionQuery);
+            this.SaveSetting(aiSettings, settings => settings.ProductDescriptionQuery);
         }
 
         //#5986
-        if (!settingService.SettingExists(mediaSettings, settings => settings.PicturePath))
+        if (!this.SettingExists(mediaSettings, settings => settings.PicturePath))
         {
             mediaSettings.PicturePath = NopMediaDefaults.DefaultImagesPath;
-            settingService.SaveSetting(mediaSettings, settings => settings.PicturePath);
+            this.SaveSetting(mediaSettings, settings => settings.PicturePath);
         }
 
         //#7390
-        var menuSettings = settingService.LoadSetting<MenuSettings>();
-        if (!settingService.SettingExists(menuSettings, settings => settings.MaximumNumberEntities))
+        var menuSettings = this.LoadSetting<MenuSettings>();
+        if (!this.SettingExists(menuSettings, settings => settings.MaximumNumberEntities))
         {
             menuSettings.MaximumNumberEntities = 8;
-            settingService.SaveSetting(menuSettings, settings => settings.MaximumNumberEntities);
+            this.SaveSetting(menuSettings, settings => settings.MaximumNumberEntities);
         }
 
-        if (!settingService.SettingExists(menuSettings, settings => settings.NumberOfItemsPerGridRow))
+        if (!this.SettingExists(menuSettings, settings => settings.NumberOfItemsPerGridRow))
         {
             menuSettings.NumberOfItemsPerGridRow = 4;
-            settingService.SaveSetting(menuSettings, settings => settings.NumberOfItemsPerGridRow);
+            this.SaveSetting(menuSettings, settings => settings.NumberOfItemsPerGridRow);
         }
 
-        if (!settingService.SettingExists(menuSettings, settings => settings.NumberOfSubItemsPerGridElement))
+        if (!this.SettingExists(menuSettings, settings => settings.NumberOfSubItemsPerGridElement))
         {
             menuSettings.NumberOfSubItemsPerGridElement = 3;
-            settingService.SaveSetting(menuSettings, settings => settings.NumberOfSubItemsPerGridElement);
+            this.SaveSetting(menuSettings, settings => settings.NumberOfSubItemsPerGridElement);
         }
 
-        if (!settingService.SettingExists(menuSettings, settings => settings.MaximumMainMenuLevels))
+        if (!this.SettingExists(menuSettings, settings => settings.MaximumMainMenuLevels))
         {
             menuSettings.MaximumMainMenuLevels = 2;
-            settingService.SaveSetting(menuSettings, settings => settings.MaximumMainMenuLevels);
+            this.SaveSetting(menuSettings, settings => settings.MaximumMainMenuLevels);
         }
 
-        if (!settingService.SettingExists(menuSettings, settings => settings.GridThumbPictureSize))
+        if (!this.SettingExists(menuSettings, settings => settings.GridThumbPictureSize))
         {
             menuSettings.GridThumbPictureSize = 340;
-            settingService.SaveSetting(menuSettings, settings => settings.GridThumbPictureSize);
+            this.SaveSetting(menuSettings, settings => settings.GridThumbPictureSize);
         }
 
-        var settingRepository = EngineContext.Current.Resolve<IRepository<Setting>>();
-        settingRepository.Delete(setting => setting.Name.StartsWith("displaydefaultmenuitemsettings"));
+        var dataProvider = EngineContext.Current.Resolve<INopDataProvider>();
+        dataProvider.BulkDeleteEntities<Setting>(setting => setting.Name.StartsWith("displaydefaultmenuitemsettings"));
 
-        var useajaxloadmenu = settingService.GetSetting("catalogsettings.useajaxloadmenu");
+        var useajaxloadmenu = this.GetSetting("catalogsettings.useajaxloadmenu");
         if (useajaxloadmenu is not null)
-            settingService.DeleteSetting(useajaxloadmenu);
+            this.DeleteSetting(useajaxloadmenu);
 
         //#7732
-        if (!settingService.SettingExists(aiSettings, settings => settings.AllowProductDescriptionGeneration))
+        if (!this.SettingExists(aiSettings, settings => settings.AllowProductDescriptionGeneration))
         {
             aiSettings.AllowProductDescriptionGeneration = true;
-            settingService.SaveSetting(aiSettings, settings => settings.AllowProductDescriptionGeneration);
+            this.SaveSetting(aiSettings, settings => settings.AllowProductDescriptionGeneration);
         }
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaTitleGeneration))
+        if (!this.SettingExists(aiSettings, settings => settings.AllowMetaTitleGeneration))
         {
             aiSettings.AllowMetaTitleGeneration = true;
-            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaTitleGeneration);
+            this.SaveSetting(aiSettings, settings => settings.AllowMetaTitleGeneration);
         }
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.MetaTitleQuery))
+        if (!this.SettingExists(aiSettings, settings => settings.MetaTitleQuery))
         {
             aiSettings.MetaTitleQuery = ArtificialIntelligenceDefaults.MetaTitleQuery;
-            settingService.SaveSetting(aiSettings, settings => settings.MetaTitleQuery);
+            this.SaveSetting(aiSettings, settings => settings.MetaTitleQuery);
         }
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaKeywordsGeneration))
+        if (!this.SettingExists(aiSettings, settings => settings.AllowMetaKeywordsGeneration))
         {
             aiSettings.AllowMetaKeywordsGeneration = true;
-            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaKeywordsGeneration);
+            this.SaveSetting(aiSettings, settings => settings.AllowMetaKeywordsGeneration);
         }
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.MetaKeywordsQuery))
+        if (!this.SettingExists(aiSettings, settings => settings.MetaKeywordsQuery))
         {
             aiSettings.MetaKeywordsQuery = ArtificialIntelligenceDefaults.MetaKeywordsQuery;
-            settingService.SaveSetting(aiSettings, settings => settings.MetaKeywordsQuery);
+            this.SaveSetting(aiSettings, settings => settings.MetaKeywordsQuery);
         }
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.AllowMetaDescriptionGeneration))
+        if (!this.SettingExists(aiSettings, settings => settings.AllowMetaDescriptionGeneration))
         {
             aiSettings.AllowMetaDescriptionGeneration = true;
-            settingService.SaveSetting(aiSettings, settings => settings.AllowMetaDescriptionGeneration);
+            this.SaveSetting(aiSettings, settings => settings.AllowMetaDescriptionGeneration);
         }
 
-        if (!settingService.SettingExists(aiSettings, settings => settings.MetaDescriptionQuery))
+        if (!this.SettingExists(aiSettings, settings => settings.MetaDescriptionQuery))
         {
             aiSettings.MetaDescriptionQuery = ArtificialIntelligenceDefaults.MetaDescriptionQuery;
-            settingService.SaveSetting(aiSettings, settings => settings.MetaDescriptionQuery);
+            this.SaveSetting(aiSettings, settings => settings.MetaDescriptionQuery);
         }
 
         //#7411
-        var filterLevelSettings = settingService.LoadSetting<FilterLevelSettings>();
-        if (!settingService.SettingExists(filterLevelSettings, settings => settings.DisplayOnHomePage))
+        var filterLevelSettings = this.LoadSetting<FilterLevelSettings>();
+        if (!this.SettingExists(filterLevelSettings, settings => settings.DisplayOnHomePage))
         {
             filterLevelSettings.DisplayOnHomePage = true;
-            settingService.SaveSetting(filterLevelSettings, settings => settings.DisplayOnHomePage);
+            this.SaveSetting(filterLevelSettings, settings => settings.DisplayOnHomePage);
         }
-        if (!settingService.SettingExists(filterLevelSettings, settings => settings.DisplayOnProductDetailsPage))
+        if (!this.SettingExists(filterLevelSettings, settings => settings.DisplayOnProductDetailsPage))
         {
             filterLevelSettings.DisplayOnProductDetailsPage = true;
-            settingService.SaveSetting(filterLevelSettings, settings => settings.DisplayOnProductDetailsPage);
+            this.SaveSetting(filterLevelSettings, settings => settings.DisplayOnProductDetailsPage);
         }
-        if (!settingService.SettingExists(productEditorSettings, settings => settings.FilterLevelValuesProducts))
+        if (!this.SettingExists(productEditorSettings, settings => settings.FilterLevelValuesProducts))
         {
             productEditorSettings.FilterLevelValuesProducts = true;
-            settingService.SaveSetting(productEditorSettings, settings => settings.FilterLevelValuesProducts);
+            this.SaveSetting(productEditorSettings, settings => settings.FilterLevelValuesProducts);
         }
 
         //#7384
-        if (!settingService.SettingExists(orderSettings, settings => settings.AllowCustomersCancelOrders))
+        if (!this.SettingExists(orderSettings, settings => settings.AllowCustomersCancelOrders))
         {
             orderSettings.AllowCustomersCancelOrders = true;
-            settingService.SaveSetting(orderSettings, settings => settings.AllowCustomersCancelOrders);
+            this.SaveSetting(orderSettings, settings => settings.AllowCustomersCancelOrders);
         }
     }
 

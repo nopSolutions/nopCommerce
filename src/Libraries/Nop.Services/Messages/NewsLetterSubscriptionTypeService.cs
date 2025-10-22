@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Domain.Messages;
 using Nop.Data;
-using Nop.Services.Catalog;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Messages;

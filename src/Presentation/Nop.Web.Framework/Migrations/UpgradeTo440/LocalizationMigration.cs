@@ -1,8 +1,6 @@
 ﻿using FluentMigrator;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440;
@@ -16,11 +14,8 @@ public class LocalizationMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        //do not use DI, because it produces exception on the installation process
-        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-
-        //use localizationService to add, update and delete localization resources
-        localizationService.DeleteLocaleResources(new List<string>
+        //add, update and delete localization resources
+        this.DeleteLocaleResources(new List<string>
         {
             "Account.Fields.VatNumber.Status",
             "Account.Fields.VatNumberStatus",
@@ -158,9 +153,7 @@ public class LocalizationMigration : MigrationBase
             "Filtering.SpecificationFilter.Separator",
         });
 
-        var (languageId, languages) = this.GetLanguageData();
-
-        localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
             ["Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart"] = "Uninstall and delete all not used plugins automatically (site will be restarted)",
             ["Admin.Configuration.AppSettings"] = "App settings",
@@ -708,7 +701,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Search' page (based on prices of available products). Set price range manually if you have complex discount rules.",
             ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange"] = "'Products by tag' page. Enter price range manually",
             ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Products by tag' page (based on prices of available products). Set price range manually if you have complex discount rules.",
-        }, languageId);
+        });
 
         // rename locales
         this.RenameLocales(new Dictionary<string, string>
@@ -761,7 +754,7 @@ public class LocalizationMigration : MigrationBase
 
             //#5429
             ["Search.NoResultsText"] = "Catalog.Products.NoResult"
-        }, languages, localizationService);
+        });
     }
 
     /// <summary>Collects the DOWN migration expressions</summary>

@@ -1,4 +1,4 @@
-namespace Nop.Services.Directory;
+﻿namespace Nop.Services.Directory;
 
 /// <summary>
 /// GEO lookup service
@@ -10,12 +10,12 @@ public partial interface IGeoLookupService
     /// </summary>
     /// <param name="ipAddress">IP address</param>
     /// <returns>Country name</returns>
-    string LookupCountryIsoCode(string ipAddress);
+    Task<string> LookupCountryIsoCodeAsync(string ipAddress);
 
     /// <summary>
     /// Get country name
     /// </summary>
     /// <param name="ipAddress">IP address</param>
     /// <returns>Country name</returns>
-    string LookupCountryName(string ipAddress);
+    Task<string> LookupCountryNameAsync(string ipAddress);
 }

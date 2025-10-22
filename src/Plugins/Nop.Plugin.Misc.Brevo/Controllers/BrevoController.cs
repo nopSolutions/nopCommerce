@@ -211,8 +211,8 @@ public class BrevoController : BasePluginController
             if (partnerSet)
             {
                 brevoSettings.PartnerValueSet = true;
-                _settingService.SaveSetting(brevoSettings, settings => settings.PartnerValueSet, clearCache: false);
-                _settingService.ClearCache();
+                await _settingService.SaveSettingAsync(brevoSettings, settings => settings.PartnerValueSet, clearCache: false);
+                await _settingService.ClearCacheAsync();
             }
         }
     }

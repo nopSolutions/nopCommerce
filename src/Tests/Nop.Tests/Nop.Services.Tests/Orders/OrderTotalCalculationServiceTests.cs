@@ -145,16 +145,14 @@ public class OrderTotalCalculationServiceTests : ServiceTest
     [TearDown]
     public async Task TearDown()
     {
-        var settingService = GetService<ISettingService>();
-
         var shippingSettings = GetService<ShippingSettings>();
         shippingSettings.ActiveShippingRateComputationMethodSystemNames.Clear();
 
         _taxSettings.PaymentMethodAdditionalFeeIsTaxable = false;
         _taxSettings.ActiveTaxProviderSystemName = string.Empty;
         _taxSettings.ShippingIsTaxable = false;
-        await settingService.SaveSettingAsync(shippingSettings);
-        await settingService.SaveSettingAsync(_taxSettings);
+        await _settingService.SaveSettingAsync(shippingSettings);
+        await _settingService.SaveSettingAsync(_taxSettings);
 
         var product = await _productService.GetProductBySkuAsync("FR_451_RB");
         product.AdditionalShippingCharge = 0M;

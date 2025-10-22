@@ -217,22 +217,6 @@ public partial class DefaultLogger : ILogger
     }
 
     /// <summary>
-    /// Inserts a log item
-    /// </summary>
-    /// <param name="logLevel">Log level</param>
-    /// <param name="shortMessage">The short message</param>
-    /// <param name="fullMessage">The full message</param>
-    /// <param name="customer">The customer to associate log record with</param>
-    public virtual void InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
-    {
-        //check ignore word/phrase list?
-        if (IgnoreLog(shortMessage) || IgnoreLog(fullMessage))
-            return;
-        
-        _logRepository.Insert(PrepareLog(logLevel, shortMessage, fullMessage, customer), false);
-    }
-
-    /// <summary>
     /// Information
     /// </summary>
     /// <param name="message">Message</param>
@@ -247,22 +231,6 @@ public partial class DefaultLogger : ILogger
 
         if (IsEnabled(LogLevel.Information))
             await InsertLogAsync(LogLevel.Information, message, exception?.ToString() ?? string.Empty, customer);
-    }
-
-    /// <summary>
-    /// Information
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <param name="exception">Exception</param>
-    /// <param name="customer">Customer</param>
-    public virtual void Information(string message, Exception exception = null, Customer customer = null)
-    {
-        //don't log thread abort exception
-        if (exception is ThreadAbortException)
-            return;
-
-        if (IsEnabled(LogLevel.Information))
-            InsertLog(LogLevel.Information, message, exception?.ToString() ?? string.Empty, customer);
     }
 
     /// <summary>
@@ -283,22 +251,6 @@ public partial class DefaultLogger : ILogger
     }
 
     /// <summary>
-    /// Warning
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <param name="exception">Exception</param>
-    /// <param name="customer">Customer</param>
-    public virtual void Warning(string message, Exception exception = null, Customer customer = null)
-    {
-        //don't log thread abort exception
-        if (exception is ThreadAbortException)
-            return;
-
-        if (IsEnabled(LogLevel.Warning))
-            InsertLog(LogLevel.Warning, message, exception?.ToString() ?? string.Empty, customer);
-    }
-
-    /// <summary>
     /// Error
     /// </summary>
     /// <param name="message">Message</param>
@@ -313,22 +265,6 @@ public partial class DefaultLogger : ILogger
 
         if (IsEnabled(LogLevel.Error))
             await InsertLogAsync(LogLevel.Error, message, exception?.ToString() ?? string.Empty, customer);
-    }
-
-    /// <summary>
-    /// Error
-    /// </summary>
-    /// <param name="message">Message</param>
-    /// <param name="exception">Exception</param>
-    /// <param name="customer">Customer</param>
-    public virtual void Error(string message, Exception exception = null, Customer customer = null)
-    {
-        //don't log thread abort exception
-        if (exception is ThreadAbortException)
-            return;
-
-        if (IsEnabled(LogLevel.Error))
-            InsertLog(LogLevel.Error, message, exception?.ToString() ?? string.Empty, customer);
     }
 
     #endregion

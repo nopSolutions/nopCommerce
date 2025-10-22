@@ -75,45 +75,6 @@ public partial class SettingService : ISettingService
     }
 
     /// <summary>
-    /// Gets all settings
-    /// </summary>
-    /// <returns>
-    /// Settings
-    /// </returns>
-    protected virtual IDictionary<string, IList<Setting>> GetAllSettingsDictionary()
-    {
-        return _staticCacheManager.Get(NopSettingsDefaults.SettingsAllAsDictionaryCacheKey, () =>
-        {
-            var settings = GetAllSettings();
-
-            var dictionary = new Dictionary<string, IList<Setting>>();
-            foreach (var s in settings)
-            {
-                var resourceName = s.Name.ToLowerInvariant();
-                var settingForCaching = new Setting
-                {
-                    Id = s.Id,
-                    Name = s.Name,
-                    Value = s.Value,
-                    StoreId = s.StoreId
-                };
-                if (!dictionary.TryGetValue(resourceName, out var value))
-                    //first setting
-                    dictionary.Add(resourceName, new List<Setting>
-                    {
-                        settingForCaching
-                    });
-                else
-                    //already added
-                    //most probably it's the setting with the same name but for some certain store (storeId > 0)
-                    value.Add(settingForCaching);
-            }
-
-            return dictionary;
-        });
-    }
-
-    /// <summary>
     /// Set setting value
     /// </summary>
     /// <param name="type">Type</param>
@@ -151,43 +112,6 @@ public partial class SettingService : ISettingService
         }
     }
 
-    /// <summary>
-    /// Set setting value
-    /// </summary>
-    /// <param name="type">Type</param>
-    /// <param name="key">Key</param>
-    /// <param name="value">Value</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-    protected virtual void SetSetting(Type type, string key, object value, int storeId = 0, bool clearCache = true)
-    {
-        ArgumentNullException.ThrowIfNull(key);
-        key = key.Trim().ToLowerInvariant();
-        var valueStr = TypeDescriptor.GetConverter(type).ConvertToInvariantString(value);
-
-        var allSettings = GetAllSettingsDictionary();
-        var settingForCaching = allSettings.TryGetValue(key, out var settings) ?
-            settings.FirstOrDefault(x => x.StoreId == storeId) : null;
-        if (settingForCaching != null)
-        {
-            //update
-            var setting = GetSettingById(settingForCaching.Id);
-            setting.Value = valueStr;
-            UpdateSetting(setting, clearCache);
-        }
-        else
-        {
-            //insert
-            var setting = new Setting
-            {
-                Name = key,
-                Value = valueStr,
-                StoreId = storeId
-            };
-            InsertSetting(setting, clearCache);
-        }
-    }
-
     #endregion
 
     #region Methods
@@ -208,20 +132,6 @@ public partial class SettingService : ISettingService
     }
 
     /// <summary>
-    /// Adds a setting
-    /// </summary>
-    /// <param name="setting">Setting</param>
-    /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-    public virtual void InsertSetting(Setting setting, bool clearCache = true)
-    {
-        _settingRepository.Insert(setting);
-
-        //cache
-        if (clearCache)
-            ClearCache();
-    }
-
-    /// <summary>
     /// Updates a setting
     /// </summary>
     /// <param name="setting">Setting</param>
@@ -239,22 +149,6 @@ public partial class SettingService : ISettingService
     }
 
     /// <summary>
-    /// Updates a setting
-    /// </summary>
-    /// <param name="setting">Setting</param>
-    /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-    public virtual void UpdateSetting(Setting setting, bool clearCache = true)
-    {
-        ArgumentNullException.ThrowIfNull(setting);
-
-        _settingRepository.Update(setting);
-
-        //cache
-        if (clearCache)
-            ClearCache();
-    }
-
-    /// <summary>
     /// Deletes a setting
     /// </summary>
     /// <param name="setting">Setting</param>
@@ -265,18 +159,6 @@ public partial class SettingService : ISettingService
 
         //cache
         await ClearCacheAsync();
-    }
-
-    /// <summary>
-    /// Deletes a setting
-    /// </summary>
-    /// <param name="setting">Setting</param>
-    public virtual void DeleteSetting(Setting setting)
-    {
-        _settingRepository.Delete(setting);
-
-        //cache
-        ClearCache();
     }
 
     /// <summary>
@@ -306,18 +188,6 @@ public partial class SettingService : ISettingService
     }
 
     /// <summary>
-    /// Gets a setting by identifier
-    /// </summary>
-    /// <param name="settingId">Setting identifier</param>
-    /// <returns>
-    /// The setting
-    /// </returns>
-    public virtual Setting GetSettingById(int settingId)
-    {
-        return _settingRepository.GetById(settingId, cache => default);
-    }
-
-    /// <summary>
     /// Get setting by key
     /// </summary>
     /// <param name="key">Key</param>
@@ -333,35 +203,6 @@ public partial class SettingService : ISettingService
             return null;
 
         var settings = await GetAllSettingsDictionaryAsync();
-        key = key.Trim().ToLowerInvariant();
-        if (!settings.TryGetValue(key, out var value))
-            return null;
-
-        var settingsByKey = value;
-        var setting = settingsByKey.FirstOrDefault(x => x.StoreId == storeId);
-
-        //load shared value?
-        if (setting == null && storeId > 0 && loadSharedValueIfNotFound)
-            setting = settingsByKey.FirstOrDefault(x => x.StoreId == 0);
-
-        return setting;
-    }
-
-    /// <summary>
-    /// Get setting by key
-    /// </summary>
-    /// <param name="key">Key</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
-    /// <returns>
-    /// The setting
-    /// </returns>
-    public virtual Setting GetSetting(string key, int storeId = 0, bool loadSharedValueIfNotFound = false)
-    {
-        if (string.IsNullOrEmpty(key))
-            return null;
-
-        var settings = GetAllSettingsDictionary();
         key = key.Trim().ToLowerInvariant();
         if (!settings.TryGetValue(key, out var value))
             return null;
@@ -410,38 +251,6 @@ public partial class SettingService : ISettingService
     }
 
     /// <summary>
-    /// Get setting value by key
-    /// </summary>
-    /// <typeparam name="T">Type</typeparam>
-    /// <param name="key">Key</param>
-    /// <param name="defaultValue">Default value</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
-    /// <returns>
-    /// Setting value
-    /// </returns>
-    public virtual T GetSettingByKey<T>(string key, T defaultValue = default,
-        int storeId = 0, bool loadSharedValueIfNotFound = false)
-    {
-        if (string.IsNullOrEmpty(key))
-            return defaultValue;
-
-        var settings = GetAllSettingsDictionary();
-        key = key.Trim().ToLowerInvariant();
-        if (!settings.TryGetValue(key, out var value))
-            return defaultValue;
-
-        var settingsByKey = value;
-        var setting = settingsByKey.FirstOrDefault(x => x.StoreId == storeId);
-
-        //load shared value?
-        if (setting == null && storeId > 0 && loadSharedValueIfNotFound)
-            setting = settingsByKey.FirstOrDefault(x => x.StoreId == 0);
-
-        return setting != null ? CommonHelper.To<T>(setting.Value) : defaultValue;
-    }
-
-    /// <summary>
     /// Set setting value
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
@@ -453,19 +262,6 @@ public partial class SettingService : ISettingService
     public virtual async Task SetSettingAsync<T>(string key, T value, int storeId = 0, bool clearCache = true)
     {
         await SetSettingAsync(typeof(T), key, value, storeId, clearCache);
-    }
-
-    /// <summary>
-    /// Set setting value
-    /// </summary>
-    /// <typeparam name="T">Type</typeparam>
-    /// <param name="key">Key</param>
-    /// <param name="value">Value</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-    public virtual void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true)
-    {
-        SetSetting(typeof(T), key, value, storeId, clearCache);
     }
 
     /// <summary>
@@ -483,21 +279,6 @@ public partial class SettingService : ISettingService
                 orderby s.Name, s.StoreId
                 select s;
         }, cache => default);
-
-        return settings;
-    }
-
-    /// <summary>
-    /// Gets all settings
-    /// </summary>
-    /// <returns>
-    /// Settings
-    /// </returns>
-    public virtual IList<Setting> GetAllSettings()
-    {
-        var settings = _settingRepository.GetAll(query => from s in query
-            orderby s.Name, s.StoreId
-            select s, cache => default);
 
         return settings;
     }
@@ -525,27 +306,6 @@ public partial class SettingService : ISettingService
     }
 
     /// <summary>
-    /// Determines whether a setting exists
-    /// </summary>
-    /// <typeparam name="T">Entity type</typeparam>
-    /// <typeparam name="TPropType">Property type</typeparam>
-    /// <param name="settings">Entity</param>
-    /// <param name="keySelector">Key selector</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <returns>
-    /// The true -setting exists; false - does not exist
-    /// </returns>
-    public virtual bool SettingExists<T, TPropType>(T settings,
-        Expression<Func<T, TPropType>> keySelector, int storeId = 0)
-        where T : ISettings, new()
-    {
-        var key = GetSettingKey(settings, keySelector);
-
-        var setting = GetSettingByKey<string>(key, storeId: storeId);
-        return setting != null;
-    }
-
-    /// <summary>
     /// Load settings
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
@@ -554,16 +314,6 @@ public partial class SettingService : ISettingService
     public virtual async Task<T> LoadSettingAsync<T>(int storeId = 0) where T : ISettings, new()
     {
         return (T)await LoadSettingAsync(typeof(T), storeId);
-    }
-
-    /// <summary>
-    /// Load settings
-    /// </summary>
-    /// <typeparam name="T">Type</typeparam>
-    /// <param name="storeId">Store identifier for which settings should be loaded</param>
-    public virtual T LoadSetting<T>(int storeId = 0) where T : ISettings, new()
-    {
-        return (T)LoadSetting(typeof(T), storeId);
     }
 
     /// <summary>
@@ -588,46 +338,6 @@ public partial class SettingService : ISettingService
             var key = type.Name + "." + prop.Name;
             //load by store
             var setting = await GetSettingByKeyAsync<string>(key, storeId: storeId, loadSharedValueIfNotFound: true);
-            if (setting == null)
-                continue;
-
-            if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
-                continue;
-
-            if (!TypeDescriptor.GetConverter(prop.PropertyType).IsValid(setting))
-                continue;
-
-            var value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromInvariantString(setting);
-
-            //set property
-            prop.SetValue(settings, value, null);
-        }
-
-        return settings as ISettings;
-    }
-
-    /// <summary>
-    /// Load settings
-    /// </summary>
-    /// <param name="type">Type</param>
-    /// <param name="storeId">Store identifier for which settings should be loaded</param>
-    /// <returns>Settings</returns>
-    public virtual ISettings LoadSetting(Type type, int storeId = 0)
-    {
-        var settings = Activator.CreateInstance(type);
-
-        if (!DataSettingsManager.IsDatabaseInstalled())
-            return settings as ISettings;
-
-        foreach (var prop in type.GetProperties())
-        {
-            // get properties we can read and write to
-            if (!prop.CanRead || !prop.CanWrite)
-                continue;
-
-            var key = type.Name + "." + prop.Name;
-            //load by store
-            var setting = GetSettingByKey<string>(key, storeId: storeId, loadSharedValueIfNotFound: true);
             if (setting == null)
                 continue;
 
@@ -682,38 +392,6 @@ public partial class SettingService : ISettingService
     /// <summary>
     /// Save settings object
     /// </summary>
-    /// <typeparam name="T">Type</typeparam>
-    /// <param name="storeId">Store identifier</param>
-    /// <param name="settings">Setting instance</param>
-    public virtual void SaveSetting<T>(T settings, int storeId = 0) where T : ISettings, new()
-    {
-        /* We do not clear cache after each setting update.
-         * This behavior can increase performance because cached settings will not be cleared 
-         * and loaded from database after each update */
-        foreach (var prop in typeof(T).GetProperties())
-        {
-            // get properties we can read and write to
-            if (!prop.CanRead || !prop.CanWrite)
-                continue;
-
-            if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
-                continue;
-
-            var key = typeof(T).Name + "." + prop.Name;
-            var value = prop.GetValue(settings, null);
-            if (value != null)
-                SetSetting(prop.PropertyType, key, value, storeId, false);
-            else
-                SetSetting(key, string.Empty, storeId, false);
-        }
-
-        //and now clear cache
-        ClearCache();
-    }
-
-    /// <summary>
-    /// Save settings object
-    /// </summary>
     /// <typeparam name="T">Entity type</typeparam>
     /// <typeparam name="TPropType">Property type</typeparam>
     /// <param name="settings">Settings</param>
@@ -737,33 +415,6 @@ public partial class SettingService : ISettingService
             await SetSettingAsync(key, value, storeId, clearCache);
         else
             await SetSettingAsync(key, string.Empty, storeId, clearCache);
-    }
-
-    /// <summary>
-    /// Save settings object
-    /// </summary>
-    /// <typeparam name="T">Entity type</typeparam>
-    /// <typeparam name="TPropType">Property type</typeparam>
-    /// <param name="settings">Settings</param>
-    /// <param name="keySelector">Key selector</param>
-    /// <param name="storeId">Store ID</param>
-    /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-    public virtual void SaveSetting<T, TPropType>(T settings,
-        Expression<Func<T, TPropType>> keySelector,
-        int storeId = 0, bool clearCache = true) where T : ISettings, new()
-    {
-        if (keySelector.Body is not MemberExpression member)
-            throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
-
-        var propInfo = member.Member as PropertyInfo
-                       ?? throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
-
-        var key = GetSettingKey(settings, keySelector);
-        var value = (TPropType)propInfo.GetValue(settings, null);
-        if (value != null)
-            SetSetting(key, value, storeId, clearCache);
-        else
-            SetSetting(key, string.Empty, storeId, clearCache);
     }
 
     /// <summary>
@@ -841,14 +492,6 @@ public partial class SettingService : ISettingService
     }
 
     /// <summary>
-    /// Clear cache
-    /// </summary>
-    public virtual void ClearCache()
-    {
-        _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
-    }
-
-    /// <summary>
     /// Get setting key (stored into database)
     /// </summary>
     /// <typeparam name="TSettings">Type of settings</typeparam>
@@ -869,5 +512,6 @@ public partial class SettingService : ISettingService
 
         return key;
     }
+
     #endregion
 }

@@ -176,7 +176,7 @@ public partial class TaxService : ITaxService
             if (_taxSettings.AutomaticallyDetectCountry)
             {
                 var ipAddress = _webHelper.GetCurrentIpAddress();
-                var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
+                var countryIsoCode = await _geoLookupService.LookupCountryIsoCodeAsync(ipAddress);
                 var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(countryIsoCode);
 
                 if (country != null)

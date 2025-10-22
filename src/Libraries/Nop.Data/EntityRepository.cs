@@ -164,35 +164,6 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     }
 
     /// <summary>
-    /// Get the entity entry
-    /// </summary>
-    /// <param name="id">Entity entry identifier</param>
-    /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
-    /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="ISoftDeletedEntity"/> entities)</param>
-    /// <returns>
-    /// The entity entry
-    /// </returns>
-    public virtual TEntity GetById(int? id, Func<ICacheKeyService, CacheKey> getCacheKey = null, bool includeDeleted = true)
-    {
-        if (!id.HasValue || id == 0)
-            return null;
-
-        TEntity getEntity()
-        {
-            return AddDeletedFilter(Table, includeDeleted).FirstOrDefault(entity => entity.Id == Convert.ToInt32(id));
-        }
-
-        if (getCacheKey == null)
-            return getEntity();
-
-        //caching
-        var cacheKey = getCacheKey(_staticCacheManager)
-                       ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, id);
-
-        return _staticCacheManager.Get(cacheKey, getEntity);
-    }
-
-    /// <summary>
     /// Get entity entries by identifiers
     /// </summary>
     /// <param name="ids">Entity entry identifiers</param>
@@ -281,27 +252,6 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
         }
 
         return await GetEntitiesAsync(getAllAsync, getCacheKey);
-    }
-
-    /// <summary>
-    /// Get all entity entries
-    /// </summary>
-    /// <param name="func">Function to select entries</param>
-    /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
-    /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="Nop.Core.Domain.Common.ISoftDeletedEntity"/> entities)</param>
-    /// <returns>Entity entries</returns>
-    public virtual IList<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
-        Func<ICacheKeyService, CacheKey> getCacheKey = null, bool includeDeleted = true)
-    {
-        IList<TEntity> getAll()
-        {
-            var query = AddDeletedFilter(Table, includeDeleted);
-            query = func != null ? func(query) : query;
-
-            return query.ToList();
-        }
-
-        return GetEntities(getAll, getCacheKey);
     }
 
     /// <summary>
@@ -416,22 +366,6 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     }
 
     /// <summary>
-    /// Insert the entity entry
-    /// </summary>
-    /// <param name="entity">Entity entry</param>
-    /// <param name="publishEvent">Whether to publish event notification</param>
-    public virtual void Insert(TEntity entity, bool publishEvent = true)
-    {
-        ArgumentNullException.ThrowIfNull(entity);
-
-        _dataProvider.InsertEntity(entity);
-
-        //event notification
-        if (publishEvent)
-            _eventPublisher.EntityInserted(entity);
-    }
-
-    /// <summary>
     /// Insert entity entries
     /// </summary>
     /// <param name="entities">Entity entries</param>
@@ -451,27 +385,6 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
         //event notification
         foreach (var entity in entities)
             await _eventPublisher.EntityInsertedAsync(entity);
-    }
-
-    /// <summary>
-    /// Insert entity entries
-    /// </summary>
-    /// <param name="entities">Entity entries</param>
-    /// <param name="publishEvent">Whether to publish event notification</param>
-    public virtual void Insert(IList<TEntity> entities, bool publishEvent = true)
-    {
-        ArgumentNullException.ThrowIfNull(entities);
-
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-        _dataProvider.BulkInsertEntities(entities);
-        transaction.Complete();
-
-        if (!publishEvent)
-            return;
-
-        //event notification
-        foreach (var entity in entities)
-            _eventPublisher.EntityInserted(entity);
     }
 
     /// <summary>
@@ -506,22 +419,6 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     }
 
     /// <summary>
-    /// Update the entity entry
-    /// </summary>
-    /// <param name="entity">Entity entry</param>
-    /// <param name="publishEvent">Whether to publish event notification</param>
-    public virtual void Update(TEntity entity, bool publishEvent = true)
-    {
-        ArgumentNullException.ThrowIfNull(entity);
-
-        _dataProvider.UpdateEntity(entity);
-
-        //event notification
-        if (publishEvent)
-            _eventPublisher.EntityUpdated(entity);
-    }
-
-    /// <summary>
     /// Update entity entries
     /// </summary>
     /// <param name="entities">Entity entries</param>
@@ -542,28 +439,6 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
 
         foreach (var entity in entities)
             await _eventPublisher.EntityUpdatedAsync(entity);
-    }
-
-    /// <summary>
-    /// Update entity entries
-    /// </summary>
-    /// <param name="entities">Entity entries</param>
-    /// <param name="publishEvent">Whether to publish event notification</param>
-    public virtual void Update(IList<TEntity> entities, bool publishEvent = true)
-    {
-        ArgumentNullException.ThrowIfNull(entities);
-
-        if (!entities.Any())
-            return;
-
-        _dataProvider.UpdateEntities(entities);
-
-        //event notification
-        if (!publishEvent)
-            return;
-
-        foreach (var entity in entities)
-            _eventPublisher.EntityUpdated(entity);
     }
 
     /// <summary>
@@ -591,32 +466,6 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
         //event notification
         if (publishEvent)
             await _eventPublisher.EntityDeletedAsync(entity);
-    }
-
-    /// <summary>
-    /// Delete the entity entry
-    /// </summary>
-    /// <param name="entity">Entity entry</param>
-    /// <param name="publishEvent">Whether to publish event notification</param>
-    public virtual void Delete(TEntity entity, bool publishEvent = true)
-    {
-        ArgumentNullException.ThrowIfNull(entity);
-
-        switch (entity)
-        {
-            case ISoftDeletedEntity softDeletedEntity:
-                softDeletedEntity.Deleted = true;
-                _dataProvider.UpdateEntity(entity);
-                break;
-
-            default:
-                _dataProvider.DeleteEntity(entity);
-                break;
-        }
-
-        //event notification
-        if (publishEvent)
-            _eventPublisher.EntityDeleted(entity);
     }
 
     /// <summary>
@@ -655,40 +504,6 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     }
 
     /// <summary>
-    /// Delete entity entries
-    /// </summary>
-    /// <param name="entities">Entity entries</param>
-    /// <param name="publishEvent">Whether to publish event notification</param>
-    public virtual void Delete(IList<TEntity> entities, bool publishEvent = true)
-    {
-        ArgumentNullException.ThrowIfNull(entities);
-
-        if (!entities.Any())
-            return;
-
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-
-        if (typeof(TEntity).GetInterface(nameof(ISoftDeletedEntity)) == null)
-            _dataProvider.BulkDeleteEntities(entities);
-        else
-        {
-            foreach (var entity in entities)
-                ((ISoftDeletedEntity)entity).Deleted = true;
-
-            _dataProvider.UpdateEntities(entities);
-        }
-
-        transaction.Complete();
-
-        //event notification
-        if (!publishEvent)
-            return;
-
-        foreach (var entity in entities)
-            _eventPublisher.EntityDeleted(entity);
-    }
-
-    /// <summary>
     /// Delete entity entries by the passed predicate
     /// </summary>
     /// <param name="predicate">A function to test each element for a condition</param>
@@ -702,24 +517,6 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
 
         using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         var countDeletedRecords = await _dataProvider.BulkDeleteEntitiesAsync(predicate);
-        transaction.Complete();
-
-        return countDeletedRecords;
-    }
-
-    /// <summary>
-    /// Delete entity entries by the passed predicate
-    /// </summary>
-    /// <param name="predicate">A function to test each element for a condition</param>
-    /// <returns>
-    /// The number of deleted records
-    /// </returns>
-    public virtual int Delete(Expression<Func<TEntity, bool>> predicate)
-    {
-        ArgumentNullException.ThrowIfNull(predicate);
-
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-        var countDeletedRecords = _dataProvider.BulkDeleteEntities(predicate);
         transaction.Complete();
 
         return countDeletedRecords;

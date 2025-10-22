@@ -24,8 +24,8 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
+using Nop.Services.Helpers;
 using Nop.Services.Installation;
-using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Media.RoxyFileman;
@@ -433,11 +433,11 @@ public static class ApplicationBuilderExtensions
             if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
-            var languageService = EngineContext.Current.Resolve<ILanguageService>();
             var localizationSettings = EngineContext.Current.Resolve<LocalizationSettings>();
+            var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
 
             //prepare supported cultures
-            var cultures = languageService
+            var cultures = syncCodeHelper
                 .GetAllLanguages()
                 .OrderBy(language => language.DisplayOrder)
                 .Select(language => new CultureInfo(language.LanguageCulture))

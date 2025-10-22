@@ -85,21 +85,7 @@ public partial class StoreService : IStoreService
             return from s in query orderby s.DisplayOrder, s.Id select s;
         }, _ => default, includeDeleted: false);
     }
-
-    /// <summary>
-    /// Gets all stores
-    /// </summary>
-    /// <returns>
-    /// The stores
-    /// </returns>
-    public virtual IList<Store> GetAllStores()
-    {
-        return _storeRepository.GetAll(query =>
-        {
-            return from s in query orderby s.DisplayOrder, s.Id select s;
-        }, _ => default, includeDeleted: false);
-    }
-
+    
     /// <summary>
     /// Gets a store 
     /// </summary>
@@ -132,16 +118,7 @@ public partial class StoreService : IStoreService
     {
         await _storeRepository.UpdateAsync(store);
     }
-
-    /// <summary>
-    /// Updates the store
-    /// </summary>
-    /// <param name="store">Store</param>
-    public virtual void UpdateStore(Store store)
-    {
-        _storeRepository.Update(store);
-    }
-
+    
     /// <summary>
     /// Indicates whether a store contains a specified host
     /// </summary>

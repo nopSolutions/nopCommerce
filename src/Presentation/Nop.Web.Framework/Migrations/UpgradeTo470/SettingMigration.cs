@@ -4,10 +4,9 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Configuration;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo470;
 
@@ -20,62 +19,59 @@ public class SettingMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        //do not use DI, because it produces exception on the installation process
-        var settingService = EngineContext.Current.Resolve<ISettingService>();
-
-        var customerSettings = settingService.LoadSetting<CustomerSettings>();
-        if (!settingService.SettingExists(customerSettings, settings => settings.PasswordMaxLength))
+        var customerSettings = this.LoadSetting<CustomerSettings>();
+        if (!this.SettingExists(customerSettings, settings => settings.PasswordMaxLength))
         {
             customerSettings.PasswordMaxLength = 64;
-            settingService.SaveSetting(customerSettings, settings => settings.PasswordMaxLength);
+            this.SaveSetting(customerSettings, settings => settings.PasswordMaxLength);
         }
 
-        if (!settingService.SettingExists(customerSettings, settings => settings.DefaultCountryId))
+        if (!this.SettingExists(customerSettings, settings => settings.DefaultCountryId))
         {
             customerSettings.DefaultCountryId = null;
-            settingService.SaveSetting(customerSettings, settings => settings.DefaultCountryId);
+            this.SaveSetting(customerSettings, settings => settings.DefaultCountryId);
         }
 
-        var securitySettings = settingService.LoadSetting<SecuritySettings>();
-        if (!settingService.SettingExists(securitySettings, settings => settings.UseAesEncryptionAlgorithm))
+        var securitySettings = this.LoadSetting<SecuritySettings>();
+        if (!this.SettingExists(securitySettings, settings => settings.UseAesEncryptionAlgorithm))
         {
             securitySettings.UseAesEncryptionAlgorithm = false;
-            settingService.SaveSetting(securitySettings, settings => settings.UseAesEncryptionAlgorithm);
+            this.SaveSetting(securitySettings, settings => settings.UseAesEncryptionAlgorithm);
         }
 
-        if (!settingService.SettingExists(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword))
+        if (!this.SettingExists(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword))
         {
             securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword = true;
-            settingService.SaveSetting(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword);
+            this.SaveSetting(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword);
         }
 
         //#7053
-        if (!settingService.SettingExists(securitySettings, settings => settings.LogHoneypotDetection))
+        if (!this.SettingExists(securitySettings, settings => settings.LogHoneypotDetection))
         {
             securitySettings.LogHoneypotDetection = true;
-            settingService.SaveSetting(securitySettings, settings => settings.LogHoneypotDetection);
+            this.SaveSetting(securitySettings, settings => settings.LogHoneypotDetection);
         }
 
-        var addressSettings = settingService.LoadSetting<AddressSettings>();
-        if (!settingService.SettingExists(addressSettings, settings => settings.DefaultCountryId))
+        var addressSettings = this.LoadSetting<AddressSettings>();
+        if (!this.SettingExists(addressSettings, settings => settings.DefaultCountryId))
         {
             addressSettings.DefaultCountryId = null;
-            settingService.SaveSetting(addressSettings, settings => settings.DefaultCountryId);
+            this.SaveSetting(addressSettings, settings => settings.DefaultCountryId);
         }
 
-        var captchaSettings = settingService.LoadSetting<CaptchaSettings>();
+        var captchaSettings = this.LoadSetting<CaptchaSettings>();
         //#6682
-        if (!settingService.SettingExists(captchaSettings, settings => settings.ShowOnNewsletterPage))
+        if (!this.SettingExists(captchaSettings, settings => settings.ShowOnNewsletterPage))
         {
             captchaSettings.ShowOnNewsletterPage = false;
-            settingService.SaveSetting(captchaSettings, settings => settings.ShowOnNewsletterPage);
+            this.SaveSetting(captchaSettings, settings => settings.ShowOnNewsletterPage);
         }
 
-        var taxSettings = settingService.LoadSetting<TaxSettings>();
-        if (!settingService.SettingExists(taxSettings, settings => settings.AutomaticallyDetectCountry))
+        var taxSettings = this.LoadSetting<TaxSettings>();
+        if (!this.SettingExists(taxSettings, settings => settings.AutomaticallyDetectCountry))
         {
             taxSettings.AutomaticallyDetectCountry = true;
-            settingService.SaveSetting(taxSettings, settings => settings.AutomaticallyDetectCountry);
+            this.SaveSetting(taxSettings, settings => settings.AutomaticallyDetectCountry);
         }
 
         //#6716
@@ -93,7 +89,7 @@ public class SettingMigration : MigrationBase
             "/boards/postvote", "/product/estimateshipping/*", "/shoppingcart/checkoutattributechange/*"
         };
 
-        var robotsTxtSettings = settingService.LoadSetting<RobotsTxtSettings>();
+        var robotsTxtSettings = this.LoadSetting<RobotsTxtSettings>();
 
         foreach (var path in newDisallowPaths)
         {
@@ -103,28 +99,28 @@ public class SettingMigration : MigrationBase
             robotsTxtSettings.DisallowPaths.Add(path);
         }
 
-        settingService.SaveSetting(robotsTxtSettings, settings => settings.DisallowPaths);
+        this.SaveSetting(robotsTxtSettings, settings => settings.DisallowPaths);
 
         //#6853
-        if (!settingService.SettingExists(customerSettings, settings => settings.NeutralGenderEnabled))
+        if (!this.SettingExists(customerSettings, settings => settings.NeutralGenderEnabled))
         {
             customerSettings.NeutralGenderEnabled = false;
-            settingService.SaveSetting(customerSettings, settings => settings.NeutralGenderEnabled);
+            this.SaveSetting(customerSettings, settings => settings.NeutralGenderEnabled);
         }
 
         //#6891
-        if (!settingService.SettingExists(customerSettings, settings => settings.RequiredReLoginAfterPasswordChange))
+        if (!this.SettingExists(customerSettings, settings => settings.RequiredReLoginAfterPasswordChange))
         {
             customerSettings.RequiredReLoginAfterPasswordChange = false;
-            settingService.SaveSetting(customerSettings, settings => settings.RequiredReLoginAfterPasswordChange);
+            this.SaveSetting(customerSettings, settings => settings.RequiredReLoginAfterPasswordChange);
         }
 
         //#7064
-        var catalogSettings = settingService.LoadSetting<CatalogSettings>();
-        if (!settingService.SettingExists(catalogSettings, settings => settings.UseStandardSearchWhenSearchProviderThrowsException))
+        var catalogSettings = this.LoadSetting<CatalogSettings>();
+        if (!this.SettingExists(catalogSettings, settings => settings.UseStandardSearchWhenSearchProviderThrowsException))
         {
             catalogSettings.UseStandardSearchWhenSearchProviderThrowsException = true;
-            settingService.SaveSetting(catalogSettings, settings => settings.UseStandardSearchWhenSearchProviderThrowsException);
+            this.SaveSetting(catalogSettings, settings => settings.UseStandardSearchWhenSearchProviderThrowsException);
         }
 
     }

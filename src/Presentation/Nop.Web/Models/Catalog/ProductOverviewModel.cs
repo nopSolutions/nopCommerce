@@ -1,7 +1,6 @@
 ﻿using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Models;
 using Nop.Web.Models.Media;
-using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Models.Catalog;
 

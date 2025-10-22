@@ -41,7 +41,7 @@ public partial class GeoLookupService : IGeoLookupService
     /// </summary>
     /// <param name="ipAddress">IP address</param>
     /// <returns>Information</returns>
-    protected virtual CountryResponse GetInformation(string ipAddress)
+    protected virtual async Task<CountryResponse> GetInformationAsync(string ipAddress)
     {
         if (string.IsNullOrEmpty(ipAddress))
             return null;
@@ -66,7 +66,7 @@ public partial class GeoLookupService : IGeoLookupService
         catch (Exception exc)
         {
             //do not throw exceptions
-            _logger.Warning("Cannot load MaxMind record", exc);
+            await _logger.WarningAsync("Cannot load MaxMind record", exc);
             return null;
         }
     }
@@ -80,13 +80,11 @@ public partial class GeoLookupService : IGeoLookupService
     /// </summary>
     /// <param name="ipAddress">IP address</param>
     /// <returns>Country name</returns>
-    public virtual string LookupCountryIsoCode(string ipAddress)
+    public virtual async Task<string> LookupCountryIsoCodeAsync(string ipAddress)
     {
-        var response = GetInformation(ipAddress);
-        if (response?.Country != null)
-            return response.Country.IsoCode;
+        var response = await GetInformationAsync(ipAddress);
 
-        return string.Empty;
+        return response?.Country != null ? response.Country.IsoCode : string.Empty;
     }
 
     /// <summary>
@@ -94,13 +92,11 @@ public partial class GeoLookupService : IGeoLookupService
     /// </summary>
     /// <param name="ipAddress">IP address</param>
     /// <returns>Country name</returns>
-    public virtual string LookupCountryName(string ipAddress)
+    public virtual async Task<string> LookupCountryNameAsync(string ipAddress)
     {
-        var response = GetInformation(ipAddress);
-        if (response?.Country != null)
-            return response.Country.Name;
+        var response = await GetInformationAsync(ipAddress);
 
-        return string.Empty;
+        return response?.Country != null ? response.Country.Name : string.Empty;
     }
 
     #endregion

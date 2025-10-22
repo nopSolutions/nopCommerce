@@ -126,23 +126,12 @@ public class EntityRepositoryTests : BaseNopTest
 
         var taskRez = await productRepository.GetAllAsync(Task.FromResult);
         taskRez.Count.Should().BeGreaterThan(0);
-
-        var rez = productRepository.GetAll(query => query, manager => _cacheKey);
-        rez.Count.Should().BeGreaterThan(0);
-
-        rez = productRepository.GetAll(query => query);
-        rez.Count.Should().BeGreaterThan(0);
-
-        asyncRez.Count.Should().Be(rez.Count);
-        rez.Count.Should().Be(taskRez.Count);
-
-        rez = await productRepository.GetAllAsync(Task.FromResult, manager => Task.FromResult(_cacheKey));
-        rez.Count.Should().BeGreaterThan(0);
-        var fullCount = rez.Count;
+        
+        var fullCount = asyncRez.Count;
 
         await _cacheManager.RemoveAsync(_cacheKey);
 
-        rez = await productRepository.GetAllAsync(Task.FromResult, manager => Task.FromResult(default(CacheKey)), false);
+        var rez = await productRepository.GetAllAsync(Task.FromResult, manager => Task.FromResult(default(CacheKey)), false);
         rez.Count.Should().BeGreaterThan(0);
         rez.Count.Should().BeLessThan(fullCount);
     }
