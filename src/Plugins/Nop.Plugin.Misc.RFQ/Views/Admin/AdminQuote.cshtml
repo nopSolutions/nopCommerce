@@ -40,8 +40,6 @@
                 <button type="submit"
                         name="sendQuote"
                         id="send-request"
-                        formaction="@Url.Action("SendQuote")"
-                        formmethod="post"
                         class="btn btn-info">
                     <i class="far fa-share-square"></i>
                     @T("Plugins.Misc.RFQ.SendQuote")
@@ -52,8 +50,6 @@
                 <button type="submit"
                         id="delete-quote"
                         name="deleteQuote"
-                        formaction="@Url.Action("DeleteQuote")"
-                        formmethod="post"
                         class="btn btn-danger">
                     <i class="far fa-trash-alt"></i>
                     @T("Admin.Common.Delete")
