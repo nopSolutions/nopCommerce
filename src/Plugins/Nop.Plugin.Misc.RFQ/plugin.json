@@ -2,7 +2,7 @@
   "Group": "Misc",
   "FriendlyName": "\"Request for quote\" and \"Quotes\"",
   "SystemName": "Misc.RFQ",
-  "Version": "5.00.1",
+  "Version": "5.00.2",
   "SupportedVersions": ["5.00"],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,
