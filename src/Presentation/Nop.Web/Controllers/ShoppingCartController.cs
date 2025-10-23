@@ -1839,8 +1839,15 @@ public partial class ShoppingCartController : BasePublicController
         var product = await _productService.GetProductByIdAsync(productId);
         if (product != null)
         {
-            var shoppingCartItem = await _shoppingCartService.FindShoppingCartItemInTheCartAsync(shoppingCarts, ShoppingCartType.Wishlist, product);
-            await MoveToCustomWishlist(shoppingCartItem.Id, wishlistId);
+            var shoppingCartItem = shoppingCarts
+                .Where(sci => sci.ProductId == product.Id
+                    && sci.ShoppingCartType == ShoppingCartType.Wishlist
+                    && sci.CustomWishlistId == null)
+                .OrderByDescending(sci => sci.UpdatedOnUtc)
+                .FirstOrDefault();
+
+            if (shoppingCartItem != null)
+                await MoveToCustomWishlist(shoppingCartItem.Id, wishlistId);
         }
         var redirectUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST, new { list = wishlistId });
         var customWishlist = await _customWishlistService.GetCustomWishlistByIdAsync(wishlistId);
