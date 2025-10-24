@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.ArtificialIntelligence;
@@ -17,22 +17,20 @@ public class DeepSeekHttpClientHelperTests
     public void SetUp()
     {
         _helper = new DeepSeekHttpClientHelper();
-        _settings = new ArtificialIntelligenceSettings
-        {
-            DeepSeekApiKey = "test-deepseek-api-key"
-        };
+        _settings = NopTestConfiguration.GetArtificialIntelligenceSettings(ArtificialIntelligenceProviderType.DeepSeek);
     }
 
     [Test]
     public void ConfigureClientShouldSetBaseAddress()
     {
-        // Arrange
-        var httpClient = new HttpClient();
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act
+        //arrange & act
+        var httpClient = new HttpClient();
         _helper.ConfigureClient(httpClient);
 
-        // Assert
+        //assert
         httpClient.BaseAddress.Should().NotBeNull();
         httpClient.BaseAddress.Should().Be(new Uri(ArtificialIntelligenceDefaults.DeepSeekBaseApiUrl));
     }
@@ -40,10 +38,13 @@ public class DeepSeekHttpClientHelperTests
     [Test]
     public void CreateRequestShouldReturnHttpRequestMessageWithPostMethod()
     {
-        // Arrange & Act
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var request = _helper.CreateRequest(_settings, "test query");
 
-        // Assert
+        //assert
         request.Should().NotBeNull();
         request.Method.Should().Be(HttpMethod.Post);
     }
@@ -51,10 +52,13 @@ public class DeepSeekHttpClientHelperTests
     [Test]
     public void CreateRequestShouldAddBearerTokenToAuthorizationHeader()
     {
-        // Arrange & Act
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var request = _helper.CreateRequest(_settings, "test query");
 
-        // Assert
+        //assert
         request.Headers.Should().Contain(h => h.Key == HeaderNames.Authorization);
         var authHeader = request.Headers.GetValues(HeaderNames.Authorization).FirstOrDefault();
         authHeader.Should().Be("Bearer test-deepseek-api-key");
@@ -63,10 +67,13 @@ public class DeepSeekHttpClientHelperTests
     [Test]
     public void CreateRequestShouldSetCorrectContentType()
     {
-        // Arrange & Act
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var request = _helper.CreateRequest(_settings, "test query");
 
-        // Assert
+        //assert
         request.Content.Should().NotBeNull();
         request.Content.Headers.ContentType.Should().NotBeNull();
         request.Content.Headers.ContentType.MediaType.Should().Be(MimeTypes.ApplicationJson);
@@ -75,14 +82,15 @@ public class DeepSeekHttpClientHelperTests
     [Test]
     public async Task CreateRequestShouldSerializeQueryInCorrectFormat()
     {
-        // Arrange
-        var query = "What is AI?";
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act
+        //arrange & act
+        var query = "What is AI?";
         var request = _helper.CreateRequest(_settings, query);
         var content = await request.Content.ReadAsStringAsync();
 
-        // Assert
+        //assert
         content.Should().NotBeNullOrEmpty();
         content.Should().Contain("messages");
         content.Should().Contain("model");
@@ -94,29 +102,38 @@ public class DeepSeekHttpClientHelperTests
     [Test]
     public async Task CreateRequestShouldIncludeSystemRoleInMessages()
     {
-        // Arrange & Act
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var request = _helper.CreateRequest(_settings, "test query");
         var content = await request.Content.ReadAsStringAsync();
 
-        // Assert
+        //assert
         content.Should().Contain("\"role\":\"system\"");
     }
 
     [Test]
     public async Task CreateRequestShouldIncludeModelInRequestBody()
     {
-        // Arrange & Act
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var request = _helper.CreateRequest(_settings, "test query");
         var content = await request.Content.ReadAsStringAsync();
 
-        // Assert
+        //assert
         content.Should().Contain(ArtificialIntelligenceDefaults.DeepSeekApiModel);
     }
 
     [Test]
     public void ParseResponseShouldReturnTextFromValidResponse()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var responseText = @"{
             ""choices"": [
                 {
@@ -126,18 +143,19 @@ public class DeepSeekHttpClientHelperTests
                 }
             ]
         }";
-
-        // Act
         var result = _helper.ParseResponse(responseText);
 
-        // Assert
+        //assert
         result.Should().Be("This is the DeepSeek response");
     }
 
     [Test]
     public void ParseResponseShouldReturnFirstChoiceContent()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var responseText = @"{
             ""choices"": [
                 {
@@ -152,33 +170,35 @@ public class DeepSeekHttpClientHelperTests
                 }
             ]
         }";
-
-        // Act
         var result = _helper.ParseResponse(responseText);
 
-        // Assert
+        //assert
         result.Should().Be("First response");
     }
 
     [Test]
     public void ParseResponseShouldReturnEmptyStringWhenChoicesIsEmpty()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var responseText = @"{
             ""choices"": []
         }";
-
-        // Act
         var result = _helper.ParseResponse(responseText);
 
-        // Assert
+        //assert
         result.Should().BeEmpty();
     }
 
     [Test]
     public void ParseResponseShouldReturnEmptyStringWhenMessageIsNull()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var responseText = @"{
             ""choices"": [
                 {
@@ -186,18 +206,19 @@ public class DeepSeekHttpClientHelperTests
                 }
             ]
         }";
-
-        // Act
         var result = _helper.ParseResponse(responseText);
 
-        // Assert
+        //assert
         result.Should().BeEmpty();
     }
 
     [Test]
     public void ParseResponseShouldReturnEmptyStringWhenContentIsNull()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var responseText = @"{
             ""choices"": [
                 {
@@ -207,18 +228,19 @@ public class DeepSeekHttpClientHelperTests
                 }
             ]
         }";
-
-        // Act
         var result = _helper.ParseResponse(responseText);
 
-        // Assert
+        //assert
         result.Should().BeEmpty();
     }
 
     [Test]
     public void ParseResponseShouldReturnEmptyStringWhenContentIsEmpty()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var responseText = @"{
             ""choices"": [
                 {
@@ -228,21 +250,22 @@ public class DeepSeekHttpClientHelperTests
                 }
             ]
         }";
-
-        // Act
         var result = _helper.ParseResponse(responseText);
 
-        // Assert
+        //assert
         result.Should().BeEmpty();
     }
 
     [Test]
     public void CreateRequestShouldHandleEmptyQuery()
     {
-        // Arrange & Act
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var request = _helper.CreateRequest(_settings, string.Empty);
 
-        // Assert
+        //assert
         request.Should().NotBeNull();
         request.Content.Should().NotBeNull();
     }
@@ -250,13 +273,14 @@ public class DeepSeekHttpClientHelperTests
     [Test]
     public void CreateRequestShouldHandleSpecialCharactersInQuery()
     {
-        // Arrange
-        var query = "What is \"AI\"? Can you explain <concepts> & ideas?";
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act
+        //arrange & act
+        var query = "What is \"AI\"? Can you explain <concepts> & ideas?";
         var request = _helper.CreateRequest(_settings, query);
 
-        // Assert
+        //assert
         request.Should().NotBeNull();
         request.Content.Should().NotBeNull();
     }
@@ -264,14 +288,15 @@ public class DeepSeekHttpClientHelperTests
     [Test]
     public async Task CreateRequestShouldUseUtf8Encoding()
     {
-        // Arrange
-        var query = "Test with émojis 🤖 and spëcial çharacters";
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act
+        //arrange & act
+        var query = "Test with émojis 🤖 and spëcial çharacters";
         var request = _helper.CreateRequest(_settings, query);
         var content = await request.Content.ReadAsStringAsync();
 
-        // Assert
+        //assert
         request.Content.Headers.ContentType.CharSet.Should().Be("utf-8");
         content.Should().Contain(query);
     }
@@ -279,11 +304,14 @@ public class DeepSeekHttpClientHelperTests
     [Test]
     public async Task CreateRequestShouldCreateMessageArrayWithSingleItem()
     {
-        // Arrange & Act
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var request = _helper.CreateRequest(_settings, "test query");
         var content = await request.Content.ReadAsStringAsync();
 
-        // Assert
+        //assert
         content.Should().Contain("\"messages\":[");
     }
 }

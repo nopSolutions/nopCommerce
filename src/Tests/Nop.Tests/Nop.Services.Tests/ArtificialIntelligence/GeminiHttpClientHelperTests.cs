@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core;
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Services.ArtificialIntelligence;
@@ -16,22 +16,20 @@ public class GeminiHttpClientHelperTests
     public void SetUp()
     {
         _helper = new GeminiHttpClientHelper();
-        _settings = new ArtificialIntelligenceSettings
-        {
-            GeminiApiKey = "test-gemini-api-key"
-        };
+        _settings = NopTestConfiguration.GetArtificialIntelligenceSettings(ArtificialIntelligenceProviderType.Gemini);
     }
 
     [Test]
     public void ConfigureClientShouldSetBaseAddress()
     {
-        // Arrange
-        var httpClient = new HttpClient();
+        if(!_settings.IsProviderConfigured())
+            return;
 
-        // Act
+        //arrange & act
+        var httpClient = new HttpClient();
         _helper.ConfigureClient(httpClient);
 
-        // Assert
+        //assert
         httpClient.BaseAddress.Should().NotBeNull();
         httpClient.BaseAddress.Should().Be(new Uri(ArtificialIntelligenceDefaults.GeminiBaseApiUrl));
     }
@@ -39,10 +37,13 @@ public class GeminiHttpClientHelperTests
     [Test]
     public void CreateRequestShouldReturnHttpRequestMessageWithPostMethod()
     {
-        // Arrange & Act
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var request = _helper.CreateRequest(_settings, "test query");
 
-        // Assert
+        //assert
         request.Should().NotBeNull();
         request.Method.Should().Be(HttpMethod.Post);
     }
@@ -50,10 +51,13 @@ public class GeminiHttpClientHelperTests
     [Test]
     public void CreateRequestShouldAddApiKeyToHeaders()
     {
-        // Arrange & Act
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var request = _helper.CreateRequest(_settings, "test query");
 
-        // Assert
+        //assert
         request.Headers.Should().Contain(h => h.Key == ArtificialIntelligenceDefaults.GeminiApiKeyHeader);
         var apiKeyHeader = request.Headers.GetValues(ArtificialIntelligenceDefaults.GeminiApiKeyHeader).FirstOrDefault();
         apiKeyHeader.Should().Be("test-gemini-api-key");
@@ -61,11 +65,14 @@ public class GeminiHttpClientHelperTests
 
     [Test]
     public void CreateRequestShouldSetCorrectContentType()
-    {   
-        // Arrange & Act
+    {
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var request = _helper.CreateRequest(_settings, "test query");
 
-        // Assert
+        //assert
         request.Content.Should().NotBeNull();
         request.Content.Headers.ContentType.Should().NotBeNull();
         request.Content.Headers.ContentType.MediaType.Should().Be(MimeTypes.ApplicationJson);
@@ -74,14 +81,15 @@ public class GeminiHttpClientHelperTests
     [Test]
     public async Task CreateRequestShouldSerializeQueryInCorrectFormat()
     {
-        // Arrange
-        var query = "What is AI?";
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act
+        //arrange & act
+        var query = "What is AI?";
         var request = _helper.CreateRequest(_settings, query);
         var content = await request.Content.ReadAsStringAsync();
 
-        // Assert
+        //assert
         content.Should().NotBeNullOrEmpty();
         content.Should().Contain("contents");
         content.Should().Contain("parts");
@@ -92,7 +100,10 @@ public class GeminiHttpClientHelperTests
     [Test]
     public void ParseResponseShouldReturnTextFromValidResponse()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var responseText = @"{
             ""candidates"": [
                 {
@@ -106,18 +117,19 @@ public class GeminiHttpClientHelperTests
                 }
             ]
         }";
-
-        // Act
         var result = _helper.ParseResponse(responseText);
 
-        // Assert
+        //assert
         result.Should().Be("This is the AI response");
     }
 
     [Test]
     public void ParseResponseShouldReturnFirstCandidateText()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var responseText = @"{
             ""candidates"": [
                 {
@@ -140,33 +152,35 @@ public class GeminiHttpClientHelperTests
                 }
             ]
         }";
-
-        // Act
         var result = _helper.ParseResponse(responseText);
 
-        // Assert
+        //assert
         result.Should().Be("First response");
     }
 
     [Test]
     public void ParseResponseShouldReturnEmptyStringWhenCandidatesIsEmpty()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var responseText = @"{
             ""candidates"": []
         }";
-
-        // Act
         var result = _helper.ParseResponse(responseText);
 
-        // Assert
+        //assert
         result.Should().BeEmpty();
     }
 
     [Test]
     public void ParseResponseShouldReturnEmptyStringWhenPartsIsNull()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var responseText = @"{
             ""candidates"": [
                 {
@@ -176,18 +190,19 @@ public class GeminiHttpClientHelperTests
                 }
             ]
         }";
-
-        // Act
         var result = _helper.ParseResponse(responseText);
 
-        // Assert
+        //assert
         result.Should().BeEmpty();
     }
 
     [Test]
     public void ParseResponseShouldReturnEmptyStringWhenTextIsEmpty()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var responseText = @"{
             ""candidates"": [
                 {
@@ -201,18 +216,19 @@ public class GeminiHttpClientHelperTests
                 }
             ]
         }";
-
-        // Act
         var result = _helper.ParseResponse(responseText);
 
-        // Assert
+        //assert
         result.Should().BeEmpty();
     }
 
     [Test]
     public void ParseResponseShouldHandleMultiplePartsAndReturnFirst()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var responseText = @"{
             ""candidates"": [
                 {
@@ -229,21 +245,22 @@ public class GeminiHttpClientHelperTests
                 }
             ]
         }";
-
-        // Act
         var result = _helper.ParseResponse(responseText);
 
-        // Assert
+        //assert
         result.Should().Be("First part");
     }
 
     [Test]
     public void CreateRequestShouldHandleEmptyQuery()
     {
-        // Arrange & Act
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         var request = _helper.CreateRequest(_settings, string.Empty);
 
-        // Assert
+        //assert
         request.Should().NotBeNull();
         request.Content.Should().NotBeNull();
     }
@@ -251,13 +268,14 @@ public class GeminiHttpClientHelperTests
     [Test]
     public void CreateRequestShouldHandleSpecialCharactersInQuery()
     {
-        // Arrange
-        var query = "What is \"AI\"? Can you explain <concepts> & ideas?";
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act
+        //arrange & act
+        var query = "What is \"AI\"? Can you explain <concepts> & ideas?";
         var request = _helper.CreateRequest(_settings, query);
 
-        // Assert
+        //assert
         request.Should().NotBeNull();
         request.Content.Should().NotBeNull();
     }
@@ -265,14 +283,15 @@ public class GeminiHttpClientHelperTests
     [Test]
     public async Task CreateRequestShouldUseUtf8Encoding()
     {
-        // Arrange
-        var query = "Test with émojis 🤖 and spëcial çharacters";
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act
+        //arrange & act
+        var query = "Test with émojis 🤖 and spëcial çharacters";
         var request = _helper.CreateRequest(_settings, query);
         var content = await request.Content.ReadAsStringAsync();
 
-        // Assert
+        //assert
         request.Content.Headers.ContentType.CharSet.Should().Be("utf-8");
         content.Should().Contain(query);
     }

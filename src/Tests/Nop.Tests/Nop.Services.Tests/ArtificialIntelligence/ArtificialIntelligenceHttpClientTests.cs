@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nop.Core;
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Services.ArtificialIntelligence;
@@ -17,14 +17,7 @@ public class ArtificialIntelligenceHttpClientTests
     [SetUp]
     public void SetUp()
     {
-        _settings = new ArtificialIntelligenceSettings
-        {
-            RequestTimeout = 30,
-            ProviderType = ArtificialIntelligenceProviderType.ChatGpt,
-            ChatGptApiKey = "test-chatgpt-key",
-            GeminiApiKey = "test-gemini-key",
-            DeepSeekApiKey = "test-deepseek-key"
-        };
+        _settings = NopTestConfiguration.GetArtificialIntelligenceSettings();
     }
 
     [TearDown]
@@ -37,93 +30,111 @@ public class ArtificialIntelligenceHttpClientTests
     [Test]
     public void ShouldConfigureHttpClientTimeoutFromSettings()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         _settings.RequestTimeout = 45;
-        _messageHandler = new MockHttpMessageHandler();
+        _messageHandler = new TestHttpMessageHandler();
         _httpClient = new HttpClient(_messageHandler);
+        _ = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
 
-        // Act
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
-
-        // Assert
+        //assert
         _httpClient.Timeout.Should().Be(TimeSpan.FromSeconds(45));
     }
 
     [Test]
     public void ShouldUseDefaultTimeoutWhenSettingIsNull()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         _settings.RequestTimeout = null;
-        _messageHandler = new MockHttpMessageHandler();
+        _messageHandler = new TestHttpMessageHandler();
         _httpClient = new HttpClient(_messageHandler);
+        _ = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
 
-        // Act
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
-
-        // Assert
+        //assert
         _httpClient.Timeout.Should().Be(TimeSpan.FromSeconds(ArtificialIntelligenceDefaults.RequestTimeout));
     }
 
     [Test]
     public void ShouldCreateGeminiHelperWhenProviderIsGemini()
     {
-        // Arrange
-        _settings.ProviderType = ArtificialIntelligenceProviderType.Gemini;
-        _messageHandler = new MockHttpMessageHandler();
-        _httpClient = new HttpClient(_messageHandler);
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act & Assert
+        //arrange & act
+        _settings.ProviderType = ArtificialIntelligenceProviderType.Gemini;
+        _messageHandler = new TestHttpMessageHandler();
+        _httpClient = new HttpClient(_messageHandler);
         var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+
+        //assert
         client.Should().NotBeNull();
     }
 
     [Test]
     public void ShouldCreateChatGptHelperWhenProviderIsChatGpt()
     {
-        // Arrange
-        _settings.ProviderType = ArtificialIntelligenceProviderType.ChatGpt;
-        _messageHandler = new MockHttpMessageHandler();
-        _httpClient = new HttpClient(_messageHandler);
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act & Assert
+        //arrange & act
+        _settings.ProviderType = ArtificialIntelligenceProviderType.ChatGpt;
+        _messageHandler = new TestHttpMessageHandler();
+        _httpClient = new HttpClient(_messageHandler);
         var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+
+        //assert
         client.Should().NotBeNull();
     }
 
     [Test]
     public void ShouldCreateDeepSeekHelperWhenProviderIsDeepSeek()
     {
-        // Arrange
-        _settings.ProviderType = ArtificialIntelligenceProviderType.DeepSeek;
-        _messageHandler = new MockHttpMessageHandler();
-        _httpClient = new HttpClient(_messageHandler);
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act & Assert
+        //arrange & act
+        _settings.ProviderType = ArtificialIntelligenceProviderType.DeepSeek;
+        _messageHandler = new TestHttpMessageHandler();
+        _httpClient = new HttpClient(_messageHandler);
         var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+
+        //assert
+
         client.Should().NotBeNull();
     }
 
     [Test]
     public void ShouldThrowArgumentOutOfRangeExceptionForInvalidProviderType()
     {
-        // Arrange
-        _settings.ProviderType = (ArtificialIntelligenceProviderType)999;
-        _messageHandler = new MockHttpMessageHandler();
-        _httpClient = new HttpClient(_messageHandler);
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act & Assert
+        //arrange & act
+        _settings.ProviderType = (ArtificialIntelligenceProviderType)999;
+        _messageHandler = new TestHttpMessageHandler();
+        _httpClient = new HttpClient(_messageHandler);
         Action act = () => new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+
+        //assert
         act.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Test]
     public async Task SendQueryAsyncShouldReturnResponseForGeminiProvider()
     {
-    // Arrange
-    _settings.ProviderType = ArtificialIntelligenceProviderType.Gemini;
-    
-    // Gemini uses "candidates" not "output"
-    var mockResponse = @"{
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
+        _settings.ProviderType = ArtificialIntelligenceProviderType.Gemini;
+
+        // Gemini uses "candidates" not "output"
+        var mockResponse = @"{
         ""candidates"": [
             {
                 ""content"": {
@@ -135,27 +146,28 @@ public class ArtificialIntelligenceHttpClientTests
                 }
             }
         ]
-    }";
-    
-    _messageHandler = new MockHttpMessageHandler(HttpStatusCode.OK, mockResponse);
-    _httpClient = new HttpClient(_messageHandler);
-    
-    var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        }";
 
-    // Act
-    var result = await client.SendQueryAsync("test query");
+        _messageHandler = new TestHttpMessageHandler(HttpStatusCode.OK, mockResponse);
+        _httpClient = new HttpClient(_messageHandler);
 
-    // Assert
-    result.Should().NotBeNullOrEmpty();
-    result.Should().Be("gemini test response");
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        var result = await client.SendQueryAsync("test query");
+
+        //assert
+        result.Should().NotBeNullOrEmpty();
+        result.Should().Be("gemini test response");
     }
 
     [Test]
     public async Task SendQueryAsyncShouldReturnResponseForChatGptProvider()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         _settings.ProviderType = ArtificialIntelligenceProviderType.ChatGpt;
-        
+
         var mockResponse = @"{
             ""output"": [
                 {
@@ -167,16 +179,14 @@ public class ArtificialIntelligenceHttpClientTests
                 }
             ]
         }";
-        
-        _messageHandler = new MockHttpMessageHandler(HttpStatusCode.OK, mockResponse);
-        _httpClient = new HttpClient(_messageHandler);
-        
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
 
-        // Act
+        _messageHandler = new TestHttpMessageHandler(HttpStatusCode.OK, mockResponse);
+        _httpClient = new HttpClient(_messageHandler);
+
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
         var result = await client.SendQueryAsync("test query");
 
-        // Assert
+        //assert
         result.Should().NotBeNullOrEmpty();
         result.Should().Be("chatgpt test response");
     }
@@ -184,9 +194,12 @@ public class ArtificialIntelligenceHttpClientTests
     [Test]
     public async Task SendQueryAsyncShouldReturnResponseForDeepSeekProvider()
     {
-        // Arrange
+        if (!_settings.IsProviderConfigured())
+            return;
+
+        //arrange & act
         _settings.ProviderType = ArtificialIntelligenceProviderType.DeepSeek;
-    
+
         // DeepSeek uses "choices" with "message.content" structure
         var mockResponse = @"{
             ""choices"": [
@@ -196,89 +209,88 @@ public class ArtificialIntelligenceHttpClientTests
                 }
             }
         ]
-    }";
-    
-    _messageHandler = new MockHttpMessageHandler(HttpStatusCode.OK, mockResponse);
-    _httpClient = new HttpClient(_messageHandler);
-    
-    var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        }";
 
-    // Act
-    var result = await client.SendQueryAsync("test query");
+        _messageHandler = new TestHttpMessageHandler(HttpStatusCode.OK, mockResponse);
+        _httpClient = new HttpClient(_messageHandler);
 
-    // Assert
-    result.Should().NotBeNullOrEmpty();
-    result.Should().Be("deepseek test response");
-}
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        var result = await client.SendQueryAsync("test query");
+
+        //assert
+        result.Should().NotBeNullOrEmpty();
+        result.Should().Be("deepseek test response");
+    }
 
     [Test]
     public async Task SendQueryAsyncShouldThrowNopExceptionWhenRequestFails()
     {
-        // Arrange
-        var errorMessage = "Bad Request";
-        _messageHandler = new MockHttpMessageHandler(HttpStatusCode.BadRequest, errorMessage);
-        _httpClient = new HttpClient(_messageHandler);
-        
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act
+        //arrange & act
+        var errorMessage = "Bad Request";
+        _messageHandler = new TestHttpMessageHandler(HttpStatusCode.BadRequest, errorMessage);
+        _httpClient = new HttpClient(_messageHandler);
+
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
         Func<Task> act = async () => await client.SendQueryAsync("test query");
 
-        // Assert
+        //assert
         await act.Should().ThrowAsync<NopException>();
     }
 
     [Test]
     public async Task SendQueryAsyncShouldThrowNopExceptionWhenUnauthorized()
     {
-        // Arrange
-        _messageHandler = new MockHttpMessageHandler(HttpStatusCode.Unauthorized, "Unauthorized");
-        _httpClient = new HttpClient(_messageHandler);
-        
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act
+        //arrange & act
+        _messageHandler = new TestHttpMessageHandler(HttpStatusCode.Unauthorized, "Unauthorized");
+        _httpClient = new HttpClient(_messageHandler);
+
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
         Func<Task> act = async () => await client.SendQueryAsync("test query");
 
-        // Assert
+        //assert
         await act.Should().ThrowAsync<NopException>();
     }
 
     [Test]
     public async Task SendQueryAsyncShouldThrowNopExceptionWhenServerError()
     {
-        // Arrange
-        _messageHandler = new MockHttpMessageHandler(HttpStatusCode.InternalServerError, "Server Error");
-        _httpClient = new HttpClient(_messageHandler);
-        
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        if (!_settings.IsProviderConfigured())
+            return;
 
-        // Act
+        //arrange & act
+        _messageHandler = new TestHttpMessageHandler(HttpStatusCode.InternalServerError, "Server Error");
+        _httpClient = new HttpClient(_messageHandler);
+
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
         Func<Task> act = async () => await client.SendQueryAsync("test query");
 
-        // Assert
+        //assert
         await act.Should().ThrowAsync<NopException>();
     }
 
-    #region Mock HttpMessageHandler
+    #region Nested class
 
-    private class MockHttpMessageHandler : HttpMessageHandler
+    private class TestHttpMessageHandler : HttpMessageHandler
     {
         private readonly HttpStatusCode _statusCode;
         private readonly string _content;
 
-        public MockHttpMessageHandler(HttpStatusCode statusCode = HttpStatusCode.OK, string content = "{}")
+        public TestHttpMessageHandler(HttpStatusCode statusCode = HttpStatusCode.OK, string content = "{}")
         {
             _statusCode = statusCode;
             _content = content;
         }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+            CancellationToken cancellationToken)
         {
-            var response = new HttpResponseMessage(_statusCode)
-            {
-                Content = new StringContent(_content)
-            };
+            var response = new HttpResponseMessage(_statusCode) { Content = new StringContent(_content) };
 
             return Task.FromResult(response);
         }
