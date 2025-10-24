@@ -42,7 +42,7 @@ public class Program
                         directoryInfo.Delete(true);
                 }
 
-                // Delete runtimes folder after clearing assemblies
+                //delete runtimes folder after clearing assemblies
                 DeleteRuntimesFolder(pluginPath);
             }
             catch
@@ -63,15 +63,16 @@ public class Program
         try
         {
             var runtimesPath = Path.Combine(pluginPath, "runtimes");
-            if (Directory.Exists(runtimesPath))
-            {
-                Directory.Delete(runtimesPath, recursive: true);
-                Console.WriteLine($"Deleted runtimes folder from: {pluginPath}");
-            }
+
+            if (!Directory.Exists(runtimesPath)) 
+                return;
+
+            Directory.Delete(runtimesPath, recursive: true);
+            Console.WriteLine($"Deleted runtimes folder from: {pluginPath}");
         }
         catch (Exception ex)
         {
-            // Log the error but don't fail the build
+            //log the error but don't fail the build
             Console.WriteLine($"Warning: Could not delete runtimes folder from {pluginPath}: {ex.Message}");
         }
     }
