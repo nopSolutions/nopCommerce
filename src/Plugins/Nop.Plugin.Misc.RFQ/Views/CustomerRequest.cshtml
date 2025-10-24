@@ -112,7 +112,7 @@
                                     <td>
                                         @if (item.Editable)
                                         {
-                                            <input type="number" asp-for="@item.Quantity" name="@($"{RfqDefaults.QUANTITY_FORM_KEY}{item.Id}")" />
+                                            <input type="number" min="1" asp-for="@item.Quantity" name="@($"{RfqDefaults.QUANTITY_FORM_KEY}{item.Id}")" />
                                         }
                                         else
                                         {
@@ -122,7 +122,7 @@
                                     <td>
                                         @if (item.Editable)
                                         {
-                                            <input type="number" step=".01" asp-for="@item.UnitPrice" name="@($"{RfqDefaults.UNIT_PRICE_FORM_KEY}{item.Id}")" />
+                                            <input type="number" min="0.01" step=".01" asp-for="@item.UnitPrice" name="@($"{RfqDefaults.UNIT_PRICE_FORM_KEY}{item.Id}")" />
                                         }
                                         else
                                         {
