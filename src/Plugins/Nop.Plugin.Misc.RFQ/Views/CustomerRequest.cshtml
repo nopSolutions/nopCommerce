@@ -130,7 +130,7 @@
                                         <span>
                                         @if (Model.CustomerItems[i].Editable)
                                         {
-                                            <input type="number" min="0.01" step=".01" asp-for="@Model.CustomerItems[i].UnitPrice" name="@($"{RfqDefaults.UNIT_PRICE_FORM_KEY}{Model.CustomerItems[i].Id}")" />
+                                            <input type="number" step=".01" asp-for="@Model.CustomerItems[i].UnitPrice" name="@($"{RfqDefaults.UNIT_PRICE_FORM_KEY}{Model.CustomerItems[i].Id}")" />
                                         }
                                         else
                                         {
