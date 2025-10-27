@@ -772,12 +772,12 @@ public partial class ProductController : BaseAdminController
         var existingCombinationPictures = await _productAttributeService.GetProductAttributeCombinationPicturesAsync(combination.Id);
         var productPictureIds = (await _pictureService.GetPicturesByProductIdAsync(product.Id)).Select(p => p.Id).ToList();
 
-        //delete manufacturers
+        //delete pictures
         foreach (var existingCombinationPicture in existingCombinationPictures)
             if (!model.PictureIds.Contains(existingCombinationPicture.PictureId) || !productPictureIds.Contains(existingCombinationPicture.PictureId))
                 await _productAttributeService.DeleteProductAttributeCombinationPictureAsync(existingCombinationPicture);
 
-        //add manufacturers
+        //add pictures
         foreach (var pictureId in model.PictureIds)
         {
             if (!productPictureIds.Contains(pictureId))
