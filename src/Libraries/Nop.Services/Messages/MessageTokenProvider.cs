@@ -270,7 +270,10 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                         "%Order.ShippingAddressLine%",
                         "%Order.PaymentMethod%",
                         "%Order.VatNumber%",
-                        "%Order.CustomValues%",
+                        $"%Order.CustomValues.{CustomValueDisplayLocation.BillingAddress.ToString()}%",
+                        $"%Order.CustomValues.{CustomValueDisplayLocation.ShippingAddress.ToString()}%",
+                        $"%Order.CustomValues.{CustomValueDisplayLocation.Payment.ToString()}%",
+                        $"%Order.CustomValues.{CustomValueDisplayLocation.Shipping.ToString()}%",
                         "%Order.Product(s)%",
                         "%Order.CreatedOn%",
                         "%Order.OrderURLForCustomer%",
@@ -1100,17 +1103,22 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         var paymentMethodName = paymentMethod != null ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, languageId) : order.PaymentMethodSystemName;
         tokens.Add(new Token("Order.PaymentMethod", paymentMethodName));
         tokens.Add(new Token("Order.VatNumber", order.VatNumber));
-        var sbCustomValues = new StringBuilder();
+        
         var customValues = new CustomValues();
         customValues.FillByXml(order.CustomValuesXml, true);
 
-        foreach (var item in customValues)
+        foreach (var displayLocation in Enum.GetValues<CustomValueDisplayLocation>())
         {
-            sbCustomValues.AppendFormat("{0}: {1}", WebUtility.HtmlEncode(item.Name), WebUtility.HtmlEncode(item.Value ?? string.Empty));
-            sbCustomValues.Append("<br />");
-        }
+            var sbCustomValues = new StringBuilder();
 
-        tokens.Add(new Token("Order.CustomValues", sbCustomValues.ToString(), true));
+            foreach (var item in customValues.GetValuesByDisplayLocation(displayLocation))
+            {
+                sbCustomValues.AppendFormat("{0}: {1}", WebUtility.HtmlEncode(item.Name), WebUtility.HtmlEncode(item.Value ?? string.Empty));
+                sbCustomValues.Append("<br />");
+            }
+
+            tokens.Add(new Token($"Order.CustomValues.{displayLocation.ToString()}", sbCustomValues.ToString(), true));
+        }
 
         tokens.Add(new Token("Order.Product(s)", await ProductListToHtmlTableAsync(order, languageId, vendorId), true));
 
