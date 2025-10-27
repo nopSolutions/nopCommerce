@@ -10,4 +10,7 @@ public record ConfigurationModel : BaseNopModel
 {
     [NopResourceDisplayName("Plugins.Misc.RFQ.Enabled")]
     public bool Enabled { get; set; }
+
+    [NopResourceDisplayName("Plugins.Misc.RFQ.ShowCaptchaOnRequestPage")]
+    public bool ShowCaptchaOnRequestPage { get; set; }
 }
