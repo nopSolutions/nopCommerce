@@ -92,14 +92,12 @@ public partial class SlugRouteTransformer : DynamicRouteValueTransformer
             var store = await _storeContext.GetCurrentStoreAsync();
             var languages = await _languageService.GetAllLanguagesAsync(storeId: store.Id);
             var language = languages
-                               .FirstOrDefault(lang => lang.Published && lang.UniqueSeoCode.Equals(langValue?.ToString(), StringComparison.InvariantCultureIgnoreCase))
-                           ?? languages.FirstOrDefault();
+                .FirstOrDefault(lang => lang.UniqueSeoCode.Equals(langValue?.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                ?? languages.FirstOrDefault();
 
-            var slugLocalized = await _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, language.Id);
+            var slugLocalized = await _urlRecordService.GetSeNameAsync(urlRecord.EntityId, urlRecord.EntityName, language.Id, true, false);
             if (!string.IsNullOrEmpty(slugLocalized) && !slugLocalized.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
             {
-                //we should make validation above because some entities does not have SeName for standard (Id = 0) language (e.g. news, blog posts)
-
                 //redirect to the page for current language
                 InternalRedirect(httpContext, values, $"/{language.UniqueSeoCode}/{slugLocalized}", false);
                 return;
@@ -208,11 +206,11 @@ public partial class SlugRouteTransformer : DynamicRouteValueTransformer
             var store = await _storeContext.GetCurrentStoreAsync();
             var languages = await _languageService.GetAllLanguagesAsync(storeId: store.Id);
             var language = languages
-                               .FirstOrDefault(lang => lang.Published && lang.UniqueSeoCode.Equals(langValue?.ToString(), StringComparison.InvariantCultureIgnoreCase))
-                           ?? languages.FirstOrDefault();
+                .FirstOrDefault(lang => lang.UniqueSeoCode.Equals(langValue?.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                ?? languages.FirstOrDefault();
 
-            var slugLocalized = await _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, language.Id);
-            var catalogSlugLocalized = await _urlRecordService.GetActiveSlugAsync(catalogUrlRecord.EntityId, catalogUrlRecord.EntityName, language.Id);
+            var slugLocalized = await _urlRecordService.GetSeNameAsync(urlRecord.EntityId, urlRecord.EntityName, language.Id, true, false);
+            var catalogSlugLocalized = await _urlRecordService.GetSeNameAsync(catalogUrlRecord.EntityId, catalogUrlRecord.EntityName, language.Id, true, false);
             if ((!string.IsNullOrEmpty(slugLocalized) && !slugLocalized.Equals(slug, StringComparison.InvariantCultureIgnoreCase)) ||
                 (!string.IsNullOrEmpty(catalogSlugLocalized) && !catalogSlugLocalized.Equals(catalogUrlRecord.Slug, StringComparison.InvariantCultureIgnoreCase)))
             {
