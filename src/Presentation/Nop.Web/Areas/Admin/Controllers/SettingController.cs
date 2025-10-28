@@ -781,6 +781,7 @@ public partial class SettingController : BaseAdminController
             artificialIntelligenceSettings.MetaKeywordsQuery = model.ArtificialIntelligenceSettingsModel.MetaKeywordsQuery;
             artificialIntelligenceSettings.AllowMetaDescriptionGeneration = model.ArtificialIntelligenceSettingsModel.AllowMetaDescriptionGeneration;
             artificialIntelligenceSettings.MetaDescriptionQuery = model.ArtificialIntelligenceSettingsModel.MetaDescriptionQuery;
+            artificialIntelligenceSettings.LogRequests = model.ArtificialIntelligenceSettingsModel.LogRequests;
 
             await _settingService.SaveSettingAsync(artificialIntelligenceSettings);
 

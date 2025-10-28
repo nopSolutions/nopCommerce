@@ -295,4 +295,17 @@ public class GeminiHttpClientHelperTests
         request.Content.Headers.ContentType.CharSet.Should().Be("utf-8");
         content.Should().Contain(query);
     }
+
+    [Test]
+    public void CanGetTokensInfo()
+    {
+        var responseText = @"{""candidates"": [{""content"": {""parts"": [{""text"": ""The Apple MacBook Pro is not merely a laptop; it is a meticulously engineered platform, meticulously designed to elevate the professional workflow of the most demanding users. It stands as a testament to uncompromising power and precision, purpose-built for those whose work mandates absolute performance.\n\nAt its core lies a **high-load CPU**, a cutting-edge processor architecture engineered for relentless computational tasks. This formidable processing unit doesn't just manage demanding applications; it dominates them. Whether compiling vast codebases, rendering complex 3D models, executing intricate data analyses, or orchestrating multi-track audio production, the MacBook Pro delivers sustained peak performance, ensuring your most critical tasks proceed without compromise. It is designed to operate under intensive, continuous loads, providing the processing headroom essential for professional-grade productivity and innovation.\n\nComplementing this computational prowess is the integrated, **faster flash storage**. This isn't merely quick; it redefines speed, delivering unparalleled I/O performance that dramatically diminishes latency across the entire system. Experience instantaneous boot times, near-zero application launch delays, and rapid file transfers – capabilities crucial for professionals handling gigabytes of high-resolution media, expansive virtual machine environments, or large-scale project files. The accelerated data throughput fundamentally transforms the responsiveness of every interaction, enabling fluid multitasking and reducing wait times to an absolute minimum.\n\nThe synergy between this potent **high-load CPU** and the blistering **faster flash** storage transforms the MacBook Pro into an indispensable tool, a meticulously optimized machine capable of tackling the most intensive and complex professional challenges with unwavering stability and speed. For the professional whose work demands the absolute best, the MacBook Pro represents the zenith of portable computing, delivering a robust and reliable foundation for peak performance.""}],""role"": ""model""},""finishReason"": ""STOP"",""index"": 0}],""usageMetadata"": {""promptTokenCount"": 43,""candidatesTokenCount"": 347,""totalTokenCount"": 1679,""promptTokensDetails"": [{""modality"": ""TEXT"",""tokenCount"": 43}],""thoughtsTokenCount"": 1289},""modelVersion"": ""gemini-2.5-flash"",""responseId"": ""fsH_aNehCaq_vdIPnqK3gQs""}";
+
+        //arrange & act
+        var tokensInfo = _helper.GetTokensInfo(responseText);
+
+        //assert
+        tokensInfo.Should().NotBeNull();
+        tokensInfo.Should().Be($"Prompt tokens: 43{Environment.NewLine}Candidate tokens: 347{Environment.NewLine}Thought tokens: 1289{Environment.NewLine}Total tokens: 1679");
+    }
 }
