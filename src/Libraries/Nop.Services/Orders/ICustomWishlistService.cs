@@ -27,6 +27,7 @@ public partial interface ICustomWishlistService
     /// </summary>
     /// <param name="itemId">The unique identifier of the custom wishlist item to remove. Must be a valid identifier of an existing item.</param>
     Task RemoveCustomWishlistAsync(int itemId);
+    Task EditCustomWishlistAsync(int wishlistId, string newName, int customer);
 
     /// <summary>
     /// Retrieves a custom wishlist by its unique identifier.
