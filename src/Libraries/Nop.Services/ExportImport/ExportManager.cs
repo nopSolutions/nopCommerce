@@ -2053,7 +2053,8 @@ public partial class ExportManager : IExportManager
 
             return stateProvince?.Name ?? string.Empty;
         }
-
+        // Fetch all stores from the service
+        var stores = await _storeService.GetAllStoresAsync();
         //property manager 
         var manager = new PropertyManager<Customer>(new[]
         {
@@ -2130,7 +2131,18 @@ public partial class ExportManager : IExportManager
 
             }, !_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword),
 
-        }, _catalogSettings);
+        }
+        .Concat(
+        // Add newsletter subscription properties for each store dynamically
+        stores.Select(store => new PropertyByName<Customer, Language>(
+            $"Newsletter-in-store-{store.Id}",
+            async (customer, lang) =>
+            {
+                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
+                return (newsletter != null && newsletter.Active).ToString();
+            }
+        ))
+        ), _catalogSettings);
 
         //activity log
         await _customerActivityService.InsertActivityAsync("ExportCustomers",
