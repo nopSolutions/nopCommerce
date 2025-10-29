@@ -258,7 +258,9 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin, IMiscPlugin
             [$"Admin.ContentManagement.MessageTemplates.Description.{RfqDefaults.CUSTOMER_SENT_NEW_REQUEST_QUOTE}"] = "This message template is used to notify a store owner that the new request a quote sent",
             [$"Admin.ContentManagement.MessageTemplates.Description.{RfqDefaults.ADMIN_SENT_NEW_QUOTE}"] = "This message template is used to notify a customer that the new quote sent",
             ["Security.Permission.Misc.RFQ.AccessRFQ.Admin.AccessRFQ"] = "Admin area. Access to the customer’s Request and Price Offer functionality",
-            ["Security.Permission.Misc.RFQ.AccessRFQ.PublicStore.AccessRFQ"] = "Public store. Access to the customer’s Request and Price Offer functionality"
+            ["Security.Permission.Misc.RFQ.AccessRFQ.PublicStore.AccessRFQ"] = "Public store. Access to the customer’s Request and Price Offer functionality",
+            ["Plugins.Misc.RFQ.CustomerRequest.RequestedQty.MustGreaterThanZero"] = "Requested qty of \"{0}\" product must be greater than zero.",
+            ["Plugins.Misc.RFQ.CustomerRequest.RequestedUnitPrice.MustBeEqualOrGreaterThanZero"] = "Requested unit price of \"{0}\" product be equal or greater than zero."
         });
 
         await base.InstallAsync();
