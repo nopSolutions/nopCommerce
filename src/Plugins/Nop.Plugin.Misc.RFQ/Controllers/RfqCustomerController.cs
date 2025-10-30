@@ -1,16 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Security;
 using Nop.Core.Http;
 using Nop.Plugin.Misc.RFQ.Domains;
 using Nop.Plugin.Misc.RFQ.Factories;
 using Nop.Plugin.Misc.RFQ.Models.Customer;
 using Nop.Plugin.Misc.RFQ.Services;
 using Nop.Services.Customers;
+using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Web.Controllers;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Misc.RFQ.Controllers;
 
@@ -19,8 +22,10 @@ public class RfqCustomerController : BasePublicController
 {
     #region Fields
 
+    private readonly CaptchaSettings _captchaSettings;
     private readonly CustomerModelFactory _modelFactory;
     private readonly ICustomerService _customerService;
+    private readonly ILocalizationService _localizationService;
     private readonly IPermissionService _permissionService;
     private readonly IShoppingCartService _shoppingCartService;
     private readonly IStoreContext _storeContext;
@@ -32,8 +37,10 @@ public class RfqCustomerController : BasePublicController
 
     #region Ctor
 
-    public RfqCustomerController(CustomerModelFactory modelFactory,
+    public RfqCustomerController(CaptchaSettings captchaSettings,
+        CustomerModelFactory modelFactory,
         ICustomerService customerService,
+        ILocalizationService localizationService,
         IPermissionService permissionService,
         IShoppingCartService shoppingCartService,
         IStoreContext storeContext,
@@ -41,8 +48,10 @@ public class RfqCustomerController : BasePublicController
         RfqService rfqService,
         RfqSettings rfqSettings)
     {
+        _captchaSettings = captchaSettings;
         _modelFactory = modelFactory;
         _customerService = customerService;
+        _localizationService = localizationService;
         _permissionService = permissionService;
         _shoppingCartService = shoppingCartService;
         _storeContext = storeContext;
@@ -133,12 +142,19 @@ public class RfqCustomerController : BasePublicController
 
     [HttpPost, ActionName("CustomerRequest")]
     [FormValueRequired("send")]
-    public async Task<IActionResult> SendRequest(RequestQuoteModel model)
+    [ValidateCaptcha]
+    public async Task<IActionResult> SendRequest(RequestQuoteModel model, bool captchaValid)
     {
         var result = await CheckCustomerPermissionAsync(await _workContext.GetCurrentCustomerAsync());
 
         if (result != null)
             return result;
+
+        //validate CAPTCHA
+        if (_captchaSettings.Enabled && _rfqSettings.ShowCaptchaOnRequestPage && !captchaValid)
+        {
+            ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+        }
 
         if (ModelState.IsValid)
         {
@@ -151,8 +167,12 @@ public class RfqCustomerController : BasePublicController
 
             return RedirectToAction("CustomerRequest", "RfqCustomer", new { requestId = model.Id });
         }
+        var (request, items) = await _rfqService.CreateRequestQuoteByShoppingCartAsync();
 
-        model = await _modelFactory.PrepareRequestQuoteModelAsync(model);
+        if (request == null)
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
+
+        model = await _modelFactory.PrepareRequestQuoteModelAsync(request, items, model);
 
         return View("~/Plugins/Misc.RFQ/Views/CustomerRequest.cshtml", model);
     }

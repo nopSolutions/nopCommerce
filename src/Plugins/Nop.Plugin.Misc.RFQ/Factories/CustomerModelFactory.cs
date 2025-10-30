@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Security;
 using Nop.Plugin.Misc.RFQ.Domains;
 using Nop.Plugin.Misc.RFQ.Models.Customer;
 using Nop.Plugin.Misc.RFQ.Services;
@@ -18,6 +19,7 @@ public class CustomerModelFactory
 {
     #region Fields
 
+    private readonly CaptchaSettings _captchaSettings;
     private readonly ICurrencyService _currencyService;
     private readonly IDateTimeHelper _dateTimeHelper;
     private readonly ILocalizationService _localizationService;
@@ -30,12 +32,14 @@ public class CustomerModelFactory
     private readonly IWorkContext _workContext;
     private readonly MediaSettings _mediaSettings;
     private readonly RfqService _rfqService;
+    private readonly RfqSettings _rfqSettings;
 
     #endregion
 
     #region Ctor
 
-    public CustomerModelFactory(ICurrencyService currencyService,
+    public CustomerModelFactory(CaptchaSettings captchaSettings,
+        ICurrencyService currencyService,
         IDateTimeHelper dateTimeHelper,
         ILocalizationService localizationService,
         IPictureService pictureService,
@@ -46,8 +50,10 @@ public class CustomerModelFactory
         IUrlRecordService urlRecordService,
         IWorkContext workContext,
         MediaSettings mediaSettings,
-        RfqService rfqService)
+        RfqService rfqService,
+        RfqSettings rfqSettings)
     {
+        _captchaSettings = captchaSettings;
         _currencyService = currencyService;
         _dateTimeHelper = dateTimeHelper;
         _localizationService = localizationService;
@@ -60,6 +66,7 @@ public class CustomerModelFactory
         _workContext = workContext;
         _mediaSettings = mediaSettings;
         _rfqService = rfqService;
+        _rfqSettings = rfqSettings;
     }
 
     #endregion
@@ -134,6 +141,7 @@ public class CustomerModelFactory
         model.CustomerId = requestQuote.CustomerId;
         model.CustomerItems = modelItems;
         model.QuoteId = requestQuote.QuoteId;
+        model.DisplayCaptcha = _captchaSettings.Enabled && _rfqSettings.ShowCaptchaOnRequestPage;
 
         if (!requestQuote.QuoteId.HasValue)
             return model;

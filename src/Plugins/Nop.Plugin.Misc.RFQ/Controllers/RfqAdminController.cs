@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Plugin.Misc.RFQ.Domains;
 using Nop.Plugin.Misc.RFQ.Factories;
 using Nop.Plugin.Misc.RFQ.Models.Admin;
@@ -29,6 +30,7 @@ public class RfqAdminController : BasePluginController
     #region Fields
 
     private readonly AdminModelFactory _modelFactory;
+    private readonly CaptchaSettings _captchaSettings;
     private readonly ICustomerModelFactory _customerModelFactory;
     private readonly ICustomerService _customerService;
     private readonly ILocalizationService _localizationService;
@@ -47,6 +49,7 @@ public class RfqAdminController : BasePluginController
     #region Ctor
 
     public RfqAdminController(AdminModelFactory modelFactory,
+        CaptchaSettings captchaSettings,
         ICustomerModelFactory customerModelFactory,
         ICustomerService customerService,
         ILocalizationService localizationService,
@@ -61,6 +64,7 @@ public class RfqAdminController : BasePluginController
         RfqSettings rfqSettings)
     {
         _modelFactory = modelFactory;
+        _captchaSettings = captchaSettings;
         _customerModelFactory = customerModelFactory;
         _customerService = customerService;
         _localizationService = localizationService;
@@ -81,11 +85,12 @@ public class RfqAdminController : BasePluginController
 
     #region Configure
 
-    public async Task<IActionResult> Configure()
+    public IActionResult Configure()
     {
         var model = new ConfigurationModel
         {
-            Enabled = _rfqSettings.Enabled
+            Enabled = _rfqSettings.Enabled,
+            ShowCaptchaOnRequestPage = _rfqSettings.ShowCaptchaOnRequestPage
         };
 
         return View("~/Plugins/Misc.RFQ/Views/Admin/Configure.cshtml", model);
@@ -96,15 +101,26 @@ public class RfqAdminController : BasePluginController
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
         if (!ModelState.IsValid)
-            return await Configure();
+            return Configure();
         
         _rfqSettings.Enabled = model.Enabled;
+        _rfqSettings.ShowCaptchaOnRequestPage = model.ShowCaptchaOnRequestPage;
 
         await _settingService.SaveSettingAsync(_rfqSettings);
         
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
-        return await Configure();
+        return Configure();
+    }
+
+    public async Task<IActionResult> CheckIsCaptchaEnabled(bool showCaptchaOnRequestPage)
+    {
+        if (_captchaSettings.Enabled || !showCaptchaOnRequestPage)
+            return Json(new { Result = string.Empty });
+
+        var warning = string.Format(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.CaptchaDisabled.Notification"), Url.Action("GeneralCommon", "Setting"));
+
+        return Json(new { Result = warning });
     }
 
     #endregion
