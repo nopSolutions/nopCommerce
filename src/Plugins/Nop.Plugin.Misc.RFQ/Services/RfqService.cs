@@ -185,10 +185,13 @@ public class RfqService
 
     private async Task<Quote> CheckIsQuoteExpiredAsync(Quote quote)
     {
+        if (quote == null)
+            return null;
+
         if (!quote.ExpirationDateUtc.HasValue)
             return quote;
 
-        if (quote.Status == QuoteStatus.Expired || quote.Status == QuoteStatus.OrderCreated)
+        if (quote.Status is QuoteStatus.Expired or QuoteStatus.OrderCreated)
             return quote;
 
         if (quote.ExpirationDateUtc.Value > DateTime.UtcNow)
@@ -733,12 +736,25 @@ public class RfqService
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task DeleteQuoteAsync(int quoteId)
     {
-        var requestQuote = await GetQuoteByIdAsync(quoteId);
+        var quote = await GetQuoteByIdAsync(quoteId);
+
+        if (quote == null)
+            return;
+
+        await _quoteRepository.DeleteAsync(quote);
+
+        if (quote.RequestQuoteId is null or 0)
+            return;
+
+        var requestQuote = await _requestQuoteRepository.GetByIdAsync(quote.RequestQuoteId);
 
         if (requestQuote == null)
             return;
 
-        await _quoteRepository.DeleteAsync(requestQuote);
+        requestQuote.QuoteId = null;
+        requestQuote.Status = RequestQuoteStatus.Submitted;
+
+        await UpdateRequestQuoteAsync(requestQuote);
     }
 
     /// <summary>

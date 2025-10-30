@@ -91,7 +91,7 @@
                             @foreach (var item in Model.CustomerItems)
                             {
                                 <tr>
-                                    <td class="picture"><img src="@item.PictureUrl" /></td>
+                                    <td class="picture"><img src="@item.PictureUrl" alt="@item.ProductName" /></td>
                                     <td class="product">
                                         <a href="@(await nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">
                                             @item.ProductName
@@ -99,8 +99,14 @@
                                         <br />
                                         @Html.Raw(item.AttributeInfo)
                                     </td>
-                                    <td>@item.Quantity</td>
-                                    <td>@item.UnitPrice</td>
+                                    <td>
+                                        <label>@T("Plugins.Misc.RFQ.OfferedQty"):</label>
+                                        <span>@item.Quantity</span>
+                                    </td>
+                                    <td>
+                                        <label>@T("Plugins.Misc.RFQ.OfferedUnitPrice"):</label>
+                                        <span>@item.UnitPrice</span>
+                                    </td>
                                 </tr>
                             }
                         </tbody>

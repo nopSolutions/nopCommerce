@@ -22,6 +22,7 @@ public class CustomerModelFactory
     private readonly IDateTimeHelper _dateTimeHelper;
     private readonly ILocalizationService _localizationService;
     private readonly IPictureService _pictureService;
+    private readonly IPriceCalculationService _priceCalculationService;
     private readonly IPriceFormatter _priceFormatter;
     private readonly IProductAttributeFormatter _productAttributeFormatter;
     private readonly IProductService _productService;
@@ -38,6 +39,7 @@ public class CustomerModelFactory
         IDateTimeHelper dateTimeHelper,
         ILocalizationService localizationService,
         IPictureService pictureService,
+        IPriceCalculationService priceCalculationService,
         IPriceFormatter priceFormatter,
         IProductAttributeFormatter productAttributeFormatter,
         IProductService productService,
@@ -50,6 +52,7 @@ public class CustomerModelFactory
         _dateTimeHelper = dateTimeHelper;
         _localizationService = localizationService;
         _pictureService = pictureService;
+        _priceCalculationService = priceCalculationService;
         _priceFormatter = priceFormatter;
         _productAttributeFormatter = productAttributeFormatter;
         _productService = productService;
@@ -191,6 +194,7 @@ public class CustomerModelFactory
         var product = await _productService.GetProductByIdAsync(item.ProductId);
 
         var unitPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(item.RequestedUnitPrice, currentCurrency);
+        unitPrice = _priceCalculationService.Round(unitPrice, currentCurrency.RoundingType);
 
         return new RequestQuoteItemModel
         {
