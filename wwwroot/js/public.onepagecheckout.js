@@ -261,7 +261,9 @@ var Billing = {
         $("#billing-new-address-form").show();
         $("#edit-billing-address-button").hide();
         $("#delete-billing-address-button").hide();
-        $("#save-billing-address-button").show();
+        if (selectedItem != 0) {
+          $("#save-billing-address-button").show();
+        }
       },
       error: Checkout.ajaxFailure,
     });
