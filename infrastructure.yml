@@ -12,7 +12,7 @@ Parameters:
     Description: Name of an existing EC2 KeyPair to SSH into the instances
   ImageId:
     Type: String
-    Default: "ami-0df368112825f8d8f"
+    Default: "ami-0a716d3f3b16d290c"
     Description: AMI ID for the EC2 instances (Ubuntu)
 
 Resources:
