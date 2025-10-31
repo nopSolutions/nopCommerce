@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to create an OIDC identity provider for GitHub Actions and an IAM role for AWS resource deployment.
+
+Parameters:
+  GitHubOwner:
+    Type: String
+    Description: The GitHub organization or username owning the repository (e.g., my-org).
+  GitHubRepoName:
+    Type: String
+    Description: The GitHub repository name (e.g., my-repo).
+
+Resources:
+  GitHubOIDCProvider:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+      Tags:
+        - Key: Purpose
+          Value: GitHubActionsOIDC
+        - Key: Project
+          Value: Learning Platform Startup Package
+
+  GitHubActionsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: LearningPlatformGitHubActionsRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub arn:aws:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              StringLike:
+                token.actions.githubusercontent.com:sub:
+                  - !Sub repo:${GitHubOwner}/${GitHubRepoName}:ref:refs/heads/main
+                  - !Sub repo:${GitHubOwner}/${GitHubRepoName}:ref:refs/heads/develop
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+      Tags:
+        - Key: Purpose
+          Value: GitHubActions
+        - Key: Project
+          Value: Learning Platform Startup Package
+
+Outputs:
+  GitHubActionsRoleArn:
+    Description: The ARN of the IAM role for GitHub Actions
+    Value: !GetAtt GitHubActionsRole.Arn

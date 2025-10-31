@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'EC2 Instance for Docker Deployment'
+
+Parameters:
+  InstanceType:
+    Type: String
+    Default: "t3.micro"
+    Description: EC2 instance type
+  KeyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: "myKeyPair"
+    Description: Name of an existing EC2 KeyPair to SSH into the instances
+  ImageId:
+    Type: String
+    Default: "ami-0df368112825f8d8f"
+    Description: AMI ID for the EC2 instances (Ubuntu)
+
+Resources:
+  EC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref ImageId
+      KeyName: !Ref KeyPairName
+      SecurityGroupIds:
+        - !Ref InstanceSecurityGroup
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash -xe
+          # Log all output to a file for debugging
+          exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+          
+          echo "Starting UserData script execution"
+          
+          # Update system and install prerequisites
+          sudo apt-get update -y
+          sudo apt-get install -y ca-certificates curl gnupg lsb-release
+          
+          # Add Docker's official GPG key
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          sudo chmod a+r /etc/apt/keyrings/docker.gpg
+          
+          # Add Docker repository
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          
+          # Install Docker
+          sudo apt-get update -y
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+          
+          # Add ubuntu user to docker group
+          sudo usermod -aG docker ubuntu
+          
+          # Enable and start Docker
+          sudo systemctl enable docker
+          sudo systemctl start docker
+          
+          echo "UserData script completed successfully"
+
+  InstanceSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: 'Enable SSH and HTTP access'
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  EC2InstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Roles:
+        - !Ref EC2InstanceRole
+
+  EC2InstanceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [ec2.amazonaws.com]
+            Action: ['sts:AssumeRole']
+
+Outputs:
+  PublicIP:
+    Description: 'Public IP address of the EC2 instance'
+    Value: !GetAtt EC2Instance.PublicIp
