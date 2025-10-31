@@ -91,6 +91,7 @@ jobs:
           IMAGE_TAG="${DOCKER_TAG}"
           DEPLOY_DIR="/home/${{ env.EC2_SSH_USER }}/deploy"
 
+          docker system prune -af
           # Create deploy dir and move the transferred image there
           mkdir -p "$DEPLOY_DIR"
           if [ -f "/home/${{ env.EC2_SSH_USER }}/image.tar" ]; then
