@@ -4,7 +4,8 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 
-WORKDIR /src                                                                    
+WORKDIR /src
+RUN rm -f Presentation/Nop.Web/Nop.Web.csproj
 COPY ./src ./
 COPY ./src/Presentation/Nop.Web/Nop.Web.dev.csproj ./Presentation/Nop.Web/Nop.Web.csproj
 
