@@ -185,15 +185,15 @@
                                             </div>
                                             <script asp-location="Footer">
                                                 $(function() {
-                                                    $('#quantity-up-@(item.Id)').on('click', () => changeQuantity(1, true));
-                                                    $('#quantity-down-@(item.Id)').on('click', () => changeQuantity(-1, true));
+                                                    $('#quantity-up-@(item.Id)').on('click', () => changeQuantity_@(item.Id)(1, true));
+                                                    $('#quantity-down-@(item.Id)').on('click', () => changeQuantity_@(item.Id)(-1, true));
                                                     $('#itemquantity@(item.Id)').on('keydown', (e) => {
                                                         switch (e.key) {
                                                             case 'ArrowUp':
-                                                                changeQuantity(1)
+                                                                changeQuantity_@(item.Id)(1)
                                                                 break;
                                                             case 'ArrowDown':
-                                                                changeQuantity(-1)
+                                                                changeQuantity_@(item.Id)(-1)
                                                                 break;
                                                             default:
                                                                 break;
@@ -202,7 +202,7 @@
 
                                                 });
 
-                                                function changeQuantity(amount, triggerChange) {
+                                                function changeQuantity_@(item.Id)(amount, triggerChange) {
                                                     var input = $(document).find('#itemquantity@(item.Id)');
                                                     var oldValue = parseInt(input.val());
                                                     var amountValue = parseInt(amount);
