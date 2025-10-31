@@ -98,7 +98,7 @@ jobs:
           fi
 
           cd "$DEPLOY_DIR"
-          cat > "$DEPLOY_DIR/.env" <<'EOF'
+          cat > "$DEPLOY_DIR/.env" <<EOF
           IMAGE_NAME=${DOCKER_IMAGE}
           IMAGE_TAG=${DOCKER_TAG}
           EOF
