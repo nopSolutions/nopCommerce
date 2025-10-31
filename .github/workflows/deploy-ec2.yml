@@ -123,6 +123,8 @@ jobs:
                 POSTGRES_USER: nopCommerce_db_user
                 POSTGRES_PASSWORD: nopCommerce_db_password
                 POSTGRES_DB: nopcommerce_db
+              ports:
+                - "5432:5432"
               volumes:
                 - db_data:/var/lib/postgresql/data
 
