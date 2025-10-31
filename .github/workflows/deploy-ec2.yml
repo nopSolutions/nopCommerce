@@ -3,7 +3,11 @@ name: Build and Deploy to EC2
 on:
   push:
     branches: [ develop ]
-
+    
+permissions:
+  id-token: write
+  contents: read
+  
 env:
   EC2_KEY_PAIR_NAME: pdt-key-pair
   STACK_NAME: pdt-app-stack
