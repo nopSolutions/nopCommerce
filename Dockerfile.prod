@@ -5,9 +5,9 @@ ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 
 WORKDIR /src
-RUN rm -f Presentation/Nop.Web/Nop.Web.csproj
+#RUN rm -f Presentation/Nop.Web/Nop.Web.csproj
 COPY ./src ./
-COPY ./src/Presentation/Nop.Web/Nop.Web.dev.csproj ./Presentation/Nop.Web/Nop.Web.csproj
+#COPY ./src/Presentation/Nop.Web/Nop.Web.dev.csproj ./Presentation/Nop.Web/Nop.Web.csproj
 
 # build solution   
 RUN dotnet build NopCommerce.sln --no-incremental -c Release
