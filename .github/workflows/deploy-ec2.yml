@@ -108,8 +108,8 @@ jobs:
           version: '3.8'
           services:
             app:
-              image: ${IMAGE_NAME}:${IMAGE_TAG}
-              container_name: ${IMAGE_NAME}
+              image: pdt-nopcommerce-app:latest
+              container_name: pdt-nopcommerce-app
               restart: unless-stopped
               ports:
                 - "80:80"
