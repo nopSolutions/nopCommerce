@@ -1,0 +1,135 @@
+name: Build and Deploy to EC2
+
+on:
+  push:
+    branches: [ develop ]
+
+env:
+  EC2_KEY_PAIR_NAME: pdt-key-pair
+  STACK_NAME: pdt-app-stack
+  DOCKER_IMAGE: pdt-nopcommerce-app
+  DOCKER_TAG: latest
+  EC2_SSH_USER: ubuntu
+
+jobs:
+  deploy-infrastructure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4.2.1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy CloudFormation stack
+        run: |
+          aws cloudformation deploy \
+            --stack-name ${{ env.STACK_NAME }} \
+            --template-file infrastructure.yml \
+            --parameter-overrides KeyPairName=${{ env.EC2_KEY_PAIR_NAME }} \
+            --capabilities CAPABILITY_IAM
+
+  build-and-deploy:
+    needs: deploy-infrastructure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4.2.1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Get EC2 Public IP
+        id: get-ip
+        run: |
+          EC2_PUBLIC_IP=$(aws cloudformation describe-stacks \
+            --stack-name ${{ env.STACK_NAME }} \
+            --query 'Stacks[0].Outputs[?OutputKey==`PublicIP`].OutputValue' \
+            --output text)
+          echo "EC2_PUBLIC_IP=$EC2_PUBLIC_IP" >> $GITHUB_ENV
+          echo "value=$EC2_PUBLIC_IP" >> $GITHUB_OUTPUT
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "$EC2_PUBLIC_IP" >> ~/.ssh/known_hosts
+          cat << EOF >> ~/.ssh/config
+          Host ec2
+            HostName $EC2_PUBLIC_IP
+            User ${{ env.EC2_SSH_USER }}
+            IdentityFile ~/.ssh/id_rsa
+            StrictHostKeyChecking no
+          EOF
+
+      - name: Build Docker image
+        run: |
+          docker build -t $DOCKER_IMAGE:$DOCKER_TAG -f Dockerfile.prod .
+          docker save $DOCKER_IMAGE:$DOCKER_TAG > image.tar
+
+      - name: Copy Docker image to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa image.tar ${{ env.EC2_SSH_USER }}@$EC2_PUBLIC_IP:/home/${{ env.EC2_SSH_USER }}/
+
+      - name: Deploy Docker image on EC2
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_SSH_USER }}@$EC2_PUBLIC_IP << SSH_EOF
+          set -e
+
+          IMAGE_NAME="${DOCKER_IMAGE}"
+          IMAGE_TAG="${DOCKER_TAG}"
+          DEPLOY_DIR="/home/${{ env.EC2_SSH_USER }}/deploy"
+
+          # Create deploy dir and move the transferred image there
+          mkdir -p "$DEPLOY_DIR"
+          if [ -f "/home/${{ env.EC2_SSH_USER }}/image.tar" ]; then
+            mv /home/${{ env.EC2_SSH_USER }}/image.tar "$DEPLOY_DIR/"
+          fi
+
+          cd "$DEPLOY_DIR"
+
+          # Create a docker-compose.yml on the EC2 host that uses the loaded image
+          cat > "$DEPLOY_DIR/docker-compose.yml" <<YAML
+          version: '3.8'
+          services:
+            app:
+              image: ${IMAGE_NAME}:${IMAGE_TAG}
+              container_name: ${IMAGE_NAME}
+              restart: unless-stopped
+              ports:
+                - "80:80"
+              depends_on:
+                - db
+
+            db:
+              image: postgres:latest
+              restart: unless-stopped
+              environment:
+                POSTGRES_USER: nopCommerce_db_user
+                POSTGRES_PASSWORD: nopCommerce_db_password
+                POSTGRES_DB: nopcommerce_db
+              volumes:
+                - db_data:/var/lib/postgresql/data
+
+          volumes:
+            db_data:
+          YAML
+
+          # Load the image into Docker and start via docker compose
+          docker load -i "$DEPLOY_DIR/image.tar"
+
+          # Stop previous compose stack (if any) and bring up new one
+          docker compose down --remove-orphans || true
+          docker compose up -d --build --remove-orphans
+
+          # Show status
+          docker compose ps
+
+          SSH_EOF
