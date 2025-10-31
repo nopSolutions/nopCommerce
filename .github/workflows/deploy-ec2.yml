@@ -98,7 +98,11 @@ jobs:
           fi
 
           cd "$DEPLOY_DIR"
-
+          cat > "$DEPLOY_DIR/.env" <<'EOF'
+          IMAGE_NAME=${DOCKER_IMAGE}
+          IMAGE_TAG=${DOCKER_TAG}
+          EOF
+          
           # Create a docker-compose.yml on the EC2 host that uses the loaded image
           cat > "$DEPLOY_DIR/docker-compose.yml" <<'YAML'
           version: '3.8'
@@ -126,14 +130,12 @@ jobs:
             db_data:
           YAML
 
-          # Load the image into Docker and start via docker compose
+
+          # Load Docker image and deploy using docker-compose
           docker load -i "$DEPLOY_DIR/image.tar"
-
-          # Stop previous compose stack (if any) and bring up new one
-          docker compose down --remove-orphans || true
-          docker compose up -d --build --remove-orphans
-
-          # Show status
+          docker compose --env-file "$DEPLOY_DIR/.env" down --remove-orphans || true
+          docker compose --env-file "$DEPLOY_DIR/.env" up -d --build --remove-orphans
           docker compose ps
+          # Show status
 
           SSH_EOF
