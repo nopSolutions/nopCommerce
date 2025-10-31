@@ -100,7 +100,7 @@ jobs:
           cd "$DEPLOY_DIR"
 
           # Create a docker-compose.yml on the EC2 host that uses the loaded image
-          cat > "$DEPLOY_DIR/docker-compose.yml" <<YAML
+          cat > "$DEPLOY_DIR/docker-compose.yml" <<'YAML'
           version: '3.8'
           services:
             app:
