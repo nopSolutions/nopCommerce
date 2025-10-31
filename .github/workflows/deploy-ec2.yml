@@ -84,7 +84,7 @@ jobs:
 
       - name: Deploy Docker image on EC2
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ env.EC2_SSH_USER }}@$EC2_PUBLIC_IP << SSH_EOF
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_SSH_USER }}@$EC2_PUBLIC_IP << 'SSH_EOF'
           set -e
 
           IMAGE_NAME="${DOCKER_IMAGE}"
