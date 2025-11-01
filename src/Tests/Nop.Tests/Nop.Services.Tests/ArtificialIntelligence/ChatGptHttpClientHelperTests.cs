@@ -298,4 +298,17 @@ public class ChatGptHttpClientHelperTests
         request.Content.Headers.ContentType.CharSet.Should().Be("utf-8");
         content.Should().Contain(query);
     }
+
+    [Test]
+    public void CanGetTokensInfo()
+    {
+        var responseText = @"{""id"": ""resp_096f41e878c7a1d20068ffc232491c8190ad765601ae8291dc"",""object"": ""response"",""created_at"": 1761591858,""status"": ""completed"",""background"": false,""billing"": {""payer"": ""developer""},""error"": null,""incomplete_details"": null,""instructions"": null,""max_output_tokens"": null,""max_tool_calls"": null,""model"": ""gpt-4.1-2025-04-14"",""output"": [{""id"": ""msg_096f41e878c7a1d20068ffc233b55081908e03c291f500b66a"",""type"": ""message"",""status"": ""completed"",""content"": [{""type"": ""output_text"",""annotations"": [],""logprobs"": [],""text"": ""**Apple MacBook Pro**\nExperience unmatched performance with the Apple MacBook Pro, engineered for professionals demanding speed and reliability. With advanced faster flash storage, launching apps and transferring large files are virtually instantaneous, boosting overall productivity. The high-load CPU effortlessly handles intensive multitasking and resource-heavy applications, making it the ideal choice for software developers, designers, and content creators. Choose the MacBook Pro to elevate your workflow with superior speed, efficiency, and unwavering stability.""}],""role"": ""assistant""}],""parallel_tool_calls"": true,""previous_response_id"": null,""prompt_cache_key"": null,""reasoning"": {""effort"": null,""summary"": null},""safety_identifier"": null,""service_tier"": ""default"",""store"": true,""temperature"": 1.0,""text"": {""format"": {""type"": ""text""},""verbosity"": ""medium""},""tool_choice"": ""auto"",""tools"": [],""top_logprobs"": 0,""top_p"": 1.0,""truncation"": ""disabled"",""usage"": {""input_tokens"": 50,""input_tokens_details"": {""cached_tokens"": 0},""output_tokens"": 94,""output_tokens_details"": {""reasoning_tokens"": 0},""total_tokens"": 144},""user"": null,""metadata"": {}}";
+
+        //arrange & act
+        var tokensInfo = _helper.GetTokensInfo(responseText);
+
+        //assert
+        tokensInfo.Should().NotBeNull();
+        tokensInfo.Should().Be($"Input tokens: 50{Environment.NewLine}Output tokens: 94{Environment.NewLine}Total tokens: 144");
+    }
 }

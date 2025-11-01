@@ -4,20 +4,23 @@ using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Services.ArtificialIntelligence;
 using NUnit.Framework;
 using System.Net;
+using Nop.Services.Logging;
 
 namespace Nop.Tests.Nop.Services.Tests.ArtificialIntelligence;
 
 [TestFixture]
-public class ArtificialIntelligenceHttpClientTests
+public class ArtificialIntelligenceHttpClientTests: BaseNopTest
 {
     private ArtificialIntelligenceSettings _settings;
     private HttpClient _httpClient;
     private HttpMessageHandler _messageHandler;
+    private ILogger _logger;
 
     [SetUp]
     public void SetUp()
     {
         _settings = NopTestConfiguration.GetArtificialIntelligenceSettings();
+        _logger = GetService<ILogger>();
     }
 
     [TearDown]
@@ -37,7 +40,7 @@ public class ArtificialIntelligenceHttpClientTests
         _settings.RequestTimeout = 45;
         _messageHandler = new TestHttpMessageHandler();
         _httpClient = new HttpClient(_messageHandler);
-        _ = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        _ = new ArtificialIntelligenceHttpClient(_settings, _httpClient, _logger);
 
         //assert
         _httpClient.Timeout.Should().Be(TimeSpan.FromSeconds(45));
@@ -53,7 +56,7 @@ public class ArtificialIntelligenceHttpClientTests
         _settings.RequestTimeout = null;
         _messageHandler = new TestHttpMessageHandler();
         _httpClient = new HttpClient(_messageHandler);
-        _ = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        _ = new ArtificialIntelligenceHttpClient(_settings, _httpClient, _logger);
 
         //assert
         _httpClient.Timeout.Should().Be(TimeSpan.FromSeconds(ArtificialIntelligenceDefaults.RequestTimeout));
@@ -69,7 +72,7 @@ public class ArtificialIntelligenceHttpClientTests
         _settings.ProviderType = ArtificialIntelligenceProviderType.Gemini;
         _messageHandler = new TestHttpMessageHandler();
         _httpClient = new HttpClient(_messageHandler);
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient, _logger);
 
         //assert
         client.Should().NotBeNull();
@@ -85,7 +88,7 @@ public class ArtificialIntelligenceHttpClientTests
         _settings.ProviderType = ArtificialIntelligenceProviderType.ChatGpt;
         _messageHandler = new TestHttpMessageHandler();
         _httpClient = new HttpClient(_messageHandler);
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient, _logger);
 
         //assert
         client.Should().NotBeNull();
@@ -101,7 +104,7 @@ public class ArtificialIntelligenceHttpClientTests
         _settings.ProviderType = ArtificialIntelligenceProviderType.DeepSeek;
         _messageHandler = new TestHttpMessageHandler();
         _httpClient = new HttpClient(_messageHandler);
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient, _logger);
 
         //assert
 
@@ -118,7 +121,7 @@ public class ArtificialIntelligenceHttpClientTests
         _settings.ProviderType = (ArtificialIntelligenceProviderType)999;
         _messageHandler = new TestHttpMessageHandler();
         _httpClient = new HttpClient(_messageHandler);
-        Action act = () => new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        Action act = () => new ArtificialIntelligenceHttpClient(_settings, _httpClient, _logger);
 
         //assert
         act.Should().Throw<ArgumentOutOfRangeException>();
@@ -151,7 +154,7 @@ public class ArtificialIntelligenceHttpClientTests
         _messageHandler = new TestHttpMessageHandler(HttpStatusCode.OK, mockResponse);
         _httpClient = new HttpClient(_messageHandler);
 
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient, _logger);
         var result = await client.SendQueryAsync("test query");
 
         //assert
@@ -183,7 +186,7 @@ public class ArtificialIntelligenceHttpClientTests
         _messageHandler = new TestHttpMessageHandler(HttpStatusCode.OK, mockResponse);
         _httpClient = new HttpClient(_messageHandler);
 
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient, _logger);
         var result = await client.SendQueryAsync("test query");
 
         //assert
@@ -214,7 +217,7 @@ public class ArtificialIntelligenceHttpClientTests
         _messageHandler = new TestHttpMessageHandler(HttpStatusCode.OK, mockResponse);
         _httpClient = new HttpClient(_messageHandler);
 
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient, _logger);
         var result = await client.SendQueryAsync("test query");
 
         //assert
@@ -233,7 +236,7 @@ public class ArtificialIntelligenceHttpClientTests
         _messageHandler = new TestHttpMessageHandler(HttpStatusCode.BadRequest, errorMessage);
         _httpClient = new HttpClient(_messageHandler);
 
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient, _logger);
         Func<Task> act = async () => await client.SendQueryAsync("test query");
 
         //assert
@@ -250,7 +253,7 @@ public class ArtificialIntelligenceHttpClientTests
         _messageHandler = new TestHttpMessageHandler(HttpStatusCode.Unauthorized, "Unauthorized");
         _httpClient = new HttpClient(_messageHandler);
 
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient, _logger);
         Func<Task> act = async () => await client.SendQueryAsync("test query");
 
         //assert
@@ -267,7 +270,7 @@ public class ArtificialIntelligenceHttpClientTests
         _messageHandler = new TestHttpMessageHandler(HttpStatusCode.InternalServerError, "Server Error");
         _httpClient = new HttpClient(_messageHandler);
 
-        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient);
+        var client = new ArtificialIntelligenceHttpClient(_settings, _httpClient, _logger);
         Func<Task> act = async () => await client.SendQueryAsync("test query");
 
         //assert

@@ -65,5 +65,28 @@ public partial class ChatGptHttpClientHelper : IArtificialIntelligenceHttpClient
         return result?[0].text ?? string.Empty;
     }
 
+    /// <summary>
+    /// Gets tokens usage information
+    /// </summary>
+    /// <param name="responseText">Text of response from AI service to get token usage information</param>
+    /// <returns>Tokens usage information</returns>
+    public virtual string GetTokensInfo(string responseText)
+    {
+        var response = JsonConvert.DeserializeAnonymousType(responseText,
+            new
+            {
+                usage = new
+                {
+                    input_tokens = 0,
+                    output_tokens = 0,
+                    total_tokens = 0
+                }
+            });
+
+        var result = $"Input tokens: {response.usage.input_tokens}{Environment.NewLine}Output tokens: {response.usage.output_tokens}{Environment.NewLine}Total tokens: {response.usage.total_tokens}";
+
+        return result;
+    }
+
     #endregion
 }

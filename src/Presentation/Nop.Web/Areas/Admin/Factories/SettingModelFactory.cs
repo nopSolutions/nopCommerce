@@ -232,6 +232,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.MetaKeywordsQuery = artificialIntelligenceSettings.MetaKeywordsQuery;
         model.AllowMetaDescriptionGeneration = artificialIntelligenceSettings.AllowMetaDescriptionGeneration;
         model.MetaDescriptionQuery = artificialIntelligenceSettings.MetaDescriptionQuery;
+        model.LogRequests = artificialIntelligenceSettings.LogRequests;
 
         //prepare available translation services
         var availableProviderType = await ArtificialIntelligenceProviderType.Gemini.ToSelectListAsync(false);
