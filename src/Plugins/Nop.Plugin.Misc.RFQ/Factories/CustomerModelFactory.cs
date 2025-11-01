@@ -176,6 +176,7 @@ public class CustomerModelFactory
         model.Status = await _localizationService.GetLocalizedEnumAsync(quote.Status);
         model.Order = quote.OrderId;
         model.StatusType = quote.Status;
+        model.AllowCustomerGenerateQuotePdf = _rfqSettings.AllowCustomerGenerateQuotePdf;
         model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(quote.CreatedOnUtc, DateTimeKind.Utc);
         model.Id = quote.Id;
         model.CustomerId = quote.CustomerId;

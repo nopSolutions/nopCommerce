@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Plugin.Misc.RFQ.Domains;
@@ -90,7 +91,8 @@ public class RfqAdminController : BasePluginController
         var model = new ConfigurationModel
         {
             Enabled = _rfqSettings.Enabled,
-            ShowCaptchaOnRequestPage = _rfqSettings.ShowCaptchaOnRequestPage
+            ShowCaptchaOnRequestPage = _rfqSettings.ShowCaptchaOnRequestPage,
+            AllowCustomerGenerateQuotePdf = _rfqSettings.AllowCustomerGenerateQuotePdf
         };
 
         return View("~/Plugins/Misc.RFQ/Views/Admin/Configure.cshtml", model);
@@ -102,12 +104,13 @@ public class RfqAdminController : BasePluginController
     {
         if (!ModelState.IsValid)
             return Configure();
-        
+
         _rfqSettings.Enabled = model.Enabled;
         _rfqSettings.ShowCaptchaOnRequestPage = model.ShowCaptchaOnRequestPage;
+        _rfqSettings.AllowCustomerGenerateQuotePdf = model.AllowCustomerGenerateQuotePdf;
 
         await _settingService.SaveSettingAsync(_rfqSettings);
-        
+
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
         return Configure();
@@ -454,6 +457,22 @@ public class RfqAdminController : BasePluginController
     #endregion
 
     #region Quote
+
+    [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]
+    public async Task<IActionResult> PdfDocument(int quoteId)
+    {
+        var quote = await _rfqService.GetQuoteByIdAsync(quoteId);
+
+        if (quote == null)
+            return RedirectToAction("AdminQuotes");
+
+        await using var stream = new MemoryStream();
+
+        await _rfqService.PrintQuoteToPdfAsync(stream, quote);
+        var bytes = stream.ToArray();
+
+        return File(bytes, MimeTypes.ApplicationPdf, string.Format(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.PdfFileName"), quote.Id) + ".pdf");
+    }
 
     [HttpPost]
     [CheckPermission(RfqPermissionConfigManager.ADMIN_ACCESS_RFQ)]

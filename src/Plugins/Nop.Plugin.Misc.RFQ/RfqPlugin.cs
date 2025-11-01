@@ -107,7 +107,8 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin, IMiscPlugin
         await _settingService.SaveSettingAsync(new RfqSettings
         {
             Enabled = true,
-            ShowCaptchaOnRequestPage = false
+            ShowCaptchaOnRequestPage = false,
+            AllowCustomerGenerateQuotePdf = false
         });
 
         if (!_widgetSettings.ActiveWidgetSystemNames.Contains(RfqDefaults.SystemName))
@@ -260,9 +261,14 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin, IMiscPlugin
             [$"Admin.ContentManagement.MessageTemplates.Description.{RfqDefaults.ADMIN_SENT_NEW_QUOTE}"] = "This message template is used to notify a customer that the new quote sent",
             ["Security.Permission.Misc.RFQ.AccessRFQ.Admin.AccessRFQ"] = "Admin area. Access to the customer’s Request and Price Offer functionality",
             ["Security.Permission.Misc.RFQ.AccessRFQ.PublicStore.AccessRFQ"] = "Public store. Access to the customer’s Request and Price Offer functionality",
-            ["Plugins.Misc.RFQ.ShowCaptchaOnRequestPage"] = "Show on request page",
+            ["Plugins.Misc.RFQ.ShowCaptchaOnRequestPage"] = "Show CAPTCHA on request page",
             ["Plugins.Misc.RFQ.ShowCaptchaOnRequestPage.Hint"] = "Check to show CAPTCHA on request page, when send the new request a quote.",
-            ["Plugins.Misc.RFQ.CaptchaDisabled.Notification"] = "In order to use this functionality, you have to enable the following setting: <a href='{0}' target='_blank'>General settings > CAPTCHA > CAPTCHA enabled</a>."
+            ["Plugins.Misc.RFQ.CaptchaDisabled.Notification"] = "In order to use this functionality, you have to enable the following setting: <a href='{0}' target='_blank'>General settings > CAPTCHA > CAPTCHA enabled</a>.",
+            ["Plugins.Misc.RFQ.CreatePdf"] = "Get a PDF quote",
+            ["Plugins.Misc.RFQ.PdfFileName"] = "quote_{0}",
+            ["Plugins.Misc.RFQ.AllowCustomerGenerateQuotePdf"] = "Quote PDF is allowed for the customer",
+            ["Plugins.Misc.RFQ.AllowCustomerGenerateQuotePdf.Hint"] = "Check to allow the generation of the quote PDF for the customer",
+            ["Plugins.Misc.RFQ.Fields.Quote.CustomerInfo"] = "Customer"
         });
 
         await base.InstallAsync();
