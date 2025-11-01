@@ -84,61 +84,20 @@ jobs:
 
       - name: Deploy Docker image on EC2
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ env.EC2_SSH_USER }}@$EC2_PUBLIC_IP << 'SSH_EOF'
-          set -e
-
+          ssh -i ~/.ssh/id_rsa ${{ env.EC2_SSH_USER }}@$EC2_PUBLIC_IP << EOF
           IMAGE_NAME="${DOCKER_IMAGE}"
           IMAGE_TAG="${DOCKER_TAG}"
-          DEPLOY_DIR="/home/${{ env.EC2_SSH_USER }}/deploy"
-
           docker system prune -af
-          # Create deploy dir and move the transferred image there
-          mkdir -p "$DEPLOY_DIR"
-          if [ -f "/home/${{ env.EC2_SSH_USER }}/image.tar" ]; then
-            mv /home/${{ env.EC2_SSH_USER }}/image.tar "$DEPLOY_DIR/"
-          fi
+          docker load -i /home/${{ env.EC2_SSH_USER }}/image.tar
 
-          cd "$DEPLOY_DIR"
-          cat > "$DEPLOY_DIR/.env" <<EOF
-          IMAGE_NAME=${DOCKER_IMAGE}
-          IMAGE_TAG=${DOCKER_TAG}
+          docker stop \$IMAGE_NAME || true
+          docker rm \$IMAGE_NAME || true
+
+          docker run -d \
+            --name \$IMAGE_NAME \
+            -p 80:80 \
+            --restart unless-stopped \
+            \$IMAGE_NAME:\$IMAGE_TAG
+
+          docker ps -a
           EOF
-          
-          # Create a docker-compose.yml on the EC2 host that uses the loaded image
-          cat > "$DEPLOY_DIR/docker-compose.yml" <<'YAML'
-          version: '3.8'
-          services:
-            app:
-              image: pdt-nopcommerce-app:latest
-              container_name: pdt-nopcommerce-app
-              restart: unless-stopped
-              ports:
-                - "80:80"
-              depends_on:
-                - db
-
-            db:
-              image: postgres:17
-              restart: unless-stopped
-              environment:
-                POSTGRES_USER: nopCommerce_db_user
-                POSTGRES_PASSWORD: nopCommerce_db_password
-                POSTGRES_DB: nopcommerce_db
-              ports:
-                - "5432:5432"
-              volumes:
-                - db_data:/var/lib/postgresql/data
-
-          volumes:
-            db_data:
-          YAML
-
-
-          # Load Docker image and deploy using docker-compose
-          docker load -i "$DEPLOY_DIR/image.tar"
-          docker compose --env-file "$DEPLOY_DIR/.env" down --remove-orphans || true
-          docker compose --env-file "$DEPLOY_DIR/.env" up -d --build --remove-orphans
-          docker compose ps
-          # Show status
-
-          SSH_EOF
