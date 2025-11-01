@@ -1472,7 +1472,7 @@ public partial class ProductController : BaseAdminController
             {
                 model.GeneratedDescription = await _artificialIntelligenceService.CreateProductDescriptionAsync(
                     model.ProductName, model.Keywords, (ToneOfVoiceType)model.ToneOfVoiceId, model.Instructions,
-                    model.CustomToneOfVoice, model.LanguageId);
+                    model.CustomToneOfVoice, model.TargetLanguageId);
             }
             catch (NopException ex)
             {
