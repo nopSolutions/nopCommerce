@@ -356,6 +356,18 @@ public class RfqCustomerController : BasePublicController
         return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
     }
 
+    public virtual async Task<IActionResult> PdfDocument(int quoteId)
+    {
+        var quote = await _rfqService.GetQuoteByIdAsync(quoteId);
+
+        await using var stream = new MemoryStream();
+
+        await _rfqService.PrintQuoteToPdfAsync(stream, quote);
+        var bytes = stream.ToArray();
+
+        return File(bytes, MimeTypes.ApplicationPdf, string.Format(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.PdfFileName"), quote.Id) + ".pdf");
+    }
+
     #endregion
 
     #endregion

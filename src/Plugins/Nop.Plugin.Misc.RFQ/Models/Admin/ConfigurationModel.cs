@@ -13,4 +13,10 @@ public record ConfigurationModel : BaseNopModel
 
     [NopResourceDisplayName("Plugins.Misc.RFQ.ShowCaptchaOnRequestPage")]
     public bool ShowCaptchaOnRequestPage { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether generation of quote pdf is allowed for customer
+    /// </summary>
+    [NopResourceDisplayName("Plugins.Misc.RFQ.AllowCustomerGenerateQuotePdf")]
+    public bool AllowCustomerGenerateQuotePdf { get; set; }
 }

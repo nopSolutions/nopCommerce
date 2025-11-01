@@ -41,6 +41,11 @@ public class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: RfqDefaults.CustomerQuoteRouteName,
             pattern: $"{lang}/rfq/quote/{{quoteId}}",
             defaults: new { controller = "RfqCustomer", action = "CustomerQuote" });
+
+        //pdf document (file result)
+        endpointRouteBuilder.MapControllerRoute(name: RfqDefaults.CustomerQuotePdfRouteName,
+            pattern: "/rfq/quote/pdf/{quoteId}",
+            defaults: new { controller = "RfqCustomer", action = "PdfDocument" });
     }
 
     /// <summary>

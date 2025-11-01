@@ -45,6 +45,10 @@
                     @T("Plugins.Misc.RFQ.SendQuote")
                 </button>
             }
+            <a asp-action="PdfDocument" asp-controller="RfqAdmin" asp-route-quoteId="@Model.Id" class="btn btn-info">
+                <i class="far fa-file-pdf"></i>
+                @T("Plugins.Misc.RFQ.CreatePdf")
+            </a>
             @if (Model.DisplayDeleteQuoteButton)
             {
                 <button type="submit"

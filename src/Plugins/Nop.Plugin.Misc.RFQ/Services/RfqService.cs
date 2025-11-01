@@ -1,16 +1,30 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
+using Nop.Core.Domain;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Plugin.Misc.RFQ.Domains;
+using Nop.Plugin.Misc.RFQ.Services.Pdf;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
+using Nop.Services.Common.Pdf;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
+using Nop.Services.Helpers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Tax;
+using PdfRpt.Core.Contracts;
 
 namespace Nop.Plugin.Misc.RFQ.Services;
 
@@ -21,10 +35,17 @@ public class RfqService
 {
     #region Fields
 
+    private readonly IActionContextAccessor _actionContextAccessor;
+    private readonly ICurrencyService _currencyService;
     private readonly ICustomerService _customerService;
+    private readonly IDateTimeHelper _dateTimeHelper;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILocalizationService _localizationService;
+    private readonly IOrderService _orderService;
     private readonly IPermissionService _permissionService;
+    private readonly IPictureService _pictureService;
+    private readonly IPriceFormatter _priceFormatter;
+    private readonly IProductAttributeFormatter _productAttributeFormatter;
     private readonly IProductService _productService;
     private readonly IRepository<Customer> _customerRepository;
     private readonly IRepository<Quote> _quoteRepository;
@@ -35,17 +56,29 @@ public class RfqService
     private readonly IShoppingCartService _shoppingCartService;
     private readonly IStoreContext _storeContext;
     private readonly ITaxService _taxService;
+    private readonly IUrlHelperFactory _urlHelperFactory;
+    private readonly IWebHelper _webHelper;
     private readonly IWorkContext _workContext;
+    private readonly IHtmlFormatter _htmlFormatter;
+    private readonly PdfSettings _pdfSettings;
     private readonly RfqMessageService _rfqMessageService;
+    private readonly StoreInformationSettings _storeInformationSettings;
 
     #endregion
 
     #region Ctor
 
-    public RfqService(ICustomerService customerService,
+    public RfqService(IActionContextAccessor actionContextAccessor,
+        ICurrencyService currencyService,
+        ICustomerService customerService,
+        IDateTimeHelper dateTimeHelper,
         IHttpContextAccessor httpContextAccessor,
         ILocalizationService localizationService,
+        IOrderService orderService,
         IPermissionService permissionService,
+        IPictureService pictureService,
+        IPriceFormatter priceFormatter,
+        IProductAttributeFormatter productAttributeFormatter,
         IProductService productService,
         IRepository<Customer> customerRepository,
         IRepository<Quote> quoteRepository,
@@ -56,13 +89,25 @@ public class RfqService
         IShoppingCartService shoppingCartService,
         IStoreContext storeContext,
         ITaxService taxService,
+        IUrlHelperFactory urlHelperFactory,
+        IWebHelper webHelper,
         IWorkContext workContext,
-        RfqMessageService rfqMessageService)
+        IHtmlFormatter htmlFormatter,
+        PdfSettings pdfSettings,
+        RfqMessageService rfqMessageService,
+        StoreInformationSettings storeInformationSettings)
     {
+        _actionContextAccessor = actionContextAccessor;
+        _currencyService = currencyService;
         _customerService = customerService;
+        _dateTimeHelper = dateTimeHelper;
         _httpContextAccessor = httpContextAccessor;
         _localizationService = localizationService;
+        _orderService = orderService;
         _permissionService = permissionService;
+        _pictureService = pictureService;
+        _priceFormatter = priceFormatter;
+        _productAttributeFormatter = productAttributeFormatter;
         _productService = productService;
         _customerRepository = customerRepository;
         _quoteRepository = quoteRepository;
@@ -73,8 +118,13 @@ public class RfqService
         _shoppingCartService = shoppingCartService;
         _storeContext = storeContext;
         _taxService = taxService;
+        _urlHelperFactory = urlHelperFactory;
+        _webHelper = webHelper;
         _workContext = workContext;
+        _htmlFormatter = htmlFormatter;
+        _pdfSettings = pdfSettings;
         _rfqMessageService = rfqMessageService;
+        _storeInformationSettings = storeInformationSettings;
     }
 
     #endregion
@@ -809,6 +859,123 @@ public class RfqService
         }
     }
 
+    /// <summary>
+    /// Write quote PDF to the specified stream
+    /// </summary>
+    /// <param name="stream">Stream to save PDF</param>
+    /// <param name="quote">Quote</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// </returns>
+    public virtual async Task PrintQuoteToPdfAsync(Stream stream, Quote quote)
+    {
+        ArgumentNullException.ThrowIfNull(quote);
+
+        //store info
+        var language = await _workContext.GetWorkingLanguageAsync();
+
+        byte[] logo = null;
+        var logoPicture = await _pictureService.GetPictureByIdAsync(_pdfSettings.LogoPictureId);
+        logoPicture ??= await _pictureService.GetPictureByIdAsync(_storeInformationSettings.LogoPictureId);
+        
+        if (logoPicture != null)
+        {
+            logo = await _pictureService.LoadPictureBinaryAsync(logoPicture);
+
+            if (logoPicture.MimeType == MimeTypes.ImageSvg)
+            {
+                await using var logoStream = new MemoryStream(logo);
+                logo = await _pictureService.ConvertSvgToPngAsync(logoStream);
+            }
+        }
+
+        var date = await _dateTimeHelper.ConvertToUserTimeAsync(quote.CreatedOnUtc, DateTimeKind.Utc);
+        var quoteItems = await GetQuoteItemsAsync(quote.Id);
+
+        var orderNumberText = string.Empty;
+
+        if (quote.OrderId != null)
+        {
+            var order = await _orderService.GetOrderByIdAsync(quote.OrderId.Value);
+            orderNumberText = order.CustomOrderNumber;
+        }
+
+        DateTime? expirationDate = null;
+        
+        if (quote.ExpirationDateUtc.HasValue)
+            expirationDate = await _dateTimeHelper.ConvertToUserTimeAsync(quote.ExpirationDateUtc.Value, DateTimeKind.Utc);
+
+        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
+        var fontName = language?.Rtl == true
+            ? !string.IsNullOrEmpty(_pdfSettings.RtlFontName) ? _pdfSettings.RtlFontName : NopCommonDefaults.PdfRtlFontName
+            : !string.IsNullOrEmpty(_pdfSettings.LtrFontName) ? _pdfSettings.LtrFontName : NopCommonDefaults.PdfLtrFontName;
+
+        var fontSize = _pdfSettings.BaseFontSize >= 0 ? _pdfSettings.BaseFontSize : 10;
+
+        var document = new QuoteDocument
+        {
+            QuoteUrl = urlHelper.RouteUrl(RfqDefaults.CustomerQuoteRouteName, new { quoteId = quote.Id }, protocol: _webHelper.GetCurrentRequestProtocol()),
+            Language = language,
+            Font = PdfDocumentHelper.GetFont(fontName, fontSize),
+            ImageTargetSize = _pdfSettings.ImageTargetSize,
+            LogoData = logo,
+            PageSize = _pdfSettings.LetterPageSizeEnabled ? PdfPageSize.Letter : PdfPageSize.A4,
+            QuoteInfo = new QuoteInfo
+            {
+                QuoteDate = date.ToString("D", new CultureInfo(language.LanguageCulture)),
+                OrderNumber = orderNumberText,
+                QuoteNumber = quote.Id.ToString(),
+                Status = await _localizationService.GetLocalizedEnumAsync(quote.Status),
+                ExpirationDate = expirationDate == null || quote.OrderId.HasValue ? string.Empty : expirationDate.Value.ToString("D", new CultureInfo(language.LanguageCulture))
+            },
+            Products = await getQuoteProductItems(),
+            GetResourceAsync = async (resourceKey, languageId) =>
+                await _localizationService.GetResourceAsync(resourceKey, languageId)
+        };
+
+        await using var pdfStream = new MemoryStream();
+        document.Generate(pdfStream);
+
+        pdfStream.Position = 0;
+        await pdfStream.CopyToAsync(stream);
+
+        return;
+
+        async Task<List<PdfQuoteItem>> getQuoteProductItems()
+        {
+            var result = new List<PdfQuoteItem>();
+
+            foreach (var qi in quoteItems)
+            {
+                var productItem = new PdfQuoteItem();
+                var product = await _productService.GetProductByIdAsync(qi.ProductId);
+
+                //product name
+                productItem.Name = await _localizationService.GetLocalizedAsync(product, x => x.Name, language.Id);
+
+                //attributes
+                if (!string.IsNullOrEmpty(qi.AttributesXml))
+                {
+                    var attributeInfo = product != null ? await _productAttributeFormatter.FormatAttributesAsync(product, qi.AttributesXml) : string.Empty;
+                    var attributes = _htmlFormatter.ConvertHtmlToPlainText(attributeInfo, true, true);
+                    productItem.ProductAttributes = attributes.Split('\n').ToList();
+                }
+
+                //price
+                var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
+                productItem.Price = await _priceFormatter.FormatPriceAsync(await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(qi.OfferedUnitPrice, currentCurrency), true, currentCurrency);
+                
+                //qty
+                productItem.Quantity = qi.OfferedQty.ToString();
+                
+                result.Add(productItem);
+            }
+
+            return result;
+        }
+    }
+    
     #endregion
 
     #region Quote item

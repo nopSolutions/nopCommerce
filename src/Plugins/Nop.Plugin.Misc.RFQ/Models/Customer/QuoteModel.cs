@@ -30,5 +30,7 @@ public record QuoteModel : BaseNopEntityModel
 
     public IList<QuoteItemModel> CustomerItems { get; set; }
 
+    public bool AllowCustomerGenerateQuotePdf { get; set; }
+
     public bool DisplayCreateOrderButton => StatusType != QuoteStatus.Expired && StatusType != QuoteStatus.OrderCreated;
 }
