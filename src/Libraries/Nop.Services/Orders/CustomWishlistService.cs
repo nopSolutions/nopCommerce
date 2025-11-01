@@ -17,7 +17,7 @@ public partial class CustomWishlistService : ICustomWishlistService
 
     #region Ctor
 
-    public CustomWishlistService(IRepository<CustomWishlist> customWishlistRepository, 
+    public CustomWishlistService(IRepository<CustomWishlist> customWishlistRepository,
         ShoppingCartSettings shoppingCartSettings)
     {
         _customWishlistRepository = customWishlistRepository;
@@ -56,6 +56,26 @@ public partial class CustomWishlistService : ICustomWishlistService
         await _customWishlistRepository.InsertAsync(item);
     }
 
+    public virtual async Task EditCustomWishlistAsync(int wishlistId, string newName, int customerId)
+    {
+        var wishlist = await _customWishlistRepository.GetByIdAsync(wishlistId);
+        if (wishlist == null)
+            throw new ArgumentException($"Custom wishlist with ID {wishlistId} not found.");
+
+        // Verify ownership
+        if (wishlist.CustomerId != customerId)
+            throw new UnauthorizedAccessException("You are not allowed to edit this wishlist.");
+
+        // Validate new name
+        if (string.IsNullOrWhiteSpace(newName))
+            throw new ArgumentException("Wishlist name cannot be empty.");
+
+        wishlist.Name = newName.Trim();
+
+        await _customWishlistRepository.UpdateAsync(wishlist);
+    }
+
+
     /// <summary>
     /// Removes a custom wishlist item with the specified identifier.
     /// </summary>
@@ -68,6 +88,7 @@ public partial class CustomWishlistService : ICustomWishlistService
             await _customWishlistRepository.DeleteAsync(item);
         }
     }
+
 
     /// <summary>
     /// Retrieves a custom wishlist by its unique identifier.

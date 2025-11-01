@@ -48,7 +48,7 @@ public static partial class NopRouteNames
         /// <summary>
         /// Gets the product search route name
         /// </summary>
-        public const string SEARCH = "ProductSearch";        
+        public const string SEARCH = "ProductSearch";
 
         /// <summary>
         /// Gets the compare products route name
@@ -702,6 +702,11 @@ public static partial class NopRouteNames
         /// Gets the delete custom wishlist route name
         /// </summary>
         public const string DELETE_CUSTOM_WISHLIST = "DeleteCustomWishlist";
+
+        /// <summary>
+        /// Gets the edit custom wishlist route name
+        /// </summary>
+        public const string RENAME_CUSTOM_WISHLIST = "RenameCustomWishlist";
 
         /// <summary>
         /// Gets the estimate shipping route name
