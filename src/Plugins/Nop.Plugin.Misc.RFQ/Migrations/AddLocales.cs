@@ -7,7 +7,7 @@ using Nop.Services.Localization;
 
 namespace Nop.Plugin.Misc.RFQ.Migrations;
 
-[NopMigration("2025/10/29 16:41:53:1677556", "Misc.RFQ add the locale")]
+[NopMigration("2025/10/30 20:17:53:1677556", "Misc.RFQ add the locale")]
 public class AddLocales : ForwardOnlyMigration
 {
     private readonly ILanguageService _languageService;
@@ -35,7 +35,9 @@ public class AddLocales : ForwardOnlyMigration
         {
             ["Plugins.Misc.RFQ.ShowCaptchaOnRequestPage"] = "Show CAPTCHA on request page",
             ["Plugins.Misc.RFQ.ShowCaptchaOnRequestPage.Hint"] = "Check to show CAPTCHA on request page, when send the new request a quote.",
-            ["Plugins.Misc.RFQ.CaptchaDisabled.Notification"] = "In order to use this functionality, you have to enable the following setting: <a href='{0}' target='_blank'>General settings > CAPTCHA > CAPTCHA enabled</a>"
+            ["Plugins.Misc.RFQ.CaptchaDisabled.Notification"] = "In order to use this functionality, you have to enable the following setting: <a href='{0}' target='_blank'>General settings > CAPTCHA > CAPTCHA enabled</a>",
+            ["Plugins.Misc.RFQ.CustomerRequest.RequestedQty.MustGreaterThanZero"] = "Requested qty of \"{0}\" product must be greater than zero.",
+            ["Plugins.Misc.RFQ.CustomerRequest.RequestedUnitPrice.MustBeEqualOrGreaterThanZero"] = "Requested unit price of \"{0}\" product must be equal or greater than zero."
         }, languageId).Wait();
     }
 }

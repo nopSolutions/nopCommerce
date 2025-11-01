@@ -262,7 +262,9 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin, IMiscPlugin
             ["Security.Permission.Misc.RFQ.AccessRFQ.PublicStore.AccessRFQ"] = "Public store. Access to the customer’s Request and Price Offer functionality",
             ["Plugins.Misc.RFQ.ShowCaptchaOnRequestPage"] = "Show on request page",
             ["Plugins.Misc.RFQ.ShowCaptchaOnRequestPage.Hint"] = "Check to show CAPTCHA on request page, when send the new request a quote.",
-            ["Plugins.Misc.RFQ.CaptchaDisabled.Notification"] = "In order to use this functionality, you have to enable the following setting: <a href='{0}' target='_blank'>General settings > CAPTCHA > CAPTCHA enabled</a>."
+            ["Plugins.Misc.RFQ.CaptchaDisabled.Notification"] = "In order to use this functionality, you have to enable the following setting: <a href='{0}' target='_blank'>General settings > CAPTCHA > CAPTCHA enabled</a>.",
+            ["Plugins.Misc.RFQ.CustomerRequest.RequestedQty.MustGreaterThanZero"] = "Requested qty of \"{0}\" product must be greater than zero.",
+            ["Plugins.Misc.RFQ.CustomerRequest.RequestedUnitPrice.MustBeEqualOrGreaterThanZero"] = "Requested unit price of \"{0}\" product be equal or greater than zero."
         });
 
         await base.InstallAsync();
