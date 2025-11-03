@@ -2507,7 +2507,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.FilterLevelValues.Updated">
     <Value>The filter level value has been updated successfully.</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers">
     <Value>Manufacturers</Value>
   </LocaleResource>
@@ -8559,7 +8559,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AllowCustomersCancelOrders.Hint">
     <Value>Check to allow customers to cancel orders</Value>
-  </LocaleResource>    
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AnonymousCheckoutAllowed">
     <Value>Anonymous checkout allowed</Value>
   </LocaleResource>
@@ -21415,6 +21415,9 @@
   </LocaleResource>
   <LocaleResource Name="Wishlist.SelectWishlist">
     <Value>Specify your wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.DuplicateNameNotAllowed">
+    <Value>A wishlist with this name already exists.</Value>
   </LocaleResource>
   <LocaleResource Name="Wishlist.TaxShipping.ExclTax">
     <Value><![CDATA[All prices are entered excluding tax. Excluding <a href="{0}">shipping</a>]]></Value>
