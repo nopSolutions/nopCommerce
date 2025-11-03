@@ -157,7 +157,7 @@ namespace Nop.Plugin.Shipping.CourierGuy.Controllers
                     var note = new OrderNote { OrderId = order.Id, Note = noteBuilder.ToString(), DisplayToCustomer = false, CreatedOnUtc = DateTime.UtcNow };
                     await _orderService.InsertOrderNoteAsync(note);
                 }
-                catch (Exception ex) { await _logger.ErrorAsync("CourierGuy tracking webhook: error adding order note", ex, order.CustomerId); }
+                catch (Exception ex) { await _logger.ErrorAsync("CourierGuy tracking webhook: error adding order note", ex); }
             }
 
             await _courierShipmentService.SendPushoverNotification("Tracking webhook processed successfully for shipment " + matchedShipment.Id, "CourierGuy Tracking");

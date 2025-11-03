@@ -57,7 +57,7 @@ namespace Nop.Plugin.Payments.PeachPayments.Controllers
         }
         public async Task<IActionResult> Configure()
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS))
                 return AccessDeniedView();
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -168,7 +168,7 @@ namespace Nop.Plugin.Payments.PeachPayments.Controllers
 
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PAYMENT_METHODS))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
