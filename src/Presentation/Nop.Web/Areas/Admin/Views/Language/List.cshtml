@@ -45,9 +45,8 @@
                                 new ColumnProperty(nameof(LanguageModel.FlagImageFileName))
                                 {
                                     Title = T("Admin.Configuration.Languages.Fields.FlagImage").Text,
-                                    Width = "100",
                                     ClassName =  NopColumnClassDefaults.CenterAll,
-                                    Render = new RenderPicture(Url.Content("~/images/flags/"))
+                                    Render = new RenderPicture(Url.Content("~/images/flags/"), 20)
                                 },
                                 new ColumnProperty(nameof(LanguageModel.LanguageCulture))
                                 {
