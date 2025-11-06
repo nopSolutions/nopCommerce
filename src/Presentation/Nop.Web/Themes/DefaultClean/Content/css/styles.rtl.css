@@ -3524,14 +3524,13 @@ label, label + * {
 }
 
 .button-2.custom-wishlist-button {
-  width: 132px;
   height: 36px;
   background-color: #cfd6e1;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 12px;
+  padding-inline-end: 12px;
   font-size: 14px;
   font-weight: 500;
   color: #1f2d3d;
@@ -3546,19 +3545,14 @@ label, label + * {
   text-overflow: ellipsis;
 }
 
-.button-2.custom-wishlist-button.add-new {
-  background: url(../images/new.png) left center no-repeat;
-  padding: 0 0 0 18px;
+.button-2.custom-wishlist-button.add-new::before {
+  content: url(../images/new.png);
+  height: 13px;
 }
 
 .button-2.custom-wishlist-button:hover {
   background-color: #e9eff6;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-}
-
-.button-2.custom-wishlist-button.add-new {
-  background-position: right center;
-  padding: 0 18px 0 0;
 }
 
 .add-wishlist-content .wishlist-add-custom-button {
