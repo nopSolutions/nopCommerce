@@ -1840,8 +1840,8 @@ label, label + * {
   padding: 5px 0;
 }
 
-.price-range-filter .selected-price-range .to {
-  float: right;
+.price-range-filter .selected-price-range .from {
+  float: left;
 }
 
 .price-range-filter .selected-price-range.manually {
