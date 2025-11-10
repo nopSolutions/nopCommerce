@@ -9,7 +9,6 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Http;
-using Nop.Core.Http.Extensions;
 using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -1304,7 +1303,7 @@ public partial class CheckoutController : BasePublicController
 
                 processPaymentRequest = new ProcessPaymentRequest();
             }
-            
+
             processPaymentRequest.StoreId = store.Id;
             processPaymentRequest.CustomerId = customer.Id;
             processPaymentRequest.PaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
@@ -1314,7 +1313,7 @@ public partial class CheckoutController : BasePublicController
             if (placeOrderResult.Success)
             {
                 await _orderProcessingService.SetProcessPaymentRequestAsync(null);
-                
+
                 var postProcessPaymentRequest = new PostProcessPaymentRequest
                 {
                     Order = placeOrderResult.PlacedOrder
@@ -1463,13 +1462,13 @@ public partial class CheckoutController : BasePublicController
         }
 
         //return payment info page
-        var paymenInfoModel = await _checkoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
+        var paymentInfoModel = await _checkoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
         return Json(new
         {
             update_section = new UpdateSectionJsonModel
             {
                 name = "payment-info",
-                html = await RenderPartialViewToStringAsync("OpcPaymentInfo", paymenInfoModel)
+                html = await RenderPartialViewToStringAsync("OpcPaymentInfo", paymentInfoModel)
             },
             goto_section = "payment_info"
         });
@@ -1965,7 +1964,7 @@ public partial class CheckoutController : BasePublicController
             if (ModelState.IsValid)
             {
                 await _orderProcessingService.SetProcessPaymentRequestAsync(await paymentMethod.GetPaymentInfoAsync(form));
-                
+
                 var confirmOrderModel = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
                 return Json(new
                 {
@@ -1979,13 +1978,13 @@ public partial class CheckoutController : BasePublicController
             }
 
             //If we got this far, something failed, redisplay form
-            var paymenInfoModel = await _checkoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
+            var paymentInfoModel = await _checkoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
             return Json(new
             {
                 update_section = new UpdateSectionJsonModel
                 {
                     name = "payment-info",
-                    html = await RenderPartialViewToStringAsync("OpcPaymentInfo", paymenInfoModel)
+                    html = await RenderPartialViewToStringAsync("OpcPaymentInfo", paymentInfoModel)
                 }
             });
         }
