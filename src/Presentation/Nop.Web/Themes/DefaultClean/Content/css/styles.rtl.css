@@ -1319,7 +1319,7 @@ label, label + * {
 .menu__toggle {
   display: block;
   width: 100%;
-  background: var(--accent-blue-color) url(../images/menu-icon.png) right center no-repeat;
+  background: var(--accent-blue-color) url(../images/menu-icon.png) left center no-repeat;
   padding: 15px;
   font-weight: bold;
   color: #fff;
