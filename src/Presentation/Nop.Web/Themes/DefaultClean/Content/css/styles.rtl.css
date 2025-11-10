@@ -3466,6 +3466,15 @@ label, label + * {
   background-color: #999;
 }
 
+.wishlist-content .delete-wishlist-button {
+    background-color: #b43c55;
+}
+
+.wishlist-content .delete-wishlist-button:hover,
+.wishlist-content .delete-wishlist-button:focus {
+    background-color: #e1133e;
+}
+
 .wishlist-page .share-info {
   text-align: center;
 }
