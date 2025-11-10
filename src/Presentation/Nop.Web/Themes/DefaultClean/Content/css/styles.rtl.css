@@ -363,6 +363,11 @@ label, label + * {
   text-align: center;
 }
 
+.inputs .form-input-wrapper {
+  display: inline-block;
+  max-width: 100%;
+}
+
 .required {
   margin: 0 3px 0 -8px; /*siblings offset*/
   vertical-align: top;
