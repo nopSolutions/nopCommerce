@@ -380,6 +380,7 @@ label, label + * {
   font-size: 13px;
   color: var(--error-red-color);
   margin-top: 5px;
+  white-space: normal;
 }
 
 .field-validation-valid,
