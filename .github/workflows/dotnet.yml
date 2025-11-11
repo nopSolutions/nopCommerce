@@ -1,4 +1,4 @@
-name: myjava project
+name: mydotnet project
 
 on:
   push:
@@ -7,10 +7,23 @@ on:
 
 jobs:
   dotnet_publish:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Code Checkout
         uses: actions/checkout@v5
 
-      - name: Dotnet Publish Command
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectBaseDir: .
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.100"
+
+      - name: Dotnet Publish    
         run: dotnet publish -c Release src/Presentation/Nop.Web/Nop.Web.csproj -o demo
