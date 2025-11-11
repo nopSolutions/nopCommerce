@@ -13,4 +13,4 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Dotnet Publish Command
-        run: dotnet publish -c Release src/Presentation/Nop.Web/Nop.Web.csproj -o /demo
+        run: dotnet publish -c Release src/Presentation/Nop.Web/Nop.Web.csproj -o demo
