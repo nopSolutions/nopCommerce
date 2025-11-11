@@ -1,0 +1,22 @@
+name: mydotnet project
+
+on:
+  push:
+    branches:
+      - develop  # corrected spelling from 'devolop'
+
+jobs:
+  dotnet_publish:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.111' # change version if your project uses different .NET version
+
+      - name: Publish .NET Project
+        run: dotnet publish -c Release src/Presentation/Nop.Web/Nop.Web.csproj -o ./publish
