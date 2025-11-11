@@ -155,7 +155,7 @@ button, .button-1, .button-2 {
 }
 
 label, label + * {
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 .master-wrapper-content {
@@ -8078,6 +8078,8 @@ label, label + * {
 
   .center-2 .inputs label {
     width: 136px;
+    min-height: 40px;
+    line-height: 40px;
   }
 
   .inputs.accept-consent label {

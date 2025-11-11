@@ -154,7 +154,7 @@ button, .button-1, .button-2 {
 }
 
 label, label + * {
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 .master-wrapper-content {
@@ -356,6 +356,11 @@ label, label + * {
   display: inline-block;
   width: auto !important;
   margin: 0 5px 0 0;
+}
+
+.inputs .form-input-wrapper {
+  display: inline-block;
+  max-width: 100%;
 }
 
 .inputs.reversed {
@@ -4336,7 +4341,7 @@ label, label + * {
 }
 
 .change-password-recovery-link {
-  text-align: right;
+  text-align: left;
   font-size: 13px;
   margin-top: 5px;
 }
@@ -8150,6 +8155,8 @@ label, label + * {
 
   .center-2 .inputs label {
     width: 136px;
+    min-height: 40px;
+    line-height: 40px;
   }
 
   .inputs.accept-consent label {
