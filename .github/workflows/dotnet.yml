@@ -16,6 +16,9 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@v2
         with:
           projectBaseDir: .
+          args: >
+            -Dsonar.organization=karthik23081998
+            -Dsonar.projectKey=karthik23081998_nopCommerce
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -23,7 +26,7 @@ jobs:
       - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "9.0.100"
+          dotnet-version: '9.0.100'
 
-      - name: Dotnet Publish    
+      - name: Dotnet Publish
         run: dotnet publish -c Release src/Presentation/Nop.Web/Nop.Web.csproj -o demo
