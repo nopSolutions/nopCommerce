@@ -6,12 +6,15 @@ on:
       - develop
 
 jobs:
-  dotnet_publish:
+  dotnet_pipeline:
     runs-on: ubuntu-latest
+
     steps:
+      # Step 1: Checkout the source code
       - name: Code Checkout
         uses: actions/checkout@v5
 
+      # Step 2: SonarCloud Scan
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
@@ -23,10 +26,46 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
+      # Step 3: Install .NET SDK
       - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.100'
 
+      # Step 4: Publish .NET Application
       - name: Dotnet Publish
         run: dotnet publish -c Release src/Presentation/Nop.Web/Nop.Web.csproj -o demo
+
+      # Step 5: Configure AWS Credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      # Step 6: Login to Amazon ECR
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # Step 7: Build & Push Docker Image to ECR
+      - name: Build and Push Docker Image
+        run: |
+          echo "Building Docker Image..."
+          docker build -t dotnetapp:1.0 .
+          docker tag dotnetapp:1.0 516557366035.dkr.ecr.us-east-1.amazonaws.com/mydemmypodlevel:latest
+          echo "Pushing Docker Image to ECR..."
+          docker push 516557366035.dkr.ecr.us-east-1.amazonaws.com/mydemmypodlevel:latest
+
+      # Step 8: Deploy to EKS (Kubernetes)
+      - name: Deploy to EKS using manifest files
+        uses: tale/kubectl-action@v1
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
+        with:
+          args: |
+            echo "Applying Kubernetes manifests..."
+            kubectl apply -f deployment.yaml
+            kubectl apply -f service.yaml
+            echo "Getting running pods..."
+            kubectl get pods
