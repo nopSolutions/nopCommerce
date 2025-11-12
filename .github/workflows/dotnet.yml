@@ -57,15 +57,18 @@ jobs:
           echo "Pushing Docker Image to ECR..."
           docker push 516557366035.dkr.ecr.us-east-1.amazonaws.com/mydemmypodlevel:latest
 
-      # Step 8: Deploy to EKS (Kubernetes)
-      - name: Deploy to EKS using manifest files
+      # Step 8a: Setup Kubectl
+      - name: Setup Kubectl
         uses: tale/kubectl-action@v1
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
         with:
-          args: |
-            echo "Applying Kubernetes manifests..."
-            kubectl apply -f deployment.yaml
-            kubectl apply -f service.yaml
-            echo "Getting running pods..."
-            kubectl get pods
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+          kubectl-version: 'v1.34.1'
+
+      # Step 8b: Deploy to EKS using manifests
+      - name: Deploy to EKS
+        run: |
+          echo "Applying Kubernetes manifests..."
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
+          echo "Getting running pods..."
+          kubectl get pods
