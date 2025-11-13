@@ -2,7 +2,7 @@
 using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
-using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Core.Rss;
 using Nop.Plugin.Misc.News.Domain;
 using Nop.Plugin.Misc.News.Public.Factories;
@@ -29,9 +29,7 @@ public class NewsController : BasePublicController
     protected readonly CaptchaSettings _captchaSettings;
     protected readonly ICustomerActivityService _customerActivityService;
     protected readonly ICustomerService _customerService;
-    protected readonly IEventPublisher _eventPublisher;
     protected readonly ILocalizationService _localizationService;
-    protected readonly INopUrlHelper _nopUrlHelper;
     protected readonly IPermissionService _permissionService;
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
@@ -50,9 +48,7 @@ public class NewsController : BasePublicController
     public NewsController(CaptchaSettings captchaSettings,
         ICustomerActivityService customerActivityService,
         ICustomerService customerService,
-        IEventPublisher eventPublisher,
         ILocalizationService localizationService,
-        INopUrlHelper nopUrlHelper,
         IPermissionService permissionService,
         IStoreContext storeContext,
         IStoreMappingService storeMappingService,
@@ -67,9 +63,7 @@ public class NewsController : BasePublicController
         _captchaSettings = captchaSettings;
         _customerActivityService = customerActivityService;
         _customerService = customerService;
-        _eventPublisher = eventPublisher;
         _localizationService = localizationService;
-        _nopUrlHelper = nopUrlHelper;
         _permissionService = permissionService;
         _storeContext = storeContext;
         _storeMappingService = storeMappingService;
@@ -89,7 +83,7 @@ public class NewsController : BasePublicController
     public async Task<IActionResult> List(NewsPagingFilteringModel command)
     {
         if (!_newsSettings.Enabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var model = await _newsModelFactory.PrepareNewsItemListModelAsync(command);
         return View("~/Plugins/Misc.News/Public/Views/List.cshtml", model);
@@ -123,7 +117,7 @@ public class NewsController : BasePublicController
     public async Task<IActionResult> NewsItem(int newsItemId)
     {
         if (!_newsSettings.Enabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var newsItem = await _newsService.GetNewsByIdAsync(newsItemId);
         if (newsItem == null)
@@ -157,11 +151,11 @@ public class NewsController : BasePublicController
     public async Task<IActionResult> NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
     {
         if (!_newsSettings.Enabled)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var newsItem = await _newsService.GetNewsByIdAsync(newsItemId);
         if (newsItem == null || !newsItem.Published || !newsItem.AllowComments)
-            return RedirectToRoute("Homepage");
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _newsSettings.ShowCaptchaOnNewsCommentPage && !captchaValid)

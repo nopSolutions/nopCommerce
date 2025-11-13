@@ -1,6 +1,6 @@
 ﻿@model HomepageNewsItemsModel
 
-@if (Model.NewsItems.Count > 0)
+@if (Model.NewsItems.Any())
 {
     <link href="~/Plugins/Misc.News/Content/styles.css" rel="stylesheet">
     <section class="news-list-homepage">
@@ -30,5 +30,4 @@
             <a href="@Url.RouteUrl(NewsDefaults.Routes.Public.NewsArchive)">@T("Plugins.Misc.News.ViewAll")</a>
         </div>
     </section>
-
 }

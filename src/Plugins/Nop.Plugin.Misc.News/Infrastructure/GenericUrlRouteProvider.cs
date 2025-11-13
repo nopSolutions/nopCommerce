@@ -30,10 +30,7 @@ public class GenericUrlRouteProvider : BaseRouteProvider, IRouteProvider
     /// <summary>
     /// Gets a priority of route provider
     /// </summary>
-    /// <remarks>
-    /// it should be the last route. we do not set it to -int.MaxValue so it could be overridden (if required)
-    /// </remarks>
-    public int Priority => -1000000;
+    public int Priority => -1000001;
 
     #endregion
 }

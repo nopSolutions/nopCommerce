@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Security;
-using Nop.Core.Events;
 using Nop.Plugin.Misc.News.Admin.Factories;
 using Nop.Plugin.Misc.News.Admin.Models;
 using Nop.Plugin.Misc.News.Domain;
@@ -31,13 +30,11 @@ public class NewsAdminController : BasePluginController
     #region Fields
 
     private readonly ICustomerActivityService _customerActivityService;
-    private readonly IEventPublisher _eventPublisher;
     private readonly ILocalizationService _localizationService;
     private readonly INotificationService _notificationService;
     private readonly ISettingService _settingService;
     private readonly IStoreContext _storeContext;
     private readonly IStoreMappingService _storeMappingService;
-    private readonly IStoreService _storeService;
     private readonly IUrlRecordService _urlRecordService;
     private readonly NewsModelFactory _newsModelFactory;
     private readonly NewsService _newsService;
@@ -47,57 +44,24 @@ public class NewsAdminController : BasePluginController
     #region Ctor
 
     public NewsAdminController(ICustomerActivityService customerActivityService,
-        IEventPublisher eventPublisher,
         ILocalizationService localizationService,
         INotificationService notificationService,
         ISettingService settingService,
         IStoreContext storeContext,
         IStoreMappingService storeMappingService,
-        IStoreService storeService,
         IUrlRecordService urlRecordService,
         NewsModelFactory newsModelFactory,
         NewsService newsService)
     {
         _customerActivityService = customerActivityService;
-        _eventPublisher = eventPublisher;
         _localizationService = localizationService;
         _notificationService = notificationService;
         _settingService = settingService;
         _storeContext = storeContext;
         _storeMappingService = storeMappingService;
-        _storeService = storeService;
         _urlRecordService = urlRecordService;
         _newsModelFactory = newsModelFactory;
         _newsService = newsService;
-    }
-
-    #endregion
-
-    #region Utilities
-
-    protected async Task SaveStoreMappingsAsync(NewsItem newsItem, NewsItemModel model)
-    {
-        newsItem.LimitedToStores = model.SelectedStoreIds.Any();
-        await _newsService.UpdateNewsAsync(newsItem);
-
-        var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(newsItem);
-        var allStores = await _storeService.GetAllStoresAsync();
-        foreach (var store in allStores)
-        {
-            if (model.SelectedStoreIds.Contains(store.Id))
-            {
-                //new store
-                if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
-                    await _storeMappingService.InsertStoreMappingAsync(newsItem, store.Id);
-            }
-            else
-            {
-                //remove store
-                var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
-                if (storeMappingToDelete != null)
-                    await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
-            }
-        }
     }
 
     #endregion
@@ -184,7 +148,7 @@ public class NewsAdminController : BasePluginController
     public async Task<IActionResult> NewsItems(int? filterByNewsItemId)
     {
         //prepare model
-        var model = await _newsModelFactory.PrepareNewsContentModelAsync(new NewsContentModel(), filterByNewsItemId);
+        var model = await _newsModelFactory.PrepareNewsContentModelAsync(new(), filterByNewsItemId);
 
         return View("~/Plugins/Misc.News/Admin/Views/NewsItems.cshtml", model);
     }
@@ -203,7 +167,7 @@ public class NewsAdminController : BasePluginController
     public async Task<IActionResult> NewsItemCreate()
     {
         //prepare model
-        var model = await _newsModelFactory.PrepareNewsItemModelAsync(new NewsItemModel(), null);
+        var model = await _newsModelFactory.PrepareNewsItemModelAsync(new(), null);
 
         return View("~/Plugins/Misc.News/Admin/Views/NewsItemCreate.cshtml", model);
     }
@@ -219,15 +183,15 @@ public class NewsAdminController : BasePluginController
             await _newsService.InsertNewsAsync(newsItem);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("AddNewNews",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewNews"), newsItem.Id), newsItem);
+            await _customerActivityService.InsertActivityAsync(NewsDefaults.ActivityLogTypeSystemNames.AddNewNews,
+                string.Format(await _localizationService.GetResourceAsync("Plugins.Misc.News.ActivityLog.AddNewNews"), newsItem.Id), newsItem);
 
             //search engine name
             var seName = await _urlRecordService.ValidateSeNameAsync(newsItem, model.SeName, model.Title, true);
             await _urlRecordService.SaveSlugAsync(newsItem, seName, newsItem.LanguageId);
 
-            //Stores
-            await SaveStoreMappingsAsync(newsItem, model);
+            //stores
+            await _storeMappingService.SaveStoreMappingsAsync(newsItem, model.SelectedStoreIds);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.News.NewsItems.Added"));
 
@@ -273,15 +237,15 @@ public class NewsAdminController : BasePluginController
             await _newsService.UpdateNewsAsync(newsItem);
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("EditNews",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditNews"), newsItem.Id), newsItem);
+            await _customerActivityService.InsertActivityAsync(NewsDefaults.ActivityLogTypeSystemNames.EditNews,
+                string.Format(await _localizationService.GetResourceAsync("Plugins.Misc.News.ActivityLog.EditNews"), newsItem.Id), newsItem);
 
             //search engine name
             var seName = await _urlRecordService.ValidateSeNameAsync(newsItem, model.SeName, model.Title, true);
             await _urlRecordService.SaveSlugAsync(newsItem, seName, newsItem.LanguageId);
 
             //stores
-            await SaveStoreMappingsAsync(newsItem, model);
+            await _storeMappingService.SaveStoreMappingsAsync(newsItem, model.SelectedStoreIds);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.News.NewsItems.Updated"));
 
@@ -310,8 +274,8 @@ public class NewsAdminController : BasePluginController
         await _newsService.DeleteNewsAsync(newsItem);
 
         //activity log
-        await _customerActivityService.InsertActivityAsync("DeleteNews",
-            string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteNews"), newsItem.Id), newsItem);
+        await _customerActivityService.InsertActivityAsync(NewsDefaults.ActivityLogTypeSystemNames.DeleteNews,
+            string.Format(await _localizationService.GetResourceAsync("Plugins.Misc.News.ActivityLog.DeleteNews"), newsItem.Id), newsItem);
 
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.News.NewsItems.Deleted"));
 
@@ -331,7 +295,7 @@ public class NewsAdminController : BasePluginController
             return RedirectToAction(nameof(NewsComments));
 
         //prepare model
-        var model = await _newsModelFactory.PrepareNewsCommentSearchModelAsync(new NewsCommentSearchModel(), newsItem);
+        var model = await _newsModelFactory.PrepareNewsCommentSearchModelAsync(new(), newsItem);
 
         return View("~/Plugins/Misc.News/Admin/Views/NewsComments.cshtml", model);
     }
@@ -354,16 +318,14 @@ public class NewsAdminController : BasePluginController
         var comment = await _newsService.GetNewsCommentByIdAsync(model.Id)
             ?? throw new ArgumentException("No comment found with the specified id");
 
-        var previousIsApproved = comment.IsApproved;
-
         //fill entity from model
         comment = model.ToEntity(comment);
 
         await _newsService.UpdateNewsCommentAsync(comment);
 
         //activity log
-        await _customerActivityService.InsertActivityAsync("EditNewsComment",
-            string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment"), comment.Id), comment);
+        await _customerActivityService.InsertActivityAsync(NewsDefaults.ActivityLogTypeSystemNames.EditNewsComment,
+            string.Format(await _localizationService.GetResourceAsync("Plugins.Misc.News.ActivityLog.EditNewsComment"), comment.Id), comment);
 
         return new NullJsonResult();
     }
@@ -379,8 +341,8 @@ public class NewsAdminController : BasePluginController
         await _newsService.DeleteNewsCommentAsync(comment);
 
         //activity log
-        await _customerActivityService.InsertActivityAsync("DeleteNewsComment",
-            string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteNewsComment"), comment.Id), comment);
+        await _customerActivityService.InsertActivityAsync(NewsDefaults.ActivityLogTypeSystemNames.DeleteNewsComment,
+            string.Format(await _localizationService.GetResourceAsync("Plugins.Misc.News.ActivityLog.DeleteNewsComment"), comment.Id), comment);
 
         return new NullJsonResult();
     }
@@ -397,8 +359,9 @@ public class NewsAdminController : BasePluginController
         await _newsService.DeleteNewsCommentsAsync(comments);
 
         //activity log
-        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteNewsComment");
-        await _customerActivityService.InsertActivitiesAsync("DeleteNewsComment", comments, newsComment => string.Format(activityLogFormat, newsComment.Id));
+        var activityLogFormat = await _localizationService.GetResourceAsync("Plugins.Misc.News.ActivityLog.DeleteNewsComment");
+        await _customerActivityService
+            .InsertActivitiesAsync(NewsDefaults.ActivityLogTypeSystemNames.DeleteNewsComment, comments, newsComment => string.Format(activityLogFormat, newsComment.Id));
 
         return Json(new { Result = true });
     }
@@ -411,18 +374,20 @@ public class NewsAdminController : BasePluginController
             return NoContent();
 
         //filter not approved comments
-        var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved).ToList();
+        var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray()))
+            .Where(comment => !comment.IsApproved)
+            .ToList();
 
         foreach (var newsComment in newsComments)
         {
             newsComment.IsApproved = true;
-
             await _newsService.UpdateNewsCommentAsync(newsComment);
         }
 
         //activity log
-        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment");
-        await _customerActivityService.InsertActivitiesAsync("EditNewsComment", newsComments, newsComment => string.Format(activityLogFormat, newsComment.Id));
+        var activityLogFormat = await _localizationService.GetResourceAsync("Plugins.Misc.News.ActivityLog.EditNewsComment");
+        await _customerActivityService
+            .InsertActivitiesAsync(NewsDefaults.ActivityLogTypeSystemNames.EditNewsComment, newsComments, newsComment => string.Format(activityLogFormat, newsComment.Id));
 
         return Json(new { Result = true });
     }
@@ -435,18 +400,20 @@ public class NewsAdminController : BasePluginController
             return NoContent();
 
         //filter approved comments
-        var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved).ToList();
+        var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray()))
+            .Where(comment => comment.IsApproved)
+            .ToList();
 
         foreach (var newsComment in newsComments)
         {
             newsComment.IsApproved = false;
-
             await _newsService.UpdateNewsCommentAsync(newsComment);
         }
 
         //activity log
-        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.EditNewsComment");
-        await _customerActivityService.InsertActivitiesAsync("EditNewsComment", newsComments, newsComment => string.Format(activityLogFormat, newsComment.Id));
+        var activityLogFormat = await _localizationService.GetResourceAsync("Plugins.Misc.News.ActivityLog.EditNewsComment");
+        await _customerActivityService
+            .InsertActivitiesAsync(NewsDefaults.ActivityLogTypeSystemNames.EditNewsComment, newsComments, newsComment => string.Format(activityLogFormat, newsComment.Id));
 
         return Json(new { Result = true });
     }

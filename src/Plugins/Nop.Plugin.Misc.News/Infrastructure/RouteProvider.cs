@@ -29,14 +29,6 @@ public class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: "Admin/News/Edit/{id:min(0)?}",
             defaults: new { controller = "NewsAdmin", action = "NewsItemEdit", area = AreaNames.ADMIN });
 
-        endpointRouteBuilder.MapControllerRoute(name: NewsDefaults.Routes.Admin.NewsItemCreateRouteName,
-            pattern: "Admin/News/Create",
-            defaults: new { controller = "NewsAdmin", action = "NewsItemCreate", area = AreaNames.ADMIN });
-
-        endpointRouteBuilder.MapControllerRoute(name: NewsDefaults.Routes.Admin.NewsItemDeleteRouteName,
-            pattern: "Admin/News/Delete/{id:min(0)}",
-            defaults: new { controller = "NewsAdmin", action = "Delete", area = AreaNames.ADMIN });
-
         endpointRouteBuilder.MapControllerRoute(name: NewsDefaults.Routes.Admin.NewsCommentsRouteName,
             pattern: "Admin/News/Comments/{filterByNewsItemId:min(0)?}",
             defaults: new { controller = "NewsAdmin", action = "NewsComments", area = AreaNames.ADMIN });

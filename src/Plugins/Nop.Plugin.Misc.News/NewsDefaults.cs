@@ -91,6 +91,11 @@ public class NewsDefaults
         public static string DeleteNewsComment => "DeleteNewsComment";
 
         /// <summary>
+        /// Gets a system name of the "Edit a news comment"
+        /// </summary>
+        public static string EditNewsComment => "EditNewsComment";
+
+        /// <summary>
         /// Gets a system name of the "Public store. Add news comment"
         /// </summary>
         public static string PublicStoreAddNewsComment => "PublicStore.AddNewsComment";
@@ -109,8 +114,6 @@ public class NewsDefaults
             public static string ConfigurationRouteName => ROUTE_PREFIX + "Configure";
             public static string NewsItemsRouteName => ROUTE_PREFIX + "NewsItems";
             public static string NewsItemEditRouteName => ROUTE_PREFIX + "NewsItemEdit";
-            public static string NewsItemCreateRouteName => ROUTE_PREFIX + "NewsItemCreate";
-            public static string NewsItemDeleteRouteName => ROUTE_PREFIX + "NewsItemDelete";
             public static string NewsCommentsRouteName => ROUTE_PREFIX + "NewsComments";
         }
 

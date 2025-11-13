@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core.Caching;
+﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Messages;
@@ -143,7 +142,7 @@ public class EventConsumer : IConsumer<CustomerPermanentlyDeleted>,
     {
         if (eventMessage?.Model is MenuItemModel menuItemModel)
         {
-            menuItemModel.AvailableStandardRoutes.Add(new SelectListItem
+            menuItemModel.AvailableStandardRoutes.Add(new()
             {
                 Text = await _localizationService.GetResourceAsync("Plugins.Misc.News.NewsArchive"),
                 Value = NewsDefaults.Routes.Public.NewsArchive

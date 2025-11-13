@@ -33,8 +33,8 @@
             <nop-label asp-for="Full" />
         </div>
         <div class="col-md-9">
-            
-            <div class="input-group-append input-group-required">                
+
+            <div class="input-group-append input-group-required">
                 <div class="input-group">
                     <nop-editor asp-for="Full" asp-template="RichEditor" />
                 </div>
@@ -86,10 +86,10 @@
                                 closeOnSelect: false,
                                 @if (!Model.AvailableStores.Any())
                                 {
-                                <text>
-                                disabled: true,
-                                placeholder: 'No stores available',
-                                </text>
+                                    <text>
+                                    disabled: true,
+                                    placeholder: 'No stores available',
+                                    </text>
                                 }
                             });
                         });

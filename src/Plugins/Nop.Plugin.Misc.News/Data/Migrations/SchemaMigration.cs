@@ -67,7 +67,7 @@ public class SchemaMigration : Migration
     /// <summary>
     /// Collects the DOWN migration expressions
     /// </summary>
-    public override void Down() 
+    public override void Down()
     {
         Delete.Table(NameCompatibilityManager.GetTableName(typeof(NewsComment)));
         Delete.Table(NameCompatibilityManager.GetTableName(typeof(NewsItem)));

@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models.ArtificialIntelligence;
 
 namespace Nop.Plugin.Misc.News.Public.Models;
 
-public partial record NewsItemModel : BaseNopEntityModel, IMetaTagsSupportedModel
+public record NewsItemModel : BaseNopEntityModel, IMetaTagsSupportedModel
 {
     #region Properties
 

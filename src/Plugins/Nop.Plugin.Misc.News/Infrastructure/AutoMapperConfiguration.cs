@@ -50,7 +50,9 @@ public class AutoMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.ShowHeaderRssUrl_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowNewsOnMainPage_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowCaptchaOnNewsCommentPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.SitemapIncludeNews_OverrideForStore, options => options.Ignore());
+            .ForMember(model => model.SitemapIncludeNews_OverrideForStore, options => options.Ignore())
+            //.ForMember(model => model.DisplayNewsFooterItem_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.SitemapXmlIncludeNews_OverrideForStore, options => options.Ignore());
         CreateMap<ConfigurationModel, NewsSettings>();
     }
 

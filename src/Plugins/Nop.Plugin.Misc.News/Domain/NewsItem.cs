@@ -1,5 +1,5 @@
-﻿using Nop.Core.Domain.Common;
 ﻿using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Stores;
 
@@ -8,7 +8,7 @@ namespace Nop.Plugin.Misc.News.Domain;
 /// <summary>
 /// Represents a news item
 /// </summary>
-public partial class NewsItem : BaseEntity, ISlugSupported, IStoreMappingSupported, IMetaTagsSupported
+public class NewsItem : BaseEntity, ISlugSupported, IStoreMappingSupported, IMetaTagsSupported
 {
     /// <summary>
     /// Gets or sets the language identifier

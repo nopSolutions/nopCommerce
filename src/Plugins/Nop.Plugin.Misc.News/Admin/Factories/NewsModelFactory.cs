@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Plugin.Misc.News.Admin.Models;
@@ -79,12 +78,12 @@ public class NewsModelFactory
     #region Methods
 
     /// <summary>
-    /// Prepare news settings model
+    /// Prepare news configuration model
     /// </summary>
-    /// <param name="model">News settings model</param>
+    /// <param name="model">News configuration model</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the news settings model
+    /// The task result contains the news configuration model
     /// </returns>
     public async Task<ConfigurationModel> PrepareNewsConfigurationModelAsync(ConfigurationModel model = null)
     {
@@ -156,6 +155,8 @@ public class NewsModelFactory
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
             title: searchModel.SearchTitle);
 
+        var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
         //prepare list model
         var model = await new NewsItemListModel().PrepareToGridAsync(searchModel, newsItems, () =>
         {
@@ -176,7 +177,7 @@ public class NewsModelFactory
 
                 //fill in additional values (not existing in the entity)
                 newsItemModel.SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, true, false);
-                newsItemModel.LanguageName = (await _languageService.GetLanguageByIdAsync(newsItem.LanguageId))?.Name;
+                newsItemModel.LanguageName = languages.FirstOrDefault(language => language.Id == newsItem.LanguageId)?.Name;
                 newsItemModel.ApprovedComments = await _newsService.GetNewsCommentsCountAsync(newsItem, isApproved: true);
                 newsItemModel.NotApprovedComments = await _newsService.GetNewsCommentsCountAsync(newsItem, isApproved: false);
 
@@ -242,17 +243,17 @@ public class NewsModelFactory
         ArgumentNullException.ThrowIfNull(searchModel);
 
         //prepare "approved" property (0 - all; 1 - approved only; 2 - disapproved only)
-        searchModel.AvailableApprovedOptions.Add(new SelectListItem
+        searchModel.AvailableApprovedOptions.Add(new()
         {
             Text = await _localizationService.GetResourceAsync("Plugins.Misc.News.Comments.List.SearchApproved.All"),
             Value = "0"
         });
-        searchModel.AvailableApprovedOptions.Add(new SelectListItem
+        searchModel.AvailableApprovedOptions.Add(new()
         {
             Text = await _localizationService.GetResourceAsync("Plugins.Misc.News.Comments.List.SearchApproved.ApprovedOnly"),
             Value = "1"
         });
-        searchModel.AvailableApprovedOptions.Add(new SelectListItem
+        searchModel.AvailableApprovedOptions.Add(new()
         {
             Text = await _localizationService.GetResourceAsync("Plugins.Misc.News.Comments.List.SearchApproved.DisapprovedOnly"),
             Value = "2"
@@ -280,9 +281,11 @@ public class NewsModelFactory
         ArgumentNullException.ThrowIfNull(searchModel);
 
         //get parameters to filter comments
-        var createdOnFromValue = searchModel.CreatedOnFrom == null ? null
+        var createdOnFromValue = searchModel.CreatedOnFrom == null
+            ? null
             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
-        var createdOnToValue = searchModel.CreatedOnTo == null ? null
+        var createdOnToValue = searchModel.CreatedOnTo == null
+            ? null
             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
         var isApprovedOnly = searchModel.SearchApprovedId == 0 ? null : searchModel.SearchApprovedId == 1 ? true : (bool?)false;
 
@@ -297,6 +300,9 @@ public class NewsModelFactory
         var storeNames = (await _storeService.GetAllStoresAsync())
             .ToDictionary(store => store.Id, store => store.Name);
 
+        var news = await _newsService.GetNewsByIdsAsync(comments.Select(comment => comment.NewsItemId).Distinct().ToArray());
+        var customers = await _customerService.GetCustomersByIdsAsync(comments.Select(comment => comment.CustomerId).Distinct().ToArray());
+
         //prepare list model
         var model = await new NewsCommentListModel().PrepareToGridAsync(searchModel, comments, () =>
         {
@@ -309,12 +315,12 @@ public class NewsModelFactory
                 commentModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsComment.CreatedOnUtc, DateTimeKind.Utc);
 
                 //fill in additional values (not existing in the entity)
-                commentModel.NewsItemTitle = (await _newsService.GetNewsByIdAsync(newsComment.NewsItemId))?.Title;
+                commentModel.NewsItemTitle = news.FirstOrDefault(item => item.Id == newsComment.NewsItemId)?.Title;
 
-                if (await _customerService.GetCustomerByIdAsync(newsComment.CustomerId) is Customer customer)
+                if (customers.FirstOrDefault(customer => customer.Id == newsComment.CustomerId) is Customer author)
                 {
-                    commentModel.CustomerInfo = await _customerService.IsRegisteredAsync(customer)
-                        ? customer.Email
+                    commentModel.CustomerInfo = await _customerService.IsRegisteredAsync(author)
+                        ? author.Email
                         : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
                 }
 

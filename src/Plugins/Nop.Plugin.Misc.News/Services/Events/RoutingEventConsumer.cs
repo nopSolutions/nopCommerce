@@ -19,7 +19,6 @@ public class RoutingEventConsumer : IConsumer<GenericRoutingEvent>
 {
     #region Fields
 
-
     private readonly ILanguageService _languageService;
     private readonly IStoreContext _storeContext;
     private readonly IUrlRecordService _urlRecordService;
@@ -29,7 +28,10 @@ public class RoutingEventConsumer : IConsumer<GenericRoutingEvent>
 
     #region Ctor
 
-    public RoutingEventConsumer(ILanguageService languageService, IStoreContext storeContext, IUrlRecordService urlRecordService, LocalizationSettings localizationSettings)
+    public RoutingEventConsumer(ILanguageService languageService,
+        IStoreContext storeContext,
+        IUrlRecordService urlRecordService,
+        LocalizationSettings localizationSettings)
     {
         _languageService = languageService;
         _storeContext = storeContext;
@@ -48,7 +50,7 @@ public class RoutingEventConsumer : IConsumer<GenericRoutingEvent>
     /// <param name="values">The route values associated with the current match</param>
     /// <param name="path">Path</param>
     /// <param name="permanent">Whether the redirect should be permanent</param>
-    protected virtual void InternalRedirect(HttpContext httpContext, RouteValueDictionary values, string path, bool permanent)
+    protected void InternalRedirect(HttpContext httpContext, RouteValueDictionary values, string path, bool permanent)
     {
         values[NopRoutingDefaults.RouteValue.Controller] = "Common";
         values[NopRoutingDefaults.RouteValue.Action] = "InternalRedirect";
@@ -73,8 +75,8 @@ public class RoutingEventConsumer : IConsumer<GenericRoutingEvent>
             return;
 
         //if URL record is not active let's find the latest one
-        var slug = eventMessage.UrlRecord.IsActive
-            ? eventMessage.UrlRecord.Slug
+        var slug = urlRecord.IsActive
+            ? urlRecord.Slug
             : await _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId);
 
         if (string.IsNullOrEmpty(slug))
@@ -87,9 +89,10 @@ public class RoutingEventConsumer : IConsumer<GenericRoutingEvent>
             var store = await _storeContext.GetCurrentStoreAsync();
             var languages = await _languageService.GetAllLanguagesAsync(storeId: store.Id);
             var language = languages
-                .FirstOrDefault(lang => lang.Published && lang.UniqueSeoCode.Equals(langValue?.ToString(), StringComparison.InvariantCultureIgnoreCase)) ?? languages.FirstOrDefault();
+                .FirstOrDefault(lang => lang.UniqueSeoCode.Equals(langValue?.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                ?? languages.FirstOrDefault();
 
-            var slugLocalized = await _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, language.Id);
+            var slugLocalized = await _urlRecordService.GetSeNameAsync(urlRecord.EntityId, urlRecord.EntityName, language.Id, true, false);
             if (!string.IsNullOrEmpty(slugLocalized) && !slugLocalized.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
             {
                 //redirect to the page for current language
@@ -101,7 +104,7 @@ public class RoutingEventConsumer : IConsumer<GenericRoutingEvent>
         eventMessage.RouteValues[NopRoutingDefaults.RouteValue.Controller] = "News";
         eventMessage.RouteValues[NopRoutingDefaults.RouteValue.Action] = "NewsItem";
         eventMessage.RouteValues[NopRoutingDefaults.RouteValue.SeName] = slug;
-        eventMessage.RouteValues[NewsDefaults.Routes.NewsItemIdRouteValue] = eventMessage.UrlRecord.EntityId;
+        eventMessage.RouteValues[NewsDefaults.Routes.NewsItemIdRouteValue] = urlRecord.EntityId;
         eventMessage.StopProcessing = true;
     }
 

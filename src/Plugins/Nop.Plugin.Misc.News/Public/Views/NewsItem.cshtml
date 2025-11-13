@@ -1,8 +1,5 @@
-﻿@using Nop.Core.Http;
+﻿@model NewsItemModel
 
-@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
-
-@model NewsItemModel
 @{
     Layout = "_ColumnsTwo";
 
@@ -14,6 +11,7 @@
     //page class
     NopHtml.AppendPageCssClassParts("html-news-item-page");
 }
+
 <div class="page news-item-page">
     <div class="page-title">
         <h1>@Model.Title</h1>
@@ -73,7 +71,7 @@
                     }
                 </form>
             </div>
-            if (Model.Comments.Count > 0)
+            if (Model.Comments.Any())
             {
                 <div class="comment-list">
                     <h2 class="title">

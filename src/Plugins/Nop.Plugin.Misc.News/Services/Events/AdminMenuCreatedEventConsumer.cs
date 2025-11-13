@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
+﻿using Nop.Services.Cms;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Events;
-using Nop.Web.Framework.Menu;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Misc.News.Services.Events;
 
@@ -15,21 +13,21 @@ public class AdminMenuCreatedEventConsumer : IConsumer<AdminMenuCreatedEvent>
 {
     #region Fields
 
-    private readonly IActionContextAccessor _actionContextAccessor;
     private readonly ILocalizationService _localizationService;
-    private readonly IUrlHelperFactory _urlHelperFactory;
+    private readonly INopUrlHelper _nopUrlHelper;
+    private readonly IWidgetPluginManager _pluginManager;
 
     #endregion
 
     #region Ctor
 
-    public AdminMenuCreatedEventConsumer(IActionContextAccessor actionContextAccessor,
-        ILocalizationService localizationService,
-        IUrlHelperFactory urlHelperFactory)
+    public AdminMenuCreatedEventConsumer(ILocalizationService localizationService,
+        INopUrlHelper nopUrlHelper,
+        IWidgetPluginManager pluginManager)
     {
-        _actionContextAccessor = actionContextAccessor;
         _localizationService = localizationService;
-        _urlHelperFactory = urlHelperFactory;
+        _nopUrlHelper = nopUrlHelper;
+        _pluginManager = pluginManager;
     }
 
     #endregion
@@ -43,23 +41,28 @@ public class AdminMenuCreatedEventConsumer : IConsumer<AdminMenuCreatedEvent>
     /// <returns>A task that represents the asynchronous operation</returns>
     public async Task HandleEventAsync(AdminMenuCreatedEvent eventMessage)
     {
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var plugin = await _pluginManager.LoadPluginBySystemNameAsync(NewsDefaults.SystemName);
 
-        eventMessage.RootMenuItem.InsertAfter("Message templates", new AdminMenuItem
+        //the LoadPluginBySystemNameAsync method returns only plugins that are already fully installed,
+        //while the IConsumer<AdminMenuCreatedEvent> event can be called before the installation is complete
+        if (plugin == null || !_pluginManager.IsPluginActive(plugin))
+            return;
+
+        eventMessage.RootMenuItem.InsertAfter("Message templates", new()
         {
             SystemName = NewsDefaults.NewsItemsMenuSystemName,
             Title = await _localizationService.GetResourceAsync("Plugins.Misc.News.NewsItems"),
             IconClass = "far fa-dot-circle",
-            Url = urlHelper.RouteUrl(NewsDefaults.Routes.Admin.NewsItemsRouteName),
+            Url = _nopUrlHelper.RouteUrl(NewsDefaults.Routes.Admin.NewsItemsRouteName),
             PermissionNames = new List<string> { NewsDefaults.Permissions.NEWS_VIEW }
         });
 
-        eventMessage.RootMenuItem.InsertAfter(NewsDefaults.NewsItemsMenuSystemName, new AdminMenuItem
+        eventMessage.RootMenuItem.InsertAfter(NewsDefaults.NewsItemsMenuSystemName, new()
         {
             SystemName = NewsDefaults.NewsCommentsMenuSystemName,
             Title = await _localizationService.GetResourceAsync("Plugins.Misc.News.Comments"),
             IconClass = "far fa-dot-circle",
-            Url = urlHelper.RouteUrl(NewsDefaults.Routes.Admin.NewsCommentsRouteName),
+            Url = _nopUrlHelper.RouteUrl(NewsDefaults.Routes.Admin.NewsCommentsRouteName),
             PermissionNames = new List<string> { NewsDefaults.Permissions.NEWS_COMMENTS_VIEW }
         });
     }

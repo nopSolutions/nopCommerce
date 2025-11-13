@@ -1704,12 +1704,6 @@
   <LocaleResource Name="Admin.ArtificialIntelligence.ManufacturerNameRequired">
     <Value>Manufacturer name (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ArtificialIntelligence.NewsItemFullRequired">
-    <Value>News item full (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ArtificialIntelligence.NewsItemTitleRequired">
-    <Value>News item title (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ArtificialIntelligence.ProductDescriptionRequired">
     <Value>Product description (on {0} language) is required for meta tags generation with artificial intelligence services.</Value>
   </LocaleResource>
@@ -18676,9 +18670,6 @@
   </LocaleResource>
   <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Blog">
     <Value>Blog</Value>
-  </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.News">
-    <Value>News archive</Value>
   </LocaleResource>
   <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Boards">
     <Value>Forums</Value>

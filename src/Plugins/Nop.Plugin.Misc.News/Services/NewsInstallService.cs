@@ -39,8 +39,7 @@ public class NewsInstallService
 
     #region Ctor
 
-    public NewsInstallService(
-        EmailAccountSettings emailAccountSettings,
+    public NewsInstallService(EmailAccountSettings emailAccountSettings,
         ICustomerService customerService,
         IEmailAccountService emailAccountService,
         ILocalizationService localizationService,
@@ -74,7 +73,7 @@ public class NewsInstallService
     /// <summary>
     /// Initialize settings
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A task that represents the asynchronous operation</returns>
     private async Task InsertSettingsAsync()
     {
         var newsSettings = await _settingService.LoadSettingAsync<NewsSettings>();
@@ -130,14 +129,12 @@ public class NewsInstallService
             seoSettings.ReservedUrlRecordSlugs.Add(NewsDefaults.ReservedUrlRecord);
             _settingService.SaveSetting(seoSettings, settings => seoSettings.ReservedUrlRecordSlugs);
         }
-
-
     }
 
     /// <summary>
     /// Add or update locales
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A task that represents the asynchronous operation</returns>
     private async Task InsertLocalesAsync()
     {
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
@@ -211,7 +208,7 @@ public class NewsInstallService
             ["Plugins.Misc.News.Comments.List.SearchText"] = "Message",
             ["Plugins.Misc.News.Comments.List.SearchText.Hint"] = "Search in title and comment text.",
             ["Plugins.Misc.News.NewsItems"] = "News items",
-            ["Plugins.Misc.News.NewsArchive"] = "News",
+            ["Plugins.Misc.News.NewsArchive"] = "News archive",
             ["Plugins.Misc.News.NewsItems.Added"] = "The new news item has been added successfully.",
             ["Plugins.Misc.News.NewsItems.AddNew"] = "Add a new news item",
             ["Plugins.Misc.News.NewsItems.BackToList"] = "back to news item list",
@@ -271,7 +268,7 @@ public class NewsInstallService
     /// <summary>
     /// Add a message template for default email account (if it doesn't exist)
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A task that represents the asynchronous operation</returns>
     private async Task InsertMessageTemplateAsync()
     {
         if ((await _messageTemplateService.GetMessageTemplatesByNameAsync(NewsDefaults.NewsCommentStoreOwnerNotification)).Any())
@@ -296,16 +293,24 @@ public class NewsInstallService
     /// <summary>
     /// Add activity log types
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A task that represents the asynchronous operation</returns>
     private async Task InserActivityLogTypesAsync()
     {
-
-        var existingActivityLogTypes = await _activityLogTypeRepository.GetAllAsync(_ => _);
-
+        var types = new List<string>
+        {
+            NewsDefaults.ActivityLogTypeSystemNames.AddNewNews,
+            NewsDefaults.ActivityLogTypeSystemNames.DeleteNews,
+            NewsDefaults.ActivityLogTypeSystemNames.EditNews,
+            NewsDefaults.ActivityLogTypeSystemNames.DeleteNewsComment,
+            NewsDefaults.ActivityLogTypeSystemNames.EditNewsComment,
+            NewsDefaults.ActivityLogTypeSystemNames.PublicStoreAddNewsComment,
+        };
+        var existingActivityLogTypes = await _activityLogTypeRepository
+            .GetAllAsync(query => query.Where(alt => types.Contains(alt.SystemKeyword, StringComparer.InvariantCultureIgnoreCase)));
 
         if (!existingActivityLogTypes.Any(alt => string.Equals(alt.SystemKeyword, NewsDefaults.ActivityLogTypeSystemNames.AddNewNews, StringComparison.InvariantCultureIgnoreCase)))
         {
-            await _activityLogTypeRepository.InsertAsync(new ActivityLogType()
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType
             {
                 SystemKeyword = NewsDefaults.ActivityLogTypeSystemNames.AddNewNews,
                 Enabled = true,
@@ -315,7 +320,7 @@ public class NewsInstallService
 
         if (!existingActivityLogTypes.Any(alt => string.Equals(alt.SystemKeyword, NewsDefaults.ActivityLogTypeSystemNames.DeleteNews, StringComparison.InvariantCultureIgnoreCase)))
         {
-            await _activityLogTypeRepository.InsertAsync(new ActivityLogType()
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType
             {
                 SystemKeyword = NewsDefaults.ActivityLogTypeSystemNames.DeleteNews,
                 Enabled = true,
@@ -325,7 +330,7 @@ public class NewsInstallService
 
         if (!existingActivityLogTypes.Any(alt => string.Equals(alt.SystemKeyword, NewsDefaults.ActivityLogTypeSystemNames.EditNews, StringComparison.InvariantCultureIgnoreCase)))
         {
-            await _activityLogTypeRepository.InsertAsync(new ActivityLogType()
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType
             {
                 SystemKeyword = NewsDefaults.ActivityLogTypeSystemNames.EditNews,
                 Enabled = true,
@@ -335,7 +340,7 @@ public class NewsInstallService
 
         if (!existingActivityLogTypes.Any(alt => string.Equals(alt.SystemKeyword, NewsDefaults.ActivityLogTypeSystemNames.DeleteNewsComment, StringComparison.InvariantCultureIgnoreCase)))
         {
-            await _activityLogTypeRepository.InsertAsync(new ActivityLogType()
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType
             {
                 SystemKeyword = NewsDefaults.ActivityLogTypeSystemNames.DeleteNewsComment,
                 Enabled = true,
@@ -343,9 +348,19 @@ public class NewsInstallService
             });
         }
 
+        if (!existingActivityLogTypes.Any(alt => string.Equals(alt.SystemKeyword, NewsDefaults.ActivityLogTypeSystemNames.EditNewsComment, StringComparison.InvariantCultureIgnoreCase)))
+        {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType
+            {
+                SystemKeyword = NewsDefaults.ActivityLogTypeSystemNames.EditNewsComment,
+                Enabled = true,
+                Name = "Edit a news comment"
+            });
+        }
+
         if (!existingActivityLogTypes.Any(alt => string.Equals(alt.SystemKeyword, NewsDefaults.ActivityLogTypeSystemNames.PublicStoreAddNewsComment, StringComparison.InvariantCultureIgnoreCase)))
         {
-            await _activityLogTypeRepository.InsertAsync(new ActivityLogType()
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType
             {
                 SystemKeyword = NewsDefaults.ActivityLogTypeSystemNames.PublicStoreAddNewsComment,
                 Enabled = false,
@@ -359,7 +374,7 @@ public class NewsInstallService
     /// </summary>
     /// <param name="oldSystemName">Old name of the permission record</param>
     /// <param name="newSystemName">New name of the permission record</param>
-    /// <returns></returns>
+    /// <returns>A task that represents the asynchronous operation</returns>
     private async Task UpdatePermissionMappingsAsync(string oldSystemName, string newSystemName)
     {
         ArgumentException.ThrowIfNullOrEmpty(oldSystemName);
@@ -433,13 +448,14 @@ public class NewsInstallService
     /// Removes the data inserted in <see cref="InstallRequiredDataAsync"/>
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task UnInstallRequiredDataAsync()
+    public async Task UninstallRequiredDataAsync()
     {
         //settings
         await _settingService.DeleteSettingAsync<NewsSettings>();
 
         //locales
         await _localizationService.DeleteLocaleResourcesAsync("Plugins.Misc.News.");
+        await _localizationService.DeleteLocaleResourcesAsync("Security.Permission.News.");
         await _localizationService.DeleteLocaleResourcesAsync("Admin.ContentManagement.MessageTemplates.Description.News.NewsComment");
 
         //message template
@@ -448,17 +464,25 @@ public class NewsInstallService
 
         //activity log type
         _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.AddNewNews);
-        _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.EditNews);
         _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.DeleteNews);
-        _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.PublicStoreAddNewsComment);
+        _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.EditNews);
         _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.DeleteNewsComment);
+        _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.EditNewsComment);
+        _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.PublicStoreAddNewsComment);
+
+        //permission
+        await _permissionRepository.DeleteAsync(record => record.SystemName == NewsDefaults.Permissions.NEWS_VIEW
+            || record.SystemName == NewsDefaults.Permissions.NEWS_MANAGE
+            || record.SystemName == NewsDefaults.Permissions.NEWS_COMMENTS_VIEW
+            || record.SystemName == NewsDefaults.Permissions.NEWS_COMMENTS_MANAGE);
+
     }
 
     /// <summary>
     /// Install sample news
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task InstallSampleDataAsync()
+    public async Task InstallSampleDataAsync()
     {
         var language = await _workContext.GetWorkingLanguageAsync();
 
@@ -482,7 +506,7 @@ public class NewsInstallService
         var seName = await _urlRecordService.ValidateSeNameAsync(aboutNewsItem, null, aboutNewsItem.Title, true);
         await _urlRecordService.SaveSlugAsync(aboutNewsItem, seName, aboutNewsItem.LanguageId);
 
-        await _newsService.InsertNewsCommentAsync(new NewsComment
+        await _newsService.InsertNewsCommentAsync(new()
         {
             NewsItemId = aboutNewsItem.Id,
             CustomerId = customer.Id,
@@ -510,7 +534,7 @@ public class NewsInstallService
         var releaseNewsItemSeName = await _urlRecordService.ValidateSeNameAsync(releaseNewsItem, null, releaseNewsItem.Title, true);
         await _urlRecordService.SaveSlugAsync(releaseNewsItem, releaseNewsItemSeName, releaseNewsItem.LanguageId);
 
-        await _newsService.InsertNewsCommentAsync(new NewsComment
+        await _newsService.InsertNewsCommentAsync(new()
         {
             NewsItemId = releaseNewsItem.Id,
             CustomerId = customer.Id,
@@ -538,7 +562,7 @@ public class NewsInstallService
         var openingNewsItemSeName = await _urlRecordService.ValidateSeNameAsync(openingNewsItem, null, openingNewsItem.Title, true);
         await _urlRecordService.SaveSlugAsync(openingNewsItem, openingNewsItemSeName, openingNewsItem.LanguageId);
 
-        await _newsService.InsertNewsCommentAsync(new NewsComment
+        await _newsService.InsertNewsCommentAsync(new()
         {
             NewsItemId = openingNewsItem.Id,
             CustomerId = customer.Id,

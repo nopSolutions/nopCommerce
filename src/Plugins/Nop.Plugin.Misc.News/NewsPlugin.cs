@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Nop.Core.Domain.Cms;
+﻿using Nop.Core.Domain.Cms;
 using Nop.Plugin.Misc.News.Public.Components;
 using Nop.Plugin.Misc.News.Services;
 using Nop.Services.Cms;
@@ -9,6 +6,7 @@ using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Infrastructure;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Misc.News;
 
@@ -19,9 +17,8 @@ public class NewsPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
 {
     #region Fields
 
-    private readonly IActionContextAccessor _actionContextAccessor;
+    private readonly INopUrlHelper _nopUrlHelper;
     private readonly ISettingService _settingService;
-    private readonly IUrlHelperFactory _urlHelperFactory;
     private readonly NewsInstallService _newsInstallService;
     private readonly WidgetSettings _widgetSettings;
 
@@ -29,15 +26,13 @@ public class NewsPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
 
     #region Ctor
 
-    public NewsPlugin(IActionContextAccessor actionContextAccessor,
+    public NewsPlugin(INopUrlHelper nopUrlHelper,
         ISettingService settingService,
-        IUrlHelperFactory urlHelperFactory,
         NewsInstallService newsInstallService,
         WidgetSettings widgetSettings)
     {
-        _actionContextAccessor = actionContextAccessor;
+        _nopUrlHelper = nopUrlHelper;
         _settingService = settingService;
-        _urlHelperFactory = urlHelperFactory;
         _newsInstallService = newsInstallService;
         _widgetSettings = widgetSettings;
     }
@@ -51,9 +46,7 @@ public class NewsPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        ArgumentNullException.ThrowIfNull(_actionContextAccessor.ActionContext);
-
-        return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).RouteUrl(NewsDefaults.Routes.Admin.ConfigurationRouteName);
+        return _nopUrlHelper.RouteUrl(NewsDefaults.Routes.Admin.ConfigurationRouteName);
     }
 
     /// <summary>
@@ -87,7 +80,7 @@ public class NewsPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
     /// <returns>A task that represents the asynchronous operation</returns>
     public override async Task UninstallAsync()
     {
-        await _newsInstallService.UnInstallRequiredDataAsync();
+        await _newsInstallService.UninstallRequiredDataAsync();
 
         //widget
         if (_widgetSettings.ActiveWidgetSystemNames.Contains(NewsDefaults.SystemName))

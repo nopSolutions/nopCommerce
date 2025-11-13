@@ -48,7 +48,7 @@
             $('#@Html.IdFor(model => model.SeName)').on('input change', function () {
                 var parameters = {
                     entityId: '@Model.Id',
-                    entityName: 'NewsItem',
+                    entityName: '@nameof(NewsItem)',
                     seName: $(this).val()
                 };
                 warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.SeName)', parameters);

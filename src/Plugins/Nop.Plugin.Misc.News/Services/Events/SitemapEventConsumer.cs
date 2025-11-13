@@ -59,14 +59,13 @@ public class SitemapEventConsumer : IConsumer<SitemapCreatedEvent>, IConsumer<Mo
 
     #region Utilities
 
-
     /// <summary>
     /// Gets localized URL with SEO code
     /// </summary>
     /// <param name="currentUrl">URL to add SEO code</param>
     /// <param name="lang">Language for localization</param>
     /// <returns>Localized URL with SEO code</returns>
-    protected virtual string GetLocalizedUrl(string currentUrl, Language lang)
+    protected string GetLocalizedUrl(string currentUrl, Language lang)
     {
         if (string.IsNullOrEmpty(currentUrl))
             return null;
@@ -110,7 +109,7 @@ public class SitemapEventConsumer : IConsumer<SitemapCreatedEvent>, IConsumer<Mo
     /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
     /// <param name="protocol">The protocol for the URL, such as "http" or "https"</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task<SitemapUrlModel> PrepareLocalizedSitemapUrlAsync(NewsItem newsItem,
+    protected async Task<SitemapUrlModel> PrepareLocalizedSitemapUrlAsync(NewsItem newsItem,
         DateTime? dateTimeUpdatedOn = null,
         string protocol = null)
     {
@@ -143,7 +142,7 @@ public class SitemapEventConsumer : IConsumer<SitemapCreatedEvent>, IConsumer<Mo
     /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
     /// <param name="protocol">The protocol for the URL, such as "http" or "https"</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task<SitemapUrlModel> PrepareLocalizedSitemapUrlAsync(string routeName,
+    protected async Task<SitemapUrlModel> PrepareLocalizedSitemapUrlAsync(string routeName,
         DateTime? dateTimeUpdatedOn = null,
         string protocol = null)
     {
@@ -204,7 +203,7 @@ public class SitemapEventConsumer : IConsumer<SitemapCreatedEvent>, IConsumer<Mo
 
         var store = await _storeContext.GetCurrentStoreAsync();
 
-        sitemapModel.Items.Add(new SitemapModel.SitemapItemModel
+        sitemapModel.Items.Add(new()
         {
             GroupTitle = await _localizationService.GetResourceAsync("Sitemap.General"),
             Name = await _localizationService.GetResourceAsync("Plugins.Misc.News.Title"),

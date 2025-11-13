@@ -73,11 +73,11 @@ public class NewsService
     /// <param name="tokens">List of already added tokens</param>
     /// <param name="newsComment">News comment</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    private async Task AddNewsCommentTokensAsync(IList<Token> tokens, NewsComment newsComment)
+    private async Task AddNewsCommentTokensAsync(List<Token> tokens, NewsComment newsComment)
     {
         var newsItem = await GetNewsByIdAsync(newsComment.NewsItemId);
 
-        tokens.Add(new Token("NewsComment.NewsTitle", newsItem.Title));
+        tokens.Add(new("NewsComment.NewsTitle", newsItem.Title));
 
         //event notification
         await _eventPublisher.EntityTokensAddedAsync(newsComment, tokens);
@@ -153,6 +153,19 @@ public class NewsService
     public async Task<NewsItem> GetNewsByIdAsync(int newsId)
     {
         return await _newsItemRepository.GetByIdAsync(newsId, cache => default);
+    }
+
+    /// <summary>
+    /// Get news by identifiers
+    /// </summary>
+    /// <param name="newsIds">News identifiers</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the news
+    /// </returns>
+    public async Task<IList<NewsItem>> GetNewsByIdsAsync(int[] newsIds)
+    {
+        return await _newsItemRepository.GetByIdsAsync(newsIds);
     }
 
     /// <summary>

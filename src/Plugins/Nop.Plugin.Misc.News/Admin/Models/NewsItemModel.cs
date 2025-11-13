@@ -9,14 +9,13 @@ namespace Nop.Plugin.Misc.News.Admin.Models;
 /// <summary>
 /// Represents a news item model
 /// </summary>
-public partial record NewsItemModel : BaseNopEntityModel, IStoreMappingSupportedModel, IMetaTagsSupportedModel
+public record NewsItemModel : BaseNopEntityModel, IStoreMappingSupportedModel, IMetaTagsSupportedModel
 {
     #region Ctor
 
     public NewsItemModel()
     {
         AvailableLanguages = new List<SelectListItem>();
-
         SelectedStoreIds = new List<int>();
         AvailableStores = new List<SelectListItem>();
     }
@@ -33,7 +32,6 @@ public partial record NewsItemModel : BaseNopEntityModel, IStoreMappingSupported
     [NopResourceDisplayName("Plugins.Misc.News.NewsItems.Fields.Language")]
     public string LanguageName { get; set; }
 
-    //store mapping
     [NopResourceDisplayName("Plugins.Misc.News.NewsItems.Fields.LimitedToStores")]
     public IList<int> SelectedStoreIds { get; set; }
 

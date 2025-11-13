@@ -97,8 +97,6 @@ public partial class SlugRouteTransformer : DynamicRouteValueTransformer
             var slugLocalized = await _urlRecordService.GetSeNameAsync(urlRecord.EntityId, urlRecord.EntityName, language.Id, true, false);
             if (!string.IsNullOrEmpty(slugLocalized) && !slugLocalized.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
             {
-                //we should make validation above because some entities does not have SeName for standard (Id = 0) language (e.g. blog posts)
-
                 //redirect to the page for current language
                 InternalRedirect(httpContext, values, $"/{language.UniqueSeoCode}/{slugLocalized}", false);
                 return;
