@@ -3529,8 +3529,8 @@ label, label + * {
 
 .button-row {
   display: flex;
-  gap: 12px;
-  flex-wrap: nowrap;
+  gap: 0 12px;
+  flex-wrap: wrap;
 }
 
 .button-2.custom-wishlist-button {
@@ -3540,7 +3540,7 @@ label, label + * {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-inline-end: 12px;
+  padding-inline: 12px;
   font-size: 14px;
   font-weight: 500;
   color: #1f2d3d;
@@ -3553,6 +3553,10 @@ label, label + * {
   white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.button-2.custom-wishlist-button.add-new {
+  padding-inline-start: 0;
 }
 
 .button-2.custom-wishlist-button.add-new::before {
