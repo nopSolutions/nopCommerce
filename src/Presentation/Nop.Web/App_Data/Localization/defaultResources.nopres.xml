@@ -18968,6 +18968,9 @@
   <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.ContactUs">
     <Value>Contact us</Value>
   </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Login">
+    <Value>Login</Value>
+  </LocaleResource>
   <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Search">
     <Value>Search</Value>
   </LocaleResource>
