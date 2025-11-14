@@ -19628,6 +19628,12 @@
   <LocaleResource Name="Payment.ExpirationDate">
     <Value>Expiration date</Value>
   </LocaleResource>
+  <LocaleResource Name="Payment.ExpirationMonth">
+    <Value>Expiration Month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Payment.ExpirationYear">
+    <Value>Expiration Year</Value>
+  </LocaleResource>
   <LocaleResource Name="Payment.ExpirationDate.Expired">
     <Value>Card is expired</Value>
   </LocaleResource>
