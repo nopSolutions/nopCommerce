@@ -1546,7 +1546,6 @@
         "TaxCategoryName": "Apparel",
         "CategoryName": "Shoes",
         "ManufacturerName": "Nike",
-        "ProductPictures": [ "product_NikeFloralShoe_1.jpg", "product_NikeFloralShoe_2.jpg" ],
         "ProductSpecificationAttribute": [
           {
             "AllowFiltering": true,
@@ -1603,12 +1602,14 @@
               {
                 "Name": "Natural",
                 "DisplayOrder": 1,
-                "ImageSquaresPictureName": "p_attribute_print_2.jpg"
+                "ImageSquaresPictureName": "p_attribute_print_2.jpg",
+                "AttributeValuePictures": [ "product_NikeFloralShoe_1.jpg" ]
               },
               {
                 "Name": "Fresh",
                 "DisplayOrder": 2,
-                "ImageSquaresPictureName": "p_attribute_print_1.jpg"
+                "ImageSquaresPictureName": "p_attribute_print_1.jpg",
+                "AttributeValuePictures": [ "product_NikeFloralShoe_2.jpg" ]
               }
             ]
           }
