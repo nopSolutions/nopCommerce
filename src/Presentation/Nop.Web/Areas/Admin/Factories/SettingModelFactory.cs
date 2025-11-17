@@ -206,6 +206,31 @@ public partial class SettingModelFactory : ISettingModelFactory
     }
 
     /// <summary>
+    /// Prepare GPSR settings model
+    /// </summary>
+    /// <param name="model">GPSR search model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the GPSR settings model
+    /// </returns>
+    protected virtual async Task<GpsrSettingsModel> PrepareGpsrSettingsModelAsync(GpsrSettingsModel model)
+    {
+        //load settings for a chosen store scope
+        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        var gpsrSettings = await _settingService.LoadSettingAsync<GpsrSettings>(storeId);
+
+        //fill in model values from the entity
+        model ??= new GpsrSettingsModel();
+        model.Enabled = gpsrSettings.Enabled;
+
+        //fill in overridden values
+        if (storeId > 0)
+            model.Enabled_OverrideForStore = await _settingService.SettingExistsAsync(gpsrSettings, x => x.Enabled, storeId);
+
+        return model;
+    }
+
+    /// <summary>
     /// Prepare artificial intelligence settings model
     /// </summary>
     /// <param name="model">Artificial intelligence search model</param>
@@ -1307,6 +1332,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         await _reviewTypeModelFactory.PrepareReviewTypeSearchModelAsync(model.ReviewTypeSearchModel);
 
         await PrepareArtificialIntelligenceSettingsModelAsync(model.ArtificialIntelligenceSettingsModel);
+        await PrepareGpsrSettingsModelAsync(model.GpsrSettingsModel);
 
         return model;
     }

@@ -785,6 +785,10 @@ public partial class SettingController : BaseAdminController
 
             await _settingService.SaveSettingAsync(artificialIntelligenceSettings);
 
+            var gpsrSettings = await _settingService.LoadSettingAsync<GpsrSettings>(storeScope);
+            gpsrSettings.Enabled = model.GpsrSettingsModel.Enabled;
+            await _settingService.SaveSettingOverridablePerStoreAsync(gpsrSettings, x => x.Enabled, model.GpsrSettingsModel.Enabled_OverrideForStore, storeScope, false);
+
             //now clear settings cache
             await _settingService.ClearCacheAsync();
 

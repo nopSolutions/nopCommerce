@@ -1040,6 +1040,11 @@ public partial class ExportManager : IExportManager
             await xmlWriter.WriteStringAsync("DisplayOrder", manufacturer.DisplayOrder);
             await xmlWriter.WriteStringAsync("CreatedOnUtc", manufacturer.CreatedOnUtc, await IgnoreExportManufacturerPropertyAsync());
             await xmlWriter.WriteStringAsync("UpdatedOnUtc", manufacturer.UpdatedOnUtc, await IgnoreExportManufacturerPropertyAsync());
+            await xmlWriter.WriteStringAsync("PhysicalAddress", manufacturer.PhysicalAddress, await IgnoreExportManufacturerPropertyAsync());
+            await xmlWriter.WriteStringAsync("ElectronicAddress", manufacturer.ElectronicAddress, await IgnoreExportManufacturerPropertyAsync());
+            await xmlWriter.WriteStringAsync("ResponsiblePerson", manufacturer.ResponsiblePerson, await IgnoreExportManufacturerPropertyAsync());
+            await xmlWriter.WriteStringAsync("ResponsiblePersonPhysicalAddress", manufacturer.ResponsiblePersonPhysicalAddress, await IgnoreExportManufacturerPropertyAsync());
+            await xmlWriter.WriteStringAsync("ResponsiblePersonElectronicAddress", manufacturer.ResponsiblePersonElectronicAddress, await IgnoreExportManufacturerPropertyAsync());
 
             await xmlWriter.WriteStartElementAsync("Products");
             var productManufacturers = await _manufacturerService.GetProductManufacturersByManufacturerIdAsync(manufacturer.Id, showHidden: true);
@@ -1115,7 +1120,12 @@ public partial class ExportManager : IExportManager
             new PropertyByName<Manufacturer>("PriceTo", (p, _) => p.PriceTo, await IgnoreExportManufacturerPropertyAsync()),
             new PropertyByName<Manufacturer>("ManuallyPriceRange", (p, _) => p.ManuallyPriceRange, await IgnoreExportManufacturerPropertyAsync()),
             new PropertyByName<Manufacturer>("Published", (p, _) => p.Published, await IgnoreExportManufacturerPropertyAsync()),
-            new PropertyByName<Manufacturer>("DisplayOrder", (p, _) => p.DisplayOrder)
+            new PropertyByName<Manufacturer>("DisplayOrder", (p, _) => p.DisplayOrder),
+            new PropertyByName<Manufacturer>("PhysicalAddress", (p, _) => p.PhysicalAddress),
+            new PropertyByName<Manufacturer>("ElectronicAddress", (p, _) => p.ElectronicAddress),
+            new PropertyByName<Manufacturer>("ResponsiblePerson", (p, _) => p.ResponsiblePerson),
+            new PropertyByName<Manufacturer>("ResponsiblePersonPhysicalAddress", (p, _) => p.ResponsiblePersonPhysicalAddress),
+            new PropertyByName<Manufacturer>("ResponsiblePersonElectronicAddress", (p, _) => p.ResponsiblePersonElectronicAddress),
         }, _catalogSettings, localizedProperties, languages);
 
         //activity log
