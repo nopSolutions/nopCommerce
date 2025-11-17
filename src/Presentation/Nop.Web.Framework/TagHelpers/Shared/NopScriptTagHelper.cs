@@ -128,6 +128,13 @@ public partial class NopScriptTagHelper : UrlResolutionTagHelper
 
         output.TagMode = TagMode.StartTagAndEndTag;
 
+        //process only text/javascript scripts
+        if (context.AllAttributes.TryGetAttribute("type", out var attribute)
+             && !string.Equals(attribute.Value?.ToString(), MimeTypes.TextJavascript, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
         var woConfig = _appSettings.Get<WebOptimizerConfig>();
 
         if (Location == ResourceLocation.Auto)
