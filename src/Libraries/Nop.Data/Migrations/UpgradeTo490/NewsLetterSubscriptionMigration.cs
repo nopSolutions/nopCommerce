@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Messages;
 using Nop.Data.Extensions;
 
@@ -19,7 +20,11 @@ public class NewsLetterSubscriptionMigration : ForwardOnlyMigration
         {
             //add new column
             Alter.Table(nameof(NewsLetterSubscription))
-                .AddColumn(nameof(NewsLetterSubscription.TypeId)).AsInt32().ForeignKey<NewsLetterSubscriptionType>().Nullable();
+                .AddColumn(nameof(NewsLetterSubscription.TypeId))
+                .AsInt32()
+                .ForeignKey(nameof(NewsLetterSubscriptionType), nameof(NewsLetterSubscriptionType.Id))
+                .OnDelete(Rule.Cascade)
+                .Nullable();
         }
 
         if (!Schema.Table(nameof(Campaign)).Column(nameof(Campaign.NewsLetterSubscriptionTypeId)).Exists())
