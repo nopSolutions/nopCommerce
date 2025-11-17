@@ -785,6 +785,10 @@ public partial class SettingController : BaseAdminController
 
             await _settingService.SaveSettingAsync(artificialIntelligenceSettings);
 
+            var gsprSettings = await _settingService.LoadSettingAsync<GsprSettings>(storeScope);
+            gsprSettings = model.GsprSettingsModel.ToSettings(gsprSettings);
+            await _settingService.SaveSettingOverridablePerStoreAsync(gsprSettings, x => x.Enabled, model.GsprSettingsModel.Enabled_OverrideForStore, storeScope, false);
+
             //now clear settings cache
             await _settingService.ClearCacheAsync();
 

@@ -1,6 +1,7 @@
 ﻿@model IList<ManufacturerBriefInfoModel>
 
 @using Nop.Core.Domain.Catalog
+@inject GsprSettings gsprSettings
 
 @if (Model.Count > 0)
 {
@@ -17,10 +18,45 @@
             @for (var i = 0; i < Model.Count; i++)
             {
                 var item = Model[i];
-                <a href="@(await NopUrl.RouteGenericUrlAsync<Manufacturer>(new { SeName = item.SeName }))">@item.Name</a>
-                if (i != Model.Count - 1)
+                
+                if (gsprSettings.Enabled && Model.Count > 1 && i == 0)
                 {
-                    <span class="separator">,</span>
+                    <br />
+                }
+
+                <a href="@(await NopUrl.RouteGenericUrlAsync<Manufacturer>(new { item.SeName }))">@item.Name</a>
+                
+                if (!gsprSettings.Enabled)
+                {
+                    if (i != Model.Count - 1)
+                    {
+                        <span class="separator">,</span>
+                    }
+                }
+                else
+                {
+                    <ul>
+                        @if (!string.IsNullOrEmpty(item.PhysicalAddress))
+                        {
+                            <li>@item.PhysicalAddress</li>
+                        }
+                        @if (!string.IsNullOrEmpty(item.ElectronicAddress))
+                        {
+                            <li>@item.ElectronicAddress</li>
+                        }
+                        @if (!string.IsNullOrEmpty(item.ResponsiblePerson))
+                        {
+                            <li>@item.ResponsiblePerson</li>
+                        }
+                        @if (!string.IsNullOrEmpty(item.ResponsiblePersonPhysicalAddress))
+                        {
+                            <li>@item.ResponsiblePersonPhysicalAddress</li>
+                        }
+                        @if (!string.IsNullOrEmpty(item.ResponsiblePersonElectronicAddress))
+                        {
+                            <li>@item.ResponsiblePersonElectronicAddress</li>
+                        }
+                    </ul>
                 }
             }
         </span>

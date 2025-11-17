@@ -418,7 +418,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.ProductUrlStructureTypeId_OverrideForStore, mo => mo.Ignore())
             .ForMember(model => model.ProductUrlStructureTypes, mo => mo.Ignore())
             .ForMember(model => model.ShowSearchBoxCategories_OverrideForStore, mo => mo.Ignore())
-            .ForMember(model => model.ArtificialIntelligenceSettingsModel, mo => mo.Ignore());
+            .ForMember(model => model.ArtificialIntelligenceSettingsModel, mo => mo.Ignore())
+            .ForMember(model => model.GsprSettingsModel, mo => mo.Ignore());
         CreateMap<CatalogSettingsModel, CatalogSettings>()
             .ForMember(settings => settings.AjaxProcessAttributeChange, options => options.Ignore())
             .ForMember(settings => settings.CompareProductsNumber, options => options.Ignore())
@@ -439,7 +440,10 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore())
             .ForMember(settings => settings.UseStandardSearchWhenSearchProviderThrowsException, options => options.Ignore())
             .ForMember(settings => settings.ActiveSearchProviderSystemName, options => options.Ignore())
-            .ForMember(settings => settings.VendorProductReviewsPageSize, options => options.Ignore());        
+            .ForMember(settings => settings.VendorProductReviewsPageSize, options => options.Ignore());
+
+        CreateMap<GsprSettings, GsprSettingsModel>();
+        CreateMap<GsprSettingsModel, GsprSettings>();
 
         CreateMap<ProductCategory, CategoryProductModel>()
             .ForMember(model => model.ProductName, options => options.Ignore());

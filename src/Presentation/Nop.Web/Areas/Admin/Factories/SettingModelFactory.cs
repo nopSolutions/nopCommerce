@@ -213,6 +213,32 @@ public partial class SettingModelFactory : ISettingModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the artificial intelligence settings model
     /// </returns>
+    protected virtual async Task<GsprSettingsModel> PrepareGsprSettingsModelAsync(GsprSettingsModel model)
+    {
+        //load settings for a chosen store scope
+        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        var gsprSettings = await _settingService.LoadSettingAsync<GsprSettings>(storeId);
+
+        //fill in model values from the entity
+        model ??= gsprSettings.ToSettingsModel<GsprSettingsModel>();
+
+        model.Enabled = gsprSettings.Enabled;
+
+        //fill in overridden values
+        if (storeId > 0)
+            model.Enabled_OverrideForStore = await _settingService.SettingExistsAsync(gsprSettings, x => x.Enabled, storeId);
+
+        return model;
+    }
+
+    /// <summary>
+    /// Prepare artificial intelligence settings model
+    /// </summary>
+    /// <param name="model">Artificial intelligence search model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the artificial intelligence settings model
+    /// </returns>
     protected virtual async Task<ArtificialIntelligenceSettingsModel> PrepareArtificialIntelligenceSettingsModelAsync(ArtificialIntelligenceSettingsModel model)
     {
         ArgumentNullException.ThrowIfNull(model);
@@ -1307,6 +1333,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         await _reviewTypeModelFactory.PrepareReviewTypeSearchModelAsync(model.ReviewTypeSearchModel);
 
         await PrepareArtificialIntelligenceSettingsModelAsync(model.ArtificialIntelligenceSettingsModel);
+        await PrepareGsprSettingsModelAsync(model.GsprSettingsModel);
 
         return model;
     }

@@ -1,0 +1,14 @@
+@model CatalogSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="GsprSettingsModel.Enabled_OverrideForStore" asp-input="GsprSettingsModel.Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="GsprSettingsModel.Enabled"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="GsprSettingsModel.Enabled"/>
+            <span asp-validation-for="GsprSettingsModel.Enabled"></span>
+        </div>
+    </div>
+</div>

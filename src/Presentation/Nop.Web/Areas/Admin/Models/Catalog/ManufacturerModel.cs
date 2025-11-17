@@ -122,6 +122,21 @@ public partial record ManufacturerModel : BaseNopEntityModel, IAclSupportedModel
 
     public bool PreTranslationAvailable { get; set; }
 
+    [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PhysicalAddress")]
+    public string PhysicalAddress { get; set; }
+    
+    [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ElectronicAddress")]
+    public string ElectronicAddress { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ResponsiblePerson")]
+    public string ResponsiblePerson { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ResponsiblePersonPhysicalAddress")]
+    public string ResponsiblePersonPhysicalAddress { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ResponsiblePersonElectronicAddress")]
+    public string ResponsiblePersonElectronicAddress { get; set; }
+
     #endregion
 }
 

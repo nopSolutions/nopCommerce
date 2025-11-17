@@ -1,0 +1,50 @@
+﻿@model ManufacturerModel
+
+<div class="card-body advanced-setting">
+    <p>@Html.Raw(T("Admin.Catalog.Manufacturers.Gspr.Information"))</p>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="PhysicalAddress" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PhysicalAddress" />
+            <span asp-validation-for="PhysicalAddress"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ElectronicAddress" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ElectronicAddress" />
+            <span asp-validation-for="ElectronicAddress"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ResponsiblePerson" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ResponsiblePerson" />
+            <span asp-validation-for="ResponsiblePerson"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ResponsiblePersonPhysicalAddress" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ResponsiblePersonPhysicalAddress" />
+            <span asp-validation-for="ResponsiblePersonPhysicalAddress"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ResponsiblePersonElectronicAddress" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ResponsiblePersonElectronicAddress" />
+            <span asp-validation-for="ResponsiblePersonElectronicAddress"></span>
+        </div>
+    </div>
+</div>

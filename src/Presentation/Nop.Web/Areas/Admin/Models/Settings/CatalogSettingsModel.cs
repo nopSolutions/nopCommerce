@@ -18,6 +18,7 @@ public partial record CatalogSettingsModel : BaseNopModel, ISettingsModel
         SortOptionSearchModel = new SortOptionSearchModel();
         ReviewTypeSearchModel = new ReviewTypeSearchModel();
         ArtificialIntelligenceSettingsModel = new ArtificialIntelligenceSettingsModel();
+        GsprSettingsModel = new GsprSettingsModel();
     }
 
     #endregion
@@ -423,6 +424,7 @@ public partial record CatalogSettingsModel : BaseNopModel, ISettingsModel
     public SelectList ProductUrlStructureTypes { get; set; }
 
     public ArtificialIntelligenceSettingsModel ArtificialIntelligenceSettingsModel { get; set; }
+    public GsprSettingsModel GsprSettingsModel { get; set; }
 
     #endregion
 }

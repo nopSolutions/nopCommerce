@@ -46,6 +46,7 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly CaptchaSettings _captchaSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CustomerSettings _customerSettings;
+    protected readonly GsprSettings _gsprSettings;
     protected readonly ICategoryService _categoryService;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
@@ -94,6 +95,7 @@ public partial class ProductModelFactory : IProductModelFactory
     public ProductModelFactory(CaptchaSettings captchaSettings,
         CatalogSettings catalogSettings,
         CustomerSettings customerSettings,
+        GsprSettings gsprSettings,
         ICategoryService categoryService,
         ICurrencyService currencyService,
         ICustomerService customerService,
@@ -137,6 +139,7 @@ public partial class ProductModelFactory : IProductModelFactory
         _captchaSettings = captchaSettings;
         _catalogSettings = catalogSettings;
         _customerSettings = customerSettings;
+        _gsprSettings = gsprSettings;
         _categoryService = categoryService;
         _currencyService = currencyService;
         _customerService = customerService;
@@ -1168,6 +1171,15 @@ public partial class ProductModelFactory : IProductModelFactory
                     Name = await _localizationService.GetLocalizedAsync(manufacturer, x => x.Name),
                     SeName = await _urlRecordService.GetSeNameAsync(manufacturer)
                 };
+
+                if (_gsprSettings.Enabled)
+                {
+                    modelMan.PhysicalAddress = string.IsNullOrEmpty(manufacturer.PhysicalAddress) ? string.Empty : $"{await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Fields.PhysicalAddress")}: {manufacturer.PhysicalAddress}";
+                    modelMan.ElectronicAddress = string.IsNullOrEmpty(manufacturer.ElectronicAddress) ? string.Empty : $"{await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Fields.ElectronicAddress")}: {manufacturer.ElectronicAddress}";
+                    modelMan.ResponsiblePerson = string.IsNullOrEmpty(manufacturer.ResponsiblePerson) ? string.Empty : $"{await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Fields.ResponsiblePerson")}: {manufacturer.ResponsiblePerson}";
+                    modelMan.ResponsiblePersonPhysicalAddress = string.IsNullOrEmpty(manufacturer.ResponsiblePersonPhysicalAddress) ? string.Empty : $"{await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Fields.ResponsiblePersonPhysicalAddress")}: {manufacturer.ResponsiblePersonPhysicalAddress}";
+                    modelMan.ResponsiblePersonElectronicAddress = string.IsNullOrEmpty(manufacturer.ResponsiblePersonElectronicAddress) ? string.Empty : $"{await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Fields.ResponsiblePersonElectronicAddress")}: {manufacturer.ResponsiblePersonElectronicAddress}";
+                }
 
                 return modelMan;
             }).ToListAsync();
