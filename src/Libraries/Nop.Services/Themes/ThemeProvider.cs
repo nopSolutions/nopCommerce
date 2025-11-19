@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
-using Nop.Core.Infrastructure;
+using Nop.Core;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Themes;
@@ -12,68 +12,42 @@ public partial class ThemeProvider : IThemeProvider
 {
     #region Fields
 
-    protected static readonly object _locker = new();
-
-    protected readonly INopFileProvider _fileProvider;
-
     protected Dictionary<string, ThemeDescriptor> _themeDescriptors;
 
     #endregion
 
-    #region Ctor
-
-    public ThemeProvider(INopFileProvider fileProvider)
-    {
-        _fileProvider = fileProvider;
-        Initialize();
-    }
-
-    #endregion
-
-    #region Utilities
+    #region Methods
 
     /// <summary>
     /// Initializes theme provider
     /// </summary>
-    protected virtual void Initialize()
+    public virtual async Task InitializeAsync()
     {
         if (_themeDescriptors != null)
             return;
 
-        //prevent multi loading data
-        lock (_locker)
+        var fileProvider = CommonHelper.DefaultFileProvider;
+
+        //load all theme descriptors
+        _themeDescriptors = new Dictionary<string, ThemeDescriptor>(StringComparer.InvariantCultureIgnoreCase);
+
+        var themeDirectoryPath = fileProvider.MapPath(NopPluginDefaults.ThemesPath);
+        foreach (var descriptionFile in fileProvider.GetFiles(themeDirectoryPath, NopPluginDefaults.ThemeDescriptionFileName, false))
         {
-            //data can be loaded while we waited
-            if (_themeDescriptors != null)
-                return;
+            var text = await fileProvider.ReadAllTextAsync(descriptionFile, Encoding.UTF8);
+            if (string.IsNullOrEmpty(text))
+                continue;
 
-            //load all theme descriptors
-            _themeDescriptors =
-                new Dictionary<string, ThemeDescriptor>(StringComparer.InvariantCultureIgnoreCase);
+            //get theme descriptor
+            var themeDescriptor = GetThemeDescriptorFromText(text);
 
-            var themeDirectoryPath = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
-            foreach (var descriptionFile in _fileProvider.GetFiles(themeDirectoryPath,
-                         NopPluginDefaults.ThemeDescriptionFileName, false))
-            {
-                var text = _fileProvider.ReadAllText(descriptionFile, Encoding.UTF8);
-                if (string.IsNullOrEmpty(text))
-                    continue;
+            //some validation
+            if (string.IsNullOrEmpty(themeDescriptor?.SystemName))
+                throw new Exception($"A theme descriptor '{descriptionFile}' has no system name");
 
-                //get theme descriptor
-                var themeDescriptor = GetThemeDescriptorFromText(text);
-
-                //some validation
-                if (string.IsNullOrEmpty(themeDescriptor?.SystemName))
-                    throw new Exception($"A theme descriptor '{descriptionFile}' has no system name");
-
-                _themeDescriptors.TryAdd(themeDescriptor.SystemName, themeDescriptor);
-            }
+            _themeDescriptors.TryAdd(themeDescriptor.SystemName, themeDescriptor);
         }
     }
-
-    #endregion
-
-    #region Methods
 
     /// <summary>
     /// Get theme descriptor from the description text
@@ -110,7 +84,7 @@ public partial class ThemeProvider : IThemeProvider
     /// <param name="systemName">Theme system name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the me descriptor
+    /// The task result contains theme descriptor
     /// </returns>
     public virtual Task<ThemeDescriptor> GetThemeBySystemNameAsync(string systemName)
     {

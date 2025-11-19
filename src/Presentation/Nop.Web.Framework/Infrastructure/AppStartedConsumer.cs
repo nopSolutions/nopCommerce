@@ -8,6 +8,7 @@ using Nop.Services.Logging;
 using Nop.Services.Plugins;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
+using Nop.Services.Themes;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web.Framework.Infrastructure;
@@ -25,6 +26,7 @@ public partial class AppStartedConsumer : IConsumer<AppStartedEvent>
     protected readonly IPluginService _pluginService;
     protected readonly ISettingService _settingService;
     protected readonly ITaskScheduler _taskScheduler;
+    protected readonly IThemeProvider _themeProvider;
 
     #endregion
 
@@ -35,7 +37,8 @@ public partial class AppStartedConsumer : IConsumer<AppStartedEvent>
         IPermissionService permissionService,
         IPluginService pluginService,
         ISettingService settingService,
-        ITaskScheduler taskScheduler)
+        ITaskScheduler taskScheduler,
+        IThemeProvider themeProvider)
     {
         _logger = logger;
         _migrationManager = migrationManager;
@@ -43,6 +46,7 @@ public partial class AppStartedConsumer : IConsumer<AppStartedEvent>
         _pluginService = pluginService;
         _settingService = settingService;
         _taskScheduler = taskScheduler;
+        _themeProvider = themeProvider;
     }
 
     #endregion
@@ -61,6 +65,9 @@ public partial class AppStartedConsumer : IConsumer<AppStartedEvent>
 
         //log application start
         await _logger.InformationAsync("Application started");
+
+        //init theme provider
+        await _themeProvider.InitializeAsync();
 
         //install and update plugins
         await _pluginService.InstallPluginsAsync();
