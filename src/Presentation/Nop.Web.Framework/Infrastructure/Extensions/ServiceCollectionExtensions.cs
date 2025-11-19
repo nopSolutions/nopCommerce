@@ -119,18 +119,18 @@ public static class ServiceCollectionExtensions
         builder.Services.AddRateLimiter(options =>
         {
             var settings = Singleton<AppSettings>.Instance.Get<CommonConfig>();
-            var securitySettings = Singleton<SecuritySettings>.Instance;
 
             options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
             {
+                var securitySettings = httpContext.RequestServices.GetRequiredService<SecuritySettings>();
                 var username = httpContext.User.Identity?.Name;
                 var ip = httpContext.Connection.RemoteIpAddress?.ToString();
 
-                if (settings.RateLimitWhitelist.Contains(ip) || //allow from configured IP addresses
-                    securitySettings.AdminAreaAllowedIpAddresses.Contains(ip) || //allow from admin area allowed IP addresses
+                if ((settings?.RateLimitWhitelist ?? []).Contains(ip) || //allow from configured IP addresses
+                    (securitySettings?.AdminAreaAllowedIpAddresses ?? []).Contains(ip) || //allow from admin area allowed IP addresses
                     httpContext.Connection.LocalIpAddress == httpContext.Connection.RemoteIpAddress) //allow from localhost
                 {
-                    return RateLimitPartition.GetNoLimiter("");
+                    return RateLimitPartition.GetNoLimiter(ip);
                 }
 
                 var partitionKey = username ?? ip ?? httpContext.Session?.Id ?? httpContext.Request.Headers.Host;
