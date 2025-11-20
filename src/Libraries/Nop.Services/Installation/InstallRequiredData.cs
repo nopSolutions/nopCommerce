@@ -1344,6 +1344,7 @@ public partial class InstallationService
             PopupGridPageSize = 7,
             GridPageSizes = "7, 15, 20, 50, 100",
             RichEditorAdditionalSettings = null,
+            RichEditorAllowJavaScript = false,
             UseRichEditorForCustomerEmails = false,
             UseRichEditorInMessageTemplates = false,
             HideAdvertisementsOnAdminArea = false,
