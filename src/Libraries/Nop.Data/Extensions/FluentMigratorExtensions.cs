@@ -1,12 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using System.Linq.Expressions;
 using System.Reflection;
+using FluentMigrator.Builders;
 using FluentMigrator.Builders.Alter;
 using FluentMigrator.Builders.Alter.Table;
 using FluentMigrator.Builders.Create;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Builders.Delete;
+using FluentMigrator.Builders.Delete.Column;
 using FluentMigrator.Builders.Schema;
+using FluentMigrator.Builders.Schema.Column;
 using FluentMigrator.Builders.Schema.Table;
 using FluentMigrator.Infrastructure.Extensions;
 using FluentMigrator.Model;
@@ -172,14 +176,37 @@ public static class FluentMigratorExtensions
     }
 
     /// <summary>
-    /// Retrieves expressions into IAlterExpressionRoot
+    /// Retrieves expressions into ISchemaExpressionRoot
     /// </summary>
     /// <param name="expressionRoot">The root expression for a SCHEMA</param>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public static ISchemaTableSyntax TableFor<TEntity>(this ISchemaExpressionRoot schema)
+    public static ISchemaTableSyntax TableFor<TEntity>(this ISchemaExpressionRoot schema) where TEntity : BaseEntity
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
         return schema.Table(tableName);
+    }
+
+    public static ISchemaColumnSyntax ColumnFor<TEntity>(
+    this ISchemaTableSyntax schema, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
+    {
+        var property = ((MemberExpression)selector.Body)?.Member?.Name;
+        var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), property!);
+        return schema.Column(columnName);
+    }
+
+    public static IAlterTableColumnAsTypeSyntax AddColumnFor<TEntity>(
+    this IAlterTableAddColumnOrAlterColumnSyntax tableSchema, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
+    {
+        var property = ((MemberExpression)selector.Body)?.Member?.Name;
+        var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), property!);
+        return tableSchema.AddColumn(columnName);
+    }
+
+    public static IInSchemaSyntax FromTable<TEntity>(
+    this IDeleteColumnFromTableSyntax tableSchema) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        return tableSchema.FromTable(tableName);
     }
 
     /// <summary>
