@@ -154,10 +154,10 @@ public static class FluentMigratorExtensions
     }
 
     /// <summary>
-    /// Retrieves expressions into IDeleteExpressionRoot
+    /// Targets the entity's mapped table for a DELETE operation.
     /// </summary>
     /// <param name="expressionRoot">The root expression for a DELETE operation</param>
-    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
     public static void TableFor<TEntity>(this IDeleteExpressionRoot expressionRoot) where TEntity : BaseEntity
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
@@ -165,10 +165,14 @@ public static class FluentMigratorExtensions
     }
 
     /// <summary>
-    /// Retrieves expressions into IAlterExpressionRoot
+    /// Targets the entity's mapped table for an ALTER TABLE operation.
     /// </summary>
-    /// <param name="expressionRoot">The root expression for a ALTER operation</param>
-    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <param name="expressionRoot">The root expression for an ALTER operation</param>
+    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
+    /// <returns>
+    /// A fluent syntax interface allowing further ALTER TABLE operations 
+    /// such as adding or modifying columns.
+    /// </returns>
     public static IAlterTableAddColumnOrAlterColumnOrSchemaOrDescriptionSyntax TableFor<TEntity>(this IAlterExpressionRoot expressionRoot) where TEntity : BaseEntity
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
@@ -176,16 +180,31 @@ public static class FluentMigratorExtensions
     }
 
     /// <summary>
-    /// Retrieves expressions into ISchemaExpressionRoot
+    /// Targets the entity's mapped table for schema-related operations.
     /// </summary>
-    /// <param name="expressionRoot">The root expression for a SCHEMA</param>
-    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <param name="schema">The root expression for schema inspection</param>
+    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
+    /// <returns>
+    /// A fluent syntax interface for performing schema operations 
+    /// such as checking table or column existence.
+    /// </returns>
     public static ISchemaTableSyntax TableFor<TEntity>(this ISchemaExpressionRoot schema) where TEntity : BaseEntity
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
         return schema.Table(tableName);
     }
 
+    /// <summary>
+    /// Targets a specific column of the entity's mapped table for schema inspection,
+    /// resolving the column name via <see cref="NameCompatibilityManager"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
+    /// <param name="schema">The schema table expression</param>
+    /// <param name="selector">An expression selecting the entity property</param>
+    /// <returns>
+    /// A fluent syntax interface for performing schema operations 
+    /// such as checking column existence.
+    /// </returns>
     public static ISchemaColumnSyntax ColumnFor<TEntity>(
     this ISchemaTableSyntax schema, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
     {
@@ -194,6 +213,17 @@ public static class FluentMigratorExtensions
         return schema.Column(columnName);
     }
 
+    /// <summary>
+    /// Adds a new column to the entity's mapped table for ALTER TABLE operations,
+    /// resolving the column name via <see cref="NameCompatibilityManager"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
+    /// <param name="tableSchema">The alter table expression</param>
+    /// <param name="selector">An expression selecting the entity property</param>
+    /// <returns>
+    /// A fluent syntax interface allowing further ALTER TABLE operations 
+    /// on the specified column.
+    /// </returns>
     public static IAlterTableColumnAsTypeSyntax AddColumnFor<TEntity>(
     this IAlterTableAddColumnOrAlterColumnSyntax tableSchema, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
     {
@@ -202,6 +232,15 @@ public static class FluentMigratorExtensions
         return tableSchema.AddColumn(columnName);
     }
 
+    /// <summary>
+    /// Targets the mapped table of the specified entity for a DELETE COLUMN operation,
+    /// resolving the table name via <see cref="NameCompatibilityManager"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
+    /// <param name="tableSchema">The delete column from table syntax</param>
+    /// <returns>
+    /// A fluent syntax interface allowing the deletion of columns from the specified table.
+    /// </returns>
     public static IInSchemaSyntax FromTable<TEntity>(
     this IDeleteColumnFromTableSyntax tableSchema) where TEntity : BaseEntity
     {
