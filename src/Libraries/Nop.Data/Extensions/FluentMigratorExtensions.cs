@@ -1,9 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Reflection;
+using FluentMigrator.Builders.Alter;
 using FluentMigrator.Builders.Alter.Table;
 using FluentMigrator.Builders.Create;
 using FluentMigrator.Builders.Create.Table;
+using FluentMigrator.Builders.Delete;
+using FluentMigrator.Builders.Schema;
+using FluentMigrator.Builders.Schema.Table;
 using FluentMigrator.Infrastructure.Extensions;
 using FluentMigrator.Model;
 using FluentMigrator.Runner;
@@ -63,7 +67,7 @@ public static class FluentMigratorExtensions
     /// <param name="builder">The builder to add the database engine(s) to</param>
     /// <returns>The migration runner builder</returns>
     public static IMigrationRunnerBuilder AddNopDbEngines(this IMigrationRunnerBuilder builder)
-    {        
+    {
         if (!DataSettingsManager.IsDatabaseInstalled())
             return builder.AddSqlServer().AddMySql5().AddPostgres92();
 
@@ -143,6 +147,39 @@ public static class FluentMigratorExtensions
         var type = typeof(TEntity);
         var builder = expressionRoot.Table(NameCompatibilityManager.GetTableName(type)) as CreateTableExpressionBuilder;
         builder.RetrieveTableExpressions(type);
+    }
+
+    /// <summary>
+    /// Retrieves expressions into IDeleteExpressionRoot
+    /// </summary>
+    /// <param name="expressionRoot">The root expression for a DELETE operation</param>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    public static void TableFor<TEntity>(this IDeleteExpressionRoot expressionRoot) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        expressionRoot.Table(tableName);
+    }
+
+    /// <summary>
+    /// Retrieves expressions into IAlterExpressionRoot
+    /// </summary>
+    /// <param name="expressionRoot">The root expression for a ALTER operation</param>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    public static IAlterTableAddColumnOrAlterColumnOrSchemaOrDescriptionSyntax TableFor<TEntity>(this IAlterExpressionRoot expressionRoot) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        return expressionRoot.Table(tableName);
+    }
+
+    /// <summary>
+    /// Retrieves expressions into IAlterExpressionRoot
+    /// </summary>
+    /// <param name="expressionRoot">The root expression for a SCHEMA</param>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    public static ISchemaTableSyntax TableFor<TEntity>(this ISchemaExpressionRoot schema)
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        return schema.Table(tableName);
     }
 
     /// <summary>
