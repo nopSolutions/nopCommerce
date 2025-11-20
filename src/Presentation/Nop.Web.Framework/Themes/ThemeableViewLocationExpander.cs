@@ -9,6 +9,7 @@ namespace Nop.Web.Framework.Themes;
 public partial class ThemeableViewLocationExpander : IViewLocationExpander
 {
     protected const string THEME_KEY = "nop.themename";
+    protected const string HTTP_CONTEXT_THEME_CACHE_KEY = "http-context-theme-cache-key";
 
     /// <summary>
     /// Invoked by a Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine to determine the
@@ -22,7 +23,14 @@ public partial class ThemeableViewLocationExpander : IViewLocationExpander
         if (context.AreaName?.Equals(AreaNames.ADMIN) ?? false)
             return;
 
-        context.Values[THEME_KEY] = EngineContext.Current.Resolve<IThemeContext>().GetWorkingThemeNameAsync().Result;
+        var httpContext = context.ActionContext.HttpContext;
+        if (!httpContext.Items.TryGetValue(HTTP_CONTEXT_THEME_CACHE_KEY, out var cachedThemeName))
+        {
+            cachedThemeName = EngineContext.Current.Resolve<IThemeContext>().GetWorkingThemeNameAsync().Result;
+            httpContext.Items[HTTP_CONTEXT_THEME_CACHE_KEY] = cachedThemeName;
+        }
+
+        context.Values[THEME_KEY] = (string)cachedThemeName;
     }
 
     /// <summary>

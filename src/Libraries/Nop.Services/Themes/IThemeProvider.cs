@@ -6,6 +6,11 @@
 public partial interface IThemeProvider
 {
     /// <summary>
+    /// Initializes theme provider
+    /// </summary>
+    Task InitializeAsync();
+
+    /// <summary>
     /// Get theme descriptor from the description text
     /// </summary>
     /// <param name="text">Description text</param>

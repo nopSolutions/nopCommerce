@@ -232,7 +232,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IImportManager, ImportManager>();
         services.AddScoped<IPdfService, PdfService>();
         services.AddScoped<IUploadService, UploadService>();
-        services.AddScoped<IThemeProvider, ThemeProvider>();
+        services.AddSingleton<IThemeProvider, ThemeProvider>();
         services.AddScoped<IThemeContext, ThemeContext>();
         services.AddScoped<IExternalAuthenticationService, ExternalAuthenticationService>();
         services.AddSingleton<IRoutePublisher, RoutePublisher>();
