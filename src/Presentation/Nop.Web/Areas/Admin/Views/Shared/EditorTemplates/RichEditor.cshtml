@@ -16,6 +16,9 @@
 
     //extend editor with additional settings
     var additionalEditorSettings = adminAreaSettings.RichEditorAdditionalSettings;
+
+    //is java-script supported?
+    var allowJavaScript = adminAreaSettings.RichEditorAllowJavaScript;
 }
 <script src="~/lib_npm/summernote/summernote-bs4.min.js" asp-location="Head"></script>
 <link href="~/lib_npm/summernote/summernote-bs4.min.css" rel="stylesheet" />
@@ -117,7 +120,13 @@
         };
 
         var initializationOptions@(random) = {
-            toolbar: [
+        @if (allowJavaScript)
+        {
+            <text>
+                codeviewFilter: false,
+            </text>
+        }
+        toolbar: [
                 ['view', ['undo', 'redo']],
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
@@ -152,7 +161,7 @@
             return settings;
         }
 
-        $('#@Html.IdForModel()').summernote(getAdditionalEditorSettings@(random)(initializationOptions@(random)));
+        $('#@Html.IdForModel()').summernote(getAdditionalEditorSettings@(random)(initializationOptions@(random)));  
     });
 </script>
 
