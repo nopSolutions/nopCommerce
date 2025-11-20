@@ -57,7 +57,6 @@ public class LocalizationMigration : MigrationBase
             "Admin.Configuration.Settings.News.ShowNewsCommentsPerStore.Hint",
             "Admin.Configuration.Settings.News.ShowNewsOnMainPage",
             "Admin.Configuration.Settings.News.ShowNewsOnMainPage.Hint",
-            "Admin.ContentManagement.MessageTemplates.Description.News.NewsComment",
             "Admin.ContentManagement.News",
             "Admin.ContentManagement.News.Comments",
             "Admin.ContentManagement.News.Comments.ApproveSelected",

@@ -109,7 +109,6 @@ public class NewsModelFactory
         model.NewsArchivePageSize_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NewsArchivePageSize, storeId);
         model.ShowHeaderRssUrl_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.ShowHeaderRssUrl, storeId);
         model.NewsCommentsMustBeApproved_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NewsCommentsMustBeApproved, storeId);
-        //model.DisplayNewsFooterItem_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.DisplayNewsFooterItem, storeId);
         model.ShowCaptchaOnNewsCommentPage_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.ShowCaptchaOnNewsCommentPage, storeId);
         model.SitemapIncludeNews_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.SitemapIncludeNews, storeId);
 

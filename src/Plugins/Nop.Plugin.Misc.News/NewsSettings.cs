@@ -62,11 +62,6 @@ public class NewsSettings : ISettings
     /// </summary>
     public bool SitemapIncludeNews { get; set; }
 
-    ///// <summary>
-    ///// Gets or sets a value indicating whether to display "news" footer item
-    ///// </summary>
-    //public bool DisplayNewsFooterItem { get; set; } 
-
     /// <summary>
     /// A value indicating whether CAPTCHA should be displayed on the "comment news" page
     /// </summary>

@@ -50,7 +50,15 @@ public class SchemaMigration : Migration
             var constraintName = _dataProvider
                 .CreateForeignKeyName(newsCommentTableName, newsCommentCustomerIdColunbName, customerTableName, customerIdColumnName);
 
-            Delete.ForeignKey(constraintName).OnTable(newsCommentTableName);
+            try
+            {
+                Delete.ForeignKey(constraintName).OnTable(newsCommentTableName);
+            }
+            catch
+            {
+                Delete.ForeignKey("NewsComment_Customer").OnTable(newsCommentTableName); //databases migrated from version 3.00
+            }
+
             Alter.Column(newsCommentCustomerIdColunbName)
                 .OnTable(newsCommentTableName)
                 .AsInt32()

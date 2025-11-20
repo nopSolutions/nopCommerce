@@ -55,10 +55,6 @@ public record ConfigurationModel : BaseNopModel, ISettingsModel
     public bool SitemapXmlIncludeNews { get; set; }
     public bool SitemapXmlIncludeNews_OverrideForStore { get; set; }
 
-    //[NopResourceDisplayName("Plugins.Misc.News.Configuration.DisplayNewsFooterItem")]
-    //public bool DisplayNewsFooterItem { get; set; }
-    //public bool DisplayNewsFooterItem_OverrideForStore { get; set; }
-
     [NopResourceDisplayName("Plugins.Misc.News.Configuration.ShowCaptchaOnNewsCommentPage")]
     public bool ShowCaptchaOnNewsCommentPage { get; set; }
     public bool ShowCaptchaOnNewsCommentPage_OverrideForStore { get; set; }

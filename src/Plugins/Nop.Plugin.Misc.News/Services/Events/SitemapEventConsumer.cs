@@ -113,25 +113,19 @@ public class SitemapEventConsumer : IConsumer<SitemapCreatedEvent>, IConsumer<Mo
         DateTime? dateTimeUpdatedOn = null,
         string protocol = null)
     {
-        var url = await _nopUrlHelper
-            .RouteGenericUrlAsync(newsItem, protocol, ensureTwoPublishedLanguages: false);
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-
+        var seName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
+        var url = _nopUrlHelper.RouteUrl(NewsDefaults.Routes.Public.NewsItemRouteName, new { SeName = seName }, protocol);
         var updatedOn = dateTimeUpdatedOn ?? DateTime.UtcNow;
-        var languages = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled
-            ? await _languageService.GetAllLanguagesAsync(storeId: store.Id)
-            : null;
 
-        if (languages == null || languages.Count == 1)
+        if (!_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled ||
+            await _languageService.GetLanguageByIdAsync(newsItem.LanguageId) is not Language language ||
+            !language.Published)
+        {
             return new SitemapUrlModel(url, new List<string>(), UpdateFrequency.Weekly, updatedOn);
+        }
 
-        if (await _languageService.GetLanguageByIdAsync(newsItem.LanguageId) is not Language language || !language.Published)
-            return new SitemapUrlModel(url, new List<string>(), UpdateFrequency.Weekly, updatedOn);
+        var localizedUrl = GetLocalizedUrl(url, language);
 
-        var localizedUrl = await _nopUrlHelper
-            .RouteGenericUrlAsync(newsItem, protocol, languageId: newsItem.LanguageId, ensureTwoPublishedLanguages: false);
-        localizedUrl = GetLocalizedUrl(url, language);
         return new SitemapUrlModel(localizedUrl, new List<string>(), UpdateFrequency.Weekly, updatedOn);
     }
 

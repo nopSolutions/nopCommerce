@@ -107,7 +107,6 @@ public class NewsAdminController : BasePluginController
         await _settingService.SaveSettingOverridablePerStoreAsync(newsSettings, x => x.ShowHeaderRssUrl, model.ShowHeaderRssUrl_OverrideForStore, storeScope, false);
         await _settingService.SaveSettingOverridablePerStoreAsync(newsSettings, x => x.NewsCommentsMustBeApproved, model.NewsCommentsMustBeApproved_OverrideForStore, storeScope, false);
         await _settingService.SaveSettingOverridablePerStoreAsync(newsSettings, x => x.SitemapIncludeNews, model.SitemapIncludeNews_OverrideForStore, storeScope, false);
-        //await _settingService.SaveSettingOverridablePerStoreAsync(newsSettings, x => x.DisplayNewsFooterItem, model.DisplayNewsFooterItem_OverrideForStore, storeScope, false);
         await _settingService.SaveSettingOverridablePerStoreAsync(newsSettings, x => x.ShowCaptchaOnNewsCommentPage, model.ShowCaptchaOnNewsCommentPage_OverrideForStore, storeScope, false);
 
         await _settingService.SaveSettingAsync(newsSettings, x => x.ShowNewsCommentsPerStore, clearCache: false);
