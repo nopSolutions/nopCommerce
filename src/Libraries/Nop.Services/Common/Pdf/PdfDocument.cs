@@ -4,6 +4,7 @@ using System.Reflection;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.draw;
+using Nop.Core.Infrastructure;
 using PdfRpt.Core.Contracts;
 using PdfRpt.Core.Helper;
 using PdfRpt.FluentInterface;
@@ -30,7 +31,7 @@ public abstract class PdfDocument<TItem>
         ArgumentNullException.ThrowIfNullOrEmpty(url);
 
         var content = new Phrase();
-        var label = LabelField(labelSelector, Font, Language);
+        var label = LabelField(labelSelector, PdfDocumentHelper.GetFont(FontName, FontSize), Language);
 
         if (label.IsEmpty())
             label.Append(url);
@@ -59,7 +60,7 @@ public abstract class PdfDocument<TItem>
     /// <returns>A cell for PDF table</returns>
     protected virtual PdfPCell BuildPdfPCell<TLabel>(Expression<Func<TLabel, string>> labelSelector, string value, int horizontalAlign = Element.ALIGN_LEFT)
     {
-        var label = LabelField(labelSelector, Font, Language, value);
+        var label = LabelField(labelSelector, PdfDocumentHelper.GetFont(FontName, FontSize), Language, value);
 
         var cell = new PdfPCell(new Phrase() { label })
         {
@@ -85,7 +86,7 @@ public abstract class PdfDocument<TItem>
     /// <returns>A cell for PDF table</returns>
     protected virtual PdfPCell BuildPdfPCell(string text, int collSpan = 1, int horizontalAlign = Element.ALIGN_LEFT, int verticalAlignment = Element.ALIGN_CENTER)
     {
-        var cell = new PdfPCell(new Phrase(text, Font))
+        var cell = new PdfPCell(new Phrase(text, PdfDocumentHelper.GetFont(FontName, FontSize)))
         {
             HorizontalAlignment = horizontalAlign,
             VerticalAlignment = verticalAlignment,
@@ -111,9 +112,10 @@ public abstract class PdfDocument<TItem>
         ArgumentNullException.ThrowIfNull(labelSelector);
         ArgumentNullException.ThrowIfNullOrEmpty(text);
 
-        var label = LabelField(labelSelector, Font, Language);
+        var font = PdfDocumentHelper.GetFont(FontName, FontSize);
+        var label = LabelField(labelSelector, font, Language);
 
-        var content = new Phrase() { label, new Chunk(":", Font), new Chunk(" ", Font), new Chunk(text, Font) };
+        var content = new Phrase() { label, new Chunk(":", font), new Chunk(" ", font), new Chunk(text, font) };
         var cell = new PdfPCell(content)
         {
             HorizontalAlignment = Element.ALIGN_LEFT,
@@ -139,7 +141,7 @@ public abstract class PdfDocument<TItem>
 
         var addressTable = PdfDocumentHelper.BuildPdfGrid(numColumns: 1, DocumentRunDirection);
 
-        var fontBold = PdfDocumentHelper.GetFont(Font, Font.Size, DocumentFontStyle.Bold);
+        var fontBold = PdfDocumentHelper.GetFont(FontName, FontSize, DocumentFontStyle.Bold);
         var label = LabelField(labelSelector, fontBold, Language);
 
         var captionCell = new PdfPCell()
@@ -196,7 +198,7 @@ public abstract class PdfDocument<TItem>
         column.CellsHorizontalAlignment(HorizontalAlignment.Left);
         column.IsVisible(true);
         column.Width(width);
-        column.HeaderCell(LabelField(propertyExpression, Font, Language).Content, horizontalAlignment: HorizontalAlignment.Left);
+        column.HeaderCell(LabelField(propertyExpression, PdfDocumentHelper.GetFont(FontName, FontSize), Language).Content, horizontalAlignment: HorizontalAlignment.Left);
 
         column.ColumnItemsTemplate(itemsTemplate =>
         {
@@ -221,7 +223,7 @@ public abstract class PdfDocument<TItem>
                     if (printProductAttributes)
                     {
                         var productAttributes = (List<string>)data.GetValueOf((ProductItem x) => x.ProductAttributes);
-                        var font8Italic = PdfDocumentHelper.GetFont(Font, Font.Size * 0.8f, DocumentFontStyle.Italic);
+                        var font8Italic = PdfDocumentHelper.GetFont(FontName, FontSize * 0.8f, DocumentFontStyle.Italic);
 
                         foreach (var pa in productAttributes)
                         {
@@ -259,6 +261,15 @@ public abstract class PdfDocument<TItem>
                 doc.RunDirection(Language.Rtl ? PdfRunDirection.RightToLeft : PdfRunDirection.LeftToRight);
                 doc.Orientation(PageOrientation.Portrait);
                 doc.PageSize(PageSize);
+            })
+            .DefaultFonts(fonts =>
+            {
+                var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+                var mainFontPath = fileProvider.Combine(fileProvider.MapPath(NopCommonDefaults.PdfFontDirectoryPath), $"{FontName}.ttf");
+
+                fonts.Color(System.Drawing.Color.Black);
+                fonts.Size((int)FontSize);
+                fonts.Path(mainFontPath, mainFontPath);
             })
             .MainTableEvents(events =>
             {
@@ -331,9 +342,14 @@ public abstract class PdfDocument<TItem>
     public required PdfPageSize PageSize { get; init; }
 
     /// <summary>
-    /// Gets or sets the font name. Loaded from the ~/App_Data/Pdf directory during application start.
+    /// Gets or sets the font name
     /// </summary>
-    public required Font Font { get; init; }
+    public required string FontName { get; init; }
+
+    /// <summary>
+    /// Gets or sets a font size
+    /// </summary>
+    public required float FontSize { get; init; }
 
     /// <summary>
     /// Gets or sets the size required to scale images before rendering
@@ -349,6 +365,7 @@ public abstract class PdfDocument<TItem>
     /// Gets or sets a function to get a resource string by the specified key and language identifier
     /// </summary>
     public required Func<string, int, Task<string>> GetResourceAsync { get; init; }
+
 
     #endregion
 }

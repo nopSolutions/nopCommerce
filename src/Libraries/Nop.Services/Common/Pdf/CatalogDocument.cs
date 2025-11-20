@@ -70,7 +70,7 @@ public partial class CatalogDocument : PdfDocument<CatalogItem>
 
     protected virtual PdfPCell ConfigureCatalogItemTemplate(InlineFieldData data)
     {
-        var font16Bold = PdfDocumentHelper.GetFont(Font, Font.Size * 1.6f, DocumentFontStyle.Bold);
+        var font16Bold = PdfDocumentHelper.GetFont(FontName, FontSize * 1.6f, DocumentFontStyle.Bold);
 
         var table = new PdfGrid(numColumns: 1)
         {
@@ -91,7 +91,7 @@ public partial class CatalogDocument : PdfDocument<CatalogItem>
 
         var description = rowData.GetSafeStringValueOf<CatalogItem>(p => p.Description);
 
-        var cell = new PdfPCell(new Paragraph(description, Font))
+        var cell = new PdfPCell(new Paragraph(description, PdfDocumentHelper.GetFont(FontName, FontSize)))
         {
             RunDirection = DocumentRunDirection,
             HorizontalAlignment = Element.ALIGN_LEFT,
