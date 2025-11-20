@@ -67,10 +67,29 @@ public class DataMigration : Migration
                 .Update();
         }
 
+        var newsLetterSubscriptionTableName = nameof(NewsLetterSubscription);
+        var typeIdIndexName = "IX_NewsLetterSubscription_TypeId";
+        var typeIdCollumnName = nameof(NewsLetterSubscription.TypeId);
+
+        //delete the index if it already exists to prevent a problem
+        //with altering NewsLetterSubscription table
+        if (Schema.Table(newsLetterSubscriptionTableName).Index(typeIdIndexName).Exists()) 
+            Delete.Index(typeIdIndexName)
+                .OnTable(newsLetterSubscriptionTableName)
+                .OnColumn(typeIdCollumnName);
+
         //alter columns
         Alter.Table(nameof(NewsLetterSubscription))
             .AlterColumn(nameof(NewsLetterSubscription.TypeId)).AsInt32().NotNullable();
-        
+
+        //added index for FK field
+        Create.Index(typeIdIndexName)
+            .OnTable(newsLetterSubscriptionTableName)
+            .OnColumn(typeIdCollumnName)
+            .Descending()
+            .WithOptions()
+            .NonClustered();
+
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "AddSubscriptionType", StringComparison.InvariantCultureIgnoreCase) == 0))
         {
             _dataProvider.InsertEntity(
