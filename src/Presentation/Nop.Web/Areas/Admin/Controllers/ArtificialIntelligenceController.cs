@@ -57,12 +57,12 @@ public partial class ArtificialIntelligenceController : BaseAdminController
 
     public virtual async Task<IActionResult> GenerateMetaTags(MetaTagsGeneratorModel metaTagsGeneratorModel)
     {
-        var metaTitle = string.Empty;
-        var metaKeywords = string.Empty;
-        var metaDescription = string.Empty;
-
         try
         {
+            string metaTitle;
+            string metaKeywords;
+            string metaDescription;
+
             switch (metaTagsGeneratorModel.EntityType)
             {
                 case nameof(Product):
@@ -92,6 +92,9 @@ public partial class ArtificialIntelligenceController : BaseAdminController
                 case nameof(Vendor):
                     var vendor = await _vendorService.GetVendorByIdAsync(metaTagsGeneratorModel.EntityId);
                     (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsForLocalizedEntityAsync(vendor, metaTagsGeneratorModel.LanguageId);
+                    break;
+                default:
+                    (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsAsync(metaTagsGeneratorModel.EntityType, metaTagsGeneratorModel.EntityId, metaTagsGeneratorModel.LanguageId);
                     break;
             }
 
