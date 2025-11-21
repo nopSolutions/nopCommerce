@@ -7,9 +7,9 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 
@@ -24,6 +24,7 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
 
     protected readonly ArtificialIntelligenceHttpClient _httpClient;
     protected readonly ArtificialIntelligenceSettings _artificialIntelligenceSettings;
+    protected readonly IEventPublisher _eventPublisher;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILogger _logger;
@@ -36,6 +37,7 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
 
     public ArtificialIntelligenceService(ArtificialIntelligenceHttpClient httpClient,
         ArtificialIntelligenceSettings artificialIntelligenceSettings,
+        IEventPublisher eventPublisher,
         ILanguageService languageService,
         ILocalizationService localizationService,
         ILogger logger,
@@ -44,6 +46,7 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     {
         _httpClient = httpClient;
         _artificialIntelligenceSettings = artificialIntelligenceSettings;
+        _eventPublisher = eventPublisher;
         _languageService = languageService;
         _localizationService = localizationService;
         _logger = logger;
@@ -136,74 +139,25 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     }
 
     /// <summary>
-    /// Validates title and text
-    /// </summary>
-    /// <param name="languageName">Target language name</param>
-    /// <param name="textRequiredLocale">Locale for raising an exception about the title field required</param>
-    /// <param name="titleRequiredLocale">Locale for raising an exception about the text field required</param>
-    /// <param name="title">Title for validate</param>
-    /// <param name="text">Text for validate</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the validated title and text
-    /// </returns>
-    protected virtual async Task<(string title, string text)> ValidateTitleAndTextAsync(string languageName,
-        string textRequiredLocale, string titleRequiredLocale, string title, string text)
-    {
-        if (string.IsNullOrEmpty(title))
-            throw new NopException(string.Format(await _localizationService.GetResourceAsync(titleRequiredLocale), languageName));
-
-        if (!string.IsNullOrEmpty(text))
-            text = Regex.Replace(text, "<.*?>", string.Empty);
-
-        if (string.IsNullOrEmpty(text))
-            throw new NopException(string.Format(await _localizationService.GetResourceAsync(textRequiredLocale), languageName));
-
-        return (title, text);
-    }
-
-    /// <summary>
     /// Create meta tags by artificial intelligence
     /// </summary>
-    /// <param name="entity">The entity to which need to generate meta tags</param>
     /// <param name="currentMetaTitle">Current entity meta title</param>
     /// <param name="currentMetaKeywords">Current entity meta keywords</param>
     /// <param name="currentMetaDescription">Current entity meta description</param>
+    /// <param name="text">The main text for entity</param>
+    /// <param name="title">The main title for entity</param>
     /// <param name="languageId">Target language identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the generated meta tags
     /// </returns>
-    protected virtual async Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<TEntity>(TEntity entity,
-        string currentMetaTitle, string currentMetaKeywords, string currentMetaDescription, int languageId)
-        where TEntity : BaseEntity, IMetaTagsSupported
+    protected virtual async Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync(string currentMetaTitle, string currentMetaKeywords, string currentMetaDescription, string title, string text, int languageId)
     {
-        var title = string.Empty;
-        var text = string.Empty;
-        var metaTitle = string.Empty;
-        var metaKeywords = string.Empty;
-        var metaDescription = string.Empty;
+        string metaTitle;
+        string metaKeywords;
+        string metaDescription;
 
         var currentLanguage = await _languageService.GetLanguageByIdAsync(languageId != 0 ? languageId : _localizationSettings.DefaultAdminLanguageId);
-
-        (title, text) = entity switch
-        {
-            Product product => await GetTitleAndTextAsync(product, languageId, currentLanguage.Name, p => p.Name, p => p.FullDescription,
-                "Admin.ArtificialIntelligence.ProductDescriptionRequired", "Admin.ArtificialIntelligence.ProductNameRequired"),
-            Category category => await GetTitleAndTextAsync(category, languageId, currentLanguage.Name, c => c.Name, c => c.Description,
-                "Admin.ArtificialIntelligence.CategoryDescriptionRequired", "Admin.ArtificialIntelligence.CategoryNameRequired"),
-            BlogPost blogPost => await GetTitleAndTextAsync(blogPost, currentLanguage.Name, bp => bp.Title, bp => bp.Body,
-                "Admin.ArtificialIntelligence.BlogPostBodyRequired", "Admin.ArtificialIntelligence.BlogPostTitleRequired"),
-            Manufacturer manufacturer => await GetTitleAndTextAsync(manufacturer, languageId, currentLanguage.Name, m => m.Name, m => m.Description,
-                "Admin.ArtificialIntelligence.ManufacturerDescriptionRequired", "Admin.ArtificialIntelligence.ManufacturerNameRequired"),
-            NewsItem newsItem => await GetTitleAndTextAsync(newsItem, currentLanguage.Name, n => n.Title, n => n.Full,
-                "Admin.ArtificialIntelligence.NewsItemFullRequired", "Admin.ArtificialIntelligence.NewsItemTitleRequired"),
-            Topic topic => await GetTitleAndTextAsync(topic, languageId, currentLanguage.Name, t => t.Title, t => t.Body,
-                "Admin.ArtificialIntelligence.TopicBodyRequired", "Admin.ArtificialIntelligence.TopicTitleRequired"),
-            Vendor vendor => await GetTitleAndTextAsync(vendor, languageId, currentLanguage.Name, v => v.Name, v => v.Description,
-                "Admin.ArtificialIntelligence.VendorDescriptionRequired", "Admin.ArtificialIntelligence.VendorNameRequired"),
-            _ => (title, text)
-        };
 
         try
         {
@@ -258,6 +212,44 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
         }
 
         return (metaTitle, metaKeywords, metaDescription);
+    }
+
+    /// <summary>
+    /// Create meta tags by artificial intelligence
+    /// </summary>
+    /// <param name="entity">The entity to which need to generate meta tags</param>
+    /// <param name="currentMetaTitle">Current entity meta title</param>
+    /// <param name="currentMetaKeywords">Current entity meta keywords</param>
+    /// <param name="currentMetaDescription">Current entity meta description</param>
+    /// <param name="languageId">Target language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the generated meta tags
+    /// </returns>
+    protected virtual async Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<TEntity>(TEntity entity,
+        string currentMetaTitle, string currentMetaKeywords, string currentMetaDescription, int languageId)
+        where TEntity : BaseEntity, IMetaTagsSupported
+    {
+        var currentLanguage = await _languageService.GetLanguageByIdAsync(languageId != 0 ? languageId : _localizationSettings.DefaultAdminLanguageId);
+
+        var (title, text) = entity switch
+        {
+            Product product => await GetTitleAndTextAsync(product, languageId, currentLanguage.Name, p => p.Name, p => p.FullDescription,
+                "Admin.ArtificialIntelligence.ProductDescriptionRequired", "Admin.ArtificialIntelligence.ProductNameRequired"),
+            Category category => await GetTitleAndTextAsync(category, languageId, currentLanguage.Name, c => c.Name, c => c.Description,
+                "Admin.ArtificialIntelligence.CategoryDescriptionRequired", "Admin.ArtificialIntelligence.CategoryNameRequired"),
+            BlogPost blogPost => await GetTitleAndTextAsync(blogPost, currentLanguage.Name, bp => bp.Title, bp => bp.Body,
+                "Admin.ArtificialIntelligence.BlogPostBodyRequired", "Admin.ArtificialIntelligence.BlogPostTitleRequired"),
+            Manufacturer manufacturer => await GetTitleAndTextAsync(manufacturer, languageId, currentLanguage.Name, m => m.Name, m => m.Description,
+                "Admin.ArtificialIntelligence.ManufacturerDescriptionRequired", "Admin.ArtificialIntelligence.ManufacturerNameRequired"),
+            Topic topic => await GetTitleAndTextAsync(topic, languageId, currentLanguage.Name, t => t.Title, t => t.Body,
+                "Admin.ArtificialIntelligence.TopicBodyRequired", "Admin.ArtificialIntelligence.TopicTitleRequired"),
+            Vendor vendor => await GetTitleAndTextAsync(vendor, languageId, currentLanguage.Name, v => v.Name, v => v.Description,
+                "Admin.ArtificialIntelligence.VendorDescriptionRequired", "Admin.ArtificialIntelligence.VendorNameRequired"),
+            _ => (string.Empty, string.Empty)
+        };
+
+        return await CreateMetaTagsAsync(currentMetaTitle, currentMetaKeywords, currentMetaDescription, title, text, languageId);
     }
 
     #endregion
@@ -344,6 +336,63 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
         var metaDescription = entity.MetaDescription;
 
         return await CreateMetaTagsAsync(entity, metaTitle, metaKeywords, metaDescription, languageId);
+    }
+
+    /// <summary>
+    /// Create meta tags by artificial intelligence
+    /// </summary>
+    /// <param name="entityTypeName">The name of entity type to which need to generate meta tags</param>
+    /// <param name="entityId">The entity identifier to which need to generate meta tags</param>
+    /// <param name="languageId">The language identifier; leave 0 to use <see cref="LocalizationSettings.DefaultAdminLanguageId"/></param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the generated meta tags
+    /// </returns>
+    public virtual async Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync(string entityTypeName, int entityId, int languageId)
+    {
+        var currentLanguage = await _languageService.GetLanguageByIdAsync(languageId != 0 ? languageId : _localizationSettings.DefaultAdminLanguageId);
+
+        var @event = new MetaTagsGenerateEvent(this)
+        {
+            EntityTypeName = entityTypeName,
+            EntityId = entityId,
+            LanguageId = languageId,
+            LanguageName = currentLanguage.Name
+        };
+
+        await _eventPublisher.PublishAsync(@event);
+
+        if (!@event.StopProcessing)
+            return (string.Empty, string.Empty, string.Empty);
+
+        return await CreateMetaTagsAsync(@event.CurrentMetaTitle, @event.CurrentMetaKeywords, @event.CurrentMetaDescription, @event.Title, @event.Text, languageId);
+    }
+
+    /// <summary>
+    /// Validates title and text
+    /// </summary>
+    /// <param name="languageName">Target language name</param>
+    /// <param name="textRequiredLocale">Locale for raising an exception about the title field required</param>
+    /// <param name="titleRequiredLocale">Locale for raising an exception about the text field required</param>
+    /// <param name="title">Title for validate</param>
+    /// <param name="text">Text for validate</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the validated title and text
+    /// </returns>
+    public virtual async Task<(string title, string text)> ValidateTitleAndTextAsync(string languageName,
+        string textRequiredLocale, string titleRequiredLocale, string title, string text)
+    {
+        if (string.IsNullOrEmpty(title))
+            throw new NopException(string.Format(await _localizationService.GetResourceAsync(titleRequiredLocale), languageName));
+
+        if (!string.IsNullOrEmpty(text))
+            text = Regex.Replace(text, "<.*?>", string.Empty);
+
+        if (string.IsNullOrEmpty(text))
+            throw new NopException(string.Format(await _localizationService.GetResourceAsync(textRequiredLocale), languageName));
+
+        return (title, text);
     }
 
     #endregion
