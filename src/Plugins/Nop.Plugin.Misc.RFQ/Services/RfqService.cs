@@ -10,7 +10,6 @@ using Nop.Plugin.Misc.RFQ.Domains;
 using Nop.Plugin.Misc.RFQ.Services.Pdf;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
-using Nop.Services.Common.Pdf;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -955,7 +954,8 @@ public class RfqService
         {
             QuoteUrl = _nopUrlHelper.RouteUrl(RfqDefaults.CustomerQuoteRouteName, new { quoteId = quote.Id }, protocol: _webHelper.GetCurrentRequestProtocol()),
             Language = language,
-            Font = PdfDocumentHelper.GetFont(fontName, fontSize),
+            FontName = fontName,
+            FontSize = fontSize,
             ImageTargetSize = pdfSettings.ImageTargetSize,
             LogoData = logo,
             PageSize = pdfSettings.LetterPageSizeEnabled ? PdfPageSize.Letter : PdfPageSize.A4,
