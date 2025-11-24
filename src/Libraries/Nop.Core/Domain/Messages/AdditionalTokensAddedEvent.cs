@@ -32,4 +32,9 @@ public partial class AdditionalTokensAddedEvent
     /// Token groups which can be used to filter the AdditionalTokens
     /// </summary>
     public IEnumerable<string> TokenGroups { get; set; }
+
+    /// <summary>
+    /// Message template for which need to add additional tokens
+    /// </summary>
+    public MessageTemplate MessageTemplate { get; set; }
 }
