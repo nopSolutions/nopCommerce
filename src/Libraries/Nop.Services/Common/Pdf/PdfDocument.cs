@@ -4,6 +4,8 @@ using System.Reflection;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.draw;
+using Nop.Core.Domain.Common;
+using Nop.Core.Infrastructure;
 using PdfRpt.Core.Contracts;
 using PdfRpt.Core.Helper;
 using PdfRpt.FluentInterface;
@@ -253,12 +255,25 @@ public abstract class PdfDocument<TItem>
     /// <returns>PDF document builder</returns>
     protected virtual PdfReport DefaultDocument()
     {
+        var pdfSettings = EngineContext.Current.Resolve<PdfSettings>();
+        var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+        var fontSize = pdfSettings.BaseFontSize >= 0 ? (int)pdfSettings.BaseFontSize : 10;
+        var fontFileName = Language.Rtl ? pdfSettings.RtlFontName : pdfSettings.LtrFontName;
+
+        var mainFontPath = fileProvider.Combine(fileProvider.MapPath("~/App_Data/Pdf/"), $"{fontFileName}.ttf");
+
         return new PdfReport()
             .DocumentPreferences(doc =>
             {
                 doc.RunDirection(Language.Rtl ? PdfRunDirection.RightToLeft : PdfRunDirection.LeftToRight);
                 doc.Orientation(PageOrientation.Portrait);
                 doc.PageSize(PageSize);
+            })
+            .DefaultFonts(fonts =>
+            {
+                fonts.Color(System.Drawing.Color.Black);
+                fonts.Size(fontSize);
+                fonts.Path(mainFontPath, mainFontPath);
             })
             .MainTableEvents(events =>
             {

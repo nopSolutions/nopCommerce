@@ -123,10 +123,6 @@ public class SettingMigration : MigrationBase
         }
 
         //#7397
-        var richEditorAllowJavaScript = settingService.GetSetting("adminareasettings.richeditorallowjavascript");
-        if (richEditorAllowJavaScript is not null)
-            settingService.DeleteSetting(richEditorAllowJavaScript);
-
         var richEditorAllowStyleTag = settingService.GetSetting("adminareasettings.richeditorallowstyletag");
         if (richEditorAllowStyleTag is not null)
             settingService.DeleteSetting(richEditorAllowStyleTag);
