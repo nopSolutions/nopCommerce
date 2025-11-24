@@ -218,12 +218,13 @@ public partial interface IMessageTokenProvider
     /// <summary>
     /// Get collection of allowed (supported) message tokens
     /// </summary>
+    /// <param name="messageTemplate">Message template</param>
     /// <param name="tokenGroups">Collection of token groups; pass null to get all available tokens</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the collection of allowed message tokens
     /// </returns>
-    Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IList<string> tokenGroups = null);
+    Task<IEnumerable<string>> GetListOfAllowedTokensAsync(MessageTemplate messageTemplate = null, IList<string> tokenGroups = null);
 
     /// <summary>
     /// Get token groups of message template
