@@ -155,7 +155,7 @@ button, .button-1, .button-2 {
 }
 
 label, label + * {
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 .master-wrapper-content {
@@ -3486,12 +3486,11 @@ label, label + * {
 
 .button-row {
   display: flex;
-  gap: 12px;
-  flex-wrap: nowrap;
+  gap: 0 12px;
+  flex-wrap: wrap;
 }
 
 .button-2.custom-wishlist-button {
-  width: 132px;
   height: 36px;
   background-color: #cfd6e1;
   border: none;
@@ -3513,8 +3512,12 @@ label, label + * {
 }
 
 .button-2.custom-wishlist-button.add-new {
-  background: url(../images/new.png) left center no-repeat;
-  padding: 0 0 0 18px;
+  padding-inline-start: 0;
+}
+
+.button-2.custom-wishlist-button.add-new::before {
+  content: url(../images/new.png);
+  height: 13px;
 }
 
 .button-2.custom-wishlist-button:hover {
@@ -8079,6 +8082,8 @@ label, label + * {
 
   .center-2 .inputs label {
     width: 136px;
+    min-height: 40px;
+    line-height: 40px;
   }
 
   .inputs.accept-consent label {

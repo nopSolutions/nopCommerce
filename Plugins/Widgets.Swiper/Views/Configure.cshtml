@@ -94,8 +94,7 @@
                                 new ColumnProperty(nameof(PublicSlideModel.PictureUrl))
                                 {
                                     Title = T("Plugins.Widgets.Swiper.Picture").Text,
-                                    Render = new RenderCustom("renderPicturesColumnPictureUrl"),
-                                    Width = "200",
+                                    Render = new RenderCustom("renderPicturesColumnPictureUrl")
                                 },
                                 new ColumnProperty(nameof(PublicSlideModel.TitleText))
                                 {
@@ -137,7 +136,7 @@
 
                         <script>
                             function renderPicturesColumnPictureUrl(data, type, row, meta) {
-                                return '<a href="' + row.PictureUrl + '" target="_blank"><img title="' + row.Text + '" alt="' + row.AltText + '" src="' + row.PictureUrl + '" /></a>';
+                                return '<a href="' + row.PictureUrl + '" target="_blank"><img title="' + row.Text + '" alt="' + row.AltText + '" src="' + row.PictureUrl + '" width="200" /></a>';
                             }
                         </script>
                     </div>
