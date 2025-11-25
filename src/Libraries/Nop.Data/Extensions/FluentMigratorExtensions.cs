@@ -164,6 +164,19 @@ public static class FluentMigratorExtensions
     }
 
     /// <summary>
+    /// Deletes a column from the table mapped to the specified entity,
+    /// resolving the table name using <see cref="NameCompatibilityManager"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type mapped to the database table.</typeparam>
+    /// <param name="expressionRoot">The root delete expression.</param>
+    /// <param name="columnName">The name of the column to delete.</param>
+    public static void Column<TEntity>(this IDeleteExpressionRoot expressionRoot, string columnName) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        expressionRoot.Column(columnName).FromTable(tableName);
+    }
+
+    /// <summary>
     /// Targets the entity's mapped table for an ALTER TABLE operation.
     /// </summary>
     /// <param name="expressionRoot">The root expression for an ALTER operation</param>

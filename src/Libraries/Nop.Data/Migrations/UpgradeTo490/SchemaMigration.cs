@@ -79,22 +79,22 @@ public class SchemaMigration : ForwardOnlyMigration
 
         var footerColumn1ColumnName = "IncludeInFooterColumn1";
         if (Schema.ColumnExist<Topic>(footerColumn1ColumnName))
-            Delete.Column(footerColumn1ColumnName).FromTable<Topic>();
+            Delete.Column<Topic>(footerColumn1ColumnName);
 
         var footerColumn2ColumnName = "IncludeInFooterColumn2";
         if (Schema.ColumnExist<Topic>(footerColumn2ColumnName))
-            Delete.Column(footerColumn2ColumnName).FromTable<Topic>();
+            Delete.Column<Topic>(footerColumn2ColumnName);
 
         var footerColumn3ColumnName = "IncludeInFooterColumn3";
         if (Schema.ColumnExist<Topic>(footerColumn3ColumnName))
-            Delete.Column(footerColumn3ColumnName).FromTable<Topic>();
+            Delete.Column<Topic>(footerColumn3ColumnName);
 
         var includeTopicInTopMenuColumnName = "IncludeInTopMenu";
         if (Schema.ColumnExist<Topic>(includeTopicInTopMenuColumnName))
-            Delete.Column(includeTopicInTopMenuColumnName).FromTable<Topic>();
+            Delete.Column(includeTopicInTopMenuColumnName);
 
         var includeCategoryInTopMenuColumnName = "IncludeInTopMenu";
         if (Schema.ColumnExist<Category>(includeCategoryInTopMenuColumnName))
-            Delete.Column(includeCategoryInTopMenuColumnName).FromTable<Category>();
+            Delete.Column<Category>(includeCategoryInTopMenuColumnName);
     }
 }
