@@ -8,6 +8,7 @@ using FluentMigrator.Builders.Create;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Builders.Delete;
 using FluentMigrator.Builders.Schema;
+using FluentMigrator.Builders.Schema.Table;
 using FluentMigrator.Infrastructure.Extensions;
 using FluentMigrator.Model;
 using FluentMigrator.Runner;
@@ -228,6 +229,21 @@ public static class FluentMigratorExtensions
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
         return expressionRoot.Table(tableName).Column(columnName).Exists();
+    }
+
+    /// <summary>
+    /// Targets the entity's mapped table for schema-related operations.
+    /// </summary>
+    /// <param name="expressionRoot">The root expression for schema inspection</param>
+    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
+    /// <returns>
+    /// A fluent syntax interface for performing schema operations 
+    /// such as checking table or column existence.
+    /// </returns>
+    public static ISchemaTableSyntax TableFor<TEntity>(this ISchemaExpressionRoot expressionRoot) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        return expressionRoot.Table(tableName);
     }
 
     /// <summary>
