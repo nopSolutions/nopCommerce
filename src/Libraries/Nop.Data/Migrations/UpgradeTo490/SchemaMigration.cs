@@ -17,8 +17,7 @@ public class SchemaMigration : ForwardOnlyMigration
         //#7387
         if (!Schema.ColumnExist<Product>(t => t.AgeVerification))
         {
-            Alter.TableFor<Product>()
-                .AddColumnFor<Product>(t => t.AgeVerification)
+            Alter.AddColumnFor<Product>(t => t.AgeVerification)
                 .AsBoolean()
                 .NotNullable()
                 .WithDefaultValue(false);
@@ -26,8 +25,7 @@ public class SchemaMigration : ForwardOnlyMigration
 
         if (!Schema.ColumnExist<Product>(t => t.MinimumAgeToPurchase))
         {
-            Alter.TableFor<Product>()
-                .AddColumnFor<Product>(t => t.MinimumAgeToPurchase)
+            Alter.AddColumnFor<Product>(t => t.MinimumAgeToPurchase)
                 .AsInt32()
                 .NotNullable()
                 .WithDefaultValue(0);
@@ -37,16 +35,14 @@ public class SchemaMigration : ForwardOnlyMigration
 
         if (!Schema.ColumnExist<Topic>(t => t.AvailableEndDateTimeUtc))
         {
-            Alter.TableFor<Topic>()
-                .AddColumnFor<Topic>(t => t.AvailableEndDateTimeUtc)
+            Alter.AddColumnFor<Topic>(t => t.AvailableEndDateTimeUtc)
                 .AsDateTime()
                 .Nullable();
         }
 
         if (!Schema.ColumnExist<Topic>(t => t.AvailableStartDateTimeUtc))
         {
-            Alter.TableFor<Topic>()
-                .AddColumnFor<Topic>(t => t.AvailableStartDateTimeUtc)
+            Alter.AddColumnFor<Topic>(t => t.AvailableStartDateTimeUtc)
                 .AsDateTime()
                 .Nullable();
         }
@@ -55,24 +51,21 @@ public class SchemaMigration : ForwardOnlyMigration
 
         if (!Schema.ColumnExist<ProductTag>(t => t.MetaDescription))
         {
-            Alter.TableFor<ProductTag>()
-                .AddColumnFor<ProductTag>(t => t.MetaDescription)
+            Alter.AddColumnFor<ProductTag>(t => t.MetaDescription)
                 .AsString()
                 .Nullable();
         }
 
         if (!Schema.ColumnExist<ProductTag>(t => t.MetaKeywords))
         {
-            Alter.TableFor<ProductTag>()
-                .AddColumnFor<ProductTag>(t => t.MetaKeywords)
+            Alter.AddColumnFor<ProductTag>(t => t.MetaKeywords)
                 .AsString(400)
                 .Nullable();
         }
 
         if (!Schema.ColumnExist<ProductTag>(t => t.MetaTitle))
         {
-            Alter.TableFor<ProductTag>()
-                .AddColumnFor<ProductTag>(t => t.MetaTitle)
+            Alter.AddColumnFor<ProductTag>(t => t.MetaTitle)
                 .AsString(400)
                 .Nullable();
         }

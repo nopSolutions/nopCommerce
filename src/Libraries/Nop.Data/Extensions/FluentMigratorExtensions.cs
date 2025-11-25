@@ -250,11 +250,12 @@ public static class FluentMigratorExtensions
     /// on the specified column.
     /// </returns>
     public static IAlterTableColumnAsTypeSyntax AddColumnFor<TEntity>(
-    this IAlterTableAddColumnOrAlterColumnSyntax tableSchema, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
+    this IAlterExpressionRoot expressionRoot, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
     {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
         var property = ((MemberExpression)selector.Body)?.Member?.Name;
         var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), property!);
-        return tableSchema.AddColumn(columnName);
+        return expressionRoot.Table(tableName).AddColumn(columnName);
     }
 
     /// <summary>
