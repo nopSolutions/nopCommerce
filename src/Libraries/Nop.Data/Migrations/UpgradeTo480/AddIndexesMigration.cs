@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Topics;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo480;
 
@@ -20,15 +21,17 @@ public class AddIndexesMigration : ForwardOnlyMigration
     /// </summary>
     public override void Up()
     {
-        if (!Schema.Table(nameof(Customer)).Index("IX_Customer_Deleted").Exists())
+        if (!Schema.TableFor<Customer>().Index("IX_Customer_Deleted").Exists())
+        {
             Create.Index("IX_Customer_Deleted")
                 .OnTable(nameof(Customer))
                 .OnColumn(nameof(Customer.Deleted)).Ascending()
                 .WithOptions().NonClustered();
+        }
 
         //#7377
-        if (!Schema.Table(nameof(Order)).Index("AK_Order_OrderGuid").Exists() &&
-            !Schema.Table(nameof(Order)).Constraint("AK_Order_OrderGuid").Exists())
+        if (!Schema.TableFor<Order>().Index("AK_Order_OrderGuid").Exists() &&
+            !Schema.TableFor<Order>().Constraint("AK_Order_OrderGuid").Exists())
         {
             var orders = _dataProvider.GetTable<Order>().GroupBy(p => p.OrderGuid, p => p)
                 .Where(p => p.Count() > 1)
@@ -49,7 +52,7 @@ public class AddIndexesMigration : ForwardOnlyMigration
         }
 
         //#7296
-        if (!Schema.Table(nameof(Topic)).Index("IX_Topic_SystemName").Exists())
+        if (!Schema.TableFor<Topic>().Index("IX_Topic_SystemName").Exists())
             Create.Index("IX_Topic_SystemName")
                 .OnTable(nameof(Topic))
                 .OnColumn(nameof(Topic.SystemName)).Ascending()

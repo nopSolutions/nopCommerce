@@ -17,25 +17,25 @@ public class StoreMigration : ForwardOnlyMigration
             //add new column
             Alter.AddColumnFor<Store>(t => t.DefaultTitle).AsString(int.MaxValue).Nullable();
         else
-            Alter.AddColumnFor<Store>(t => t.DefaultTitle).AsString(int.MaxValue).Nullable();
+            Alter.AlterColumnFor<Store>(t => t.DefaultTitle).AsString(int.MaxValue).Nullable();
 
         if (!Schema.ColumnExist<Store>(t => t.DefaultMetaDescription))
             //add new column
             Alter.AddColumnFor<Store>(t => t.DefaultMetaDescription).AsString(int.MaxValue).Nullable();
         else
-            Alter.AddColumnFor<Store>(t => t.DefaultMetaDescription).AsString(int.MaxValue).Nullable();
+            Alter.AlterColumnFor<Store>(t => t.DefaultMetaDescription).AsString(int.MaxValue).Nullable();
 
         if (!Schema.ColumnExist<Store>(t => t.DefaultMetaKeywords))
             //add new column
             Alter.AddColumnFor<Store>(t => t.DefaultMetaKeywords).AsString(int.MaxValue).Nullable();
         else
-            Alter.AddColumnFor<Store>(t => t.DefaultMetaKeywords).AsString(int.MaxValue).Nullable();
+            Alter.AlterColumnFor<Store>(t => t.DefaultMetaKeywords).AsString(int.MaxValue).Nullable();
 
         if (!Schema.ColumnExist<Store>(t => t.HomepageDescription))
             //add new column
             Alter.AddColumnFor<Store>(t => t.HomepageDescription).AsString(int.MaxValue).Nullable();
         else
-            Alter.AddColumnFor<Store>(t => t.HomepageDescription).AsString(int.MaxValue).Nullable();
+            Alter.AlterColumnFor<Store>(t => t.HomepageDescription).AsString(int.MaxValue).Nullable();
 
         if (!Schema.ColumnExist<Store>(t => t.HomepageTitle))
             //add new column

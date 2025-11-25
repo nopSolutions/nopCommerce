@@ -6,7 +6,7 @@ using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Security;
-using Nop.Data.Mapping;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo470;
 
@@ -146,12 +146,11 @@ public class DataMigration : Migration
         }
 
         //#6890
-        var productTableName = NameCompatibilityManager.GetTableName(typeof(Product));
 
         //remove column
         var isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName = "IsTelecommunicationsOrBroadcastingOrElectronicServices";
-        if (Schema.Table(productTableName).Column(isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName).Exists())
-            Delete.Column(isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName).FromTable(productTableName);
+        if (Schema.ColumnExist<Product>(isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName))
+            Delete.Column<Product>(isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName);
 
         //New message template
         if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
@@ -168,10 +167,9 @@ public class DataMigration : Migration
         }
 
         //#7031
-        var emailAccountTableName = nameof(EmailAccount);
         var credentialsColumnName = "UseDefaultCredentials";
 
-        if (Schema.Table(emailAccountTableName).Column(credentialsColumnName).Exists())
+        if (Schema.ColumnExist<EmailAccount>(credentialsColumnName))
         {
             var emailAccounts = _dataProvider.GetTable<EmailAccount>().ToList();
             foreach (var item in emailAccounts)
@@ -183,13 +181,11 @@ public class DataMigration : Migration
             _dataProvider.UpdateEntities(emailAccounts);
 
             //remove column
-            Delete.Column(credentialsColumnName).FromTable(emailAccountTableName);
+            Delete.Column<EmailAccount>(credentialsColumnName);
         }
 
         //#6978
-        var newsLetterSubscriptionTableName = nameof(NewsLetterSubscription);
-        var languageIdColumnName = nameof(NewsLetterSubscription.LanguageId);
-        if (Schema.Table(newsLetterSubscriptionTableName).Column(languageIdColumnName).Exists())
+        if (Schema.ColumnExist<NewsLetterSubscription>(t => t.LanguageId))
         {
             var defaultLanguageId = _dataProvider.GetTable<Language>().FirstOrDefault()?.Id ?? 0;
 

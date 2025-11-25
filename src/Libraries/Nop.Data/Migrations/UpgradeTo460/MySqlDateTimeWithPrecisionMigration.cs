@@ -31,7 +31,7 @@ public class MySqlDateTimeWithPrecisionMigration : ForwardOnlyMigration
             return;
 
         Alter.AlterColumnFor<Address>(t => t.CreatedOnUtc)
-    .AsCustom("datetime(6)");
+            .AsCustom("datetime(6)");
 
         Alter.AlterColumnFor<BackInStockSubscription>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");

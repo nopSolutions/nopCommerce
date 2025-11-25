@@ -18,68 +18,60 @@ public class SchemaMigration : ForwardOnlyMigration
     public override void Up()
     {
         //#7187
-        var ptoductTableName = nameof(Product);
         var hasTierPricesColumnName = "HasTierPrices";
-        if (Schema.Table(ptoductTableName).Column(hasTierPricesColumnName).Exists())
-            Delete.Column(hasTierPricesColumnName).FromTable(ptoductTableName);
+        if (Schema.ColumnExist<Product>(hasTierPricesColumnName))
+            Delete.Column<Product>(hasTierPricesColumnName);
 
         //#7188
         var hasDiscountsAppliedColumnName = "HasDiscountsApplied";
-        if (Schema.Table(ptoductTableName).Column(hasDiscountsAppliedColumnName).Exists())
-            Delete.Column(hasDiscountsAppliedColumnName).FromTable(ptoductTableName);
+        if (Schema.ColumnExist<Product>(hasDiscountsAppliedColumnName))
+            Delete.Column<Product>(hasDiscountsAppliedColumnName);
 
         //#7242
-        var categoryTableName = nameof(Category);
-        var restrictFromVendorsColumnName = nameof(Category.RestrictFromVendors);
 
-        if (!Schema.Table(categoryTableName).Column(restrictFromVendorsColumnName).Exists())
+        if (!Schema.ColumnExist<Category>(t => t.RestrictFromVendors))
         {
-            Alter.Table(categoryTableName)
-                .AddColumn(restrictFromVendorsColumnName)
+            Alter.AddColumnFor<Category>(t => t.RestrictFromVendors)
                 .AsBoolean()
                 .NotNullable()
                 .WithDefaultValue(false);
         }
 
         //#7281
-        var customerTableName = nameof(Customer);
-        var mustChangePasswordColumnName = nameof(Customer.MustChangePassword);
 
-        if (!Schema.Table(customerTableName).Column(mustChangePasswordColumnName).Exists())
+        if (!Schema.ColumnExist<Customer>(t => t.MustChangePassword))
         {
-            Alter.Table(customerTableName)
-                .AddColumn(mustChangePasswordColumnName)
+            Alter.AddColumnFor<Customer>(t => t.MustChangePassword)
                 .AsBoolean()
                 .NotNullable()
                 .WithDefaultValue(false);
         }
 
         //#7294
-        var topicTableName = nameof(Topic);
-        var topicSystemNameColumnName = nameof(Topic.SystemName);
 
-        if (!Schema.Table(topicTableName).Index("IX_Topic_SystemName").Exists())
+        if (!Schema.TableFor<Topic>().Index("IX_Topic_SystemName").Exists())
         {
-            Alter.Table(topicTableName)
-                .AlterColumn(topicSystemNameColumnName)
+            Alter.AlterColumnFor<Topic>(t => t.SystemName)
                 .AsString(400)
                 .Nullable();
         }
 
         //#7241
-        var discountTableName = nameof(Discount);
-        var vendorIdDiscountColumnName = nameof(Discount.VendorId);
 
-        if (!Schema.Table(discountTableName).Column(vendorIdDiscountColumnName).Exists())
+        if (!Schema.ColumnExist<Discount>(t => t.VendorId))
         {
-            Alter.Table(discountTableName)
-                .AddColumn(vendorIdDiscountColumnName).AsInt32().ForeignKey<Vendor>(onDelete: Rule.SetNull).Nullable();
+            Alter.AddColumnFor<Discount>(t => t.VendorId)
+                .AsInt32()
+                .ForeignKey<Vendor>(onDelete: Rule.SetNull)
+                .Nullable();
         }
 
         //#7243
-        var vendorTableName = nameof(Vendor);
-        var pmCustomerIdColumnName = nameof(Vendor.PmCustomerId);
-        if (!Schema.Table(vendorTableName).Column(pmCustomerIdColumnName).Exists())
-            Alter.Table(vendorTableName).AddColumn(pmCustomerIdColumnName).AsInt32().Nullable();
+        if (!Schema.ColumnExist<Vendor>(t => t.PmCustomerId))
+        {
+            Alter.AddColumnFor<Vendor>(t => t.PmCustomerId)
+                .AsInt32()
+                .Nullable();
+        }
     }
 }
