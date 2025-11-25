@@ -231,8 +231,10 @@ public static class FluentMigratorExtensions
     this ISchemaExpressionRoot expressionRoot, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
-        var property = ((MemberExpression)selector.Body)?.Member?.Name;
-        var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), property!);
+        var propertyMemberExpression = selector.Body as MemberExpression
+                 ?? (selector.Body as UnaryExpression)?.Operand as MemberExpression
+                 ?? throw new ArgumentException("Selector must be a property expression.", nameof(selector));
+        var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), propertyMemberExpression.Member.Name);
         return expressionRoot.Table(tableName).Column(columnName).Exists();
     }
 
@@ -266,8 +268,10 @@ public static class FluentMigratorExtensions
     this IAlterExpressionRoot expressionRoot, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
-        var property = ((MemberExpression)selector.Body)?.Member?.Name;
-        var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), property!);
+        var propertyMemberExpression = selector.Body as MemberExpression
+                 ?? (selector.Body as UnaryExpression)?.Operand as MemberExpression
+                 ?? throw new ArgumentException("Selector must be a property expression.", nameof(selector));
+        var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), propertyMemberExpression.Member.Name);
         return expressionRoot.Table(tableName).AddColumn(columnName);
     }
 
