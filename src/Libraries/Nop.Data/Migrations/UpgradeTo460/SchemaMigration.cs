@@ -18,144 +18,71 @@ public class SchemaMigration : ForwardOnlyMigration
     public override void Up()
     {
         // add column
-        var customerTableName = nameof(Customer);
+        if (!Schema.ColumnExist<Customer>(t => t.FirstName))
+            Alter.AddColumnFor<Customer>(t => t.FirstName).AsString(1000).Nullable();
 
-        var firstNameCustomerColumnName = nameof(Customer.FirstName);
-        var lastNameCustomerColumnName = nameof(Customer.LastName);
-        var genderCustomerColumnName = nameof(Customer.Gender);
-        var dobCustomerColumnName = nameof(Customer.DateOfBirth);
-        var companyCustomerColumnName = nameof(Customer.Company);
-        var address1CustomerColumnName = nameof(Customer.StreetAddress);
-        var address2CustomerColumnName = nameof(Customer.StreetAddress2);
-        var zipCustomerColumnName = nameof(Customer.ZipPostalCode);
-        var cityCustomerColumnName = nameof(Customer.City);
-        var countyCustomerColumnName = nameof(Customer.County);
-        var countryIdCustomerColumnName = nameof(Customer.CountryId);
-        var stateIdCustomerColumnName = nameof(Customer.StateProvinceId);
-        var phoneCustomerColumnName = nameof(Customer.Phone);
-        var faxCustomerColumnName = nameof(Customer.Fax);
-        var vatNumberCustomerColumnName = nameof(Customer.VatNumber);
-        var vatNumberStatusIdCustomerColumnName = nameof(Customer.VatNumberStatusId);
-        var timeZoneIdCustomerColumnName = nameof(Customer.TimeZoneId);
-        var attributeXmlCustomerColumnName = nameof(Customer.CustomCustomerAttributesXML);
-        var currencyIdCustomerColumnName = nameof(Customer.CurrencyId);
-        var languageIdCustomerColumnName = nameof(Customer.LanguageId);
-        var taxDisplayTypeIdCustomerColumnName = nameof(Customer.TaxDisplayTypeId);
+        if (!Schema.ColumnExist<Customer>(t => t.LastName))
+            Alter.AddColumnFor<Customer>(t => t.LastName).AsString(1000).Nullable();
 
-        if (!Schema.Table(customerTableName).Column(firstNameCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(firstNameCustomerColumnName).AsString(1000).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(lastNameCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(lastNameCustomerColumnName).AsString(1000).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(genderCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(genderCustomerColumnName).AsString(1000).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(dobCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(dobCustomerColumnName).AsDateTime2().Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(companyCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(companyCustomerColumnName).AsString(1000).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(address1CustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(address1CustomerColumnName).AsString(1000).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(address2CustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(address2CustomerColumnName).AsString(1000).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(zipCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(zipCustomerColumnName).AsString(1000).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(cityCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(cityCustomerColumnName).AsString(1000).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(countyCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(countyCustomerColumnName).AsString(1000).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(countryIdCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(countryIdCustomerColumnName).AsInt32().NotNullable().SetExistingRowsTo(0);
-        }
-        if (!Schema.Table(customerTableName).Column(stateIdCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(stateIdCustomerColumnName).AsInt32().NotNullable().SetExistingRowsTo(0);
-        }
-        if (!Schema.Table(customerTableName).Column(phoneCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(phoneCustomerColumnName).AsString(1000).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(faxCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(faxCustomerColumnName).AsString(1000).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(vatNumberCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(vatNumberCustomerColumnName).AsString(1000).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(vatNumberStatusIdCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(vatNumberStatusIdCustomerColumnName).AsInt32().NotNullable().SetExistingRowsTo((int)VatNumberStatus.Unknown);
-        }
-        if (!Schema.Table(customerTableName).Column(timeZoneIdCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(timeZoneIdCustomerColumnName).AsString(1000).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(attributeXmlCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(attributeXmlCustomerColumnName).AsString(int.MaxValue).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(currencyIdCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(currencyIdCustomerColumnName).AsInt32().ForeignKey<Currency>(onDelete: Rule.SetNull).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(languageIdCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(languageIdCustomerColumnName).AsInt32().ForeignKey<Language>(onDelete: Rule.SetNull).Nullable();
-        }
-        if (!Schema.Table(customerTableName).Column(taxDisplayTypeIdCustomerColumnName).Exists())
-        {
-            Alter.Table(customerTableName)
-                .AddColumn(taxDisplayTypeIdCustomerColumnName).AsInt32().Nullable();
-        }
+        if (!Schema.ColumnExist<Customer>(t => t.Gender))
+            Alter.AddColumnFor<Customer>(t => t.Gender).AsString(1000).Nullable();
 
-        //5705
-        var discountTableName = nameof(Discount);
-        var isActiveDiscountColumnName = nameof(Discount.IsActive);
+        if (!Schema.ColumnExist<Customer>(t => t.DateOfBirth))
+            Alter.AddColumnFor<Customer>(t => t.DateOfBirth).AsDateTime2().Nullable();
 
-        if (!Schema.Table(discountTableName).Column(isActiveDiscountColumnName).Exists())
-        {
-            Alter.Table(discountTableName)
-                .AddColumn(isActiveDiscountColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
-        }
+        if (!Schema.ColumnExist<Customer>(t => t.Company))
+            Alter.AddColumnFor<Customer>(t => t.Company).AsString(1000).Nullable();
+
+        if (!Schema.ColumnExist<Customer>(t => t.StreetAddress))
+            Alter.AddColumnFor<Customer>(t => t.StreetAddress).AsString(1000).Nullable();
+
+        if (!Schema.ColumnExist<Customer>(t => t.StreetAddress2))
+            Alter.AddColumnFor<Customer>(t => t.StreetAddress2).AsString(1000).Nullable();
+
+        if (!Schema.ColumnExist<Customer>(t => t.ZipPostalCode))
+            Alter.AddColumnFor<Customer>(t => t.ZipPostalCode).AsString(1000).Nullable();
+
+        if (!Schema.ColumnExist<Customer>(t => t.City))
+            Alter.AddColumnFor<Customer>(t => t.City).AsString(1000).Nullable();
+
+        if (!Schema.ColumnExist<Customer>(t => t.County))
+            Alter.AddColumnFor<Customer>(t => t.County).AsString(1000).Nullable();
+
+        if (!Schema.ColumnExist<Customer>(t => t.CountryId))
+            Alter.AddColumnFor<Customer>(t => t.CountryId).AsInt32().NotNullable().SetExistingRowsTo(0);
+
+        if (!Schema.ColumnExist<Customer>(t => t.StateProvinceId))
+            Alter.AddColumnFor<Customer>(t => t.StateProvinceId).AsInt32().NotNullable().SetExistingRowsTo(0);
+
+        if (!Schema.ColumnExist<Customer>(t => t.Phone))
+            Alter.AddColumnFor<Customer>(t => t.Phone).AsString(1000).Nullable();
+
+        if (!Schema.ColumnExist<Customer>(t => t.Fax))
+            Alter.AddColumnFor<Customer>(t => t.Fax).AsString(1000).Nullable();
+
+        if (!Schema.ColumnExist<Customer>(t => t.VatNumber))
+            Alter.AddColumnFor<Customer>(t => t.VatNumber).AsString(1000).Nullable();
+
+        if (!Schema.ColumnExist<Customer>(t => t.VatNumberStatusId))
+            Alter.AddColumnFor<Customer>(t => t.VatNumberStatusId).AsInt32().NotNullable().SetExistingRowsTo((int)VatNumberStatus.Unknown);
+
+        if (!Schema.ColumnExist<Customer>(t => t.TimeZoneId))
+            Alter.AddColumnFor<Customer>(t => t.TimeZoneId).AsString(1000).Nullable();
+
+        if (!Schema.ColumnExist<Customer>(t => t.CustomCustomerAttributesXML))
+            Alter.AddColumnFor<Customer>(t => t.CustomCustomerAttributesXML).AsString(int.MaxValue).Nullable();
+
+        if (!Schema.ColumnExist<Customer>(t => t.CurrencyId))
+            Alter.AddColumnFor<Customer>(t => t.CurrencyId).AsInt32().ForeignKey<Currency>(onDelete: Rule.SetNull).Nullable();
+
+        if (!Schema.ColumnExist<Customer>(t => t.LanguageId))
+            Alter.AddColumnFor<Customer>(t => t.LanguageId).AsInt32().ForeignKey<Language>(onDelete: Rule.SetNull).Nullable();
+
+        if (!Schema.ColumnExist<Customer>(t => t.TaxDisplayTypeId))
+            Alter.AddColumnFor<Customer>(t => t.TaxDisplayTypeId).AsInt32().Nullable();
+
+        // Discount table
+        if (!Schema.ColumnExist<Discount>(t => t.IsActive))
+            Alter.AddColumnFor<Discount>(t => t.IsActive).AsBoolean().NotNullable().SetExistingRowsTo(true);
     }
 }

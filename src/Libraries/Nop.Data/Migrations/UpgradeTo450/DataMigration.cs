@@ -6,7 +6,6 @@ using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Data.Extensions;
-using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo450;
 
@@ -49,7 +48,6 @@ public class DataMigration : Migration
             );
         }
         //#5547
-        var scheduleTaskTableName = NameCompatibilityManager.GetTableName(typeof(ScheduleTask));
 
         //add column
         if (!Schema.ColumnExist<ScheduleTask>(t => t.LastEnabledUtc))
@@ -60,7 +58,9 @@ public class DataMigration : Migration
         }
         else
         {
-            Alter.Table(scheduleTaskTableName).AlterColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime2().Nullable();
+            Alter.AlterColumnFor<ScheduleTask>(t => t.LastEnabledUtc)
+                .AsDateTime2()
+                .Nullable();
         }
 
         //#5939
@@ -90,13 +90,13 @@ public class DataMigration : Migration
         }
 
         //add column
-        var returnRequestTableName = NameCompatibilityManager.GetTableName(typeof(ReturnRequest));
-        var returnedQuantityColumnName = "ReturnedQuantity";
 
-        if (!Schema.Table(returnRequestTableName).Column(returnedQuantityColumnName).Exists())
+        if (!Schema.ColumnExist<ReturnRequest>(t => t.ReturnedQuantity))
         {
-            Alter.Table(returnRequestTableName)
-                .AddColumn(returnedQuantityColumnName).AsInt32().NotNullable().SetExistingRowsTo(0);
+            Alter.AddColumnFor<ReturnRequest>(t => t.ReturnedQuantity)
+                .AsInt32()
+                .NotNullable()
+                .SetExistingRowsTo(0);
         }
 
         //#6053

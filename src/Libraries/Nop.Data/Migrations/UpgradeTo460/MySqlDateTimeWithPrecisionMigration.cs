@@ -15,7 +15,7 @@ using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
-using Nop.Data.Mapping;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo460;
 
@@ -30,313 +30,310 @@ public class MySqlDateTimeWithPrecisionMigration : ForwardOnlyMigration
         if (dataSettings.DataProvider != DataProviderType.MySql)
             return;
 
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ActivityLog)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ActivityLog), nameof(ActivityLog.CreatedOnUtc)))
+        Alter.AlterColumnFor<Address>(t => t.CreatedOnUtc)
+    .AsCustom("datetime(6)");
+
+        Alter.AlterColumnFor<BackInStockSubscription>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Address)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Address), nameof(Address.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<BlogComment>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(BackInStockSubscription)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(BackInStockSubscription), nameof(BackInStockSubscription.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<BlogPost>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(BlogComment)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(BlogComment), nameof(BlogComment.CreatedOnUtc)))
-            .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(BlogPost)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(BlogPost), nameof(BlogPost.CreatedOnUtc)))
-            .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(BlogPost)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(BlogPost), nameof(BlogPost.EndDateUtc)))
+
+        Alter.AlterColumnFor<BlogPost>(t => t.EndDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(BlogPost)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(BlogPost), nameof(BlogPost.StartDateUtc)))
+
+        Alter.AlterColumnFor<BlogPost>(t => t.StartDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Campaign)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Campaign), nameof(Campaign.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<Campaign>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Campaign)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Campaign), nameof(Campaign.DontSendBeforeDateUtc)))
+
+        Alter.AlterColumnFor<Campaign>(t => t.DontSendBeforeDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Category)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Category), nameof(Category.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<Category>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Category)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Category), nameof(Category.UpdatedOnUtc)))
+
+        Alter.AlterColumnFor<Category>(t => t.UpdatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Currency)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Currency), nameof(Currency.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<Currency>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Currency)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Currency), nameof(Currency.UpdatedOnUtc)))
+
+        Alter.AlterColumnFor<Currency>(t => t.UpdatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Customer)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Customer), nameof(Customer.CannotLoginUntilDateUtc)))
+
+        Alter.AlterColumnFor<Customer>(t => t.CannotLoginUntilDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Customer)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Customer), nameof(Customer.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<Customer>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Customer)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Customer), nameof(Customer.DateOfBirth)))
+
+        Alter.AlterColumnFor<Customer>(t => t.DateOfBirth)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Customer)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Customer), nameof(Customer.LastActivityDateUtc)))
+
+        Alter.AlterColumnFor<Customer>(t => t.LastActivityDateUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Customer)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Customer), nameof(Customer.LastLoginDateUtc)))
+
+        Alter.AlterColumnFor<Customer>(t => t.LastLoginDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(CustomerPassword)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(CustomerPassword), nameof(CustomerPassword.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<CustomerPassword>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Discount)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Discount), nameof(Discount.EndDateUtc)))
+
+        Alter.AlterColumnFor<Discount>(t => t.EndDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Discount)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Discount), nameof(Discount.StartDateUtc)))
+
+        Alter.AlterColumnFor<Discount>(t => t.StartDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(DiscountUsageHistory)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(DiscountUsageHistory), nameof(DiscountUsageHistory.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<DiscountUsageHistory>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Forum)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Forum), nameof(Forum.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<Forum>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Forum)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Forum), nameof(Forum.LastPostTime)))
+
+        Alter.AlterColumnFor<Forum>(t => t.LastPostTime)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Forum)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Forum), nameof(Forum.UpdatedOnUtc)))
+
+        Alter.AlterColumnFor<Forum>(t => t.UpdatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ForumGroup)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ForumGroup), nameof(ForumGroup.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<ForumGroup>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ForumGroup)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ForumGroup), nameof(ForumGroup.UpdatedOnUtc)))
+
+        Alter.AlterColumnFor<ForumGroup>(t => t.UpdatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ForumPost)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ForumPost), nameof(ForumPost.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<ForumPost>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ForumPost)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ForumPost), nameof(ForumPost.UpdatedOnUtc)))
+
+        Alter.AlterColumnFor<ForumPost>(t => t.UpdatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ForumPostVote)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ForumPostVote), nameof(ForumPostVote.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<ForumPostVote>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(PrivateMessage)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(PrivateMessage), nameof(PrivateMessage.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<PrivateMessage>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ForumSubscription)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ForumSubscription), nameof(ForumSubscription.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<ForumSubscription>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ForumTopic), nameof(ForumTopic.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<ForumTopic>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ForumTopic), nameof(ForumTopic.LastPostTime)))
+
+        Alter.AlterColumnFor<ForumTopic>(t => t.LastPostTime)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ForumTopic), nameof(ForumTopic.UpdatedOnUtc)))
+
+        Alter.AlterColumnFor<ForumTopic>(t => t.UpdatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(GdprLog)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(GdprLog), nameof(GdprLog.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<GdprLog>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(GenericAttribute)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(GenericAttribute), nameof(GenericAttribute.CreatedOrUpdatedDateUTC)))
+
+        Alter.AlterColumnFor<GenericAttribute>(t => t.CreatedOrUpdatedDateUTC)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(GiftCard)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(GiftCard), nameof(GiftCard.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<GiftCard>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(GiftCardUsageHistory)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(GiftCardUsageHistory), nameof(GiftCardUsageHistory.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<GiftCardUsageHistory>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Log)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Log), nameof(Log.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<Log>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Manufacturer)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Manufacturer), nameof(Manufacturer.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<Manufacturer>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Manufacturer)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Manufacturer), nameof(Manufacturer.UpdatedOnUtc)))
+
+        Alter.AlterColumnFor<Manufacturer>(t => t.UpdatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(MigrationVersionInfo)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(MigrationVersionInfo), nameof(MigrationVersionInfo.AppliedOn)))
+
+        Alter.AlterColumnFor<MigrationVersionInfo>(t => t.AppliedOn)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(NewsItem)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(NewsItem), nameof(NewsItem.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<NewsItem>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(NewsItem)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(NewsItem), nameof(NewsItem.EndDateUtc)))
+
+        Alter.AlterColumnFor<NewsItem>(t => t.EndDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(NewsItem)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(NewsItem), nameof(NewsItem.StartDateUtc)))
+
+        Alter.AlterColumnFor<NewsItem>(t => t.StartDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(NewsComment)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(NewsComment), nameof(NewsComment.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<NewsComment>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(NewsLetterSubscription)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(NewsLetterSubscription), nameof(NewsLetterSubscription.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<NewsLetterSubscription>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Order)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Order), nameof(Order.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<Order>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Order)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Order), nameof(Order.PaidDateUtc)))
+
+        Alter.AlterColumnFor<Order>(t => t.PaidDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(OrderItem)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(OrderItem), nameof(OrderItem.RentalEndDateUtc)))
+
+        Alter.AlterColumnFor<OrderItem>(t => t.RentalEndDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(OrderItem)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(OrderItem), nameof(OrderItem.RentalStartDateUtc)))
+
+        Alter.AlterColumnFor<OrderItem>(t => t.RentalStartDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(OrderNote)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(OrderNote), nameof(OrderNote.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<OrderNote>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Poll)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Poll), nameof(Poll.EndDateUtc)))
+
+        Alter.AlterColumnFor<Poll>(t => t.EndDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Poll)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Poll), nameof(Poll.StartDateUtc)))
+
+        Alter.AlterColumnFor<Poll>(t => t.StartDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(PollVotingRecord)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(PollVotingRecord), nameof(PollVotingRecord.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<PollVotingRecord>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Product)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Product), nameof(Product.AvailableEndDateTimeUtc)))
+
+        Alter.AlterColumnFor<Product>(t => t.AvailableEndDateTimeUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Product)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Product), nameof(Product.AvailableStartDateTimeUtc)))
+
+        Alter.AlterColumnFor<Product>(t => t.AvailableStartDateTimeUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Product)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Product), nameof(Product.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<Product>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Product)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Product), nameof(Product.MarkAsNewEndDateTimeUtc)))
+
+        Alter.AlterColumnFor<Product>(t => t.MarkAsNewEndDateTimeUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Product)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Product), nameof(Product.MarkAsNewStartDateTimeUtc)))
+
+        Alter.AlterColumnFor<Product>(t => t.MarkAsNewStartDateTimeUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Product)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Product), nameof(Product.PreOrderAvailabilityStartDateTimeUtc)))
+
+        Alter.AlterColumnFor<Product>(t => t.PreOrderAvailabilityStartDateTimeUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Product)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Product), nameof(Product.UpdatedOnUtc)))
+
+        Alter.AlterColumnFor<Product>(t => t.UpdatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ProductReview)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ProductReview), nameof(ProductReview.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<ProductReview>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(QueuedEmail)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(QueuedEmail), nameof(QueuedEmail.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<QueuedEmail>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(QueuedEmail)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(QueuedEmail), nameof(QueuedEmail.DontSendBeforeDateUtc)))
+
+        Alter.AlterColumnFor<QueuedEmail>(t => t.DontSendBeforeDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(QueuedEmail)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(QueuedEmail), nameof(QueuedEmail.SentOnUtc)))
+
+        Alter.AlterColumnFor<QueuedEmail>(t => t.SentOnUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(RecurringPayment)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(RecurringPayment), nameof(RecurringPayment.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<RecurringPayment>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(RecurringPayment)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(RecurringPayment), nameof(RecurringPayment.StartDateUtc)))
+
+        Alter.AlterColumnFor<RecurringPayment>(t => t.StartDateUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(RecurringPaymentHistory)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(RecurringPaymentHistory), nameof(RecurringPaymentHistory.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<RecurringPaymentHistory>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ReturnRequest)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ReturnRequest), nameof(ReturnRequest.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<ReturnRequest>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ReturnRequest)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ReturnRequest), nameof(ReturnRequest.UpdatedOnUtc)))
+
+        Alter.AlterColumnFor<ReturnRequest>(t => t.UpdatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(RewardPointsHistory)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(RewardPointsHistory), nameof(RewardPointsHistory.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<RewardPointsHistory>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(RewardPointsHistory)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(RewardPointsHistory), nameof(RewardPointsHistory.EndDateUtc)))
+
+        Alter.AlterColumnFor<RewardPointsHistory>(t => t.EndDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ScheduleTask)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ScheduleTask), nameof(ScheduleTask.LastEnabledUtc)))
+
+        Alter.AlterColumnFor<ScheduleTask>(t => t.LastEnabledUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ScheduleTask)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ScheduleTask), nameof(ScheduleTask.LastEndUtc)))
+
+        Alter.AlterColumnFor<ScheduleTask>(t => t.LastEndUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ScheduleTask)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ScheduleTask), nameof(ScheduleTask.LastStartUtc)))
+
+        Alter.AlterColumnFor<ScheduleTask>(t => t.LastStartUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ScheduleTask)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ScheduleTask), nameof(ScheduleTask.LastSuccessUtc)))
+
+        Alter.AlterColumnFor<ScheduleTask>(t => t.LastSuccessUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Shipment)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Shipment), nameof(Shipment.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<Shipment>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Shipment)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Shipment), nameof(Shipment.DeliveryDateUtc)))
+
+        Alter.AlterColumnFor<Shipment>(t => t.DeliveryDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Shipment)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Shipment), nameof(Shipment.ReadyForPickupDateUtc)))
+
+        Alter.AlterColumnFor<Shipment>(t => t.ReadyForPickupDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(Shipment)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(Shipment), nameof(Shipment.ShippedDateUtc)))
+
+        Alter.AlterColumnFor<Shipment>(t => t.ShippedDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ShoppingCartItem)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ShoppingCartItem), nameof(ShoppingCartItem.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<ShoppingCartItem>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ShoppingCartItem)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ShoppingCartItem), nameof(ShoppingCartItem.RentalEndDateUtc)))
+
+        Alter.AlterColumnFor<ShoppingCartItem>(t => t.RentalEndDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ShoppingCartItem)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ShoppingCartItem), nameof(ShoppingCartItem.RentalStartDateUtc)))
+
+        Alter.AlterColumnFor<ShoppingCartItem>(t => t.RentalStartDateUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(ShoppingCartItem)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(ShoppingCartItem), nameof(ShoppingCartItem.UpdatedOnUtc)))
+
+        Alter.AlterColumnFor<ShoppingCartItem>(t => t.UpdatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(StockQuantityHistory)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(StockQuantityHistory), nameof(StockQuantityHistory.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<StockQuantityHistory>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(TierPrice)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(TierPrice), nameof(TierPrice.EndDateTimeUtc)))
+
+        Alter.AlterColumnFor<TierPrice>(t => t.EndDateTimeUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(TierPrice)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(TierPrice), nameof(TierPrice.StartDateTimeUtc)))
+
+        Alter.AlterColumnFor<TierPrice>(t => t.StartDateTimeUtc)
             .AsCustom("datetime(6)")
             .Nullable();
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(VendorNote)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(VendorNote), nameof(VendorNote.CreatedOnUtc)))
+
+        Alter.AlterColumnFor<VendorNote>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
+
     }
 }
