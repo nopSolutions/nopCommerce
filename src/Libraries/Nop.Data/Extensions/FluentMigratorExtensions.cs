@@ -2,15 +2,12 @@
 using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
-using FluentMigrator.Builders;
 using FluentMigrator.Builders.Alter;
 using FluentMigrator.Builders.Alter.Table;
 using FluentMigrator.Builders.Create;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Builders.Delete;
-using FluentMigrator.Builders.Delete.Column;
 using FluentMigrator.Builders.Schema;
-using FluentMigrator.Builders.Schema.Table;
 using FluentMigrator.Infrastructure.Extensions;
 using FluentMigrator.Model;
 using FluentMigrator.Runner;
@@ -153,17 +150,6 @@ public static class FluentMigratorExtensions
     }
 
     /// <summary>
-    /// Targets the entity's mapped table for a DELETE operation.
-    /// </summary>
-    /// <param name="expressionRoot">The root expression for a DELETE operation</param>
-    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
-    public static void TableFor<TEntity>(this IDeleteExpressionRoot expressionRoot) where TEntity : BaseEntity
-    {
-        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
-        expressionRoot.Table(tableName);
-    }
-
-    /// <summary>
     /// Deletes a column from the table mapped to the specified entity,
     /// resolving the table name using <see cref="NameCompatibilityManager"/>.
     /// </summary>
@@ -174,36 +160,6 @@ public static class FluentMigratorExtensions
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
         expressionRoot.Column(columnName).FromTable(tableName);
-    }
-
-    /// <summary>
-    /// Targets the entity's mapped table for an ALTER TABLE operation.
-    /// </summary>
-    /// <param name="expressionRoot">The root expression for an ALTER operation</param>
-    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
-    /// <returns>
-    /// A fluent syntax interface allowing further ALTER TABLE operations 
-    /// such as adding or modifying columns.
-    /// </returns>
-    public static IAlterTableAddColumnOrAlterColumnOrSchemaOrDescriptionSyntax TableFor<TEntity>(this IAlterExpressionRoot expressionRoot) where TEntity : BaseEntity
-    {
-        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
-        return expressionRoot.Table(tableName);
-    }
-
-    /// <summary>
-    /// Targets the entity's mapped table for schema-related operations.
-    /// </summary>
-    /// <param name="expressionRoot">The root expression for schema inspection</param>
-    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
-    /// <returns>
-    /// A fluent syntax interface for performing schema operations 
-    /// such as checking table or column existence.
-    /// </returns>
-    public static ISchemaTableSyntax TableFor<TEntity>(this ISchemaExpressionRoot expressionRoot) where TEntity : BaseEntity
-    {
-        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
-        return expressionRoot.Table(tableName);
     }
 
     /// <summary>
@@ -273,22 +229,6 @@ public static class FluentMigratorExtensions
                  ?? throw new ArgumentException("Selector must be a property expression.", nameof(selector));
         var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), propertyMemberExpression.Member.Name);
         return expressionRoot.Table(tableName).AddColumn(columnName);
-    }
-
-    /// <summary>
-    /// Targets the mapped table of the specified entity for a DELETE COLUMN operation,
-    /// resolving the table name via <see cref="NameCompatibilityManager"/>.
-    /// </summary>
-    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
-    /// <param name="expressionRoot">The delete column expression from table syntax</param>
-    /// <returns>
-    /// A fluent syntax interface allowing the deletion of columns from the specified table.
-    /// </returns>
-    public static IInSchemaSyntax FromTable<TEntity>(
-    this IDeleteColumnFromTableSyntax expressionRoot) where TEntity : BaseEntity
-    {
-        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
-        return expressionRoot.FromTable(tableName);
     }
 
     /// <summary>
