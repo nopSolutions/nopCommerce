@@ -12,21 +12,25 @@ public class NewsLetterSubscriptionMigration : ForwardOnlyMigration
     /// </summary>
     public override void Up()
     {
-        if (!Schema.Table(nameof(NewsLetterSubscriptionType)).Exists())
+        if (!Schema.TableExist<NewsLetterSubscriptionType>())
             Create.TableFor<NewsLetterSubscriptionType>();
 
-        if (!Schema.Table(nameof(NewsLetterSubscription)).Column(nameof(NewsLetterSubscription.TypeId)).Exists())
+        if (!Schema.ColumnExist<NewsLetterSubscription>(t => t.TypeId))
         {
             //add new column
-            Alter.Table(nameof(NewsLetterSubscription))
-                .AddColumn(nameof(NewsLetterSubscription.TypeId)).AsInt32().ForeignKey<NewsLetterSubscriptionType>().Nullable();
+            Alter.AddColumnFor<NewsLetterSubscription>(t => t.TypeId)
+                .AsInt32()
+                .ForeignKey<NewsLetterSubscriptionType>()
+                .Nullable();
         }
 
-        if (!Schema.Table(nameof(Campaign)).Column(nameof(Campaign.NewsLetterSubscriptionTypeId)).Exists())
+        if (!Schema.ColumnExist<Campaign>(t => t.NewsLetterSubscriptionTypeId))
         {
             //add new column
-            Alter.Table(nameof(Campaign))
-                .AddColumn(nameof(Campaign.NewsLetterSubscriptionTypeId)).AsInt32().NotNullable().SetExistingRowsTo(0);
+            Alter.AddColumnFor<Campaign>(t => t.NewsLetterSubscriptionTypeId)
+                .AsInt32()
+                .NotNullable()
+                .SetExistingRowsTo(0);
         }
     }
 }

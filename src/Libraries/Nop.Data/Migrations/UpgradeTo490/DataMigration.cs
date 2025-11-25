@@ -2,6 +2,7 @@
 using LinqToDB;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo490;
 
@@ -68,9 +69,8 @@ public class DataMigration : Migration
         }
 
         //alter columns
-        Alter.Table(nameof(NewsLetterSubscription))
-            .AlterColumn(nameof(NewsLetterSubscription.TypeId)).AsInt32().NotNullable();
-        
+        Alter.AddColumnFor<NewsLetterSubscription>(t => t.TypeId).AsInt32().NotNullable();
+
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "AddSubscriptionType", StringComparison.InvariantCultureIgnoreCase) == 0))
         {
             _dataProvider.InsertEntity(
@@ -187,7 +187,7 @@ public class DataMigration : Migration
                 }
             );
         }
-        
+
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportFilterLevelValues", StringComparison.InvariantCultureIgnoreCase) == 0))
         {
             _dataProvider.InsertEntity(
