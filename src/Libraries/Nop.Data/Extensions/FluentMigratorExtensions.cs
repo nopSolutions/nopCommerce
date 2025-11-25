@@ -150,6 +150,21 @@ public static class FluentMigratorExtensions
     }
 
     /// <summary>
+    /// Targets the entity's mapped table for an ALTER TABLE operation.
+    /// </summary>
+    /// <param name="expressionRoot">The root expression for an ALTER operation</param>
+    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
+    /// <returns>
+    /// A fluent syntax interface allowing further ALTER TABLE operations 
+    /// such as adding or modifying columns.
+    /// </returns>
+    public static IAlterTableAddColumnOrAlterColumnOrSchemaOrDescriptionSyntax TableFor<TEntity>(this IAlterExpressionRoot expressionRoot) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        return expressionRoot.Table(tableName);
+    }
+
+    /// <summary>
     /// Deletes a column from the table mapped to the specified entity,
     /// resolving the table name using <see cref="NameCompatibilityManager"/>.
     /// </summary>
