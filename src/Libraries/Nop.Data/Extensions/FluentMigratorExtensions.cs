@@ -150,18 +150,24 @@ public static class FluentMigratorExtensions
     }
 
     /// <summary>
-    /// Targets the entity's mapped table for an ALTER TABLE operation.
+    /// Targets a specific column of the entity’s mapped table for an ALTER COLUMN operation,
+    /// resolving both table and column names using <see cref="NameCompatibilityManager"/>.
     /// </summary>
-    /// <param name="expressionRoot">The root expression for an ALTER operation</param>
-    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
+    /// <typeparam name="TEntity">The entity type mapped to the database table.</typeparam>
+    /// <param name="expressionRoot">The root expression for an ALTER TABLE operation.</param>
+    /// <param name="selector">An expression selecting the entity property to alter.</param>
     /// <returns>
-    /// A fluent syntax interface allowing further ALTER TABLE operations 
-    /// such as adding or modifying columns.
+    /// A fluent syntax interface for specifying the new column type 
+    /// and additional ALTER COLUMN options.
     /// </returns>
-    public static IAlterTableAddColumnOrAlterColumnOrSchemaOrDescriptionSyntax TableFor<TEntity>(this IAlterExpressionRoot expressionRoot) where TEntity : BaseEntity
+    public static IAlterTableColumnAsTypeSyntax AlterColumnFor<TEntity>(this IAlterExpressionRoot expressionRoot, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
-        return expressionRoot.Table(tableName);
+        var propertyMemberExpression = selector.Body as MemberExpression
+                 ?? (selector.Body as UnaryExpression)?.Operand as MemberExpression
+                 ?? throw new ArgumentException("Selector must be a property expression.", nameof(selector));
+        var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), propertyMemberExpression.Member.Name);
+        return expressionRoot.Table(tableName).AlterColumn(columnName);
     }
 
     /// <summary>
