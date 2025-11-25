@@ -226,6 +226,10 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"addcustomwishlist",
             defaults: new { controller = "ShoppingCart", action = "AddWishlist" });
 
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.RENAME_CUSTOM_WISHLIST,
+            pattern: $"renamecustomwishlist",
+            defaults: new { controller = "ShoppingCart", action = "RenameWishlist" });
+
         //comparing products (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.ADD_PRODUCT_TO_COMPARE,
             pattern: $"compareproducts/add/{{productId:min(0)}}",
@@ -508,12 +512,12 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/customer/gdpr",
             defaults: new { controller = "Customer", action = "GdprTools" });
 
-        //customer check gift card balance 
+        //customer check gift card balance
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.General.CHECK_GIFT_CARD_BALANCE,
             pattern: $"{lang}/customer/checkgiftcardbalance",
             defaults: new { controller = "Customer", action = "CheckGiftCardBalance" });
 
-        //customer multi-factor authentication settings 
+        //customer multi-factor authentication settings
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.MULTI_FACTOR_AUTHENTICATION_SETTINGS,
             pattern: $"{lang}/customer/multifactorauthentication",
             defaults: new { controller = "Customer", action = "MultiFactorAuthentication" });
