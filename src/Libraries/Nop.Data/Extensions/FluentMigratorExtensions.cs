@@ -1,9 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using System.Linq.Expressions;
 using System.Reflection;
+using FluentMigrator.Builders.Alter;
 using FluentMigrator.Builders.Alter.Table;
 using FluentMigrator.Builders.Create;
 using FluentMigrator.Builders.Create.Table;
+using FluentMigrator.Builders.Delete;
+using FluentMigrator.Builders.Schema;
+using FluentMigrator.Builders.Schema.Table;
 using FluentMigrator.Infrastructure.Extensions;
 using FluentMigrator.Model;
 using FluentMigrator.Runner;
@@ -63,7 +68,7 @@ public static class FluentMigratorExtensions
     /// <param name="builder">The builder to add the database engine(s) to</param>
     /// <returns>The migration runner builder</returns>
     public static IMigrationRunnerBuilder AddNopDbEngines(this IMigrationRunnerBuilder builder)
-    {        
+    {
         if (!DataSettingsManager.IsDatabaseInstalled())
             return builder.AddSqlServer().AddMySql5().AddPostgres92();
 
@@ -143,6 +148,124 @@ public static class FluentMigratorExtensions
         var type = typeof(TEntity);
         var builder = expressionRoot.Table(NameCompatibilityManager.GetTableName(type)) as CreateTableExpressionBuilder;
         builder.RetrieveTableExpressions(type);
+    }
+
+    /// <summary>
+    /// Targets a specific column of the entity’s mapped table for an ALTER COLUMN operation,
+    /// resolving both table and column names using <see cref="NameCompatibilityManager"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type mapped to the database table.</typeparam>
+    /// <param name="expressionRoot">The root expression for an ALTER TABLE operation.</param>
+    /// <param name="selector">An expression selecting the entity property to alter.</param>
+    /// <returns>
+    /// A fluent syntax interface for specifying the new column type 
+    /// and additional ALTER COLUMN options.
+    /// </returns>
+    public static IAlterTableColumnAsTypeSyntax AlterColumnFor<TEntity>(this IAlterExpressionRoot expressionRoot, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        var propertyMemberExpression = selector.Body as MemberExpression
+                 ?? (selector.Body as UnaryExpression)?.Operand as MemberExpression
+                 ?? throw new ArgumentException("Selector must be a property expression.", nameof(selector));
+        var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), propertyMemberExpression.Member.Name);
+        return expressionRoot.Table(tableName).AlterColumn(columnName);
+    }
+
+    /// <summary>
+    /// Deletes a column from the table mapped to the specified entity,
+    /// resolving the table name using <see cref="NameCompatibilityManager"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type mapped to the database table.</typeparam>
+    /// <param name="expressionRoot">The root delete expression.</param>
+    /// <param name="columnName">The name of the column to delete.</param>
+    public static void Column<TEntity>(this IDeleteExpressionRoot expressionRoot, string columnName) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        expressionRoot.Column(columnName).FromTable(tableName);
+    }
+
+    /// <summary>
+    /// Determines whether the database table mapped to the specified entity exists,
+    /// resolving the table name using <see cref="NameCompatibilityManager"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type mapped to the database table.</typeparam>
+    /// <param name="expressionRoot">The root schema expression.</param>
+    /// <returns><c>true</c> if the table exists; otherwise, <c>false</c>.</returns>
+    public static bool TableExist<TEntity>(this ISchemaExpressionRoot expressionRoot) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        return expressionRoot.Table(tableName).Exists();
+    }
+
+    /// <summary>
+    /// Checks whether a mapped column exists in the database table for the specified entity.
+    /// Resolves both the table name and column name using <see cref="NameCompatibilityManager"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type mapped to the database table.</typeparam>
+    /// <param name="expressionRoot">The root schema expression.</param>
+    /// <param name="selector">An expression selecting the entity property to check.</param>
+    /// <returns><c>true</c> if the column exists; otherwise, <c>false</c>.</returns>
+    public static bool ColumnExist<TEntity>(
+    this ISchemaExpressionRoot expressionRoot, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        var propertyMemberExpression = selector.Body as MemberExpression
+                 ?? (selector.Body as UnaryExpression)?.Operand as MemberExpression
+                 ?? throw new ArgumentException("Selector must be a property expression.", nameof(selector));
+        var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), propertyMemberExpression.Member.Name);
+        return expressionRoot.Table(tableName).Column(columnName).Exists();
+    }
+
+    /// <summary>
+    /// Checks whether a mapped column exists in the database table for the specified entity.
+    /// Resolves both the table name and column name using <see cref="NameCompatibilityManager"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type mapped to the database table.</typeparam>
+    /// <param name="expressionRoot">The root schema expression.</param>
+    /// <param name="columnName">The column name</param>
+    /// <returns><c>true</c> if the column exists; otherwise, <c>false</c>.</returns>
+    public static bool ColumnExist<TEntity>(
+    this ISchemaExpressionRoot expressionRoot, string columnName) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        return expressionRoot.Table(tableName).Column(columnName).Exists();
+    }
+
+    /// <summary>
+    /// Targets the entity's mapped table for schema-related operations.
+    /// </summary>
+    /// <param name="expressionRoot">The root expression for schema inspection</param>
+    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
+    /// <returns>
+    /// A fluent syntax interface for performing schema operations 
+    /// such as checking table or column existence.
+    /// </returns>
+    public static ISchemaTableSyntax TableFor<TEntity>(this ISchemaExpressionRoot expressionRoot) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        return expressionRoot.Table(tableName);
+    }
+
+    /// <summary>
+    /// Adds a new column to the entity's mapped table for ALTER TABLE operations,
+    /// resolving the column name via <see cref="NameCompatibilityManager"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
+    /// <param name="tableSchema">The alter table expression</param>
+    /// <param name="selector">An expression selecting the entity property</param>
+    /// <returns>
+    /// A fluent syntax interface allowing further ALTER TABLE operations 
+    /// on the specified column.
+    /// </returns>
+    public static IAlterTableColumnAsTypeSyntax AddColumnFor<TEntity>(
+    this IAlterExpressionRoot expressionRoot, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        var propertyMemberExpression = selector.Body as MemberExpression
+                 ?? (selector.Body as UnaryExpression)?.Operand as MemberExpression
+                 ?? throw new ArgumentException("Selector must be a property expression.", nameof(selector));
+        var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), propertyMemberExpression.Member.Name);
+        return expressionRoot.Table(tableName).AddColumn(columnName);
     }
 
     /// <summary>
