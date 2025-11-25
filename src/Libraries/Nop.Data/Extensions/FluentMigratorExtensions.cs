@@ -10,7 +10,6 @@ using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Builders.Delete;
 using FluentMigrator.Builders.Delete.Column;
 using FluentMigrator.Builders.Schema;
-using FluentMigrator.Builders.Schema.Column;
 using FluentMigrator.Builders.Schema.Table;
 using FluentMigrator.Infrastructure.Extensions;
 using FluentMigrator.Model;
@@ -195,22 +194,48 @@ public static class FluentMigratorExtensions
     }
 
     /// <summary>
-    /// Targets a specific column of the entity's mapped table for schema inspection,
-    /// resolving the column name via <see cref="NameCompatibilityManager"/>.
+    /// Determines whether the database table mapped to the specified entity exists,
+    /// resolving the table name using <see cref="NameCompatibilityManager"/>.
     /// </summary>
-    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
-    /// <param name="tableSchema">The schema table expression</param>
-    /// <param name="selector">An expression selecting the entity property</param>
-    /// <returns>
-    /// A fluent syntax interface for performing schema operations 
-    /// such as checking column existence.
-    /// </returns>
-    public static ISchemaColumnSyntax ColumnFor<TEntity>(
-    this ISchemaTableSyntax tableSchema, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
+    /// <typeparam name="TEntity">The entity type mapped to the database table.</typeparam>
+    /// <param name="expressionRoot">The root schema expression.</param>
+    /// <returns><c>true</c> if the table exists; otherwise, <c>false</c>.</returns>
+    public static bool TableExist<TEntity>(this ISchemaExpressionRoot expressionRoot) where TEntity : BaseEntity
     {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        return expressionRoot.Table(tableName).Exists();
+    }
+
+    /// <summary>
+    /// Checks whether a mapped column exists in the database table for the specified entity.
+    /// Resolves both the table name and column name using <see cref="NameCompatibilityManager"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type mapped to the database table.</typeparam>
+    /// <param name="expressionRoot">The root schema expression.</param>
+    /// <param name="selector">An expression selecting the entity property to check.</param>
+    /// <returns><c>true</c> if the column exists; otherwise, <c>false</c>.</returns>
+    public static bool ColumnExist<TEntity>(
+    this ISchemaExpressionRoot expressionRoot, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
         var property = ((MemberExpression)selector.Body)?.Member?.Name;
         var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), property!);
-        return tableSchema.Column(columnName);
+        return expressionRoot.Table(tableName).Column(columnName).Exists();
+    }
+
+    /// <summary>
+    /// Checks whether a mapped column exists in the database table for the specified entity.
+    /// Resolves both the table name and column name using <see cref="NameCompatibilityManager"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type mapped to the database table.</typeparam>
+    /// <param name="expressionRoot">The root schema expression.</param>
+    /// <param name="columnName">The column name</param>
+    /// <returns><c>true</c> if the column exists; otherwise, <c>false</c>.</returns>
+    public static bool ColumnExist<TEntity>(
+    this ISchemaExpressionRoot expressionRoot, string columnName) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        return expressionRoot.Table(tableName).Column(columnName).Exists();
     }
 
     /// <summary>

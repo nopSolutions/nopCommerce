@@ -15,7 +15,7 @@ public class SchemaMigration : ForwardOnlyMigration
     public override void Up()
     {
         //#7387
-        if (!Schema.TableFor<Product>().ColumnFor<Product>(t => t.AgeVerification).Exists())
+        if (!Schema.ColumnExist<Product>(t => t.AgeVerification))
         {
             Alter.TableFor<Product>()
                 .AddColumnFor<Product>(t => t.AgeVerification)
@@ -24,7 +24,7 @@ public class SchemaMigration : ForwardOnlyMigration
                 .WithDefaultValue(false);
         }
 
-        if (!Schema.TableFor<Product>().ColumnFor<Product>(t => t.MinimumAgeToPurchase).Exists())
+        if (!Schema.ColumnExist<Product>(t => t.MinimumAgeToPurchase))
         {
             Alter.TableFor<Product>()
                 .AddColumnFor<Product>(t => t.MinimumAgeToPurchase)
@@ -35,7 +35,7 @@ public class SchemaMigration : ForwardOnlyMigration
 
         //#7294
 
-        if (!Schema.TableFor<Topic>().ColumnFor<Topic>(t => t.AvailableEndDateTimeUtc).Exists())
+        if (!Schema.ColumnExist<Topic>(t => t.AvailableEndDateTimeUtc))
         {
             Alter.TableFor<Topic>()
                 .AddColumnFor<Topic>(t => t.AvailableEndDateTimeUtc)
@@ -43,7 +43,7 @@ public class SchemaMigration : ForwardOnlyMigration
                 .Nullable();
         }
 
-        if (!Schema.TableFor<Topic>().ColumnFor<Topic>(t => t.AvailableStartDateTimeUtc).Exists())
+        if (!Schema.ColumnExist<Topic>(t => t.AvailableStartDateTimeUtc))
         {
             Alter.TableFor<Topic>()
                 .AddColumnFor<Topic>(t => t.AvailableStartDateTimeUtc)
@@ -53,7 +53,7 @@ public class SchemaMigration : ForwardOnlyMigration
 
         //#873
 
-        if (!Schema.TableFor<ProductTag>().ColumnFor<ProductTag>(t => t.MetaDescription).Exists())
+        if (!Schema.ColumnExist<ProductTag>(t => t.MetaDescription))
         {
             Alter.TableFor<ProductTag>()
                 .AddColumnFor<ProductTag>(t => t.MetaDescription)
@@ -61,7 +61,7 @@ public class SchemaMigration : ForwardOnlyMigration
                 .Nullable();
         }
 
-        if (!Schema.TableFor<ProductTag>().ColumnFor<ProductTag>(t => t.MetaKeywords).Exists())
+        if (!Schema.ColumnExist<ProductTag>(t => t.MetaKeywords))
         {
             Alter.TableFor<ProductTag>()
                 .AddColumnFor<ProductTag>(t => t.MetaKeywords)
@@ -69,7 +69,7 @@ public class SchemaMigration : ForwardOnlyMigration
                 .Nullable();
         }
 
-        if (!Schema.TableFor<ProductTag>().ColumnFor<ProductTag>(t => t.MetaTitle).Exists())
+        if (!Schema.ColumnExist<ProductTag>(t => t.MetaTitle))
         {
             Alter.TableFor<ProductTag>()
                 .AddColumnFor<ProductTag>(t => t.MetaTitle)
@@ -78,30 +78,30 @@ public class SchemaMigration : ForwardOnlyMigration
         }
 
         //#7390
-        if (!Schema.TableFor<Menu>().Exists())
+        if (!Schema.TableExist<Menu>())
             Create.TableFor<Menu>();
 
-        if (!Schema.TableFor<Menu>().Exists())
+        if (!Schema.TableExist<Menu>())
             Create.TableFor<MenuItem>();
 
         var footerColumn1ColumnName = "IncludeInFooterColumn1";
-        if (Schema.TableFor<Topic>().Column(footerColumn1ColumnName).Exists())
+        if (Schema.ColumnExist<Topic>(footerColumn1ColumnName))
             Delete.Column(footerColumn1ColumnName).FromTable<Topic>();
 
         var footerColumn2ColumnName = "IncludeInFooterColumn2";
-        if (Schema.TableFor<Topic>().Column(footerColumn2ColumnName).Exists())
+        if (Schema.ColumnExist<Topic>(footerColumn2ColumnName))
             Delete.Column(footerColumn2ColumnName).FromTable<Topic>();
 
         var footerColumn3ColumnName = "IncludeInFooterColumn3";
-        if (Schema.TableFor<Topic>().Column(footerColumn3ColumnName).Exists())
+        if (Schema.ColumnExist<Topic>(footerColumn3ColumnName))
             Delete.Column(footerColumn3ColumnName).FromTable<Topic>();
 
         var includeTopicInTopMenuColumnName = "IncludeInTopMenu";
-        if (Schema.TableFor<Topic>().Column(includeTopicInTopMenuColumnName).Exists())
+        if (Schema.ColumnExist<Topic>(includeTopicInTopMenuColumnName))
             Delete.Column(includeTopicInTopMenuColumnName).FromTable<Topic>();
 
         var includeCategoryInTopMenuColumnName = "IncludeInTopMenu";
-        if (Schema.TableFor<Category>().Column(includeCategoryInTopMenuColumnName).Exists())
+        if (Schema.ColumnExist<Category>(includeCategoryInTopMenuColumnName))
             Delete.Column(includeCategoryInTopMenuColumnName).FromTable<Category>();
     }
 }
