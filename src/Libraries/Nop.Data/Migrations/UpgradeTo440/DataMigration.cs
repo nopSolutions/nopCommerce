@@ -4,6 +4,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
+using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo440;
@@ -108,126 +109,140 @@ public class DataMigration : Migration
         //</MFA #475>
 
         //issue-3852
-        var tableName = nameof(RewardPointsHistory);
-        var rph = Schema.Table(tableName);
+        var rewardPointsHistoryTableName = NameCompatibilityManager.GetTableName(typeof(RewardPointsHistory));
+        var rph = Schema.Table(rewardPointsHistoryTableName);
         var columnName = "UsedWithOrder_Id";
 
-        if (rph.Column(columnName).Exists())
+        if (Schema.ColumnExist<RewardPointsHistory>(columnName))
         {
             var constraintName = "RewardPointsHistory_UsedWithOrder";
 
             if (rph.Constraint(constraintName).Exists())
-                Delete.UniqueConstraint(constraintName).FromTable(tableName);
+                Delete.UniqueConstraint(constraintName).FromTable(rewardPointsHistoryTableName);
 
-            Delete.Column(columnName).FromTable(tableName);
+            Delete.Column<RewardPointsHistory>(columnName);
         }
 
         //#3353
-        var productAttributeCombinationTableName = NameCompatibilityManager.GetTableName(typeof(ProductAttributeCombination));
 
         //add column
-        if (!Schema.Table(productAttributeCombinationTableName).Column(nameof(ProductAttributeCombination.MinStockQuantity)).Exists())
+        if (!Schema.ColumnExist<ProductAttributeCombination>(t => t.MinStockQuantity))
         {
-            Alter.Table(productAttributeCombinationTableName)
-                .AddColumn(nameof(ProductAttributeCombination.MinStockQuantity)).AsInt32().NotNullable().SetExistingRowsTo(0);
+            Alter.AddColumnFor<ProductAttributeCombination>(t => t.MinStockQuantity)
+                .AsInt32()
+                .NotNullable()
+                .SetExistingRowsTo(0);
         }
 
         //#276 AJAX filters
-        var categoryTableName = NameCompatibilityManager.GetTableName(typeof(Category));
-        var manufacturerTableName = NameCompatibilityManager.GetTableName(typeof(Manufacturer));
-        var vendorTableName = NameCompatibilityManager.GetTableName(typeof(Vendor));
 
         //remove column
         var priceRangesColumnName = "PriceRanges";
 
-        if (Schema.Table(categoryTableName).Column(priceRangesColumnName).Exists())
-            Delete.Column(priceRangesColumnName).FromTable(categoryTableName);
+        if (Schema.ColumnExist<Category>(priceRangesColumnName))
+            Delete.Column<Category>(priceRangesColumnName);
 
-        if (Schema.Table(manufacturerTableName).Column(priceRangesColumnName).Exists())
-            Delete.Column(priceRangesColumnName).FromTable(manufacturerTableName);
-
-        //add column
-        var priceRangeFilteringColumnName = "PriceRangeFiltering";
-
-        if (!Schema.Table(categoryTableName).Column(priceRangeFilteringColumnName).Exists())
-        {
-            Alter.Table(categoryTableName)
-                .AddColumn(priceRangeFilteringColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
-        }
-
-        if (!Schema.Table(manufacturerTableName).Column(priceRangeFilteringColumnName).Exists())
-        {
-            Alter.Table(manufacturerTableName)
-                .AddColumn(priceRangeFilteringColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
-        }
-
-        if (!Schema.Table(vendorTableName).Column(priceRangeFilteringColumnName).Exists())
-        {
-            Alter.Table(vendorTableName)
-                .AddColumn(priceRangeFilteringColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
-        }
+        if (Schema.ColumnExist<Manufacturer>(priceRangesColumnName))
+            Delete.Column<Manufacturer>(priceRangesColumnName);
 
         //add column
-        var priceFromColumnName = "PriceFrom";
-
-        if (!Schema.Table(categoryTableName).Column(priceFromColumnName).Exists())
+        if (!Schema.ColumnExist<Category>(t => t.PriceRangeFiltering))
         {
-            Alter.Table(categoryTableName)
-                .AddColumn(priceFromColumnName).AsDecimal().NotNullable().SetExistingRowsTo(0);
+            Alter.AddColumnFor<Category>(t => t.PriceRangeFiltering)
+                .AsBoolean()
+                .NotNullable()
+                .SetExistingRowsTo(true);
         }
 
-        if (!Schema.Table(manufacturerTableName).Column(priceFromColumnName).Exists())
+        if (!Schema.ColumnExist<Manufacturer>(t => t.PriceRangeFiltering))
         {
-            Alter.Table(manufacturerTableName)
-                .AddColumn(priceFromColumnName).AsDecimal().NotNullable().SetExistingRowsTo(0);
+            Alter.AddColumnFor<Manufacturer>(t => t.PriceRangeFiltering)
+                .AsBoolean()
+                .NotNullable()
+                .SetExistingRowsTo(true);
         }
 
-        if (!Schema.Table(vendorTableName).Column(priceFromColumnName).Exists())
+        if (!Schema.ColumnExist<Vendor>(t => t.PriceRangeFiltering))
         {
-            Alter.Table(vendorTableName)
-                .AddColumn(priceFromColumnName).AsDecimal().NotNullable().SetExistingRowsTo(0);
+            Alter.AddColumnFor<Vendor>(t => t.PriceRangeFiltering)
+                .AsBoolean()
+                .NotNullable()
+                .SetExistingRowsTo(true);
         }
 
         //add column
-        var priceToColumnName = "PriceTo";
-
-        if (!Schema.Table(categoryTableName).Column(priceToColumnName).Exists())
+        if (!Schema.ColumnExist<Category>(t => t.PriceFrom))
         {
-            Alter.Table(categoryTableName)
-                .AddColumn(priceToColumnName).AsDecimal().NotNullable().SetExistingRowsTo(10000);
+            Alter.AddColumnFor<Category>(t => t.PriceFrom)
+                .AsDecimal()
+                .NotNullable()
+                .SetExistingRowsTo(0);
         }
 
-        if (!Schema.Table(manufacturerTableName).Column(priceToColumnName).Exists())
+        if (!Schema.ColumnExist<Manufacturer>(t => t.PriceFrom))
         {
-            Alter.Table(manufacturerTableName)
-                .AddColumn(priceToColumnName).AsDecimal().NotNullable().SetExistingRowsTo(10000);
+            Alter.AddColumnFor<Manufacturer>(t => t.PriceFrom)
+                .AsDecimal()
+                .NotNullable()
+                .SetExistingRowsTo(0);
         }
 
-        if (!Schema.Table(vendorTableName).Column(priceToColumnName).Exists())
+        if (!Schema.ColumnExist<Vendor>(t => t.PriceFrom))
         {
-            Alter.Table(vendorTableName)
-                .AddColumn(priceToColumnName).AsDecimal().NotNullable().SetExistingRowsTo(10000);
+            Alter.AddColumnFor<Vendor>(t => t.PriceFrom)
+                .AsDecimal()
+                .NotNullable()
+                .SetExistingRowsTo(0);
         }
 
         //add column
-        var manuallyPriceRangeColumnName = "ManuallyPriceRange";
-
-        if (!Schema.Table(categoryTableName).Column(manuallyPriceRangeColumnName).Exists())
+        if (!Schema.ColumnExist<Category>(t => t.PriceTo))
         {
-            Alter.Table(categoryTableName)
-                .AddColumn(manuallyPriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            Alter.AddColumnFor<Category>(t => t.PriceTo)
+                .AsDecimal()
+                .NotNullable()
+                .SetExistingRowsTo(10000);
         }
 
-        if (!Schema.Table(manufacturerTableName).Column(manuallyPriceRangeColumnName).Exists())
+        if (!Schema.ColumnExist<Manufacturer>(t => t.PriceTo))
         {
-            Alter.Table(manufacturerTableName)
-                .AddColumn(manuallyPriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            Alter.AddColumnFor<Manufacturer>(t => t.PriceTo)
+                .AsDecimal()
+                .NotNullable()
+                .SetExistingRowsTo(10000);
         }
 
-        if (!Schema.Table(vendorTableName).Column(manuallyPriceRangeColumnName).Exists())
+        if (!Schema.ColumnExist<Vendor>(t => t.PriceTo))
         {
-            Alter.Table(vendorTableName)
-                .AddColumn(manuallyPriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            Alter.AddColumnFor<Vendor>(t => t.PriceTo)
+                .AsDecimal()
+                .NotNullable()
+                .SetExistingRowsTo(10000);
+        }
+
+        //add column
+        if (!Schema.ColumnExist<Category>(t => t.ManuallyPriceRange))
+        {
+            Alter.AddColumnFor<Category>(t => t.ManuallyPriceRange)
+                .AsBoolean()
+                .NotNullable()
+                .SetExistingRowsTo(false);
+        }
+
+        if (!Schema.ColumnExist<Manufacturer>(t => t.ManuallyPriceRange))
+        {
+            Alter.AddColumnFor<Manufacturer>(t => t.ManuallyPriceRange)
+                .AsBoolean()
+                .NotNullable()
+                .SetExistingRowsTo(false);
+        }
+
+        if (!Schema.ColumnExist<Vendor>(t => t.ManuallyPriceRange))
+        {
+            Alter.AddColumnFor<Vendor>(t => t.ManuallyPriceRange)
+                .AsBoolean()
+                .NotNullable()
+                .SetExistingRowsTo(false);
         }
     }
 

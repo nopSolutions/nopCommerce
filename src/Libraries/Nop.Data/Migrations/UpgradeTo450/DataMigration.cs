@@ -5,6 +5,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
+using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo450;
@@ -25,13 +26,12 @@ public class DataMigration : Migration
     public override void Up()
     {
         // add column
-        var shipmentTableName = nameof(Shipment);
-        var collectedDateUtcColumnName = "ReadyForPickupDateUtc";
 
-        if (!Schema.Table(shipmentTableName).Column(collectedDateUtcColumnName).Exists())
+        if (!Schema.ColumnExist<Shipment>(t => t.ReadyForPickupDateUtc))
         {
-            Alter.Table(shipmentTableName)
-                .AddColumn(collectedDateUtcColumnName).AsDateTime2().Nullable();
+            Alter.AddColumnFor<Shipment>(t => t.ReadyForPickupDateUtc)
+                .AsDateTime2()
+                .Nullable();
         }
 
         // add message template
@@ -52,10 +52,11 @@ public class DataMigration : Migration
         var scheduleTaskTableName = NameCompatibilityManager.GetTableName(typeof(ScheduleTask));
 
         //add column
-        if (!Schema.Table(scheduleTaskTableName).Column(nameof(ScheduleTask.LastEnabledUtc)).Exists())
+        if (!Schema.ColumnExist<ScheduleTask>(t => t.LastEnabledUtc))
         {
-            Alter.Table(scheduleTaskTableName)
-                .AddColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime2().Nullable();
+            Alter.AddColumnFor<ScheduleTask>(t => t.LastEnabledUtc)
+                .AsDateTime2()
+                .Nullable();
         }
         else
         {

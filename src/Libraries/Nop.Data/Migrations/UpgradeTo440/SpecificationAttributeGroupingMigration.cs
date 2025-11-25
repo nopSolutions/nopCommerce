@@ -1,7 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
 using Nop.Data.Extensions;
-using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo440;
 
@@ -15,14 +14,16 @@ public class SpecificationAttributeGroupingMigration : ForwardOnlyMigration
     /// </summary>
     public override void Up()
     {
-        if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttributeGroup))).Exists())
+        if (!Schema.TableExist<SpecificationAttributeGroup>())
             Create.TableFor<SpecificationAttributeGroup>();
 
-        if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute))).Column(nameof(SpecificationAttribute.SpecificationAttributeGroupId)).Exists())
+        if (!Schema.ColumnExist<SpecificationAttribute>(t => t.SpecificationAttributeGroupId))
         {
             //add new column
-            Alter.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute)))
-                .AddColumn(nameof(SpecificationAttribute.SpecificationAttributeGroupId)).AsInt32().Nullable().ForeignKey<SpecificationAttributeGroup>();
+            Alter.AddColumnFor<SpecificationAttribute>(t => t.SpecificationAttributeGroupId)
+                .AsInt32()
+                .Nullable()
+                .ForeignKey<SpecificationAttributeGroup>();
         }
     }
 
