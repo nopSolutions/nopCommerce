@@ -1,8 +1,6 @@
 ﻿using FluentMigrator;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Helpers;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo450;
@@ -16,11 +14,8 @@ public class LocalizationMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        //do not use DI, because it produces exception on the installation process
-        var synchronousCodeHelper = EngineContext.Current.Resolve<ISynchronousCodeHelper>();
-
-        //use localizationService to add, update and delete localization resources
-        synchronousCodeHelper.DeleteLocaleResources(new List<string>
+        //add, update and delete localization resources
+        this.DeleteLocaleResources(new List<string>
         {
             "Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps",
             "Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps.Hint",
@@ -32,9 +27,7 @@ public class LocalizationMigration : MigrationBase
             "Admin.Help.Topics"
         });
 
-        var (languageId, languages) = this.GetLanguageData();
-
-        synchronousCodeHelper.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
             //#5696
             ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords"] = "Search keywords",
@@ -173,7 +166,7 @@ public class LocalizationMigration : MigrationBase
             ["Permission.ManageExternalAuthenticationMethods"] = "Admin area. Manage External Authentication Methods",
             ["Permission.ManageMultifactorAuthenticationMethods"] = "Admin area. Manage Multifactor Authentication Methods",
             ["Permission.AccessProfiling"] = "Public store. Access MiniProfiler results"
-        }, languageId);
+        });
 
         // rename locales
         this.RenameLocales(new Dictionary<string, string>
@@ -183,7 +176,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling.Hint",
             ["Admin.Configuration.Settings.GeneralCommon.EnableCssBundling"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling",
             ["Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint"] = "Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling.Hint"
-        }, languages, synchronousCodeHelper);
+        });
     }
 
     /// <summary>Collects the DOWN migration expressions</summary>

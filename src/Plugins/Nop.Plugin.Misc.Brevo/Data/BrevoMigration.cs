@@ -4,7 +4,6 @@ using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Helpers;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.Misc.Brevo.Data;
@@ -15,7 +14,6 @@ public class BrevoMigration : MigrationBase
     #region Fields
 
     protected readonly INopDataProvider _dataProvider;
-    protected readonly ISynchronousCodeHelper _synchronousCodeHelper;
     protected readonly WidgetSettings _widgetSettings;
 
     #endregion
@@ -23,12 +21,10 @@ public class BrevoMigration : MigrationBase
     #region Ctor
 
     public BrevoMigration(INopDataProvider dataProvider,
-        ISynchronousCodeHelper synchronousCodeHelper,
         WidgetSettings widgetSettings
     )
     {
         _dataProvider = dataProvider;
-        _synchronousCodeHelper = synchronousCodeHelper;
         _widgetSettings = widgetSettings;
     }
 
@@ -45,8 +41,6 @@ public class BrevoMigration : MigrationBase
             return;
 
         #region locales
-
-        var (languageId, languages) = this.GetLanguageData();
 
         //rename locales
         this.RenameLocales(new Dictionary<string, string>
@@ -104,10 +98,10 @@ public class BrevoMigration : MigrationBase
             ["Plugins.Misc.Sendinblue.Synchronization"] = "Plugins.Misc.Brevo.Synchronization",
             ["Plugins.Misc.Sendinblue.Transactional"] = "Plugins.Misc.Brevo.Transactional",
             ["Plugins.Misc.Sendinblue.UseSendinblueTemplate"] = "Plugins.Misc.Brevo.UseBrevoTemplate",
-        }, languages, _synchronousCodeHelper);
+        });
 
         //add, update and delete localization resources
-        _synchronousCodeHelper.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
             ["Plugins.Misc.Brevo.ActivateSMTP"] = "On your Brevo account, the SMTP has not been enabled yet. To request its activation, simply send an email to our support team at contact@brevo.com and mention that you will be using the SMTP with the nopCommerce plugin.",
             ["Plugins.Misc.Brevo.Fields.ApiKey.Hint"] = "Paste your Brevo account API v3 key.",
@@ -117,7 +111,7 @@ public class BrevoMigration : MigrationBase
             ["Plugins.Misc.Brevo.Fields.UseSmtp"] = "Use Brevo SMTP",
             ["Plugins.Misc.Brevo.Fields.UseSmtp.Hint"] = "Check for using Brevo SMTP for sending transactional emails.",
             ["Plugins.Misc.Brevo.UseBrevoTemplate"] = "Brevo template",
-        }, languageId);
+        });
 
         #endregion
 
@@ -125,7 +119,7 @@ public class BrevoMigration : MigrationBase
 
         var sendinblueSettings = _dataProvider.GetTable<Setting>().Where(x => x.Name.StartsWith("sendinbluesettings.")).ToList();
         if (sendinblueSettings.Any())
-        { 
+        {
             foreach (var setting in sendinblueSettings)
             {
                 setting.Name = setting.Name.Replace("sendinbluesettings", "brevosettings");
@@ -136,7 +130,7 @@ public class BrevoMigration : MigrationBase
         if (!_widgetSettings.ActiveWidgetSystemNames.Contains(BrevoDefaults.SystemName))
         {
             _widgetSettings.ActiveWidgetSystemNames.Add(BrevoDefaults.SystemName);
-            _synchronousCodeHelper.SaveSetting(_widgetSettings);
+            this.SaveSetting(_widgetSettings);
         }
 
         #endregion

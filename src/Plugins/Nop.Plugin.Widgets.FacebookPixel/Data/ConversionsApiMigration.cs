@@ -3,7 +3,6 @@ using Nop.Data;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 using Nop.Plugin.Widgets.FacebookPixel.Domain;
-using Nop.Services.Helpers;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.Widgets.FacebookPixel.Data;
@@ -11,21 +10,6 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Data;
 [NopMigration("2022-03-18 12:00:00", "Widgets.FacebookPixel 2.00. Conversions API", MigrationProcessType.Update)]
 public class ConversionsApiMigration : MigrationBase
 {
-    #region Fields
-
-    protected readonly ISynchronousCodeHelper _synchronousCodeHelper;
-
-    #endregion
-
-    #region Ctor
-
-    public ConversionsApiMigration(ISynchronousCodeHelper synchronousCodeHelper)
-    {
-        _synchronousCodeHelper = synchronousCodeHelper;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -62,9 +46,7 @@ public class ConversionsApiMigration : MigrationBase
         }
 
         //locales
-        var (languageId, _) = this.GetLanguageData();
-
-        _synchronousCodeHelper.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
             ["Plugins.Widgets.FacebookPixel.Configuration.Fields.AccessToken"] = "Access token",
             ["Plugins.Widgets.FacebookPixel.Configuration.Fields.AccessToken.Hint"] = "Enter the Facebook Conversions API access token.",
@@ -73,9 +55,9 @@ public class ConversionsApiMigration : MigrationBase
             ["Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelScriptEnabled.Hint"] = "Toggle to enable/disable Facebook Pixel for this configuration.",
             ["Plugins.Widgets.FacebookPixel.Configuration.Fields.ConversionsApiEnabled"] = "Conversions API enabled",
             ["Plugins.Widgets.FacebookPixel.Configuration.Fields.ConversionsApiEnabled.Hint"] = "Toggle to enable/disable Facebook Conversions API for this configuration."
-        }, languageId);
+        });
 
-        _synchronousCodeHelper.DeleteLocaleResources(new List<string>
+        this.DeleteLocaleResources(new List<string>
         {
             "Plugins.Widgets.FacebookPixel.Configuration.Fields.Enabled",
             "Plugins.Widgets.FacebookPixel.Configuration.Fields.Enabled.Hint"

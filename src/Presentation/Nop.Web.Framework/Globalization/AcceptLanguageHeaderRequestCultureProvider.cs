@@ -26,7 +26,7 @@ public partial class NopAcceptLanguageHeaderRequestCultureProvider : RequestCult
         {
             var requestedCulture = new CultureInfo(languageHeader.Value.Value);
 
-            var synchronousCodeHelper = EngineContext.Current.Resolve<ISynchronousCodeHelper>();
+            var synchronousCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
             var language = synchronousCodeHelper
                 .GetAllLanguages()
                 .FirstOrDefault(urlLanguage =>

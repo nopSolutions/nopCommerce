@@ -4,10 +4,9 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Helpers;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo470;
 
@@ -20,62 +19,59 @@ public class SettingMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        //do not use DI, because it produces exception on the installation process
-        var synchronousCodeHelper = EngineContext.Current.Resolve<ISynchronousCodeHelper>();
-
-        var customerSettings = synchronousCodeHelper.LoadSetting<CustomerSettings>();
-        if (!synchronousCodeHelper.SettingExists(customerSettings, settings => settings.PasswordMaxLength))
+        var customerSettings = this.LoadSetting<CustomerSettings>();
+        if (!this.SettingExists(customerSettings, settings => settings.PasswordMaxLength))
         {
             customerSettings.PasswordMaxLength = 64;
-            synchronousCodeHelper.SaveSetting(customerSettings, settings => settings.PasswordMaxLength);
+            this.SaveSetting(customerSettings, settings => settings.PasswordMaxLength);
         }
 
-        if (!synchronousCodeHelper.SettingExists(customerSettings, settings => settings.DefaultCountryId))
+        if (!this.SettingExists(customerSettings, settings => settings.DefaultCountryId))
         {
             customerSettings.DefaultCountryId = null;
-            synchronousCodeHelper.SaveSetting(customerSettings, settings => settings.DefaultCountryId);
+            this.SaveSetting(customerSettings, settings => settings.DefaultCountryId);
         }
 
-        var securitySettings = synchronousCodeHelper.LoadSetting<SecuritySettings>();
-        if (!synchronousCodeHelper.SettingExists(securitySettings, settings => settings.UseAesEncryptionAlgorithm))
+        var securitySettings = this.LoadSetting<SecuritySettings>();
+        if (!this.SettingExists(securitySettings, settings => settings.UseAesEncryptionAlgorithm))
         {
             securitySettings.UseAesEncryptionAlgorithm = false;
-            synchronousCodeHelper.SaveSetting(securitySettings, settings => settings.UseAesEncryptionAlgorithm);
+            this.SaveSetting(securitySettings, settings => settings.UseAesEncryptionAlgorithm);
         }
 
-        if (!synchronousCodeHelper.SettingExists(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword))
+        if (!this.SettingExists(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword))
         {
             securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword = true;
-            synchronousCodeHelper.SaveSetting(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword);
+            this.SaveSetting(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword);
         }
 
         //#7053
-        if (!synchronousCodeHelper.SettingExists(securitySettings, settings => settings.LogHoneypotDetection))
+        if (!this.SettingExists(securitySettings, settings => settings.LogHoneypotDetection))
         {
             securitySettings.LogHoneypotDetection = true;
-            synchronousCodeHelper.SaveSetting(securitySettings, settings => settings.LogHoneypotDetection);
+            this.SaveSetting(securitySettings, settings => settings.LogHoneypotDetection);
         }
 
-        var addressSettings = synchronousCodeHelper.LoadSetting<AddressSettings>();
-        if (!synchronousCodeHelper.SettingExists(addressSettings, settings => settings.DefaultCountryId))
+        var addressSettings = this.LoadSetting<AddressSettings>();
+        if (!this.SettingExists(addressSettings, settings => settings.DefaultCountryId))
         {
             addressSettings.DefaultCountryId = null;
-            synchronousCodeHelper.SaveSetting(addressSettings, settings => settings.DefaultCountryId);
+            this.SaveSetting(addressSettings, settings => settings.DefaultCountryId);
         }
 
-        var captchaSettings = synchronousCodeHelper.LoadSetting<CaptchaSettings>();
+        var captchaSettings = this.LoadSetting<CaptchaSettings>();
         //#6682
-        if (!synchronousCodeHelper.SettingExists(captchaSettings, settings => settings.ShowOnNewsletterPage))
+        if (!this.SettingExists(captchaSettings, settings => settings.ShowOnNewsletterPage))
         {
             captchaSettings.ShowOnNewsletterPage = false;
-            synchronousCodeHelper.SaveSetting(captchaSettings, settings => settings.ShowOnNewsletterPage);
+            this.SaveSetting(captchaSettings, settings => settings.ShowOnNewsletterPage);
         }
 
-        var taxSettings = synchronousCodeHelper.LoadSetting<TaxSettings>();
-        if (!synchronousCodeHelper.SettingExists(taxSettings, settings => settings.AutomaticallyDetectCountry))
+        var taxSettings = this.LoadSetting<TaxSettings>();
+        if (!this.SettingExists(taxSettings, settings => settings.AutomaticallyDetectCountry))
         {
             taxSettings.AutomaticallyDetectCountry = true;
-            synchronousCodeHelper.SaveSetting(taxSettings, settings => settings.AutomaticallyDetectCountry);
+            this.SaveSetting(taxSettings, settings => settings.AutomaticallyDetectCountry);
         }
 
         //#6716
@@ -93,7 +89,7 @@ public class SettingMigration : MigrationBase
             "/boards/postvote", "/product/estimateshipping/*", "/shoppingcart/checkoutattributechange/*"
         };
 
-        var robotsTxtSettings = synchronousCodeHelper.LoadSetting<RobotsTxtSettings>();
+        var robotsTxtSettings = this.LoadSetting<RobotsTxtSettings>();
 
         foreach (var path in newDisallowPaths)
         {
@@ -103,28 +99,28 @@ public class SettingMigration : MigrationBase
             robotsTxtSettings.DisallowPaths.Add(path);
         }
 
-        synchronousCodeHelper.SaveSetting(robotsTxtSettings, settings => settings.DisallowPaths);
+        this.SaveSetting(robotsTxtSettings, settings => settings.DisallowPaths);
 
         //#6853
-        if (!synchronousCodeHelper.SettingExists(customerSettings, settings => settings.NeutralGenderEnabled))
+        if (!this.SettingExists(customerSettings, settings => settings.NeutralGenderEnabled))
         {
             customerSettings.NeutralGenderEnabled = false;
-            synchronousCodeHelper.SaveSetting(customerSettings, settings => settings.NeutralGenderEnabled);
+            this.SaveSetting(customerSettings, settings => settings.NeutralGenderEnabled);
         }
 
         //#6891
-        if (!synchronousCodeHelper.SettingExists(customerSettings, settings => settings.RequiredReLoginAfterPasswordChange))
+        if (!this.SettingExists(customerSettings, settings => settings.RequiredReLoginAfterPasswordChange))
         {
             customerSettings.RequiredReLoginAfterPasswordChange = false;
-            synchronousCodeHelper.SaveSetting(customerSettings, settings => settings.RequiredReLoginAfterPasswordChange);
+            this.SaveSetting(customerSettings, settings => settings.RequiredReLoginAfterPasswordChange);
         }
 
         //#7064
-        var catalogSettings = synchronousCodeHelper.LoadSetting<CatalogSettings>();
-        if (!synchronousCodeHelper.SettingExists(catalogSettings, settings => settings.UseStandardSearchWhenSearchProviderThrowsException))
+        var catalogSettings = this.LoadSetting<CatalogSettings>();
+        if (!this.SettingExists(catalogSettings, settings => settings.UseStandardSearchWhenSearchProviderThrowsException))
         {
             catalogSettings.UseStandardSearchWhenSearchProviderThrowsException = true;
-            synchronousCodeHelper.SaveSetting(catalogSettings, settings => settings.UseStandardSearchWhenSearchProviderThrowsException);
+            this.SaveSetting(catalogSettings, settings => settings.UseStandardSearchWhenSearchProviderThrowsException);
         }
 
     }

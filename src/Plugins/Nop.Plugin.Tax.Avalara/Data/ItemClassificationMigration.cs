@@ -15,14 +15,14 @@ public class ItemClassificationMigration : MigrationBase
     #region Fields
 
     protected readonly AvalaraTaxSettings _avalaraTaxSettings;
-    protected readonly ISynchronousCodeHelper _synchronousCodeHelper;
+    protected readonly ISyncCodeHelper _synchronousCodeHelper;
 
     #endregion
 
     #region Ctor
 
     public ItemClassificationMigration(AvalaraTaxSettings avalaraTaxSettings,
-        ISynchronousCodeHelper synchronousCodeHelper)
+        ISyncCodeHelper synchronousCodeHelper)
     {
         _avalaraTaxSettings = avalaraTaxSettings;
         _synchronousCodeHelper = synchronousCodeHelper;
@@ -44,9 +44,7 @@ public class ItemClassificationMigration : MigrationBase
             Create.TableFor<ItemClassification>();
 
         //locales
-        var (languageId, languages) = this.GetLanguageData();
-
-        _synchronousCodeHelper.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
             ["Plugins.Tax.Avalara.ItemClassification"] = "Item Classification",
             ["Plugins.Tax.Avalara.Fields.UseItemClassification"] = "Use item classification",
@@ -73,16 +71,16 @@ public class ItemClassificationMigration : MigrationBase
             ["Plugins.Tax.Avalara.ItemClassification.UpdatedDate"] = "Updated on",
             ["Plugins.Tax.Avalara.ItemClassification.Deleted"] = "The item classification entry has been deleted successfully.",
             ["Plugins.Tax.Avalara.ItemClassification.AddProduct"] = "Add product",
-        }, languageId);
+        });
 
         //settings
-        if (!_synchronousCodeHelper.SettingExists(_avalaraTaxSettings, settings => settings.UseItemClassification))
+        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.UseItemClassification))
             _avalaraTaxSettings.UseItemClassification = false;
 
-        if (!_synchronousCodeHelper.SettingExists(_avalaraTaxSettings, settings => settings.SelectedCountryIds))
+        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.SelectedCountryIds))
             _avalaraTaxSettings.SelectedCountryIds = null;
 
-        _synchronousCodeHelper.SaveSetting(_avalaraTaxSettings);
+        this.SaveSetting(_avalaraTaxSettings);
     }
 
     /// <summary>

@@ -7,7 +7,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Helpers;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo450;
 
@@ -22,45 +22,44 @@ public class SettingMigration : MigrationBase
 
         //do not use DI, because it produces exception on the installation process
         var dataProvider = EngineContext.Current.Resolve<INopDataProvider>();
-        var synchronousCodeHelper = EngineContext.Current.Resolve<ISynchronousCodeHelper>();
 
         //miniprofiler settings are moved to appSettings
         dataProvider.BulkDeleteEntities<Setting>(setting => setting.Name == "storeinformationsettings.displayminiprofilerforadminonly" ||
                                setting.Name == "storeinformationsettings.displayminiprofilerinpublicstore");
 
         //#4363
-        var commonSettings = synchronousCodeHelper.LoadSetting<CommonSettings>();
+        var commonSettings = this.LoadSetting<CommonSettings>();
 
-        if (!synchronousCodeHelper.SettingExists(commonSettings, settings => settings.ClearLogOlderThanDays))
+        if (!this.SettingExists(commonSettings, settings => settings.ClearLogOlderThanDays))
         {
             commonSettings.ClearLogOlderThanDays = 0;
-            synchronousCodeHelper.SaveSetting(commonSettings, settings => settings.ClearLogOlderThanDays);
+            this.SaveSetting(commonSettings, settings => settings.ClearLogOlderThanDays);
         }
 
         //#5551
-        var catalogSettings = synchronousCodeHelper.LoadSetting<CatalogSettings>();
+        var catalogSettings = this.LoadSetting<CatalogSettings>();
 
-        if (!synchronousCodeHelper.SettingExists(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering))
+        if (!this.SettingExists(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering))
         {
             catalogSettings.EnableSpecificationAttributeFiltering = true;
-            synchronousCodeHelper.SaveSetting(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering);
+            this.SaveSetting(catalogSettings, settings => settings.EnableSpecificationAttributeFiltering);
         }
 
         //#5204
-        var shippingSettings = synchronousCodeHelper.LoadSetting<ShippingSettings>();
+        var shippingSettings = this.LoadSetting<ShippingSettings>();
 
-        if (!synchronousCodeHelper.SettingExists(shippingSettings, settings => settings.ShippingSorting))
+        if (!this.SettingExists(shippingSettings, settings => settings.ShippingSorting))
         {
             shippingSettings.ShippingSorting = ShippingSortingEnum.Position;
-            synchronousCodeHelper.SaveSetting(shippingSettings, settings => settings.ShippingSorting);
+            this.SaveSetting(shippingSettings, settings => settings.ShippingSorting);
         }
 
         //#5698
-        var orderSettings = synchronousCodeHelper.LoadSetting<OrderSettings>();
-        if (!synchronousCodeHelper.SettingExists(orderSettings, settings => settings.DisplayOrderSummary))
+        var orderSettings = this.LoadSetting<OrderSettings>();
+        if (!this.SettingExists(orderSettings, settings => settings.DisplayOrderSummary))
         {
             orderSettings.DisplayOrderSummary = true;
-            synchronousCodeHelper.SaveSetting(orderSettings, settings => settings.DisplayOrderSummary);
+            this.SaveSetting(orderSettings, settings => settings.DisplayOrderSummary);
         }
     }
 

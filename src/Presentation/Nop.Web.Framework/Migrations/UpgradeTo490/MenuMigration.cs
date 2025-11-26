@@ -13,7 +13,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Helpers;
+using Nop.Web.Framework.Extensions;
 using M = Nop.Core.Domain.Menus;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo490;
@@ -26,7 +26,6 @@ public class MenuMigration : Migration
     private readonly INopDataProvider _dataProvider;
     private readonly IRepository<M.Menu> _menuRepository;
     private readonly IRepository<Topic> _topicRepository;
-    private readonly ISynchronousCodeHelper _synchronousCodeHelper;
 
     #endregion
 
@@ -34,13 +33,11 @@ public class MenuMigration : Migration
 
     public MenuMigration(INopDataProvider dataProvider,
         IRepository<M.Menu> menuRepository,
-        IRepository<Topic> topicRepository,
-        ISynchronousCodeHelper synchronousCodeHelper)
+        IRepository<Topic> topicRepository)
     {
         _dataProvider = dataProvider;
         _menuRepository = menuRepository;
         _topicRepository = topicRepository;
-        _synchronousCodeHelper = synchronousCodeHelper;
     }
 
     #endregion
@@ -49,7 +46,7 @@ public class MenuMigration : Migration
 
     private bool IsSettingEnabled(string key, out Setting setting)
     {
-        setting = _synchronousCodeHelper.GetSetting(key);
+        setting = this.GetSetting(key);
         return setting is not null && CommonHelper.To<bool>(setting.Value);
     }
 
@@ -77,7 +74,7 @@ public class MenuMigration : Migration
             return;
 
         var topics = _topicRepository.Table.ToList();
-        var catalogSettings = _synchronousCodeHelper.LoadSetting<CatalogSettings>();
+        var catalogSettings = this.LoadSetting<CatalogSettings>();
 
         #region Information
 
@@ -96,11 +93,11 @@ public class MenuMigration : Migration
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.SITEMAP,
             Title = "Sitemap",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaysitemapfooteritem", out var displaysitemapfooteritem) && _synchronousCodeHelper.LoadSetting<SitemapSettings>().SitemapEnabled
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaysitemapfooteritem", out var displaysitemapfooteritem) && this.LoadSetting<SitemapSettings>().SitemapEnabled
         });
 
         if (displaysitemapfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displaysitemapfooteritem);
+            this.DeleteSetting(displaysitemapfooteritem);
 
         _dataProvider.BulkDeleteEntities(
         [
@@ -144,7 +141,7 @@ public class MenuMigration : Migration
         });
 
         if (displaycontactusfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displaycontactusfooteritem);
+            this.DeleteSetting(displaycontactusfooteritem);
 
         #endregion
 
@@ -169,7 +166,7 @@ public class MenuMigration : Migration
         });
 
         if (displayproductsearchfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displayproductsearchfooteritem);
+            this.DeleteSetting(displayproductsearchfooteritem);
 
         _dataProvider.InsertEntity(new MenuItem
         {
@@ -177,11 +174,11 @@ public class MenuMigration : Migration
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.NEWS,
             Title = "News",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaynewsfooteritem", out var displaynewsfooteritem) && _synchronousCodeHelper.LoadSetting<NewsSettings>().Enabled
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaynewsfooteritem", out var displaynewsfooteritem) && this.LoadSetting<NewsSettings>().Enabled
         });
 
         if (displaynewsfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displaynewsfooteritem);
+            this.DeleteSetting(displaynewsfooteritem);
 
         _dataProvider.InsertEntity(new MenuItem
         {
@@ -189,11 +186,11 @@ public class MenuMigration : Migration
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.BLOG,
             Title = "Blog",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayblogfooteritem", out var displayblogfooteritem) && _synchronousCodeHelper.LoadSetting<BlogSettings>().Enabled
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayblogfooteritem", out var displayblogfooteritem) && this.LoadSetting<BlogSettings>().Enabled
         });
 
         if (displayblogfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displayblogfooteritem);
+            this.DeleteSetting(displayblogfooteritem);
 
         _dataProvider.InsertEntity(new MenuItem
         {
@@ -201,11 +198,11 @@ public class MenuMigration : Migration
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.BOARDS,
             Title = "Forum",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayforumsfooteritem", out var displayforumsfooteritem) && _synchronousCodeHelper.LoadSetting<ForumSettings>().ForumsEnabled
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayforumsfooteritem", out var displayforumsfooteritem) && this.LoadSetting<ForumSettings>().ForumsEnabled
         });
 
         if (displayforumsfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displayforumsfooteritem);
+            this.DeleteSetting(displayforumsfooteritem);
 
         _dataProvider.InsertEntity(new MenuItem
         {
@@ -217,7 +214,7 @@ public class MenuMigration : Migration
         });
 
         if (displayrecentlyviewedproductsfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displayrecentlyviewedproductsfooteritem);
+            this.DeleteSetting(displayrecentlyviewedproductsfooteritem);
 
         _dataProvider.InsertEntity(new MenuItem
         {
@@ -229,7 +226,7 @@ public class MenuMigration : Migration
         });
 
         if (displaycompareproductsfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displaycompareproductsfooteritem);
+            this.DeleteSetting(displaycompareproductsfooteritem);
 
         _dataProvider.InsertEntity(new MenuItem
         {
@@ -241,7 +238,7 @@ public class MenuMigration : Migration
         });
 
         if (displaynewproductsfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displaynewproductsfooteritem);
+            this.DeleteSetting(displaynewproductsfooteritem);
 
         _dataProvider.InsertEntity(new MenuItem
         {
@@ -249,7 +246,7 @@ public class MenuMigration : Migration
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.CHECK_GIFT_CARD_BALANCE,
             Title = "Check gift card balance",
-            Published = _synchronousCodeHelper.LoadSetting<CustomerSettings>().AllowCustomersToCheckGiftCardBalance
+            Published = this.LoadSetting<CustomerSettings>().AllowCustomersToCheckGiftCardBalance
         });
 
         #endregion
@@ -276,7 +273,7 @@ public class MenuMigration : Migration
         });
 
         if (displaycustomerinfofooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displaycustomerinfofooteritem);
+            this.DeleteSetting(displaycustomerinfofooteritem);
 
         _dataProvider.InsertEntity(new MenuItem
         {
@@ -288,7 +285,7 @@ public class MenuMigration : Migration
         });
 
         if (displaycustomerordersfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displaycustomerordersfooteritem);
+            this.DeleteSetting(displaycustomerordersfooteritem);
 
         _dataProvider.InsertEntity(new MenuItem
         {
@@ -300,7 +297,7 @@ public class MenuMigration : Migration
         });
 
         if (displaycustomeraddressesfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displaycustomeraddressesfooteritem);
+            this.DeleteSetting(displaycustomeraddressesfooteritem);
 
         _dataProvider.InsertEntity(new MenuItem
         {
@@ -312,7 +309,7 @@ public class MenuMigration : Migration
         });
 
         if (displayshoppingcartfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displayshoppingcartfooteritem);
+            this.DeleteSetting(displayshoppingcartfooteritem);
 
         _dataProvider.InsertEntity(new MenuItem
         {
@@ -324,7 +321,7 @@ public class MenuMigration : Migration
         });
 
         if (displaywishlistfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displaywishlistfooteritem);
+            this.DeleteSetting(displaywishlistfooteritem);
 
         _dataProvider.InsertEntity(new MenuItem
         {
@@ -332,12 +329,11 @@ public class MenuMigration : Migration
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.APPLY_VENDOR_ACCOUNT,
             Title = "Apply for vendor account",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayapplyvendoraccountfooteritem", out var displayapplyvendoraccountfooteritem) &&
-                _synchronousCodeHelper.LoadSetting<VendorSettings>().AllowCustomersToApplyForVendorAccount
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayapplyvendoraccountfooteritem", out var displayapplyvendoraccountfooteritem) && this.LoadSetting<VendorSettings>().AllowCustomersToApplyForVendorAccount
         });
 
         if (displayapplyvendoraccountfooteritem is not null)
-            _synchronousCodeHelper.DeleteSetting(displayapplyvendoraccountfooteritem);
+            this.DeleteSetting(displayapplyvendoraccountfooteritem);
 
         #endregion
     }

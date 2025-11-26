@@ -434,7 +434,7 @@ public static class ApplicationBuilderExtensions
                 return;
 
             var localizationSettings = EngineContext.Current.Resolve<LocalizationSettings>();
-            var synchronousCodeHelper = EngineContext.Current.Resolve<ISynchronousCodeHelper>();
+            var synchronousCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
 
             //prepare supported cultures
             var cultures = synchronousCodeHelper

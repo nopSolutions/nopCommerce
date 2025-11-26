@@ -1,8 +1,6 @@
 ﻿using FluentMigrator;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Helpers;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Migrations.UpgradeTo470;
@@ -20,12 +18,8 @@ public class LocalizationMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        var synchronousCodeHelper = EngineContext.Current.Resolve<ISynchronousCodeHelper>();
-
-        var (languageId, _) = this.GetLanguageData();
-
-        //use localizationService to add, update and delete localization resources
-        synchronousCodeHelper.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        //add, update and delete localization resources
+        this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
             ["Plugins.Tax.FixedOrByCountryStateZip.SwitchRate"] = @"
                     <p>
@@ -35,6 +29,6 @@ public class LocalizationMigration : MigrationBase
                         Any current tax rate settings will be saved, but will not be active until you return to this tax calculation method.
                     </p>",
 
-        }, languageId);
+        });
     }
 }

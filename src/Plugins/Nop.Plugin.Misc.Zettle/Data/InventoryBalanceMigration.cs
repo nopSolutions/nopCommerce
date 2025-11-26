@@ -2,28 +2,13 @@
 using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Plugin.Misc.Zettle.Domain;
-using Nop.Services.Helpers;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.Misc.Zettle.Data;
 
 [NopMigration("2024-04-16 00:00:00", "Misc.Zettle 4.70.5 Inventory balance tracking", MigrationProcessType.Update)]
 public class InventoryBalanceMigration : MigrationBase
 {
-    #region Fields
-
-    protected readonly ISynchronousCodeHelper _synchronousCodeHelper;
-
-    #endregion
-
-    #region Ctor
-
-    public InventoryBalanceMigration(ISynchronousCodeHelper synchronousCodeHelper)
-    {
-        _synchronousCodeHelper = synchronousCodeHelper;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -39,11 +24,11 @@ public class InventoryBalanceMigration : MigrationBase
             Alter.Table(nameof(ZettleRecord)).AddColumn(nameof(ZettleRecord.ExternalUuid)).AsString().Nullable();
 
         //delete settings
-        var setting = _synchronousCodeHelper.GetSetting($"{nameof(ZettleSettings)}.InventoryTrackingIds");
+        var setting = this.GetSetting($"{nameof(ZettleSettings)}.InventoryTrackingIds");
         if (setting is null)
             return;
 
-        _synchronousCodeHelper.DeleteSetting(setting);
+        this.DeleteSetting(setting);
     }
 
     /// <summary>

@@ -45,7 +45,7 @@ public partial class LanguageParameterTransformer : IOutboundParameterTransforme
         {
             //ensure this language is available
             var code = routeValue?.ToString();
-            var synchronousCodeHelper = EngineContext.Current.Resolve<ISynchronousCodeHelper>();
+            var synchronousCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
             var store = synchronousCodeHelper.GetCurrentStore();
             var languages = synchronousCodeHelper.GetAllLanguages(storeId: store.Id);
             var language = languages

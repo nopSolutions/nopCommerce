@@ -1,8 +1,6 @@
 ﻿using FluentMigrator;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Helpers;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo480;
@@ -16,14 +14,9 @@ public class LocalizationMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        //do not use DI, because it produces exception on the installation process
-        var synchronousCodeHelper = EngineContext.Current.Resolve<ISynchronousCodeHelper>();
-
-        var (languageId, _) = this.GetLanguageData();
-
         #region Delete locales
 
-        synchronousCodeHelper.DeleteLocaleResources(new List<string>
+        this.DeleteLocaleResources(new List<string>
         {
             //#6977
             "Common.FileUploader.Upload",
@@ -119,7 +112,7 @@ public class LocalizationMigration : MigrationBase
 
         #region Add or update locales
 
-        synchronousCodeHelper.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
             //#6977
             ["Common.FileUploader.Browse"] = "Browse",
@@ -323,8 +316,7 @@ public class LocalizationMigration : MigrationBase
 
             //#7618
             ["Admin.Orders.Address.CustomAttributes"] = "Custom Attributes",
-
-        }, languageId);
+        });
 
         #endregion
     }

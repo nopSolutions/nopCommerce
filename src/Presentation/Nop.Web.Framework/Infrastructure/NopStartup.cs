@@ -245,7 +245,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<INopUrlHelper, NopUrlHelper>();
         services.AddScoped<IWidgetModelFactory, WidgetModelFactory>();
         services.AddScoped<IMenuService, MenuService>();
-        services.AddScoped<ISynchronousCodeHelper, SynchronousCodeHelper>();
+        services.AddScoped<ISyncCodeHelper, SyncCodeHelper>();
 
         //attribute services
         services.AddScoped(typeof(IAttributeService<,>), typeof(AttributeService<,>));
