@@ -352,11 +352,11 @@ public partial class CategoryService : ICategoryService
         var categories = await _categoryRepository.GetAllAsync(query =>
         {
             return from c in query
-                orderby c.DisplayOrder, c.Id
-                where c.Published &&
-                      !c.Deleted &&
-                      c.ShowOnHomepage
-                select c;
+                   orderby c.DisplayOrder, c.Id
+                   where c.Published &&
+                         !c.Deleted &&
+                         c.ShowOnHomepage
+                   select c;
         }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesHomepageCacheKey));
 
         if (showHidden)
@@ -489,9 +489,9 @@ public partial class CategoryService : ICategoryService
 
         if (discountId.HasValue)
             categories = from category in categories
-                join dcm in _discountCategoryMappingRepository.Table on category.Id equals dcm.EntityId
-                where dcm.DiscountId == discountId.Value
-                select category;
+                         join dcm in _discountCategoryMappingRepository.Table on category.Id equals dcm.EntityId
+                         where dcm.DiscountId == discountId.Value
+                         select category;
 
         if (!showHidden)
             categories = categories.Where(category => !category.Deleted);
@@ -609,10 +609,10 @@ public partial class CategoryService : ICategoryService
             return new PagedList<ProductCategory>(new List<ProductCategory>(), pageIndex, pageSize);
 
         var query = from pc in _productCategoryRepository.Table
-            join p in _productRepository.Table on pc.ProductId equals p.Id
-            where pc.CategoryId == categoryId && !p.Deleted
-            orderby pc.DisplayOrder, pc.Id
-            select pc;
+                    join p in _productRepository.Table on pc.ProductId equals p.Id
+                    where pc.CategoryId == categoryId && !p.Deleted
+                    orderby pc.DisplayOrder, pc.Id
+                    select pc;
 
         if (!showHidden)
         {
@@ -669,6 +669,16 @@ public partial class CategoryService : ICategoryService
     public virtual async Task InsertProductCategoryAsync(ProductCategory productCategory)
     {
         await _productCategoryRepository.InsertAsync(productCategory);
+    }
+
+    /// <summary>
+    /// Inserts a list of product category mapping
+    /// </summary>
+    /// <param name="productCategories">>Product category mappings</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertProductCategoriesAsync(IList<ProductCategory> productCategories)
+    {
+        await _productCategoryRepository.InsertAsync(productCategories);
     }
 
     /// <summary>

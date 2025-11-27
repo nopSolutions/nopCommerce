@@ -213,9 +213,9 @@ public partial class ManufacturerService : IManufacturerService
 
         if (discountId.HasValue)
             manufacturers = from manufacturer in manufacturers
-                join dmm in _discountManufacturerMappingRepository.Table on manufacturer.Id equals dmm.EntityId
-                where dmm.DiscountId == discountId.Value
-                select manufacturer;
+                            join dmm in _discountManufacturerMappingRepository.Table on manufacturer.Id equals dmm.EntityId
+                            where dmm.DiscountId == discountId.Value
+                            select manufacturer;
 
         if (!showHidden)
             manufacturers = manufacturers.Where(manufacturer => !manufacturer.Deleted);
@@ -268,8 +268,8 @@ public partial class ManufacturerService : IManufacturerService
             select pc;
 
         var manufacturerQuery = from m in _manufacturerRepository.Table
-            where !m.Deleted && m.Published
-            select m;
+                                where !m.Deleted && m.Published
+                                select m;
 
         //apply store mapping constraints
         manufacturerQuery = await _storeMappingService.ApplyStoreMapping(manufacturerQuery, store.Id);
@@ -364,10 +364,10 @@ public partial class ManufacturerService : IManufacturerService
             return new PagedList<ProductManufacturer>(new List<ProductManufacturer>(), pageIndex, pageSize);
 
         var query = from pm in _productManufacturerRepository.Table
-            join p in _productRepository.Table on pm.ProductId equals p.Id
-            where pm.ManufacturerId == manufacturerId && !p.Deleted
-            orderby pm.DisplayOrder, pm.Id
-            select pm;
+                    join p in _productRepository.Table on pm.ProductId equals p.Id
+                    where pm.ManufacturerId == manufacturerId && !p.Deleted
+                    orderby pm.DisplayOrder, pm.Id
+                    select pm;
 
         if (!showHidden)
         {
@@ -410,10 +410,10 @@ public partial class ManufacturerService : IManufacturerService
             .PrepareKeyForDefaultCache(NopCatalogDefaults.ProductManufacturersByProductCacheKey, productId, showHidden, customerRoleIds, store);
 
         var query = from pm in _productManufacturerRepository.Table
-            join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
-            where pm.ProductId == productId && !m.Deleted
-            orderby pm.DisplayOrder, pm.Id
-            select pm;
+                    join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
+                    where pm.ProductId == productId && !m.Deleted
+                    orderby pm.DisplayOrder, pm.Id
+                    select pm;
 
         if (!showHidden)
         {
@@ -452,6 +452,16 @@ public partial class ManufacturerService : IManufacturerService
     public virtual async Task InsertProductManufacturerAsync(ProductManufacturer productManufacturer)
     {
         await _productManufacturerRepository.InsertAsync(productManufacturer);
+    }
+
+    /// <summary>
+    /// Inserts a list of product manufacturer mapping
+    /// </summary>
+    /// <param name="productManufacturers">Product manufacturer mappings</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertProductManufacturersAsync(IList<ProductManufacturer> productManufacturers)
+    {
+        await _productManufacturerRepository.InsertAsync(productManufacturers);
     }
 
     /// <summary>
