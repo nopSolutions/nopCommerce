@@ -10,9 +10,12 @@ public class ThemeProviderTests : BaseNopTest
     private IThemeProvider _themeProvider;
 
     [OneTimeSetUp]
-    public void OneTimeSetUp()
+    public async Task OneTimeSetUpAsync()
     {
         _themeProvider = GetService<IThemeProvider>();
+
+        //init theme provider
+        await _themeProvider.InitializeAsync();
     }
 
     [Test]
