@@ -4345,6 +4345,10 @@ label, label + * {
   margin: 0 0 30px;
 }
 
+.change-password-page label {
+  vertical-align: top;
+}
+
 .change-password-recovery-link {
   text-align: left;
   font-size: 13px;
