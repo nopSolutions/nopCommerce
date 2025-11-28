@@ -234,7 +234,15 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                         "%Customer.PasswordRecoveryURL%",
                         "%Customer.AccountActivationURL%",
                         "%Customer.EmailRevalidationURL%",
-                        "%Wishlist.URLForCustomer%",
+                        "%Wishlist.URLForCustomer%"
+                    }
+                },
+
+                // shopping cart
+                {
+                    TokenGroupNames.ShoppingCartTokens,
+                    new[]
+                    {
                         "%Customer.Cart%",
                         "%Customer.ShoppingCartUrl%"
                     }
@@ -1722,7 +1730,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_1_MESSAGE or
             MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_2_MESSAGE or
             MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_3_MESSAGE or
-            MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens },
+            MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ShoppingCartTokens },
 
             MessageTemplateSystemNames.ORDER_PLACED_VENDOR_NOTIFICATION or
             MessageTemplateSystemNames.ORDER_PLACED_STORE_OWNER_NOTIFICATION or

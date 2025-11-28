@@ -6,6 +6,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Reminders;
+using Nop.Services.ScheduleTasks;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Reminders;
 
@@ -21,7 +22,7 @@ public partial class ReminderController : BaseAdminController
     protected readonly IReminderService _reminderService;
     protected readonly ISettingService _settingService;
     protected readonly IStoreContext _storeContext;
-
+    protected readonly IScheduleTaskService _scheduleTaskService;
 
     #endregion
 
@@ -32,7 +33,8 @@ public partial class ReminderController : BaseAdminController
         IReminderModelFactory reminderModelFactory,
         IReminderService reminderService,
         ISettingService settingService,
-        IStoreContext storeContext)
+        IStoreContext storeContext,
+        IScheduleTaskService scheduleTaskService)
     {
         _localizationService = localizationService;
         _notificationService = notificationService;
@@ -40,6 +42,7 @@ public partial class ReminderController : BaseAdminController
         _reminderService = reminderService;
         _settingService = settingService;
         _storeContext = storeContext;
+        _scheduleTaskService = scheduleTaskService;
     }
 
     #endregion
@@ -88,6 +91,58 @@ public partial class ReminderController : BaseAdminController
         model = await _reminderModelFactory.PrepareRemindersModelAsync();
 
         return View(model);
+    }
+
+    public virtual async Task<IActionResult> ProcessAbandonedCartsTaskWarning(bool enabled)
+    {
+        if (!enabled)
+            return Json(new { Result = string.Empty });
+
+        var task = await _scheduleTaskService.GetTaskByTypeAsync(typeof(ProcessAbandonedCartsTask).FullName);
+
+        if (task is null)
+            return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Promotions.Reminders.Warning.NotFound") });
+
+        if (task.Enabled)
+            return Json(new { Result = string.Empty });
+
+        var locale = await _localizationService.GetResourceAsync("Admin.Promotions.Reminders.Warning.TaskDisabled");
+        return Json(new { Result = string.Format(locale, Url.Action("List", "ScheduleTask"), task.Name) });
+    }
+
+    public virtual async Task<IActionResult> ProcessIncompleteRegistrationsTaskWarning(bool enabled)
+    {
+        if (!enabled)
+            return Json(new { Result = string.Empty });
+
+        var task = await _scheduleTaskService.GetTaskByTypeAsync(typeof(ProcessIncompleteRegistrationsTask).FullName);
+
+        if (task is null)
+            return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Promotions.Reminders.Warning.NotFound") });
+
+        if (task.Enabled)
+            return Json(new { Result = string.Empty });
+
+        var locale = await _localizationService.GetResourceAsync("Admin.Promotions.Reminders.Warning.TaskDisabled");
+
+        return Json(new { Result = string.Format(locale, Url.Action("List", "ScheduleTask"), task.Name) });
+    }
+
+    public virtual async Task<IActionResult> ProcessPendingOrdersTaskWarning(bool enabled)
+    {
+        if (!enabled)
+            return Json(new { Result = string.Empty });
+
+        var task = await _scheduleTaskService.GetTaskByTypeAsync(typeof(Task).FullName);
+
+        if (task is null)
+            return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Promotions.Reminders.Warning.NotFound") });
+
+        if (task.Enabled)
+            return Json(new { Result = string.Empty });
+
+        var locale = await _localizationService.GetResourceAsync("Admin.Promotions.Reminders.Warning.TaskDisabled");
+        return Json(new { Result = string.Format(locale, Url.Action("List", "ScheduleTask"), task.Name) });
     }
 
     #endregion

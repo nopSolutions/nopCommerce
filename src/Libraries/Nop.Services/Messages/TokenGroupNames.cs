@@ -26,6 +26,11 @@ public static partial class TokenGroupNames
     public static string ShipmentTokens => "Shipment tokens";
 
     /// <summary>
+    /// Represents tokens with information about the shopping cart
+    /// </summary>
+    public static string ShoppingCartTokens => "Shopping cart tokens";
+
+    /// <summary>
     /// Represents tokens with information about the refunded order
     /// </summary>
     public static string RefundedOrderTokens => "Refunded order  tokens";

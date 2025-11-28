@@ -37,6 +37,7 @@
 										</div>
 										<div class="col-md-9">
 											<nop-editor asp-for="AbandonedCartEnabled" />
+                                            <span asp-validation-for="AbandonedCartEnabled"></span>
 										</div>
 									</div>
 									<nop-nested-setting asp-for="AbandonedCartEnabled">
@@ -58,6 +59,7 @@
 										</div>
 										<div class="col-md-9">
 											<nop-editor asp-for="PendingOrdersEnabled" />
+                                            <span asp-validation-for="PendingOrdersEnabled"></span>
 										</div>
 									</div>
 									<nop-nested-setting asp-for="PendingOrdersEnabled">
@@ -79,6 +81,7 @@
 										</div>
 										<div class="col-md-9">
 											<nop-editor asp-for="IncompleteRegistrationEnabled" />
+                                            <span asp-validation-for="IncompleteRegistrationEnabled"></span>
 										</div>
 									</div>
 									<nop-nested-setting asp-for="IncompleteRegistrationEnabled">
@@ -97,3 +100,21 @@
 		</div>
 	</section>
 </form>
+
+<script asp-location="Footer">
+    $(function() {
+        ReminderTaskWarning($('#@Html.IdFor(m => m.AbandonedCartEnabled)')[0].checked);
+
+        $('#@Html.IdFor(m => m.AbandonedCartEnabled)').on('change', function() {
+            warningValidation('@Url.Action("ProcessAbandonedCartsTaskWarning", "Reminder")', this.name, { enabled: this.checked });
+        });
+
+        $('#@Html.IdFor(m => m.IncompleteRegistrationEnabled)').on('change', function() {
+            warningValidation('@Url.Action("ProcessIncompleteRegistrationsTaskWarning", "Reminder")', this.name, { enabled: this.checked });
+        });
+
+        $('#@Html.IdFor(m => m.PendingOrdersEnabled)').on('change', function() {
+            warningValidation('@Url.Action("ProcessPendingOrdersTaskWarning", "Reminder")', this.name, { enabled: this.checked });
+        });
+    });
+</script>

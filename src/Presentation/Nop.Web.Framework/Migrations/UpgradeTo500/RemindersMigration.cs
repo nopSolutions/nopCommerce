@@ -5,9 +5,9 @@ using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Reminders;
 
-namespace Nop.Web.Framework.Migrations.UpgradeTo490;
+namespace Nop.Web.Framework.Migrations.UpgradeTo500;
 
-[NopMigration("2025-09-12 12:00:00", "Reminders migration", MigrationProcessType.Update)]
+[NopMigration("2025-12-01 12:00:00", "Reminders migration", MigrationProcessType.Update)]
 public class RemindersMigration : Migration
 {
     #region Fields

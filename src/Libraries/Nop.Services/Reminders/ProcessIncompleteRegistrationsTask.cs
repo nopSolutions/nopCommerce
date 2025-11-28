@@ -6,6 +6,7 @@ using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Messages;
 using Nop.Services.ScheduleTasks;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Reminders;
 
@@ -21,6 +22,7 @@ public partial class ProcessIncompleteRegistrationsTask : IScheduleTask
     protected readonly IMessageTemplateService _messageTemplateService;
     protected readonly IRepository<Customer> _customerRepository;
     protected readonly IRepository<GenericAttribute> _genericAttributeRepository;
+    protected readonly IStoreService _storeService;
     protected readonly IWorkflowMessageService _workflowMessageService;
     protected readonly ReminderSettings _reminderSettings;
 
@@ -33,6 +35,7 @@ public partial class ProcessIncompleteRegistrationsTask : IScheduleTask
         IMessageTemplateService messageTemplateService,
         IRepository<Customer> customerRepository,
         IRepository<GenericAttribute> genericAttributeRepository,
+        IStoreService storeService,
         IWorkflowMessageService workflowMessageService,
         ReminderSettings reminderSettings)
     {
@@ -41,6 +44,7 @@ public partial class ProcessIncompleteRegistrationsTask : IScheduleTask
         _messageTemplateService = messageTemplateService;
         _customerRepository = customerRepository;
         _genericAttributeRepository = genericAttributeRepository;
+        _storeService = storeService;
         _workflowMessageService = workflowMessageService;
         _reminderSettings = reminderSettings;
     }
@@ -61,37 +65,42 @@ public partial class ProcessIncompleteRegistrationsTask : IScheduleTask
         if (_customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation)
             return;
 
-        var messageTemplates = await _messageTemplateService
-            .GetMessageTemplatesByNameAsync(MessageTemplateSystemNames.REMINDER_REGISTRATION_FOLLOW_UP_MESSAGE);
-        var followUpMessage = messageTemplates.FirstOrDefault(template => template.IsActive && template.DelayBeforeSend is not null);
-
-        if (followUpMessage is null)
-            return;
-
-        var attributeName = NopReminderDefaults.IncompleteRegistrations.FollowUpAttributeName;
-        var timeToFollowUp = DateTime.UtcNow - TimeSpan.FromHours(followUpMessage.DelayPeriod.ToHours(followUpMessage.DelayBeforeSend.Value));
-
-        //find customers to follow-up about registration activation
-        var customersToFollowUp = from c in _customerRepository.Table
-                                  join incomplteAttr in _genericAttributeRepository.Table on
-                                       new { EntityId = c.Id, KeyGroup = nameof(Customer), Key = NopCustomerDefaults.AccountActivationTokenAttribute } equals
-                                       new { incomplteAttr.EntityId, incomplteAttr.KeyGroup, incomplteAttr.Key }
-                                  join attribute in _genericAttributeRepository.Table on
-                                       new { EntityId = c.Id, KeyGroup = nameof(Customer), Key = attributeName } equals
-                                       new { attribute.EntityId, attribute.KeyGroup, attribute.Key } into attribute
-                                  from followUpAttr in attribute.DefaultIfEmpty()
-                                  where !c.Deleted && !c.Active
-                                       && incomplteAttr.CreatedOrUpdatedDateUTC != null && incomplteAttr.CreatedOrUpdatedDateUTC.Value < timeToFollowUp
-                                       && followUpAttr == null
-                                  select c;
-
-        foreach (var customerToFollowUp in customersToFollowUp.ToList())
+        foreach (var store in await _storeService.GetAllStoresAsync())
         {
-            var emailIds = await _workflowMessageService.SendIncompleteRegistrationNotificationMessageAsync(customerToFollowUp);
 
-            //the follow up has been sent
-            if (emailIds.Any())
-                await _genericAttributeService.SaveAttributeAsync(customerToFollowUp, attributeName, DateTime.UtcNow, customerToFollowUp.RegisteredInStoreId);
+            var messageTemplates = await _messageTemplateService
+                .GetMessageTemplatesByNameAsync(MessageTemplateSystemNames.REMINDER_REGISTRATION_FOLLOW_UP_MESSAGE, storeId: store.Id);
+            var followUpMessage = messageTemplates.FirstOrDefault(template => template.IsActive && template.DelayBeforeSend is not null);
+
+            if (followUpMessage is null)
+                return;
+
+            var attributeName = NopReminderDefaults.IncompleteRegistrations.FollowUpAttributeName;
+            var timeToFollowUp = DateTime.UtcNow - TimeSpan.FromHours(followUpMessage.DelayPeriod.ToHours(followUpMessage.DelayBeforeSend.Value));
+
+            //find customers to follow-up about registration activation
+            var customersToFollowUp = from c in _customerRepository.Table
+                                      join incomplteAttr in _genericAttributeRepository.Table on
+                                           new { EntityId = c.Id, KeyGroup = nameof(Customer), Key = NopCustomerDefaults.AccountActivationTokenAttribute, StoreId = store.Id } equals
+                                           new { incomplteAttr.EntityId, incomplteAttr.KeyGroup, incomplteAttr.Key, incomplteAttr.StoreId }
+                                      join attribute in _genericAttributeRepository.Table on
+                                           new { EntityId = c.Id, KeyGroup = nameof(Customer), Key = attributeName, StoreId = store.Id } equals
+                                           new { attribute.EntityId, attribute.KeyGroup, attribute.Key, attribute.StoreId } into attribute
+                                      from followUpAttr in attribute.DefaultIfEmpty()
+                                      where !c.Deleted && !c.Active
+                                           && c.RegisteredInStoreId == store.Id
+                                           && incomplteAttr.CreatedOrUpdatedDateUTC != null && incomplteAttr.CreatedOrUpdatedDateUTC.Value < timeToFollowUp
+                                           && followUpAttr == null
+                                      select c;
+
+            foreach (var customerToFollowUp in customersToFollowUp.ToList())
+            {
+                var emailIds = await _workflowMessageService.SendIncompleteRegistrationNotificationMessageAsync(customerToFollowUp);
+
+                //the follow up has been sent
+                if (emailIds.Any())
+                    await _genericAttributeService.SaveAttributeAsync(customerToFollowUp, attributeName, DateTime.UtcNow, store.Id);
+            }
         }
     }
 

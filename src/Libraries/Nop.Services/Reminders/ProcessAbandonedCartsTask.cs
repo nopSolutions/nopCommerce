@@ -29,7 +29,6 @@ public partial class ProcessAbandonedCartsTask : IScheduleTask
     protected readonly IStoreService _storeService;
     protected readonly IWorkflowMessageService _workflowMessageService;
     protected readonly ReminderSettings _reminderSettings;
-    protected readonly ShoppingCartSettings _shoppingCartSettings;
 
     #endregion
 
@@ -44,8 +43,7 @@ public partial class ProcessAbandonedCartsTask : IScheduleTask
         IRepository<ShoppingCartItem> shoppingCartRepository,
         IStoreService storeService,
         IWorkflowMessageService workflowMessageService,
-        ReminderSettings reminderSettings,
-        ShoppingCartSettings shoppingCartSettings)
+        ReminderSettings reminderSettings)
     {
         _customerService = customerService;
         _genericAttributeService = genericAttributeService;
@@ -57,7 +55,6 @@ public partial class ProcessAbandonedCartsTask : IScheduleTask
         _storeService = storeService;
         _workflowMessageService = workflowMessageService;
         _reminderSettings = reminderSettings;
-        _shoppingCartSettings = shoppingCartSettings;
     }
 
     #endregion
@@ -84,15 +81,15 @@ public partial class ProcessAbandonedCartsTask : IScheduleTask
                 .ToListAsync();
 
             var timeToFirstFollowUp = messageTemplates
-                    .Select(template => DateTime.UtcNow - TimeSpan.FromHours(template.DelayPeriod.ToHours(template.DelayBeforeSend.Value)))
-                    .OrderDescending()
-                    .FirstOrDefault();
+                .Select(template => DateTime.UtcNow - TimeSpan.FromHours(template.DelayPeriod.ToHours(template.DelayBeforeSend.Value)))
+                .OrderDescending()
+                .FirstOrDefault();
 
             if (timeToFirstFollowUp == default)
                 continue;
 
             //get registered customers with abandoned carts
-            var customersWithItems1 = from cartItem in _shoppingCartRepository.Table
+            var customersWithItems = (from cartItem in _shoppingCartRepository.Table
                                       join c in _customerRepository.Table on cartItem.CustomerId equals c.Id
                                       join ccrm in _customerCustomerRoleMappingRepository.Table on
                                         new { customerId = c.Id, roleId = registeredRole.Id } equals
@@ -107,9 +104,7 @@ public partial class ProcessAbandonedCartsTask : IScheduleTask
                                                 (attributeJoined != null && int.Parse(attributeJoined.Value) < NopReminderDefaults.AbandonedCarts.FollowUpList.Length) ||
                                                 (attributeJoined == null && cartItem.UpdatedOnUtc < timeToFirstFollowUp)
                                             )
-                                      select new { Customer = c, Item = cartItem, Attribute = attributeJoined };
-
-            var customersWithItems = customersWithItems1.ToList();
+                                      select new { Customer = c, Item = cartItem, Attribute = attributeJoined }).ToList();
 
             if (!customersWithItems.Any())
                 continue;
