@@ -69,7 +69,12 @@ export default function copyDependencies()
     //Summernote
     gulp
       .src(`${nodeModules}summernote/dist/{lang,font}/**`)
-      .pipe(gulp.dest(targetPath + '/summernote')),
+        .pipe(gulp.dest(targetPath + '/summernote')),
+
+    //elFinder
+    gulp
+      .src(`${nodeModules}elfinder-npm/{css,img,js,sounds}/**`)
+      .pipe(gulp.dest(targetPath + '/elfinder')),
 
     //OverlayScrollbars
     gulp

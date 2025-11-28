@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="elFinder.NetCore" Version="1.5.5" />
     <PackageReference Include="Google.Apis.Auth" Version="1.70.0" />
     <!--Do not remove this reference. HarfBuzzSharp.NativeAssets.Linux library need for properly work SkiaSharp.HarfBuzz on the UNIX system-->
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.1" />

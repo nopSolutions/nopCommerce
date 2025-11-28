@@ -28,7 +28,6 @@ using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
-using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Globalization;
@@ -352,16 +351,6 @@ public static class ApplicationBuilderExtensions
             RequestPath = "/icons",
             ContentTypeProvider = provider
         });
-
-        if (DataSettingsManager.IsDatabaseInstalled())
-        {
-            application.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = EngineContext.Current.Resolve<IRoxyFilemanFileProvider>(),
-                RequestPath = new PathString(NopRoxyFilemanDefaults.DefaultRootDirectory),
-                OnPrepareResponse = staticFileResponse
-            });
-        }
 
         if (appSettings.Get<CommonConfig>().ServeUnknownFileTypes)
         {

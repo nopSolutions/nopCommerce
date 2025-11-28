@@ -1,16 +1,11 @@
 ﻿@model string
 @inject AdminAreaSettings adminAreaSettings
 @inject ISummernoteHelper summernoteHelper
-@inject Nop.Core.IWebHelper webHelper
-@inject IRoxyFilemanFileProvider fileProvider
 
-@using Nop.Services.Media.RoxyFileman
 @using Nop.Web.Areas.Admin.Helpers
 @{
     // Summernote language
     var language = await summernoteHelper.GetRichEditorLanguageAsync();
-
-    var allowRoxyFileman = await permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES);
 
     var random = CommonHelper.GenerateRandomInteger();
 
@@ -21,112 +16,81 @@
     var allowJavaScript = adminAreaSettings.RichEditorAllowJavaScript;
 }
 <script src="~/lib_npm/summernote/summernote-bs4.min.js" asp-location="Head"></script>
+<script src="~/lib_npm/elfinder/js/elfinder.min.js" asp-location="Head"></script>
+
 <link href="~/lib_npm/summernote/summernote-bs4.min.css" rel="stylesheet" />
+<link href="~/lib_npm/elfinder/css/elfinder.min.css" rel="stylesheet" />
+<link href="~/lib_npm/elfinder/css/theme.css" rel="stylesheet" />
+
 @if (!string.IsNullOrEmpty(language))
 {
     <script src="~/lib_npm/summernote/lang/summernote-@(language).min.js" asp-location="Head"></script>
 }
 
 <script asp-location="Head">
-    $(function() {
+    $(function () {
         // Summernote
-        // Dialog handler
-        function openRoxyDialog(context) {
-            var roxyFileman = '@Url.Content("~/lib/Roxy_Fileman/index.html")';
+        function openElFinderDialog(context) {
+            var myCommands = elFinder.prototype._options.commands;
 
-            // Create modal dialog
-            var dialog = $('<div class="modal fade" role="dialog">');
-            var content = `
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title">Select Image</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  </div>
-                  <div class="modal-body">
-                    <iframe id="roxyFrame" width="100%" height="500" frameborder="0"></iframe>
-                  </div>
-                </div>
-              </div>
-            `;
-            dialog.html(content);
-
-            function joinPaths(...segments) {
-              const nonEmptySegments = segments.filter(segment => segment && typeof segment === 'string');
-              const combinedPath = nonEmptySegments.join('/');
-              const normalizedPath = combinedPath.replace(/[\\/]+/g, '/');
-              return normalizedPath.replace(/:\//g, '://');
-            }
-
-            // Function to handle image selection
-            function handleSelectedFile(file) {
-                if (file && file.fullPath) {
-                    var storeLocation = '@(webHelper.GetStoreLocation())';
-                    var filesRoot = '@(((await fileProvider.GetOrCreateConfigurationAsync("", "")).FILES_ROOT))';
-                    
-                    var fullImagePath = joinPaths(storeLocation, filesRoot, file.fullPath);
-                    context.invoke('editor.insertImage', fullImagePath);
-                }
-                dialog.modal('hide');
-            }
-
-            // Load Roxy Fileman
-            $.ajax({
-                cache: false,
-                type: "GET",
-                url: "@Url.Action("CreateConfiguration", "RoxyFileman")",
-                success: function (data) {
-                    dialog.modal('show');
-                    setTimeout(() => {
-                        var iframe = document.getElementById('roxyFrame');
-
-                        // Wait for iframe to load before setting up callback
-                        iframe.onload = function() {
-                            // Set callback in iframe's window context
-                            iframe.contentWindow.ROXY_CALLBACK = handleSelectedFile;
-                        };
-
-                        // Set the iframe source after setting up onload handler
-                        iframe.src = roxyFileman;
-                     }, 1000);
+            $('<div/>').dialogelfinder({
+                url: '@Url.Action("Connector", "ElFinder")',
+                lang: '@language',
+                destroyOnClose : true,
+                getFileCallback : function(files, fm) {
+                    $('#@Html.IdForModel()').summernote('editor.insertImage',files.url);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.error('Failed to load Roxy configuration:', errorThrown);
+                commandsOptions : {
+                    getfile : {
+                        oncomplete : 'close',
+                        folders : false
+                    }
+                },
+                resizable: false,
+                commands: myCommands,
+                uiOptions: {
+                    // toolbar configuration
+                    toolbar: [
+                        ['back', 'forward'],
+                        ['reload'],
+                        ['home', 'up'],
+                        ['mkdir', 'upload'],
+                        ['open', 'download'],
+                        ['undo', 'redo'],
+                        ['info'],
+                        ['quicklook'],
+                        ['copy', 'cut', 'paste'],
+                        ['rm'],
+                        ['duplicate', 'rename', 'edit'],
+                        ['selectall', 'selectnone', 'selectinvert'],
+                        ['view', 'sort'],
+                        ['search']
+                    ]
                 }
-            });
-
-            // Clean up on close
-            dialog.on('hidden.bs.modal', function () {
-                var iframe = document.getElementById('roxyFrame');
-                if (iframe && iframe.contentWindow) {
-                    iframe.contentWindow.ROXY_CALLBACK = null;
-                }
-                dialog.remove();
-            });
+            }).dialogelfinder('instance');
         }
 
-        //Image button
-        var RoxyImageButton = function (context) {
+        //Image button for elFinder
+        var ElFinderImageButton = function (context) {
             var ui = $.summernote.ui;
 
             // create button
             return ui.button({
                 contents: '<i class="fa fa-image"/>',
-                tooltip: 'Insert image',
                 click: function () {
-                    openRoxyDialog(context);
+                    openElFinderDialog(context);
                 }
             }).render();
         };
 
         var initializationOptions@(random) = {
-        @if (allowJavaScript)
-        {
-            <text>
-                codeviewFilter: false,
-            </text>
-        }
-        toolbar: [
+            @if (allowJavaScript)
+            {
+                <text>
+                    codeviewFilter: false,
+                </text>
+            }
+            toolbar: [
                 ['view', ['undo', 'redo']],
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
@@ -134,11 +98,11 @@
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['table', ['table']],
-                ['insert', ['link', 'image', 'video', 'hr']],
+                ['insert', ['link', 'elfinder', 'video', 'hr']],
                 ['view', ['fullscreen', 'codeview', 'help']]
             ],
             buttons: {
-                image: RoxyImageButton
+                elfinder: ElFinderImageButton
             },
             spellCheck: true,
             maxHeight: 800,
@@ -156,12 +120,12 @@
             }
         };
 
-        function getAdditionalEditorSettings@(random)(settings) {
-            @Html.Raw(additionalEditorSettings)
-            return settings;
-        }
+    function getAdditionalEditorSettings@(random)(settings) {
+        @Html.Raw(additionalEditorSettings)
+        return settings;
+    }
 
-        $('#@Html.IdForModel()').summernote(getAdditionalEditorSettings@(random)(initializationOptions@(random)));  
+    $('#@Html.IdForModel()').summernote(getAdditionalEditorSettings@(random)(initializationOptions@(random)));
     });
 </script>
 
