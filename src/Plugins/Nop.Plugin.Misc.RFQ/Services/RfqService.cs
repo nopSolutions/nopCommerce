@@ -777,6 +777,10 @@ public class RfqService
         //reset checkout info
         await _customerService.ResetCheckoutDataAsync(customer, store.Id);
 
+        var products = (await _productService.GetProductsByIdsAsync(quoteItems.Select(i => i.ProductId).ToArray()))
+            .GroupBy(p => p.Id)
+            .ToDictionary(p => p.Key, p => p.First());
+
         foreach (var quoteItem in quoteItems)
         {
             var now = DateTime.UtcNow;
@@ -786,7 +790,7 @@ public class RfqService
                 StoreId = store.Id,
                 ProductId = quoteItem.ProductId,
                 AttributesXml = quoteItem.AttributesXml,
-                CustomerEnteredPrice = decimal.Zero,
+                CustomerEnteredPrice = products[quoteItem.ProductId].CustomerEntersPrice ? quoteItem.OfferedUnitPrice : decimal.Zero,
                 Quantity = quoteItem.OfferedQty,
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null,
