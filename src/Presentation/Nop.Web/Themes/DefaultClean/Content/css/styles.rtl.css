@@ -154,7 +154,7 @@ button, .button-1, .button-2 {
 }
 
 label, label + * {
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 .master-wrapper-content {
