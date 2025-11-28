@@ -155,7 +155,7 @@ button, .button-1, .button-2 {
 }
 
 label, label + * {
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 .master-wrapper-content {
@@ -4296,6 +4296,10 @@ label, label + * {
 
 .change-password-page .fieldset {
   margin: 0 0 30px;
+}
+
+.change-password-page label {
+  vertical-align: top;
 }
 
 .change-password-recovery-link {
