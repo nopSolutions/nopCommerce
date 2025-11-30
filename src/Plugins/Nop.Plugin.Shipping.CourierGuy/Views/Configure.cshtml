@@ -1,0 +1,118 @@
+@model Nop.Plugin.Shipping.CourierGuy.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+<form asp-controller="ShippingCourierGuy" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                @Html.Raw(T("Plugins.Payments.CourierGuy.Instructions"))
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="@Model.ApiKey_OverrideForStore" asp-input="ApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="@Model.ApiKey"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.ApiKey"/>
+                        <span asp-validation-for="@Model.ApiKey"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="@Model.SandBoxApiKey_OverrideForStore" asp-input="SandBoxApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="@Model.SandBoxApiKey"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.SandBoxApiKey"/>
+                        <span asp-validation-for="@Model.SandBoxApiKey"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="@Model.BaseUrl_OverrideForStore" asp-input="BaseUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="@Model.BaseUrl"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.BaseUrl"/>
+                        <span asp-validation-for="@Model.BaseUrl"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="@Model.TrackingUri_OverrideForStore" asp-input="TrackingUri" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="@Model.TrackingUri"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.TrackingUri"/>
+                        <span asp-validation-for="@Model.TrackingUri"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="@Model.RateRequestUri_OverrideForStore" asp-input="RateRequestUri" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="@Model.RateRequestUri"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.RateRequestUri"/>
+                        <span asp-validation-for="@Model.RateRequestUri"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="@Model.ShipmentRequestUri_OverrideForStore" asp-input="ShipmentRequestUri" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="@Model.ShipmentRequestUri"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.ShipmentRequestUri"/>
+                        <span asp-validation-for="@Model.ShipmentRequestUri"></span>
+                    </div>
+                </div>
+                @*
+                    [NopResourceDisplayName("Plugins.Shipping.CourierGuy.Fields.PushoverApiKey")]
+    public string PushoverApiKey { get; set; } = "asz7kc48pkkivvf8uo8drfodeowb37";
+
+    [NopResourceDisplayName("Plugins.Shipping.CourierGuy.Fields.PushoverUserKey")]
+    public string PushoverUserKey { get; set; } = "grxswvwt4yi1mqtmkvuxk71pndyt4t";
+
+                 *@
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="@Model.PushoverApiKey_OverrideForStore" asp-input="PushoverApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="@Model.PushoverApiKey"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.PushoverApiKey"/>
+                        <span asp-validation-for="@Model.PushoverApiKey"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="@Model.PushoverUserKey_OverrideForStore" asp-input="PushoverUserKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="@Model.PushoverUserKey"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.PushoverUserKey"/>
+                        <span asp-validation-for="@Model.PushoverUserKey"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="@Model.UseSandbox_OverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="@Model.UseSandbox"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.UseSandbox"/>
+                        <span asp-validation-for="@Model.UseSandbox"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn bg-primary" value="@T("Admin.Common.Save")"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
