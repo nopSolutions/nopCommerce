@@ -107,7 +107,9 @@ namespace Nop.Plugin.Api.Controllers
         [GetRequestsErrorInterceptorActionFilter]
         public async Task<IActionResult> GetSpecificationAttributesCount([FromQuery] SpecificationAttributesCountParametersModel parameters)
         {
-            var specificationAttributesCount = (await _specificationAttributeService.GetSpecificationAttributesAsync()).TotalCount;
+            var specificationAttributesCount = _specificationAttributeApiService
+                .GetSpecificationAttributes(limit: int.MaxValue, page: 1, sinceId: Constants.Configurations.DefaultSinceId)
+                .Count;
 
             var specificationAttributesCountRootObject = new SpecificationAttributesCountRootObject
             {

@@ -574,11 +574,11 @@ namespace Nop.Plugin.Api.Controllers
 			if (customerId.HasValue && currentCustomer.Id == customerId)
 			{
 				// if I want to handle my own orders, check only public store permission
-				return await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart, currentCustomer);
-			}
-			// if I want to handle other customer's orders, check admin permission
-			return await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders, currentCustomer);
-		}
+                    return await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART, currentCustomer);
+                }
+                // if I want to handle other customer's orders, check admin permission
+                return await _permissionService.AuthorizeAsync(StandardPermission.Orders.ORDERS_CREATE_EDIT_DELETE, currentCustomer);
+            }
 
 		private async Task<bool> SetShippingOptionAsync(
 			string shippingRateComputationMethodSystemName, string shippingOptionName, int storeId, Customer customer, List<ShoppingCartItem> shoppingCartItems)

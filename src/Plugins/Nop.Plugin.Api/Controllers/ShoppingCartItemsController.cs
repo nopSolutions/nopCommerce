@@ -502,20 +502,20 @@ namespace Nop.Plugin.Api.Controllers
 			if (customerId.HasValue && currentCustomer.Id == customerId)
 			{
 				// if I want to handle my own shopping cart, check only public store permission
-				switch (shoppingCartType)
-				{
-					case ShoppingCartType.ShoppingCart:
-						return await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart, currentCustomer);
-					case ShoppingCartType.Wishlist:
-						return await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist, currentCustomer);
-					default:
-						return await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart, currentCustomer)
-							&& await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist, currentCustomer);
-				}
-			}
-			// if I want to handle other customer's shopping carts, check admin permission
-			return await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts, currentCustomer);
-		}
+                    switch (shoppingCartType)
+                    {
+                        case ShoppingCartType.ShoppingCart:
+                            return await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART, currentCustomer);
+                        case ShoppingCartType.Wishlist:
+                            return await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST, currentCustomer);
+                        default:
+                            return await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART, currentCustomer)
+                                    && await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST, currentCustomer);
+                    }
+                }
+                // if I want to handle other customer's shopping carts, check admin permission
+                return await _permissionService.AuthorizeAsync(StandardPermission.Orders.CURRENT_CARTS_MANAGE, currentCustomer);
+            }
 
 		private async Task<ShoppingCartItemsRootObject> LoadCurrentShoppingCartItems(ShoppingCartType shoppingCartType, Core.Domain.Customers.Customer customer)
 		{

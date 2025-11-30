@@ -10,6 +10,11 @@
     var themeName = await themeContext.GetWorkingThemeNameAsync();
     var supportRtl = await Html.ShouldUseRtlThemeAsync();
 
+    //add typography
+    NopHtml.AppendHeadCustomParts("<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />");
+    NopHtml.AppendHeadCustomParts("<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin />");
+    NopHtml.AppendCssFileParts("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+
     //add main CSS file
     NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles{(supportRtl ? ".rtl" : "")}.css");
     

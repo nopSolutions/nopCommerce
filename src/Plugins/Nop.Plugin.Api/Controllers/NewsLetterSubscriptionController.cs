@@ -109,7 +109,9 @@ namespace Nop.Plugin.Api.Controllers
                 return Error(HttpStatusCode.BadRequest, "The email parameter could not be empty.");
             }
 
-            var existingSubscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(email, _storeContext.GetCurrentStore().Id);
+            var existingSubscription = (await _newsLetterSubscriptionService
+                .GetNewsLetterSubscriptionsByEmailAsync(email, _storeContext.GetCurrentStore().Id))
+                .FirstOrDefault();
 
             if (existingSubscription == null)
             {

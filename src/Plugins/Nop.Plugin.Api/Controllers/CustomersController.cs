@@ -528,7 +528,9 @@ namespace Nop.Plugin.Api.Controllers
 			//remove newsletter subscription (if exists)
 			foreach (var store in await StoreService.GetAllStoresAsync())
 			{
-				var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
+                            var subscription = (await _newsLetterSubscriptionService
+                                .GetNewsLetterSubscriptionsByEmailAsync(customer.Email, store.Id))
+                                .FirstOrDefault();
 				if (subscription != null)
 				{
 					await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
@@ -638,8 +640,8 @@ namespace Nop.Plugin.Api.Controllers
 				return true;
 			}
 			// if I want to handle other customer's info, check admin permission
-			return await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers, currentCustomer);
-		}
+                return await _permissionService.AuthorizeAsync(StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE, currentCustomer);
+            }
 
 		private async Task InsertFirstAndLastNameGenericAttributesAsync(string firstName, string lastName, Customer newCustomer)
 		{

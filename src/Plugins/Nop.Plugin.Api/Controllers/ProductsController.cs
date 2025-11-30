@@ -714,7 +714,6 @@ namespace Nop.Plugin.Api.Controllers
             }
 
             await _productService.UpdateProductAsync(product);
-            await _productService.UpdateHasDiscountsAppliedAsync(product);
         }
 
         private async Task UpdateProductManufacturersAsync(Product product, List<int> passedManufacturerIds)
