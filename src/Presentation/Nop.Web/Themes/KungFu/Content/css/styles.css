@@ -9467,13 +9467,9 @@ input:disabled {
   cursor: not-allowed;
 }
 
-.topic-block,
-.block,
 .home-page-category-grid .item-box,
 .product-grid .item-box,
 .product-list .item-box,
-.order-summary-content,
-.cart,
 .news-list-homepage .item,
 .blog-posts .post {
   background: linear-gradient(155deg, rgba(21, 21, 26, 0.92) 0%, rgba(11, 11, 15, 0.92) 100%);
@@ -9481,6 +9477,17 @@ input:disabled {
   border-radius: 16px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
   overflow: hidden;
+}
+
+.topic-block,
+.block,
+.order-summary-content,
+.cart {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
 }
 
 .item-box .picture a img,
