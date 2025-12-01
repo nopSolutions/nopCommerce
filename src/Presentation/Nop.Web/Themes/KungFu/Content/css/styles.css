@@ -3985,8 +3985,8 @@ label, label + * {
 
 .login-page .new-wrapper .text {
   margin: 0 0 30px;
-  border-top: 1px solid #e6e6e6;
-  background-color: #f9f9f9;
+  border-top: 1px solid #1f1f26;
+  background-color: #101017;
   padding: 30px;
   line-height: 22px;
 }
@@ -5120,7 +5120,7 @@ label, label + * {
 
 .checkout-page .address-item ul {
   margin: 0 0 15px;
-  background-color: #f9f9f9;
+  background-color: #101017;
   padding: 20px;
   color: var(--dark-gray-color);
 }
@@ -5139,8 +5139,8 @@ label, label + * {
 }
 
 .enter-address .edit-address {
-  background-color: #f9f9f9;
-  border-top: 1px solid #e6e6e6;
+  background-color: #101017;
+  border-top: 1px solid #1f1f26;
   margin: 0 0 30px;
   padding: 30px 15px;
 }
@@ -8208,8 +8208,7 @@ label, label + * {
     right: 0;
     z-index: 100;
     width: 300px;
-    box-shadow: 0 0 2px rgba(0,0,0,0.25);
-    background-color: #fff;
+    background-color: #101017;
   }
 
   .flyout-cart.active {
@@ -8234,8 +8233,8 @@ label, label + * {
   }
 
   .mini-shopping-cart .items {
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #1f1f26;
+    border-bottom: 1px solid #1f1f26;
     margin: 0 0 20px;
   }
 
@@ -9473,9 +9472,9 @@ input:disabled {
 .news-list-homepage .item,
 .blog-posts .post {
   background: linear-gradient(155deg, rgba(21, 21, 26, 0.92) 0%, rgba(11, 11, 15, 0.92) 100%);
-  border: 1px solid #1f1f26;
+  border: none;
   border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+  box-shadow: none;
   overflow: hidden;
 }
 
