@@ -9330,11 +9330,11 @@ a.skip:hover {
 .center-1,
 .center-2,
 .side-2 {
-  background: rgba(14, 14, 18, 0.85);
-  backdrop-filter: blur(2px);
-  border: 1px solid #1f1f26;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-  border-radius: 14px;
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
   padding: 25px;
 }
 
