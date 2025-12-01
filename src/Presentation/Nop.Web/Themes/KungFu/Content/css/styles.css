@@ -67,7 +67,8 @@ input[type="reset"] {
 }
 
 input:-webkit-autofill {
-  -webkit-box-shadow: inset 0 0 0 1000px #fff;
+  -webkit-box-shadow: inset 0 0 0 1000px #0f0f15;
+  -webkit-text-fill-color: #f1f1f1;
 }
 
 script {
@@ -122,9 +123,12 @@ input[type="tel"],
 input[type="password"],
 textarea, select {
   height: 36px; /*safari padding fix*/
-  border: 1px solid #ddd;
+  border: 1px solid #262632;
+  background-color: #0f0f15;
   padding: 8px;
   vertical-align: middle;
+  color: #f1f1f1;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 input, textarea, select, button {
@@ -149,8 +153,11 @@ input[type="tel"]:focus,
 input[type="password"]:focus,
 textarea:focus,
 select:focus {
-  border-color: #ccc;
-  color: var(--dark-gray-color);
+  border-color: var(--kungfu-gold);
+  background-color: #14141d;
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(215, 180, 106, 0.12);
+  outline: none;
   position: relative;
   z-index: 1;
 }
@@ -211,7 +218,7 @@ label, label + * {
 .page-title {
   min-height: 50px;
   margin: 0 0 25px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding: 6px 10px;
 }
 
@@ -307,9 +314,11 @@ label, label + * {
 
 .form-fields {
   position: relative;
-  border-top: 1px solid #e6e6e6;
-  background-color: #f9f9f9;
+  border: 1px solid #1f1f26;
+  background-color: #101017;
   padding: 30px 15px;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .inputs {
@@ -342,7 +351,9 @@ label, label + * {
 .inputs select, .inputs textarea {
   width: 400px;
   max-width: 100%;
-  background-color: #fff;
+  background-color: #0f0f15;
+  border-color: #262632;
+  color: #f1f1f1;
 }
 
 .inputs.custom-attributes {
@@ -358,9 +369,10 @@ label, label + * {
 .inputs .option-list li {
   display: inline-block;
   margin: 5px;
-  border: 1px solid #ddd;
-  background-color: #fff;
+  border: 1px solid #262632;
+  background-color: #0f0f15;
   padding: 8px 10px;
+  border-radius: 8px;
 }
 
 .inputs .option-list label {
@@ -3655,7 +3667,7 @@ label, label + * {
 .topic-block-title {
   min-height: 50px;
   margin: 0 0 25px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding: 0 0 15px;
 }
 
