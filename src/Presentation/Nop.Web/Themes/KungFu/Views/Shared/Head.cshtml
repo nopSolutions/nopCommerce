@@ -9,6 +9,7 @@
     Layout ="";
     var themeName = await themeContext.GetWorkingThemeNameAsync();
     var supportRtl = await Html.ShouldUseRtlThemeAsync();
+    var themeVersion = "1.0.1";
 
     //add typography
     NopHtml.AppendHeadCustomParts("<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />");
@@ -16,7 +17,7 @@
     NopHtml.AppendCssFileParts("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 
     //add main CSS file
-    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles{(supportRtl ? ".rtl" : "")}.css");
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles{(supportRtl ? ".rtl" : "")}.css?v={themeVersion}");
     
     //add swiper css file
     if (catalogSettings.DisplayAllPicturesOnCatalogPages)
