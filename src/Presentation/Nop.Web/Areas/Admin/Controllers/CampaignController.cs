@@ -261,7 +261,7 @@ public partial class CampaignController : BaseAdminController
             return RedirectToAction("List");
 
         //prepare model
-        model = await _campaignModelFactory.PrepareCampaignModelAsync(model, campaign);
+        model = await _campaignModelFactory.PrepareCampaignModelAsync(model, campaign, true);
 
         try
         {
@@ -283,9 +283,6 @@ public partial class CampaignController : BaseAdminController
         {
             await _notificationService.ErrorNotificationAsync(exc);
         }
-
-        //prepare model
-        model = await _campaignModelFactory.PrepareCampaignModelAsync(model, campaign, true);
 
         //if we got this far, something failed, redisplay form
         return View(model);
