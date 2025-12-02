@@ -1589,7 +1589,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         var additionalTokens = new CampaignAdditionalTokensAddedEvent();
         await _eventPublisher.PublishAsync(additionalTokens);
 
-        var allowedTokens = (await GetListOfAllowedTokensAsync(new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens })).ToList();
+        var allowedTokens = (await GetListOfAllowedTokensAsync(tokenGroups: new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens })).ToList();
         allowedTokens.AddRange(additionalTokens.AdditionalTokens);
 
         return allowedTokens.Distinct();
@@ -1598,17 +1598,20 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     /// <summary>
     /// Get collection of allowed (supported) message tokens
     /// </summary>
+    /// <param name="messageTemplate">Message template</param>
     /// <param name="tokenGroups">Collection of token groups; pass null to get all available tokens</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the collection of allowed message tokens
     /// </returns>
-    public virtual async Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IList<string> tokenGroups = null)
+    public virtual async Task<IEnumerable<string>> GetListOfAllowedTokensAsync(MessageTemplate messageTemplate = null, IList<string> tokenGroups = null)
     {
         var additionalTokens = new AdditionalTokensAddedEvent
         {
-            TokenGroups = tokenGroups ?? new List<string>()
+            TokenGroups = tokenGroups ?? (messageTemplate != null ? GetTokenGroups(messageTemplate).ToList() : new List<string>()),
+            MessageTemplate = messageTemplate,
         };
+
         await _eventPublisher.PublishAsync(additionalTokens);
 
         var allowedTokens = AllowedTokens.Where(x => tokenGroups == null || tokenGroups.Contains(x.Key))
