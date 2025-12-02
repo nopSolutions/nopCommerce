@@ -1,0 +1,22 @@
+name: workflow for converting trx to jar
+on:
+    push:
+        branches:
+            - develop
+    workflow_dispatch:
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: setup dotnet
+              uses: actions/setup-dotnet@v5
+              with:
+                  dotnet-version: 9.0.x
+            - name: checkout
+              uses: actions/checkout@v5
+            - name: restore
+              uses: dotnet restore src/Presentation/Nop.Web/Nop.Web.csproj
+            - name: build
+              uses: dotnet build --configuration release src/Presentation/Nop.Web/Nop.Web.csproj
+            - name: publish
+              uses: dotnet publish --configuration release src/Presentation/Nop.Web/Nop.Web.csproj -o published/
