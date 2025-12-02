@@ -128,6 +128,10 @@ public partial class BaseNopTest
 
         var permissionService = EngineContext.Current.Resolve<IPermissionService>();
         permissionService.InsertPermissionsAsync().Wait();
+
+        //init theme provider
+        var themeProvider = EngineContext.Current.Resolve<IThemeProvider>();
+        themeProvider.InitializeAsync().Wait();
     }
 
     protected static void PropertiesShouldEqual<T1, T2>(T1 obj1, T2 obj2, params string[] filter)
@@ -386,7 +390,7 @@ public partial class BaseNopTest
         services.AddTransient<IImportManager, ImportManager>();
         services.AddTransient<IPdfService, PdfService>();
         services.AddTransient<IUploadService, UploadService>();
-        services.AddTransient<IThemeProvider, ThemeProvider>();
+        services.AddSingleton<IThemeProvider, ThemeProvider>();
         services.AddTransient<IExternalAuthenticationService, ExternalAuthenticationService>();
         services.AddScoped<IBBCodeHelper, BBCodeHelper>();
         services.AddScoped<IHtmlFormatter, HtmlFormatter>();
