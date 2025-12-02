@@ -16412,6 +16412,18 @@
   <LocaleResource Name="Admin.System.Maintenance.ReIndexTables.ReIndexNow">
     <Value>Re-index</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ShrinkDatabase">
+    <Value>Shrink database</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ShrinkDatabase.Complete">
+    <Value>Database shrinking completed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ShrinkDatabase.Progress">
+    <Value>Processing...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ShrinkDatabase.Text">
+    <Value>Reclaim disk space by reorganizing physical data storage</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails">
     <Value>Message queue</Value>
   </LocaleResource>
