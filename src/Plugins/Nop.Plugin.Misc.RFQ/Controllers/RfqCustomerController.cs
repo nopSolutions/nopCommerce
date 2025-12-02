@@ -2,6 +2,7 @@
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Http;
 using Nop.Core.Http.Extensions;
@@ -9,6 +10,7 @@ using Nop.Plugin.Misc.RFQ.Domains;
 using Nop.Plugin.Misc.RFQ.Factories;
 using Nop.Plugin.Misc.RFQ.Models.Customer;
 using Nop.Plugin.Misc.RFQ.Services;
+using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -29,6 +31,7 @@ public class RfqCustomerController : BasePublicController
     private readonly ICustomerService _customerService;
     private readonly ILocalizationService _localizationService;
     private readonly IPermissionService _permissionService;
+    private readonly IProductService _productService;
     private readonly IShoppingCartService _shoppingCartService;
     private readonly IStoreContext _storeContext;
     private readonly IWorkContext _workContext;
@@ -45,6 +48,7 @@ public class RfqCustomerController : BasePublicController
         ICustomerService customerService,
         ILocalizationService localizationService,
         IPermissionService permissionService,
+        IProductService productService,
         IShoppingCartService shoppingCartService,
         IStoreContext storeContext,
         IWorkContext workContext,
@@ -57,6 +61,7 @@ public class RfqCustomerController : BasePublicController
         _customerService = customerService;
         _localizationService = localizationService;
         _permissionService = permissionService;
+        _productService = productService;
         _shoppingCartService = shoppingCartService;
         _storeContext = storeContext;
         _workContext = workContext;
@@ -108,7 +113,7 @@ public class RfqCustomerController : BasePublicController
         if (request == null)
             return errors;
 
-        if (!Request.IsPostRequest() || !Request.HasFormContentType) 
+        if (!Request.IsPostRequest() || !Request.HasFormContentType)
             return errors;
 
         var form = await Request.ReadFormAsync();
@@ -125,7 +130,7 @@ public class RfqCustomerController : BasePublicController
         {
             var key = $"{RfqDefaults.UNIT_PRICE_FORM_KEY}{requestQuoteItem.Id}";
 
-            if (!form.ContainsKey(key)) 
+            if (!form.ContainsKey(key))
                 return;
 
             var formValue = form[key];
@@ -203,6 +208,15 @@ public class RfqCustomerController : BasePublicController
         }
         else
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+
+            var products = await _productService.GetProductsByIdsAsync(cart.Select(i => i.ProductId).ToArray());
+
+            //"enter your price" products in the cart, so we should redirect customer to shopping cart page
+            if (products.Any(product => product.CustomerEntersPrice))
+                return RedirectToRoute(NopRouteNames.General.CART);
+
             var (request, items) = await _rfqService.CreateRequestQuoteByShoppingCartAsync();
 
             if (request == null)
@@ -238,7 +252,7 @@ public class RfqCustomerController : BasePublicController
         var validationErrors = await ValidateFormAsync(request, items);
 
         if (validationErrors != null && validationErrors.Any())
-            foreach (var validationError in validationErrors) 
+            foreach (var validationError in validationErrors)
                 ModelState.AddModelError(string.Empty, validationError);
 
         if (ModelState.IsValid)
