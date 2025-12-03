@@ -112,6 +112,7 @@ textarea, select {
   border: 1px solid #ddd;
   padding: 8px;
   vertical-align: middle;
+  direction: ltr;
 }
 
 input, textarea, select, button {
