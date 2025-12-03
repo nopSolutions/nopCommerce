@@ -130,8 +130,8 @@ public class RfqCustomerController : BasePublicController
 
             var products = await _productService.GetProductsByIdsAsync(cart.Select(i => i.ProductId).ToArray());
 
-            //"enter your price" products in the cart, so we should redirect customer to shopping cart page
-            if (products.Any(product => product.CustomerEntersPrice))
+            //"enter your price" or rental products in the cart, so we should redirect customer to shopping cart page
+            if (products.Any(product => product.CustomerEntersPrice || product.IsRental))
                 return RedirectToRoute(NopRouteNames.General.CART);
 
             var (request, items) = await _rfqService.CreateRequestQuoteByShoppingCartAsync();
