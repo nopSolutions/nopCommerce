@@ -5096,7 +5096,7 @@ label, label + * {
 .product-estimate-shipping .open-estimate-shipping-popup .arrow-down {
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
-  margin: 0 0 3px 6px;
+  margin: 0 6px 3px 0;
   border: solid black;
   border-width: 0 1px 1px 0;
   display: inline-block;
