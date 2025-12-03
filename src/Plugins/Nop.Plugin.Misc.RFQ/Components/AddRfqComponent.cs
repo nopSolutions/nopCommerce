@@ -59,8 +59,8 @@ public class AddRfqComponent : NopViewComponent
 
         var products = await _productService.GetProductsByIdsAsync(cart.Select(i => i.ProductId).ToArray());
 
-        //"enter your price" products in the cart, so we should not show the "Request a quote" button
-        if (products.Any(product => product.CustomerEntersPrice))
+        //"enter your price" or rental products in the cart, so we should not show the "Request a quote" button
+        if (products.Any(product => product.CustomerEntersPrice || product.IsRental))
             return Content(string.Empty);
 
         //is shopping cart created by quote
