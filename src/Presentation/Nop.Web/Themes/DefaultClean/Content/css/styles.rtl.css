@@ -4838,7 +4838,7 @@ label, label + * {
 .estimate-shipping-popup {
   position: relative;
   background: #FFF;
-  padding: 25px 10px;
+  padding: 30px 10px;
   width: auto;
   max-width: 800px;
   margin: 0 auto;
@@ -4873,6 +4873,11 @@ label, label + * {
   opacity: 0;
 }
 
+.estimate-shipping-popup .mfp-close {
+  left:0;
+  right: auto;
+}
+
 .shipping-options-loading {
   background: url(../images/ajax-loader-small.gif) no-repeat;
   width: 16px;
@@ -4880,10 +4885,6 @@ label, label + * {
   position: relative;
   left: 8px;
   margin: 4% 50%;
-}
-
-.shipping-address .required {
-  margin-right: 0px;
 }
 
 .estimate-shipping-row {
@@ -4908,6 +4909,7 @@ label, label + * {
   padding: 8px 0;
   overflow: hidden;
   overflow-wrap: break-word;
+  text-align: right;
 }
 
 .estimate-shipping-row-item.shipping-header-item {
@@ -4926,6 +4928,7 @@ label, label + * {
 
 .estimate-shipping-row-item-radio {
   flex: 0 0 35px;
+  text-align: right;
 }
 
 .ship-to-title {
@@ -4939,7 +4942,7 @@ label, label + * {
 }
 
 .estimate-shipping-address-control {
-  width: 100%;
+  width: calc(100% - 10px);
   height: 36px;
 }
 
@@ -7397,7 +7400,7 @@ label, label + * {
   /*** ESTIMATE SHIPPING POPUP ***/
 
   .estimate-shipping-popup {
-    padding: 25px;
+    padding: 30px;
   }
 }
 
