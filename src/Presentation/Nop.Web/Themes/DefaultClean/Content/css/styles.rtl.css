@@ -3255,7 +3255,7 @@ label, label + * {
 }
 
 .write-review .review-rating {
-  text-align: center;
+  text-align: right;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -7173,7 +7173,7 @@ label, label + * {
 
   .write-review .review-rating div.name-description {
     width: 100%;
-    margin: 0 5px 0 0;
+    margin: 0 0 0 5px;
     text-align: center;
   }
 
@@ -8853,8 +8853,8 @@ label, label + * {
 
   .write-review .review-rating div.name-description {
     width: 265px;
-    margin: 0 5px 0 0;
-    text-align: right
+    margin: 0 0 0 5px;
+    text-align: left;
   }
 
   .product-review-item .review-text {
@@ -9247,7 +9247,7 @@ label, label + * {
   }
 
   .write-review .review-rating div.name-description {
-    margin: 0 5px 0 0;
+    margin: 0 0 0 5px;
     min-width: 375px;
   }
 
