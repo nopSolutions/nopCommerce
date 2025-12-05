@@ -4534,7 +4534,7 @@ label, label + * {
   min-width: 180px;
   margin: 5px;
   border: none;
-  background-color: #aaa;
+  background-color: var(--accent-blue-color);
   padding: 10px 20px;
   font-size: 15px;
   color: #fff;
@@ -4542,7 +4542,7 @@ label, label + * {
 
 .shopping-cart-page .common-buttons button:hover,
 .shopping-cart-page .common-buttons button:focus {
-  background-color: #999;
+  background-color: var(--accent-blue-active-color);
 }
 
 .shopping-cart-page .common-buttons button:first-child {
@@ -4736,7 +4736,7 @@ label, label + * {
 .cart-collaterals .button-2 {
   display: inline-block;
   border: none;
-  background-color: #aaa;
+  background-color: var(--accent-blue-color);
   padding: 10px 15px;
   color: #fff;
   text-transform: uppercase;
@@ -4744,7 +4744,7 @@ label, label + * {
 
 .cart-collaterals .button-2:hover,
 .cart-collaterals .button-2:focus {
-  background-color: #999;
+  background-color: var(--accent-blue-active-color);
 }
 
 .cart-collaterals .title {
@@ -5051,7 +5051,7 @@ label, label + * {
   min-width: 180px;
   margin: 5px;
   border: none;
-  background-color: #aaa;
+  background-color: var(--accent-blue-color);
   padding: 10px 20px;
   font-size: 15px;
   text-align: center;
@@ -5060,7 +5060,7 @@ label, label + * {
 
 .shopping-cart-page .common-buttons .estimate-shipping-button:hover,
 .shopping-cart-page .common-buttons .estimate-shipping-button:focus {
-  background-color: #999;
+  background-color: var(--accent-blue-active-color);
 }
 
 
