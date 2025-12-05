@@ -4786,7 +4786,7 @@ label, label + * {
 .estimate-shipping-popup {
   position: relative;
   background: #FFF;
-  padding: 25px 10px;
+  padding: 30px 10px;
   width: auto;
   max-width: 800px;
   margin: 0 auto;
@@ -4828,10 +4828,6 @@ label, label + * {
   position: relative;
   right: 8px;
   margin: 4% 50%;
-}
-
-.shipping-address .required {
-  margin-left: 0px;
 }
 
 .estimate-shipping-row {
@@ -4885,7 +4881,7 @@ label, label + * {
 }
 
 .estimate-shipping-address-control {
-  width: 100%;
+  width: calc(100% - 10px);
   height: 36px;
 }
 
@@ -7326,7 +7322,7 @@ label, label + * {
   /*** ESTIMATE SHIPPING POPUP ***/
 
   .estimate-shipping-popup {
-    padding: 25px;
+    padding: 30px;
   }
 }
 
