@@ -203,7 +203,7 @@
 
 .cmhc-card-img {
   position: relative;
-  padding-top: 62%;
+  padding-top: 10%;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -211,19 +211,19 @@
 
 /* Replace these placeholder paths with your actual images */
 .cmhc-card-img--kungfu {
-  background-image: url('images/kung-fu.png');
+  background-image: none;
 }
 
 .cmhc-card-img--taichi {
-  background-image: url('images/tai-chi.png');
+  background-image: none;
 }
 
 .cmhc-card-img--qigong {
-  background-image: url('images/chi-qong.png');
+  background-image: none;
 }
 
 .cmhc-card-img--tactical {
-  background-image: url('/content/images/tactical-home.jpg');
+  background-image: none;
 }
 
 .cmhc-card-body {
