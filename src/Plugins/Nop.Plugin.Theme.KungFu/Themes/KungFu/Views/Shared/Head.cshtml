@@ -1,0 +1,30 @@
+﻿@using Nop.Core.Domain.Catalog
+@using Nop.Services.Helpers
+
+@inject CatalogSettings catalogSettings
+@inject IThemeContext themeContext
+@inject IUserAgentHelper userAgentHelper
+
+@{
+    Layout ="";
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+    var supportRtl = await Html.ShouldUseRtlThemeAsync();
+
+    //add typography
+    NopHtml.AppendHeadCustomParts("<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />");
+    NopHtml.AppendHeadCustomParts("<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin />");
+    NopHtml.AppendCssFileParts("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+
+    //add main CSS file
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles{(supportRtl ? ".rtl" : "")}.css");
+    NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/topics/topics.css");
+    
+    //add swiper css file
+    if (catalogSettings.DisplayAllPicturesOnCatalogPages)
+    {
+        NopHtml.AppendCssFileParts("~/lib_npm/swiper/swiper-bundle.min.css");
+    }
+
+    //add jQuery UI css file
+    NopHtml.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
+}
