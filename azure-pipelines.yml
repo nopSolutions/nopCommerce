@@ -8,6 +8,8 @@ trigger:
     include:
       - develop
 
+pr: none
+
 
 variables:
   buildConfiguration: 'Release'

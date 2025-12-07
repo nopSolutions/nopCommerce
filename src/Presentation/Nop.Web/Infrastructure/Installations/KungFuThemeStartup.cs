@@ -17,7 +17,7 @@ public partial class KungFuThemeStartup : INopStartup
 
     public void Configure(IApplicationBuilder application)
     {
-        var dataSettings = DataSettingsManager.LoadSettings(reloadSettings: false);
+        var dataSettings = DataSettingsManager.LoadSettings(reload: false);
         if (dataSettings is null || string.IsNullOrWhiteSpace(dataSettings.ConnectionString))
             return;
 
