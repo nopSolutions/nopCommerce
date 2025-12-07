@@ -1,0 +1,65 @@
+@model Nop.Plugin.Theme.KungFu.Models.ConfigurationModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = T("Plugins.Theme.KungFu.Configure.Heading").Text;
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        <span class="badge badge-primary mr-2" style="background: linear-gradient(120deg,#2dd4bf,#6366f1);">
+            <i class="fas fa-bolt mr-1"></i> @T("Plugins.Theme.KungFu.Configure.Heading")
+        </span>
+        <small class="text-muted">@T("Plugins.Theme.KungFu.Configure.Subheading")</small>
+    </h1>
+</div>
+
+<div class="card shadow-sm" style="border-color:#e0e7ff;">
+    <div class="card-body">
+        <div class="d-flex justify-content-between flex-wrap mb-3 align-items-center">
+            <div>
+                <div class="text-uppercase text-secondary small mb-1">@T("Plugins.Theme.KungFu.Fields.LastSyncedOn")</div>
+                <div class="h4 mb-0">@Model.LastSyncedOn</div>
+                <div class="text-muted mt-1">
+                    <i class="fas fa-code-branch"></i>
+                    @T("Plugins.Theme.KungFu.Configure.Version"): <strong>@Model.PluginVersion</strong>
+                </div>
+            </div>
+            <div class="text-right">
+                @if (Model.IsOutdated)
+                {
+                    <span class="badge badge-danger mb-2"><i class="fas fa-exclamation-triangle"></i> @T("Plugins.Theme.KungFu.Configure.Outdated")</span>
+                }
+                else
+                {
+                    <span class="badge badge-success mb-2"><i class="fas fa-check-circle"></i> @T("Plugins.Theme.KungFu.Configure.UpToDate")</span>
+                }
+                <div class="text-muted small">@Model.AccentSummary</div>
+            </div>
+        </div>
+
+        <div class="alert alert-info d-flex align-items-center" style="background: linear-gradient(120deg,#eef2ff,#ecfeff); border-color:#e0e7ff;">
+            <i class="fas fa-magic text-primary mr-2"></i>
+            <div>@T("Plugins.Theme.KungFu.Fields.SyncAutomatically.Hint")</div>
+        </div>
+
+        <form asp-action="Configure" method="post">
+            <div class="form-group form-check mb-4">
+                <input asp-for="SyncAutomatically" class="form-check-input" />
+                <label asp-for="SyncAutomatically" class="form-check-label font-weight-bold"></label>
+                <span class="text-muted small d-block">@T("Plugins.Theme.KungFu.Configure.Subheading")</span>
+            </div>
+
+            <input type="hidden" asp-for="TriggerResync" value="false" />
+            <input type="hidden" asp-for="IsOutdated" />
+
+            <div class="d-flex flex-wrap align-items-center">
+                <button type="submit" class="btn btn-primary mr-2 mb-2" onclick="this.form.TriggerResync.value=true;">
+                    <i class="fas fa-sync-alt mr-1"></i> @T("Plugins.Theme.KungFu.Configure.SyncNow")
+                </button>
+                <button type="submit" class="btn btn-outline-secondary mb-2">
+                    <i class="far fa-save mr-1"></i> @T("Admin.Common.Save")
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
