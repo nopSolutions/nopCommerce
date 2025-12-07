@@ -1,0 +1,267 @@
+@model Nop.Web.Areas.Admin.Models.Services.ServicesProvidedModel
+
+@{
+    ViewBag.Title = "Services provided";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<form asp-controller="ServicesProvided" asp-action="Configure" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">Services Provided</h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-purple">
+                <i class="far fa-save"></i>
+                Save blueprint
+            </button>
+        </div>
+    </div>
+
+    <div class="cards-group">
+        <div class="card shadow-sm border-0" style="background: linear-gradient(135deg, #f0f6ff, #f8f5ff);">
+            <div class="card-body">
+                <div class="row align-items-center mb-3">
+                    <div class="col-md-8">
+                        <h2 class="mb-2">Design your services catalog</h2>
+                        <p class="text-muted mb-0">Curate session types, sub-types, treatment codes, and consumables so therapists can book and bill with confidence.</p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <button type="button" id="seed-sample" class="btn btn-outline-primary me-2">
+                            <i class="far fa-magic me-1"></i> Load sample
+                        </button>
+                        <button type="button" id="add-service" class="btn btn-primary">
+                            <i class="far fa-plus me-1"></i> New service
+                        </button>
+                    </div>
+                </div>
+
+                <div id="services-collection" class="row g-3"></div>
+                <textarea asp-for="ServicesJson" id="services-json" class="form-control mt-3" rows="6" hidden></textarea>
+                <span asp-validation-for="ServicesJson" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</form>
+
+<template id="service-template">
+    <div class="col-12">
+        <div class="card service-card shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                    <div class="flex-fill">
+                        <input type="text" class="form-control form-control-lg service-name" placeholder="Service name (e.g. Neuro Music Therapy)">
+                        <input type="text" class="form-control mt-2 service-description" placeholder="Short description for therapists">
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-6">
+                                <label class="form-label mb-1">Primary treatment code</label>
+                                <input type="text" class="form-control treatment-code" placeholder="HPCSA 2001">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label mb-1">Consumables for the service</label>
+                                <div class="consumable-list"></div>
+                                <button type="button" class="btn btn-link p-0 add-consumable">+ Add consumable</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-light text-danger remove-service"><i class="far fa-trash"></i></button>
+                    </div>
+                </div>
+
+                <div class="subtype-panel mt-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1">Session sub-types</h5>
+                            <p class="text-muted mb-0">Outline variants, duration options, or bundles with their own consumables.</p>
+                        </div>
+                        <button type="button" class="btn btn-outline-secondary add-subtype">
+                            <i class="far fa-plus me-1"></i> Add sub-type
+                        </button>
+                    </div>
+                    <div class="subtype-list mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="subtype-template">
+    <div class="card mb-2 subtype-card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                <div class="flex-fill">
+                    <input type="text" class="form-control subtype-name" placeholder="Sub-type name (e.g. 15-30 minutes Music Therapy)">
+                    <div class="row g-2 mt-2">
+                        <div class="col-md-6">
+                            <label class="form-label mb-1">Treatment code</label>
+                            <input type="text" class="form-control subtype-code" placeholder="HPCSA M-30">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label mb-1">Consumables</label>
+                            <div class="consumable-list"></div>
+                            <button type="button" class="btn btn-link p-0 add-consumable">+ Add consumable</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-light text-danger remove-subtype"><i class="far fa-times"></i></button>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="consumable-template">
+    <div class="input-group mb-2 consumable-row">
+        <input type="text" class="form-control consumable-name" placeholder="Consumable name">
+        <input type="text" class="form-control consumable-code" placeholder="HPCSA code or SKU">
+        <input type="text" class="form-control consumable-qty" placeholder="Qty/usage">
+        <button class="btn btn-outline-danger remove-consumable" type="button"><i class="far fa-trash"></i></button>
+    </div>
+</template>
+
+@section Scripts {
+    <script>
+        (function () {
+            const servicesContainer = document.getElementById('services-collection');
+            const jsonField = document.getElementById('services-json');
+            const sample = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.SampleJson));
+
+            function hydrateFromJson(raw) {
+                servicesContainer.innerHTML = '';
+                let payload = raw;
+                if (!payload) return;
+
+                try {
+                    payload = typeof payload === 'string' ? JSON.parse(payload) : payload;
+                } catch (e) {
+                    console.warn('Unable to parse services JSON', e);
+                    return;
+                }
+
+                const services = payload.services || [];
+                services.forEach(svc => addServiceCard(svc));
+                syncJson();
+            }
+
+            function addServiceCard(data = {}) {
+                const tpl = document.getElementById('service-template');
+                const node = tpl.content.cloneNode(true);
+                const card = node.querySelector('.service-card');
+                card.querySelector('.service-name').value = data.name || '';
+                card.querySelector('.service-description').value = data.description || '';
+                card.querySelector('.treatment-code').value = data.treatmentCode || '';
+
+                const consumableList = card.querySelector('.consumable-list');
+                (data.consumables || []).forEach(consumable => addConsumable(consumableList, consumable));
+
+                const subtypeList = card.querySelector('.subtype-list');
+                (data.subtypes || []).forEach(st => addSubtype(subtypeList, st));
+
+                card.querySelector('.add-subtype').addEventListener('click', () => {
+                    addSubtype(subtypeList);
+                    syncJson();
+                });
+
+                card.querySelector('.add-consumable').addEventListener('click', () => {
+                    addConsumable(consumableList);
+                    syncJson();
+                });
+
+                card.querySelector('.remove-service').addEventListener('click', () => {
+                    card.parentElement.remove();
+                    syncJson();
+                });
+
+                servicesContainer.appendChild(node);
+            }
+
+            function addSubtype(container, data = {}) {
+                const tpl = document.getElementById('subtype-template');
+                const node = tpl.content.cloneNode(true);
+                const card = node.querySelector('.subtype-card');
+                card.querySelector('.subtype-name').value = data.name || '';
+                card.querySelector('.subtype-code').value = data.treatmentCode || '';
+
+                const consumableList = card.querySelector('.consumable-list');
+                (data.consumables || []).forEach(consumable => addConsumable(consumableList, consumable));
+
+                card.querySelector('.add-consumable').addEventListener('click', () => {
+                    addConsumable(consumableList);
+                    syncJson();
+                });
+
+                card.querySelector('.remove-subtype').addEventListener('click', () => {
+                    card.remove();
+                    syncJson();
+                });
+
+                container.appendChild(node);
+            }
+
+            function addConsumable(container, data = {}) {
+                const tpl = document.getElementById('consumable-template');
+                const node = tpl.content.cloneNode(true);
+                const row = node.querySelector('.consumable-row');
+                row.querySelector('.consumable-name').value = data.name || '';
+                row.querySelector('.consumable-code').value = data.code || '';
+                row.querySelector('.consumable-qty').value = data.quantity || '';
+                row.querySelector('.remove-consumable').addEventListener('click', () => {
+                    row.remove();
+                    syncJson();
+                });
+                container.appendChild(node);
+            }
+
+            function serializeConsumables(container) {
+                return Array.from(container.querySelectorAll('.consumable-row')).map(row => ({
+                    name: row.querySelector('.consumable-name').value,
+                    code: row.querySelector('.consumable-code').value,
+                    quantity: row.querySelector('.consumable-qty').value
+                })).filter(item => item.name || item.code || item.quantity);
+            }
+
+            function syncJson() {
+                const services = Array.from(servicesContainer.querySelectorAll('.service-card')).map(card => {
+                    const consumables = serializeConsumables(card.querySelector('.consumable-list'));
+                    const subtypes = Array.from(card.querySelectorAll('.subtype-card')).map(sub => ({
+                        name: sub.querySelector('.subtype-name').value,
+                        treatmentCode: sub.querySelector('.subtype-code').value,
+                        consumables: serializeConsumables(sub.querySelector('.consumable-list'))
+                    })).filter(st => st.name || st.treatmentCode || st.consumables.length);
+
+                    return {
+                        name: card.querySelector('.service-name').value,
+                        description: card.querySelector('.service-description').value,
+                        treatmentCode: card.querySelector('.treatment-code').value,
+                        consumables,
+                        subtypes
+                    };
+                }).filter(s => s.name || s.treatmentCode || s.consumables.length || s.subtypes.length);
+
+                const payload = { services };
+                jsonField.value = JSON.stringify(payload, null, 2);
+            }
+
+            document.getElementById('add-service').addEventListener('click', () => {
+                addServiceCard();
+                syncJson();
+            });
+
+            document.getElementById('seed-sample').addEventListener('click', () => {
+                hydrateFromJson(sample);
+            });
+
+            document.querySelector('form').addEventListener('change', syncJson);
+            document.querySelector('form').addEventListener('keyup', syncJson);
+
+            hydrateFromJson(@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ServicesJson)));
+        })();
+    </script>
+}
+
+<style>
+    .service-card { border-radius: 12px; }
+    .service-card .form-control-lg { font-size: 1.05rem; }
+    .subtype-card { border-color: #eef0f6; border-radius: 10px; }
+    .subtype-panel { background: #fbfbff; border: 1px dashed #e0e2f0; border-radius: 12px; padding: 16px; }
+    #services-collection .card { transition: transform .2s ease, box-shadow .2s ease; }
+    #services-collection .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+</style>
