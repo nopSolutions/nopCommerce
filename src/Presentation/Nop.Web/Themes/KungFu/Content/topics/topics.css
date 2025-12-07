@@ -1,0 +1,233 @@
+.kungfu-topic {
+  margin: 0 auto 60px auto;
+  max-width: 1200px;
+  padding: 32px 20px 72px;
+  color: #f4f4f4;
+  background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+  border-radius: 24px;
+  border: 1px solid #1d1d1d;
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.45);
+}
+
+.kungfu-topic .topic-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.kungfu-topic .topic-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  background: rgba(226, 28, 35, 0.08);
+  border: 1px solid rgba(226, 28, 35, 0.25);
+  border-radius: 999px;
+  color: #f9f9f9;
+  letter-spacing: 0.16em;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.kungfu-topic .topic-eyebrow .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e21c23, #e4433c);
+  box-shadow: 0 0 0 6px rgba(226, 28, 35, 0.18);
+}
+
+.kungfu-topic h1 {
+  margin: 14px 0 10px;
+  font-size: 30px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.kungfu-topic .topic-lede {
+  margin: 0 auto 28px auto;
+  max-width: 820px;
+  color: #d7d7d7;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.kungfu-topic .topic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.kungfu-topic .topic-card {
+  height: 100%;
+  padding: 18px;
+  border-radius: 18px;
+  background: #0f0f0f;
+  border: 1px solid #1f1f1f;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
+}
+
+.kungfu-topic .topic-card.accent {
+  border-color: rgba(226, 28, 35, 0.6);
+  background: radial-gradient(circle at 20% 20%, rgba(226, 28, 35, 0.16), rgba(10, 10, 10, 0.8));
+}
+
+.kungfu-topic h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  letter-spacing: 0.02em;
+}
+
+.kungfu-topic h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+}
+
+.kungfu-topic p {
+  margin: 0 0 12px;
+  color: #d0d0d0;
+  line-height: 1.7;
+}
+
+.kungfu-topic .topic-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.kungfu-topic .topic-list li {
+  position: relative;
+  padding-left: 20px;
+  color: #d7d7d7;
+  line-height: 1.5;
+}
+
+.kungfu-topic .topic-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #e21c23;
+  box-shadow: 0 0 0 5px rgba(226, 28, 35, 0.16);
+}
+
+.kungfu-topic .topic-steps {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kungfu-topic .topic-steps li {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #1f1f1f;
+  background: #0c0c0c;
+}
+
+.kungfu-topic .topic-steps .step-label {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(226, 28, 35, 0.12);
+  color: #f1f1f1;
+  letter-spacing: 0.1em;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.kungfu-topic .topic-panel {
+  margin-bottom: 18px;
+  padding: 16px;
+  border-radius: 18px;
+  background: #0d0d0d;
+  border: 1px solid #1f1f1f;
+}
+
+.kungfu-topic .topic-panel strong {
+  color: #fff;
+}
+
+.kungfu-topic .topic-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 8px 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.kungfu-topic .topic-pills li {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  letter-spacing: 0.05em;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #e5e5e5;
+}
+
+.kungfu-topic .topic-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid #e21c23;
+  color: #fff;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  background: linear-gradient(135deg, rgba(226, 28, 35, 0.24), rgba(226, 28, 35, 0.08));
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.kungfu-topic .topic-cta:hover {
+  background: linear-gradient(135deg, rgba(226, 28, 35, 0.42), rgba(226, 28, 35, 0.16));
+  transform: translateY(-2px);
+}
+
+.kungfu-topic .note {
+  margin-top: 10px;
+  color: #b8b8b8;
+  font-size: 13px;
+}
+
+.kungfu-topic .topic-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.kungfu-topic .topic-alert {
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(226, 28, 35, 0.4);
+  background: rgba(226, 28, 35, 0.1);
+  color: #f8f8f8;
+  margin-bottom: 18px;
+}
+
+.kungfu-topic .topic-muted {
+  color: #b8b8b8;
+}
+
+@media (max-width: 768px) {
+  .kungfu-topic {
+    padding: 24px 18px 48px;
+    margin-bottom: 40px;
+  }
+
+  .kungfu-topic h1 {
+    font-size: 24px;
+  }
+}
