@@ -111,6 +111,7 @@ textarea, select {
   border: 1px solid #ddd;
   padding: 8px;
   vertical-align: middle;
+  direction: rtl;
 }
 
 input, textarea, select, button {
@@ -154,7 +155,7 @@ button, .button-1, .button-2 {
 }
 
 label, label + * {
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 .master-wrapper-content {
@@ -3254,7 +3255,7 @@ label, label + * {
 }
 
 .write-review .review-rating {
-  text-align: center;
+  text-align: right;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -4345,6 +4346,10 @@ label, label + * {
   margin: 0 0 30px;
 }
 
+.change-password-page label {
+  vertical-align: top;
+}
+
 .change-password-recovery-link {
   text-align: left;
   font-size: 13px;
@@ -4529,7 +4534,7 @@ label, label + * {
   min-width: 180px;
   margin: 5px;
   border: none;
-  background-color: #aaa;
+  background-color: var(--accent-blue-color);
   padding: 10px 20px;
   font-size: 15px;
   color: #fff;
@@ -4537,7 +4542,7 @@ label, label + * {
 
 .shopping-cart-page .common-buttons button:hover,
 .shopping-cart-page .common-buttons button:focus {
-  background-color: #999;
+  background-color: var(--accent-blue-active-color);
 }
 
 .shopping-cart-page .common-buttons button:first-child {
@@ -4731,7 +4736,7 @@ label, label + * {
 .cart-collaterals .button-2 {
   display: inline-block;
   border: none;
-  background-color: #aaa;
+  background-color: var(--accent-blue-color);
   padding: 10px 15px;
   color: #fff;
   text-transform: uppercase;
@@ -4739,7 +4744,7 @@ label, label + * {
 
 .cart-collaterals .button-2:hover,
 .cart-collaterals .button-2:focus {
-  background-color: #999;
+  background-color: var(--accent-blue-active-color);
 }
 
 .cart-collaterals .title {
@@ -4833,7 +4838,7 @@ label, label + * {
 .estimate-shipping-popup {
   position: relative;
   background: #FFF;
-  padding: 25px 10px;
+  padding: 30px 10px;
   width: auto;
   max-width: 800px;
   margin: 0 auto;
@@ -4868,6 +4873,11 @@ label, label + * {
   opacity: 0;
 }
 
+.estimate-shipping-popup .mfp-close {
+  left:0;
+  right: auto;
+}
+
 .shipping-options-loading {
   background: url(../images/ajax-loader-small.gif) no-repeat;
   width: 16px;
@@ -4875,10 +4885,6 @@ label, label + * {
   position: relative;
   left: 8px;
   margin: 4% 50%;
-}
-
-.shipping-address .required {
-  margin-right: 0px;
 }
 
 .estimate-shipping-row {
@@ -4903,6 +4909,7 @@ label, label + * {
   padding: 8px 0;
   overflow: hidden;
   overflow-wrap: break-word;
+  text-align: right;
 }
 
 .estimate-shipping-row-item.shipping-header-item {
@@ -4921,6 +4928,7 @@ label, label + * {
 
 .estimate-shipping-row-item-radio {
   flex: 0 0 35px;
+  text-align: right;
 }
 
 .ship-to-title {
@@ -4934,7 +4942,7 @@ label, label + * {
 }
 
 .estimate-shipping-address-control {
-  width: 100%;
+  width: calc(100% - 10px);
   height: 36px;
 }
 
@@ -5043,7 +5051,7 @@ label, label + * {
   min-width: 180px;
   margin: 5px;
   border: none;
-  background-color: #aaa;
+  background-color: var(--accent-blue-color);
   padding: 10px 20px;
   font-size: 15px;
   text-align: center;
@@ -5052,7 +5060,7 @@ label, label + * {
 
 .shopping-cart-page .common-buttons .estimate-shipping-button:hover,
 .shopping-cart-page .common-buttons .estimate-shipping-button:focus {
-  background-color: #999;
+  background-color: var(--accent-blue-active-color);
 }
 
 
@@ -5092,7 +5100,7 @@ label, label + * {
 .product-estimate-shipping .open-estimate-shipping-popup .arrow-down {
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
-  margin: 0 0 3px 6px;
+  margin: 0 6px 3px 0;
   border: solid black;
   border-width: 0 1px 1px 0;
   display: inline-block;
@@ -7168,7 +7176,7 @@ label, label + * {
 
   .write-review .review-rating div.name-description {
     width: 100%;
-    margin: 0 5px 0 0;
+    margin: 0 0 0 5px;
     text-align: center;
   }
 
@@ -7392,7 +7400,7 @@ label, label + * {
   /*** ESTIMATE SHIPPING POPUP ***/
 
   .estimate-shipping-popup {
-    padding: 25px;
+    padding: 30px;
   }
 }
 
@@ -8848,8 +8856,8 @@ label, label + * {
 
   .write-review .review-rating div.name-description {
     width: 265px;
-    margin: 0 5px 0 0;
-    text-align: right
+    margin: 0 0 0 5px;
+    text-align: left;
   }
 
   .product-review-item .review-text {
@@ -9242,7 +9250,7 @@ label, label + * {
   }
 
   .write-review .review-rating div.name-description {
-    margin: 0 5px 0 0;
+    margin: 0 0 0 5px;
     min-width: 375px;
   }
 

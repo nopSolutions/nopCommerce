@@ -957,13 +957,18 @@ public partial class ProductAttributeParser : IProductAttributeParser
         {
             var ctrlStartDate = form[$"rental_start_date_{product.Id}"];
             var ctrlEndDate = form[$"rental_end_date_{product.Id}"];
+
+            var dateFormat = CultureInfo.CurrentCulture.TextInfo.IsRightToLeft ?
+                        CultureInfo.InvariantCulture.DateTimeFormat.ShortDatePattern :
+                        CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
+
             try
             {
                 startDate = DateTime.ParseExact(ctrlStartDate,
-                    CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+                    dateFormat,
                     CultureInfo.InvariantCulture);
                 endDate = DateTime.ParseExact(ctrlEndDate,
-                    CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+                    dateFormat,
                     CultureInfo.InvariantCulture);
             }
             catch

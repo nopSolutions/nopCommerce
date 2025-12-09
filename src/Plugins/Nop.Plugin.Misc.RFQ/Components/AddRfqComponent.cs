@@ -2,6 +2,7 @@
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Misc.RFQ.Services;
+using Nop.Services.Catalog;
 using Nop.Services.Orders;
 using Nop.Web.Framework.Components;
 
@@ -14,6 +15,7 @@ public class AddRfqComponent : NopViewComponent
 {
     #region Fields
 
+    private readonly IProductService _productService;
     private readonly IShoppingCartService _shoppingCartService;
     private readonly IStoreContext _storeContext;
     private readonly IWorkContext _workContext;
@@ -23,11 +25,13 @@ public class AddRfqComponent : NopViewComponent
 
     #region Ctor
 
-    public AddRfqComponent(IShoppingCartService shoppingCartService,
+    public AddRfqComponent(IProductService productService,
+        IShoppingCartService shoppingCartService,
         IStoreContext storeContext,
         IWorkContext workContext,
         RfqService rfqService)
     {
+        _productService = productService;
         _shoppingCartService = shoppingCartService;
         _storeContext = storeContext;
         _workContext = workContext;
@@ -52,6 +56,12 @@ public class AddRfqComponent : NopViewComponent
         var customer = await _workContext.GetCurrentCustomerAsync();
         var store = await _storeContext.GetCurrentStoreAsync();
         var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+
+        var products = await _productService.GetProductsByIdsAsync(cart.Select(i => i.ProductId).ToArray());
+
+        //"enter your price" or rental products in the cart, so we should not show the "Request a quote" button
+        if (products.Any(product => product.CustomerEntersPrice || product.IsRental))
+            return Content(string.Empty);
 
         //is shopping cart created by quote
         if (await cart.AnyAwaitAsync(async shoppingCartItemModel => (await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(shoppingCartItemModel.Id)) != null))
