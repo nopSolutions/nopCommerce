@@ -19,66 +19,41 @@ public class SettingMigration : MigrationBase
             return;
 
         //#7215
-        var displayAttributeCombinationImagesOnly = this.GetSetting("producteditorsettings.displayattributecombinationimagesonly");
-        if (displayAttributeCombinationImagesOnly is not null)
-            this.DeleteSetting(displayAttributeCombinationImagesOnly);
+        this.DeleteSettingsByNames(["producteditorsettings.displayattributecombinationimagesonly"]);
 
         //#7325
-        var orderSettings = this.LoadSetting<OrderSettings>();
-        if (!this.SettingExists(orderSettings, settings => settings.PlaceOrderWithLock))
-        {
-            orderSettings.PlaceOrderWithLock = false;
-            this.SaveSetting(orderSettings, settings => settings.PlaceOrderWithLock);
-        }
-
+        this.SetSettingIfNotExists<OrderSettings, bool>(settings => settings.PlaceOrderWithLock, false);
+        
         //#7394
-        if (orderSettings.MinimumOrderPlacementInterval > 10)
+        this.SetSetting<OrderSettings, int>(settings => settings.MinimumOrderPlacementInterval, setting =>
         {
-            if (orderSettings.MinimumOrderPlacementInterval < 60)
-                orderSettings.MinimumOrderPlacementInterval = 1;
-            else
-                orderSettings.MinimumOrderPlacementInterval = Math.Truncate(orderSettings.MinimumOrderPlacementInterval / 60.0) + (orderSettings.MinimumOrderPlacementInterval % 60) == 0 ? 0 : 1;
-
-            this.SaveSetting(orderSettings, settings => settings.MinimumOrderPlacementInterval);
-        }
+            switch (setting.MinimumOrderPlacementInterval)
+            {
+                case <= 10:
+                    return;
+                case < 60:
+                    setting.MinimumOrderPlacementInterval = 1;
+                    break;
+                default:
+                    setting.MinimumOrderPlacementInterval = Math.Truncate(setting.MinimumOrderPlacementInterval / 60.0) + (setting.MinimumOrderPlacementInterval % 60) == 0 ? 0 : 1;
+                    break;
+            }
+        });
 
         //#7265
-        var taxSetting = this.LoadSetting<TaxSettings>();
-        if (!this.SettingExists(taxSetting, settings => settings.EuVatRequired))
-        {
-            taxSetting.EuVatRequired = false;
-            this.SaveSetting(taxSetting, settings => settings.EuVatRequired);
-        }
+        this.SetSettingIfNotExists<TaxSettings, bool>(settings => settings.EuVatRequired, false);
 
         //#4306
-        var catalogSettings = this.LoadSetting<CatalogSettings>();
-        if (!this.SettingExists(catalogSettings, settings => settings.ShowSearchBoxCategories))
-        {
-            catalogSettings.ShowSearchBoxCategories = false;
-            this.SaveSetting(catalogSettings, settings => settings.ShowSearchBoxCategories);
-        }
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.ShowSearchBoxCategories, false);
 
         //#2388
-        if (!this.SettingExists(catalogSettings, settings => settings.ExportImportTierPrices))
-        {
-            catalogSettings.ExportImportTierPrices = true;
-            this.SaveSetting(catalogSettings, settings => settings.ExportImportTierPrices);
-        }
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.ExportImportTierPrices, true);
 
         //#7228
-        var adminAreaSettings = this.LoadSetting<AdminAreaSettings>();
-        if (!this.SettingExists(adminAreaSettings, settings => settings.ProductsBulkEditGridPageSize))
-        {
-            adminAreaSettings.ProductsBulkEditGridPageSize = 100;
-            this.SaveSetting(adminAreaSettings, settings => settings.ProductsBulkEditGridPageSize);
-        }
+        this.SetSettingIfNotExists<AdminAreaSettings, int>(settings => settings.ProductsBulkEditGridPageSize, 100);
 
         //#7244
-        if (!this.SettingExists(catalogSettings, settings => settings.VendorProductReviewsPageSize))
-        {
-            catalogSettings.VendorProductReviewsPageSize = 6;
-            this.SaveSetting(catalogSettings, settings => settings.VendorProductReviewsPageSize);
-        }
+        this.SetSettingIfNotExists<CatalogSettings, int>(settings => settings.VendorProductReviewsPageSize, 6);
     }
 
     public override void Down()

@@ -26,24 +26,8 @@ public class UpgradeTo470 : Migration
             ["Plugins.Shipping.UPS.Fields.Tracing.Hint"] = "Check if you want to record plugin tracing in System Log. Warning: The entire request and response will be logged (including Client Id/secret, AccountNumber). Do not leave this enabled in a production environment."
         });
 
-        var setting = this.LoadSetting<UPSSettings>();
-        if (!this.SettingExists(setting, settings => settings.RequestTimeout))
-        {
-            setting.RequestTimeout = UPSDefaults.RequestTimeout;
-            this.SaveSetting(setting, settings => settings.RequestTimeout);
-        }
-
-        var accessKey = this.GetSetting("upssettings.accesskey");
-        if (accessKey is not null)
-            this.DeleteSetting(accessKey);
-
-        var username = this.GetSetting("upssettings.username");
-        if (username is not null)
-            this.DeleteSetting(username);
-
-        var password = this.GetSetting("upssettings.password");
-        if (password is not null)
-            this.DeleteSetting(password);
+        this.SetSettingIfNotExists<UPSSettings, int?>(settings => settings.RequestTimeout, UPSDefaults.RequestTimeout);
+        this.DeleteSettingsByNames(["upssettings.accesskey", "upssettings.username", "upssettings.password"]);
     }
 
     public override void Down()

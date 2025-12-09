@@ -10,21 +10,6 @@ namespace Nop.Plugin.Tax.Avalara.Data;
 [NopMigration("2021-12-06 00:00:00", "Tax.Avalara 2.60. New schedule task", MigrationProcessType.Update)]
 public class ScheduleTaskMigration : MigrationBase
 {
-    #region Fields
-
-    protected readonly AvalaraTaxSettings _avalaraTaxSettings;
-
-    #endregion
-
-    #region Ctor
-
-    public ScheduleTaskMigration(AvalaraTaxSettings avalaraTaxSettings)
-    {
-        _avalaraTaxSettings = avalaraTaxSettings;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -43,9 +28,7 @@ public class ScheduleTaskMigration : MigrationBase
         });
 
         //settings
-        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.UseTaxRateTables))
-            _avalaraTaxSettings.UseTaxRateTables = true;
-        this.SaveSetting(_avalaraTaxSettings);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.UseTaxRateTables, true);
 
         //in version 4.50 we added the LastEnabledUtc field to the ScheduleTask entity,
         //we need to make sure that these changes are applied before inserting new task into the database

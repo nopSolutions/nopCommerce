@@ -8,21 +8,6 @@ namespace Nop.Plugin.Tax.Avalara.Data;
 [NopMigration("2021-09-06 00:00:00", "Tax.Avalara 2.50. Add certificates feature", MigrationProcessType.Update)]
 public class CertificatesMigration : MigrationBase
 {
-    #region Fields
-
-    protected readonly AvalaraTaxSettings _avalaraTaxSettings;
-
-    #endregion
-
-    #region Ctor
-
-    public CertificatesMigration(AvalaraTaxSettings avalaraTaxSettings)
-    {
-        _avalaraTaxSettings = avalaraTaxSettings;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -101,25 +86,15 @@ public class CertificatesMigration : MigrationBase
         });
 
         //settings
-        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.CompanyId))
-            _avalaraTaxSettings.CompanyId = null;
-        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.EnableCertificates))
-            _avalaraTaxSettings.EnableCertificates = false;
-        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.AutoValidateCertificate))
-            _avalaraTaxSettings.AutoValidateCertificate = true;
-        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.AllowEditCustomer))
-            _avalaraTaxSettings.AllowEditCustomer = true;
-        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.DisplayNoValidCertificatesMessage))
-            _avalaraTaxSettings.DisplayNoValidCertificatesMessage = true;
-        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.CustomerRoleIds))
-            _avalaraTaxSettings.CustomerRoleIds = null;
-        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.PreviewCertificate))
-            _avalaraTaxSettings.PreviewCertificate = false;
-        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.UploadOnly))
-            _avalaraTaxSettings.UploadOnly = false;
-        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.FillOnly))
-            _avalaraTaxSettings.FillOnly = false;
-        this.SaveSetting(_avalaraTaxSettings);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, int?>(settings => settings.CompanyId, (int?)null);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.EnableCertificates, false);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.AutoValidateCertificate, true);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.AllowEditCustomer, true);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.DisplayNoValidCertificatesMessage, true);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, List<int>>(settings => settings.CustomerRoleIds, (List<int>)null);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.PreviewCertificate, false);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.UploadOnly, false);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.FillOnly, false);
     }
 
     /// <summary>

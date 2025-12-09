@@ -19,110 +19,54 @@ public class SettingMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        var customerSettings = this.LoadSetting<CustomerSettings>();
-        if (!this.SettingExists(customerSettings, settings => settings.PasswordMaxLength))
-        {
-            customerSettings.PasswordMaxLength = 64;
-            this.SaveSetting(customerSettings, settings => settings.PasswordMaxLength);
-        }
+        this.SetSettingIfNotExists<CustomerSettings, int>(settings => settings.PasswordMaxLength, 64);
+        this.SetSettingIfNotExists<CustomerSettings, int?>(settings => settings.DefaultCountryId, value: null);
 
-        if (!this.SettingExists(customerSettings, settings => settings.DefaultCountryId))
-        {
-            customerSettings.DefaultCountryId = null;
-            this.SaveSetting(customerSettings, settings => settings.DefaultCountryId);
-        }
-
-        var securitySettings = this.LoadSetting<SecuritySettings>();
-        if (!this.SettingExists(securitySettings, settings => settings.UseAesEncryptionAlgorithm))
-        {
-            securitySettings.UseAesEncryptionAlgorithm = false;
-            this.SaveSetting(securitySettings, settings => settings.UseAesEncryptionAlgorithm);
-        }
-
-        if (!this.SettingExists(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword))
-        {
-            securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword = true;
-            this.SaveSetting(securitySettings, settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword);
-        }
+        this.SetSettingIfNotExists<SecuritySettings, bool>(settings => settings.UseAesEncryptionAlgorithm, false);
+        this.SetSettingIfNotExists<SecuritySettings, bool>(settings => settings.AllowStoreOwnerExportImportCustomersWithHashedPassword, true);
 
         //#7053
-        if (!this.SettingExists(securitySettings, settings => settings.LogHoneypotDetection))
-        {
-            securitySettings.LogHoneypotDetection = true;
-            this.SaveSetting(securitySettings, settings => settings.LogHoneypotDetection);
-        }
+        this.SetSettingIfNotExists<SecuritySettings, bool>(settings => settings.LogHoneypotDetection, true);
+        this.SetSettingIfNotExists<AddressSettings, int?>(settings => settings.DefaultCountryId, value: null);
 
-        var addressSettings = this.LoadSetting<AddressSettings>();
-        if (!this.SettingExists(addressSettings, settings => settings.DefaultCountryId))
-        {
-            addressSettings.DefaultCountryId = null;
-            this.SaveSetting(addressSettings, settings => settings.DefaultCountryId);
-        }
-
-        var captchaSettings = this.LoadSetting<CaptchaSettings>();
         //#6682
-        if (!this.SettingExists(captchaSettings, settings => settings.ShowOnNewsletterPage))
-        {
-            captchaSettings.ShowOnNewsletterPage = false;
-            this.SaveSetting(captchaSettings, settings => settings.ShowOnNewsletterPage);
-        }
-
-        var taxSettings = this.LoadSetting<TaxSettings>();
-        if (!this.SettingExists(taxSettings, settings => settings.AutomaticallyDetectCountry))
-        {
-            taxSettings.AutomaticallyDetectCountry = true;
-            this.SaveSetting(taxSettings, settings => settings.AutomaticallyDetectCountry);
-        }
+        this.SetSettingIfNotExists<CaptchaSettings, bool>(settings => settings.ShowOnNewsletterPage, false);
+        this.SetSettingIfNotExists<TaxSettings, bool>(settings => settings.AutomaticallyDetectCountry, true);
 
         //#6716
-        var newDisallowPaths = new[]
+        this.SetSettingIfNotExists<RobotsTxtSettings, List<string>>(settings => settings.DisallowPaths, setting =>
         {
-            "/cart/estimateshipping", "/cart/selectshippingoption", "/customer/addressdelete",
-            "/customer/removeexternalassociation", "/customer/checkusernameavailability",
-            "/catalog/searchtermautocomplete", "/catalog/getcatalogroot", "/addproducttocart/catalog/*",
-            "/addproducttocart/details/*", "/compareproducts/add/*", "/backinstocksubscribe/*",
-            "/subscribenewsletter", "/t-popup/*", "/setproductreviewhelpfulness", "/poll/vote",
-            "/country/getstatesbycountryid/", "/eucookielawaccept", "/topic/authenticate",
-            "/category/products/", "/product/combinations", "/uploadfileproductattribute/*",
-            "/shoppingcart/productdetails_attributechange/*", "/uploadfilereturnrequest",
-            "/boards/topicwatch/*", "/boards/forumwatch/*", "/install/restartapplication",
-            "/boards/postvote", "/product/estimateshipping/*", "/shoppingcart/checkoutattributechange/*"
-        };
+            var newDisallowPaths = new[]
+            {
+                "/cart/estimateshipping", "/cart/selectshippingoption", "/customer/addressdelete",
+                "/customer/removeexternalassociation", "/customer/checkusernameavailability",
+                "/catalog/searchtermautocomplete", "/catalog/getcatalogroot", "/addproducttocart/catalog/*",
+                "/addproducttocart/details/*", "/compareproducts/add/*", "/backinstocksubscribe/*",
+                "/subscribenewsletter", "/t-popup/*", "/setproductreviewhelpfulness", "/poll/vote",
+                "/country/getstatesbycountryid/", "/eucookielawaccept", "/topic/authenticate",
+                "/category/products/", "/product/combinations", "/uploadfileproductattribute/*",
+                "/shoppingcart/productdetails_attributechange/*", "/uploadfilereturnrequest",
+                "/boards/topicwatch/*", "/boards/forumwatch/*", "/install/restartapplication",
+                "/boards/postvote", "/product/estimateshipping/*", "/shoppingcart/checkoutattributechange/*"
+            };
 
-        var robotsTxtSettings = this.LoadSetting<RobotsTxtSettings>();
+            foreach (var path in newDisallowPaths)
+            {
+                if (setting.DisallowPaths.Contains(path))
+                    continue;
 
-        foreach (var path in newDisallowPaths)
-        {
-            if (robotsTxtSettings.DisallowPaths.Contains(path))
-                continue;
-
-            robotsTxtSettings.DisallowPaths.Add(path);
-        }
-
-        this.SaveSetting(robotsTxtSettings, settings => settings.DisallowPaths);
+                setting.DisallowPaths.Add(path);
+            }
+        });
 
         //#6853
-        if (!this.SettingExists(customerSettings, settings => settings.NeutralGenderEnabled))
-        {
-            customerSettings.NeutralGenderEnabled = false;
-            this.SaveSetting(customerSettings, settings => settings.NeutralGenderEnabled);
-        }
+        this.SetSettingIfNotExists<CustomerSettings, bool>(settings => settings.NeutralGenderEnabled, false);
 
         //#6891
-        if (!this.SettingExists(customerSettings, settings => settings.RequiredReLoginAfterPasswordChange))
-        {
-            customerSettings.RequiredReLoginAfterPasswordChange = false;
-            this.SaveSetting(customerSettings, settings => settings.RequiredReLoginAfterPasswordChange);
-        }
+        this.SetSettingIfNotExists<CustomerSettings, bool>(settings => settings.RequiredReLoginAfterPasswordChange, false);
 
         //#7064
-        var catalogSettings = this.LoadSetting<CatalogSettings>();
-        if (!this.SettingExists(catalogSettings, settings => settings.UseStandardSearchWhenSearchProviderThrowsException))
-        {
-            catalogSettings.UseStandardSearchWhenSearchProviderThrowsException = true;
-            this.SaveSetting(catalogSettings, settings => settings.UseStandardSearchWhenSearchProviderThrowsException);
-        }
-
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.UseStandardSearchWhenSearchProviderThrowsException, true);
     }
 
     public override void Down()

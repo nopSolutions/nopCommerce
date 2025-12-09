@@ -9,13 +9,7 @@ public class AddLoadAllRecordSetting : Migration
 {
     public override void Up()
     {
-        var pluginSettings = this.LoadSetting<FixedByWeightByTotalSettings>();
-
-        if (!this.SettingExists(pluginSettings, settings => settings.LoadAllRecord))
-        {
-            pluginSettings.LoadAllRecord = true;
-            this.SaveSetting(pluginSettings, settings => settings.LoadAllRecord);
-        }
+        this.SetSettingIfNotExists<FixedByWeightByTotalSettings, bool>(settings => settings.LoadAllRecord, true);
     }
 
     public override void Down()

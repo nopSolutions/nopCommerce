@@ -14,18 +14,14 @@ public class BrevoMigration : MigrationBase
     #region Fields
 
     protected readonly INopDataProvider _dataProvider;
-    protected readonly WidgetSettings _widgetSettings;
 
     #endregion
 
     #region Ctor
 
-    public BrevoMigration(INopDataProvider dataProvider,
-        WidgetSettings widgetSettings
-    )
+    public BrevoMigration(INopDataProvider dataProvider)
     {
         _dataProvider = dataProvider;
-        _widgetSettings = widgetSettings;
     }
 
     #endregion
@@ -127,11 +123,13 @@ public class BrevoMigration : MigrationBase
             _dataProvider.UpdateEntities(sendinblueSettings);
         }
 
-        if (!_widgetSettings.ActiveWidgetSystemNames.Contains(BrevoDefaults.SystemName))
+        this.SetSetting<WidgetSettings, List<string>>(settings => settings.ActiveWidgetSystemNames, setting =>
         {
-            _widgetSettings.ActiveWidgetSystemNames.Add(BrevoDefaults.SystemName);
-            this.SaveSetting(_widgetSettings);
-        }
+            if (setting.ActiveWidgetSystemNames.Contains(BrevoDefaults.SystemName)) 
+                return;
+
+            setting.ActiveWidgetSystemNames.Add(BrevoDefaults.SystemName);
+        });
 
         #endregion
 

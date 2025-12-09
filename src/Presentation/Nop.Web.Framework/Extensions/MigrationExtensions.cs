@@ -32,9 +32,8 @@ public static partial class MigrationExtensions
     {
         return staticCacheManager.Get(NopSettingsDefaults.SettingsAllAsDictionaryCacheKey, () =>
         {
-            var settings = syncCodeHelper.GetAllEntities<Setting>(query => from s in query
-                                                                           orderby s.Name, s.StoreId
-                                                                           select s, _ => default);
+            var settings = syncCodeHelper.GetAllEntities<Setting>(query =>
+                query.OrderBy(s => s.Name).ThenBy(s => s.StoreId), _ => default);
 
             var dictionary = new Dictionary<string, IList<Setting>>();
             foreach (var s in settings)
@@ -76,50 +75,74 @@ public static partial class MigrationExtensions
     }
 
     /// <summary>
-    /// Set setting value
+    /// Get setting value
     /// </summary>
-    /// <param name="staticCacheManager">Static cache manager</param>
-    /// <param name="syncCodeHelper">Sync code helper</param>
-    /// <param name="type">Type</param>
-    /// <param name="key">Key</param>
-    /// <param name="value">Value</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-    private static void SetSetting(IStaticCacheManager staticCacheManager, ISyncCodeHelper syncCodeHelper, Type type, string key, object value, int storeId = 0, bool clearCache = true)
+    /// <typeparam name="TSettings">Type of settings</typeparam>
+    /// <typeparam name="TPropType">Property type</typeparam>
+    /// <param name="settings">The setting</param>
+    /// <param name="keySelector">Key selector</param>
+    /// <returns>Value</returns>
+    private static TPropType GetValue<TSettings, TPropType>(TSettings settings, Expression<Func<TSettings, TPropType>> keySelector)
     {
-        ArgumentNullException.ThrowIfNull(key);
-        key = key.Trim().ToLowerInvariant();
-        var valueStr = TypeDescriptor.GetConverter(type).ConvertToInvariantString(value);
+        if (keySelector.Body is not MemberExpression member)
+            throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
 
-        var allSettings = GetAllSettingsDictionary(staticCacheManager, syncCodeHelper);
-        var settingForCaching = allSettings.TryGetValue(key, out var settings)
-            ? settings.FirstOrDefault(x => x.StoreId == storeId)
-            : null;
-        if (settingForCaching != null)
-        {
-            //update
-            var setting = syncCodeHelper.GetEntityById<Setting>(settingForCaching.Id, _ => default);
-            setting.Value = valueStr;
+        var propInfo = member.Member as PropertyInfo
+            ?? throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
 
-            syncCodeHelper.UpdateEntity(setting);
-
-            //cache
-            if (clearCache)
-                staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
-        }
-        else
-        {
-            //insert
-            var setting = new Setting { Name = key, Value = valueStr, StoreId = storeId };
-
-            syncCodeHelper.InsertEntity(setting);
-
-            //cache
-            if (clearCache)
-                staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
-        }
+        return (TPropType)propInfo.GetValue(settings, null);
     }
 
+    /// <summary>
+    /// Set setting value
+    /// </summary>
+    /// <typeparam name="T">Type</typeparam>
+    /// <param name="key">Key</param>
+    /// <param name="value">Value</param>
+    private static void SetSetting<T>(string key, T value)
+    {
+        var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
+        var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
+
+        setSetting(typeof(T));
+
+        return;
+
+        void setSetting(Type type)
+        {
+            ArgumentNullException.ThrowIfNull(key);
+            key = key.Trim().ToLowerInvariant();
+            var valueStr = TypeDescriptor.GetConverter(type).ConvertToInvariantString(value);
+
+            var allSettings = GetAllSettingsDictionary(staticCacheManager, syncCodeHelper);
+            var settingForCaching = allSettings.TryGetValue(key, out var settings)
+                ? settings.FirstOrDefault(x => x.StoreId == 0)
+                : null;
+
+            if (settingForCaching != null)
+            {
+                //update
+                var setting = syncCodeHelper.GetEntityById<Setting>(settingForCaching.Id, _ => default);
+                setting.Value = valueStr;
+
+                syncCodeHelper.UpdateEntity(setting);
+
+                //cache
+                staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
+            }
+            else
+            {
+                //insert
+                var setting = new Setting { Name = key, Value = valueStr, StoreId = 0 };
+
+                syncCodeHelper.InsertEntity(setting);
+
+                //cache
+                staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
+            }
+        }
+    }
+    
     #endregion
 
     #region Localization
@@ -264,23 +287,7 @@ public static partial class MigrationExtensions
     #endregion
 
     #region Setting
-
-    /// <summary>
-    /// Deletes a setting
-    /// </summary>
-    /// <param name="_">Migration</param>
-    /// <param name="setting">Setting</param>
-    public static void DeleteSetting(this IMigration _, Setting setting)
-    {
-        var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
-        var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-
-        syncCodeHelper.DeleteEntity(setting);
-
-        //cache
-        staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
-    }
-
+    
     /// <summary>
     /// Deletes a setting
     /// </summary>
@@ -296,40 +303,7 @@ public static partial class MigrationExtensions
         //cache
         staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
     }
-
-    /// <summary>
-    /// Get setting by key
-    /// </summary>
-    /// <param name="_">Migration</param>
-    /// <param name="key">Key</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
-    /// <returns>
-    /// The setting
-    /// </returns>
-    public static Setting GetSetting(this IMigration _, string key, int storeId = 0, bool loadSharedValueIfNotFound = false)
-    {
-        if (string.IsNullOrEmpty(key))
-            return null;
-
-        var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
-        var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-
-        var settings = GetAllSettingsDictionary(staticCacheManager, syncCodeHelper);
-        key = key.Trim().ToLowerInvariant();
-        if (!settings.TryGetValue(key, out var value))
-            return null;
-
-        var settingsByKey = value;
-        var setting = settingsByKey.FirstOrDefault(x => x.StoreId == storeId);
-
-        //load shared value?
-        if (setting == null && storeId > 0 && loadSharedValueIfNotFound)
-            setting = settingsByKey.FirstOrDefault(x => x.StoreId == 0);
-
-        return setting;
-    }
-
+    
     /// <summary>
     /// Get setting value by key
     /// </summary>
@@ -365,149 +339,141 @@ public static partial class MigrationExtensions
 
         return setting != null ? CommonHelper.To<T>(setting.Value) : defaultValue;
     }
+    
+    /// <summary>
+    /// Set setting value
+    /// </summary>
+    /// <typeparam name="T">Type</typeparam>
+    /// <param name="migration">Migration</param>
+    /// <param name="key">Key</param>
+    /// <param name="value">Value</param>
+    public static void SetSettingIfNotExists<T>(this IMigration migration, string key, T value)
+    {
+        if (GetSettingByKey<string>(migration, key) != null)
+            return;
+
+        SetSetting(key, value);
+    }
 
     /// <summary>
     /// Set setting value
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
-    /// <param name="_">Migration</param>
-    /// <param name="key">Key</param>
-    /// <param name="value">Value</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-    public static void SetSetting<T>(this IMigration _, string key, T value, int storeId = 0, bool clearCache = true)
-    {
-        var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
-        var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-
-        SetSetting(staticCacheManager, syncCodeHelper, typeof(T), key, value, storeId, clearCache);
-    }
-
-    /// <summary>
-    /// Determines whether a setting exists
-    /// </summary>
-    /// <typeparam name="T">Entity type</typeparam>
     /// <typeparam name="TPropType">Property type</typeparam>
     /// <param name="migration">Migration</param>
-    /// <param name="settings">Entity</param>
     /// <param name="keySelector">Key selector</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <returns>
-    /// The true -setting exists; false - does not exist
-    /// </returns>
-    public static bool SettingExists<T, TPropType>(this IMigration migration, T settings,
-        Expression<Func<T, TPropType>> keySelector, int storeId = 0)
-        where T : ISettings, new()
+    public static void SetSettingIfNotExists<T, TPropType>(this IMigration migration, Expression<Func<T, TPropType>> keySelector) where T : ISettings, new()
     {
-        var key = GetSettingKey(keySelector);
-
-        var setting = GetSettingByKey<string>(migration, key, storeId: storeId);
-        return setting != null;
+        SetSettingIfNotExists(migration, keySelector, setting => GetValue(setting, keySelector));
     }
 
     /// <summary>
-    /// Load settings
-    /// </summary>
-    /// <param name="migration">Migration</param>
-    /// <typeparam name="T">Type</typeparam>
-    /// <param name="storeId">Store identifier for which settings should be loaded</param>
-    public static T LoadSetting<T>(this IMigration migration, int storeId = 0) where T : ISettings, new()
-    {
-        var type = typeof(T);
-        var settings = Activator.CreateInstance(type);
-
-        if (!DataSettingsManager.IsDatabaseInstalled())
-            return (T)settings;
-
-        foreach (var prop in type.GetProperties())
-        {
-            // get properties we can read and write to
-            if (!prop.CanRead || !prop.CanWrite)
-                continue;
-
-            var key = type.Name + "." + prop.Name;
-            //load by store
-            var setting = GetSettingByKey<string>(migration, key, storeId: storeId, loadSharedValueIfNotFound: true);
-            if (setting == null)
-                continue;
-
-            if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
-                continue;
-
-            if (!TypeDescriptor.GetConverter(prop.PropertyType).IsValid(setting))
-                continue;
-
-            var value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromInvariantString(setting);
-
-            //set property
-            prop.SetValue(settings, value, null);
-        }
-
-        return (T)settings;
-    }
-
-    /// <summary>
-    /// Save settings object
+    /// Set setting value
     /// </summary>
     /// <typeparam name="T">Type</typeparam>
-    /// <param name="migration">Migration</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <param name="settings">Setting instance</param>
-    public static void SaveSetting<T>(this IMigration migration, T settings, int storeId = 0) where T : ISettings, new()
-    {
-        var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
-        var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-
-        /* We do not clear cache after each setting update.
-         * This behavior can increase performance because cached settings will not be cleared
-         * and loaded from database after each update */
-        foreach (var prop in typeof(T).GetProperties())
-        {
-            // get properties we can read and write to
-            if (!prop.CanRead || !prop.CanWrite)
-                continue;
-
-            if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
-                continue;
-
-            var key = typeof(T).Name + "." + prop.Name;
-            var value = prop.GetValue(settings, null);
-            if (value != null)
-                SetSetting(staticCacheManager, syncCodeHelper, prop.PropertyType, key, value, storeId, false);
-            else
-                SetSetting(migration, key, string.Empty, storeId, false);
-        }
-
-        //and now clear cache
-        staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
-    }
-
-    /// <summary>
-    /// Save settings object
-    /// </summary>
-    /// <typeparam name="T">Entity type</typeparam>
     /// <typeparam name="TPropType">Property type</typeparam>
     /// <param name="migration">Migration</param>
-    /// <param name="settings">Settings</param>
     /// <param name="keySelector">Key selector</param>
-    /// <param name="storeId">Store ID</param>
-    /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-    public static void SaveSetting<T, TPropType>(this IMigration migration, T settings,
-        Expression<Func<T, TPropType>> keySelector,
-        int storeId = 0, bool clearCache = true) where T : ISettings, new()
+    /// <param name="value">The value to set</param>
+    public static void SetSettingIfNotExists<T, TPropType>(this IMigration migration, Expression<Func<T, TPropType>> keySelector, TPropType value) where T : ISettings, new()
     {
-        if (keySelector.Body is not MemberExpression member)
-            throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
+        SetSettingIfNotExists(migration, keySelector, _ =>
+        {
+            var key = GetSettingKey(keySelector);
+            SetSetting(key, value);
+        });
+    }
 
-        var propInfo = member.Member as PropertyInfo
-            ?? throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
+    /// <summary>
+    /// Set setting value
+    /// </summary>
+    /// <typeparam name="T">Type</typeparam>
+    /// <typeparam name="TPropType">Property type</typeparam>
+    /// <param name="migration">Migration</param>
+    /// <param name="keySelector">Key selector</param>
+    /// <param name="action">Action</param>
+    public static void SetSettingIfNotExists<T, TPropType>(this IMigration migration, Expression<Func<T, TPropType>> keySelector, Action<T> action) where T : ISettings, new()
+    {
+        if (GetSettingByKey<string>(migration, GetSettingKey(keySelector), storeId: 0) != null)
+            return;
+        
+        SetSetting(migration, keySelector, action);
+    }
 
-        var key = GetSettingKey(keySelector);
-        var value = (TPropType)propInfo.GetValue(settings, null);
-        if (value != null)
-            SetSetting(migration, key, value, storeId, clearCache);
+    /// <summary>
+    /// Set setting value
+    /// </summary>
+    /// <typeparam name="T">Type</typeparam>
+    /// <typeparam name="TPropType">Property type</typeparam>
+    /// <param name="migration">Migration</param>
+    /// <param name="keySelector">Key selector</param>
+    /// <param name="action">Action</param>
+    public static void SetSetting<T, TPropType>(this IMigration migration, Expression<Func<T, TPropType>> keySelector, Action<T> action) where T : ISettings, new()
+    {
+        var loadedSetting = loadSetting();
+
+        action(loadedSetting);
+
+        var settingValue = GetValue(loadedSetting, keySelector);
+        var settingKey = GetSettingKey(keySelector);
+
+        if (settingValue != null)
+            SetSetting(settingKey, settingValue);
         else
-            SetSetting(migration, key, string.Empty, storeId, clearCache);
+            SetSetting(settingKey, string.Empty);
+
+        return;
+
+        T loadSetting()
+        {
+            var type = typeof(T);
+            var settings = Activator.CreateInstance(type);
+
+            if (!DataSettingsManager.IsDatabaseInstalled())
+                return (T)settings;
+
+            foreach (var prop in type.GetProperties())
+            {
+                // get properties we can read and write to
+                if (!prop.CanRead || !prop.CanWrite)
+                    continue;
+
+                var key = type.Name + "." + prop.Name;
+                //load by store
+                var setting = GetSettingByKey<string>(migration, key);
+                if (setting == null)
+                    continue;
+
+                if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
+                    continue;
+
+                if (!TypeDescriptor.GetConverter(prop.PropertyType).IsValid(setting))
+                    continue;
+
+                var value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromInvariantString(setting);
+
+                //set property
+                prop.SetValue(settings, value, null);
+            }
+
+            return (T)settings;
+        }
+    }
+
+    /// <summary>
+    /// Deletes a setting
+    /// </summary>
+    /// <param name="_">Migration</param>
+    /// <param name="settingNames">Array of setting's name</param>
+    public static void DeleteSettingsByNames(this IMigration _, string[] settingNames)
+    {
+        var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
+        var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
+
+        syncCodeHelper.DeleteEntities<Setting>(setting => settingNames.Contains(setting.Name.ToLowerInvariant()));
+
+        //cache
+        staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
     }
 
     #endregion

@@ -11,21 +11,6 @@ namespace Nop.Plugin.Tax.Avalara.Data;
 [NopMigration("2023-05-01 00:00:02", "Tax.Avalara 4.70.2. Add Item classification feature", MigrationProcessType.Update)]
 public class ItemClassificationMigration : MigrationBase
 {
-    #region Fields
-
-    protected readonly AvalaraTaxSettings _avalaraTaxSettings;
-
-    #endregion
-
-    #region Ctor
-
-    public ItemClassificationMigration(AvalaraTaxSettings avalaraTaxSettings)
-    {
-        _avalaraTaxSettings = avalaraTaxSettings;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -70,13 +55,8 @@ public class ItemClassificationMigration : MigrationBase
         });
 
         //settings
-        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.UseItemClassification))
-            _avalaraTaxSettings.UseItemClassification = false;
-
-        if (!this.SettingExists(_avalaraTaxSettings, settings => settings.SelectedCountryIds))
-            _avalaraTaxSettings.SelectedCountryIds = null;
-
-        this.SaveSetting(_avalaraTaxSettings);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.UseItemClassification, false);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, List<int>>(settings => settings.SelectedCountryIds, (List<int>)null);
     }
 
     /// <summary>

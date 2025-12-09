@@ -15,19 +15,16 @@ public class AdvancedCardsMigration : MigrationBase
 
     private readonly OnboardingHttpClient _httpClient;
     private readonly PayPalCommerceServiceManager _serviceManager;
-    private readonly PayPalCommerceSettings _settings;
 
     #endregion
 
     #region Ctor
 
     public AdvancedCardsMigration(OnboardingHttpClient httpClient,
-        PayPalCommerceServiceManager serviceManager,
-        PayPalCommerceSettings settings)
+        PayPalCommerceServiceManager serviceManager)
     {
         _httpClient = httpClient;
         _serviceManager = serviceManager;
-        _settings = settings;
     }
 
     #endregion
@@ -109,71 +106,41 @@ public class AdvancedCardsMigration : MigrationBase
             ["Plugins.Payments.PayPalCommerce.Shipment.Carrier.Hint"] = "Specify the carrier for the shipment (e.g. UPS or FEDEX_UK, see allowed values on PayPal site).",
         });
 
-        if (!this.SettingExists(_settings, settings => settings.MerchantId))
-            _settings.MerchantId = null;
+        this.SetSettingIfNotExists<PayPalCommerceSettings, string>(settings => settings.MerchantId, (string)null);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, bool>(settings => settings.UseCardFields, false);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, bool>(settings => settings.CustomerAuthenticationRequired, true);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, bool>(settings => settings.UseApplePay, false);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, bool>(settings => settings.UseGooglePay, false);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, bool>(settings => settings.UseAlternativePayments, false);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, bool>(settings => settings.UseVault, false);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, bool>(settings => settings.SkipOrderConfirmPage, false);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, bool>(settings => settings.UseShipmentTracking, false);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, bool>(settings => settings.DisplayButtonsOnPaymentMethod, true);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, bool>(settings => settings.HideCheckoutButton, false);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, bool>(settings => settings.ImmediatePaymentRequired, false);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, int>(settings => settings.OrderValidityInterval, 300);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, bool>(settings => settings.ConfiguratorSupported, false);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, string>(settings => settings.PayLaterConfig, (string)null);
+        this.SetSettingIfNotExists<PayPalCommerceSettings, bool>(settings => settings.MerchantIdRequired, false);
 
-        if (!this.SettingExists(_settings, settings => settings.UseCardFields))
-            _settings.UseCardFields = false;
-
-        if (!this.SettingExists(_settings, settings => settings.CustomerAuthenticationRequired))
-            _settings.CustomerAuthenticationRequired = true;
-
-        if (!this.SettingExists(_settings, settings => settings.UseApplePay))
-            _settings.UseApplePay = false;
-
-        if (!this.SettingExists(_settings, settings => settings.UseGooglePay))
-            _settings.UseGooglePay = false;
-
-        if (!this.SettingExists(_settings, settings => settings.UseAlternativePayments))
-            _settings.UseAlternativePayments = false;
-
-        if (!this.SettingExists(_settings, settings => settings.UseVault))
-            _settings.UseVault = false;
-
-        if (!this.SettingExists(_settings, settings => settings.SkipOrderConfirmPage))
-            _settings.SkipOrderConfirmPage = false;
-
-        if (!this.SettingExists(_settings, settings => settings.UseShipmentTracking))
-            _settings.UseShipmentTracking = false;
-
-        if (!this.SettingExists(_settings, settings => settings.DisplayButtonsOnPaymentMethod))
-            _settings.DisplayButtonsOnPaymentMethod = true;
-
-        if (!this.SettingExists(_settings, settings => settings.HideCheckoutButton))
-            _settings.HideCheckoutButton = false;
-
-        if (!this.SettingExists(_settings, settings => settings.ImmediatePaymentRequired))
-            _settings.ImmediatePaymentRequired = false;
-
-        if (!this.SettingExists(_settings, settings => settings.OrderValidityInterval))
-            _settings.OrderValidityInterval = 300;
-
-        if (!this.SettingExists(_settings, settings => settings.ConfiguratorSupported))
-            _settings.ConfiguratorSupported = false;
-
-        if (!this.SettingExists(_settings, settings => settings.PayLaterConfig))
-            _settings.PayLaterConfig = null;
-
-        if (!this.SettingExists(_settings, settings => settings.MerchantIdRequired))
-            _settings.MerchantIdRequired = false;
-
-        try
+        this.SetSetting<PayPalCommerceSettings, string>(settings => settings.MerchantId, setting =>
         {
-            if (_settings.SetCredentialsManually)
-                _settings.MerchantIdRequired = true;
-            else if (!string.IsNullOrEmpty(_settings.MerchantGuid) && _serviceManager.IsActiveAsync(_settings).Result.Active)
+            try
             {
-                _settings.MerchantIdRequired = true;
-                _settings.MerchantId = _httpClient.GetMerchantAsync(_settings.MerchantGuid).Result?.MerchantId;
-                _settings.MerchantIdRequired = string.IsNullOrEmpty(_settings.MerchantId);
+                if (setting.SetCredentialsManually)
+                    this.SetSetting<PayPalCommerceSettings, bool>(settings => settings.MerchantIdRequired, s => s.MerchantIdRequired = true);
+                else if (!string.IsNullOrEmpty(setting.MerchantGuid) && _serviceManager.IsActiveAsync(setting).Result.Active)
+                {
+                    this.SetSetting<PayPalCommerceSettings, bool>(settings => settings.MerchantIdRequired, s => s.MerchantIdRequired = true);
+                    setting.MerchantId = _httpClient.GetMerchantAsync(setting.MerchantGuid).Result?.MerchantId;
+                    this.SetSetting<PayPalCommerceSettings, bool>(settings => settings.MerchantIdRequired, s => s.MerchantIdRequired = string.IsNullOrEmpty(setting.MerchantId));
+                }
             }
-        }
-        catch
-        {
-            // ignored
-        }
-
-        this.SaveSetting(_settings);
+            catch
+            {
+                // ignored
+            }
+        });
     }
 
     /// <summary>
