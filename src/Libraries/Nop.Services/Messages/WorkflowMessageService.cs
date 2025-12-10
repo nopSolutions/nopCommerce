@@ -92,138 +92,6 @@ public partial class WorkflowMessageService : IWorkflowMessageService
 
     #endregion
 
-    #region Utilities
-
-    /// <summary>
-    /// Get active message templates by the name
-    /// </summary>
-    /// <param name="messageTemplateName">Message template name</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the list of message templates
-    /// </returns>
-    protected virtual async Task<IList<MessageTemplate>> GetActiveMessageTemplatesAsync(string messageTemplateName, int storeId)
-    {
-        //get message templates by the name
-        var messageTemplates = await _messageTemplateService.GetMessageTemplatesByNameAsync(messageTemplateName, storeId);
-
-        //no template found
-        if (!messageTemplates?.Any() ?? true)
-            return new List<MessageTemplate>();
-
-        //filter active templates
-        messageTemplates = messageTemplates.Where(messageTemplate => messageTemplate.IsActive).ToList();
-
-        return messageTemplates;
-    }
-
-    /// <summary>
-    /// Get EmailAccount to use with a message templates
-    /// </summary>
-    /// <param name="messageTemplate">Message template</param>
-    /// <param name="languageId">Language identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the emailAccount
-    /// </returns>
-    protected virtual async Task<EmailAccount> GetEmailAccountOfMessageTemplateAsync(MessageTemplate messageTemplate, int languageId)
-    {
-        var emailAccountId = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.EmailAccountId, languageId);
-        //some 0 validation (for localizable "Email account" dropdownlist which saves 0 if "Standard" value is chosen)
-        if (emailAccountId == 0)
-            emailAccountId = messageTemplate.EmailAccountId;
-
-        var emailAccount = (await _emailAccountService.GetEmailAccountByIdAsync(emailAccountId) ?? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)) ??
-                           (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
-        return emailAccount;
-    }
-
-    /// <summary>
-    /// Ensure language is active
-    /// </summary>
-    /// <param name="languageId">Language identifier</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the return a value language identifier
-    /// </returns>
-    protected virtual async Task<int> EnsureLanguageIsActiveAsync(int languageId, int storeId)
-    {
-        //load language by specified ID
-        var language = await _languageService.GetLanguageByIdAsync(languageId);
-
-        if (language == null || !language.Published)
-        {
-            //load any language from the specified store
-            language = (await _languageService.GetAllLanguagesAsync(storeId: storeId)).FirstOrDefault();
-        }
-
-        if (language == null || !language.Published)
-        {
-            //load any language
-            language = (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
-        }
-
-        if (language == null)
-            throw new Exception("No active language could be loaded");
-
-        return language.Id;
-    }
-
-    /// <summary>
-    /// Get email and name to send email for store owner
-    /// </summary>
-    /// <param name="messageTemplateEmailAccount">Message template email account</param>
-    /// <returns>Email address and name to send email fore store owner</returns>
-    protected virtual async Task<(string email, string name)> GetStoreOwnerNameAndEmailAsync(EmailAccount messageTemplateEmailAccount)
-    {
-        var storeOwnerEmailAccount = _messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails ? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId) : null;
-        storeOwnerEmailAccount ??= messageTemplateEmailAccount;
-
-        return (storeOwnerEmailAccount.Email, storeOwnerEmailAccount.DisplayName);
-    }
-
-    /// <summary>
-    /// Get email and name to set ReplyTo property of email from customer 
-    /// </summary>
-    /// <param name="messageTemplate">Message template</param>
-    /// <param name="customer">Customer</param>
-    /// <returns>Email address and name when reply to email</returns>
-    protected virtual async Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Customer customer)
-    {
-        if (!messageTemplate.AllowDirectReply)
-            return (null, null);
-
-        var replyToEmail = await _customerService.IsGuestAsync(customer)
-            ? string.Empty
-            : customer.Email;
-
-        var replyToName = await _customerService.IsGuestAsync(customer)
-            ? string.Empty
-            : await _customerService.GetCustomerFullNameAsync(customer);
-
-        return (replyToEmail, replyToName);
-    }
-
-    /// <summary>
-    /// Get email and name to set ReplyTo property of email from order
-    /// </summary>
-    /// <param name="messageTemplate">Message template</param>
-    /// <param name="order">Order</param>
-    /// <returns>Email address and name when reply to email</returns>
-    protected virtual async Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Order order)
-    {
-        if (!messageTemplate.AllowDirectReply)
-            return (null, null);
-
-        var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
-
-        return (billingAddress.Email, $"{billingAddress.FirstName} {billingAddress.LastName}");
-    }
-
-    #endregion
-
     #region Methods
 
     #region Customer workflow
@@ -2866,6 +2734,147 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     #endregion
 
     #region Common
+
+    /// <summary>
+    /// Get active message templates by the name
+    /// </summary>
+    /// <param name="messageTemplateName">Message template name</param>
+    /// <param name="storeId">Store identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of message templates
+    /// </returns>
+    public virtual async Task<IList<MessageTemplate>> GetActiveMessageTemplatesAsync(string messageTemplateName, int storeId)
+    {
+        //get message templates by the name
+        var messageTemplates = await _messageTemplateService.GetMessageTemplatesByNameAsync(messageTemplateName, storeId);
+
+        //no template found
+        if (!messageTemplates?.Any() ?? true)
+            return new List<MessageTemplate>();
+
+        //filter active templates
+        messageTemplates = messageTemplates.Where(messageTemplate => messageTemplate.IsActive).ToList();
+
+        return messageTemplates;
+    }
+
+    /// <summary>
+    /// Get email account to use with a message templates
+    /// </summary>
+    /// <param name="messageTemplate">Message template</param>
+    /// <param name="languageId">Language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email account
+    /// </returns>
+    public virtual async Task<EmailAccount> GetEmailAccountOfMessageTemplateAsync(MessageTemplate messageTemplate, int languageId)
+    {
+        var emailAccountId = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.EmailAccountId, languageId);
+        //some 0 validation (for localizable "Email account" dropdownlist which saves 0 if "Standard" value is chosen)
+        if (emailAccountId == 0)
+            emailAccountId = messageTemplate.EmailAccountId;
+
+        var emailAccount = (await _emailAccountService.GetEmailAccountByIdAsync(emailAccountId)
+            ?? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId))
+            ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
+
+        return emailAccount;
+    }
+
+    /// <summary>
+    /// Ensure language is active
+    /// </summary>
+    /// <param name="languageId">Language identifier</param>
+    /// <param name="storeId">Store identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the active language identifier
+    /// </returns>
+    public virtual async Task<int> EnsureLanguageIsActiveAsync(int languageId, int storeId)
+    {
+        //load language by specified ID
+        var language = await _languageService.GetLanguageByIdAsync(languageId);
+
+        if (language == null || !language.Published)
+        {
+            //load any language from the specified store
+            language = (await _languageService.GetAllLanguagesAsync(storeId: storeId)).FirstOrDefault();
+        }
+
+        if (language == null || !language.Published)
+        {
+            //load any language
+            language = (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
+        }
+
+        if (language == null)
+            throw new Exception("No active language could be loaded");
+
+        return language.Id;
+    }
+
+    /// <summary>
+    /// Get email and name to send email for store owner
+    /// </summary>
+    /// <param name="messageTemplateEmailAccount">Message template email account</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email address and name to send email for store owner
+    /// </returns>
+    public virtual async Task<(string email, string name)> GetStoreOwnerNameAndEmailAsync(EmailAccount messageTemplateEmailAccount)
+    {
+        var storeOwnerEmailAccount = (_messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails
+            ? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
+            : null)
+            ?? messageTemplateEmailAccount;
+
+        return (storeOwnerEmailAccount.Email, storeOwnerEmailAccount.DisplayName);
+    }
+
+    /// <summary>
+    /// Get email and name to set ReplyTo property of email from customer 
+    /// </summary>
+    /// <param name="messageTemplate">Message template</param>
+    /// <param name="customer">Customer</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email address and name to reply
+    /// </returns>
+    public virtual async Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Customer customer)
+    {
+        if (!messageTemplate.AllowDirectReply)
+            return (null, null);
+
+        var replyToEmail = await _customerService.IsGuestAsync(customer)
+            ? string.Empty
+            : customer.Email;
+
+        var replyToName = await _customerService.IsGuestAsync(customer)
+            ? string.Empty
+            : await _customerService.GetCustomerFullNameAsync(customer);
+
+        return (replyToEmail, replyToName);
+    }
+
+    /// <summary>
+    /// Get email and name to set ReplyTo property of email from order
+    /// </summary>
+    /// <param name="messageTemplate">Message template</param>
+    /// <param name="order">Order</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email address and name to reply
+    /// </returns>
+    public virtual async Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Order order)
+    {
+        if (!messageTemplate.AllowDirectReply)
+            return (null, null);
+
+        var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+
+        return (billingAddress.Email, $"{billingAddress.FirstName} {billingAddress.LastName}");
+    }
 
     /// <summary>
     /// Send notification
