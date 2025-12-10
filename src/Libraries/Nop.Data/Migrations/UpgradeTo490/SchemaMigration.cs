@@ -15,89 +15,86 @@ public class SchemaMigration : ForwardOnlyMigration
     public override void Up()
     {
         //#7387
-        var productTableName = nameof(Product);
-
-        var ageVerificationColumnName = nameof(Product.AgeVerification);
-        if (!Schema.Table(productTableName).Column(ageVerificationColumnName).Exists())
+        if (!Schema.ColumnExist<Product>(t => t.AgeVerification))
         {
-            Alter.Table(productTableName)
-                .AddColumn(ageVerificationColumnName)
+            Alter.AddColumnFor<Product>(t => t.AgeVerification)
                 .AsBoolean()
                 .NotNullable()
                 .WithDefaultValue(false);
         }
 
-        var minimumAgeToPurchaseColumnName = nameof(Product.MinimumAgeToPurchase);
-        if (!Schema.Table(productTableName).Column(minimumAgeToPurchaseColumnName).Exists())
+        if (!Schema.ColumnExist<Product>(t => t.MinimumAgeToPurchase))
         {
-            Alter.Table(productTableName)
-                .AddColumn(minimumAgeToPurchaseColumnName)
+            Alter.AddColumnFor<Product>(t => t.MinimumAgeToPurchase)
                 .AsInt32()
                 .NotNullable()
                 .WithDefaultValue(0);
         }
 
         //#7294
-        var topicTableName = nameof(Topic);
-        var topicAvailableEndDateColumnName = nameof(Topic.AvailableEndDateTimeUtc);
-        var topicAvailableStartDateColumnName = nameof(Topic.AvailableStartDateTimeUtc);
 
-        if (!Schema.Table(topicTableName).Column(topicAvailableEndDateColumnName).Exists())
+        if (!Schema.ColumnExist<Topic>(t => t.AvailableEndDateTimeUtc))
         {
-            Alter.Table(topicTableName)
-                .AddColumn(topicAvailableEndDateColumnName)
+            Alter.AddColumnFor<Topic>(t => t.AvailableEndDateTimeUtc)
                 .AsDateTime()
                 .Nullable();
         }
 
-        if (!Schema.Table(topicTableName).Column(topicAvailableStartDateColumnName).Exists())
+        if (!Schema.ColumnExist<Topic>(t => t.AvailableStartDateTimeUtc))
         {
-            Alter.Table(topicTableName)
-                .AddColumn(topicAvailableStartDateColumnName)
+            Alter.AddColumnFor<Topic>(t => t.AvailableStartDateTimeUtc)
                 .AsDateTime()
                 .Nullable();
         }
 
         //#873
-        var productTagTableName = nameof(ProductTag);
 
-        if (!Schema.Table(productTagTableName).Column(nameof(ProductTag.MetaDescription)).Exists())
-            Alter.Table(productTagTableName).AddColumn(nameof(ProductTag.MetaDescription)).AsString().Nullable();
+        if (!Schema.ColumnExist<ProductTag>(t => t.MetaDescription))
+        {
+            Alter.AddColumnFor<ProductTag>(t => t.MetaDescription)
+                .AsString()
+                .Nullable();
+        }
 
-        if (!Schema.Table(productTagTableName).Column(nameof(ProductTag.MetaKeywords)).Exists())
-            Alter.Table(productTagTableName).AddColumn(nameof(ProductTag.MetaKeywords)).AsString(400).Nullable();
+        if (!Schema.ColumnExist<ProductTag>(t => t.MetaKeywords))
+        {
+            Alter.AddColumnFor<ProductTag>(t => t.MetaKeywords)
+                .AsString(400)
+                .Nullable();
+        }
 
-        if (!Schema.Table(productTagTableName).Column(nameof(ProductTag.MetaTitle)).Exists())
-            Alter.Table(productTagTableName).AddColumn(nameof(ProductTag.MetaTitle)).AsString(400).Nullable();
+        if (!Schema.ColumnExist<ProductTag>(t => t.MetaTitle))
+        {
+            Alter.AddColumnFor<ProductTag>(t => t.MetaTitle)
+                .AsString(400)
+                .Nullable();
+        }
 
         //#7390
-        if (!Schema.Table(nameof(Menu)).Exists())
+        if (!Schema.TableExist<Menu>())
             Create.TableFor<Menu>();
 
-        if (!Schema.Table(nameof(MenuItem)).Exists())
+        if (!Schema.TableExist<Menu>())
             Create.TableFor<MenuItem>();
 
         var footerColumn1ColumnName = "IncludeInFooterColumn1";
-        if (Schema.Table(topicTableName).Column(footerColumn1ColumnName).Exists())
-            Delete.Column(footerColumn1ColumnName).FromTable(topicTableName);
+        if (Schema.ColumnExist<Topic>(footerColumn1ColumnName))
+            Delete.Column<Topic>(footerColumn1ColumnName);
 
         var footerColumn2ColumnName = "IncludeInFooterColumn2";
-        if (Schema.Table(topicTableName).Column(footerColumn2ColumnName).Exists())
-            Delete.Column(footerColumn2ColumnName).FromTable(topicTableName);
+        if (Schema.ColumnExist<Topic>(footerColumn2ColumnName))
+            Delete.Column<Topic>(footerColumn2ColumnName);
 
         var footerColumn3ColumnName = "IncludeInFooterColumn3";
-        if (Schema.Table(topicTableName).Column(footerColumn3ColumnName).Exists())
-            Delete.Column(footerColumn3ColumnName).FromTable(topicTableName);
+        if (Schema.ColumnExist<Topic>(footerColumn3ColumnName))
+            Delete.Column<Topic>(footerColumn3ColumnName);
 
         var includeTopicInTopMenuColumnName = "IncludeInTopMenu";
-        if (Schema.Table(topicTableName).Column(includeTopicInTopMenuColumnName).Exists())
-            Delete.Column(includeTopicInTopMenuColumnName).FromTable(topicTableName);
+        if (Schema.ColumnExist<Topic>(includeTopicInTopMenuColumnName))
+            Delete.Column(includeTopicInTopMenuColumnName);
 
-        var categoryTableName = nameof(Category);
         var includeCategoryInTopMenuColumnName = "IncludeInTopMenu";
-        if (Schema.Table(categoryTableName).Column(includeCategoryInTopMenuColumnName).Exists())
-            Delete.Column(includeCategoryInTopMenuColumnName).FromTable(categoryTableName);
-
-
+        if (Schema.ColumnExist<Category>(includeCategoryInTopMenuColumnName))
+            Delete.Column<Category>(includeCategoryInTopMenuColumnName);
     }
 }
