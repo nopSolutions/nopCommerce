@@ -11,13 +11,18 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Common;
-using Nop.Services.Configuration;
 using Nop.Services.Helpers;
 
 namespace Nop.Web.Framework.Extensions;
 
 public static partial class MigrationExtensions
 {
+    #region Fields
+
+    private static readonly Dictionary<string, IList<Setting>> _allSettings = new();
+
+    #endregion
+
     #region Utilities
 
     /// <summary>
@@ -28,29 +33,30 @@ public static partial class MigrationExtensions
     /// <returns>
     /// Settings
     /// </returns>
-    private static IDictionary<string, IList<Setting>> GetAllSettingsDictionary(IStaticCacheManager staticCacheManager, ISyncCodeHelper syncCodeHelper)
+    private static IDictionary<string, IList<Setting>> GetAllSettingsDictionary()
     {
-        return staticCacheManager.Get(NopSettingsDefaults.SettingsAllAsDictionaryCacheKey, () =>
+        if (_allSettings.Any())
+            return _allSettings;
+
+        var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
+
+        var settings = syncCodeHelper.GetAllEntities<Setting>(query =>
+            query.OrderBy(s => s.Name).ThenBy(s => s.StoreId), _ => default);
+
+        foreach (var s in settings)
         {
-            var settings = syncCodeHelper.GetAllEntities<Setting>(query =>
-                query.OrderBy(s => s.Name).ThenBy(s => s.StoreId), _ => default);
+            var resourceName = s.Name.ToLowerInvariant();
+            var settingForCaching = new Setting { Id = s.Id, Name = s.Name, Value = s.Value, StoreId = s.StoreId };
+            if (!_allSettings.TryGetValue(resourceName, out var value))
+                //first setting
+                _allSettings.Add(resourceName, new List<Setting> { settingForCaching });
+            else
+                //already added
+                //most probably it's the setting with the same name but for some certain store (storeId > 0)
+                value.Add(settingForCaching);
+        }
 
-            var dictionary = new Dictionary<string, IList<Setting>>();
-            foreach (var s in settings)
-            {
-                var resourceName = s.Name.ToLowerInvariant();
-                var settingForCaching = new Setting { Id = s.Id, Name = s.Name, Value = s.Value, StoreId = s.StoreId };
-                if (!dictionary.TryGetValue(resourceName, out var value))
-                    //first setting
-                    dictionary.Add(resourceName, new List<Setting> { settingForCaching });
-                else
-                    //already added
-                    //most probably it's the setting with the same name but for some certain store (storeId > 0)
-                    value.Add(settingForCaching);
-            }
-
-            return dictionary;
-        });
+        return _allSettings;
     }
 
     /// <summary>
@@ -102,7 +108,6 @@ public static partial class MigrationExtensions
     private static void SetSetting<T>(string key, T value)
     {
         var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
-        var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
 
         setSetting(typeof(T));
 
@@ -114,31 +119,29 @@ public static partial class MigrationExtensions
             key = key.Trim().ToLowerInvariant();
             var valueStr = TypeDescriptor.GetConverter(type).ConvertToInvariantString(value);
 
-            var allSettings = GetAllSettingsDictionary(staticCacheManager, syncCodeHelper);
-            var settingForCaching = allSettings.TryGetValue(key, out var settings)
+            var allSettings = GetAllSettingsDictionary();
+            var setting = allSettings.TryGetValue(key, out var settings)
                 ? settings.FirstOrDefault(x => x.StoreId == 0)
                 : null;
 
-            if (settingForCaching != null)
+            if (setting != null)
             {
                 //update
-                var setting = syncCodeHelper.GetEntityById<Setting>(settingForCaching.Id, _ => default);
                 setting.Value = valueStr;
 
                 syncCodeHelper.UpdateEntity(setting);
-
-                //cache
-                staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
             }
             else
             {
                 //insert
-                var setting = new Setting { Name = key, Value = valueStr, StoreId = 0 };
+                setting = new Setting { Name = key, Value = valueStr, StoreId = 0 };
 
                 syncCodeHelper.InsertEntity(setting);
 
-                //cache
-                staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
+                if (!_allSettings.ContainsKey(key))
+                    _allSettings.Add(key, new List<Setting>());
+
+                _allSettings[key].Add(setting);
             }
         }
     }
@@ -296,12 +299,10 @@ public static partial class MigrationExtensions
     public static void DeleteSettings(this IMigration _, Expression<Func<Setting, bool>> predicate)
     {
         var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
-        var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
 
         syncCodeHelper.DeleteEntities(predicate);
 
-        //cache
-        staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
+        _allSettings.Clear();
     }
     
     /// <summary>
@@ -322,10 +323,7 @@ public static partial class MigrationExtensions
         if (string.IsNullOrEmpty(key))
             return defaultValue;
 
-        var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
-        var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-
-        var settings = GetAllSettingsDictionary(staticCacheManager, syncCodeHelper);
+        var settings = GetAllSettingsDictionary();
         key = key.Trim().ToLowerInvariant();
         if (!settings.TryGetValue(key, out var value))
             return defaultValue;
@@ -377,11 +375,12 @@ public static partial class MigrationExtensions
     /// <param name="value">The value to set</param>
     public static void SetSettingIfNotExists<T, TPropType>(this IMigration migration, Expression<Func<T, TPropType>> keySelector, TPropType value) where T : ISettings, new()
     {
-        SetSettingIfNotExists(migration, keySelector, _ =>
-        {
-            var key = GetSettingKey(keySelector);
-            SetSetting(key, value);
-        });
+        var key = GetSettingKey(keySelector);
+        
+        if (GetSettingByKey<string>(migration, key, storeId: 0) != null)
+            return;
+
+        SetSetting(key, value);
     }
 
     /// <summary>
@@ -439,8 +438,9 @@ public static partial class MigrationExtensions
                     continue;
 
                 var key = type.Name + "." + prop.Name;
-                //load by store
+
                 var setting = GetSettingByKey<string>(migration, key);
+                
                 if (setting == null)
                     continue;
 
@@ -465,15 +465,15 @@ public static partial class MigrationExtensions
     /// </summary>
     /// <param name="_">Migration</param>
     /// <param name="settingNames">Array of setting's name</param>
-    public static void DeleteSettingsByNames(this IMigration _, string[] settingNames)
+    public static void DeleteSettingsByNames(this IMigration _, IList<string> settingNames)
     {
         var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
-        var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
+        var names = settingNames.Select(n => n.ToLowerInvariant()).ToArray();
 
-        syncCodeHelper.DeleteEntities<Setting>(setting => settingNames.Contains(setting.Name.ToLowerInvariant()));
+        syncCodeHelper.DeleteEntities<Setting>(setting => names.Contains(setting.Name));
 
-        //cache
-        staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
+        foreach (var name in names) 
+            _allSettings.Remove(name);
     }
 
     #endregion
