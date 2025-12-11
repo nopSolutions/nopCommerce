@@ -766,36 +766,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         }
     }
 
-    /// <summary>
-    /// Prepare multistore preview models for an entity
-    /// </summary>
-    /// <typeparam name="TEntity">Entity type</typeparam>
-    /// <param name="entity">Entity</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the list of multistore preview models for an entity
-    /// </returns>
-    protected virtual async Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsForEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, ISlugSupported
-    {
-        var models = new List<MultistorePreviewModel>();
-        var stores = await _storeService.GetAllStoresAsync();
-
-        foreach (var store in stores)
-        {
-            if (!Uri.TryCreate(store.Url, UriKind.Absolute, out var url))
-                continue;
-
-            models.Add(new MultistorePreviewModel
-            {
-                StoreName = store.Name,
-                Url = await _nopUrlHelper
-                    .RouteGenericUrlAsync(entity, url.Scheme, url.IsDefaultPort ? url.Host : $"{url.Host}:{url.Port}", null, null, false),
-            });
-        }
-
-        return models;
-    }
-
     #endregion
 
     #region Methods
@@ -1268,29 +1238,34 @@ public partial class CommonModelFactory : ICommonModelFactory
     }
 
     /// <summary>
-    /// Prepare multistore preview models
+    /// Prepare entity preview model
     /// </summary>
     /// <typeparam name="TModel">Model type</typeparam>
     /// <param name="model">Entity model</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the list of multistore preview models
+    /// The task result contains the entity preview model
     /// </returns>
-    public virtual async Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsAsync<TModel>(TModel model) where TModel : BaseNopEntityModel
+    public virtual async Task<EntityPreviewModel> PrepareEntityPreviewModelAsync<TModel>(TModel model) where TModel : BaseNopEntityModel
     {
+        var entityPreviewModel = new EntityPreviewModel { Id = model.Id, ModelType = model.GetType() };
+
         switch (model)
         {
             case BlogPostModel blogPostModel:
                 var blogPost = await _blogService.GetBlogPostByIdAsync(blogPostModel.Id);
-                return await PrepareMultistorePreviewModelsForEntityAsync(blogPost);
+                entityPreviewModel.PreviewModels = await PrepareMultistorePreviewModelsAsync(blogPost);
+                break;
 
             case CategoryModel categoryModel:
                 var category = await _categoryService.GetCategoryByIdAsync(categoryModel.Id);
-                return await PrepareMultistorePreviewModelsForEntityAsync(category);
+                entityPreviewModel.PreviewModels = await PrepareMultistorePreviewModelsAsync(category);
+                break;
 
             case ManufacturerModel manufacturerModel:
                 var manufacturerEntity = await _manufacturerService.GetManufacturerByIdAsync(manufacturerModel.Id);
-                return await PrepareMultistorePreviewModelsForEntityAsync(manufacturerEntity);
+                entityPreviewModel.PreviewModels = await PrepareMultistorePreviewModelsAsync(manufacturerEntity);
+                break;
 
             case NewsItemModel newsItemModel:
                 var newsItem = await _newsService.GetNewsByIdAsync(newsItemModel.Id);
@@ -1298,15 +1273,47 @@ public partial class CommonModelFactory : ICommonModelFactory
 
             case ProductModel productModel:
                 var product = await _productService.GetProductByIdAsync(productModel.Id);
-                return await PrepareMultistorePreviewModelsForEntityAsync(product);
+                entityPreviewModel.PreviewModels = await PrepareMultistorePreviewModelsAsync(product);
+                break;
 
             case TopicModel topicModel:
                 var topic = await _topicService.GetTopicByIdAsync(topicModel.Id);
-                return await PrepareMultistorePreviewModelsForEntityAsync(topic);
-
-            default:
-                throw new NotImplementedException("Unknown entity type");
+                entityPreviewModel.PreviewModels = await PrepareMultistorePreviewModelsAsync(topic);
+                break;
         }
+
+        return entityPreviewModel;
+    }
+
+    /// <summary>
+    /// Prepare multistore preview models for an entity
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <param name="entity">Entity</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of multistore preview models for an entity
+    /// </returns>
+    public virtual async Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsAsync<TEntity>(TEntity entity)
+        where TEntity : BaseEntity, ISlugSupported
+    {
+        var models = new List<MultistorePreviewModel>();
+        var stores = await _storeService.GetAllStoresAsync();
+
+        foreach (var store in stores)
+        {
+            if (!Uri.TryCreate(store.Url, UriKind.Absolute, out var url))
+                continue;
+
+            models.Add(new()
+            {
+                StoreName = store.Name,
+                Url = await _nopUrlHelper
+                    .RouteGenericUrlAsync(entity, url.Scheme, url.IsDefaultPort ? url.Host : $"{url.Host}:{url.Port}", null, null, false)
+            });
+        }
+
+        return models;
     }
 
     #endregion
