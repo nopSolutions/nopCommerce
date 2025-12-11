@@ -230,4 +230,27 @@
   .kungfu-topic h1 {
     font-size: 24px;
   }
+
+  .kungfu-topic h2 {
+    font-size: 18px;
+  }
+
+  .kungfu-topic h3 {
+    font-size: 15px;
+  }
+
+  .kungfu-topic p,
+  .kungfu-topic .topic-list li,
+  .kungfu-topic .topic-lede {
+    font-size: 14px;
+    text-align: left;
+  }
+
+  .kungfu-topic .topic-eyebrow {
+    font-size: 11px;
+  }
+
+  .kungfu-topic .note {
+    font-size: 12px;
+  }
 }
