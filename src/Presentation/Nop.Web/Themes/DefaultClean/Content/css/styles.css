@@ -3651,13 +3651,13 @@ label, label + * {
 }
 
 .topic-block-body {
-  text-align: justify;
+  text-align: left;
   line-height: 24px;
   font-size: 16px;
 }
 
 .topic-page .page-body {
-  text-align: justify;
+  text-align: left;
   line-height: 22px;
 }
 
