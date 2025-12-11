@@ -4149,36 +4149,52 @@ label, label + * {
 .address-list-page .info,
 .order-list-page .info {
   margin: 0 0 10px;
-  border-top: 1px solid #e6e6e6;
-  background-color: #f9f9f9;
+  border: 1px solid #1f1f26;
+  background-color: #101017;
   padding: 20px;
   line-height: 26px;
   color: var(--dark-gray-color);
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .address-list-page .info .name,
 .order-list-page .info .name {
   font-size: 16px;
   font-weight: bold;
+  color: #fff;
+}
+
+.address-list-page .info li,
+.order-list-page .info li {
+  margin: 5px 0;
+}
+
+.address-list-page .info li label,
+.order-list-page .info li label {
+  color: var(--kungfu-gold);
+  font-weight: 500;
 }
 
 .address-list-page .button-2,
 .order-list-page .button-2 {
   display: inline-block;
-  margin: 0 0 0 10px;
+  margin: 0 5px;
   border: none;
-  padding: 0 0 0 18px;
+  padding: 10px 20px 10px 38px;
   font-size: 12px;
-  color: var(--dark-gray-color);
+  color: #fff;
+  text-align: center;
+  min-width: 100px;
 }
 
 .edit-address-button {
-  background: url('../images/edit.png') left center no-repeat;
+  background: url('../images/edit.png') 15px center no-repeat;
 }
 
 .delete-address-button,
 .cancel-recurring-order-button {
-  background: url('../images/remove.png') left center no-repeat;
+  background: url('../images/remove.png') 15px center no-repeat;
 }
 
 .retry-recurring-order-button {
@@ -4197,7 +4213,8 @@ label, label + * {
 .address-list-page .button-2:focus,
 .order-list-page .button-2:hover,
 .order-list-page .button-2:focus {
-  color: var(--accent-blue-active-color);
+  transform: translateY(-1px);
+  box-shadow: 0 22px 40px rgba(215, 38, 61, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .order-filters {
@@ -4245,9 +4262,11 @@ label, label + * {
 
 .address-edit-page .edit-address {
   margin: 0 0 30px;
-  border-top: 1px solid #e6e6e6;
-  background-color: #f9f9f9;
+  border: 1px solid #1f1f26;
+  background-color: #101017;
   padding: 30px 15px;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .recurring-payments table td {
