@@ -200,8 +200,12 @@
                         {
                             <div class="col-md-4 col-xs-12"></div>
                         }
+                        <!-- Display current date and time (initially rendered from server, then updated by JS) -->
                         <div class="col-md-4 col-xs-12 text-center">
-                            @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("f", CultureInfo.CurrentCulture))
+                            <span id="admin-now"
+                                  data-utc="@DateTime.UtcNow.ToString("o")">
+                                @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.UtcNow)).ToString("f", CultureInfo.CurrentCulture))
+                            </span>
                         </div>
                         <div class="col-md-4 col-xs-12 text-md-right text-center">
                             <b>nopCommerce version @NopVersion.FULL_VERSION</b>
@@ -311,6 +315,9 @@
             </script>
         </text>
     }
+    <!-- Load custom script for updating the admin time dynamically -->
+    <script src="~/js/admin-footer-time.js"></script>
+
     @NopHtml.GenerateScripts(ResourceLocation.Footer)
     @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
 </body>
