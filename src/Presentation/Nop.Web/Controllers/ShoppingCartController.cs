@@ -1889,6 +1889,51 @@ public partial class ShoppingCartController : BasePublicController
     }
 
     [HttpPost]
+    public virtual async Task<IActionResult> RenameWishlist(int wishlistId, string name)
+    {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var isGuest = await _customerService.IsGuestAsync(customer);
+
+        if (isGuest)
+        {
+            return Json(new
+            {
+                success = false,
+                message = await _localizationService.GetResourceAsync("Wishlist.MultipleWishlistNotForGuest")
+            });
+        }
+
+        if (!_shoppingCartSettings.AllowMultipleWishlist)
+        {
+            return Json(new
+            {
+                success = false,
+                message = await _localizationService.GetResourceAsync("Wishlist.NotAllowMultipleWishlist")
+            });
+        }
+
+        try
+        {
+            await _customWishlistService.EditCustomWishlistAsync(wishlistId, name, customer.Id);
+
+            return Json(new
+            {
+                success = true,
+                message = await _localizationService.GetResourceAsync("Wishlist.Rename.Success")
+            });
+        }
+        catch (Exception ex)
+        {
+            return Json(new
+            {
+                success = false,
+                message = ex.Message
+            });
+        }
+    }
+
+
+    [HttpPost]
     public virtual async Task<IActionResult> DeleteWishlist(int wishlistId)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
