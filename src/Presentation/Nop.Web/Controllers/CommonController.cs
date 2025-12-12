@@ -112,7 +112,7 @@ public partial class CommonController : BasePublicController
     public virtual async Task<IActionResult> SetLanguage(int langid, string returnUrl = "")
     {
         var language = await _languageService.GetLanguageByIdAsync(langid);
-        if (!language?.Published ?? false)
+        if (language == null || !language.Published)
             language = await _workContext.GetWorkingLanguageAsync();
 
         //home page
