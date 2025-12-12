@@ -70,4 +70,11 @@ public partial class CommonConfig : IConfig
     /// Default status code to set on the response when a request is rejected.
     /// </summary>
     public int RejectionStatusCode { get; set; } = 503;
+
+    /// <summary>
+    /// Gets or sets the collection of user identifiers that are exempt from rate limiting.
+    /// </summary>
+    /// <remarks>Add user IDs or IP Addresses to this collection to allow them to bypass rate limit checks. Changes to the
+    /// collection take effect immediately.</remarks>
+    public HashSet<string> RateLimitWhitelist { get; set; } = new();
 }
