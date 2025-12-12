@@ -46,6 +46,7 @@ public class LocalizationMigration : MigrationBase
             //#7898
             ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.LogRequests"] = "Log AI requests",
             ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.LogRequests.Hint"] = "Check to enable logging of all requests to AI services.",
+            ["Admin.Catalog.Products.RelatedProducts.CyclicallyRelated"] = "Circular dependency is not allowed for required products (e.g. product A requires product B. And product B requires product A)",
         }, languageId);
 
         #endregion

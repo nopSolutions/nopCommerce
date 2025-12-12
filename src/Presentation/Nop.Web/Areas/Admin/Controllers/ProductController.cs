@@ -1192,11 +1192,31 @@ public partial class ProductController : BaseAdminController
             var previousStockQuantity = product.StockQuantity;
             var previousWarehouseId = product.WarehouseId;
             var previousProductType = product.ProductType;
+            var previousRequiredProductIds = product.RequiredProductIds;
 
             //product
             product = model.ToEntity(product);
 
             product.UpdatedOnUtc = DateTime.UtcNow;
+
+            var requireOtherProductsError = string.Empty;
+
+            if (product.RequireOtherProducts && !string.IsNullOrEmpty(product.RequiredProductIds))
+            {
+                var requiredProductIds = _productService.ParseRequiredProductIds(product);
+                
+                foreach (var requiredProduct in await _productService.GetProductsByIdsAsync(requiredProductIds.ToArray()))
+                {
+                    if (product.Id == requiredProduct.Id || await isCyclicallyRequired(requiredProduct)) 
+                        requireOtherProductsError = await _localizationService.GetResourceAsync("Admin.Catalog.Products.RelatedProducts.CyclicallyRelated");
+
+                    break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(requireOtherProductsError))
+                product.RequiredProductIds = previousRequiredProductIds;
+
             await _productService.UpdateProductAsync(product);
 
             //remove associated products
@@ -1307,7 +1327,19 @@ public partial class ProductController : BaseAdminController
             await _customerActivityService.InsertActivityAsync("EditProduct",
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditProduct"), product.Name), product);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Updated"));
+            if (string.IsNullOrEmpty(requireOtherProductsError))
+            {
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Updated"));
+            }
+            else
+            {
+                _notificationService.ErrorNotification(requireOtherProductsError);
+
+                //prepare model
+                model = await _productModelFactory.PrepareProductModelAsync(model, product, true);
+
+                return View(model);
+            }
 
             if (!continueEditing)
                 return RedirectToAction("List");
@@ -1320,6 +1352,24 @@ public partial class ProductController : BaseAdminController
 
         //if we got this far, something failed, redisplay form
         return View(model);
+
+        async Task<bool> isCyclicallyRequired(Product productToCheck)
+        {
+            if (!product.RequireOtherProducts)
+                return false;
+
+            if (string.IsNullOrEmpty(productToCheck.RequiredProductIds))
+                return false;
+
+            var requiredProductIds = _productService.ParseRequiredProductIds(productToCheck);
+
+            if (requiredProductIds.Any(rp => rp == product.Id))
+                return true;
+
+            var products = await _productService.GetProductsByIdsAsync(requiredProductIds);
+
+            return await products.AnyAwaitAsync(async p => await isCyclicallyRequired(p));
+        }
     }
 
     [HttpPost]

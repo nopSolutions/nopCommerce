@@ -1237,6 +1237,14 @@ public partial class ImportManager : IImportManager
         tempProperty = manager.GetDefaultProperty("LimitedToStores");
         var limitedToStoresCellNum = tempProperty?.PropertyOrderPosition ?? -1;
 
+        tempProperty = manager.GetDefaultProperty("RequireOtherProducts");
+        var requireOtherProductsCellNum = tempProperty?.PropertyOrderPosition ?? -1;
+
+        tempProperty = manager.GetDefaultProperty("RequiredProductIds");
+        var requiredProductIdsCellNum = tempProperty?.PropertyOrderPosition ?? -1;
+
+        var requiredProductsData = new Dictionary<string, string>();
+        
         if (_catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities)
         {
             tierPriceManager.SetSelectList("Store", (await _storeService.GetAllStoresAsync()).ToSelectList(p => (p as Store)?.Name ?? string.Empty));
@@ -1361,9 +1369,11 @@ public partial class ImportManager : IImportManager
                         .Distinct());
             }
 
+            var sku = string.Empty;
+
             if (skuCellNum > 0)
             {
-                var sku = defaultWorksheet.Row(endRow).Cell(skuCellNum).Value.ToString() ?? string.Empty;
+                sku = defaultWorksheet.Row(endRow).Cell(skuCellNum).Value.ToString() ?? string.Empty;
 
                 if (!string.IsNullOrEmpty(sku))
                     allSku.Add(sku);
@@ -1385,6 +1395,14 @@ public partial class ImportManager : IImportManager
                 if (!string.IsNullOrEmpty(storeIds))
                     allStores.AddRange(storeIds
                         .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
+            }
+
+            if (!string.IsNullOrEmpty(sku) && requireOtherProductsCellNum > 0 && requiredProductIdsCellNum > 0)
+            {
+                var requiredProductIds = defaultWorksheet.Row(endRow).Cell(requiredProductIdsCellNum).Value.ToString() ?? string.Empty;
+
+                if (!string.IsNullOrEmpty(requiredProductIds))
+                    requiredProductsData.TryAdd(sku, requiredProductIds);
             }
 
             //counting the number of products
@@ -1438,7 +1456,8 @@ public partial class ImportManager : IImportManager
             SpecificationAttributeManager = specificationAttributeManager,
             TierPriceManager = tierPriceManager,
             SkuCellNum = skuCellNum,
-            AllSku = allSku
+            AllSku = allSku,
+            RequiredProductsData = requiredProductsData
         };
     }
 
@@ -2078,11 +2097,23 @@ public partial class ImportManager : IImportManager
                 throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
         }
 
+        //validate Circular dependency for required products
+        var circularDependencyProducts = new List<Product>();
+        
+        foreach (var data in metadata.RequiredProductsData)
+        {
+            if (isCyclicallyRequired(data, out var product))
+                circularDependencyProducts.Add(product);
+        }
+
+        if(circularDependencyProducts.Any())
+            throw new ArgumentException($"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.RelatedProducts.CyclicallyRelated")} ({string.Join(", ", circularDependencyProducts.Select(p=>p.Name).Distinct())})");
+
         //performance optimization, load all categories IDs for products in one SQL request
         var allProductsCategoryIds = await _categoryService.GetProductCategoryIdsAsync(allProductsBySku.Select(p => p.Id).ToArray());
 
         //performance optimization, load all categories in one SQL request
-        Dictionary<CategoryKey, Category> allCategories = new();
+        Dictionary<CategoryKey, Category> allCategories;
         try
         {
             var allCategoryList = await _categoryService.GetAllCategoriesAsync(showHidden: true);
@@ -2701,6 +2732,38 @@ public partial class ImportManager : IImportManager
 
         //activity log
         await _customerActivityService.InsertActivityAsync("ImportProducts", string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportProducts"), metadata.CountProductsInFile));
+
+        return;
+
+        bool isCyclicallyRequired(KeyValuePair<string, string> data, out Product product)
+        {
+            product = allProductsBySku.FirstOrDefault(p=>p.Sku.Equals(data.Key));
+
+            if (product == null)
+                return false;
+
+            var prevRequiredProductIds = product.RequiredProductIds;
+            product.RequiredProductIds = data.Value;
+
+            var requiredProductIds = _productService.ParseRequiredProductIds(product);
+            product.RequiredProductIds = prevRequiredProductIds;
+
+            if (requiredProductIds.Contains(product.Id))
+                return true;
+
+            var skuList = allProductsBySku.Where(p => requiredProductIds.Contains(p.Id)).Select(p => p.Sku);
+
+            foreach (var sku in skuList)
+            {
+                if (!metadata.RequiredProductsData.TryGetValue(sku, out var value))
+                    continue;
+
+                if (isCyclicallyRequired(new KeyValuePair<string, string>(sku, value), out _))
+                    return true;
+            }
+
+            return false;
+        }
     }
 
     /// <summary>
