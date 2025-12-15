@@ -427,23 +427,19 @@ public partial class ShoppingCartController : BasePublicController
                     ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
                     : string.Empty;
 
-                    string message;
+                    string message = "";
                     var cartUrl = Url.RouteUrl(NopRouteNames.General.CART);
 
                     if (updatecartitemid > 0)
                     {
                         // FALL 1: Produkten fanns redan (Uppdatering)
-                        message = await _localizationService.GetResourceAsync("Products.ProductHasBeenUpdatedInTheCart");
+                        message = await _localizationService.GetResourceAsync("products.producthasbeenupdatedinthecart");
 
                         // Fallback om du inte lagt in resursen i admin än:
                         if (string.IsNullOrEmpty(message))
                             message = $"The product has been updated in your <a href=\"{cartUrl}\">shopping cart</a>.";
                     }
-                    else
-                    {
-                        // FALL 2: Ny produkt (Standard)
-                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"), cartUrl);
-                    }
+       
 
                     return Json(new
                     {
