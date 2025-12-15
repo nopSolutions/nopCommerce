@@ -335,7 +335,7 @@ public partial class ShoppingCartController : BasePublicController
     }
 
     protected virtual async Task<IActionResult> GetProductToCartDetailsAsync(List<string> addToCartWarnings, ShoppingCartType cartType,
-        Product product)
+        Product product, int updatecartitemid =0)
     {
         if (addToCartWarnings.Any())
         {
@@ -427,14 +427,31 @@ public partial class ShoppingCartController : BasePublicController
                     ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
                     : string.Empty;
 
-                return Json(new
-                {
-                    success = true,
-                    message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"),
-                        Url.RouteUrl(NopRouteNames.General.CART)),
-                    updatetopcartsectionhtml = updateTopCartSectionHtml,
-                    updateflyoutcartsectionhtml = updateFlyoutCartSectionHtml
-                });
+                    string message;
+                    var cartUrl = Url.RouteUrl(NopRouteNames.General.CART);
+
+                    if (updatecartitemid > 0)
+                    {
+                        // FALL 1: Produkten fanns redan (Uppdatering)
+                        message = await _localizationService.GetResourceAsync("Products.ProductHasBeenUpdatedInTheCart");
+
+                        // Fallback om du inte lagt in resursen i admin än:
+                        if (string.IsNullOrEmpty(message))
+                            message = $"The product has been updated in your <a href=\"{cartUrl}\">shopping cart</a>.";
+                    }
+                    else
+                    {
+                        // FALL 2: Ny produkt (Standard)
+                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"), cartUrl);
+                    }
+
+                    return Json(new
+                    {
+                        success = true,
+                        message = message,
+                        updatetopcartsectionhtml = updateTopCartSectionHtml,
+                        updateflyoutcartsectionhtml = updateFlyoutCartSectionHtml
+                    });
             }
         }
     }
@@ -827,7 +844,8 @@ public partial class ShoppingCartController : BasePublicController
         await SaveItemAsync(updatecartitem, addToCartWarnings, product, cartType, attributes, customerEnteredPriceConverted, rentalStartDate, rentalEndDate, quantity);
 
         //return result
-        return await GetProductToCartDetailsAsync(addToCartWarnings, cartType, product);
+        // Här skickar vi med updatecartitemid (som du såg var "14" i din debug)
+        return await GetProductToCartDetailsAsync(addToCartWarnings, cartType, product, updatecartitemid);
     }
 
     //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
