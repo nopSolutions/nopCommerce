@@ -427,15 +427,22 @@ public partial class ShoppingCartController : BasePublicController
                         ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
                         : string.Empty;
 
-                    var updateProductMessage = updateCartItemId > 0
-                        ? await _localizationService.GetResourceAsync("Products.ProductHasBeenUpdatedInTheCart")
-                        : string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl(NopRouteNames.General.CART));
+                    // 1. Hämta texterna från tjänsten (som vanligt)
+                    var addedText = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl(NopRouteNames.General.CART));
+                    var updatedText = await _localizationService.GetResourceAsync("Products.ProductHasBeenUpdatedInTheCart");
 
+                    // Fallback om texten saknas i Admin
+                    if (string.IsNullOrEmpty(updatedText))
+                        updatedText = "Product updated in cart.";
 
+                    // 2. ANROPA DEN NYA STATISKA METODEN (Detta är raden som gör koden testbar!)
+                    var message = GetCartStatusMessage(updateCartItemId, addedText, updatedText);
+
+                    // 3. Returnera JSON
                     return Json(new
                     {
                         success = true,
-                        message = updateProductMessage,
+                        message = message, // <--- Använd resultatet här
                         updatetopcartsectionhtml = updateTopCartSectionHtml,
                         updateflyoutcartsectionhtml = updateFlyoutCartSectionHtml
                     });
@@ -1925,4 +1932,21 @@ public partial class ShoppingCartController : BasePublicController
     }
 
     #endregion
+
+    // --- NY METOD FÖR ATT MÖJLIGGÖRA ENKEL TESTNING ---
+
+    /// <summary>
+    /// En ren logik-metod som avgör vilken text som ska visas.
+    /// Eftersom den är 'static' kan den testas utan att starta hela Controllern.
+    /// </summary>
+    public static string GetCartStatusMessage(int updateCartItemId, string addedResource, string updatedResource)
+    {
+        // Om ID är större än 0 är det en uppdatering, annars är det nytt
+        if (updateCartItemId > 0)
+        {
+            return updatedResource;
+        }
+        return addedResource;
+    }
+
 }
