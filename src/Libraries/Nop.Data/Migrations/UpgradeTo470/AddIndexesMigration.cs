@@ -4,7 +4,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Logging;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
 using Nop.Data.Mapping;
@@ -118,11 +117,6 @@ public class AddIndexesMigration : ForwardOnlyMigration
             IfDatabase(databaseType).Create.Index("IX_RewardPointsHistory_CustomerId")
                 .OnTable(nameof(RewardPointsHistory))
                 .OnColumn(nameof(RewardPointsHistory.CustomerId)).Ascending()
-                .WithOptions().NonClustered();
-
-        if (!Schema.Table(nameof(NewsComment)).Index("IX_NewsComment_CustomerId").Exists())
-            IfDatabase(databaseType).Create.Index("IX_NewsComment_CustomerId").OnTable(nameof(NewsComment))
-                .OnColumn(nameof(NewsComment.CustomerId)).Ascending()
                 .WithOptions().NonClustered();
 
         if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(CustomerAddressMapping)))

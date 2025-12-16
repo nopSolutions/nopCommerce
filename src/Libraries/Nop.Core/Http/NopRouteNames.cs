@@ -66,11 +66,6 @@ public static partial class NopRouteNames
         public const string BLOG = "Blog";
 
         /// <summary>
-        /// Gets the news route name
-        /// </summary>
-        public const string NEWS = "NewsArchive";
-
-        /// <summary>
         /// Gets the forums route name
         /// </summary>
         public const string BOARDS = "Boards";
@@ -290,11 +285,6 @@ public static partial class NopRouteNames
         /// Gets the blog RSS route name
         /// </summary>
         public const string BLOG_RSS = "BlogRSS";
-
-        /// <summary>
-        /// Gets the news RSS route name
-        /// </summary>
-        public const string NEWS_RSS = "NewsRSS";
 
         /// <summary>
         /// Gets the customer return request route name

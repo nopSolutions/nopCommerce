@@ -1,0 +1,27 @@
+﻿@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Nop.Web.Framework
+
+@inject IGenericAttributeService genericAttributeService
+@inject INopHtmlHelper NopHtml
+@inject IStoreService storeService
+@inject IWorkContext workContext
+
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using Microsoft.AspNetCore.Routing
+@using Nop.Core
+@using Nop.Plugin.Misc.News
+@using Nop.Plugin.Misc.News.Admin.Models
+@using Nop.Plugin.Misc.News.Domain
+@using Nop.Services.Common
+@using Nop.Services.Events
+@using Nop.Services.Stores
+@using Nop.Web.Areas.Admin.Components
+@using Nop.Web.Areas.Admin.Models.Common
+@using Nop.Web.Framework.Events
+@using Nop.Web.Framework.Extensions
+@using Nop.Web.Framework.Infrastructure
+@using Nop.Web.Framework.Models.DataTables
+@using Nop.Web.Framework.UI
+@using static Nop.Services.Common.NopLinksDefaults

@@ -5,7 +5,6 @@ using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
@@ -125,10 +124,6 @@ public partial class SlugRouteTransformer : DynamicRouteValueTransformer
 
             case var name when name.Equals(nameof(Vendor), StringComparison.InvariantCultureIgnoreCase):
                 RouteToAction(values, "Catalog", "Vendor", slug, (NopRoutingDefaults.RouteValue.VendorId, urlRecord.EntityId));
-                return;
-
-            case var name when name.Equals(nameof(NewsItem), StringComparison.InvariantCultureIgnoreCase):
-                RouteToAction(values, "News", "NewsItem", slug, (NopRoutingDefaults.RouteValue.NewsItemId, urlRecord.EntityId));
                 return;
 
             case var name when name.Equals(nameof(BlogPost), StringComparison.InvariantCultureIgnoreCase):

@@ -5,13 +5,14 @@ using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
+using Nop.Web.Framework.Events;
 
 namespace Nop.Web.Framework.Mvc.Routing;
 
@@ -25,6 +26,7 @@ public partial class NopUrlHelper : INopUrlHelper
     protected readonly CatalogSettings _catalogSettings;
     protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly ICategoryService _categoryService;
+    protected readonly IEventPublisher _eventPublisher;
     protected readonly IManufacturerService _manufacturerService;
     protected readonly IStoreContext _storeContext;
     protected readonly ITopicService _topicService;
@@ -38,6 +40,7 @@ public partial class NopUrlHelper : INopUrlHelper
     public NopUrlHelper(CatalogSettings catalogSettings,
         IActionContextAccessor actionContextAccessor,
         ICategoryService categoryService,
+        IEventPublisher eventPublisher,
         IManufacturerService manufacturerService,
         IStoreContext storeContext,
         ITopicService topicService,
@@ -47,6 +50,7 @@ public partial class NopUrlHelper : INopUrlHelper
         _catalogSettings = catalogSettings;
         _actionContextAccessor = actionContextAccessor;
         _categoryService = categoryService;
+        _eventPublisher = eventPublisher;
         _manufacturerService = manufacturerService;
         _storeContext = storeContext;
         _topicService = topicService;
@@ -146,6 +150,12 @@ public partial class NopUrlHelper : INopUrlHelper
     public virtual async Task<string> RouteGenericUrlAsync<TEntity>(object values = null, string protocol = null, string host = null, string fragment = null)
         where TEntity : BaseEntity, ISlugSupported
     {
+        //allow third-party handlers to route URL by the found record
+        var routingEvent = new RouteUrlEvent(typeof(TEntity), new(values), protocol, host, fragment);
+        await _eventPublisher.PublishAsync(routingEvent);
+        if (routingEvent.StopProcessing)
+            return routingEvent.Url;
+
         return typeof(TEntity) switch
         {
             var entityType when entityType == typeof(Product)
@@ -156,8 +166,6 @@ public partial class NopUrlHelper : INopUrlHelper
                 => RouteUrl(NopRoutingDefaults.RouteName.Generic.Manufacturer, values, protocol, host, fragment),
             var entityType when entityType == typeof(Vendor)
                 => RouteUrl(NopRoutingDefaults.RouteName.Generic.Vendor, values, protocol, host, fragment),
-            var entityType when entityType == typeof(NewsItem)
-                => RouteUrl(NopRoutingDefaults.RouteName.Generic.NewsItem, values, protocol, host, fragment),
             var entityType when entityType == typeof(BlogPost)
                 => RouteUrl(NopRoutingDefaults.RouteName.Generic.BlogPost, values, protocol, host, fragment),
             var entityType when entityType == typeof(Topic)
