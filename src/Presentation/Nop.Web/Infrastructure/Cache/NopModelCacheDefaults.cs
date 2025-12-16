@@ -268,16 +268,6 @@ public static partial class NopModelCacheDefaults
     public static string BlogPrefixCacheKey => "Nop.pres.blog";
 
     /// <summary>
-    /// Key for home page news
-    /// </summary>
-    /// <remarks>
-    /// {0} : language ID
-    /// {1} : current store ID
-    /// </remarks>
-    public static CacheKey HomepageNewsModelKey => new("Nop.pres.news.homepage-{0}-{1}");
-    public static string NewsPrefixCacheKey => "Nop.pres.news";
-
-    /// <summary>
     /// Key for logo
     /// </summary>
     /// <remarks>

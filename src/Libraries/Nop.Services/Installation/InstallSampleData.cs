@@ -13,7 +13,6 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Seo;
@@ -1542,43 +1541,6 @@ public partial class InstallationService
             CustomerId = customerId,
             CommentText = comment,
             IsApproved = true,
-            StoreId = storeId,
-            CreatedOnUtc = DateTime.UtcNow
-        })));
-    }
-
-    /// <summary>
-    /// Installs a sample news
-    /// </summary>
-    /// <param name="sampleNewsItems">Sample news items to install</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task InstallNewsAsync(IList<SampleNewsItem> sampleNewsItems)
-    {
-        var languageId = await GetDefaultLanguageIdAsync();
-        var customerId = await GetDefaultCustomerIdAsync();
-        var storeId = await GetDefaultStoreIdAsync();
-
-        var news = sampleNewsItems.ToDictionary(sni => new NewsItem
-        {
-            AllowComments = sni.AllowComments,
-            LanguageId = languageId,
-            Title = sni.Title,
-            Short = sni.Short,
-            Full = sni.Full,
-            Published = sni.Published,
-            CreatedOnUtc = DateTime.UtcNow
-        }, sni => sni.NewsComments);
-
-        await _dataProvider.BulkInsertEntitiesAsync(news.Keys);
-        await InsertSearchEngineNamesAsync(news.Keys, newsItem => newsItem.Title, languageId);
-
-        await _dataProvider.BulkInsertEntitiesAsync(news.SelectMany(newsItem => newsItem.Value.Select(comment => new NewsComment
-        {
-            NewsItemId = newsItem.Key.Id,
-            CustomerId = customerId,
-            CommentTitle = comment.CommentTitle,
-            CommentText = comment.CommentText,
-            IsApproved = comment.IsApproved,
             StoreId = storeId,
             CreatedOnUtc = DateTime.UtcNow
         })));

@@ -38,11 +38,6 @@ public partial class SitemapXmlSettings : ISettings
     public bool SitemapXmlIncludeManufacturers { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether to include news to sitemap.xml
-    /// </summary>
-    public bool SitemapXmlIncludeNews { get; set; }
-
-    /// <summary>
     /// Gets or sets a value indicating whether to include products to sitemap.xml
     /// </summary>
     public bool SitemapXmlIncludeProducts { get; set; }
