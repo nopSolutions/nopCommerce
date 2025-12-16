@@ -335,7 +335,7 @@ public partial class ShoppingCartController : BasePublicController
     }
 
     protected virtual async Task<IActionResult> GetProductToCartDetailsAsync(List<string> addToCartWarnings, ShoppingCartType cartType,
-        Product product, int updateCartItemId = 0)
+     Product product, int updateCartItemId = 0)
     {
         if (addToCartWarnings.Any())
         {
@@ -427,15 +427,22 @@ public partial class ShoppingCartController : BasePublicController
                         ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
                         : string.Empty;
 
-                    var updateProductMessage = updateCartItemId > 0
-                        ? await _localizationService.GetResourceAsync("Products.ProductHasBeenUpdatedInTheCart")
-                        : string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl(NopRouteNames.General.CART));
+
+                    var addedText = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl(NopRouteNames.General.CART));
+                    var updatedText = await _localizationService.GetResourceAsync("Products.ProductHasBeenUpdatedInTheCart");
+
+
+                    if (string.IsNullOrEmpty(updatedText))
+                        updatedText = "Product updated in cart.";
+
+
+                    var message = GetCartStatusMessage(updateCartItemId, addedText, updatedText);
 
 
                     return Json(new
                     {
                         success = true,
-                        message = updateProductMessage,
+                        message = message,
                         updatetopcartsectionhtml = updateTopCartSectionHtml,
                         updateflyoutcartsectionhtml = updateFlyoutCartSectionHtml
                     });
@@ -1925,4 +1932,13 @@ public partial class ShoppingCartController : BasePublicController
     }
 
     #endregion
+
+    public static string GetCartStatusMessage(int updateCartItemId, string addedResource, string updatedResource)
+    {
+        if (updateCartItemId > 0)
+        {
+            return updatedResource;
+        }
+        return addedResource;
+    }
 }
