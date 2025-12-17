@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Polls",
+  "SystemName": "Misc.Polls",
+  "Version": "5.00.1",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "nopCommerce/LTU team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.Polls.dll",
+  "Description": "This plugin allows you to open polls in your store."
+}
