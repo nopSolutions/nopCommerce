@@ -1,0 +1,60 @@
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+  <div style="background: linear-gradient(120deg, #94a3b8, #64748b); padding: 30px; text-align: center; color: white;">
+    <h1 style="margin: 0; font-size: 28px;">Order Cancelled</h1>
+    <p style="margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;">Sometimes We Must Change Our Path</p>
+  </div>
+  
+  <div style="padding: 30px; background: #f9fafb;">
+    <p style="font-size: 16px; line-height: 1.6;">Hello <strong>%Order.CustomerFullName%</strong>,</p>
+    
+    <p style="font-size: 16px; line-height: 1.6;">
+      Your order <strong>#%Order.OrderNumber%</strong> has been cancelled as requested.
+    </p>
+    
+    <div style="background: white; border-left: 4px solid #64748b; padding: 20px; margin: 25px 0; border-radius: 4px;">
+      <p style="margin: 0; font-style: italic; color: #555; line-height: 1.8;">
+        "Life is a series of natural and spontaneous changes. Don't resist them; that only creates sorrow. Let reality be reality."
+        <br><span style="font-size: 12px; color: #888;">— Lao Tzu</span>
+      </p>
+    </div>
+    
+    <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+      <h2 style="color: #475569; font-size: 18px; margin-top: 0;">Order Summary</h2>
+      <table style="width: 100%; font-size: 14px;">
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Order Number:</td>
+          <td style="padding: 8px 0; text-align: right;"><strong>%Order.OrderNumber%</strong></td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Date Ordered:</td>
+          <td style="padding: 8px 0; text-align: right;">%Order.CreatedOn%</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;" colspan="2">
+            Order Details: <a target="_blank" href="%Order.OrderURLForCustomer%" style="color: #475569;">View Online</a>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+    <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+      <h3 style="color: #475569; font-size: 16px; margin-top: 0;">Products</h3>
+      %Order.Product(s)%
+    </div>
+    
+    <div style="background: #e0e7ff; border: 2px solid #6366f1; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
+      <p style="margin: 0; font-size: 14px; color: #4338ca;">
+        Your journey continues. When you're ready, we'll be here to support your practice.
+      </p>
+    </div>
+  </div>
+  
+  <div style="background: #1f2937; color: white; padding: 20px; text-align: center; font-size: 12px;">
+    <p style="margin: 0 0 10px 0;">
+      <strong>%Store.Name%</strong> - Always Here for Your Journey
+    </p>
+    <p style="margin: 0; opacity: 0.8;">
+      Questions? Contact us at <a href="mailto:%Store.Email%" style="color: #2dd4bf;">%Store.Email%</a>
+    </p>
+  </div>
+</div>

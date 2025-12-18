@@ -124,7 +124,22 @@ Focus on the philosophical and spiritual aspects of their choices.";
             "application/json");
 
         var response = await client.SendAsync(request);
-        response.EnsureSuccessStatusCode();
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            var statusCode = (int)response.StatusCode;
+            
+            _logger.LogError("Azure OpenAI API call failed with status {StatusCode}: {Error}", statusCode, errorContent);
+            
+            return statusCode switch
+            {
+                401 => "Unable to authenticate with Azure OpenAI. Please verify your API key.",
+                429 => "Rate limit exceeded. The sage is meditating. Please try again later.",
+                >= 500 => "Azure OpenAI service is temporarily unavailable. Peace will return soon.",
+                _ => null
+            };
+        }
 
         var responseContent = await response.Content.ReadAsStringAsync();
         var jsonResponse = JsonDocument.Parse(responseContent);
