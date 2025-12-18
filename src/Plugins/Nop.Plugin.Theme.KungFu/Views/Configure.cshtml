@@ -46,13 +46,13 @@
             <div class="form-group form-check mb-4">
                 <input asp-for="SyncAutomatically" class="form-check-input" />
                 <label asp-for="SyncAutomatically" class="form-check-label font-weight-bold"></label>
-                <span class="text-muted small d-block">@T("Plugins.Theme.KungFu.Configure.Subheading")</span>
+                <span class="text-muted small d-block">@T("Plugins.Theme.KungFu.Fields.SyncAutomatically.Hint")</span>
             </div>
 
             <input type="hidden" asp-for="TriggerResync" value="false" />
             <input type="hidden" asp-for="IsOutdated" />
 
-            <div class="d-flex flex-wrap align-items-center">
+            <div class="d-flex flex-wrap align-items-center mb-4">
                 <button type="submit" class="btn btn-primary mr-2 mb-2" onclick="this.form.TriggerResync.value=true;">
                     <i class="fas fa-sync-alt mr-1"></i> @T("Plugins.Theme.KungFu.Configure.SyncNow")
                 </button>
@@ -60,6 +60,60 @@
                     <i class="far fa-save mr-1"></i> @T("Admin.Common.Save")
                 </button>
             </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm mt-4" style="border-color:#e0e7ff;">
+    <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+            <i class="fas fa-brain text-primary mr-2" style="font-size: 24px;"></i>
+            <div>
+                <h3 style="margin: 0; color: #6366f1;">@T("Plugins.Theme.KungFu.Configure.AISection")</h3>
+                <p style="margin: 0; color: #666; font-size: 14px;">@T("Plugins.Theme.KungFu.Configure.AISection.Description")</p>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(120deg,#fef3c7,#fde68a); padding: 15px; border-radius: 4px; border-left: 4px solid #f59e0b; margin-bottom: 20px;">
+            <p style="margin: 0; color: #92400e; font-size: 13px; line-height: 1.6;">
+                <i class="fas fa-info-circle mr-1"></i>
+                <strong>Ancient Wisdom Meets Modern AI:</strong> When configured, the AI Sage will generate personalized messages inspired by Lao Tzu and Confucius, reflecting on the customer's order with philosophical insights and peaceful meditation.
+            </p>
+        </div>
+
+        <form asp-action="Configure" method="post">
+            <input type="hidden" asp-for="SyncAutomatically" />
+            <input type="hidden" asp-for="TriggerResync" value="false" />
+            <input type="hidden" asp-for="IsOutdated" />
+
+            <div class="form-group">
+                <label asp-for="AzureOpenAIEndpoint" class="font-weight-bold"></label>
+                <input asp-for="AzureOpenAIEndpoint" class="form-control" placeholder="https://your-resource.openai.azure.com/" />
+                <span class="text-muted small">@T("Plugins.Theme.KungFu.Fields.AzureOpenAIEndpoint.Hint")</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AzureOpenAIKey" class="font-weight-bold"></label>
+                <input asp-for="AzureOpenAIKey" type="password" class="form-control" placeholder="••••••••••••••••" />
+                <span class="text-muted small">@T("Plugins.Theme.KungFu.Fields.AzureOpenAIKey.Hint")</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AzureOpenAIDeploymentName" class="font-weight-bold"></label>
+                <input asp-for="AzureOpenAIDeploymentName" class="form-control" placeholder="gpt-4" />
+                <span class="text-muted small">@T("Plugins.Theme.KungFu.Fields.AzureOpenAIDeploymentName.Hint")</span>
+            </div>
+
+            <div class="form-group form-check">
+                <input asp-for="EnableAISageMessages" class="form-check-input" />
+                <label asp-for="EnableAISageMessages" class="form-check-label font-weight-bold"></label>
+                <br />
+                <span class="text-muted small">@T("Plugins.Theme.KungFu.Fields.EnableAISageMessages.Hint")</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="far fa-save mr-1"></i> @T("Admin.Common.Save")
+            </button>
         </form>
     </div>
 </div>

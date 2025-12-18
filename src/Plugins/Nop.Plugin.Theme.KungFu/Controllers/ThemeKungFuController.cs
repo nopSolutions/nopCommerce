@@ -56,7 +56,11 @@ public class ThemeKungFuController : BasePluginController
             PluginVersion = status.PluginVersion,
             AccentSummary = status.WasOutdated
                 ? await _localizationService.GetResourceAsync("Plugins.Theme.KungFu.Status.Outdated")
-                : await _localizationService.GetResourceAsync("Plugins.Theme.KungFu.Status.Fresh")
+                : await _localizationService.GetResourceAsync("Plugins.Theme.KungFu.Status.Fresh"),
+            AzureOpenAIEndpoint = settings.AzureOpenAIEndpoint,
+            AzureOpenAIKey = settings.AzureOpenAIKey,
+            AzureOpenAIDeploymentName = settings.AzureOpenAIDeploymentName,
+            EnableAISageMessages = settings.EnableAISageMessages
         };
 
         return View("~/Plugins/Theme.KungFu/Views/Configure.cshtml", model);
@@ -71,6 +75,10 @@ public class ThemeKungFuController : BasePluginController
 
         var settings = await _settingService.LoadSettingAsync<ThemeKungFuSettings>();
         settings.SyncAutomatically = model.SyncAutomatically;
+        settings.AzureOpenAIEndpoint = model.AzureOpenAIEndpoint;
+        settings.AzureOpenAIKey = model.AzureOpenAIKey;
+        settings.AzureOpenAIDeploymentName = model.AzureOpenAIDeploymentName;
+        settings.EnableAISageMessages = model.EnableAISageMessages;
         await _settingService.SaveSettingAsync(settings);
 
         var result = await _themeKungFuService.EnsureSyncedAsync(model.TriggerResync || model.IsOutdated);

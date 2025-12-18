@@ -10,7 +10,9 @@ public class ThemeKungFuStartup : INopStartup
 {
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
+        services.AddHttpClient();
         services.AddScoped<IThemeKungFuService, ThemeKungFuService>();
+        services.AddScoped<IAISageService, AISageService>();
     }
 
     public void Configure(IApplicationBuilder application)

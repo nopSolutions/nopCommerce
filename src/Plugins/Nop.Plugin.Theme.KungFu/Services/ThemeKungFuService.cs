@@ -2,9 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Plugin.Theme.KungFu;
 using Nop.Services.Configuration;
+using Nop.Services.Messages;
 using Nop.Services.Plugins;
 using Nop.Services.Topics;
 
@@ -18,6 +21,8 @@ public class ThemeKungFuService : IThemeKungFuService
     private readonly ITopicService _topicService;
     private readonly ITopicTemplateService _topicTemplateService;
     private readonly IPluginService _pluginService;
+    private readonly IMessageTemplateService _messageTemplateService;
+    private readonly IRepository<EmailAccount> _emailAccountRepository;
 
     public ThemeKungFuService(
         ILogger<ThemeKungFuService> logger,
@@ -25,7 +30,9 @@ public class ThemeKungFuService : IThemeKungFuService
         ISettingService settingService,
         ITopicService topicService,
         ITopicTemplateService topicTemplateService,
-        IPluginService pluginService)
+        IPluginService pluginService,
+        IMessageTemplateService messageTemplateService,
+        IRepository<EmailAccount> emailAccountRepository)
     {
         _logger = logger;
         _fileProvider = fileProvider;
@@ -33,6 +40,8 @@ public class ThemeKungFuService : IThemeKungFuService
         _topicService = topicService;
         _topicTemplateService = topicTemplateService;
         _pluginService = pluginService;
+        _messageTemplateService = messageTemplateService;
+        _emailAccountRepository = emailAccountRepository;
     }
 
     public async Task<ThemeSyncResult> EnsureSyncedAsync(bool force = false)
@@ -56,6 +65,7 @@ public class ThemeKungFuService : IThemeKungFuService
 
         await CopyThemeAsync(descriptor);
         await SeedTopicsAsync();
+        await SeedMessageTemplatesAsync();
 
         settings.LastSyncedOnUtc = DateTime.UtcNow;
         settings.LastSyncedVersion = pluginVersion;
@@ -212,5 +222,97 @@ public class ThemeKungFuService : IThemeKungFuService
         };
     }
 
+    private async Task SeedMessageTemplatesAsync()
+    {
+        var emailAccount = await _emailAccountRepository.Table.FirstOrDefaultAsync();
+        if (emailAccount == null)
+        {
+            _logger.LogWarning("No email account found. Skipping message template sync.");
+            return;
+        }
+
+        foreach (var descriptor in GetMessageTemplateDescriptors())
+        {
+            var body = await LoadMessageTemplateBodyAsync(descriptor.FileName);
+            if (string.IsNullOrWhiteSpace(body))
+            {
+                _logger.LogWarning("Skipped message template {SystemName} because {FileName} could not be read.", descriptor.SystemName, descriptor.FileName);
+                continue;
+            }
+
+            await UpsertMessageTemplateAsync(descriptor, body, emailAccount.Id);
+        }
+    }
+
+    private async Task<string> LoadMessageTemplateBodyAsync(string fileName)
+    {
+        var templatesDirectory = _fileProvider.MapPath(ThemeKungFuDefaults.MessageTemplatesVirtualPath);
+        var filePath = _fileProvider.Combine(templatesDirectory, fileName);
+
+        if (!_fileProvider.FileExists(filePath))
+            return null;
+
+        return await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8);
+    }
+
+    private async Task UpsertMessageTemplateAsync(MessageTemplateSeedDescriptor descriptor, string body, int emailAccountId)
+    {
+        var templates = await _messageTemplateService.GetMessageTemplatesByNameAsync(descriptor.SystemName);
+        var template = templates.FirstOrDefault() ?? new MessageTemplate
+        {
+            Name = descriptor.SystemName
+        };
+
+        template.Subject = descriptor.Subject;
+        template.Body = body;
+        template.IsActive = descriptor.IsActive;
+        template.EmailAccountId = emailAccountId;
+
+        if (template.Id == 0)
+            await _messageTemplateService.InsertMessageTemplateAsync(template);
+        else
+            await _messageTemplateService.UpdateMessageTemplateAsync(template);
+    }
+
+    private static IEnumerable<MessageTemplateSeedDescriptor> GetMessageTemplateDescriptors()
+    {
+        return new List<MessageTemplateSeedDescriptor>
+        {
+            new(MessageTemplateSystemNames.ORDER_PLACED_CUSTOMER_NOTIFICATION, 
+                "Order receipt from %Store.Name%", 
+                "order-placed-customer.html", 
+                true),
+            new(MessageTemplateSystemNames.ORDER_COMPLETED_CUSTOMER_NOTIFICATION, 
+                "%Store.Name% - Your order completed", 
+                "order-completed-customer.html", 
+                true),
+            new(MessageTemplateSystemNames.ORDER_CANCELLED_CUSTOMER_NOTIFICATION, 
+                "%Store.Name% - Your order cancelled", 
+                "order-cancelled-customer.html", 
+                true),
+            new(MessageTemplateSystemNames.CUSTOMER_WELCOME_MESSAGE, 
+                "Welcome to %Store.Name% - Begin Your Journey", 
+                "customer-welcome.html", 
+                true),
+            new(MessageTemplateSystemNames.CUSTOMER_EMAIL_VALIDATION_MESSAGE, 
+                "%Store.Name% - Email validation", 
+                "email-validation.html", 
+                true),
+            new(MessageTemplateSystemNames.SHIPMENT_SENT_CUSTOMER_NOTIFICATION, 
+                "Your order from %Store.Name% has been %if (!%Order.IsCompletelyShipped%) partially endif%shipped", 
+                "shipment-sent-customer.html", 
+                true),
+            new(MessageTemplateSystemNames.CUSTOMER_PASSWORD_RECOVERY_MESSAGE, 
+                "%Store.Name% - Password Recovery", 
+                "password-recovery.html", 
+                true),
+            new(MessageTemplateSystemNames.ORDER_PAID_AI_SAGE_NOTIFICATION, 
+                "%Store.Name% - Wisdom from the Sage", 
+                "order-paid-ai-sage.html", 
+                false) // Disabled by default until AI is configured
+        };
+    }
+
     private record TopicSeedDescriptor(string SystemName, string Title, int DisplayOrder, string FileName, bool IncludeInSitemap = false);
+    private record MessageTemplateSeedDescriptor(string SystemName, string Subject, string FileName, bool IsActive);
 }
