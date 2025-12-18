@@ -6099,33 +6099,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.AllowGenerateProductDescription.Hint">
     <Value>Check to allow generation of product descriptions with artificial intelligence services.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.Info">
-    <Value><![CDATA[<p>Artificial intelligence functionality allows you to use third-party AI services such as <a href='https://www.deepseek.com/' target='_blank'>DeepSeek</a>, <a href='https://gemini.google.com/' target='_blank'>Gemini</a> or <a href='https://chatgpt.com/' target='_blank'>ChatGPT</a> to automatically generate content. This could be either product descriptions or meta tags for specific pages or entities.</p>]]></Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.LogRequests">
-    <Value>Log AI requests</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.LogRequests.Hint">
-    <Value>Check to enable logging of all requests to AI services.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaDescriptionQuery">
-    <Value>AI query to generate meta description</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaDescriptionQuery.Hint">
-    <Value>Set the query to generate meta description with artificial intelligence.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaKeywordsQuery">
-    <Value>AI query to generate meta keywords</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaKeywordsQuery.Hint">
-    <Value>Set the query to generate meta keywords with artificial intelligence.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaTitleQuery">
-    <Value>AI query to generate meta title</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaTitleQuery.Hint">
-    <Value>Set the query to generate meta title with artificial intelligence.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ChatGptApiKey">
     <Value>API key</Value>
   </LocaleResource>
@@ -6162,6 +6135,30 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.Info">
     <Value><![CDATA[<p>Artificial intelligence functionality allows you to use third-party AI services such as <a href='https://www.deepseek.com/' target='_blank'>DeepSeek</a>, <a href='https://gemini.google.com/' target='_blank'>Gemini</a> or <a href='https://chatgpt.com/' target='_blank'>ChatGPT</a> to automatically generate product descriptions.</p>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.LogRequests">
+    <Value>Log AI requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.LogRequests.Hint">
+    <Value>Check to enable logging of all requests to AI services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaDescriptionQuery">
+    <Value>AI query to generate meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaDescriptionQuery.Hint">
+    <Value>Set the query to generate meta description with artificial intelligence.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaKeywordsQuery">
+    <Value>AI query to generate meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaKeywordsQuery.Hint">
+    <Value>Set the query to generate meta keywords with artificial intelligence.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaTitleQuery">
+    <Value>AI query to generate meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaTitleQuery.Hint">
+    <Value>Set the query to generate meta title with artificial intelligence.</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery">
     <Value>AI query to generate product description</Value>
   </LocaleResource>
