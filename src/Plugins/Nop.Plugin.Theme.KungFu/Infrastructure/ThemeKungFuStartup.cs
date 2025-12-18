@@ -11,6 +11,7 @@ public class ThemeKungFuStartup : INopStartup
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IThemeKungFuService, ThemeKungFuService>();
+        services.AddScoped<IAISageService, AISageService>();
     }
 
     public void Configure(IApplicationBuilder application)
