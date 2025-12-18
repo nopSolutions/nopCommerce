@@ -159,10 +159,13 @@ public static class FluentMigratorExtensions
     /// </param>
     public static void CreateTableIfNotExists<TEntity>(this Migration migration) where TEntity : BaseEntity
     {
-        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        var type = typeof(TEntity);
+        var tableName = NameCompatibilityManager.GetTableName(type);
+
         if (!migration.Schema.Table(tableName).Exists())
         {
-            migration.Create.TableFor<TEntity>();
+            var builder = migration.Create.Table(tableName) as CreateTableExpressionBuilder;
+            builder.RetrieveTableExpressions(type);
         }
     }
 
