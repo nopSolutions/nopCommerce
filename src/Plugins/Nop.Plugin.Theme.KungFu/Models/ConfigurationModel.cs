@@ -18,4 +18,16 @@ public record ConfigurationModel : BaseNopModel
     public string AccentSummary { get; set; }
 
     public bool TriggerResync { get; set; }
+
+    [NopResourceDisplayName("Plugins.Theme.KungFu.Fields.AzureOpenAIEndpoint")]
+    public string AzureOpenAIEndpoint { get; set; }
+
+    [NopResourceDisplayName("Plugins.Theme.KungFu.Fields.AzureOpenAIKey")]
+    public string AzureOpenAIKey { get; set; }
+
+    [NopResourceDisplayName("Plugins.Theme.KungFu.Fields.AzureOpenAIDeploymentName")]
+    public string AzureOpenAIDeploymentName { get; set; }
+
+    [NopResourceDisplayName("Plugins.Theme.KungFu.Fields.EnableAISageMessages")]
+    public bool EnableAISageMessages { get; set; }
 }

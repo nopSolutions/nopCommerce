@@ -6,4 +6,5 @@ public static class ThemeKungFuDefaults
     public const string ThemeName = "KungFu";
     public const string ConfigurationRouteName = "Plugin.Theme.KungFu.Configure";
     public const string TopicsVirtualPath = "~/Themes/KungFu/Content/topics";
+    public const string MessageTemplatesVirtualPath = "~/Plugins/Theme.KungFu/MessageTemplates";
 }

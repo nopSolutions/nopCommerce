@@ -307,4 +307,13 @@ public static partial class MessageTemplateSystemNames
     public const string CONTACT_VENDOR_MESSAGE = "Service.ContactVendor";
 
     #endregion
+
+    #region AI Sage
+
+    /// <summary>
+    /// Represents system name of AI sage notification after order payment
+    /// </summary>
+    public const string ORDER_PAID_AI_SAGE_NOTIFICATION = "OrderPaid.AISage.CustomerNotification";
+
+    #endregion
 }
