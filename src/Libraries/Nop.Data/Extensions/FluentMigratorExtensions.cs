@@ -2,6 +2,7 @@
 using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
+using FluentMigrator;
 using FluentMigrator.Builders.Alter;
 using FluentMigrator.Builders.Alter.Table;
 using FluentMigrator.Builders.Create;
@@ -205,8 +206,7 @@ public static class FluentMigratorExtensions
     /// <param name="expressionRoot">The root schema expression.</param>
     /// <param name="selector">An expression selecting the entity property to check.</param>
     /// <returns><c>true</c> if the column exists; otherwise, <c>false</c>.</returns>
-    public static bool ColumnExists<TEntity>(
-    this ISchemaExpressionRoot expressionRoot, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
+    public static bool ColumnExists<TEntity>(this ISchemaExpressionRoot expressionRoot, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
         var propertyMemberExpression = selector.Body as MemberExpression
@@ -224,8 +224,7 @@ public static class FluentMigratorExtensions
     /// <param name="expressionRoot">The root schema expression.</param>
     /// <param name="columnName">The column name</param>
     /// <returns><c>true</c> if the column exists; otherwise, <c>false</c>.</returns>
-    public static bool ColumnExists<TEntity>(
-    this ISchemaExpressionRoot expressionRoot, string columnName) where TEntity : BaseEntity
+    public static bool ColumnExists<TEntity>(this ISchemaExpressionRoot expressionRoot, string columnName) where TEntity : BaseEntity
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
         return expressionRoot.Table(tableName).Column(columnName).Exists();
@@ -247,6 +246,74 @@ public static class FluentMigratorExtensions
     }
 
     /// <summary>
+    /// Creates a database table for the specified entity type
+    /// if the table does not already exist.
+    /// </summary>
+    /// <typeparam name="TEntity">
+    /// The entity type mapped to the database table.
+    /// </typeparam>
+    /// <param name="migration">
+    /// The migration context used to inspect the schema and create the table.
+    /// </param>
+    public static void CreateTableIfNotExists<TEntity>(this Migration migration) where TEntity : BaseEntity
+    {
+        if (!migration.Schema.TableExists<TEntity>())
+        {
+            migration.Create.TableFor<TEntity>();
+        }
+    }
+
+    /// <summary>
+    /// Adds a new column or alters an existing column in the database table
+    /// mapped to the specified entity, depending on whether the column
+    /// already exists.
+    /// </summary>
+    /// <typeparam name="TEntity">
+    /// The entity type mapped to the database table.
+    /// </typeparam>
+    /// <param name="migrationRoot">
+    /// The migration context used to inspect the schema and apply changes.
+    /// </param>
+    /// <param name="selector">
+    /// An expression selecting the entity property that maps to the target column.
+    /// </param>
+    /// <returns>
+    /// A fluent syntax interface allowing further ALTER TABLE operations
+    /// on the added or altered column.
+    /// </returns>
+    public static IAlterTableColumnAsTypeSyntax AddOrAlterColumnFor<TEntity>(this Migration migration, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
+    {
+        if (migration.Schema.ColumnExists<TEntity>(selector))
+            return migration.Alter.AlterColumnFor<TEntity>(selector);
+
+        return migration.Alter.AddColumnFor<TEntity>(selector);
+    }
+
+    /// <summary>
+    /// Deletes the specified columns from the database table mapped to the given entity
+    /// if those columns already exist.
+    /// </summary>
+    /// <typeparam name="TEntity">
+    /// The entity type mapped to the database table.
+    /// </typeparam>
+    /// <param name="migration">
+    /// The migration context used to inspect the schema and delete columns.
+    /// </param>
+    /// <param name="columns">
+    /// A list of column names to delete if they exist.
+    /// </param>
+    public static void DeleteColumnsIfExists<TEntity>(this Migration migration, IEnumerable<string> columns) where TEntity : BaseEntity
+    {
+        foreach (var column in columns)
+        {
+            if (migration.Schema.ColumnExists<TEntity>(column))
+            {
+                migration.Delete.Column<TEntity>(column);
+            }
+        }
+    }
+
+    /// <summary>
     /// Adds a new column to the database table mapped to the specified entity,
     /// resolving both the table name and column name using <see cref="NameCompatibilityManager"/>.
     /// </summary>
@@ -257,8 +324,7 @@ public static class FluentMigratorExtensions
     /// A fluent syntax interface allowing further ALTER TABLE operations
     /// on the newly added column.
     /// </returns>
-    public static IAlterTableColumnAsTypeSyntax AddColumnFor<TEntity>(
-    this IAlterExpressionRoot expressionRoot, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
+    public static IAlterTableColumnAsTypeSyntax AddColumnFor<TEntity>(this IAlterExpressionRoot expressionRoot, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
         var propertyMemberExpression = selector.Body as MemberExpression
