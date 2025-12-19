@@ -6,10 +6,11 @@ using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Migrations;
 
 [NopMigration("2021-10-29 11:00:00", "Shipping.FixedByWeightByTotal change decimal precision", MigrationProcessType.Update)]
-public class ChangeDecimalPrecision : Migration
+public class UpgradeTo450 : Migration
 {
     public override void Up()
     {
+        //ChangeDecimalPrecision
         this.AddOrAlterColumnFor<ShippingByWeightByTotalRecord>(t => t.WeightFrom)
             .AsDecimal(18, 4);
         this.AddOrAlterColumnFor<ShippingByWeightByTotalRecord>(t => t.WeightTo)
