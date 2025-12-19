@@ -5,7 +5,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
-using Nop.Data.Mapping;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo450;
 
@@ -25,14 +25,10 @@ public class DataMigration : Migration
     public override void Up()
     {
         // add column
-        var shipmentTableName = nameof(Shipment);
-        var collectedDateUtcColumnName = "ReadyForPickupDateUtc";
 
-        if (!Schema.Table(shipmentTableName).Column(collectedDateUtcColumnName).Exists())
-        {
-            Alter.Table(shipmentTableName)
-                .AddColumn(collectedDateUtcColumnName).AsDateTime2().Nullable();
-        }
+        this.AddOrAlterColumnFor<Shipment>(t => t.ReadyForPickupDateUtc)
+            .AsDateTime2()
+            .Nullable();
 
         // add message template
         if (!_dataProvider.GetTable<MessageTemplate>().Any(pr => string.Compare(pr.Name, MessageTemplateSystemNames.SHIPMENT_READY_FOR_PICKUP_CUSTOMER_NOTIFICATION, true) == 0))
@@ -49,18 +45,10 @@ public class DataMigration : Migration
             );
         }
         //#5547
-        var scheduleTaskTableName = NameCompatibilityManager.GetTableName(typeof(ScheduleTask));
-
         //add column
-        if (!Schema.Table(scheduleTaskTableName).Column(nameof(ScheduleTask.LastEnabledUtc)).Exists())
-        {
-            Alter.Table(scheduleTaskTableName)
-                .AddColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime2().Nullable();
-        }
-        else
-        {
-            Alter.Table(scheduleTaskTableName).AlterColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime2().Nullable();
-        }
+        this.AddOrAlterColumnFor<ScheduleTask>(t => t.LastEnabledUtc)
+            .AsDateTime2()
+            .Nullable();
 
         //#5939
         if (!_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "SalesSummaryReport", StringComparison.InvariantCultureIgnoreCase) == 0))
@@ -89,14 +77,10 @@ public class DataMigration : Migration
         }
 
         //add column
-        var returnRequestTableName = NameCompatibilityManager.GetTableName(typeof(ReturnRequest));
-        var returnedQuantityColumnName = "ReturnedQuantity";
-
-        if (!Schema.Table(returnRequestTableName).Column(returnedQuantityColumnName).Exists())
-        {
-            Alter.Table(returnRequestTableName)
-                .AddColumn(returnedQuantityColumnName).AsInt32().NotNullable().SetExistingRowsTo(0);
-        }
+        this.AddOrAlterColumnFor<ReturnRequest>(t => t.ReturnedQuantity)
+            .AsInt32()
+            .NotNullable()
+            .SetExistingRowsTo(0);
 
         //#6053
         if (!_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "ManageAppSettings", StringComparison.InvariantCultureIgnoreCase) == 0))

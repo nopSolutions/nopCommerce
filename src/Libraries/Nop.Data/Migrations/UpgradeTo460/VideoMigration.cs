@@ -2,7 +2,6 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Data.Extensions;
-using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo460;
 
@@ -14,10 +13,8 @@ public class VideoMigration : ForwardOnlyMigration
     /// </summary>
     public override void Up()
     {
-        if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(Video))).Exists())
-            Create.TableFor<Video>();
+        this.CreateTableIfNotExists<Video>();
 
-        if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(ProductVideo))).Exists())
-            Create.TableFor<ProductVideo>();
+        this.CreateTableIfNotExists<ProductVideo>();
     }
 }

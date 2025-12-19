@@ -6,7 +6,7 @@ using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Security;
-using Nop.Data.Mapping;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo470;
 
@@ -146,12 +146,8 @@ public class DataMigration : Migration
         }
 
         //#6890
-        var productTableName = NameCompatibilityManager.GetTableName(typeof(Product));
-
         //remove column
-        var isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName = "IsTelecommunicationsOrBroadcastingOrElectronicServices";
-        if (Schema.Table(productTableName).Column(isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName).Exists())
-            Delete.Column(isTelecommunicationsOrBroadcastingOrElectronicServicesColumnName).FromTable(productTableName);
+        this.DeleteColumnsIfExists<Product>(["IsTelecommunicationsOrBroadcastingOrElectronicServices"]);
 
         //New message template
         if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.DELETE_CUSTOMER_REQUEST_STORE_OWNER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
