@@ -37,9 +37,9 @@ public partial class MultistorePreviewViewComponent : NopViewComponent
         if (model is not BaseNopEntityModel entityModel)
             return Content(string.Empty);
 
-        var multistorePreviewModels = await _commonModelFactory.PrepareMultistorePreviewModelsAsync(entityModel);
+        var entityPreviewModel = await _commonModelFactory.PrepareEntityPreviewModelAsync(entityModel);
 
-        return View(multistorePreviewModels);
+        return View(entityPreviewModel);
     }
 
     #endregion

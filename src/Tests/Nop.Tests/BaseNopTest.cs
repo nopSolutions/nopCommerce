@@ -62,7 +62,6 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Menus;
 using Nop.Services.Messages;
-using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
@@ -128,6 +127,10 @@ public partial class BaseNopTest
 
         var permissionService = EngineContext.Current.Resolve<IPermissionService>();
         permissionService.InsertPermissionsAsync().Wait();
+
+        //init theme provider
+        var themeProvider = EngineContext.Current.Resolve<IThemeProvider>();
+        themeProvider.InitializeAsync().Wait();
     }
 
     protected static void PropertiesShouldEqual<T1, T2>(T1 obj1, T2 obj2, params string[] filter)
@@ -379,14 +382,13 @@ public partial class BaseNopTest
         services.AddTransient<IPollService, PollService>();
         services.AddTransient<IBlogService, BlogService>();
         services.AddTransient<ITopicService, TopicService>();
-        services.AddTransient<INewsService, NewsService>();
         services.AddTransient<IDateTimeHelper, DateTimeHelper>();
         services.AddTransient<IScheduleTaskService, ScheduleTaskService>();
         services.AddTransient<IExportManager, ExportManager>();
         services.AddTransient<IImportManager, ImportManager>();
         services.AddTransient<IPdfService, PdfService>();
         services.AddTransient<IUploadService, UploadService>();
-        services.AddTransient<IThemeProvider, ThemeProvider>();
+        services.AddSingleton<IThemeProvider, ThemeProvider>();
         services.AddTransient<IExternalAuthenticationService, ExternalAuthenticationService>();
         services.AddScoped<IBBCodeHelper, BBCodeHelper>();
         services.AddScoped<IHtmlFormatter, HtmlFormatter>();
@@ -504,8 +506,6 @@ public partial class BaseNopTest
         services.AddTransient<IManufacturerModelFactory, ManufacturerModelFactory>();
         services.AddTransient<IMeasureModelFactory, MeasureModelFactory>();
         services.AddTransient<IMessageTemplateModelFactory, MessageTemplateModelFactory>();
-        services.AddTransient<INewsLetterSubscriptionModelFactory, NewsLetterSubscriptionModelFactory>();
-        services.AddTransient<INewsModelFactory, NewsModelFactory>();
         services.AddTransient<IOrderModelFactory, OrderModelFactory>();
         services.AddTransient<IPaymentModelFactory, PaymentModelFactory>();
         services.AddTransient<IPluginModelFactory, PluginModelFactory>();
@@ -546,7 +546,6 @@ public partial class BaseNopTest
             .AddTransient<Web.Factories.IExternalAuthenticationModelFactory,
                 Web.Factories.ExternalAuthenticationModelFactory>();
         services.AddTransient<Web.Factories.IJsonLdModelFactory, Web.Factories.JsonLdModelFactory>();
-        services.AddTransient<Web.Factories.INewsModelFactory, Web.Factories.NewsModelFactory>();
         services.AddTransient<Web.Factories.INewsLetterModelFactory, Web.Factories.NewsLetterModelFactory>();
         services.AddTransient<Web.Factories.IOrderModelFactory, Web.Factories.OrderModelFactory>();
         services.AddTransient<Web.Factories.IPollModelFactory, Web.Factories.PollModelFactory>();

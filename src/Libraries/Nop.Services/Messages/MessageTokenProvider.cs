@@ -14,7 +14,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -35,7 +34,6 @@ using Nop.Services.Helpers;
 using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
@@ -71,7 +69,6 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILogger _logger;
-    protected readonly INewsService _newsService;
     protected readonly IOrderService _orderService;
     protected readonly IPaymentPluginManager _paymentPluginManager;
     protected readonly IPaymentService _paymentService;
@@ -115,7 +112,6 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         ILanguageService languageService,
         ILocalizationService localizationService,
         ILogger logger,
-        INewsService newsService,
         IOrderService orderService,
         IPaymentPluginManager paymentPluginManager,
         IPaymentService paymentService,
@@ -153,7 +149,6 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         _languageService = languageService;
         _localizationService = localizationService;
         _logger = logger;
-        _newsService = newsService;
         _orderService = orderService;
         _paymentPluginManager = paymentPluginManager;
         _paymentService = paymentService;
@@ -270,7 +265,10 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                         "%Order.ShippingAddressLine%",
                         "%Order.PaymentMethod%",
                         "%Order.VatNumber%",
-                        "%Order.CustomValues%",
+                        $"%Order.CustomValues.{CustomValueDisplayLocation.BillingAddress.ToString()}%",
+                        $"%Order.CustomValues.{CustomValueDisplayLocation.ShippingAddress.ToString()}%",
+                        $"%Order.CustomValues.{CustomValueDisplayLocation.Payment.ToString()}%",
+                        $"%Order.CustomValues.{CustomValueDisplayLocation.Shipping.ToString()}%",
                         "%Order.Product(s)%",
                         "%Order.CreatedOn%",
                         "%Order.OrderURLForCustomer%",
@@ -463,15 +461,6 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                     new[]
                     {
                         "%BlogComment.BlogPostTitle%"
-                    }
-                },
-
-                //news comment tokens
-                {
-                    TokenGroupNames.NewsCommentTokens,
-                    new[]
-                    {
-                        "%NewsComment.NewsTitle%"
                     }
                 },
 
@@ -1100,17 +1089,22 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         var paymentMethodName = paymentMethod != null ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, languageId) : order.PaymentMethodSystemName;
         tokens.Add(new Token("Order.PaymentMethod", paymentMethodName));
         tokens.Add(new Token("Order.VatNumber", order.VatNumber));
-        var sbCustomValues = new StringBuilder();
+        
         var customValues = new CustomValues();
         customValues.FillByXml(order.CustomValuesXml, true);
 
-        foreach (var item in customValues)
+        foreach (var displayLocation in Enum.GetValues<CustomValueDisplayLocation>())
         {
-            sbCustomValues.AppendFormat("{0}: {1}", WebUtility.HtmlEncode(item.Name), WebUtility.HtmlEncode(item.Value ?? string.Empty));
-            sbCustomValues.Append("<br />");
-        }
+            var sbCustomValues = new StringBuilder();
 
-        tokens.Add(new Token("Order.CustomValues", sbCustomValues.ToString(), true));
+            foreach (var item in customValues.GetValuesByDisplayLocation(displayLocation))
+            {
+                sbCustomValues.AppendFormat("{0}: {1}", WebUtility.HtmlEncode(item.Name), WebUtility.HtmlEncode(item.Value ?? string.Empty));
+                sbCustomValues.Append("<br />");
+            }
+
+            tokens.Add(new Token($"Order.CustomValues.{displayLocation.ToString()}", sbCustomValues.ToString(), true));
+        }
 
         tokens.Add(new Token("Order.Product(s)", await ProductListToHtmlTableAsync(order, languageId, vendorId), true));
 
@@ -1396,22 +1390,6 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     }
 
     /// <summary>
-    /// Add news comment tokens
-    /// </summary>
-    /// <param name="tokens">List of already added tokens</param>
-    /// <param name="newsComment">News comment</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task AddNewsCommentTokensAsync(IList<Token> tokens, NewsComment newsComment)
-    {
-        var newsItem = await _newsService.GetNewsByIdAsync(newsComment.NewsItemId);
-
-        tokens.Add(new Token("NewsComment.NewsTitle", newsItem.Title));
-
-        //event notification
-        await _eventPublisher.EntityTokensAddedAsync(newsComment, tokens);
-    }
-
-    /// <summary>
     /// Add product tokens
     /// </summary>
     /// <param name="tokens">List of already added tokens</param>
@@ -1589,7 +1567,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         var additionalTokens = new CampaignAdditionalTokensAddedEvent();
         await _eventPublisher.PublishAsync(additionalTokens);
 
-        var allowedTokens = (await GetListOfAllowedTokensAsync(new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens })).ToList();
+        var allowedTokens = (await GetListOfAllowedTokensAsync(tokenGroups: new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens })).ToList();
         allowedTokens.AddRange(additionalTokens.AdditionalTokens);
 
         return allowedTokens.Distinct();
@@ -1598,17 +1576,20 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     /// <summary>
     /// Get collection of allowed (supported) message tokens
     /// </summary>
+    /// <param name="messageTemplate">Message template</param>
     /// <param name="tokenGroups">Collection of token groups; pass null to get all available tokens</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the collection of allowed message tokens
     /// </returns>
-    public virtual async Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IList<string> tokenGroups = null)
+    public virtual async Task<IEnumerable<string>> GetListOfAllowedTokensAsync(MessageTemplate messageTemplate = null, IList<string> tokenGroups = null)
     {
         var additionalTokens = new AdditionalTokensAddedEvent
         {
-            TokenGroups = tokenGroups ?? new List<string>()
+            TokenGroups = tokenGroups ?? (messageTemplate != null ? GetTokenGroups(messageTemplate).ToList() : new List<string>()),
+            MessageTemplate = messageTemplate,
         };
+
         await _eventPublisher.PublishAsync(additionalTokens);
 
         var allowedTokens = AllowedTokens.Where(x => tokenGroups == null || tokenGroups.Contains(x.Key))
@@ -1690,7 +1671,6 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             MessageTemplateSystemNames.QUANTITY_BELOW_ATTRIBUTE_COMBINATION_VENDOR_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens, TokenGroupNames.AttributeCombinationTokens],
             MessageTemplateSystemNames.NEW_VAT_SUBMITTED_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VatValidation],
             MessageTemplateSystemNames.BLOG_COMMENT_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.BlogCommentTokens, TokenGroupNames.CustomerTokens],
-            MessageTemplateSystemNames.NEWS_COMMENT_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.NewsCommentTokens, TokenGroupNames.CustomerTokens],
             MessageTemplateSystemNames.BACK_IN_STOCK_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductBackInStockTokens],
             MessageTemplateSystemNames.CONTACT_US_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactUs],
             MessageTemplateSystemNames.CONTACT_VENDOR_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactVendor],

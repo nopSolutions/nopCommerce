@@ -20,12 +20,10 @@
         var origTitle = undefined;
         var origText = undefined;
 
-        document.addEventListener('readystatechange', function () {
-            if (document.readyState === 'complete' && (origTitle === undefined || origText == undefined)) {
-                origTitle = $('#@Model.TitleFieldId').val();
-                origText = $('#@Model.TextFieldId').val();
-            }
-        });
+        if (origTitle === undefined || origText === undefined) {
+            origTitle = $('#@Model.TitleFieldId').val();
+            origText = $('#@Model.TextFieldId').val();
+        }
 
         $('#generate-button-@Model.LanguageId').click(function () {
 

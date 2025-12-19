@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.IO.Compression;
-using iTextSharp.text;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -231,6 +230,23 @@ public partial class PdfService : IPdfService
         }
 
         return addressResult;
+    }
+
+    /// <summary>
+    /// Get font information
+    /// </summary>
+    /// <param name="pdfSettings">PDF settings</param>
+    /// <param name="isRtl">Is right-to-left option</param>
+    /// <returns>The name and size of the PDF font</returns>
+    protected virtual (string fontName, float fontSize) GetFontInfo(PdfSettings pdfSettings, bool isRtl)
+    {
+        var fontName = isRtl == true ?
+            !string.IsNullOrEmpty(pdfSettings.RtlFontName) ? pdfSettings.RtlFontName : NopCommonDefaults.PdfRtlFontName :
+            !string.IsNullOrEmpty(pdfSettings.LtrFontName) ? pdfSettings.LtrFontName : NopCommonDefaults.PdfLtrFontName;
+
+        var fontSize = pdfSettings.BaseFontSize >= 0 ? pdfSettings.BaseFontSize : 10;
+
+        return (fontName, fontSize);
     }
 
     /// <summary>
@@ -645,25 +661,6 @@ public partial class PdfService : IPdfService
         return result;
     }
 
-    /// <summary>
-    /// Resolve font for PDF document
-    /// </summary>
-    /// <param name="language">Language</param>
-    /// <param name="settings">PDF settings</param>
-    /// <returns>A font object</returns>
-    protected virtual Font ResolvePdfFont(Language language, PdfSettings settings)
-    {
-        ArgumentNullException.ThrowIfNull(settings);
-
-        var fontName = language?.Rtl == true
-            ? !string.IsNullOrEmpty(settings.RtlFontName) ? settings.RtlFontName : NopCommonDefaults.PdfRtlFontName
-            : !string.IsNullOrEmpty(settings.LtrFontName) ? settings.LtrFontName : NopCommonDefaults.PdfLtrFontName;
-
-        var fontSize = settings.BaseFontSize >= 0 ? settings.BaseFontSize : 10;
-
-        return PdfDocumentHelper.GetFont(fontName, fontSize);
-    }
-
     #endregion
 
     #region Methods
@@ -730,11 +727,14 @@ public partial class PdfService : IPdfService
                 .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
 
+        var (fontName, fontSize) = GetFontInfo(pdfSettingsByStore, language.Rtl);
+
         var document = new InvoiceDocument
         {
             StoreUrl = orderStore.Url?.Trim('/'),
             Language = language,
-            Font = ResolvePdfFont(language, pdfSettingsByStore),
+            FontName = fontName,
+            FontSize = fontSize,
             ImageTargetSize = pdfSettingsByStore.ImageTargetSize,
             OrderDateUser = date.ToString("D", new CultureInfo(language.LanguageCulture)),
             LogoData = logo,
@@ -854,12 +854,15 @@ public partial class PdfService : IPdfService
         if (orderItems?.Any() != true)
             return;
 
+        var (fontName, fontSize) = GetFontInfo(pdfSettingsByStore, language.Rtl);
+
         await using var pdfStream = new MemoryStream();
         var document = new ShipmentDocument
         {
             PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PdfPageSize.Letter : PdfPageSize.A4,
             Language = language,
-            Font = ResolvePdfFont(language, pdfSettingsByStore),
+            FontName = fontName,
+            FontSize = fontSize,
             ImageTargetSize = pdfSettingsByStore.ImageTargetSize,
             ShipmentNumberText = shipment.Id.ToString(),
             OrderNumberText = order.CustomOrderNumber,
@@ -941,12 +944,15 @@ public partial class PdfService : IPdfService
             productItems.Add(item);
         }
 
+        var (fontName, fontSize) = GetFontInfo(pdfSettingsByStore, lang.Rtl);
+
         var catalogDocument = new CatalogDocument
         {
             Language = lang,
             ImageTargetSize = pdfSettingsByStore.ImageTargetSize,
             PageSize = pdfSettingsByStore.LetterPageSizeEnabled ? PdfPageSize.Letter : PdfPageSize.A4,
-            Font = ResolvePdfFont(lang, pdfSettingsByStore),
+            FontName = fontName,
+            FontSize = fontSize,
             Products = productItems,
             GetImageAsync = async (string path) =>
             {

@@ -14,12 +14,10 @@ public class MultipleWishlistMigration : ForwardOnlyMigration
     /// </summary>
     public override void Up()
     {
-        if (!Schema.Table(nameof(CustomWishlist)).Exists())
-            Create.TableFor<CustomWishlist>();
+        this.CreateTableIfNotExists<CustomWishlist>();
 
         //add new column
-        if (!Schema.Table(nameof(ShoppingCartItem)).Column(nameof(ShoppingCartItem.CustomWishlistId)).Exists())
-            Alter.Table(nameof(ShoppingCartItem)).AddColumn(nameof(ShoppingCartItem.CustomWishlistId)).AsInt32().Nullable().ForeignKey<CustomWishlist>();
+        this.AddOrAlterColumnFor<ShoppingCartItem>(t => t.CustomWishlistId).AsInt32().Nullable().ForeignKey<CustomWishlist>();
     }
 
     #endregion

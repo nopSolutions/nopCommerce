@@ -3,7 +3,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
@@ -644,17 +643,6 @@ public partial interface IWorkflowMessageService
     Task<IList<int>> SendBlogCommentStoreOwnerNotificationMessageAsync(BlogComment blogComment, int languageId);
 
     /// <summary>
-    /// Sends a news comment notification message to a store owner
-    /// </summary>
-    /// <param name="newsComment">News comment</param>
-    /// <param name="languageId">Message language identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the queued email identifier
-    /// </returns>
-    Task<IList<int>> SendNewsCommentStoreOwnerNotificationMessageAsync(NewsComment newsComment, int languageId);
-
-    /// <summary>
     /// Sends a 'Back in stock' notification message to a customer
     /// </summary>
     /// <param name="subscription">Subscription</param>
@@ -710,6 +698,71 @@ public partial interface IWorkflowMessageService
     #endregion
 
     #region Common
+
+    /// <summary>
+    /// Get active message templates by the name
+    /// </summary>
+    /// <param name="messageTemplateName">Message template name</param>
+    /// <param name="storeId">Store identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of message templates
+    /// </returns>
+    Task<IList<MessageTemplate>> GetActiveMessageTemplatesAsync(string messageTemplateName, int storeId);
+
+    /// <summary>
+    /// Get email account to use with a message templates
+    /// </summary>
+    /// <param name="messageTemplate">Message template</param>
+    /// <param name="languageId">Language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email account
+    /// </returns>
+    Task<EmailAccount> GetEmailAccountOfMessageTemplateAsync(MessageTemplate messageTemplate, int languageId);
+
+    /// <summary>
+    /// Ensure language is active
+    /// </summary>
+    /// <param name="languageId">Language identifier</param>
+    /// <param name="storeId">Store identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the active language identifier
+    /// </returns>
+    Task<int> EnsureLanguageIsActiveAsync(int languageId, int storeId);
+
+    /// <summary>
+    /// Get email and name to send email for store owner
+    /// </summary>
+    /// <param name="messageTemplateEmailAccount">Message template email account</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email address and name to send email for store owner
+    /// </returns>
+    Task<(string email, string name)> GetStoreOwnerNameAndEmailAsync(EmailAccount messageTemplateEmailAccount);
+
+    /// <summary>
+    /// Get email and name to set ReplyTo property of email from customer 
+    /// </summary>
+    /// <param name="messageTemplate">Message template</param>
+    /// <param name="customer">Customer</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email address and name to reply
+    /// </returns>
+    Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Customer customer);
+
+    /// <summary>
+    /// Get email and name to set ReplyTo property of email from order
+    /// </summary>
+    /// <param name="messageTemplate">Message template</param>
+    /// <param name="order">Order</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email address and name to reply
+    /// </returns>
+    Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Order order);
 
     /// <summary>
     /// Send notification

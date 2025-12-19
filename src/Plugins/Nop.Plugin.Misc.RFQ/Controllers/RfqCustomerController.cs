@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Http;
 using Nop.Core.Http.Extensions;
@@ -8,6 +10,7 @@ using Nop.Plugin.Misc.RFQ.Domains;
 using Nop.Plugin.Misc.RFQ.Factories;
 using Nop.Plugin.Misc.RFQ.Models.Customer;
 using Nop.Plugin.Misc.RFQ.Services;
+using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -28,9 +31,11 @@ public class RfqCustomerController : BasePublicController
     private readonly ICustomerService _customerService;
     private readonly ILocalizationService _localizationService;
     private readonly IPermissionService _permissionService;
+    private readonly IProductService _productService;
     private readonly IShoppingCartService _shoppingCartService;
     private readonly IStoreContext _storeContext;
     private readonly IWorkContext _workContext;
+    private readonly PdfSettings _pdfSettings;
     private readonly RfqService _rfqService;
     private readonly RfqSettings _rfqSettings;
 
@@ -43,9 +48,11 @@ public class RfqCustomerController : BasePublicController
         ICustomerService customerService,
         ILocalizationService localizationService,
         IPermissionService permissionService,
+        IProductService productService,
         IShoppingCartService shoppingCartService,
         IStoreContext storeContext,
         IWorkContext workContext,
+        PdfSettings pdfSettings,
         RfqService rfqService,
         RfqSettings rfqSettings)
     {
@@ -54,9 +61,11 @@ public class RfqCustomerController : BasePublicController
         _customerService = customerService;
         _localizationService = localizationService;
         _permissionService = permissionService;
+        _productService = productService;
         _shoppingCartService = shoppingCartService;
         _storeContext = storeContext;
         _workContext = workContext;
+        _pdfSettings = pdfSettings;
         _rfqService = rfqService;
         _rfqSettings = rfqSettings;
     }
@@ -92,7 +101,7 @@ public class RfqCustomerController : BasePublicController
             return null;
 
         if (request.CustomerId != customer.Id)
-            return RedirectToAction("CustomerRequests");
+            return RedirectToRoute(RfqDefaults.CustomerRequestsRouteName);
 
         return null;
     }
@@ -104,7 +113,7 @@ public class RfqCustomerController : BasePublicController
         if (request == null)
             return errors;
 
-        if (!Request.IsPostRequest() || !Request.HasFormContentType) 
+        if (!Request.IsPostRequest() || !Request.HasFormContentType)
             return errors;
 
         var form = await Request.ReadFormAsync();
@@ -121,7 +130,7 @@ public class RfqCustomerController : BasePublicController
         {
             var key = $"{RfqDefaults.UNIT_PRICE_FORM_KEY}{requestQuoteItem.Id}";
 
-            if (!form.ContainsKey(key)) 
+            if (!form.ContainsKey(key))
                 return;
 
             var formValue = form[key];
@@ -199,6 +208,15 @@ public class RfqCustomerController : BasePublicController
         }
         else
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+
+            var products = await _productService.GetProductsByIdsAsync(cart.Select(i => i.ProductId).ToArray());
+
+            //"enter your price" or rental products in the cart, so we should redirect customer to shopping cart page
+            if (products.Any(product => product.CustomerEntersPrice || product.IsRental))
+                return RedirectToRoute(NopRouteNames.General.CART);
+
             var (request, items) = await _rfqService.CreateRequestQuoteByShoppingCartAsync();
 
             if (request == null)
@@ -234,7 +252,7 @@ public class RfqCustomerController : BasePublicController
         var validationErrors = await ValidateFormAsync(request, items);
 
         if (validationErrors != null && validationErrors.Any())
-            foreach (var validationError in validationErrors) 
+            foreach (var validationError in validationErrors)
                 ModelState.AddModelError(string.Empty, validationError);
 
         if (ModelState.IsValid)
@@ -246,7 +264,7 @@ public class RfqCustomerController : BasePublicController
 
             model.Id = await _rfqService.SendNewRequestAsync(model.CustomerNotes);
 
-            return RedirectToAction("CustomerRequest", "RfqCustomer", new { requestId = model.Id });
+            return RedirectToRoute(RfqDefaults.CreateCustomerRequestRouteName, new { requestId = model.Id });
         }
 
         model = await _modelFactory.PrepareRequestQuoteModelAsync(request, items, model);
@@ -275,7 +293,7 @@ public class RfqCustomerController : BasePublicController
             var request = await _rfqService.GetRequestQuoteByIdAsync(model.Id);
 
             if (request == null)
-                return RedirectToAction("CustomerRequests");
+                return RedirectToRoute(RfqDefaults.CustomerRequestsRouteName);
 
             var checkResult = await CheckCustomerPermissionAsync(request);
 
@@ -313,7 +331,7 @@ public class RfqCustomerController : BasePublicController
 
             await _rfqService.DeleteRequestQuoteAsync(request);
 
-            return RedirectToAction("CustomerRequests");
+            return RedirectToRoute(RfqDefaults.CustomerRequestsRouteName);
         }
 
         model = await _modelFactory.PrepareRequestQuoteModelAsync(model);
@@ -366,23 +384,23 @@ public class RfqCustomerController : BasePublicController
             return result;
 
         QuoteModel model;
-        
+
         try
         {
             model = await _modelFactory.PrepareQuoteModelAsync(quoteId);
         }
         catch (ArgumentNullException)
         {
-            return RedirectToAction("CustomerQuotes");
+            return RedirectToRoute(RfqDefaults.CustomerQuotesRouteName);
         }
 
         if (model.CustomerId != (await _workContext.GetCurrentCustomerAsync()).Id)
-            return RedirectToAction("CustomerQuotes");
+            return RedirectToRoute(RfqDefaults.CustomerQuotesRouteName);
 
         var statuses = new[] { QuoteStatus.Submitted, QuoteStatus.OrderCreated };
 
         if (!statuses.Contains(model.StatusType))
-            return RedirectToAction("CustomerQuotes");
+            return RedirectToRoute(RfqDefaults.CustomerQuotesRouteName);
 
         return View("~/Plugins/Misc.RFQ/Views/CustomerQuote.cshtml", model);
     }
@@ -401,11 +419,11 @@ public class RfqCustomerController : BasePublicController
         if (ModelState.IsValid)
         {
             if (model.CustomerId != customer.Id)
-                return RedirectToAction("CustomerQuotes");
+                return RedirectToRoute(RfqDefaults.CustomerQuotesRouteName);
 
             var quote = await _rfqService.GetQuoteByIdAsync(model.Id);
             if (quote.Status is QuoteStatus.Expired or QuoteStatus.OrderCreated)
-                return RedirectToAction("CustomerQuotes");
+                return RedirectToRoute(RfqDefaults.CustomerQuotesRouteName);
 
             await _rfqService.CreateShoppingCartAsync(model.Id);
 
@@ -431,6 +449,32 @@ public class RfqCustomerController : BasePublicController
         await _shoppingCartService.ClearShoppingCartAsync(customer, store.Id);
 
         return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
+    }
+
+    [CheckLanguageSeoCode(ignore: true)]
+    public async Task<IActionResult> PdfDocument(int quoteId)
+    {
+        if (!_rfqSettings.AllowCustomerGenerateQuotePdf)
+            return RedirectToRoute(RfqDefaults.CustomerQuoteRouteName, new { quoteId });
+
+        var customer = await _workContext.GetCurrentCustomerAsync();
+
+        var result = await CheckCustomerPermissionAsync(customer);
+
+        if (result != null)
+            return result;
+
+        var quote = await _rfqService.GetQuoteByIdAsync(quoteId);
+
+        if (quote.CustomerId != customer.Id)
+            return RedirectToRoute(RfqDefaults.CustomerQuotesRouteName);
+
+        await using var stream = new MemoryStream();
+
+        await _rfqService.PrintQuoteToPdfAsync(stream, quote, _pdfSettings);
+        var bytes = stream.ToArray();
+
+        return File(bytes, MimeTypes.ApplicationPdf, string.Format(await _localizationService.GetResourceAsync("Plugins.Misc.RFQ.PdfFileName"), quote.Id) + ".pdf");
     }
 
     #endregion

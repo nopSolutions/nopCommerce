@@ -41,7 +41,9 @@ public static class HtmlExtensions
             *  yyyy    yy              2009        Year(four digit)             *
             */
 
-        var currentFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
+        var currentFormat = CultureInfo.CurrentCulture.TextInfo.IsRightToLeft ?
+            CultureInfo.InvariantCulture.DateTimeFormat.ShortDatePattern :
+            CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
 
         // Convert the date
         currentFormat = currentFormat.Replace("dddd", "DD");

@@ -37,6 +37,10 @@
         <div class="page-body">
             <div class="quote-options">
                 <div class="common-buttons">
+                    @if (Model.AllowCustomerGenerateQuotePdf)
+                    {
+                        <a href="@Url.RouteUrl(RfqDefaults.CustomerQuotePdfRouteName, new { quoteId = Model.Id })" class="rfq-button-2">@T("Plugins.Misc.RFQ.CreatePdf")</a>
+                    }
                     @if (Model.DisplayCreateOrderButton)
                     {
                         <button type="submit" name="createOrder" class="button-1">@T("Plugins.Misc.RFQ.CreateOrder")</button>

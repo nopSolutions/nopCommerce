@@ -126,7 +126,7 @@ public partial class ProductController : BasePublicController
     
     #region Product details page
 
-    public virtual async Task<IActionResult> ProductDetails(int productId, int updatecartitemid = 0)
+    public virtual async Task<IActionResult> ProductDetails(int productId, int updatecartitemid = 0, int? customwishlistid = null)
     {
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null || product.Deleted)
@@ -165,7 +165,7 @@ public partial class ProductController : BasePublicController
         {
             var productUrl = await _nopUrlHelper.RouteGenericUrlAsync(product);
             var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), storeId: store.Id);
+            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), storeId: store.Id, customWishlistId: customwishlistid);
             updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
 
             //not found?

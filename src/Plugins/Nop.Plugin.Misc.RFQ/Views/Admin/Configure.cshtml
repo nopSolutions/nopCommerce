@@ -43,6 +43,15 @@
                                 </script>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AllowCustomerGenerateQuotePdf" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AllowCustomerGenerateQuotePdf" />
+                                <span asp-validation-for="AllowCustomerGenerateQuotePdf"></span>
+                            </div>
+                        </div>
                     </nop-nested-setting>
                     <div class="form-group row">
                         <div class="col-md-9 offset-md-3">

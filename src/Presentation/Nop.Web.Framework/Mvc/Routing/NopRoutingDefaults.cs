@@ -57,11 +57,6 @@ public static partial class NopRoutingDefaults
             public static string Vendor => "Vendor";
 
             /// <summary>
-            /// Gets the generic news item route name
-            /// </summary>
-            public static string NewsItem => "NewsItem";
-
-            /// <summary>
             /// Gets the generic blog post route name
             /// </summary>
             public static string BlogPost => "BlogPost";
@@ -118,11 +113,6 @@ public static partial class NopRoutingDefaults
         /// Gets default key for manufacturer id route value
         /// </summary>
         public static string ManufacturerId => "manufacturerid";
-
-        /// <summary>
-        /// Gets default key for newsitem id route value
-        /// </summary>
-        public static string NewsItemId => "newsitemId";
 
         /// <summary>
         /// Gets default key for product id route value

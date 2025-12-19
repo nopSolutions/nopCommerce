@@ -3,7 +3,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
@@ -138,14 +137,6 @@ public partial interface IMessageTokenProvider
     Task AddBlogCommentTokensAsync(IList<Token> tokens, BlogComment blogComment);
 
     /// <summary>
-    /// Add news comment tokens
-    /// </summary>
-    /// <param name="tokens">List of already added tokens</param>
-    /// <param name="newsComment">News comment</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task AddNewsCommentTokensAsync(IList<Token> tokens, NewsComment newsComment);
-
-    /// <summary>
     /// Add product tokens
     /// </summary>
     /// <param name="tokens">List of already added tokens</param>
@@ -218,12 +209,13 @@ public partial interface IMessageTokenProvider
     /// <summary>
     /// Get collection of allowed (supported) message tokens
     /// </summary>
+    /// <param name="messageTemplate">Message template</param>
     /// <param name="tokenGroups">Collection of token groups; pass null to get all available tokens</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the collection of allowed message tokens
     /// </returns>
-    Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IList<string> tokenGroups = null);
+    Task<IEnumerable<string>> GetListOfAllowedTokensAsync(MessageTemplate messageTemplate = null, IList<string> tokenGroups = null);
 
     /// <summary>
     /// Get token groups of message template
