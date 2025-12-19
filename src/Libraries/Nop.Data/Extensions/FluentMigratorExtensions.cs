@@ -133,7 +133,7 @@ public static class FluentMigratorExtensions
 
         return column.Indexed().ForeignKey(primaryTableName, primaryColumnName).OnDelete(onDelete);
     }
-    
+
     /// <summary>
     /// Creates a database table for the specified entity type
     /// if the table does not already exist.
@@ -149,7 +149,7 @@ public static class FluentMigratorExtensions
         var type = typeof(TEntity);
         var tableName = NameCompatibilityManager.GetTableName(type);
 
-        if (migration.Schema.Table(tableName).Exists()) 
+        if (migration.Schema.Table(tableName).Exists())
             return;
 
         var builder = migration.Create.Table(tableName) as CreateTableExpressionBuilder;
@@ -174,7 +174,7 @@ public static class FluentMigratorExtensions
     /// A fluent syntax interface allowing further ALTER TABLE operations
     /// on the added or altered column.
     /// </returns>
-    public static IAlterTableColumnAsTypeSyntax AddOrAlterColumnFor<TEntity>(this Migration migration, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
+    public static IAlterTableColumnAsTypeSyntax AddOrAlterColumnFor<TEntity>(this MigrationBase migration, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
         var propertyMemberExpression = selector.Body as MemberExpression
@@ -204,7 +204,7 @@ public static class FluentMigratorExtensions
         {
             var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
 
-            if (!migration.Schema.Table(tableName).Column(columnName).Exists()) 
+            if (!migration.Schema.Table(tableName).Column(columnName).Exists())
                 continue;
 
             migration.Delete.Column(columnName).FromTable(tableName);
@@ -265,5 +265,5 @@ public static class FluentMigratorExtensions
 
             return (typeToMap, false);
         }
-}
+    }
 }

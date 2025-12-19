@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 using Nop.Services.Configuration;
@@ -69,9 +70,9 @@ public class ScheduleTaskMigration : MigrationBase
         var scheduleTaskTableName = NameCompatibilityManager.GetTableName(typeof(ScheduleTask));
 
         //add column if not exists
-        if (!Schema.Table(scheduleTaskTableName).Column(nameof(ScheduleTask.LastEnabledUtc)).Exists())
-            Alter.Table(scheduleTaskTableName)
-                .AddColumn(nameof(ScheduleTask.LastEnabledUtc)).AsDateTime2().Nullable();
+        this.AddOrAlterColumnFor<ScheduleTask>(t => t.LastEnabledUtc)
+            .AsDateTime2()
+            .Nullable();
 
         //schedule task
         Insert.IntoTable(scheduleTaskTableName).Row(new
