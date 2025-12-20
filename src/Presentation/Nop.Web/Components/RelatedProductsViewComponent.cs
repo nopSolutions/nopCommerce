@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -7,45 +13,106 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components;
 
+/// <summary>
+/// View component for displaying related products
+/// </summary>
 public partial class RelatedProductsViewComponent : NopViewComponent
 {
-    protected readonly IAclService _aclService;
-    protected readonly IProductModelFactory _productModelFactory;
-    protected readonly IProductService _productService;
-    protected readonly IStoreMappingService _storeMappingService;
+    #region Fields
 
-    public RelatedProductsViewComponent(IAclService aclService,
+    private readonly IAclService _aclService;
+    private readonly IProductModelFactory _productModelFactory;
+    private readonly IProductService _productService;
+    private readonly IStoreMappingService _storeMappingService;
+    private readonly ILogger<RelatedProductsViewComponent> _logger;
+    private readonly IWorkContext _workContext;
+
+    #endregion
+
+    #region Ctor
+
+    public RelatedProductsViewComponent(
+        IAclService aclService,
         IProductModelFactory productModelFactory,
         IProductService productService,
-        IStoreMappingService storeMappingService)
+        IStoreMappingService storeMappingService,
+        ILogger<RelatedProductsViewComponent> logger,
+        IWorkContext workContext)
     {
-        _aclService = aclService;
-        _productModelFactory = productModelFactory;
-        _productService = productService;
-        _storeMappingService = storeMappingService;
+        _aclService = aclService ?? throw new ArgumentNullException(nameof(aclService));
+        _productModelFactory = productModelFactory ?? throw new ArgumentNullException(nameof(productModelFactory));
+        _productService = productService ?? throw new ArgumentNullException(nameof(productService));
+        _storeMappingService = storeMappingService ?? throw new ArgumentNullException(nameof(storeMappingService));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _workContext = workContext ?? throw new ArgumentNullException(nameof(workContext));
     }
 
-    public async Task<IViewComponentResult> InvokeAsync(int productId, int? productThumbPictureSize)
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// Invoke the widget view component
+    /// </summary>
+    /// <param name="productId">Product identifier</param>
+    /// <param name="productThumbPictureSize">Picture size for thumbnails</param>
+    /// <returns>View component result</returns>
+    public async Task<IViewComponentResult> InvokeAsync(int productId, int? productThumbPictureSize = null)
     {
-        //load and cache report
-        var productIds = (await _productService.GetRelatedProductsByProductId1Async(productId)).Select(x => x.ProductId2).ToArray();
+        try
+        {
+            if (productId <= 0)
+                return Content(string.Empty);
 
-        if (productIds.Length == 0)
+            // Load related product IDs in a single query
+            var relatedProductIds = (await _productService.GetRelatedProductsByProductId1Async(productId))
+                .Select(x => x.ProductId2)
+                .ToArray();
+
+            if (relatedProductIds.Length == 0)
+                return Content(string.Empty);
+
+            // Get current store and customer
+            var currentStore = await _workContext.GetCurrentStoreAsync();
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+
+            // Load products with all necessary data in optimized way
+            var products = await _productService.GetProductsByIdsAsync(relatedProductIds, 
+                cacheResults: true, 
+                includeDeleted: false);
+
+            if (products?.Any() != true)
+                return Content(string.Empty);
+
+            // Filter products in memory after loading
+            var filteredProducts = await products
+                .WhereAwait(async p => 
+                    p.Published &&
+                    p.VisibleIndividually &&
+                    await _productService.ProductIsAvailableAsync(p, currentStore.Id) &&
+                    await _aclService.AuthorizeAsync(p, currentCustomer) &&
+                    await _storeMappingService.AuthorizeAsync(p, currentStore.Id))
+                .ToListAsync();
+
+            if (!filteredProducts.Any())
+                return Content(string.Empty);
+
+            // Prepare the model
+            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(
+                filteredProducts,
+                preparePriceModel: true,
+                preparePictureModel: true,
+                productThumbPictureSize: productThumbPictureSize))
+                .ToList();
+
+            return View(model);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while preparing related products for product ID {ProductId}", productId);
             return Content(string.Empty);
-
-        //load products
-        var products = await (await _productService.GetProductsByIdsAsync(productIds))
-            //ACL and store mapping
-            .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
-            //availability dates
-            .Where(p => _productService.ProductIsAvailable(p))
-            //visible individually
-            .Where(p => p.VisibleIndividually).ToListAsync();
-
-        if (!products.Any())
-            return Content(string.Empty);
-
-        var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
-        return View(model);
+        }
     }
+
+    #endregion
 }

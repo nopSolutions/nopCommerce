@@ -163,6 +163,7 @@ $RECYCLE.BIN/
 # Mac crap
 .DS_Store
 
+**/*_old_*
 
 #######################
 ## nopCommerce specific
