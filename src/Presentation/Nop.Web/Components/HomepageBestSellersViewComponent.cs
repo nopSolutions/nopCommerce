@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -14,16 +16,17 @@ namespace Nop.Web.Components;
 
 public partial class HomepageBestSellersViewComponent : NopViewComponent
 {
-    protected readonly CatalogSettings _catalogSettings;
-    protected readonly IAclService _aclService;
-    protected readonly IOrderReportService _orderReportService;
-    protected readonly IProductModelFactory _productModelFactory;
-    protected readonly IProductService _productService;
-    protected readonly IStaticCacheManager _staticCacheManager;
-    protected readonly IStoreContext _storeContext;
-    protected readonly IStoreMappingService _storeMappingService;
+    private readonly CatalogSettings _catalogSettings;
+    private readonly IAclService _aclService;
+    private readonly IOrderReportService _orderReportService;
+    private readonly IProductModelFactory _productModelFactory;
+    private readonly IProductService _productService;
+    private readonly IStaticCacheManager _staticCacheManager;
+    private readonly IStoreContext _storeContext;
+    private readonly IStoreMappingService _storeMappingService;
 
-    public HomepageBestSellersViewComponent(CatalogSettings catalogSettings,
+    public HomepageBestSellersViewComponent(
+        CatalogSettings catalogSettings,
         IAclService aclService,
         IOrderReportService orderReportService,
         IProductModelFactory productModelFactory,
@@ -44,30 +47,65 @@ public partial class HomepageBestSellersViewComponent : NopViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
     {
-        if (!_catalogSettings.ShowBestsellersOnHomepage || _catalogSettings.NumberOfBestsellersOnHomepage == 0)
-            return Content("");
+        if (!_catalogSettings.ShowBestsellersOnHomepage || _catalogSettings.NumberOfBestsellersOnHomepage <= 0)
+            return Content(string.Empty);
 
-        //load and cache report
         var store = await _storeContext.GetCurrentStoreAsync();
-        var report = await _staticCacheManager.GetAsync(
-            _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageBestsellersIdsKey,
-                store),
-            async () => await (await _orderReportService.BestSellersReportAsync(
+        var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(
+            NopModelCacheDefaults.HomepageBestsellersIdsKey, 
+            store);
+
+        // Get bestseller IDs from cache or database
+        var report = await _staticCacheManager.GetAsync(cacheKey, async () => 
+            await (await _orderReportService.BestSellersReportAsync(
                 storeId: store.Id,
-                pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)).ToListAsync());
+                pageSize: _catalogSettings.NumberOfBestsellersOnHomepage))
+            .ToListAsync());
 
-        //load products
-        var products = await (await _productService.GetProductsByIdsAsync(report.Select(x => x.ProductId).ToArray()))
-            //ACL and store mapping
-            .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
-            //availability dates
-            .Where(p => _productService.ProductIsAvailable(p)).ToListAsync();
+        if (report == null || !report.Any())
+            return Content(string.Empty);
 
-        if (!products.Any())
-            return Content("");
+        // Get product IDs and filter out any invalid ones
+        var productIds = report
+            .Where(x => x?.ProductId > 0)
+            .Select(x => x.ProductId)
+            .Distinct()
+            .ToArray();
 
-        //prepare model
-        var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
+        if (!productIds.Any())
+            return Content(string.Empty);
+
+        // Get products with a single database call
+        var products = await _productService.GetProductsByIdsAsync(productIds);
+        
+        // Apply filters in memory
+        var availableProducts = new List<Product>();
+        foreach (var product in products)
+        {
+            if (product == null)
+                continue;
+
+            var isAvailable = _productService.ProductIsAvailable(product);
+            var isAuthorized = await _aclService.AuthorizeAsync(product);
+            var isMapped = await _storeMappingService.AuthorizeAsync(product);
+
+            if (isAvailable && isAuthorized && isMapped)
+            {
+                availableProducts.Add(product);
+            }
+        }
+
+        if (!availableProducts.Any())
+            return Content(string.Empty);
+
+        // Prepare the model
+        var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(
+            availableProducts, 
+            true, 
+            true, 
+            productThumbPictureSize))
+            .ToList();
+
         return View(model);
     }
 }

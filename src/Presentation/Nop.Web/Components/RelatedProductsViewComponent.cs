@@ -30,6 +30,9 @@ public partial class RelatedProductsViewComponent : NopViewComponent
         //load and cache report
         var productIds = (await _productService.GetRelatedProductsByProductId1Async(productId)).Select(x => x.ProductId2).ToArray();
 
+        if (productIds.Length == 0)
+            return Content(string.Empty);
+
         //load products
         var products = await (await _productService.GetProductsByIdsAsync(productIds))
             //ACL and store mapping

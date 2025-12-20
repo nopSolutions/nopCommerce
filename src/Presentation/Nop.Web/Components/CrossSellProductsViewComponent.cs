@@ -54,7 +54,7 @@ public partial class CrossSellProductsViewComponent : NopViewComponent
             .Where(p => p.VisibleIndividually).ToListAsync();
 
         if (!products.Any())
-            return Content("");
+            return Content(string.Empty);
 
         //Cross-sell products are displayed on the shopping cart page.
         //We know that the entire shopping cart page is not refresh

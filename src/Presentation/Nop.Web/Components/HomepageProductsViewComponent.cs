@@ -36,7 +36,7 @@ public partial class HomepageProductsViewComponent : NopViewComponent
             .Where(p => p.VisibleIndividually).ToListAsync();
 
         if (!products.Any())
-            return Content("");
+            return Content(string.Empty);
 
         var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
 
