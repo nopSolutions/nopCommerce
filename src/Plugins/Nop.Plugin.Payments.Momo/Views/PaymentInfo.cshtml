@@ -2,116 +2,554 @@
 @{
     Layout = "";
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVJkEZSMUkrQ6usKGiiZPpyzfegQB02soyLwzlcWvCKaJl2OfNfcdAqRWrsFiWfistkwUpaeVROA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style type="text/css">
+        * {
+            box-sizing: border-box;
+        }
+
+        .momo-payment-form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .payment-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+            width: 100%;
+        }
+
+        .payment-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .payment-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #1E90FF 0%, #0047AB 100%);
+            color: white;
+            gap: 15px;
+        }
+
+        .header-icon {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .header-info {
+            flex-grow: 1;
+            min-width: 0;
+            text-align: center;
+        }
+
+        .header-email {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.95;
+            font-weight: 500;
+            word-break: break-word;
+            text-align: center;
+        }
+
+        .header-amount {
+            margin: 8px 0 0 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .amount-value {
+            color: #4ab2f1;
+            font-weight: 700;
+        }
+
+        .payment-card-body {
+            padding: 25px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-section {
+            width: 100%;
+            text-align: center;
+        }
+
+        .form-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .form-title i {
+            color: #1E90FF;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+            text-align: center;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .form-label.required::after {
+            content: ' *';
+            color: #dc3545;
+            font-weight: 700;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 0;
+            justify-content: center;
+        }
+
+        .country-code {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-right: none;
+            padding: 0 12px;
+            font-weight: 600;
+            color: #666;
+            border-radius: 4px 0 0 4px;
+            min-width: 50px;
+            justify-content: center;
+        }
+
+        .form-control {
+            flex: 1;
+            padding: 10px 12px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 0 4px 4px 0;
+            font-family: inherit;
+            max-width: 250px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .form-hint i {
+            color: #1E90FF;
+            font-size: 0.8rem;
+        }
+
+        .invalid-feedback {
+            display: none;
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        .processing-container {
+            text-align: center;
+        }
+
+        .spinner-border {
+            display: inline-block;
+            width: 3rem;
+            height: 3rem;
+            margin-bottom: 15px;
+            border: 4px solid #f0f0f0;
+            border-top-color: #1E90FF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .processing-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 15px 0 10px 0;
+        }
+
+        .processing-message {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .progress-bar-container {
+            height: 6px;
+            background-color: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #1E90FF 0%, #0047AB 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-bar-striped {
+            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+            background-size: 1rem 1rem;
+        }
+
+        .progress-bar-animated {
+            animation: progress-bar-stripes 1s linear infinite;
+        }
+
+        .success-container {
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+
+        .success-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #28a745;
+            margin: 0 0 10px 0;
+        }
+
+        .success-message {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .error-container {
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 3rem;
+            color: #dc3545;
+            margin-bottom: 15px;
+        }
+
+        .error-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #dc3545;
+            margin: 0 0 10px 0;
+        }
+
+        .error-message {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .manual-confirm-container {
+            text-align: center;
+        }
+
+        .manual-confirm-container h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 8px 0;
+        }
+
+        .manual-confirm-container p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .payment-card-footer {
+            padding: 15px 25px 25px 25px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-submit,
+        .btn-retry,
+        .btn-confirm,
+        .btn-continue {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #1E90FF 0%, #0047AB 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 144, 255, 0.4);
+        }
+
+        .btn-submit:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn-retry {
+            background-color: #f8f9fa;
+            color: #dc3545;
+            border: 2px solid #dc3545;
+            width: 100%;
+        }
+
+        .btn-retry:hover:not(:disabled) {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-confirm {
+            background-color: #ffc107;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-confirm:hover:not(:disabled) {
+            background-color: #e0a800;
+        }
+
+        .btn-continue {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-continue:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+        }
+
+        .d-none {
+            display: none !important;
+        }
+
+        .text-primary {
+            color: #667eea;
+        }
+
+        .text-success {
+            color: #28a745;
+        }
+
+        .text-danger {
+            color: #dc3545;
+        }
+
+        .text-warning {
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
 
 <div class="momo-payment-form">
-    <!-- Payment Input Section -->
-    <div id="paymentInputSection">
-        <div class="card border-0 shadow-sm rounded-3">
-            <div class="card-body p-4">
-                <h4 class="card-title mb-4">
-                    <i class="fas fa-mobile-alt text-primary me-2"></i>
-                    MTN MoMo Payment
+    <!-- Main Payment Card -->
+    <div class="payment-card">
+        <!-- Card Header with Summary -->
+        <div class="payment-card-header">
+            <div class="header-icon">
+                💳
+            </div>
+            <div class="header-info">
+                <p class="header-email">@Model.CustomerEmail</p>
+                <p class="header-amount">Pay <span class="amount-value">@Model.OrderTotal</span></p>
+            </div>
+        </div>
+
+        <!-- Card Body with Input Section -->
+        <div id="paymentInputSection" class="payment-card-body">
+            <div class="form-section">
+                <h4 class="form-title">
+                    <i class="fas fa-mobile-alt"></i>
+                    Payment via MTN Momo 
                 </h4>
 
-                <div class="mb-4">
-                    <label class="form-label fw-medium required" asp-for="PhoneNumber">MTN Mobile Money Number</label>
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text fw-bold">+233</span>
-                        <input asp-for="PhoneNumber" class="form-control" placeholder="Enter your MTN MoMo number"
+                <div class="form-group">
+                    <label class="form-label required" asp-for="PhoneNumber">MTN Mobile Money Number</label>
+                    <div class="input-wrapper">
+                        <span class="country-code">+233</span>
+                        <input asp-for="PhoneNumber" 
+                               class="form-control" 
+                               placeholder="244 010 0000"
                                autocomplete="tel" />
                         <input type="hidden" name="PaymentCompleted" value="false" />
-                        <button type="button" id="initiatePayment" class="btn btn-primary px-4">
-                            <i class="fas fa-wallet me-2"></i>
-                            Pay Now
-                        </button>
                     </div>
-                    <div class="form-text mt-2">
-                        <i class="fas fa-info-circle me-1"></i>
-                        Enter your number without the leading zero
-                    </div>
+                    <small class="form-hint">
+                        <i class="fas fa-info-circle"></i>
+                        Enter your number.
+                    </small>
                     <div class="invalid-feedback" id="phoneNumberError"></div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Payment Processing Section -->
-    <div id="paymentProcessingSection" class="d-none">
-        <div class="card border-0 shadow-sm rounded-3">
-            <div class="card-body p-4">
-                <div class="text-center mb-4">
-                    <div class="spinner-border text-primary mb-3" role="status">
-                        <span class="visually-hidden">Processing payment...</span>
-                    </div>
-                    <h5 class="mb-2">Processing Payment</h5>
-                    <p class="text-muted mb-0" id="processingMessage">
-                        Please check your phone for the MTN MoMo prompt
-                    </p>
-                </div>
-
-                <div class="progress" style="height: 8px;">
+        <!-- Payment Processing Section (Hidden by default) -->
+        <div id="paymentProcessingSection" class="payment-card-body d-none">
+            <div class="processing-container">
+                <div class="spinner-border text-primary" role="status"></div>
+                <h5 class="processing-title">Processing Payment</h5>
+                <p class="processing-message" id="processingMessage">
+                    Please check your phone for the MTN MoMo prompt
+                </p>
+                <div class="progress-bar-container">
                     <div id="paymentProgress" class="progress-bar progress-bar-striped progress-bar-animated"
                         role="progressbar" style="width: 0%">
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Payment Success Section -->
-    <div id="paymentSuccessSection" class="d-none">
-        <div class="card border-0 shadow-sm rounded-3 border-success">
-            <div class="card-body p-4 text-center">
-                <div class="mb-3">
-                    <i class="fas fa-check-circle text-success" style="font-size: 3rem;"></i>
-                </div>
-                <h4 class="text-success mb-3">Payment Successful!</h4>
-                <p class="text-muted mb-4">Your payment has been processed successfully.</p>
-                <button type="button" class="btn btn-success payment-info-next-step-button">
-                    <i class="fas fa-check me-2"></i>
-                    Continue to Order Confirmation
-                </button>
+        <!-- Payment Success Section (Hidden by default) -->
+        <div id="paymentSuccessSection" class="payment-card-body d-none success-container">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h4 class="success-title">Payment Successful!</h4>
+            <p class="success-message">Your payment has been processed successfully.</p>
+        </div>
+
+        <!-- Payment Error Section (Hidden by default) -->
+        <div id="paymentErrorSection" class="payment-card-body d-none error-container">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <h4 class="error-title">Payment Failed</h4>
+            <p class="error-message" id="errorMessage"></p>
+        </div>
+
+        <!-- Manual Confirmation Section (Hidden by default) -->
+        <div id="manualConfirmSection" class="payment-card-body d-none">
+            <div class="manual-confirm-container">
+                <h5>Have you completed the payment?</h5>
+                <p>Click the button below to confirm your payment</p>
             </div>
         </div>
-    </div>
 
-    <!-- Payment Error Section -->
-    <div id="paymentErrorSection" class="d-none">
-        <div class="card border-0 shadow-sm rounded-3 border-danger">
-            <div class="card-body p-4 text-center">
-                <div class="mb-3">
-                    <i class="fas fa-exclamation-circle text-danger" style="font-size: 3rem;"></i>
-                </div>
-                <h4 class="text-danger mb-3">Payment Failed</h4>
-                <p class="text-muted mb-4" id="errorMessage"></p>
-                <button type="button" id="retryPayment" class="btn btn-outline-danger">
-                    <i class="fas fa-redo me-2"></i>
-                    Try Again
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Manual Confirmation Section -->
-    <div id="manualConfirmSection" class="d-none mt-3">
-        <div class="card border-0 shadow-sm rounded-3 border-warning">
-            <div class="card-body p-4">
-                <div class="d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <h5 class="mb-1">Have you completed the payment?</h5>
-                        <p class="text-muted mb-0">Click the button to confirm your payment</p>
-                    </div>
-                    <button type="button" id="checkPaymentStatus" class="btn btn-warning ms-3">
-                        <i class="fas fa-sync-alt me-2"></i>
-                        Confirm Payment
-                    </button>
-                </div>
-            </div>
+        <!-- Card Footer with Actions -->
+        <div class="payment-card-footer">
+            <button type="button" id="initiatePayment" class="btn-submit">
+                <i class="fas fa-check"></i>
+                Pay Now
+            </button>
+            <button type="button" id="retryPayment" class="btn-retry d-none">
+                <i class="fas fa-redo"></i>
+                Try Again
+            </button>
+            <button type="button" id="checkPaymentStatus" class="btn-confirm d-none">
+                <i class="fas fa-sync-alt"></i>
+                Confirm Payment
+            </button>
+            <button type="button" class="btn-continue payment-info-next-step-button d-none">
+                <i class="fas fa-arrow-right"></i>
+                Continue
+            </button>
         </div>
     </div>
 </div>
 
 <script>
+    (function() {
+        /* Create character code to avoid Razor conflicts */
+        var at = String.fromCharCode(64);
+        var styleElement = document.createElement('style');
+        styleElement.textContent = [
+            "/* Keyframe Animations */",
+            at + "keyframes spin { to { transform: rotate(360deg); } }",
+            at + "keyframes progress-bar-stripes { 0% { background-position: 0; } 100% { background-position: 1rem 0; } }",
+            "/* Tablet Styles - max 768px */",
+            at + "media (max-width: 768px) {",
+            ".momo-payment-form { padding: 12px; }",
+            ".payment-card { border-radius: 6px; }",
+            ".payment-card-header { padding: 15px; gap: 12px; }",
+            ".header-icon { width: 50px; height: 50px; font-size: 24px; }",
+            ".header-email { font-size: 0.85rem; }",
+            ".header-amount { font-size: 1.2rem; }",
+            ".payment-card-body { padding: 20px; min-height: 180px; }",
+            ".payment-card-footer { padding: 12px 20px 20px 20px; }",
+            ".btn-submit, .btn-retry, .btn-confirm, .btn-continue { padding: 10px 16px; font-size: 0.95rem; min-width: 120px; }",
+            "}",
+            "/* Mobile Styles - max 480px */",
+            at + "media (max-width: 480px) {",
+            ".momo-payment-form { padding: 10px; }",
+            ".payment-card-header { flex-direction: column; text-align: center; padding: 12px; gap: 10px; }",
+            ".header-icon { width: 45px; height: 45px; font-size: 22px; }",
+            ".header-email { font-size: 0.8rem; }",
+            ".header-amount { font-size: 1.1rem; }",
+            ".payment-card-body { padding: 15px; min-height: 160px; }",
+            ".payment-card-footer { padding: 10px 15px 15px 15px; gap: 8px; }",
+            ".btn-submit, .btn-retry, .btn-confirm, .btn-continue { padding: 10px 12px; font-size: 0.9rem; min-width: 100%; flex-basis: 100%; }",
+            ".form-label { font-size: 0.9rem; }",
+            ".country-code { min-width: 45px; padding: 0 8px; font-size: 0.9rem; }",
+            ".form-control { font-size: 0.95rem; }",
+            ".form-title { font-size: 1rem; margin-bottom: 15px; }",
+            "}"
+        ].join('\n');
+        document.head.appendChild(styleElement);
+    })();
+
     $(document).ready(function () {
         const momoPayment = {
             referenceId: null,
@@ -120,7 +558,7 @@
             maxChecks: 12, // Will check for 1 minute (5s intervals)
 
             showSection: function (sectionId) {
-                // Hide all sections
+                // Hide all body sections
                 const sections = [
                     '#paymentInputSection',
                     '#paymentProcessingSection',
@@ -132,6 +570,33 @@
 
                 // Show requested section
                 $(sectionId).removeClass('d-none');
+
+                // Update button visibility based on section
+                this.updateButtonVisibility(sectionId);
+            },
+
+            updateButtonVisibility: function (sectionId) {
+                // Hide all buttons
+                $('#initiatePayment, #retryPayment, #checkPaymentStatus, .btn-continue').addClass('d-none');
+
+                // Show appropriate button based on section
+                switch(sectionId) {
+                    case '#paymentInputSection':
+                        $('#initiatePayment').removeClass('d-none');
+                        break;
+                    case '#paymentProcessingSection':
+                        // No buttons during processing
+                        break;
+                    case '#paymentSuccessSection':
+                        $('.btn-continue').removeClass('d-none');
+                        break;
+                    case '#paymentErrorSection':
+                        $('#retryPayment').removeClass('d-none');
+                        break;
+                    case '#manualConfirmSection':
+                        $('#checkPaymentStatus').removeClass('d-none');
+                        break;
+                }
             },
 
             updateProgress: function (percentage) {
@@ -259,115 +724,6 @@
     });
 </script>
 
-<style>
-    .momo-payment-form {
-        max-width: 600px;
-        margin: 0 auto;
-    }
+</body>
+</html>
 
-    .required:after {
-        content: '*';
-        margin-left: 4px;
-        color: #dc3545;
-    }
-
-    .progress {
-        background-color: rgba(0, 0, 0, 0.05);
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .card {
-        transition: all 0.3s ease;
-    }
-
-    .btn {
-        transition: all 0.2s ease;
-    }
-
-    .btn:active {
-        transform: scale(0.98);
-    }
-
-    .spinner-border {
-        width: 3rem;
-        height: 3rem;
-    }
-
-    .d-none {
-        display: none !important;
-    }
-
-    .momo-payment-form {
-        max-width: 500px;
-        max-height: 500px;
-        border: 1px solid #dee2e6;
-        border-radius: 5px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .momo-payment-form .form-group {
-        margin-bottom: 1.5rem;
-    }
-
-    .momo-payment-form .required::after {
-        content: '*';
-        color: #dc3545;
-        margin-left: 4px;
-    }
-
-    .momo-payment-form .input-group-text {
-        background-color: #f8f9fa;
-        font-weight: 500;
-    }
-
-    .momo-payment-form .form-text {
-        font-size: 0.875rem;
-        margin-top: 0.5rem;
-    }
-
-    .payment-status {
-        transition: all 0.3s ease;
-    }
-
-    .payment-status .spinner-border {
-        width: 1.5rem;
-        height: 1.5rem;
-    }
-
-    .payment-status .progress {
-        height: 0.5rem;
-        margin-top: 1rem;
-        background-color: rgba(0, 0, 0, 0.1);
-    }
-
-    .payment-status .progress-bar {
-        transition: width 0.6s ease;
-    }
-
-    .manual-check {
-        transition: all 0.3s ease;
-    }
-
-    .manual-check .btn {
-        margin-top: 0.5rem;
-    }
-
-    .manual-check .btn i {
-        margin-right: 0.5rem;
-    }
-
-    .payment-note {
-        font-size: 0.9rem;
-        line-height: 1.5;
-    }
-
-    .momo-payment-form button {
-        background-color: #4ab2f1;
-        color: white;
-        border: none;
-        padding: 10px 30px;
-        margin-top: 16px;
-    }
-</style>
