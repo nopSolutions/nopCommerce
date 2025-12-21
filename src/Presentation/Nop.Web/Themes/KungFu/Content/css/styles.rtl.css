@@ -2040,6 +2040,9 @@ label, label + * {
 .item-box .buttons {
   margin: 0;
   font-size: 0;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
 }
 
 .item-box button {
@@ -2047,15 +2050,16 @@ label, label + * {
   height: 40px;
   border: none;
   vertical-align: middle;
+  flex: 1;
 }
 
 .item-box .product-box-add-to-cart-button {
-  width: 60%;
   background-color: var(--accent-blue-color);
   text-align: center;
   font-size: 15px;
   color: #fff;
   text-transform: uppercase;
+  flex: 2;
 }
 
 .item-box .product-box-add-to-cart-button:hover,
@@ -2065,27 +2069,66 @@ label, label + * {
 
 .item-box .add-to-compare-list-button,
 .item-box .add-to-wishlist-button {
-  width: 20%;
-  border-right: 1px solid #fff !important;
-  background-color: #eaeaea;
+  background: linear-gradient(135deg, rgba(215, 38, 61, 0.85) 0%, rgba(165, 22, 40, 0.85) 100%);
   background-position: center;
   background-repeat: no-repeat;
   font-size: 0;
+  color: #fff;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .item-box .add-to-compare-list-button {
-  background-image: url('../images/compare-button.png');
+  background-image: none;
+}
+
+.item-box .add-to-compare-list-button::before {
+  content: "compare_arrows";
+  font-family: 'Material Symbols Outlined';
+  font-size: 24px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  color: #fff;
 }
 
 .item-box .add-to-wishlist-button {
-  background-image: url('../images/wishlist-button.png');
+  background-image: none;
+}
+
+.item-box .add-to-wishlist-button::before {
+  content: "favorite";
+  font-family: 'Material Symbols Outlined';
+  font-size: 24px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  color: #fff;
 }
 
 .item-box .add-to-compare-list-button:hover,
 .item-box .add-to-compare-list-button:focus,
 .item-box .add-to-wishlist-button:hover,
 .item-box .add-to-wishlist-button:focus {
-  background-color: #ddd;
+  background: linear-gradient(135deg, #d7263d 0%, #a51628 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(215, 38, 61, 0.4);
 }
 
 .home-page-category-grid,
@@ -2467,51 +2510,141 @@ label, label + * {
 
 .overview-buttons div {
   width: 80%;
-  margin: 0 auto 3px;
+  margin: 0 auto 8px;
 }
 
 .overview .button-2,
 .variant-overview .button-2 {
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
   border: none;
-  background-color: #eaeaea;
+  background: linear-gradient(135deg, rgba(215, 38, 61, 0.85) 0%, rgba(165, 22, 40, 0.85) 100%);
   background-position: right center;
   background-repeat: no-repeat;
-  padding: 12px 40px 12px 15px;
+  padding: 12px 15px;
   text-align: right;
-  font-size: 14px; /*reset zeroing*/
-  color: var(--gray-color);
+  font-size: 14px;
+  color: #fff;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  gap: 12px;
+  flex-direction: row-reverse;
 }
 
 .overview .button-2:hover,
 .overview .button-2:focus,
 .variant-overview .button-2:hover,
 .variant-overview .button-2:focus {
-  background-color: #ddd;
+  background: linear-gradient(135deg, #d7263d 0%, #a51628 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(215, 38, 61, 0.4);
 }
 
 .overview .add-to-compare-list-button {
-  background-image: url('../images/compare-button.png');
+  background-image: none;
+}
+
+.overview .add-to-compare-list-button::before {
+  content: "compare_arrows";
+  font-family: 'Material Symbols Outlined';
+  font-size: 24px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  color: #fff;
 }
 
 .overview .email-a-friend-button {
-  background-image: url('../images/email-button.png');
+  background-image: none;
+}
+
+.overview .email-a-friend-button::before {
+  content: "mail";
+  font-family: 'Material Symbols Outlined';
+  font-size: 24px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  color: #fff;
 }
 
 .overview .subscribe-button,
 .variant-overview .subscribe-button {
-  background-image: url('../images/email-button.png');
+  background-image: none;
+}
+
+.overview .subscribe-button::before,
+.variant-overview .subscribe-button::before {
+  content: "notifications";
+  font-family: 'Material Symbols Outlined';
+  font-size: 24px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  color: #fff;
 }
 
 .overview .download-sample-button,
 .variant-overview .download-sample-button {
-  background-image: url('../images/download-button.png');
+  background-image: none;
+}
+
+.overview .download-sample-button::before,
+.variant-overview .download-sample-button::before {
+  content: "download";
+  font-family: 'Material Symbols Outlined';
+  font-size: 24px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  color: #fff;
 }
 
 .overview .add-to-wishlist-button,
 .variant-overview .add-to-wishlist-button {
-  background-image: url('../images/wishlist-button.png');
+  background-image: none;
+}
+
+.overview .add-to-wishlist-button::before,
+.variant-overview .add-to-wishlist-button::before {
+  content: "favorite";
+  font-family: 'Material Symbols Outlined';
+  font-size: 24px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  color: #fff;
 }
 
 .overview .manufacturers {
