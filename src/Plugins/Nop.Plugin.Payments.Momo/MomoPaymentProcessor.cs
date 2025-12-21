@@ -61,50 +61,14 @@ public class MomoPaymentProcessor : BasePlugin, IPaymentMethod
     /// A task that represents the asynchronous operation
     /// The task result contains the process payment result
     /// </returns>
-    public async Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
+    public Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
     {
-        if (!processPaymentRequest.CustomValues.TryGetValue("PhoneNumber", out string phoneNumber))
-            return new ProcessPaymentResult { Errors = new[] { "Phone number is required" } };
-
-        try
+        if (processPaymentRequest.CustomValues.TryGetValue("PaymentCompleted", out var paymentValue) &&
+            paymentValue.Value == "true")
         {
-            // Generate a unique reference ID for this transaction
-            var referenceId = Guid.NewGuid().ToString();
-            
-            // Request payment from MTN MoMo
-            var response = await _momoPaymentClient.RequestToPayAsync(
-                phoneNumber,
-                processPaymentRequest.OrderTotal,
-                _momoPaymentSettings.Currency);
-
-            if (response.IsSuccessStatusCode)
-            {
-                // Store custom value for client-side to pick up
-                processPaymentRequest.CustomValues["MomoReferenceId"] = referenceId;
-
-                return new ProcessPaymentResult
-                {
-                    NewPaymentStatus = PaymentStatus.Pending,
-                    AuthorizationTransactionId = referenceId,
-                    AuthorizationTransactionCode = phoneNumber // Store phone number for reference
-                };
-            }
-            else
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                return new ProcessPaymentResult
-                {
-                    Errors = new[] { $"MoMo payment failed: {error}" }
-                };
-            }
+            return Task.FromResult(new ProcessPaymentResult { NewPaymentStatus = PaymentStatus.Paid, });
         }
-        catch (Exception ex)
-        {
-            return new ProcessPaymentResult
-            {
-                Errors = new[] { $"Error processing MoMo payment: {ex.Message}" }
-            };
-        }
+        return Task.FromResult(new ProcessPaymentResult { NewPaymentStatus = PaymentStatus.Pending, });
     }
 
     /// <summary>
@@ -242,10 +206,11 @@ public class MomoPaymentProcessor : BasePlugin, IPaymentMethod
     {
         return Task.FromResult(new ProcessPaymentRequest
         {
-            CustomValues = new Dictionary<string, string>
-            {
-                ["PhoneNumber"] = form["PhoneNumber"]
-            }
+            CustomValues =
+            [
+                new CustomValue("PhoneNumber", form["PhoneNumber"]),
+                new CustomValue("PaymentCompleted", form["PaymentCompleted"])
+            ]
         });
     }
 
@@ -279,7 +244,7 @@ public class MomoPaymentProcessor : BasePlugin, IPaymentMethod
             ApiUser = "",
             SubscriptionKey = "4c91dae7a6f1474387a23a1f3d448eb7",
             Environment = "sandbox",
-            Currency = "GHS",
+            Currency = "GHS", // Ghanaian Cedi is the default currency for MTN MoMo in Ghana
             CallbackUrl = "https://localhost:44300/Plugins/PaymentMomo/Return"
         };
         await _settingService.SaveSettingAsync(settings);
@@ -346,14 +311,35 @@ public class MomoPaymentProcessor : BasePlugin, IPaymentMethod
         return await _localizationService.GetResourceAsync("Plugins.Payments.Momo.PaymentMethodDescription");
     }
 
+    /// <summary>
+    /// Gets an additional handling fee of the payment method
+    /// </summary>
+    /// <param name="cart">Shopping cart</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the additional handling fee
+    /// </returns>
     public Task<decimal> GetAdditionalHandlingFeeAsync(IList<ShoppingCartItem> cart)
     {
-        throw new NotImplementedException();
+        // No additional handling fee for MTN MoMo payments
+        return Task.FromResult(0m);
     }
 
+    /// <summary>
+    /// Process recurring payment
+    /// </summary>
+    /// <param name="processPaymentRequest">Payment info required for an order processing</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the process payment result
+    /// </returns>
     public Task<ProcessPaymentResult> ProcessRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest)
     {
-        throw new NotImplementedException();
+        // MTN MoMo doesn't support recurring payments
+        return Task.FromResult(new ProcessPaymentResult 
+        { 
+            Errors = new[] { "Recurring payments not supported" } 
+        });
     }
 
     #endregion

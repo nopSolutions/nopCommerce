@@ -78,3 +78,236 @@ Create a new graphical theme or develop a new plugin or integration and sell it 
 ### Contribute ###
 
 As a free and open-source project, we are very grateful to everyone who helps us to develop nopCommerce. Please find more details about the options and bonuses for contributors at [contribute page](https://www.nopcommerce.com/contribute?utm_source=github&utm_medium=referral&utm_campaign=contribute&utm_content=text).
+
+
+# AWS EC2 Docker Deployment with GitHub Actions
+
+This repository contains everything you need to stand up a Docker-ready EC2 instance with CloudFormation, build a production Docker image for a .NET (NopCommerce) app, and deploy it automatically using GitHub Actions.
+
+It also includes an optional CloudFormation template to set up a GitHub OIDC identity provider and IAM role so your workflow can assume AWS credentials without long‑lived keys.
+
+> Heads‑up: The included GitHub Actions workflow currently triggers on the `deploy` branch, while the OIDC role template trusts `main`, `develop`, and `destroy`. You must either change the workflow trigger to one of those branches or add `deploy` to the role trust conditions (see "Branch trust alignment" below).
+
+---
+
+## What’s inside
+
+- `infrastructure.yml` – CloudFormation template that provisions an Ubuntu EC2 instance with Docker preinstalled and a security group that opens ports 22 and 80.
+- `github-oidc-role.yml` – CloudFormation template to create a GitHub OIDC provider and an IAM role your workflows can assume (AdministratorAccess by default — narrow this for production).
+- `Dockerfile.prod` – Multi-stage Dockerfile to build and run NopCommerce on .NET 9, ready for containerized deployment.
+- `.github/workflows/deploy-ec2.yml` – CI/CD workflow that:
+  - Deploys the EC2 stack
+  - Builds the Docker image
+  - Copies it to the instance over SSH
+  - Boots the app and a Postgres DB using Docker Compose
+
+### High-level flow
+
+```mermaid
+flowchart LR
+  A[GitHub Actions] -- OIDC -> B[(IAM Role)]
+  B -- assume-role --> C[AWS CloudFormation]
+  C --> D[EC2 (Ubuntu + Docker)]
+  A -- scp/ssh --> D
+  D --> E[(Docker Compose: app + Postgres)]
+```
+
+---
+
+## Prerequisites
+
+- AWS account with permissions to create IAM, CloudFormation, EC2
+- AWS CLI v2 configured locally (optional if you deploy only via Actions)
+- GitHub repository with Actions enabled
+- EC2 Key Pair in the target region (default in workflow: `myKeyPair`)
+  - Store the matching private key (PEM) as a GitHub secret (`SSH_PRIVATE_KEY`)
+- Ensure the AMI ID in `infrastructure.yml` is valid in your chosen region (default is an Ubuntu AMI and may be region-specific)
+
+Cost notice: Running an EC2 instance and EBS volume incurs cost. Shut down or delete stacks when not in use.
+
+---
+
+## Quick start (GitHub Actions)
+
+1) Create the OIDC role (one-time)
+
+Replace values for your org/user and repo:
+
+```sh
+aws cloudformation deploy \
+  --stack-name github-oidc-role \
+  --template-file github-oidc-role.yml \
+  --parameter-overrides GitHubOwner=<your-org-or-username> GitHubRepoName=<your-repo-name> \
+  --capabilities CAPABILITY_IAM
+```
+
+After it finishes, copy the IAM Role ARN from the stack outputs (`GitHubActionsRoleArn`).
+
+2) Add GitHub secrets (Repository Settings → Secrets and variables → Actions)
+
+- `AWS_ROLE_TO_ASSUME` – The ARN you copied (e.g., `arn:aws:iam::<accountId>:role/LearningPlatformGitHubActionsRole`)
+- `AWS_REGION` – Your AWS region (e.g., `us-east-1`)
+- `SSH_PRIVATE_KEY` – The entire contents of your EC2 key pair PEM file
+
+3) Set or verify workflow env vars
+
+Open `.github/workflows/deploy-ec2.yml` and adjust as needed:
+
+- `EC2_KEY_PAIR_NAME` – Must match the EC2 Key Pair name in AWS
+- `STACK_NAME` – CloudFormation stack name for the EC2 infrastructure
+- `DOCKER_IMAGE` and `DOCKER_TAG` – Local names used for the image
+
+4) Align branch trust (important)
+
+- The OIDC role template trusts `main`, `develop`, and `destroy` branches.
+- The workflow triggers on `deploy` by default.
+
+Choose ONE of:
+
+- Change the workflow trigger to `main`/`develop`, or
+- Add `deploy` to `github-oidc-role.yml` under `Condition -> StringLike -> token.actions.githubusercontent.com:sub`
+
+Example entry to add:
+
+```
+- !Sub repo:${GitHubOwner}/${GitHubRepoName}:ref:refs/heads/deploy
+```
+
+Re-deploy the OIDC stack if you change trust conditions.
+
+5) Push to trigger
+
+Commit and push to the configured branch to kick off the workflow. When it finishes, grab the EC2 Public IP from the stack outputs and browse http://<PublicIP>.
+
+---
+
+## Manual deployment (optional)
+
+If you prefer to deploy locally with the AWS CLI:
+
+1) Provision EC2
+
+```sh
+aws cloudformation deploy \
+  --stack-name my-app-stack \
+  --template-file infrastructure.yml \
+  --parameter-overrides KeyPairName=myKeyPair \
+  --capabilities CAPABILITY_IAM
+```
+
+2) Get the EC2 Public IP
+
+```sh
+aws cloudformation describe-stacks \
+  --stack-name my-app-stack \
+  --query 'Stacks[0].Outputs[?OutputKey==`PublicIP`].OutputValue' \
+  --output text
+```
+
+3) Build the Docker image locally
+
+```sh
+docker build -t my-app:latest -f Dockerfile.prod .
+```
+
+4) Copy image and compose on EC2
+
+```sh
+# Save and transfer image
+docker save my-app:latest > image.tar
+scp -i /path/to/your-key.pem image.tar ubuntu@<PublicIP>:/home/ubuntu/
+
+# SSH in and deploy
+ssh -i /path/to/your-key.pem ubuntu@<PublicIP> <<'SSH_EOF'
+set -e
+DEPLOY_DIR=/home/ubuntu/deploy
+mkdir -p "$DEPLOY_DIR"
+mv /home/ubuntu/image.tar "$DEPLOY_DIR"/ || true
+cd "$DEPLOY_DIR"
+
+cat > docker-compose.yml <<'YAML'
+version: '3.8'
+services:
+  app:
+    image: my-app:latest
+    container_name: my-app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nopCommerce_db_user
+      POSTGRES_PASSWORD: nopCommerce_db_password
+      POSTGRES_DB: nopcommerce_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
+YAML
+
+# Load and run
+docker load -i image.tar
+docker compose down --remove-orphans || true
+docker compose up -d --build --remove-orphans
+docker compose ps
+SSH_EOF
+```
+
+---
+
+## Project structure and assumptions
+
+- The `Dockerfile.prod` expects a `.NET` solution laid out under `./src` with NopCommerce (`NopCommerce.sln` and `Presentation/Nop.Web`). If your app layout differs, adjust the `COPY` and build steps accordingly.
+- The EC2 instance user data installs Docker on first boot. If Docker doesn’t appear, check `/var/log/user-data.log` on the instance.
+
+---
+
+## Customization
+
+- Instance type and AMI: change parameters in `infrastructure.yml` (e.g., `InstanceType`, `ImageId`).
+- Open ports: modify the security group in `infrastructure.yml` (port 80 is open by default). Consider HTTPS on 443 for production.
+- IAM least privilege: replace `AdministratorAccess` in `github-oidc-role.yml` with a narrowly scoped policy for the services you actually use.
+- Database: the sample uses a local Postgres container. For production, consider Amazon RDS or Aurora and remove the in-VM database container.
+
+---
+
+## Troubleshooting
+
+- AccessDenied assuming role: ensure your push branch is trusted by the OIDC role (see "Align branch trust").
+- SSH failures: confirm the `KeyPairName` exists in the target region and your `SSH_PRIVATE_KEY` matches. Verify port 22 is reachable from your IP.
+- Docker not installed: review `/var/log/user-data.log` on the instance to see cloud-init progress and errors.
+- Port 80 blocked: verify the security group attached to the instance allows ingress from your client IP.
+- Build errors for Dockerfile: ensure the expected source code exists at `./src` or update paths in `Dockerfile.prod`.
+
+---
+
+## Cleanup
+
+- Delete stacks to avoid costs:
+
+```sh
+aws cloudformation delete-stack --stack-name my-app-stack
+aws cloudformation delete-stack --stack-name github-oidc-role
+```
+
+- Optionally terminate any remaining EC2 instances and clean up EBS volumes and key pairs.
+
+---
+
+## Security notes
+
+- The sample IAM role grants `AdministratorAccess` for simplicity. Replace with least-privilege policies for production.
+- Restrict security group ingress to known IP ranges; avoid `0.0.0.0/0` for SSH.
+- Store secrets only in GitHub Actions secrets; rotate keys regularly.
+
+---
+
+## License
+
+MIT or your preferred license.

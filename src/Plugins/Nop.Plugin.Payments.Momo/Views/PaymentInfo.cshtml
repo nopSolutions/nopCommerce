@@ -1,94 +1,373 @@
-﻿@{
+﻿@model Nop.Plugin.Payments.Momo.Models.PaymentInfoModel
+@{
     Layout = "";
 }
-@model Nop.Plugin.Payments.Momo.Models.PaymentInfoModel
 
-<div class="form-group">
-    <label asp-for="@Model.PhoneNumber"></label>
-    <input asp-for="@Model.PhoneNumber" class="form-control" />
-    <span asp-validation-for="@Model.PhoneNumber"></span>
-</div>
+<div class="momo-payment-form">
+    <!-- Payment Input Section -->
+    <div id="paymentInputSection">
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-body p-4">
+                <h4 class="card-title mb-4">
+                    <i class="fas fa-mobile-alt text-primary me-2"></i>
+                    MTN MoMo Payment
+                </h4>
 
-<div id="momoPaymentStatus" style="display: none;" class="alert alert-info mt-3">
-    <p id="momoStatusMessage">Please check your phone and approve the payment request.</p>
-    <div class="progress">
-        <div id="momoStatusProgress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                <div class="mb-4">
+                    <label class="form-label fw-medium required" asp-for="PhoneNumber">MTN Mobile Money Number</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text fw-bold">+233</span>
+                        <input asp-for="PhoneNumber" class="form-control" placeholder="Enter your MTN MoMo number"
+                               autocomplete="tel" />
+                        <input type="hidden" name="PaymentCompleted" value="false" />
+                        <button type="button" id="initiatePayment" class="btn btn-primary px-4">
+                            <i class="fas fa-wallet me-2"></i>
+                            Pay Now
+                        </button>
+                    </div>
+                    <div class="form-text mt-2">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Enter your number without the leading zero
+                    </div>
+                    <div class="invalid-feedback" id="phoneNumberError"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Processing Section -->
+    <div id="paymentProcessingSection" class="d-none">
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <div class="spinner-border text-primary mb-3" role="status">
+                        <span class="visually-hidden">Processing payment...</span>
+                    </div>
+                    <h5 class="mb-2">Processing Payment</h5>
+                    <p class="text-muted mb-0" id="processingMessage">
+                        Please check your phone for the MTN MoMo prompt
+                    </p>
+                </div>
+
+                <div class="progress" style="height: 8px;">
+                    <div id="paymentProgress" class="progress-bar progress-bar-striped progress-bar-animated"
+                        role="progressbar" style="width: 0%">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Success Section -->
+    <div id="paymentSuccessSection" class="d-none">
+        <div class="card border-0 shadow-sm rounded-3 border-success">
+            <div class="card-body p-4 text-center">
+                <div class="mb-3">
+                    <i class="fas fa-check-circle text-success" style="font-size: 3rem;"></i>
+                </div>
+                <h4 class="text-success mb-3">Payment Successful!</h4>
+                <p class="text-muted mb-4">Your payment has been processed successfully.</p>
+                <button type="button" class="btn btn-success payment-info-next-step-button">
+                    <i class="fas fa-check me-2"></i>
+                    Continue to Order Confirmation
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Error Section -->
+    <div id="paymentErrorSection" class="d-none">
+        <div class="card border-0 shadow-sm rounded-3 border-danger">
+            <div class="card-body p-4 text-center">
+                <div class="mb-3">
+                    <i class="fas fa-exclamation-circle text-danger" style="font-size: 3rem;"></i>
+                </div>
+                <h4 class="text-danger mb-3">Payment Failed</h4>
+                <p class="text-muted mb-4" id="errorMessage"></p>
+                <button type="button" id="retryPayment" class="btn btn-outline-danger">
+                    <i class="fas fa-redo me-2"></i>
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manual Confirmation Section -->
+    <div id="manualConfirmSection" class="d-none mt-3">
+        <div class="card border-0 shadow-sm rounded-3 border-warning">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1">Have you completed the payment?</h5>
+                        <p class="text-muted mb-0">Click the button to confirm your payment</p>
+                    </div>
+                    <button type="button" id="checkPaymentStatus" class="btn btn-warning ms-3">
+                        <i class="fas fa-sync-alt me-2"></i>
+                        Confirm Payment
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        var momoPaymentChecker = {
-            referenceId: '',
-            checkInterval: null,
-            maxAttempts: 60, // 5 minutes (5 * 60 seconds)
-            currentAttempt: 0,
+<script>
+    $(document).ready(function () {
+        const momoPayment = {
+            referenceId: null,
+            statusCheckInterval: null,
+            checkCount: 0,
+            maxChecks: 12, // Will check for 1 minute (5s intervals)
 
-            init: function(referenceId) {
-                this.referenceId = referenceId;
-                if (this.referenceId) {
-                    this.startChecking();
-                }
+            showSection: function (sectionId) {
+                // Hide all sections
+                const sections = [
+                    '#paymentInputSection',
+                    '#paymentProcessingSection',
+                    '#paymentSuccessSection',
+                    '#paymentErrorSection',
+                    '#manualConfirmSection'
+                ];
+                sections.forEach(section => $(section).addClass('d-none'));
+
+                // Show requested section
+                $(sectionId).removeClass('d-none');
             },
 
-            startChecking: function() {
-                $('#momoPaymentStatus').show();
-                this.currentAttempt = 0;
-                this.checkStatus();
-                this.checkInterval = setInterval(() => this.checkStatus(), 5000); // Check every 5 seconds
+            updateProgress: function (percentage) {
+                $('#paymentProgress')
+                    .css('width', `${percentage}%`)
+                    .attr('aria-valuenow', percentage);
             },
 
-            stopChecking: function() {
-                if (this.checkInterval) {
-                    clearInterval(this.checkInterval);
-                    this.checkInterval = null;
-                }
+            showError: function (message) {
+                $('#errorMessage').text(message);
+                this.showSection('#paymentErrorSection');
+                this.stopStatusCheck();
             },
 
-            updateProgress: function() {
-                var progress = (this.currentAttempt / this.maxAttempts) * 100;
-                $('#momoStatusProgress').css('width', progress + '%');
-            },
-
-            checkStatus: function() {
-                if (this.currentAttempt >= this.maxAttempts) {
-                    this.stopChecking();
-                    $('#momoStatusMessage').text('Payment request has expired. Please try again.');
-                    $('#momoStatusProgress').removeClass('progress-bar-animated').addClass('bg-danger');
+            startPayment: async function () {
+                const phoneNumber = $('#PhoneNumber').val().trim();
+                console.log(phoneNumber);
+                if (!phoneNumber) {
+                    $('#phoneNumberError').text('Please enter your phone number').show();
                     return;
                 }
 
-                this.currentAttempt++;
-                this.updateProgress();
+                this.showSection('#paymentProcessingSection');
+                this.updateProgress(10);
 
-                $.get('@Url.Action("CheckStatus", "PaymentMomo")', { referenceId: this.referenceId })
-                    .done(function(response) {
-                        if (response.isComplete) {
-                            momoPaymentChecker.stopChecking();
-                            
-                            if (response.status === 'SUCCESSFUL') {
-                                $('#momoStatusMessage').text('Payment successful! Redirecting...');
-                                $('#momoStatusProgress').removeClass('progress-bar-animated').addClass('bg-success');
-                                window.location.href = response.redirectUrl;
-                            } else {
-                                $('#momoStatusMessage').text('Payment failed. Please try again.');
-                                $('#momoStatusProgress').removeClass('progress-bar-animated').addClass('bg-danger');
-                            }
-                        }
-                    })
-                    .fail(function() {
-                        momoPaymentChecker.stopChecking();
-                        $('#momoStatusMessage').text('Error checking payment status. Please contact support.');
-                        $('#momoStatusProgress').removeClass('progress-bar-animated').addClass('bg-danger');
-                    });
+                try {
+                    const response = await fetch('/Admin/PaymentMomo/InitiatePayment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ phoneNumber })
+                    }).then(r => r.json());
+
+                    if (response.success) {
+                        this.referenceId = response.referenceId;
+                        this.startStatusCheck();
+                        this.updateProgress(25);
+                    } else {
+                        this.showError(response.message || 'Failed to initiate payment');
+                    }
+                } catch (error) {
+                    this.showError('Failed to connect to payment service');
+                    console.error('Payment initiation error:', error);
+                }
+            },
+
+            startStatusCheck: function () {
+                this.checkCount = 0;
+                this.checkPaymentStatus();
+                this.statusCheckInterval = setInterval(() => this.checkPaymentStatus(), 5000);
+
+                // Show manual confirmation after 30 seconds
+                setTimeout(() => {
+                    if (!$('#paymentSuccessSection').is(':visible')) {
+                        this.showSection('#manualConfirmSection');
+                    }
+                }, 30000);
+            },
+
+            stopStatusCheck: function () {
+                if (this.statusCheckInterval) {
+                    clearInterval(this.statusCheckInterval);
+                    this.statusCheckInterval = null;
+                }
+            },
+
+            checkPaymentStatus: async function () {
+                if (this.checkCount >= this.maxChecks) {
+                    this.stopStatusCheck();
+                    this.showSection('#manualConfirmSection');
+                    return;
+                }
+
+                this.checkCount++;
+                this.updateProgress(25 + (this.checkCount / this.maxChecks) * 75);
+
+                try {
+                    const response = await fetch(`/Admin/PaymentMomo/CheckStatus?referenceId=${this.referenceId}`)
+                        .then(r => r.json());
+
+                    if (response.success) {
+                        this.stopStatusCheck();
+                        this.showSection('#paymentSuccessSection');
+                        $('input[name="PaymentCompleted"]').val('true');
+                        $('.payment-info-next-step-button').prop('disabled', false);
+                    } else if (response.status === 'FAILED') {
+                        this.showError(response.message || 'Payment failed');
+                    }
+                } catch (error) {
+                    console.error('Status check error:', error);
+                }
+            },
+
+            reset: function () {
+                this.stopStatusCheck();
+                this.showSection('#paymentInputSection');
+                this.updateProgress(0);
+                $('#phoneNumberError').hide();
+                $('input[name="PaymentCompleted"]').val('false');
+                $('.payment-info-next-step-button').prop('disabled', true);
             }
         };
 
-        $(document).ready(function() {
-            // Listen for the payment initiated event
-            $(document).on('momo:paymentInitiated', function(e, referenceId) {
-                momoPaymentChecker.init(referenceId);
-            });
+        // Event Handlers
+        $('#initiatePayment').click(() => momoPayment.startPayment());
+        $('#retryPayment').click(() => momoPayment.reset());
+        $('#checkPaymentStatus').click(() => momoPayment.checkPaymentStatus());
+
+        // Initially disable the continue button
+        $('.payment-info-next-step-button').prop('disabled', true);
+
+        // Form validation
+        $('form').on('submit', function (e) {
+            if (!$('#paymentSuccessSection').is(':visible')) {
+                e.preventDefault();
+                alert('Please complete the payment before proceeding.');
+            }
         });
-    </script>
-}
+
+        // Phone number validation
+        $('#PhoneNumber').on('input', function () {
+            $('#phoneNumberError').hide();
+        });
+    });
+</script>
+
+<style>
+    .momo-payment-form {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .required:after {
+        content: '*';
+        margin-left: 4px;
+        color: #dc3545;
+    }
+
+    .progress {
+        background-color: rgba(0, 0, 0, 0.05);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .card {
+        transition: all 0.3s ease;
+    }
+
+    .btn {
+        transition: all 0.2s ease;
+    }
+
+    .btn:active {
+        transform: scale(0.98);
+    }
+
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .d-none {
+        display: none !important;
+    }
+
+    .momo-payment-form {
+        max-width: 500px;
+        max-height: 500px;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .momo-payment-form .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .momo-payment-form .required::after {
+        content: '*';
+        color: #dc3545;
+        margin-left: 4px;
+    }
+
+    .momo-payment-form .input-group-text {
+        background-color: #f8f9fa;
+        font-weight: 500;
+    }
+
+    .momo-payment-form .form-text {
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+
+    .payment-status {
+        transition: all 0.3s ease;
+    }
+
+    .payment-status .spinner-border {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .payment-status .progress {
+        height: 0.5rem;
+        margin-top: 1rem;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .payment-status .progress-bar {
+        transition: width 0.6s ease;
+    }
+
+    .manual-check {
+        transition: all 0.3s ease;
+    }
+
+    .manual-check .btn {
+        margin-top: 0.5rem;
+    }
+
+    .manual-check .btn i {
+        margin-right: 0.5rem;
+    }
+
+    .payment-note {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .momo-payment-form button {
+        background-color: #4ab2f1;
+        color: white;
+        border: none;
+        padding: 10px 30px;
+        margin-top: 16px;
+    }
+</style>

@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Nop.Core;
+using Nop.Core.Domain.Orders;
 using Nop.Plugin.Payments.Momo.Models;
 using Nop.Plugin.Payments.Momo.Services;
 using Nop.Services;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
@@ -33,6 +36,10 @@ public class PaymentMomoController : BasePaymentController
     protected readonly IStoreContext _storeContext;
     protected readonly MtnMomoConfigHttpClient _momoConfigClient;
     protected readonly IMomoTransactionService _transactionService;
+    protected readonly MomoPaymentClient _momoPaymentClient;
+    protected readonly IShoppingCartService _shoppingCartService;
+    protected readonly IWorkContext _workContext;
+    protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
 
     #endregion
 
@@ -48,7 +55,9 @@ public class PaymentMomoController : BasePaymentController
         ISettingService settingService,
         IStoreContext storeContext,
         MtnMomoConfigHttpClient momoConfigClient,
-        IMomoTransactionService transactionService)
+        MomoPaymentClient momoPaymentClient,
+        IMomoTransactionService transactionService,
+        IShoppingCartService shoppingCartService, IWorkContext workContext, IOrderTotalCalculationService orderTotalCalculationService)
     {
         _localizationService = localizationService;
         _notificationService = notificationService;
@@ -59,7 +68,11 @@ public class PaymentMomoController : BasePaymentController
         _settingService = settingService;
         _storeContext = storeContext;
         _momoConfigClient = momoConfigClient;
+        _momoPaymentClient = momoPaymentClient;
         _transactionService = transactionService;
+        _shoppingCartService = shoppingCartService;
+        _workContext = workContext;
+        _orderTotalCalculationService = orderTotalCalculationService;
     }
 
     #endregion
@@ -186,7 +199,7 @@ public class PaymentMomoController : BasePaymentController
             {
                 var apiKeyString = await response.Content.ReadAsStringAsync();
                 var apiKeyResponse = JsonConvert.DeserializeObject<ApiKeyResponse>(apiKeyString);
-                
+
                 // Save the API Key
                 momoSettings.ApiKey = apiKeyResponse.ApiKey;
                 await _settingService.SaveSettingAsync(momoSettings, x => x.ApiKey, storeScope);
@@ -263,29 +276,125 @@ public class PaymentMomoController : BasePaymentController
         }
     }
 
-    [HttpGet]
-    public virtual async Task<IActionResult> CheckStatus(string referenceId)
+[HttpPost]
+[IgnoreAntiforgeryToken]
+public async Task<IActionResult> InitiatePayment([FromBody] MomoRequest momoRequest)
+{
+    try
     {
-        try
-        {
-            var transaction = await _transactionService.GetTransactionAsync(referenceId);
-            if (transaction == null)
-                return NotFound();
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+        
+        // Format phone number (remove leading zero if present)
+        momoRequest.PhoneNumber = momoRequest.PhoneNumber.TrimStart('0');
+        if (!momoRequest.PhoneNumber.StartsWith("233"))
+            momoRequest.PhoneNumber = "233" + momoRequest.PhoneNumber;
+        
+        // Get current shopping cart
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+        
+        if (!cart.Any())
+            return Json(new { success = false, message = "Shopping cart is empty" });
 
+        // Calculate order total
+        var (total, _, _, _, _, _) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart);
+        if (!total.HasValue)
+            return Json(new { success = false, message = "Could not calculate order total" });
+
+        var orderTotal = total.Value;            // Make payment request
+            var response = await _momoPaymentClient.RequestToPayAsync(
+                momoRequest.PhoneNumber,
+                orderTotal);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Get reference ID from response headers
+                var referenceId = response.Headers.GetValues(MtnMomoDefaults.REFERENCE_ID).FirstOrDefault();
+
+                return Json(new
+                {
+                    success = true,
+                    referenceId,
+                    message = "Payment initiated successfully"
+                });
+            }
+
+            // Read error response
+            var errorContent = await response.Content.ReadAsStringAsync();
             return Json(new
             {
-                status = transaction.Status,
-                isComplete = transaction.Status != "PENDING",
-                redirectUrl = transaction.Status == "SUCCESSFUL"
-                    ? Url.RouteUrl("CheckoutCompleted", new { orderId = transaction.OrderId })
-                    : Url.RouteUrl("OrderDetails", new { orderId = transaction.OrderId })
+                success = false,
+                message = $"Failed to initiate payment: {errorContent}"
             });
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex.Message);
+            return Json(new
+            {
+                success = false,
+                message = $"An error occurred: {ex.Message}"
+            });
         }
     }
+
+    [HttpGet]
+    public virtual async Task<IActionResult> CheckStatus(string referenceId)
+    {
+        if (string.IsNullOrEmpty(referenceId))
+            return Json(new { success = false, message = "Reference ID is required" });
+
+        try
+        {
+            // First check our local transaction status
+            var transaction = new MomoTransactionModel();/*await _transactionService.GetTransactionAsync(referenceId);*/
+            if (transaction == null)
+                return Json(new { success = false, status = "error", message = "Transaction not found" });
+
+            // Check with MTN MoMo for the latest status
+            var response = await _momoPaymentClient.GetPaymentStatusAsync(referenceId);
+
+            // Update our local transaction if we got a successful response
+            if (response.Success)
+            {
+                if (response.Status != transaction.Status)
+                {
+                    // transaction = await _transactionService.UpdateTransactionStatusAsync(
+                    //     referenceId,
+                    //     response.Status,
+                    //     response.Message);
+                }
+
+                // Return the full status info
+                return Json(new
+                {
+                    success = response.Success,
+                    status = transaction.Status,
+                    message = "Payment made successfully",
+                    redirectUrl = response.Status == "SUCCESSFUL"
+                        ? Url.RouteUrl("CheckoutCompleted", new { orderId = transaction.OrderId })
+                        : null
+                });
+            }
+
+            // If MTN MoMo check failed, return the latest local status
+            return Json(new
+            {
+                success = true,
+                status = transaction.Status,
+                message = transaction.ErrorMessage ?? "Payment status is being verified",
+                redirectUrl = transaction.Status == "SUCCESSFUL"
+                    ? Url.RouteUrl("CheckoutCompleted", new { orderId = transaction.OrderId })
+                    : null
+            });
+        }
+        catch (Exception)
+        {
+            return Json(new { success = false, status = "error", message = "Error checking payment status" });
+        }
+    }
+
 
     #endregion
 
@@ -294,6 +403,12 @@ public class PaymentMomoController : BasePaymentController
     private class ApiKeyResponse
     {
         public string ApiKey { get; set; }
+    }
+
+    public class MomoRequest
+    {
+        [Required, StringLength(15, MinimumLength = 10, ErrorMessage = "Phone number must be between 10 and 15 characters long")]
+        public string PhoneNumber { get; set; }
     }
 
     #endregion
