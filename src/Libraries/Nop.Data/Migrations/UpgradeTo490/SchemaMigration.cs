@@ -15,7 +15,6 @@ public class SchemaMigration : ForwardOnlyMigration
     public override void Up()
     {
         //#7387
-
         this.AddOrAlterColumnFor<Product>(t => t.AgeVerification)
             .AsBoolean()
             .NotNullable()
@@ -27,7 +26,6 @@ public class SchemaMigration : ForwardOnlyMigration
             .WithDefaultValue(0);
 
         //#7294
-
         this.AddOrAlterColumnFor<Topic>(t => t.AvailableEndDateTimeUtc)
             .AsDateTime()
             .Nullable();
@@ -37,7 +35,6 @@ public class SchemaMigration : ForwardOnlyMigration
             .Nullable();
 
         //#873
-
         this.AddOrAlterColumnFor<ProductTag>(t => t.MetaDescription)
             .AsString()
             .Nullable();

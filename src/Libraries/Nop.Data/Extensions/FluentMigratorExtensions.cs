@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using FluentMigrator;
 using FluentMigrator.Builders.Alter.Table;
-using FluentMigrator.Builders.Create;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Infrastructure.Extensions;
 using FluentMigrator.Model;
@@ -136,18 +135,6 @@ public static class FluentMigratorExtensions
     }
 
     /// <summary>
-    /// Retrieves expressions into ICreateExpressionRoot
-    /// </summary>
-    /// <param name="expressionRoot">The root expression for a CREATE operation</param>
-    /// <typeparam name="TEntity">Entity type</typeparam>
-    public static void TableFor<TEntity>(this ICreateExpressionRoot expressionRoot) where TEntity : BaseEntity
-    {
-        var type = typeof(TEntity);
-        var builder = expressionRoot.Table(NameCompatibilityManager.GetTableName(type)) as CreateTableExpressionBuilder;
-        builder.RetrieveTableExpressions(type);
-    }
-
-    /// <summary>
     /// Creates a database table for the specified entity type
     /// if the table does not already exist.
     /// </summary>
@@ -157,16 +144,16 @@ public static class FluentMigratorExtensions
     /// <param name="migration">
     /// The migration context used to inspect the schema and create the table.
     /// </param>
-    public static void CreateTableIfNotExists<TEntity>(this Migration migration) where TEntity : BaseEntity
+    public static void CreateTableIfNotExists<TEntity>(this MigrationBase migration) where TEntity : BaseEntity
     {
         var type = typeof(TEntity);
         var tableName = NameCompatibilityManager.GetTableName(type);
 
-        if (!migration.Schema.Table(tableName).Exists())
-        {
-            var builder = migration.Create.Table(tableName) as CreateTableExpressionBuilder;
-            builder.RetrieveTableExpressions(type);
-        }
+        if (migration.Schema.Table(tableName).Exists())
+            return;
+
+        var builder = migration.Create.Table(tableName) as CreateTableExpressionBuilder;
+        builder.RetrieveTableExpressions(type);
     }
 
     /// <summary>
@@ -187,7 +174,7 @@ public static class FluentMigratorExtensions
     /// A fluent syntax interface allowing further ALTER TABLE operations
     /// on the added or altered column.
     /// </returns>
-    public static IAlterTableColumnAsTypeSyntax AddOrAlterColumnFor<TEntity>(this Migration migration, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
+    public static IAlterTableColumnAsTypeSyntax AddOrAlterColumnFor<TEntity>(this MigrationBase migration, Expression<Func<TEntity, object>> selector) where TEntity : BaseEntity
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
         var propertyMemberExpression = selector.Body as MemberExpression
@@ -195,12 +182,7 @@ public static class FluentMigratorExtensions
                  ?? throw new ArgumentException("Selector must be a property expression.", nameof(selector));
         var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), propertyMemberExpression.Member.Name);
 
-        if (migration.Schema.Table(tableName).Column(columnName).Exists())
-        {
-            return migration.Alter.Table(tableName).AlterColumn(columnName);
-        }
-
-        return migration.Alter.Table(tableName).AddColumn(columnName);
+        return migration.Schema.Table(tableName).Column(columnName).Exists() ? migration.Alter.Table(tableName).AlterColumn(columnName) : migration.Alter.Table(tableName).AddColumn(columnName);
     }
 
     /// <summary>
@@ -221,10 +203,11 @@ public static class FluentMigratorExtensions
         foreach (var columnName in columns)
         {
             var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
-            if (migration.Schema.Table(tableName).Column(columnName).Exists())
-            {
-                migration.Delete.Column(columnName).FromTable(tableName);
-            }
+
+            if (!migration.Schema.Table(tableName).Column(columnName).Exists())
+                continue;
+
+            migration.Delete.Column(columnName).FromTable(tableName);
         }
     }
 
@@ -264,21 +247,23 @@ public static class FluentMigratorExtensions
                          pi.CanWrite &&
                          !pi.HasAttribute<NotMappedAttribute>() && !pi.HasAttribute<NotColumnAttribute>() &&
                          !expression.Columns.Any(x => x.Name.Equals(NameCompatibilityManager.GetColumnName(type, pi.Name), StringComparison.OrdinalIgnoreCase)) &&
-                         TypeMapping.ContainsKey(GetTypeToMap(pi.PropertyType).propType));
+                         TypeMapping.ContainsKey(getTypeToMap(pi.PropertyType).propType));
 
         foreach (var prop in propertiesToAutoMap)
         {
             var columnName = NameCompatibilityManager.GetColumnName(type, prop.Name);
-            var (propType, canBeNullable) = GetTypeToMap(prop.PropertyType);
+            var (propType, canBeNullable) = getTypeToMap(prop.PropertyType);
             DefineByOwnType(columnName, propType, builder, canBeNullable);
         }
-    }
 
-    public static (Type propType, bool canBeNullable) GetTypeToMap(this Type type)
-    {
-        if (Nullable.GetUnderlyingType(type) is Type uType)
-            return (uType, true);
+        return;
 
-        return (type, false);
+        (Type propType, bool canBeNullable) getTypeToMap(Type typeToMap)
+        {
+            if (Nullable.GetUnderlyingType(typeToMap) is { } uType)
+                return (uType, true);
+
+            return (typeToMap, false);
+        }
     }
 }

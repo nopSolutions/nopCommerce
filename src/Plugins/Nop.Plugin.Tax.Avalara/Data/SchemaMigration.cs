@@ -15,8 +15,8 @@ public class SchemaMigration : AutoReversingMigration
     /// </summary>
     public override void Up()
     {
-        Create.TableFor<TaxTransactionLog>();
-        Create.TableFor<ItemClassification>();
+        this.CreateTableIfNotExists<TaxTransactionLog>();
+        this.CreateTableIfNotExists<ItemClassification>();
     }
 
     #endregion

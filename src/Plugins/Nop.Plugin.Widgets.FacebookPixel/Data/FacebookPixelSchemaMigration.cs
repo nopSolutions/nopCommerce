@@ -16,7 +16,7 @@ public class FacebookPixelSchemaMigration : AutoReversingMigration
     /// </summary>
     public override void Up()
     {
-        Create.TableFor<FacebookPixelConfiguration>();
+        this.CreateTableIfNotExists<FacebookPixelConfiguration>();
     }
 
     #endregion

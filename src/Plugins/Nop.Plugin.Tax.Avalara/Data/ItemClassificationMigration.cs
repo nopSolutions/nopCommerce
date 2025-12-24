@@ -1,7 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Data;
 using Nop.Data.Extensions;
-using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 using Nop.Plugin.Tax.Avalara.Domain;
 using Nop.Services.Configuration;
@@ -47,8 +46,7 @@ public class ItemClassificationMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(ItemClassification))).Exists())
-            Create.TableFor<ItemClassification>();
+        this.CreateTableIfNotExists<ItemClassification>();
 
         //locales
         var (languageId, languages) = this.GetLanguageData();

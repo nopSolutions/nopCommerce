@@ -80,7 +80,8 @@ public class DataMigration : Migration
                     Name = "Delete a specification attribute group"
                 }
             );
-        //<MFA #475>
+
+        //MFA #475
         if (!_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "ManageMultifactorAuthenticationMethods", StringComparison.InvariantCultureIgnoreCase) == 0))
         {
             var multiFactorAuthenticationPermission = _dataProvider.InsertEntity(
@@ -105,8 +106,7 @@ public class DataMigration : Migration
                 }
             );
         }
-        //</MFA #475>
-
+        
         //issue-3852
         var tableName = nameof(RewardPointsHistory);
         var rph = Schema.Table(tableName);
@@ -123,7 +123,6 @@ public class DataMigration : Migration
         }
 
         //#3353
-
         //add column
         this.AddOrAlterColumnFor<ProductAttributeCombination>(t => t.MinStockQuantity)
         .AsInt32()
@@ -131,7 +130,6 @@ public class DataMigration : Migration
         .SetExistingRowsTo(0);
 
         //#276 AJAX filters
-
         //remove column
         this.DeleteColumnsIfExists<Category>(["PriceRanges"]);
         this.DeleteColumnsIfExists<Manufacturer>(["PriceRanges"]);
@@ -151,7 +149,6 @@ public class DataMigration : Migration
             .AsBoolean()
             .NotNullable()
             .SetExistingRowsTo(true);
-
 
         //add column
         this.AddOrAlterColumnFor<Category>(t => t.PriceFrom)
@@ -180,7 +177,6 @@ public class DataMigration : Migration
             .AsDecimal()
             .NotNullable()
             .SetExistingRowsTo(10000);
-
 
         //add column
         this.AddOrAlterColumnFor<Category>(t => t.ManuallyPriceRange)

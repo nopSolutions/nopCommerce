@@ -14,7 +14,7 @@ public class SchemaMigration : AutoReversingMigration
     /// </summary>
     public override void Up()
     {
-        Create.TableFor<Domain.CloudflareImages>();
+        this.CreateTableIfNotExists<Domain.CloudflareImages>();
     }
 
     #endregion

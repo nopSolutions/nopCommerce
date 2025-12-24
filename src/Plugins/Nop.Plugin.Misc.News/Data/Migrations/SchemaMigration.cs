@@ -35,20 +35,18 @@ public class SchemaMigration : Migration
     /// </summary>
     public override void Up()
     {
-        var newsTableName = NameCompatibilityManager.GetTableName(typeof(NewsItem));
         var newsCommentTableName = NameCompatibilityManager.GetTableName(typeof(NewsComment));
-        var newsCommentCustomerIdColunbName = NameCompatibilityManager.GetColumnName(typeof(NewsComment), nameof(NewsComment.CustomerId));
+        var newsCommentCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(NewsComment), nameof(NewsComment.CustomerId));
 
-        if (!Schema.Table(newsTableName).Exists())
-            Create.TableFor<NewsItem>();
+        this.CreateTableIfNotExists<NewsItem>();
 
-        if (Schema.Table(newsCommentTableName).Column(newsCommentCustomerIdColunbName).Exists())
+        if (Schema.Table(newsCommentTableName).Column(newsCommentCustomerIdColumnName).Exists())
         {
             var customerTableName = NameCompatibilityManager.GetTableName(typeof(Customer));
             var customerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(Customer), nameof(BaseEntity.Id));
 
             var constraintName = _dataProvider
-                .CreateForeignKeyName(newsCommentTableName, newsCommentCustomerIdColunbName, customerTableName, customerIdColumnName);
+                .CreateForeignKeyName(newsCommentTableName, newsCommentCustomerIdColumnName, customerTableName, customerIdColumnName);
 
             if (Schema.Table(newsCommentTableName).Constraint(constraintName).Exists())
                 Delete.UniqueConstraint(constraintName).FromTable(newsCommentTableName);
@@ -58,8 +56,7 @@ public class SchemaMigration : Migration
             if (Schema.Table(newsCommentTableName).Constraint(constraintName).Exists())
                 Delete.UniqueConstraint(constraintName).FromTable(newsCommentTableName);
 
-            Alter.Column(newsCommentCustomerIdColunbName)
-                .OnTable(newsCommentTableName)
+            this.AddOrAlterColumnFor<NewsComment>(t => t.CustomerId)
                 .AsInt32()
                 .Nullable()
                 .ForeignKey(customerTableName, customerIdColumnName)
@@ -67,7 +64,7 @@ public class SchemaMigration : Migration
         }
         else
         {
-            Create.TableFor<NewsComment>();
+            this.CreateTableIfNotExists<NewsComment>();
         }
     }
 

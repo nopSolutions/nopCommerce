@@ -10,6 +10,6 @@ public class SchemaMigration : AutoReversingMigration
 {
     public override void Up()
     {
-        Create.TableFor<ShippingByWeightByTotalRecord>();
+        this.CreateTableIfNotExists<ShippingByWeightByTotalRecord>();
     }
 }

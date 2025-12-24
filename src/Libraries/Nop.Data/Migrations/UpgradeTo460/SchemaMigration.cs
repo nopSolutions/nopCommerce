@@ -17,7 +17,7 @@ public class SchemaMigration : ForwardOnlyMigration
     /// </summary>
     public override void Up()
     {
-        // add column
+        //add column
         this.AddOrAlterColumnFor<Customer>(t => t.FirstName)
             .AsString(1000)
             .Nullable();
@@ -107,13 +107,10 @@ public class SchemaMigration : ForwardOnlyMigration
             .AsInt32()
             .Nullable();
 
-
         // 5705
-
         this.AddOrAlterColumnFor<Discount>(t => t.IsActive)
             .AsBoolean()
             .NotNullable()
             .SetExistingRowsTo(true);
-
     }
 }

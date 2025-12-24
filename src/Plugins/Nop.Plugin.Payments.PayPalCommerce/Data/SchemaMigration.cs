@@ -15,7 +15,7 @@ public class SchemaMigration : AutoReversingMigration
     /// </summary>
     public override void Up()
     {
-        Create.TableFor<PayPalToken>();
+        this.CreateTableIfNotExists<PayPalToken>();
     }
 
     #endregion

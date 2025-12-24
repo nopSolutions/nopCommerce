@@ -10,6 +10,6 @@ public class SchemaMigration : AutoReversingMigration
 {
     public override void Up()
     {
-        Create.TableFor<TaxRate>();
+        this.CreateTableIfNotExists<TaxRate>();
     }
 }

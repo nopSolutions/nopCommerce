@@ -25,7 +25,6 @@ public class DataMigration : Migration
     public override void Up()
     {
         // add column
-
         this.AddOrAlterColumnFor<Shipment>(t => t.ReadyForPickupDateUtc)
             .AsDateTime2()
             .Nullable();
@@ -44,6 +43,7 @@ public class DataMigration : Migration
                 }
             );
         }
+
         //#5547
         //add column
         this.AddOrAlterColumnFor<ScheduleTask>(t => t.LastEnabledUtc)

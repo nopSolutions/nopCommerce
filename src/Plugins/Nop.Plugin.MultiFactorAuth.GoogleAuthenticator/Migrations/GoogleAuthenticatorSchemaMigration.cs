@@ -13,6 +13,6 @@ public class GoogleAuthenticatorSchemaMigration : AutoReversingMigration
     /// </summary>
     public override void Up()
     {
-        Create.TableFor<GoogleAuthenticatorRecord>();
+        this.CreateTableIfNotExists<GoogleAuthenticatorRecord>();
     }
 }

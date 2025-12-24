@@ -22,7 +22,6 @@ public class NewsLetterSubscriptionMigration : ForwardOnlyMigration
             .OnDelete(Rule.Cascade)
             .Nullable();
 
-        //add new column
         this.AddOrAlterColumnFor<Campaign>(t => t.NewsLetterSubscriptionTypeId).AsInt32().NotNullable().SetExistingRowsTo(0);
     }
 }

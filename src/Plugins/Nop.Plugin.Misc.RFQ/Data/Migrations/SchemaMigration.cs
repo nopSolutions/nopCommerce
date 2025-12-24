@@ -13,10 +13,10 @@ public class SchemaMigration : AutoReversingMigration
     /// </summary>
     public override void Up()
     {
-        Create.TableFor<RequestQuote>();
-        Create.TableFor<RequestQuoteItem>();
+        this.CreateTableIfNotExists<RequestQuote>();
+        this.CreateTableIfNotExists<RequestQuoteItem>();
 
-        Create.TableFor<Quote>();
-        Create.TableFor<QuoteItem>();
+        this.CreateTableIfNotExists<Quote>();
+        this.CreateTableIfNotExists<QuoteItem>();
     }
 }

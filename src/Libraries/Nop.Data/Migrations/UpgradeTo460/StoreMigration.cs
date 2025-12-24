@@ -32,6 +32,5 @@ public class StoreMigration : ForwardOnlyMigration
         this.AddOrAlterColumnFor<Store>(t => t.HomepageTitle)
             .AsString(int.MaxValue)
             .Nullable();
-
     }
 }

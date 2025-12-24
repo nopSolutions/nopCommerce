@@ -15,7 +15,7 @@ public class SchemaMigration : AutoReversingMigration
     /// </summary>
     public override void Up()
     {
-        Create.TableFor<ZettleRecord>();
+        this.CreateTableIfNotExists<ZettleRecord>();
     }
 
     #endregion

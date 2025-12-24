@@ -50,8 +50,7 @@ public class AdvancedCardsMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        if (!Schema.Table(nameof(PayPalToken)).Exists())
-            Create.TableFor<PayPalToken>();
+        this.CreateTableIfNotExists<PayPalToken>();
 
         var (languageId, languages) = this.GetLanguageData();
 

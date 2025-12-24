@@ -17,16 +17,15 @@ public class SchemaMigration : ForwardOnlyMigration
     /// </summary>
     public override void Up()
     {
-        //#7187
-        //#7188
+        //#7187, #7188
         this.DeleteColumnsIfExists<Product>(["HasTierPrices", "HasDiscountsApplied"]);
 
         //#7242
-
         this.AddOrAlterColumnFor<Category>(t => t.RestrictFromVendors)
             .AsBoolean()
             .NotNullable()
             .WithDefaultValue(false);
+
         //#7281
         this.AddOrAlterColumnFor<Customer>(t => t.MustChangePassword)
             .AsBoolean()

@@ -14,7 +14,6 @@ public class VideoMigration : ForwardOnlyMigration
     public override void Up()
     {
         this.CreateTableIfNotExists<Video>();
-
         this.CreateTableIfNotExists<ProductVideo>();
     }
 }
