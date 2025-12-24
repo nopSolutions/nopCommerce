@@ -48,6 +48,16 @@ public partial class BackInStockSubscriptionService : IBackInStockSubscriptionSe
     }
 
     /// <summary>
+    /// Delete a list of back in stock subscription
+    /// </summary>
+    /// <param name="subscriptions">Subscriptions</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteSubscriptionsAsync(IList<BackInStockSubscription> subscriptions)
+    {
+        await _backInStockSubscriptionRepository.DeleteAsync(subscriptions);
+    }
+
+    /// <summary>
     /// Gets all subscriptions
     /// </summary>
     /// <param name="customerId">Customer identifier</param>
@@ -72,9 +82,9 @@ public partial class BackInStockSubscriptionService : IBackInStockSubscriptionSe
 
             //product
             query = from q in query
-                join p in _productRepository.Table on q.ProductId equals p.Id
-                where !p.Deleted
-                select q;
+                    join p in _productRepository.Table on q.ProductId equals p.Id
+                    where !p.Deleted
+                    select q;
 
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
 
@@ -95,11 +105,11 @@ public partial class BackInStockSubscriptionService : IBackInStockSubscriptionSe
     public virtual async Task<BackInStockSubscription> FindSubscriptionAsync(int customerId, int productId, int storeId)
     {
         var query = from biss in _backInStockSubscriptionRepository.Table
-            orderby biss.CreatedOnUtc descending
-            where biss.CustomerId == customerId &&
-                  biss.ProductId == productId &&
-                  biss.StoreId == storeId
-            select biss;
+                    orderby biss.CreatedOnUtc descending
+                    where biss.CustomerId == customerId &&
+                          biss.ProductId == productId &&
+                          biss.StoreId == storeId
+                    select biss;
 
         var subscription = await query.FirstOrDefaultAsync();
 
@@ -143,14 +153,23 @@ public partial class BackInStockSubscriptionService : IBackInStockSubscriptionSe
 
         var result = 0;
         var subscriptions = await GetAllSubscriptionsByProductIdAsync(product.Id);
+        var customersMap = (await _customerRepository.GetByIdsAsync(subscriptions.Select(s => s.CustomerId).Distinct().ToArray()))
+            .Select(c => new
+            {
+                c.Id,
+                c.LanguageId
+            })
+            .ToDictionary(x => x.Id);
+
         foreach (var subscription in subscriptions)
         {
-            var customer = await _customerRepository.GetByIdAsync(subscription.CustomerId);
-            result += (await _workflowMessageService.SendBackInStockNotificationAsync(subscription, customer?.LanguageId ?? 0)).Count;
+            if (customersMap.TryGetValue(subscription.Id, out var customer))
+            {
+                result += (await _workflowMessageService.SendBackInStockNotificationAsync(subscription, customer?.LanguageId ?? 0)).Count;
+            }
         }
 
-        for (var i = 0; i <= subscriptions.Count - 1; i++)
-            await DeleteSubscriptionAsync(subscriptions[i]);
+        await DeleteSubscriptionsAsync(subscriptions.ToList());
 
         return result;
     }
@@ -178,9 +197,9 @@ public partial class BackInStockSubscriptionService : IBackInStockSubscriptionSe
                 query = query.Where(biss => biss.StoreId == storeId);
             //customer
             query = from biss in query
-                join c in _customerRepository.Table on biss.CustomerId equals c.Id
-                where c.Active && !c.Deleted
-                select biss;
+                    join c in _customerRepository.Table on biss.CustomerId equals c.Id
+                    where c.Active && !c.Deleted
+                    select biss;
 
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
 

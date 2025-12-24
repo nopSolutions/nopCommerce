@@ -839,6 +839,15 @@ public partial interface IProductService
     Task<DiscountProductMapping> GetDiscountAppliedToProductAsync(int productId, int discountId);
 
     /// <summary>
+    /// Returns a DiscountProductMapping that has the specified values
+    /// </summary>
+    /// <param name="source">Source</param>
+    /// <param name="productId">Product identifier</param>
+    /// <param name="discountId">Discount identifier</param>
+    /// <returns>A DiscountProductMapping that has the specified values; otherwise null</returns>
+    DiscountProductMapping FindDiscountProduct(IList<DiscountProductMapping> source, int productId, int discountId);
+
+    /// <summary>
     /// Inserts a discount-product mapping record
     /// </summary>
     /// <param name="discountProductMapping">Discount-product mapping</param>
@@ -846,11 +855,25 @@ public partial interface IProductService
     Task InsertDiscountProductMappingAsync(DiscountProductMapping discountProductMapping);
 
     /// <summary>
+    /// Inserts a list of discount-product mapping record
+    /// </summary>
+    /// <param name="discountProductMappings">Discount-product mappings</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task InsertDiscountProductMappingsAsync(IList<DiscountProductMapping> discountProductMappings);
+
+    /// <summary>
     /// Deletes a discount-product mapping record
     /// </summary>
     /// <param name="discountProductMapping">Discount-product mapping</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task DeleteDiscountProductMappingAsync(DiscountProductMapping discountProductMapping);
+
+    /// <summary>
+    /// Deletes a list of discount-product mapping record
+    /// </summary>
+    /// <param name="discountProductMappings">Discount-product mappings</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task DeleteDiscountProductMappingsAsync(IList<DiscountProductMapping> discountProductMappings);
 
     #endregion
 }

@@ -484,12 +484,12 @@ public partial class ProductService : IProductService
             return new List<CrossSellProduct>();
 
         var query = from csp in _crossSellProductRepository.Table
-            join p in _productRepository.Table on csp.ProductId2 equals p.Id
-            where productIds.Contains(csp.ProductId1) &&
-                  !p.Deleted &&
-                  (showHidden || p.Published)
-            orderby csp.Id
-            select csp;
+                    join p in _productRepository.Table on csp.ProductId2 equals p.Id
+                    where productIds.Contains(csp.ProductId1) &&
+                          !p.Deleted &&
+                          (showHidden || p.Published)
+                    orderby csp.Id
+                    select csp;
         var crossSellProducts = await query.ToListAsync();
 
         return crossSellProducts;
@@ -533,11 +533,11 @@ public partial class ProductService : IProductService
         var products = await _productRepository.GetAllAsync(query =>
         {
             return from p in query
-                orderby p.DisplayOrder, p.Id
-                where p.Published &&
-                      !p.Deleted &&
-                      p.ShowOnHomepage
-                select p;
+                   orderby p.DisplayOrder, p.Id
+                   where p.Published &&
+                         !p.Deleted &&
+                         p.ShowOnHomepage
+                   select p;
         }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsHomepageCacheKey));
 
         return products;
@@ -632,12 +632,12 @@ public partial class ProductService : IProductService
         var featuredProductIds = await _staticCacheManager.GetAsync(cacheKey, async () =>
         {
             var query = from p in _productRepository.Table
-                join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
-                where p.Published && !p.Deleted && p.VisibleIndividually &&
-                      (!p.AvailableStartDateTimeUtc.HasValue || p.AvailableStartDateTimeUtc.Value < DateTime.UtcNow) &&
-                      (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc.Value > DateTime.UtcNow) &&
-                      pc.IsFeaturedProduct && categoryId == pc.CategoryId
-                select p;
+                        join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                        where p.Published && !p.Deleted && p.VisibleIndividually &&
+                              (!p.AvailableStartDateTimeUtc.HasValue || p.AvailableStartDateTimeUtc.Value < DateTime.UtcNow) &&
+                              (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc.Value > DateTime.UtcNow) &&
+                              pc.IsFeaturedProduct && categoryId == pc.CategoryId
+                        select p;
 
             //apply store mapping constraints
             query = await _storeMappingService.ApplyStoreMapping(query, storeId);
@@ -679,12 +679,12 @@ public partial class ProductService : IProductService
         var featuredProductIds = await _staticCacheManager.GetAsync(cacheKey, async () =>
         {
             var query = from p in _productRepository.Table
-                join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
-                where p.Published && !p.Deleted && p.VisibleIndividually &&
-                      (!p.AvailableStartDateTimeUtc.HasValue || p.AvailableStartDateTimeUtc.Value < DateTime.UtcNow) &&
-                      (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc.Value > DateTime.UtcNow) &&
-                      pm.IsFeaturedProduct && manufacturerId == pm.ManufacturerId
-                select p;
+                        join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                        where p.Published && !p.Deleted && p.VisibleIndividually &&
+                              (!p.AvailableStartDateTimeUtc.HasValue || p.AvailableStartDateTimeUtc.Value < DateTime.UtcNow) &&
+                              (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc.Value > DateTime.UtcNow) &&
+                              pm.IsFeaturedProduct && manufacturerId == pm.ManufacturerId
+                        select p;
 
             //apply store mapping constraints
             query = await _storeMappingService.ApplyStoreMapping(query, storeId);
@@ -714,10 +714,10 @@ public partial class ProductService : IProductService
     public virtual async Task<IPagedList<Product>> GetProductsMarkedAsNewAsync(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
     {
         var query = from p in _productRepository.Table
-            where p.Published && p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
-                  DateTime.UtcNow >= (p.MarkAsNewStartDateTimeUtc ?? SqlDateTime.MinValue.Value) &&
-                  DateTime.UtcNow <= (p.MarkAsNewEndDateTimeUtc ?? SqlDateTime.MaxValue.Value)
-            select p;
+                    where p.Published && p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
+                          DateTime.UtcNow >= (p.MarkAsNewStartDateTimeUtc ?? SqlDateTime.MinValue.Value) &&
+                          DateTime.UtcNow <= (p.MarkAsNewEndDateTimeUtc ?? SqlDateTime.MaxValue.Value)
+                    select p;
 
         //apply store mapping constraints
         query = await _storeMappingService.ApplyStoreMapping(query, storeId);
@@ -760,9 +760,9 @@ public partial class ProductService : IProductService
         if (categoryIds != null && categoryIds.Any())
         {
             query = from p in query
-                join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
-                where categoryIds.Contains(pc.CategoryId)
-                select p;
+                    join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                    where categoryIds.Contains(pc.CategoryId)
+                    select p;
         }
 
         var cacheKey = _staticCacheManager
@@ -1130,7 +1130,7 @@ public partial class ProductService : IProductService
                                  from os in orderSeq.DefaultIfEmpty()
                                  orderby os == null ? int.MaxValue : os.ind
                                  select p;
-                                 
+
 
             return await sortedProducts.ToPagedListAsync(pageIndex, pageSize);
         }
@@ -1152,12 +1152,12 @@ public partial class ProductService : IProductService
         int pageIndex = 0, int pageSize = int.MaxValue)
     {
         var query = from p in _productRepository.Table
-            join pam in _productAttributeMappingRepository.Table on p.Id equals pam.ProductId
-            where
-                pam.ProductAttributeId == productAttributeId &&
-                !p.Deleted
-            orderby p.Name
-            select p;
+                    join pam in _productAttributeMappingRepository.Table on p.Id equals pam.ProductId
+                    where
+                        pam.ProductAttributeId == productAttributeId &&
+                        !p.Deleted
+                    orderby p.Name
+                    select p;
 
         return await query.ToPagedListAsync(pageIndex, pageSize);
     }
@@ -1270,22 +1270,22 @@ public partial class ProductService : IProductService
         int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
     {
         var combinations = from pac in _productAttributeCombinationRepository.Table
-            join p in _productRepository.Table on pac.ProductId equals p.Id
-            where
-                //filter by combinations with stock quantity less than the minimum
-                pac.StockQuantity <= pac.MinStockQuantity &&
-                //filter by products with tracking inventory by attributes
-                p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
-                //ignore deleted products
-                !p.Deleted &&
-                //ignore grouped products
-                p.ProductTypeId != (int)ProductType.GroupedProduct &&
-                //filter by vendor
-                ((vendorId ?? 0) == 0 || p.VendorId == vendorId) &&
-                //whether to load published products only
-                (loadPublishedOnly == null || p.Published == loadPublishedOnly)
-            orderby pac.ProductId, pac.Id
-            select pac;
+                           join p in _productRepository.Table on pac.ProductId equals p.Id
+                           where
+                               //filter by combinations with stock quantity less than the minimum
+                               pac.StockQuantity <= pac.MinStockQuantity &&
+                               //filter by products with tracking inventory by attributes
+                               p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
+                               //ignore deleted products
+                               !p.Deleted &&
+                               //ignore grouped products
+                               p.ProductTypeId != (int)ProductType.GroupedProduct &&
+                               //filter by vendor
+                               ((vendorId ?? 0) == 0 || p.VendorId == vendorId) &&
+                               //whether to load published products only
+                               (loadPublishedOnly == null || p.Published == loadPublishedOnly)
+                           orderby pac.ProductId, pac.Id
+                           select pac;
 
         return await combinations.ToPagedListAsync(pageIndex, pageSize, getOnlyTotalCount);
     }
@@ -1306,10 +1306,10 @@ public partial class ProductService : IProductService
         sku = sku.Trim();
 
         var query = from p in _productRepository.Table
-            orderby p.Id
-            where !p.Deleted &&
-                  p.Sku == sku
-            select p;
+                    orderby p.Id
+                    where !p.Deleted &&
+                          p.Sku == sku
+                    select p;
         var product = await query.FirstOrDefaultAsync();
 
         return product;
@@ -1482,40 +1482,40 @@ public partial class ProductService : IProductService
         switch (product.RentalPricePeriod)
         {
             case RentalPricePeriod.Days:
-            {
-                var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
-                var configuredPeriodDays = product.RentalPriceLength;
-                totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
-            }
+                {
+                    var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
+                    var configuredPeriodDays = product.RentalPriceLength;
+                    totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
+                }
 
                 break;
             case RentalPricePeriod.Weeks:
-            {
-                var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
-                var configuredPeriodDays = 7 * product.RentalPriceLength;
-                totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
-            }
+                {
+                    var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
+                    var configuredPeriodDays = 7 * product.RentalPriceLength;
+                    totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
+                }
 
                 break;
             case RentalPricePeriod.Months:
-            {
-                //Source: http://stackoverflow.com/questions/4638993/difference-in-months-between-two-dates
-                var totalMonthsToRent = (endDate.Year - startDate.Year) * 12 + endDate.Month - startDate.Month;
-                if (startDate.AddMonths(totalMonthsToRent) < endDate)
-                    //several days added (not full month)
-                    totalMonthsToRent++;
+                {
+                    //Source: http://stackoverflow.com/questions/4638993/difference-in-months-between-two-dates
+                    var totalMonthsToRent = (endDate.Year - startDate.Year) * 12 + endDate.Month - startDate.Month;
+                    if (startDate.AddMonths(totalMonthsToRent) < endDate)
+                        //several days added (not full month)
+                        totalMonthsToRent++;
 
-                var configuredPeriodMonths = product.RentalPriceLength;
-                totalPeriods = Convert.ToInt32(Math.Ceiling((double)totalMonthsToRent / configuredPeriodMonths));
-            }
+                    var configuredPeriodMonths = product.RentalPriceLength;
+                    totalPeriods = Convert.ToInt32(Math.Ceiling((double)totalMonthsToRent / configuredPeriodMonths));
+                }
 
                 break;
             case RentalPricePeriod.Years:
-            {
-                var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
-                var configuredPeriodDays = 365 * product.RentalPriceLength;
-                totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
-            }
+                {
+                    var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
+                    var configuredPeriodDays = 365 * product.RentalPriceLength;
+                    totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
+                }
 
                 break;
             default:
@@ -1902,12 +1902,12 @@ public partial class ProductService : IProductService
     public virtual async Task<IList<RelatedProduct>> GetRelatedProductsByProductId1Async(int productId, bool showHidden = false)
     {
         var query = from rp in _relatedProductRepository.Table
-            join p in _productRepository.Table on rp.ProductId2 equals p.Id
-            where rp.ProductId1 == productId &&
-                  !p.Deleted &&
-                  (showHidden || p.Published)
-            orderby rp.DisplayOrder, rp.Id
-            select rp;
+                    join p in _productRepository.Table on rp.ProductId2 equals p.Id
+                    where rp.ProductId1 == productId &&
+                          !p.Deleted &&
+                          (showHidden || p.Published)
+                    orderby rp.DisplayOrder, rp.Id
+                    select rp;
 
         var relatedProducts = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.RelatedProductsCacheKey, productId, showHidden), async () => await query.ToListAsync());
 
@@ -2174,9 +2174,9 @@ public partial class ProductService : IProductService
     public virtual async Task<IList<ProductPicture>> GetProductPicturesByProductIdAsync(int productId)
     {
         var query = from pp in _productPictureRepository.Table
-            where pp.ProductId == productId
-            orderby pp.DisplayOrder, pp.Id
-            select pp;
+                    where pp.ProductId == productId
+                    orderby pp.DisplayOrder, pp.Id
+                    select pp;
 
         var productPictures = await query.ToListAsync();
 
@@ -2251,9 +2251,9 @@ public partial class ProductService : IProductService
 
         if (discountId.HasValue)
             products = from product in products
-                join dpm in _discountProductMappingRepository.Table on product.Id equals dpm.EntityId
-                where dpm.DiscountId == discountId.Value
-                select product;
+                       join dpm in _discountProductMappingRepository.Table on product.Id equals dpm.EntityId
+                       where dpm.DiscountId == discountId.Value
+                       select product;
 
         if (!showHidden)
             products = products.Where(product => !product.Deleted);
@@ -2288,9 +2288,9 @@ public partial class ProductService : IProductService
     public virtual async Task<IList<ProductVideo>> GetProductVideosByProductIdAsync(int productId)
     {
         var query = from pvm in _productVideoRepository.Table
-            where pvm.ProductId == productId
-            orderby pvm.DisplayOrder, pvm.Id
-            select pvm;
+                    where pvm.ProductId == productId
+                    orderby pvm.DisplayOrder, pvm.Id
+                    select pvm;
 
         var productVideos = await query.ToListAsync();
 
@@ -2496,6 +2496,18 @@ public partial class ProductService : IProductService
     }
 
     /// <summary>
+    /// Returns a DiscountProductMapping that has the specified values
+    /// </summary>
+    /// <param name="source">Source</param>
+    /// <param name="productId">Product identifier</param>
+    /// <param name="discountId">Discount identifier</param>
+    /// <returns>A DiscountProductMapping that has the specified values; otherwise null</returns>
+    public virtual DiscountProductMapping FindDiscountProduct(IList<DiscountProductMapping> source, int productId, int discountId)
+    {
+        return source.FirstOrDefault(pm => pm.EntityId == productId && pm.DiscountId == discountId);
+    }
+
+    /// <summary>
     /// Inserts a discount-product mapping record
     /// </summary>
     /// <param name="discountProductMapping">Discount-product mapping</param>
@@ -2506,6 +2518,16 @@ public partial class ProductService : IProductService
     }
 
     /// <summary>
+    /// Inserts a list of discount-product mapping record
+    /// </summary>
+    /// <param name="discountProductMappings">Discount-product mappings</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertDiscountProductMappingsAsync(IList<DiscountProductMapping> discountProductMappings)
+    {
+        await _discountProductMappingRepository.InsertAsync(discountProductMappings);
+    }
+
+    /// <summary>
     /// Deletes a discount-product mapping record
     /// </summary>
     /// <param name="discountProductMapping">Discount-product mapping</param>
@@ -2513,6 +2535,16 @@ public partial class ProductService : IProductService
     public virtual async Task DeleteDiscountProductMappingAsync(DiscountProductMapping discountProductMapping)
     {
         await _discountProductMappingRepository.DeleteAsync(discountProductMapping);
+    }
+
+    /// <summary>
+    /// Deletes a list of discount-product mapping record
+    /// </summary>
+    /// <param name="discountProductMappings">Discount-product mappings</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteDiscountProductMappingsAsync(IList<DiscountProductMapping> discountProductMappings)
+    {
+        await _discountProductMappingRepository.DeleteAsync(discountProductMappings);
     }
 
     #endregion
