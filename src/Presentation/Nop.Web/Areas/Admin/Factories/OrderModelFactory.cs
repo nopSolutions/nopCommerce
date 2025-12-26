@@ -1,8 +1,5 @@
 ﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -51,7 +48,6 @@ public partial class OrderModelFactory : IOrderModelFactory
     protected readonly AddressSettings _addressSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CurrencySettings _currencySettings;
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IAddressModelFactory _addressModelFactory;
     protected readonly IAddressService _addressService;
     protected readonly IAffiliateService _affiliateService;
@@ -64,6 +60,7 @@ public partial class OrderModelFactory : IOrderModelFactory
     protected readonly IDownloadService _downloadService;
     protected readonly IEncryptionService _encryptionService;
     protected readonly IGiftCardService _giftCardService;
+    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILocalizationService _localizationService;
     protected readonly IMeasureService _measureService;
     protected readonly IOrderProcessingService _orderProcessingService;
@@ -82,10 +79,10 @@ public partial class OrderModelFactory : IOrderModelFactory
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStoreService _storeService;
     protected readonly ITaxService _taxService;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IVendorService _vendorService;
     protected readonly IWarehouseService _warehouseService;
     protected readonly IWorkContext _workContext;
+    protected readonly LinkGenerator _linkGenerator;
     protected readonly MeasureSettings _measureSettings;
     protected readonly NopHttpClient _nopHttpClient;
     protected readonly OrderSettings _orderSettings;
@@ -101,7 +98,6 @@ public partial class OrderModelFactory : IOrderModelFactory
     public OrderModelFactory(AddressSettings addressSettings,
         CatalogSettings catalogSettings,
         CurrencySettings currencySettings,
-        IActionContextAccessor actionContextAccessor,
         IAddressModelFactory addressModelFactory,
         IAddressService addressService,
         IAffiliateService affiliateService,
@@ -114,6 +110,7 @@ public partial class OrderModelFactory : IOrderModelFactory
         IDownloadService downloadService,
         IEncryptionService encryptionService,
         IGiftCardService giftCardService,
+        IHttpContextAccessor httpContextAccessor,
         ILocalizationService localizationService,
         IMeasureService measureService,
         IOrderProcessingService orderProcessingService,
@@ -132,10 +129,10 @@ public partial class OrderModelFactory : IOrderModelFactory
         IStateProvinceService stateProvinceService,
         IStoreService storeService,
         ITaxService taxService,
-        IUrlHelperFactory urlHelperFactory,
         IVendorService vendorService,
         IWarehouseService warehouseService,
         IWorkContext workContext,
+        LinkGenerator linkGenerator,
         MeasureSettings measureSettings,
         NopHttpClient nopHttpClient,
         OrderSettings orderSettings,
@@ -146,7 +143,6 @@ public partial class OrderModelFactory : IOrderModelFactory
         _addressSettings = addressSettings;
         _catalogSettings = catalogSettings;
         _currencySettings = currencySettings;
-        _actionContextAccessor = actionContextAccessor;
         _addressModelFactory = addressModelFactory;
         _addressService = addressService;
         _affiliateService = affiliateService;
@@ -159,6 +155,7 @@ public partial class OrderModelFactory : IOrderModelFactory
         _downloadService = downloadService;
         _encryptionService = encryptionService;
         _giftCardService = giftCardService;
+        _httpContextAccessor = httpContextAccessor;
         _localizationService = localizationService;
         _measureService = measureService;
         _orderProcessingService = orderProcessingService;
@@ -177,10 +174,10 @@ public partial class OrderModelFactory : IOrderModelFactory
         _stateProvinceService = stateProvinceService;
         _storeService = storeService;
         _taxService = taxService;
-        _urlHelperFactory = urlHelperFactory;
         _vendorService = vendorService;
         _warehouseService = warehouseService;
         _workContext = workContext;
+        _linkGenerator = linkGenerator;
         _measureSettings = measureSettings;
         _nopHttpClient = nopHttpClient;
         _orderSettings = orderSettings;
@@ -1840,19 +1837,17 @@ public partial class OrderModelFactory : IOrderModelFactory
     {
         var orderIncompleteReportModels = new List<OrderIncompleteReportModel>();
 
-        //get URL helper
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-
         //not paid
         var orderStatuses = Enum.GetValues(typeof(OrderStatus)).Cast<int>().Where(os => os != (int)OrderStatus.Cancelled).ToList();
         var paymentStatuses = new List<int> { (int)PaymentStatus.Pending };
         var psPending = await _orderReportService.GetOrderAverageReportLineAsync(psIds: paymentStatuses, osIds: orderStatuses);
+        var httpContext = _httpContextAccessor.HttpContext;
         orderIncompleteReportModels.Add(new OrderIncompleteReportModel
         {
             Item = await _localizationService.GetResourceAsync("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
             Count = psPending.CountOrders,
             Total = await _priceFormatter.FormatPriceAsync(psPending.SumOrders, true, false),
-            ViewLink = urlHelper.Action("List", "Order", new
+            ViewLink = _linkGenerator.GetPathByAction(httpContext, "List", "Order", new
             {
                 orderStatuses = string.Join(",", orderStatuses),
                 paymentStatuses = string.Join(",", paymentStatuses)
@@ -1867,7 +1862,7 @@ public partial class OrderModelFactory : IOrderModelFactory
             Item = await _localizationService.GetResourceAsync("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
             Count = ssPending.CountOrders,
             Total = await _priceFormatter.FormatPriceAsync(ssPending.SumOrders, true, false),
-            ViewLink = urlHelper.Action("List", "Order", new
+            ViewLink = _linkGenerator.GetPathByAction(httpContext, "List", "Order", new
             {
                 orderStatuses = string.Join(",", orderStatuses),
                 shippingStatuses = string.Join(",", shippingStatuses)
@@ -1882,7 +1877,7 @@ public partial class OrderModelFactory : IOrderModelFactory
             Item = await _localizationService.GetResourceAsync("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
             Count = osPending.CountOrders,
             Total = await _priceFormatter.FormatPriceAsync(osPending.SumOrders, true, false),
-            ViewLink = urlHelper.Action("List", "Order", new { orderStatuses = string.Join(",", orderStatuses) })
+            ViewLink = _linkGenerator.GetPathByAction(httpContext, "List", "Order", new { orderStatuses = string.Join(",", orderStatuses) })
         });
 
         var pagedList = new PagedList<OrderIncompleteReportModel>(orderIncompleteReportModels, 0, int.MaxValue);

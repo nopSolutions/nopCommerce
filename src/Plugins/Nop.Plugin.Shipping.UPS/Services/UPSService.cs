@@ -640,12 +640,15 @@ public class UPSService
             var dimension = 0;
 
             //get total volume of the package
-            var totalVolume = await shippingOptionRequest.Items.SumAwaitAsync(async item =>
+            var totalVolume = decimal.Zero;
+            foreach (var item in shippingOptionRequest.Items)
             {
                 //get dimensions and weight of the single item
                 var (itemWidth, itemLength, itemHeight) = await GetDimensionsForSingleItemAsync(item.ShoppingCartItem, item.Product);
-                return item.GetQuantity() * itemWidth * itemLength * itemHeight;
-            });
+
+                totalVolume += item.GetQuantity() * itemWidth * itemLength * itemHeight;
+            }
+            
             if (totalVolume > decimal.Zero)
             {
                 //use default value (in cubic inches) if not specified

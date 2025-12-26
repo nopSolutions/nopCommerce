@@ -308,8 +308,11 @@ public partial class ProductModelFactory : IProductModelFactory
 
                     //or check for attribute price adjustment, in this case we should add it to the base product price
                     var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
-                    var additionalCharge = await attributeValues.SumAwaitAsync(async attributeValue =>
-                        await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store));
+
+                    var additionalCharge = decimal.Zero; 
+                    foreach (var attributeValue in attributeValues)
+                        additionalCharge += await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store);
+
                     if (additionalCharge != decimal.Zero)
                     {
                         var (priceWithoutDiscount, priceWithDiscount, _, _) = await _priceCalculationService
@@ -760,7 +763,7 @@ public partial class ProductModelFactory : IProductModelFactory
         var model = await productsTags
             //filter by store
             .WhereAwait(async x => await _productTagService.GetProductCountByProductTagIdAsync(x.Id, store.Id) > 0)
-            .SelectAwait(async x => new ProductTagModel
+            .Select(async (ProductTag x, CancellationToken _) => new ProductTagModel
             {
                 Id = x.Id,
                 Name = await _localizationService.GetLocalizedAsync(x, y => y.Name),

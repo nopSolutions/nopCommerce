@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Hosting;
@@ -89,44 +90,7 @@ public partial class WebHelper : IWebHelper
         if (string.IsNullOrEmpty(url))
             return false;
 
-        switch (url[0])
-        {
-            //allows "/" or "/foo" but not "//" or "/\".
-            //url is exactly "/"
-            case '/' when url.Length == 1:
-                return true;
-            //url doesn't start with "//" or "/\"
-            case '/' when url[1] != '/' && url[1] != '\\':
-                return !hasControlCharacter(url.AsSpan(1));
-            case '/':
-                break;
-            //allows "~/" or "~/foo" but not "~//" or "~/\".
-            case '~' when url.Length > 1 && url[1] == '/':
-            {
-                //url is exactly "~/"
-                if (url.Length == 2)
-                    return true;
-
-                //url doesn't start with "~//" or "~/\"
-                if (url[2] != '/' && url[2] != '\\')
-                    return !hasControlCharacter(url.AsSpan(2));
-                break;
-            }
-        }
-
-        return false;
-
-        static bool hasControlCharacter(ReadOnlySpan<char> readOnlySpan)
-        {
-            //URLs may not contain ASCII control characters.
-            foreach (var t in readOnlySpan)
-            {
-                if (char.IsControl(t))
-                    return true;
-            }
-
-            return false;
-        }
+        return RedirectHttpResult.IsLocalUrl(url);        
     }
 
     /// <summary>

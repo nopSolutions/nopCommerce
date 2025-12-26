@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
@@ -13,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.0" />
-    <PackageReference Include="elFinder.NetCore" Version="1.5.5" />
+    <PackageReference Include="elFinder.NetCore" Version="1.6.0" />
     <PackageReference Include="Google.Apis.Auth" Version="1.70.0" />
     <!--Do not remove this reference. HarfBuzzSharp.NativeAssets.Linux library need for properly work SkiaSharp.HarfBuzz on the UNIX system-->
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.1" />
@@ -22,8 +23,8 @@
     <PackageReference Include="MaxMind.GeoIP2" Version="5.3.0" />
     <PackageReference Include="PdfRpt.Core" Version="1.5.15" />
     <PackageReference Include="System.ServiceModel.Http" Version="8.1.2" />
-    <PackageReference Include="SkiaSharp" Version="3.116.1" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1" />
     <PackageReference Include="Svg.Skia" Version="3.0.6" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.7" />
   </ItemGroup>

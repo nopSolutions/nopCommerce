@@ -1,9 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -64,7 +61,6 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly AppSettings _appSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CurrencySettings _currencySettings;
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IAuthenticationPluginManager _authenticationPluginManager;
     protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly IBlogService _blogService;
@@ -101,11 +97,11 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly ITaxPluginManager _taxPluginManager;
     protected readonly IThumbService _thumbService;
     protected readonly ITopicService _topicService;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWidgetPluginManager _widgetPluginManager;
     protected readonly IWorkContext _workContext;
+    protected readonly LinkGenerator _linkGenerator;
     protected readonly MeasureSettings _measureSettings;
     protected readonly NopHttpClient _nopHttpClient;
     protected readonly ProxySettings _proxySettings;
@@ -117,7 +113,6 @@ public partial class CommonModelFactory : ICommonModelFactory
     public CommonModelFactory(AppSettings appSettings,
         CatalogSettings catalogSettings,
         CurrencySettings currencySettings,
-        IActionContextAccessor actionContextAccessor,
         IAuthenticationPluginManager authenticationPluginManager,
         IBaseAdminModelFactory baseAdminModelFactory,
         IBlogService blogService,
@@ -154,11 +149,11 @@ public partial class CommonModelFactory : ICommonModelFactory
         ITaxPluginManager taxPluginManager,
         IThumbService thumbService,
         ITopicService topicService,
-        IUrlHelperFactory urlHelperFactory,
         IUrlRecordService urlRecordService,
         IWebHelper webHelper,
         IWidgetPluginManager widgetPluginManager,
         IWorkContext workContext,
+        LinkGenerator linkGenerator,
         MeasureSettings measureSettings,
         NopHttpClient nopHttpClient,
         ProxySettings proxySettings)
@@ -166,7 +161,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         _appSettings = appSettings;
         _catalogSettings = catalogSettings;
         _currencySettings = currencySettings;
-        _actionContextAccessor = actionContextAccessor;
         _authenticationPluginManager = authenticationPluginManager;
         _baseAdminModelFactory = baseAdminModelFactory;
         _blogService = blogService;
@@ -203,11 +197,11 @@ public partial class CommonModelFactory : ICommonModelFactory
         _taxPluginManager = taxPluginManager;
         _thumbService = thumbService;
         _topicService = topicService;
-        _urlHelperFactory = urlHelperFactory;
         _urlRecordService = urlRecordService;
         _webHelper = webHelper;
         _widgetPluginManager = widgetPluginManager;
         _workContext = workContext;
+        _linkGenerator = linkGenerator;
         _measureSettings = measureSettings;
         _nopHttpClient = nopHttpClient;
         _proxySettings = proxySettings;
@@ -756,15 +750,11 @@ public partial class CommonModelFactory : ICommonModelFactory
 
         if (notEnabled.Any())
         {
-            //get URL helper
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Warning,
                 DontEncode = true,
-
-                Text = $"{await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{urlHelper.Action("UninstallAndDeleteUnusedPlugins", "Plugin", new { names = notEnabledSystemNames.ToArray() })}\">{await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
+                Text = $"{await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{_linkGenerator.GetPathByAction(_httpContextAccessor.HttpContext, "UninstallAndDeleteUnusedPlugins", "Plugin", new { names = notEnabledSystemNames.ToArray() })}\">{await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
             });
         }
     }
@@ -1163,9 +1153,6 @@ public partial class CommonModelFactory : ICommonModelFactory
             languageId: languageId, isActive: isActive,
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
-        //get URL helper
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-
         //prepare list model
         var model = await new UrlRecordListModel().PrepareToGridAsync(searchModel, urlRecords, () =>
         {
@@ -1183,25 +1170,26 @@ public partial class CommonModelFactory : ICommonModelFactory
                 //details URL
                 var detailsUrl = string.Empty;
                 var entityName = urlRecord.EntityName?.ToLowerInvariant() ?? string.Empty;
+                var httpContext = _httpContextAccessor.HttpContext;
                 switch (entityName)
                 {
                     case "blogpost":
-                        detailsUrl = urlHelper.Action("BlogPostEdit", "Blog", new { id = urlRecord.EntityId });
+                        detailsUrl = _linkGenerator.GetPathByAction(httpContext, "BlogPostEdit", "Blog", new { id = urlRecord.EntityId });
                         break;
                     case "category":
-                        detailsUrl = urlHelper.Action("Edit", "Category", new { id = urlRecord.EntityId });
+                        detailsUrl = _linkGenerator.GetPathByAction(httpContext, "Edit", "Category", new { id = urlRecord.EntityId });
                         break;
                     case "manufacturer":
-                        detailsUrl = urlHelper.Action("Edit", "Manufacturer", new { id = urlRecord.EntityId });
+                        detailsUrl = _linkGenerator.GetPathByAction(httpContext, "Edit", "Manufacturer", new { id = urlRecord.EntityId });
                         break;
                     case "product":
-                        detailsUrl = urlHelper.Action("Edit", "Product", new { id = urlRecord.EntityId });
+                        detailsUrl = _linkGenerator.GetPathByAction(httpContext, "Edit", "Product", new { id = urlRecord.EntityId });
                         break;
                     case "topic":
-                        detailsUrl = urlHelper.Action("Edit", "Topic", new { id = urlRecord.EntityId });
+                        detailsUrl = _linkGenerator.GetPathByAction(httpContext, "Edit", "Topic", new { id = urlRecord.EntityId });
                         break;
                     case "vendor":
-                        detailsUrl = urlHelper.Action("Edit", "Vendor", new { id = urlRecord.EntityId });
+                        detailsUrl = _linkGenerator.GetPathByAction(httpContext, "Edit", "Vendor", new { id = urlRecord.EntityId });
                         break;
                 }
 

@@ -422,7 +422,17 @@ public partial class LocalizationService : ILocalizationService
     {
         ArgumentNullException.ThrowIfNull(language);
 
-        if (xmlStreamReader.EndOfStream)
+        IList<(string name, string value)> parsedResources;
+        try
+        {
+            parsedResources = LoadLocaleResourcesFromStream(xmlStreamReader).ToList();
+        }
+        catch (XmlException)
+        {
+            parsedResources = new List<(string, string)>();
+        }
+
+        if (!parsedResources.Any())
             return;
 
         var lsNamesList = new Dictionary<string, LocaleStringResource>();
@@ -437,7 +447,7 @@ public partial class LocalizationService : ILocalizationService
         var lrsToUpdateList = new Dictionary<string, LocaleStringResource>();
         var lrsToInsertList = new Dictionary<string, LocaleStringResource>();
 
-        foreach (var (name, value) in LoadLocaleResourcesFromStream(xmlStreamReader))
+        foreach (var (name, value) in parsedResources)
         {
             if (lsNamesList.TryGetValue(name, out var localString))
             {
@@ -454,8 +464,11 @@ public partial class LocalizationService : ILocalizationService
             }
         }
 
-        await _lsrRepository.UpdateAsync(lrsToUpdateList.Values.ToList(), false);
-        await _lsrRepository.InsertAsync(lrsToInsertList.Values.ToList(), false);
+        if (lrsToUpdateList.Any())
+            await _lsrRepository.UpdateAsync(lrsToUpdateList.Values.ToList(), false);
+
+        if (lrsToInsertList.Any())
+            await _lsrRepository.InsertAsync(lrsToInsertList.Values.ToList(), false);
 
         //clear cache
         await _staticCacheManager.RemoveByPrefixAsync(NopEntityCacheDefaults<LocaleStringResource>.Prefix);

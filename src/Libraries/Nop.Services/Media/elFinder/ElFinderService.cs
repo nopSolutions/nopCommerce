@@ -1,8 +1,7 @@
 ﻿using elFinder.NetCore;
 using elFinder.NetCore.Drivers.FileSystem;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Services.Helpers;
@@ -16,10 +15,10 @@ public partial class ElFinderService : IElFinderService
 {
     #region Fields
 
-    protected readonly IActionContextAccessor _actionContextAccessor;
+    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly INopFileProvider _nopFileProvider;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IWebHelper _webHelper;
+    protected readonly LinkGenerator _linkGenerator;
     protected readonly MediaSettings _mediaSettings;
 
     protected readonly Dictionary<int, Connector> _connectors = new();
@@ -28,16 +27,16 @@ public partial class ElFinderService : IElFinderService
 
     #region Ctor
 
-    public ElFinderService(IActionContextAccessor actionContextAccessor,
+    public ElFinderService(IHttpContextAccessor httpContextAccessor,
         INopFileProvider nopFileProvider,
-        IUrlHelperFactory urlHelperFactory,
         IWebHelper webHelper,
+        LinkGenerator linkGenerator,
         MediaSettings mediaSettings)
     {
-        _actionContextAccessor = actionContextAccessor;
+        _httpContextAccessor = httpContextAccessor;
         _nopFileProvider = nopFileProvider;
-        _urlHelperFactory = urlHelperFactory;
         _webHelper = webHelper;
+        _linkGenerator = linkGenerator;
         _mediaSettings = mediaSettings;
     }
 
@@ -62,8 +61,7 @@ public partial class ElFinderService : IElFinderService
         // Create root directory if it doesn't exist
         _nopFileProvider.CreateDirectory(rootPath);
 
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-        var thumbUrl = $"{urlHelper.Action("Thumb", "ElFinder", new { area = "Admin" })}/";
+        var thumbUrl = $"{_linkGenerator.GetPathByAction(_httpContextAccessor.HttpContext, "Thumb", "ElFinder", new { area = "Admin" })}/";
 
         var driver = new FileSystemDriver();
 

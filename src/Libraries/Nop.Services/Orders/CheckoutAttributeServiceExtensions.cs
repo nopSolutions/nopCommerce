@@ -30,7 +30,7 @@ public static partial class CheckoutAttributeServiceExtensions
 
             if (storeId > 0)
                 //store mapping
-                checkoutAttributes = checkoutAttributes.WhereAwait(async ca => await storeMappingService.AuthorizeAsync(ca, storeId));
+                checkoutAttributes = checkoutAttributes.Where(async (ca, _) => await storeMappingService.AuthorizeAsync(ca, storeId));
 
             if (excludeShippableAttributes)
                 //remove attributes which require shippable products

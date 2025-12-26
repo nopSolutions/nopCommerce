@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain.FilterLevels;
@@ -23,15 +21,15 @@ public partial class AdminMenu : IAdminMenu
     protected AdminMenuItem _rootItem;
 
     protected readonly FilterLevelSettings _filterLevelSettings;
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IEventPublisher _eventPublisher;
+    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILocalizationService _localizationService;
     protected readonly IPermissionService _permissionService;
 #pragma warning disable CS0618 // Type or member is obsolete
     protected readonly IPluginManager<IAdminMenuPlugin> _adminMenuPluginManager;
 #pragma warning restore CS0618 // Type or member is obsolete
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IWorkContext _workContext;
+    protected readonly LinkGenerator _linkGenerator;
 
     #endregion
 
@@ -41,24 +39,24 @@ public partial class AdminMenu : IAdminMenu
     /// Ctor
     /// </summary>
     public AdminMenu(FilterLevelSettings filterLevelSettings,
-        IActionContextAccessor actionContextAccessor,
         IEventPublisher eventPublisher,
+        IHttpContextAccessor httpContextAccessor,
         ILocalizationService localizationService,
         IPermissionService permissionService,
 #pragma warning disable CS0618 // Type or member is obsolete
         IPluginManager<IAdminMenuPlugin> adminMenuPluginManager,
 #pragma warning restore CS0618 // Type or member is obsolete
-        IUrlHelperFactory urlHelperFactory,
-        IWorkContext workContext)
+        IWorkContext workContext,
+        LinkGenerator linkGenerator)
     {
         _filterLevelSettings = filterLevelSettings;
-        _actionContextAccessor = actionContextAccessor;
         _eventPublisher = eventPublisher;
+        _httpContextAccessor = httpContextAccessor;
         _localizationService = localizationService;
         _permissionService = permissionService;
         _adminMenuPluginManager = adminMenuPluginManager;
-        _urlHelperFactory = urlHelperFactory;
         _workContext = workContext;
+        _linkGenerator = linkGenerator;
     }
 
     #endregion
@@ -1095,12 +1093,13 @@ public partial class AdminMenu : IAdminMenu
 
         _rootItem = await LoadMenuAsync(showHidden);
 
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext ?? throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext)));
-
         void transformUrl(AdminMenuItem node)
         {
             if (node.Url?.StartsWith("~/", StringComparison.Ordinal) ?? false)
-                node.Url = urlHelper.Content(node.Url);
+            {
+                var pathBase = _httpContextAccessor.HttpContext?.Request.PathBase.Value ?? "";
+                node.Url = pathBase + node.Url[1..];
+            }
 
             foreach (var childNode in node.ChildNodes)
                 transformUrl(childNode);
@@ -1122,9 +1121,11 @@ public partial class AdminMenu : IAdminMenu
         if (string.IsNullOrEmpty(controllerName) || string.IsNullOrEmpty(actionName))
             return null;
 
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext ?? throw new ArgumentNullException(nameof(_actionContextAccessor.ActionContext)));
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext == null)
+            return null;
 
-        return urlHelper.Action(actionName, controllerName, new RouteValueDictionary { { "area", AreaNames.ADMIN } }, null, null);
+        return _linkGenerator.GetPathByAction(httpContext, actionName, controllerName, new { area = AreaNames.ADMIN });
     }
 
     #endregion

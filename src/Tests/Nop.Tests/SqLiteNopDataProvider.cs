@@ -426,7 +426,7 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
     /// <summary>
     /// Linq2Db data provider
     /// </summary>
-    protected override IDataProvider LinqToDbDataProvider { get; } = SQLiteTools.GetDataProvider(ProviderName.SQLiteMS);
+    protected override IDataProvider LinqToDbDataProvider { get; } = SQLiteTools.GetDataProvider(SQLiteProvider.Microsoft);
 
     /// <summary>
     /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

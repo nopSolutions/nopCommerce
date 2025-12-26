@@ -781,7 +781,11 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
     /// </returns>
     protected virtual async Task<decimal> GetShoppingCartAdditionalShippingChargeAsync(IList<ShoppingCartItem> cart)
     {
-        return await cart.SumAwaitAsync(async shoppingCartItem => await _shippingService.GetAdditionalShippingChargeAsync(shoppingCartItem));
+        var totalAdditionalShippingCharge = decimal.Zero;
+        foreach (var shoppingCartItem in cart)
+            totalAdditionalShippingCharge += await _shippingService.GetAdditionalShippingChargeAsync(shoppingCartItem);
+        
+        return totalAdditionalShippingCharge;
     }
 
     /// <summary>

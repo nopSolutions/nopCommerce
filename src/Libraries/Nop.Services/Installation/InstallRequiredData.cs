@@ -186,37 +186,44 @@ public partial class InstallationService
         {
             var result = new HashSet<(string name, string value)>();
 
-            using var xmlReader = XmlReader.Create(xmlStreamReader);
-            while (xmlReader.ReadToFollowing("Language"))
+            try
             {
-                if (xmlReader.NodeType != XmlNodeType.Element)
-                    continue;
-
-                using var languageReader = xmlReader.ReadSubtree();
-                while (languageReader.ReadToFollowing("LocaleResource"))
+                using var xmlReader = XmlReader.Create(xmlStreamReader);
+                while (xmlReader.ReadToFollowing("Language"))
                 {
-                    if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.GetAttribute("Name") is { } name)
-                    {
-                        using var lrReader = languageReader.ReadSubtree();
-                        if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element)
-                            result.Add((name.ToLowerInvariant(), lrReader.ReadString()));
-                    }
-                }
+                    if (xmlReader.NodeType != XmlNodeType.Element)
+                        continue;
 
-                break;
-            }
+                    using var languageReader = xmlReader.ReadSubtree();
+                    while (languageReader.ReadToFollowing("LocaleResource"))
+                    {
+                        if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.GetAttribute("Name") is { } name)
+                        {
+                            using var lrReader = languageReader.ReadSubtree();
+                            if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element)
+                                result.Add((name.ToLowerInvariant(), lrReader.ReadString()));
+                        }
+                    }
+
+                    break;
+                }
+            } catch (XmlException) { }
 
             return result;
         }
 
-        if (xmlStreamReader.EndOfStream)
+        var parsedResources = loadLocaleResourcesFromStream();
+        
+        if (!parsedResources.Any())
             return;
 
         var lsNamesList = new Dictionary<string, LocaleStringResource>();
 
         foreach (var localeStringResource in Table<LocaleStringResource>().Where(lsr => lsr.LanguageId == language.Id)
                      .OrderBy(lsr => lsr.Id))
+        {
             lsNamesList[localeStringResource.ResourceName.ToLowerInvariant()] = localeStringResource;
+        }
 
         var lrsToUpdateList = new List<LocaleStringResource>();
         var lrsToInsertList = new Dictionary<string, LocaleStringResource>();
@@ -242,8 +249,11 @@ public partial class InstallationService
             }
         }
 
-        await _dataProvider.UpdateEntitiesAsync(lrsToUpdateList);
-        await _dataProvider.BulkInsertEntitiesAsync(lrsToInsertList.Values);
+        if (lrsToUpdateList.Any())
+            await _dataProvider.UpdateEntitiesAsync(lrsToUpdateList);
+
+        if (lrsToInsertList.Any())
+            await _dataProvider.BulkInsertEntitiesAsync(lrsToInsertList.Values);
     }
 
     /// <summary>
@@ -258,9 +268,9 @@ public partial class InstallationService
     {
         var count = 0;
         using var reader = new StreamReader(stream);
-        while (!reader.EndOfStream)
+        string line;
+        while ((line = await reader.ReadLineAsync()) != null)
         {
-            var line = await reader.ReadLineAsync();
             if (string.IsNullOrWhiteSpace(line))
                 continue;
             var tmp = line.Split(',');

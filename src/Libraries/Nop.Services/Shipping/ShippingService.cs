@@ -298,34 +298,36 @@ public partial class ShippingService : IShippingService
                 ? item.Product.Height : decimal.Zero);
 
             //get total volume of the shipped items
-            var totalVolume = await packageItems.SumAwaitAsync(async packageItem =>
+            var totalVolume = decimal.Zero;
+            foreach (var packageItem in packageItems)
             {
                 //product volume
-                var productVolume = !packageItem.Product.IsFreeShipping || !ignoreFreeShippedItems ?
-                    packageItem.Product.Width * packageItem.Product.Length * packageItem.Product.Height : decimal.Zero;
+                var productVolume = !packageItem.Product.IsFreeShipping || !ignoreFreeShippedItems
+                    ? packageItem.Product.Width * packageItem.Product.Length * packageItem.Product.Height
+                    : decimal.Zero;
 
                 //associated products volume
                 if (_shippingSettings.ConsiderAssociatedProductsDimensions && !string.IsNullOrEmpty(packageItem.ShoppingCartItem.AttributesXml))
                 {
-                    productVolume += await (await _productAttributeParser.ParseProductAttributeValuesAsync(packageItem.ShoppingCartItem.AttributesXml))
-                        .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct).SumAwaitAsync(async attributeValue =>
-                        {
-                            var associatedProduct = await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId);
-                            if (associatedProduct == null || !associatedProduct.IsShipEnabled || (associatedProduct.IsFreeShipping && ignoreFreeShippedItems))
-                                return 0;
+                    var associatedAttributes = (await _productAttributeParser.ParseProductAttributeValuesAsync(packageItem.ShoppingCartItem.AttributesXml))
+                        .Where(a => a.AttributeValueType == AttributeValueType.AssociatedToProduct);
+                    foreach (var attributeValue in associatedAttributes)
+                    {
+                        var associatedProduct = await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId);
+                        if (associatedProduct == null || !associatedProduct.IsShipEnabled || (associatedProduct.IsFreeShipping && ignoreFreeShippedItems))
+                            continue;
 
-                            //adjust max dimensions
-                            maxWidth = Math.Max(maxWidth, associatedProduct.Width);
-                            maxLength = Math.Max(maxLength, associatedProduct.Length);
-                            maxHeight = Math.Max(maxHeight, associatedProduct.Height);
+                        //adjust max dimensions
+                        maxWidth = Math.Max(maxWidth, associatedProduct.Width);
+                        maxLength = Math.Max(maxLength, associatedProduct.Length);
+                        maxHeight = Math.Max(maxHeight, associatedProduct.Height);
 
-                            return attributeValue.Quantity * associatedProduct.Width * associatedProduct.Length * associatedProduct.Height;
-                        });
+                        productVolume += attributeValue.Quantity * associatedProduct.Width * associatedProduct.Length * associatedProduct.Height;
+                    }
                 }
-
                 //total volume of item
-                return productVolume * packageItem.GetQuantity();
-            });
+                totalVolume += productVolume * packageItem.GetQuantity();
+            }
 
             //set dimensions as cube root of volume
             width = length = height = Convert.ToDecimal(Math.Pow(Convert.ToDouble(totalVolume), 1.0 / 3.0));
@@ -739,9 +741,13 @@ public partial class ShippingService : IShippingService
             return additionalShippingCharge;
 
         //and sum with associated products additional shipping charges
-        additionalShippingCharge += await (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
-            .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-            .SumAwaitAsync(async attributeValue => (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.AdditionalShippingCharge ?? decimal.Zero);
+        var parsedAttributes = (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
+            .Where(a => a.AttributeValueType == AttributeValueType.AssociatedToProduct);
+        foreach (var attributeValue in parsedAttributes)
+        {
+            var associatedProduct = await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId);
+            additionalShippingCharge += associatedProduct?.AdditionalShippingCharge ?? decimal.Zero;
+        }
 
         return additionalShippingCharge;
     }
