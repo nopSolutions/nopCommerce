@@ -5,8 +5,8 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -31,7 +31,6 @@ public partial class NopHtmlHelper : INopHtmlHelper
 
     protected readonly AppSettings _appSettings;
     protected readonly HtmlEncoder _htmlEncoder;
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IHtmlHelper _htmlHelper;
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly INopAssetHelper _bundleHelper;
@@ -61,7 +60,6 @@ public partial class NopHtmlHelper : INopHtmlHelper
 
     public NopHtmlHelper(AppSettings appSettings,
         HtmlEncoder htmlEncoder,
-        IActionContextAccessor actionContextAccessor,
         IHtmlHelper htmlHelper,
         IHttpContextAccessor httpContextAccessor,
         INopAssetHelper bundleHelper,
@@ -73,7 +71,6 @@ public partial class NopHtmlHelper : INopHtmlHelper
     {
         _appSettings = appSettings;
         _htmlEncoder = htmlEncoder;
-        _actionContextAccessor = actionContextAccessor;
         _htmlHelper = htmlHelper;
         _httpContextAccessor = httpContextAccessor;
         _bundleHelper = bundleHelper;
@@ -110,7 +107,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
     /// <returns>URL; check result</returns>
     protected virtual (string Url, bool IsLocal) GetSrcUrl(string src)
     {
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var urlHelper = UrlHelperExtensions.GetUrlHelper();
 
         var isLocal = urlHelper.IsLocalUrl(src);
         var url = isLocal
@@ -749,12 +746,15 @@ public partial class NopHtmlHelper : INopHtmlHelper
 
         if (handleDefaultRoutes)
         {
-            return _actionContextAccessor.ActionContext.ActionDescriptor switch
+            var endpoint = httpContext.GetEndpoint();
+            var actionDescriptor = endpoint?.Metadata.GetMetadata<ActionDescriptor>();
+
+            return actionDescriptor switch
             {
                 ControllerActionDescriptor controllerAction => string.Concat(controllerAction.ControllerName, controllerAction.ActionName),
                 CompiledPageActionDescriptor compiledPage => string.Concat(compiledPage.AreaName, compiledPage.ViewEnginePath.Replace("/", "")),
                 PageActionDescriptor pageAction => string.Concat(pageAction.AreaName, pageAction.ViewEnginePath.Replace("/", "")),
-                _ => _actionContextAccessor.ActionContext.ActionDescriptor.DisplayName?.Replace("/", "") ?? string.Empty
+                _ => actionDescriptor.DisplayName?.Replace("/", "") ?? string.Empty
             };
         }
 

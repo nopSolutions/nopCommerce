@@ -1,8 +1,8 @@
 ﻿using System.Data.Common;
 using LinqToDB;
-using LinqToDB.Common;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.PostgreSQL;
+using LinqToDB.Internal.DataProvider.PostgreSQL;
 
 namespace Nop.Data.DataProviders.LinqToDB;
 

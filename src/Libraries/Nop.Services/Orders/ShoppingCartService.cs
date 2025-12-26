@@ -1,7 +1,6 @@
 ﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -35,7 +34,6 @@ public partial class ShoppingCartService : IShoppingCartService
 
     protected readonly CatalogSettings _catalogSettings;
     protected readonly IAclService _aclService;
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeParser;
     protected readonly IAttributeService<CheckoutAttribute, CheckoutAttributeValue> _checkoutAttributeService;
     protected readonly ICurrencyService _currencyService;
@@ -45,6 +43,7 @@ public partial class ShoppingCartService : IShoppingCartService
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IGiftCardService _giftCardService;
+    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILocalizationService _localizationService;
     protected readonly IPermissionService _permissionService;
     protected readonly IPriceCalculationService _priceCalculationService;
@@ -59,9 +58,9 @@ public partial class ShoppingCartService : IShoppingCartService
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreService _storeService;
     protected readonly IStoreMappingService _storeMappingService;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWorkContext _workContext;
+    protected readonly LinkGenerator _linkGenerator;
     protected readonly OrderSettings _orderSettings;
     protected readonly ShoppingCartSettings _shoppingCartSettings;
 
@@ -71,7 +70,6 @@ public partial class ShoppingCartService : IShoppingCartService
 
     public ShoppingCartService(CatalogSettings catalogSettings,
         IAclService aclService,
-        IActionContextAccessor actionContextAccessor,
         IAttributeParser<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeParser,
         IAttributeService<CheckoutAttribute, CheckoutAttributeValue> checkoutAttributeService,
         ICurrencyService currencyService,
@@ -81,6 +79,7 @@ public partial class ShoppingCartService : IShoppingCartService
         IEventPublisher eventPublisher,
         IGenericAttributeService genericAttributeService,
         IGiftCardService giftCardService,
+        IHttpContextAccessor httpContextAccessor,
         ILocalizationService localizationService,
         IPermissionService permissionService,
         IPriceCalculationService priceCalculationService,
@@ -95,15 +94,14 @@ public partial class ShoppingCartService : IShoppingCartService
         IStoreContext storeContext,
         IStoreService storeService,
         IStoreMappingService storeMappingService,
-        IUrlHelperFactory urlHelperFactory,
         IUrlRecordService urlRecordService,
         IWorkContext workContext,
+        LinkGenerator linkGenerator,
         OrderSettings orderSettings,
         ShoppingCartSettings shoppingCartSettings)
     {
         _catalogSettings = catalogSettings;
         _aclService = aclService;
-        _actionContextAccessor = actionContextAccessor;
         _checkoutAttributeParser = checkoutAttributeParser;
         _checkoutAttributeService = checkoutAttributeService;
         _currencyService = currencyService;
@@ -113,6 +111,7 @@ public partial class ShoppingCartService : IShoppingCartService
         _eventPublisher = eventPublisher;
         _genericAttributeService = genericAttributeService;
         _giftCardService = giftCardService;
+        _httpContextAccessor = httpContextAccessor;
         _localizationService = localizationService;
         _permissionService = permissionService;
         _priceCalculationService = priceCalculationService;
@@ -127,9 +126,9 @@ public partial class ShoppingCartService : IShoppingCartService
         _storeContext = storeContext;
         _storeService = storeService;
         _storeMappingService = storeMappingService;
-        _urlHelperFactory = urlHelperFactory;
         _urlRecordService = urlRecordService;
         _workContext = workContext;
+        _linkGenerator = linkGenerator;
         _orderSettings = orderSettings;
         _shoppingCartSettings = shoppingCartSettings;
     }
@@ -258,7 +257,7 @@ public partial class ShoppingCartService : IShoppingCartService
             .Select(g => new { Product = g.First(), Count = g.Count() });
 
         //get warnings
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var httpContext = _httpContextAccessor.HttpContext;
         var warningLocale = await _localizationService.GetResourceAsync("ShoppingCart.RequiredProductWarning");
         foreach (var requiredProduct in finalRequiredProducts)
         {
@@ -276,7 +275,11 @@ public partial class ShoppingCartService : IShoppingCartService
                 continue;
 
             //prepare warning message
-            var url = urlHelper.RouteUrl(nameof(Product), new { SeName = await _urlRecordService.GetSeNameAsync(requiredProduct.Product) });
+            var url = _linkGenerator.GetPathByName(
+                httpContext: httpContext,
+                endpointName: nameof(Product),
+                values: new { SeName = await _urlRecordService.GetSeNameAsync(requiredProduct.Product) }
+            );
             var requiredProductName = WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(requiredProduct.Product, x => x.Name));
             var requiredProductWarning = _catalogSettings.UseLinksInRequiredProductWarnings
                 ? string.Format(warningLocale, $"<a href=\"{url}\">{requiredProductName}</a>", requiredProductRequiredQuantity * requiredProduct.Count)

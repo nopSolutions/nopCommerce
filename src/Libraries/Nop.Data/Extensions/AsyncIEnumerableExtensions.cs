@@ -21,7 +21,8 @@ public static class AsyncIEnumerableExtensions
     public static IAsyncEnumerable<TResult> SelectAwait<TSource, TResult>(this IEnumerable<TSource> source,
         Func<TSource, ValueTask<TResult>> predicate)
     {
-        return source.ToAsyncEnumerable().SelectAwait(predicate);
+        return source.ToAsyncEnumerable()
+            .Select((TSource x, CancellationToken ct) => predicate(x));
     }
 
     /// <summary>
@@ -40,7 +41,9 @@ public static class AsyncIEnumerableExtensions
     public static Task<TSource> FirstOrDefaultAwaitAsync<TSource>(this IEnumerable<TSource> source,
         Func<TSource, ValueTask<bool>> predicate)
     {
-        return source.ToAsyncEnumerable().FirstOrDefaultAwaitAsync(predicate).AsTask();
+        return source.ToAsyncEnumerable()
+            .FirstOrDefaultAsync((TSource x, CancellationToken ct) => predicate(x))
+            .AsTask();
     }
 
     /// <summary>
@@ -57,7 +60,9 @@ public static class AsyncIEnumerableExtensions
     public static Task<bool> AllAwaitAsync<TSource>(this IEnumerable<TSource> source,
         Func<TSource, ValueTask<bool>> predicate)
     {
-        return source.ToAsyncEnumerable().AllAwaitAsync(predicate).AsTask();
+        return source.ToAsyncEnumerable()
+            .AllAsync((TSource x, CancellationToken ct) => predicate(x))
+            .AsTask();
     }
 
     /// <summary>
@@ -76,13 +81,8 @@ public static class AsyncIEnumerableExtensions
     public static IAsyncEnumerable<TResult> SelectManyAwait<TSource, TResult>(this IEnumerable<TSource> source,
         Func<TSource, Task<IList<TResult>>> predicate)
     {
-        async ValueTask<IAsyncEnumerable<TResult>> getAsyncEnumerable(TSource items)
-        {
-            var rez = await predicate(items);
-            return rez.ToAsyncEnumerable();
-        }
-
-        return source.ToAsyncEnumerable().SelectManyAwait(getAsyncEnumerable);
+        return source.ToAsyncEnumerable()
+            .SelectMany<TSource, TResult>(async (TSource x, CancellationToken ct) =>  await predicate(x));
     }
 
     /// <summary>
@@ -101,13 +101,8 @@ public static class AsyncIEnumerableExtensions
     public static IAsyncEnumerable<TResult> SelectManyAwait<TSource, TResult>(this IEnumerable<TSource> source,
         Func<TSource, Task<IEnumerable<TResult>>> predicate)
     {
-        async ValueTask<IAsyncEnumerable<TResult>> getAsyncEnumerable(TSource items)
-        {
-            var rez = await predicate(items);
-            return rez.ToAsyncEnumerable();
-        }
-
-        return source.ToAsyncEnumerable().SelectManyAwait(getAsyncEnumerable);
+        return source.ToAsyncEnumerable()
+            .SelectMany(async (TSource x, CancellationToken ct) => await predicate(x));
     }
 
     /// <summary>
@@ -124,7 +119,7 @@ public static class AsyncIEnumerableExtensions
     public static IAsyncEnumerable<TSource> WhereAwait<TSource>(this IEnumerable<TSource> source,
         Func<TSource, ValueTask<bool>> predicate)
     {
-        return source.ToAsyncEnumerable().WhereAwait(predicate);
+        return source.ToAsyncEnumerable().Where((TSource x, CancellationToken ct) => predicate(x));
     }
 
     /// <summary>
@@ -141,7 +136,9 @@ public static class AsyncIEnumerableExtensions
     public static Task<bool> AnyAwaitAsync<TSource>(this IEnumerable<TSource> source,
         Func<TSource, ValueTask<bool>> predicate)
     {
-        return source.ToAsyncEnumerable().AnyAwaitAsync(predicate).AsTask();
+        return source.ToAsyncEnumerable()
+            .AnyAsync((TSource x, CancellationToken ct) => predicate(x))
+            .AsTask();
     }
 
     /// <summary>
@@ -162,7 +159,9 @@ public static class AsyncIEnumerableExtensions
     public static Task<TSource> SingleOrDefaultAwaitAsync<TSource>(this IEnumerable<TSource> source,
         Func<TSource, ValueTask<bool>> predicate)
     {
-        return source.ToAsyncEnumerable().SingleOrDefaultAwaitAsync(predicate).AsTask();
+        return source.ToAsyncEnumerable()
+            .SingleOrDefaultAsync((TSource x, CancellationToken ct) => predicate(x))
+            .AsTask();
     }
 
     /// <summary>
@@ -287,6 +286,6 @@ public static class AsyncIEnumerableExtensions
     public static ValueTask<decimal> SumAwaitAsync<TSource>(this IEnumerable<TSource> source,
         Func<TSource, ValueTask<decimal>> selector)
     {
-        return source.ToAsyncEnumerable().SumAwaitAsync(selector);
+        return source.ToAsyncEnumerable().SumAsync(selector);
     }
 }

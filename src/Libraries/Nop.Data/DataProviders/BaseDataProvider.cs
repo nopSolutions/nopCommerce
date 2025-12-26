@@ -42,7 +42,11 @@ public abstract partial class BaseDataProvider
     {
         ArgumentNullException.ThrowIfNull(dataProvider);
 
-        var dataConnection = new DataConnection(dataProvider, CreateDbConnection(), NopMappingSchema.GetMappingSchema(ConfigurationName, LinqToDbDataProvider))
+        var dataConnection = new DataConnection(
+            new DataOptions()
+            .UseConnection(dataProvider, CreateDbConnection())
+            .UseMappingSchema(NopMappingSchema.GetMappingSchema(ConfigurationName, LinqToDbDataProvider))
+            )
         {
             CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
         };

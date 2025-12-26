@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
@@ -17,8 +18,8 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="Google.Cloud.Translation.V2" Version="3.4.0" />
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.477" />
-    <PackageReference Include="WebMarkupMin.AspNetCoreLatest" Version="2.19.0" />
-    <PackageReference Include="WebMarkupMin.NUglify" Version="2.19.0" />
+    <PackageReference Include="WebMarkupMin.AspNetCoreLatest" Version="2.20.0" />
+    <PackageReference Include="WebMarkupMin.NUglify" Version="2.20.0" />
   </ItemGroup>
 
   <ItemGroup>

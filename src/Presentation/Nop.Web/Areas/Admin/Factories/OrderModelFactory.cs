@@ -38,6 +38,7 @@ using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Models.Extensions;
+using UrlHelperExtensions = Nop.Web.Framework.Mvc.Routing.UrlHelperExtensions;
 
 namespace Nop.Web.Areas.Admin.Factories;
 
@@ -51,7 +52,6 @@ public partial class OrderModelFactory : IOrderModelFactory
     protected readonly AddressSettings _addressSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CurrencySettings _currencySettings;
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IAddressModelFactory _addressModelFactory;
     protected readonly IAddressService _addressService;
     protected readonly IAffiliateService _affiliateService;
@@ -101,7 +101,6 @@ public partial class OrderModelFactory : IOrderModelFactory
     public OrderModelFactory(AddressSettings addressSettings,
         CatalogSettings catalogSettings,
         CurrencySettings currencySettings,
-        IActionContextAccessor actionContextAccessor,
         IAddressModelFactory addressModelFactory,
         IAddressService addressService,
         IAffiliateService affiliateService,
@@ -146,7 +145,6 @@ public partial class OrderModelFactory : IOrderModelFactory
         _addressSettings = addressSettings;
         _catalogSettings = catalogSettings;
         _currencySettings = currencySettings;
-        _actionContextAccessor = actionContextAccessor;
         _addressModelFactory = addressModelFactory;
         _addressService = addressService;
         _affiliateService = affiliateService;
@@ -1841,7 +1839,7 @@ public partial class OrderModelFactory : IOrderModelFactory
         var orderIncompleteReportModels = new List<OrderIncompleteReportModel>();
 
         //get URL helper
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var urlHelper = UrlHelperExtensions.GetUrlHelper();
 
         //not paid
         var orderStatuses = Enum.GetValues(typeof(OrderStatus)).Cast<int>().Where(os => os != (int)OrderStatus.Cancelled).ToList();

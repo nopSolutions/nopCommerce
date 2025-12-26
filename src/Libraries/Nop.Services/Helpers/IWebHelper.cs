@@ -63,6 +63,16 @@ public partial interface IWebHelper
     bool IsStaticResource();
 
     /// <summary>
+    /// Determines whether the specified URL is a local URL that is safe for redirection within the application.
+    /// </summary>
+    /// <remarks>A local URL is one that starts with '/' (but not '//' or '/\') or with '~/' (but not '~//' or
+    /// '~/\'), and does not contain ASCII control characters. This method helps prevent open redirect vulnerabilities
+    /// by ensuring only safe, local URLs are accepted for redirection.</remarks>
+    /// <param name="url">The URL to validate. This can be an absolute or relative URL.</param>
+    /// <returns>true if the URL is considered local and safe for redirection; otherwise, false.</returns>
+    bool CheckIsLocalUrl(string url);
+
+    /// <summary>
     /// Modify query string of the URL
     /// </summary>
     /// <param name="url">Url to modify</param>
