@@ -19,10 +19,10 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: 10.0.x
     - name: Restore dependencies
       run: dotnet restore src
     - name: Build
-      run: dotnet build --no-restore src
+      run: dotnet build --no-restore --configuration Release src
     - name: Test
-      run: dotnet test --no-build --verbosity normal src
+      run: dotnet test --no-build --configuration Release --verbosity normal src
