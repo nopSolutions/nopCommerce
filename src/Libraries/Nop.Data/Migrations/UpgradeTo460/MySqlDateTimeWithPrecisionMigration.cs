@@ -5,7 +5,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
@@ -102,45 +101,7 @@ public class MySqlDateTimeWithPrecisionMigration : ForwardOnlyMigration
         this.AddOrAlterColumnFor<DiscountUsageHistory>(t => t.CreatedOnUtc)
             .AsCustom("datetime(6)");
 
-        this.AddOrAlterColumnFor<Forum>(t => t.CreatedOnUtc)
-            .AsCustom("datetime(6)");
-
-        this.AddOrAlterColumnFor<Forum>(t => t.LastPostTime)
-            .AsCustom("datetime(6)")
-            .Nullable();
-
-        this.AddOrAlterColumnFor<Forum>(t => t.UpdatedOnUtc)
-            .AsCustom("datetime(6)");
-
-        this.AddOrAlterColumnFor<ForumGroup>(t => t.CreatedOnUtc)
-            .AsCustom("datetime(6)");
-
-        this.AddOrAlterColumnFor<ForumGroup>(t => t.UpdatedOnUtc)
-            .AsCustom("datetime(6)");
-
-        this.AddOrAlterColumnFor<ForumPost>(t => t.CreatedOnUtc)
-            .AsCustom("datetime(6)");
-
-        this.AddOrAlterColumnFor<ForumPost>(t => t.UpdatedOnUtc)
-            .AsCustom("datetime(6)");
-
-        this.AddOrAlterColumnFor<ForumPostVote>(t => t.CreatedOnUtc)
-            .AsCustom("datetime(6)");
-
         this.AddOrAlterColumnFor<PrivateMessage>(t => t.CreatedOnUtc)
-            .AsCustom("datetime(6)");
-
-        this.AddOrAlterColumnFor<ForumSubscription>(t => t.CreatedOnUtc)
-            .AsCustom("datetime(6)");
-
-        this.AddOrAlterColumnFor<ForumTopic>(t => t.CreatedOnUtc)
-            .AsCustom("datetime(6)");
-
-        this.AddOrAlterColumnFor<ForumTopic>(t => t.LastPostTime)
-            .AsCustom("datetime(6)")
-            .Nullable();
-
-        this.AddOrAlterColumnFor<ForumTopic>(t => t.UpdatedOnUtc)
             .AsCustom("datetime(6)");
 
         this.AddOrAlterColumnFor<GdprLog>(t => t.CreatedOnUtc)

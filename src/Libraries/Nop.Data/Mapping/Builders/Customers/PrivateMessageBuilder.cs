@@ -2,7 +2,6 @@
 using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Customers;
 using Nop.Data.Extensions;
-
 namespace Nop.Data.Mapping.Builders.Customers;
 
 /// <summary>

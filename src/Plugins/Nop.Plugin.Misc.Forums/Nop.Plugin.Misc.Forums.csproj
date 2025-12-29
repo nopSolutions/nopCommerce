@@ -1,0 +1,337 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
+    <Company>Nop Solutions, Ltd</Company>
+    <Authors>Nop Solutions, Ltd</Authors>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>https://www.nopcommerce.com/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <OutputPath>$(SolutionDir)\Presentation\Nop.Web\Plugins\Misc.Forums</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+    <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project.
+    You need to set this parameter to true if your plugin has a nuget package 
+    to ensure that the dlls copied from the NuGet cache to the output of your project-->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Admin\Views\Configure.cshtml" />
+    <None Remove="Admin\Views\CreateForum.cshtml" />
+    <None Remove="Admin\Views\CreateForumGroup.cshtml" />
+    <None Remove="Admin\Views\EditForum.cshtml" />
+    <None Remove="Admin\Views\EditForumGroup.cshtml" />
+    <None Remove="Admin\Views\List.cshtml" />
+    <None Remove="Admin\Views\_Configure.Common.cshtml" />
+    <None Remove="Admin\Views\_Configure.Feeds.cshtml" />
+    <None Remove="Admin\Views\_Configure.PageSizes.cshtml" />
+    <None Remove="Admin\Views\_Configure.Permissions.cshtml" />
+    <None Remove="Admin\Views\_CreateOrUpdateForum.cshtml" />
+    <None Remove="Admin\Views\_CreateOrUpdateForumGroup.cshtml" />
+    <None Remove="Admin\Views\_ViewImports.cshtml" />
+    <None Remove="Admin\Views\_ViewStart.cshtml" />
+    <None Remove="Content\images\edit_.png" />
+    <None Remove="Content\images\move.png" />
+    <None Remove="Content\images\new.png" />
+    <None Remove="Content\images\remove_.png" />
+    <None Remove="Content\images\reply.png" />
+    <None Remove="Content\images\topic-type1.png" />
+    <None Remove="Content\images\topic-type2.png" />
+    <None Remove="Content\images\topic-type3.png" />
+    <None Remove="Content\images\vote-down-selected.png" />
+    <None Remove="Content\images\vote-down.png" />
+    <None Remove="Content\images\vote-up-selected.png" />
+    <None Remove="Content\images\vote-up.png" />
+    <None Remove="Content\images\watch.png" />
+    <None Remove="Content\js\marked.umd.js" />
+    <None Remove="Content\js\mdeditor\icons\bold.svg" />
+    <None Remove="Content\js\mdeditor\icons\code-block.svg" />
+    <None Remove="Content\js\mdeditor\icons\code.svg" />
+    <None Remove="Content\js\mdeditor\icons\heading.svg" />
+    <None Remove="Content\js\mdeditor\icons\image.svg" />
+    <None Remove="Content\js\mdeditor\icons\italic.svg" />
+    <None Remove="Content\js\mdeditor\icons\link.svg" />
+    <None Remove="Content\js\mdeditor\icons\list-ol.svg" />
+    <None Remove="Content\js\mdeditor\icons\list-ul.svg" />
+    <None Remove="Content\js\mdeditor\icons\quote.svg" />
+    <None Remove="Content\js\mdeditor\script.js" />
+    <None Remove="Content\js\mdeditor\style.css" />
+    <None Remove="Content\styles.css" />
+    <None Remove="Content\styles.rtl.css" />
+    <None Remove="logo.png" />
+    <None Remove="plugin.json" />
+    <None Remove="Public\Views\ActiveDiscussions.cshtml" />
+    <None Remove="Public\Views\Components\ForumAccountInfo\Default.cshtml" />
+    <None Remove="Public\Views\Components\ForumActiveDiscussionsSmall\Default.cshtml" />
+    <None Remove="Public\Views\Components\ForumBreadcrumb\Default.cshtml" />
+    <None Remove="Public\Views\Components\ForumLastPost\Default.cshtml" />
+    <None Remove="Public\Views\Components\ProfileForumPostLink\Default.cshtml" />
+    <None Remove="Public\Views\CustomerForumSubscriptions.cshtml" />
+    <None Remove="Public\Views\Forum.cshtml" />
+    <None Remove="Public\Views\ForumGroup.cshtml" />
+    <None Remove="Public\Views\Index.cshtml" />
+    <None Remove="Public\Views\PostCreate.cshtml" />
+    <None Remove="Public\Views\PostEdit.cshtml" />
+    <None Remove="Public\Views\ProfilePosts.cshtml" />
+    <None Remove="Public\Views\Search.cshtml" />
+    <None Remove="Public\Views\Topic.cshtml" />
+    <None Remove="Public\Views\TopicCreate.cshtml" />
+    <None Remove="Public\Views\TopicEdit.cshtml" />
+    <None Remove="Public\Views\TopicMove.cshtml" />
+    <None Remove="Public\Views\_ActiveTopics.cshtml" />
+    <None Remove="Public\Views\_CreateUpdatePost.cshtml" />
+    <None Remove="Public\Views\_CreateUpdateTopic.cshtml" />
+    <None Remove="Public\Views\_ForumGroup.cshtml" />
+    <None Remove="Public\Views\_ForumHeader.cshtml" />
+    <None Remove="Public\Views\_ForumPager.cshtml" />
+    <None Remove="Public\Views\_ForumPost.cshtml" />
+    <None Remove="Public\Views\_MarkdownEditor.cshtml" />
+    <None Remove="Public\Views\_SearchBox.cshtml" />
+    <None Remove="Public\Views\_ViewImports.cshtml" />
+    <None Remove="Public\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Admin\Views\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\CreateForum.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\CreateForumGroup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\EditForum.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\EditForumGroup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\List.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\_Configure.Common.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\_Configure.Feeds.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\_Configure.PageSizes.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\_Configure.Permissions.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\_CreateOrUpdateForum.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\_CreateOrUpdateForumGroup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\_ViewImports.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Admin\Views\_ViewStart.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\edit_.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\move.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\new.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\remove_.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\reply.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\topic-type1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\topic-type2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\topic-type3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\vote-down-selected.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\vote-down.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\vote-up-selected.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\vote-up.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\watch.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\marked.umd.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\mdeditor\icons\bold.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\mdeditor\icons\code-block.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\mdeditor\icons\code.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\mdeditor\icons\heading.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\mdeditor\icons\image.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\mdeditor\icons\italic.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\mdeditor\icons\link.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\mdeditor\icons\list-ol.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\mdeditor\icons\list-ul.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\mdeditor\icons\quote.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\mdeditor\script.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\mdeditor\style.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\styles.rtl.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\ActiveDiscussions.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\Components\ForumAccountInfo\Default.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\Components\ForumActiveDiscussionsSmall\Default.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\Components\ForumBreadcrumb\Default.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\Components\ForumLastPost\Default.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\Components\ProfileForumPostLink\Default.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\CustomerForumSubscriptions.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_ForumPager.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\Forum.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\ForumGroup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\Index.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\PostCreate.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\PostEdit.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\ProfilePosts.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\Search.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\Topic.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\TopicCreate.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\TopicEdit.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\TopicMove.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_ActiveTopics.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_CreateUpdatePost.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_CreateUpdateTopic.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_ForumGroup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_ForumHeader.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_ForumPager.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_ForumPost.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_MarkdownEditor.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_SearchBox.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_ViewImports.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Public\Views\_ViewStart.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)\Presentation\Nop.Web\Nop.Web.csproj" />
+    <ClearPluginAssemblies Include="$(SolutionDir)\Build\ClearPluginAssemblies.proj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Humanizer" Version="3.0.1" />
+  </ItemGroup>
+
+  <!-- This target execute after "Build" target -->
+  <Target Name="NopTarget" AfterTargets="Build">
+    <!-- Delete unnecessary libraries from plugins path -->
+    <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(OutDir)" Targets="NopClear" />
+  </Target>
+
+</Project>

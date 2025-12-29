@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Humanizer;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Events;
 using Nop.Data;
@@ -66,8 +65,6 @@ public class LocalizationServiceTests : ServiceTest
         await _localizationService.AddOrUpdateLocaleResourceAsync(_resources);
         await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToUpperInvariant(), p => p.Value));
         await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToLowerInvariant(), p => p.Value));
-        await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.Camelize(), p => p.Value));
-        await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.Pascalize(), p => p.Value));
 
         var rez = _lsrRepository.Table
             .Where(p => p.ResourceName.StartsWith(PREFIX, StringComparison.InvariantCultureIgnoreCase)).ToList();
@@ -106,8 +103,6 @@ public class LocalizationServiceTests : ServiceTest
         await _localizationService.AddOrUpdateLocaleResourceAsync(_resources);
         await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToUpperInvariant(), p => p.Value));
         await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToLowerInvariant(), p => p.Value));
-        await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.Camelize(), p => p.Value));
-        await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.Pascalize(), p => p.Value));
 
         LocaleResourceConsumer.UpdateCount.Should().Be(0);
         await _localizationService.AddOrUpdateLocaleResourceAsync(_resources.ToDictionary(p => p.Key.ToUpperInvariant(), p => p.Value.ToUpperInvariant()));

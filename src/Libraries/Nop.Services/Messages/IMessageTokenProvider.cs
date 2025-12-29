@@ -1,7 +1,6 @@
 ﻿using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
@@ -153,33 +152,6 @@ public partial interface IMessageTokenProvider
     /// <param name="languageId">Language identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task AddAttributeCombinationTokensAsync(IList<Token> tokens, ProductAttributeCombination combination, int languageId);
-
-    /// <summary>
-    /// Add forum tokens
-    /// </summary>
-    /// <param name="tokens">List of already added tokens</param>
-    /// <param name="forum">Forum</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task AddForumTokensAsync(IList<Token> tokens, Forum forum);
-
-    /// <summary>
-    /// Add forum topic tokens
-    /// </summary>
-    /// <param name="tokens">List of already added tokens</param>
-    /// <param name="forumTopic">Forum topic</param>
-    /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
-    /// <param name="appendedPostIdentifierAnchor">Forum post identifier</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task AddForumTopicTokensAsync(IList<Token> tokens, ForumTopic forumTopic,
-        int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null);
-
-    /// <summary>
-    /// Add forum post tokens
-    /// </summary>
-    /// <param name="tokens">List of already added tokens</param>
-    /// <param name="forumPost">Forum post</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task AddForumPostTokensAsync(IList<Token> tokens, ForumPost forumPost);
 
     /// <summary>
     /// Add private message tokens

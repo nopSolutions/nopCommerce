@@ -5,7 +5,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.FilterLevels;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Menus;
@@ -85,9 +84,6 @@ public class SettingMigration : MigrationBase
 
         //#7625
         this.SetSettingIfNotExists<AddressSettings, bool>(settings => settings.PrePopulateCountryByCustomer, true);
-
-        //#7747
-        this.SetSettingIfNotExists<ForumSettings, int>(settings => settings.TopicMetaDescriptionLength, 160);
 
         //#7388
         this.SetSettingIfNotExists<TranslationSettings, bool>(settings => settings.AllowPreTranslate, false);

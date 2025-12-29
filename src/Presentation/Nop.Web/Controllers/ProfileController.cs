@@ -49,7 +49,7 @@ public partial class ProfileController : BasePublicController
         if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Customers.CUSTOMERS_VIEW))
             DisplayEditLink(Url.Action("Edit", "Customer", new { id = customer.Id, area = AreaNames.ADMIN }));
 
-        var model = await _profileModelFactory.PrepareProfileIndexModelAsync(customer, pageNumber);
+        var model = await _profileModelFactory.PrepareProfileIndexModelAsync(customer);
         return View(model);
     }
 }

@@ -56,11 +56,6 @@ export default function copyDependencies()
       .src(`${nodeModules}moment/dist/**`)
       .pipe(gulp.dest(targetPath + '/moment')),
 
-    //Marked
-    gulp
-      .src(`${nodeModules}marked/lib/marked.umd.js`)
-      .pipe(gulp.dest(targetPath + '/marked')),
-
     //Ionicons
     gulp
       .src(`${nodeModules}ionicons/{css,fonts,png}/**`)

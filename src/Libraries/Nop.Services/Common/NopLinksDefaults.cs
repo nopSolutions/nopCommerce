@@ -222,11 +222,6 @@ public static partial class NopLinksDefaults
         public static string Blog => "https://docs.nopcommerce.com/running-your-store/content-management/blog.html";
 
         /// <summary>
-        /// Gets a URL of the forums docs page
-        /// </summary>
-        public static string Forums => "https://docs.nopcommerce.com/running-your-store/content-management/forums.html";
-
-        /// <summary>
         /// Gets a URL of the email accounts docs page
         /// </summary>
         public static string EmailAccounts => "https://docs.nopcommerce.com/getting-started/email-accounts.html";

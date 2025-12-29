@@ -80,8 +80,8 @@ public class PollInstallationService
                     }
                 }
 
-                _permissionMappingRepository.Delete(pr => pr.PermissionRecordId == oldRec.Id);
-                _permissionRepository.Delete(pr => pr.Id == oldRec.Id);
+                await _permissionMappingRepository.DeleteAsync(pr => pr.PermissionRecordId == oldRec.Id);
+                await _permissionRepository.DeleteAsync(pr => pr.Id == oldRec.Id);
             }
         }
     }

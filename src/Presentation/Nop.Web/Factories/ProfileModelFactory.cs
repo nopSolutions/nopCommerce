@@ -1,12 +1,10 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
 using Nop.Core.Http;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -24,11 +22,9 @@ public partial class ProfileModelFactory : IProfileModelFactory
     #region Fields
 
     protected readonly CustomerSettings _customerSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly ICountryService _countryService;
     protected readonly ICustomerService _customerService;
     protected readonly IDateTimeHelper _dateTimeHelper;
-    protected readonly IForumService _forumService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IPictureService _pictureService;
@@ -40,11 +36,9 @@ public partial class ProfileModelFactory : IProfileModelFactory
     #region Ctor
 
     public ProfileModelFactory(CustomerSettings customerSettings,
-        ForumSettings forumSettings,
         ICountryService countryService,
         ICustomerService customerService,
         IDateTimeHelper dateTimeHelper,
-        IForumService forumService,
         IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
         IPictureService pictureService,
@@ -52,11 +46,9 @@ public partial class ProfileModelFactory : IProfileModelFactory
         MediaSettings mediaSettings)
     {
         _customerSettings = customerSettings;
-        _forumSettings = forumSettings;
         _countryService = countryService;
         _customerService = customerService;
         _dateTimeHelper = dateTimeHelper;
-        _forumService = forumService;
         _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
         _pictureService = pictureService;
@@ -77,31 +69,18 @@ public partial class ProfileModelFactory : IProfileModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the profile index model
     /// </returns>
-    public virtual async Task<ProfileIndexModel> PrepareProfileIndexModelAsync(Customer customer, int? page)
+    public virtual async Task<ProfileIndexModel> PrepareProfileIndexModelAsync(Customer customer)
     {
         ArgumentNullException.ThrowIfNull(customer);
-
-        var pagingPosts = false;
-        var postsPage = 0;
-
-        if (page.HasValue)
-        {
-            postsPage = page.Value;
-            pagingPosts = true;
-        }
 
         var name = await _customerService.FormatUsernameAsync(customer);
         var title = string.Format(await _localizationService.GetResourceAsync("Profile.ProfileOf"), name);
 
-        var model = new ProfileIndexModel
+        return new ProfileIndexModel
         {
             ProfileTitle = title,
-            PostsPage = postsPage,
-            PagingPosts = pagingPosts,
-            CustomerProfileId = customer.Id,
-            ForumsEnabled = _forumSettings.ForumsEnabled
+            CustomerProfileId = customer.Id
         };
-        return model;
     }
 
     /// <summary>
@@ -149,15 +128,6 @@ public partial class ProfileModelFactory : IProfileModelFactory
         //private message
         var pmEnabled = _customerSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer);
 
-        //total forum posts
-        var totalPostsEnabled = false;
-        var totalPosts = 0;
-        if (_forumSettings.ForumsEnabled && _forumSettings.ShowCustomersPostCount)
-        {
-            totalPostsEnabled = true;
-            totalPosts = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.ForumPostCountAttribute);
-        }
-
         //registration date
         var joinDateEnabled = false;
         var joinDate = string.Empty;
@@ -187,82 +157,10 @@ public partial class ProfileModelFactory : IProfileModelFactory
             LocationEnabled = locationEnabled,
             Location = location,
             PMEnabled = pmEnabled,
-            TotalPostsEnabled = totalPostsEnabled,
-            TotalPosts = totalPosts.ToString(),
             JoinDateEnabled = joinDateEnabled,
             JoinDate = joinDate,
             DateOfBirthEnabled = dateOfBirthEnabled,
             DateOfBirth = dateOfBirth,
-        };
-
-        return model;
-    }
-
-    /// <summary>
-    /// Prepare the profile posts model
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    /// <param name="page">Number of posts page</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the profile posts model
-    /// </returns>
-    public virtual async Task<ProfilePostsModel> PrepareProfilePostsModelAsync(Customer customer, int page)
-    {
-        ArgumentNullException.ThrowIfNull(customer);
-
-        if (page > 0)
-        {
-            page -= 1;
-        }
-
-        var pageSize = _forumSettings.LatestCustomerPostsPageSize;
-
-        var list = await _forumService.GetAllPostsAsync(0, customer.Id, string.Empty, false, page, pageSize);
-
-        var latestPosts = new List<PostsModel>();
-
-        foreach (var forumPost in list)
-        {
-            string posted;
-            if (_forumSettings.RelativeDateTimeFormattingEnabled)
-            {
-                var languageCode = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
-                var postedAgo = forumPost.CreatedOnUtc.RelativeFormat(languageCode);
-                posted = string.Format(await _localizationService.GetResourceAsync("Common.RelativeDateTime.Past"), postedAgo);
-            }
-            else
-            {
-                posted = (await _dateTimeHelper.ConvertToUserTimeAsync(forumPost.CreatedOnUtc, DateTimeKind.Utc)).ToString("f");
-            }
-
-            var topic = await _forumService.GetTopicByIdAsync(forumPost.TopicId);
-
-            latestPosts.Add(new PostsModel
-            {
-                ForumTopicId = topic.Id,
-                ForumTopicTitle = topic.Subject,
-                ForumTopicSlug = await _forumService.GetTopicSeNameAsync(topic),
-                ForumPostText = _forumService.FormatPostText(forumPost),
-                Posted = posted
-            });
-        }
-
-        var pagerModel = new PagerModel(_localizationService)
-        {
-            PageSize = list.PageSize,
-            TotalRecords = list.TotalCount,
-            PageIndex = list.PageIndex,
-            ShowTotalSummary = false,
-            RouteActionName = NopRouteNames.Standard.CUSTOMER_PROFILE_PAGED,
-            UseRouteLinks = true,
-            RouteValues = new SlugRouteValues { PageNumber = page, Id = customer.Id }
-        };
-
-        var model = new ProfilePostsModel
-        {
-            PagerModel = pagerModel,
-            Posts = latestPosts,
         };
 
         return model;

@@ -127,7 +127,6 @@ public class AclMigration : Migration
         insertMappings("ManageBlog", StandardPermission.ContentManagement.BLOG_COMMENTS_CREATE_EDIT_DELETE, StandardPermission.ContentManagement.BLOG_COMMENTS_VIEW, StandardPermission.ContentManagement.BLOG_CREATE_EDIT_DELETE, StandardPermission.ContentManagement.BLOG_VIEW);
         insertMappings("ManageWidgets", StandardPermission.Configuration.MANAGE_WIDGETS);
         insertMappings("ManageTopics", StandardPermission.ContentManagement.TOPICS_CREATE_EDIT_DELETE, StandardPermission.ContentManagement.TOPICS_VIEW);
-        insertMappings("ManageForums", StandardPermission.ContentManagement.FORUMS_CREATE_EDIT_DELETE, StandardPermission.ContentManagement.FORUMS_VIEW);
         insertMappings("ManageMessageTemplates", StandardPermission.ContentManagement.MESSAGE_TEMPLATES_CREATE_EDIT_DELETE, StandardPermission.ContentManagement.MESSAGE_TEMPLATES_VIEW);
         insertMappings("ManageCountries", StandardPermission.Configuration.MANAGE_COUNTRIES);
         insertMappings("ManageLanguages", StandardPermission.Configuration.MANAGE_LANGUAGES);

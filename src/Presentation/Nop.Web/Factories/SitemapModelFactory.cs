@@ -6,7 +6,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Events;
@@ -32,7 +31,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
     #region Fields
 
     protected readonly BlogSettings _blogSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly IBlogService _blogService;
     protected readonly ICategoryService _categoryService;
     protected readonly ICustomerService _customerService;
@@ -60,7 +58,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
     #region Ctor
 
     public SitemapModelFactory(BlogSettings blogSettings,
-        ForumSettings forumSettings,
         IBlogService blogService,
         ICategoryService categoryService,
         ICustomerService customerService,
@@ -84,7 +81,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         SitemapXmlSettings sitemapXmlSettings)
     {
         _blogSettings = blogSettings;
-        _forumSettings = forumSettings;
         _blogService = blogService;
         _categoryService = categoryService;
         _customerService = customerService;
@@ -150,10 +146,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         //blog
         if (_blogSettings.Enabled)
             sitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync(NopRouteNames.General.BLOG));
-
-        //forum
-        if (_forumSettings.ForumsEnabled)
-            sitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync(NopRouteNames.General.BOARDS));
 
         //categories
         if (_sitemapXmlSettings.SitemapXmlIncludeCategories)
@@ -560,17 +552,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
                     GroupTitle = commonGroupTitle,
                     Name = await _localizationService.GetResourceAsync("Blog"),
                     Url = _nopUrlHelper.RouteUrl(NopRouteNames.General.BLOG)
-                });
-            }
-
-            //forums
-            if (_forumSettings.ForumsEnabled)
-            {
-                model.Items.Add(new SitemapModel.SitemapItemModel
-                {
-                    GroupTitle = commonGroupTitle,
-                    Name = await _localizationService.GetResourceAsync("Forum.Forums"),
-                    Url = _nopUrlHelper.RouteUrl(NopRouteNames.General.BOARDS)
                 });
             }
 

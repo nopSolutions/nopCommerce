@@ -6,7 +6,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Tax;
@@ -15,7 +14,6 @@ using Nop.Services.Attributes;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.ExportImport;
-using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -40,7 +38,6 @@ public partial class CustomerController : BaseAdminController
     protected readonly CustomerSettings _customerSettings;
     protected readonly DateTimeSettings _dateTimeSettings;
     protected readonly EmailAccountSettings _emailAccountSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly GdprSettings _gdprSettings;
     protected readonly IAddressService _addressService;
     protected readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
@@ -54,7 +51,6 @@ public partial class CustomerController : BaseAdminController
     protected readonly IEmailAccountService _emailAccountService;
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IExportManager _exportManager;
-    protected readonly IForumService _forumService;
     protected readonly IGdprService _gdprService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IImportManager _importManager;
@@ -78,7 +74,6 @@ public partial class CustomerController : BaseAdminController
     public CustomerController(CustomerSettings customerSettings,
         DateTimeSettings dateTimeSettings,
         EmailAccountSettings emailAccountSettings,
-        ForumSettings forumSettings,
         GdprSettings gdprSettings,
         IAddressService addressService,
         IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
@@ -92,7 +87,6 @@ public partial class CustomerController : BaseAdminController
         IEmailAccountService emailAccountService,
         IEventPublisher eventPublisher,
         IExportManager exportManager,
-        IForumService forumService,
         IGdprService gdprService,
         IGenericAttributeService genericAttributeService,
         IImportManager importManager,
@@ -111,7 +105,6 @@ public partial class CustomerController : BaseAdminController
         _customerSettings = customerSettings;
         _dateTimeSettings = dateTimeSettings;
         _emailAccountSettings = emailAccountSettings;
-        _forumSettings = forumSettings;
         _gdprSettings = gdprSettings;
         _addressService = addressService;
         _addressAttributeParser = addressAttributeParser;
@@ -125,7 +118,6 @@ public partial class CustomerController : BaseAdminController
         _emailAccountService = emailAccountService;
         _eventPublisher = eventPublisher;
         _exportManager = exportManager;
-        _forumService = forumService;
         _gdprService = gdprService;
         _genericAttributeService = genericAttributeService;
         _importManager = importManager;

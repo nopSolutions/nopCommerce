@@ -5,7 +5,6 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -37,8 +36,6 @@ public partial class CustomerService : ICustomerService
     protected readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
     protected readonly IRepository<CustomerPassword> _customerPasswordRepository;
     protected readonly IRepository<CustomerRole> _customerRoleRepository;
-    protected readonly IRepository<ForumPost> _forumPostRepository;
-    protected readonly IRepository<ForumTopic> _forumTopicRepository;
     protected readonly IRepository<GenericAttribute> _gaRepository;
     protected readonly IRepository<Order> _orderRepository;
     protected readonly IRepository<PrivateMessage> _privateMessageRepository;
@@ -67,8 +64,6 @@ public partial class CustomerService : ICustomerService
         IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
         IRepository<CustomerPassword> customerPasswordRepository,
         IRepository<CustomerRole> customerRoleRepository,
-        IRepository<ForumPost> forumPostRepository,
-        IRepository<ForumTopic> forumTopicRepository,
         IRepository<GenericAttribute> gaRepository,
         IRepository<Order> orderRepository,
         IRepository<PrivateMessage> privateMessageRepository,
@@ -93,8 +88,6 @@ public partial class CustomerService : ICustomerService
         _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
         _customerPasswordRepository = customerPasswordRepository;
         _customerRoleRepository = customerRoleRepository;
-        _forumPostRepository = forumPostRepository;
-        _forumTopicRepository = forumTopicRepository;
         _gaRepository = gaRepository;
         _orderRepository = orderRepository;
         _privateMessageRepository = privateMessageRepository;
@@ -692,11 +685,8 @@ public partial class CustomerService : ICustomerService
             from blogComment in _blogCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             from productReview in _productReviewRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             from productReviewHelpfulness in _productReviewHelpfulnessRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from forumTopic in _forumTopicRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from forumPost in _forumPostRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             where (!onlyWithoutShoppingCart || sCart == null) &&
                   order == null && blogComment == null && productReview == null && productReviewHelpfulness == null &&
-                  forumTopic == null && forumPost == null &&
                   !guest.IsSystemAccount &&
                   (createdFromUtc == null || guest.CreatedOnUtc > createdFromUtc) &&
                   (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
@@ -1339,20 +1329,6 @@ public partial class CustomerService : ICustomerService
     public virtual async Task<bool> IsAdminAsync(Customer customer, bool onlyActiveCustomerRoles = true)
     {
         return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.AdministratorsRoleName, onlyActiveCustomerRoles);
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether customer is a forum moderator
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the result
-    /// </returns>
-    public virtual async Task<bool> IsForumModeratorAsync(Customer customer, bool onlyActiveCustomerRoles = true)
-    {
-        return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.ForumModeratorsRoleName, onlyActiveCustomerRoles);
     }
 
     /// <summary>

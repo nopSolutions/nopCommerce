@@ -32,7 +32,7 @@ public partial class PrivateMessagesController : BasePublicController
 
     #region Ctor
 
-    public PrivateMessagesController(CustomerSettings forumSettings,
+    public PrivateMessagesController(CustomerSettings customerSettings,
         ICustomerActivityService customerActivityService,
         ICustomerService customerService,
         IGenericAttributeService genericAttributeService,
@@ -42,7 +42,7 @@ public partial class PrivateMessagesController : BasePublicController
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService)
     {
-        _customerSettings = forumSettings;
+        _customerSettings = customerSettings;
         _customerActivityService = customerActivityService;
         _customerService = customerService;
         _genericAttributeService = genericAttributeService;

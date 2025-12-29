@@ -2,7 +2,6 @@
 using Nop.Core.Domain.Customers;
 using Nop.Core.Http;
 using Nop.Services.Customers;
-using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Infrastructure;
@@ -21,7 +20,6 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
     protected readonly CustomerSettings _customerSettings;
     protected readonly ICustomerService _customerService;
     protected readonly IDateTimeHelper _dateTimeHelper;
-    protected readonly IForumService _forumService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IStoreContext _storeContext;
     protected readonly IWorkContext _workContext;
@@ -33,7 +31,6 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
     public PrivateMessagesModelFactory(CustomerSettings customerSettings,
         ICustomerService customerService,
         IDateTimeHelper dateTimeHelper,
-        IForumService forumService,
         ILocalizationService localizationService,
         IStoreContext storeContext,
         IWorkContext workContext)
@@ -41,7 +38,6 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
         _customerSettings = customerSettings;
         _customerService = customerService;
         _dateTimeHelper = dateTimeHelper;
-        _forumService = forumService;
         _localizationService = localizationService;
         _storeContext = storeContext;
         _workContext = workContext;

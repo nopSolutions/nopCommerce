@@ -57,10 +57,6 @@ public partial record CaptchaSettingsModel : BaseNopModel, ISettingsModel
     public bool ShowOnForgotPasswordPage { get; set; }
     public bool ShowOnForgotPasswordPage_OverrideForStore { get; set; }
 
-    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForum")]
-    public bool ShowOnForum { get; set; }
-    public bool ShowOnForum_OverrideForStore { get; set; }
-
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests")]
     public bool ShowOnCheckoutPageForGuests { get; set; }
     public bool ShowOnCheckoutPageForGuests_OverrideForStore { get; set; }

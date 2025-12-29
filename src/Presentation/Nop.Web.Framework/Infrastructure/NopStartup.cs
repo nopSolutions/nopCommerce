@@ -26,7 +26,6 @@ using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.ExportImport;
 using Nop.Services.FilterLevels;
-using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Html;
@@ -217,7 +216,6 @@ public partial class NopStartup : INopStartup
         services.AddScoped<ITaxService, TaxService>();
         services.AddScoped<ILogger, DefaultLogger>();
         services.AddScoped<ICustomerActivityService, CustomerActivityService>();
-        services.AddScoped<IForumService, ForumService>();
         services.AddScoped<IGdprService, GdprService>();
         services.AddScoped<IBlogService, BlogService>();
         services.AddScoped<ITopicService, TopicService>();

@@ -225,7 +225,6 @@ public partial class InstallationService : IInstallationService
         await InstallCategoriesAsync(sampleData.Categories);
         await InstallManufacturersAsync(sampleData.Manufacturers);
         await InstallProductsAsync(sampleData.Products);
-        await InstallForumsAsync(sampleData.ForumGroups);
         await InstallDiscountsAsync(sampleData.Discounts);
         await InstallBlogPostsAsync(sampleData.BlogPosts);
         await InstallWarehousesAsync(sampleData.Warehouses);
