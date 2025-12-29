@@ -89,7 +89,7 @@ public partial class CountryService : ICountryService
                 countries = await countries
                     .ToAsyncEnumerable()
                     .OrderBy(c => c.DisplayOrder)
-                    .ThenBy(async c => await _localizationService.GetLocalizedAsync(c, x => x.Name, languageId))
+                    .ThenBy(async (c, _) => await _localizationService.GetLocalizedAsync(c, x => x.Name, languageId))
                     .ToListAsync();
             }
 

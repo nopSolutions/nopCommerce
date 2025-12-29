@@ -123,7 +123,7 @@ public partial class StateProvinceService : IStateProvinceService
             {
                 stateProvinces = await stateProvinces.ToAsyncEnumerable()
                     .OrderBy(c => c.DisplayOrder)
-                    .ThenBy(async c => await _localizationService.GetLocalizedAsync(c, x => x.Name, languageId))
+                    .ThenBy(async (c, _) => await _localizationService.GetLocalizedAsync(c, x => x.Name, languageId))
                     .ToListAsync();
             }
 
