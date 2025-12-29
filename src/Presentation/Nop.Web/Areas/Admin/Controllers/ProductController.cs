@@ -3869,7 +3869,7 @@ public partial class ProductController : BaseAdminController
             .Where(pam => pam.IsRequired)
             .Where(pam => !pam.IsNonCombinable())
             .WhereAwait(async pam => !(await _productAttributeService.GetProductAttributeValuesAsync(pam.Id)).Any(v => allowedAttributeIds.Any(id => id == v.Id)))
-            .SelectAwait(async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name).ToListAsync();
+            .Select(async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name).ToListAsync();
 
         if (requiredAttributeNames.Any())
         {

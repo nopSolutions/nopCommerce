@@ -760,7 +760,7 @@ public partial class ProductModelFactory : IProductModelFactory
         var model = await productsTags
             //filter by store
             .WhereAwait(async x => await _productTagService.GetProductCountByProductTagIdAsync(x.Id, store.Id) > 0)
-            .SelectAwait(async x => new ProductTagModel
+            .Select(async (ProductTag x, CancellationToken _) => new ProductTagModel
             {
                 Id = x.Id,
                 Name = await _localizationService.GetLocalizedAsync(x, y => y.Name),

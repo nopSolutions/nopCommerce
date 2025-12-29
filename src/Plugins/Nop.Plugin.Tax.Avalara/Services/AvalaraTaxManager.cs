@@ -563,10 +563,14 @@ public class AvalaraTaxManager : IDisposable
     {
         //get checkout attributes values
         var attributeValues = _checkoutAttributeParser.ParseAttributeValues(order.CheckoutAttributesXml);
-        return await attributeValues.SelectManyAwait(async attributeWithValues =>
+        var result = attributeValues.SelectMany(asyncEnumerable);
+        
+        return await result.ToListAsync();
+
+        IAsyncEnumerable<LineItemModel> asyncEnumerable((CheckoutAttribute attribute, IAsyncEnumerable<CheckoutAttributeValue> values) attributeWithValues)
         {
             var attribute = attributeWithValues.attribute;
-            return (await attributeWithValues.values.SelectAwait(async value =>
+            var res = (attributeWithValues.values.Select(async (CheckoutAttributeValue value, CancellationToken _) =>
             {
                 //create line
                 var checkoutAttributeItem = new LineItemModel
@@ -602,8 +606,10 @@ public class AvalaraTaxManager : IDisposable
                 checkoutAttributeItem.customerUsageType = CommonHelper.EnsureMaximumLength(entityUseCode, 25);
 
                 return checkoutAttributeItem;
-            }).ToListAsync()).ToAsyncEnumerable();
-        }).ToListAsync();
+            }));
+
+            return res;
+        }
     }
 
     /// <summary>
