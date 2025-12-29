@@ -1047,12 +1047,11 @@ public partial class ProductService : IProductService
                     join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                     where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
                           categoryIds.Contains(pc.CategoryId)
-                    orderby c.DisplayOrder
-                    group pc by pc.ProductId into pc
+                    group c.DisplayOrder by pc.ProductId into gr
                     select new
                     {
-                        ProductId = pc.Key,
-                        DisplayOrder = pc.First().DisplayOrder
+                        ProductId = gr.Key,
+                        DisplayOrder = gr.Min()
                     };
 
                 productsQuery =
