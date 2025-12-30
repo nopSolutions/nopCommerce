@@ -20,7 +20,6 @@
     <PackageReference Include="MySqlConnector" Version="2.4.0" />
     <PackageReference Include="Npgsql" Version="9.0.3" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.1" />
-    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
