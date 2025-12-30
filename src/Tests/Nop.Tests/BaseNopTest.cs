@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -234,33 +233,30 @@ public partial class BaseNopTest
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Headers.Append(HeaderNames.Host, NopTestsDefaults.HostIpAddress);
         httpContext.Session = new TestSeesion();
+        
+        var actionContext = new ActionContext(httpContext, httpContext.GetRouteData(), new ActionDescriptor());
 
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         httpContextAccessor.Setup(p => p.HttpContext).Returns(httpContext);
 
         services.AddSingleton(httpContextAccessor.Object);
-
-        var actionContextAccessor = new Mock<IActionContextAccessor>();
-        actionContextAccessor.Setup(x => x.ActionContext)
-            .Returns(new ActionContext(httpContext, httpContext.GetRouteData(), new ActionDescriptor()));
-
-        services.AddSingleton(actionContextAccessor.Object);
-
+        
         var urlHelperFactory = new Mock<IUrlHelperFactory>();
-        var urlHelper = new NopTestUrlHelper(actionContextAccessor.Object.ActionContext);
+        var urlHelper = new NopTestUrlHelper(actionContext);
 
         urlHelperFactory.Setup(x => x.GetUrlHelper(It.IsAny<ActionContext>()))
             .Returns(urlHelper);
 
-        services.AddTransient(_ => actionContextAccessor.Object);
-
         services.AddSingleton(urlHelperFactory.Object);
 
         var tempDataDictionaryFactory = new Mock<ITempDataDictionaryFactory>();
-        var dataDictionary = new TempDataDictionary(httpContextAccessor.Object.HttpContext,
-            new Mock<ITempDataProvider>().Object);
+        var dataDictionary = new TempDataDictionary(httpContext, new Mock<ITempDataProvider>().Object);
         tempDataDictionaryFactory.Setup(f => f.GetTempData(It.IsAny<HttpContext>())).Returns(dataDictionary);
         services.AddSingleton(tempDataDictionaryFactory.Object);
+
+        var linkGenerator = new Mock<LinkGenerator>();
+
+        services.AddSingleton(linkGenerator.Object);
 
         services.AddSingleton<ITypeFinder>(typeFinder);
         Singleton<ITypeFinder>.Instance = typeFinder;
