@@ -1,10 +1,9 @@
 ﻿using System.Data;
 using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Data.Extensions;
 
-namespace Nop.Data.Mapping.Builders.Forums;
+namespace Nop.Data.Mapping.Builders.Customers;
 
 /// <summary>
 /// Represents a private message entity builder

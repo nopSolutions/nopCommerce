@@ -789,7 +789,10 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateMap<CustomerRoleModel, CustomerRole>();
 
         CreateMap<CustomerSettings, CustomerSettingsModel>()
-            .ForMember(model => model.AvailableCountries, options => options.Ignore());
+            .ForMember(model => model.AvailableCountries, options => options.Ignore())
+            .ForMember(model => model.AllowPrivateMessages_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.NotifyAboutPrivateMessages_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.ShowAlertForPM_OverrideForStore, options => options.Ignore());
         CreateMap<CustomerSettingsModel, CustomerSettings>()
             .ForMember(settings => settings.AvatarMaximumSizeBytes, options => options.Ignore())
             .ForMember(settings => settings.DeleteGuestTaskOlderThanMinutes, options => options.Ignore())
@@ -798,7 +801,10 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.OnlineCustomerMinutes, options => options.Ignore())
             .ForMember(settings => settings.SuffixDeletedCustomers, options => options.Ignore())
             .ForMember(settings => settings.LastActivityMinutes, options => options.Ignore())
-            .ForMember(settings => settings.RequiredReLoginAfterPasswordChange, options => options.Ignore());
+            .ForMember(settings => settings.RequiredReLoginAfterPasswordChange, options => options.Ignore())
+            .ForMember(settings => settings.PMSubjectMaxLength, options => options.Ignore())
+            .ForMember(settings => settings.PMTextMaxLength, options => options.Ignore())
+            .ForMember(settings => settings.PrivateMessagesPageSize, options => options.Ignore());
 
         CreateMap<MultiFactorAuthenticationSettings, MultiFactorAuthenticationSettingsModel>();
         CreateMap<MultiFactorAuthenticationSettingsModel, MultiFactorAuthenticationSettings>()
@@ -1042,18 +1048,15 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.AllowGuestsToCreatePosts_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.AllowGuestsToCreateTopics_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.AllowPostVoting_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowPrivateMessages_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ForumEditorValues, options => options.Ignore())
             .ForMember(model => model.ForumEditor_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ForumFeedCount_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ForumFeedsEnabled_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ForumsEnabled_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.MaxVotesPerDay_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NotifyAboutPrivateMessages_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.PostsPageSize_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.RelativeDateTimeFormattingEnabled_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.SearchResultsPageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowAlertForPM_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowCustomersPostCount_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.SignaturesEnabled_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.TopicsPageSize_OverrideForStore, options => options.Ignore());
@@ -1062,10 +1065,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.ForumSubscriptionsPageSize, options => options.Ignore())
             .ForMember(settings => settings.HomepageActiveDiscussionsTopicCount, options => options.Ignore())
             .ForMember(settings => settings.LatestCustomerPostsPageSize, options => options.Ignore())
-            .ForMember(settings => settings.PMSubjectMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.PMTextMaxLength, options => options.Ignore())
             .ForMember(settings => settings.PostMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.PrivateMessagesPageSize, options => options.Ignore())
             .ForMember(settings => settings.StrippedTopicMaxLength, options => options.Ignore())
             .ForMember(settings => settings.TopicSubjectMaxLength, options => options.Ignore())
             .ForMember(settings => settings.TopicMetaDescriptionLength, options => options.Ignore());

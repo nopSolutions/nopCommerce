@@ -1,5 +1,4 @@
 ﻿using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Web.Models.PrivateMessages;
 
 namespace Nop.Web.Factories;

@@ -1,6 +1,5 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Http;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
@@ -20,7 +19,6 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
     #region Fields
 
     protected readonly CustomerSettings _customerSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly ICustomerService _customerService;
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IForumService _forumService;
@@ -33,7 +31,6 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
     #region Ctor
 
     public PrivateMessagesModelFactory(CustomerSettings customerSettings,
-        ForumSettings forumSettings,
         ICustomerService customerService,
         IDateTimeHelper dateTimeHelper,
         IForumService forumService,
@@ -42,7 +39,6 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
         IWorkContext workContext)
     {
         _customerSettings = customerSettings;
-        _forumSettings = forumSettings;
         _customerService = customerService;
         _dateTimeHelper = dateTimeHelper;
         _forumService = forumService;
@@ -118,12 +114,12 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
             page -= 1;
         }
 
-        var pageSize = _forumSettings.PrivateMessagesPageSize;
+        var pageSize = _customerSettings.PrivateMessagesPageSize;
 
         var messages = new List<PrivateMessageModel>();
         var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();
-        var list = await _forumService.GetAllPrivateMessagesAsync(store.Id,
+        var list = await _customerService.GetAllPrivateMessagesAsync(store.Id,
             0, customer.Id, null, null, false, string.Empty, page, pageSize);
 
         foreach (var pm in list)
@@ -165,12 +161,12 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
             page -= 1;
         }
 
-        var pageSize = _forumSettings.PrivateMessagesPageSize;
+        var pageSize = _customerSettings.PrivateMessagesPageSize;
 
         var messages = new List<PrivateMessageModel>();
         var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();
-        var list = await _forumService.GetAllPrivateMessagesAsync(store.Id,
+        var list = await _customerService.GetAllPrivateMessagesAsync(store.Id,
             customer.Id, 0, null, false, null, string.Empty, page, pageSize);
         foreach (var pm in list)
             messages.Add(await PreparePrivateMessageModelAsync(pm));
@@ -254,7 +250,7 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
             CustomerToName = await _customerService.FormatUsernameAsync(toCustomer),
             AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(toCustomer),
             Subject = pm.Subject,
-            Message = _forumService.FormatPrivateMessageText(pm),
+            Message = _customerService.FormatPrivateMessageText(pm),
             CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(pm.CreatedOnUtc, DateTimeKind.Utc),
             IsRead = pm.IsRead,
         };

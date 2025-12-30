@@ -951,7 +951,7 @@ public partial class CustomerController : BaseAdminController
 
         try
         {
-            if (!_forumSettings.AllowPrivateMessages)
+            if (!_customerSettings.AllowPrivateMessages)
                 throw new NopException("Private messages are disabled");
             if (await _customerService.IsGuestAsync(customer))
                 throw new NopException("Customer should be registered");
@@ -976,7 +976,17 @@ public partial class CustomerController : BaseAdminController
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            await _forumService.InsertPrivateMessageAsync(privateMessage);
+            await _customerService.InsertPrivateMessageAsync(privateMessage);
+
+            var customerTo = await _customerService.GetCustomerByIdAsync(privateMessage.ToCustomerId)
+                 ?? throw new NopException("Recipient could not be loaded");
+
+            //UI notification
+            await _genericAttributeService.SaveAttributeAsync(customerTo, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, false, privateMessage.StoreId);
+
+            //Email notification
+            if (_customerSettings.NotifyAboutPrivateMessages)
+                await _workflowMessageService.SendPrivateMessageNotificationAsync(privateMessage, (await _workContext.GetWorkingLanguageAsync())?.Id ?? 0);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.SendPM.Sent"));
         }

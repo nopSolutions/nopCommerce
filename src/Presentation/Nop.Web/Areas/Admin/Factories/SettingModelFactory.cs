@@ -293,6 +293,13 @@ public partial class SettingModelFactory : ISettingModelFactory
         //fill in model values from the entity
         var model = customerSettings.ToSettingsModel<CustomerSettingsModel>();
 
+        if (storeId <= 0)
+            return model;
+
+        model.AllowPrivateMessages_OverrideForStore = await _settingService.SettingExistsAsync(customerSettings, x => x.AllowPrivateMessages, storeId);
+        model.ShowAlertForPM_OverrideForStore = await _settingService.SettingExistsAsync(customerSettings, x => x.ShowAlertForPM, storeId);
+        model.NotifyAboutPrivateMessages_OverrideForStore = await _settingService.SettingExistsAsync(customerSettings, x => x.NotifyAboutPrivateMessages, storeId);
+
         return model;
     }
 
@@ -989,16 +996,13 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.PostsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.PostsPageSize, storeId);
         model.ForumEditor_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ForumEditor, storeId);
         model.SignaturesEnabled_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.SignaturesEnabled, storeId);
-        model.AllowPrivateMessages_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowPrivateMessages, storeId);
-        model.ShowAlertForPM_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ShowAlertForPM, storeId);
-        model.NotifyAboutPrivateMessages_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.NotifyAboutPrivateMessages, storeId);
         model.ActiveDiscussionsFeedEnabled_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ActiveDiscussionsFeedEnabled, storeId);
         model.ActiveDiscussionsFeedCount_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ActiveDiscussionsFeedCount, storeId);
         model.ForumFeedsEnabled_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ForumFeedsEnabled, storeId);
         model.ForumFeedCount_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ForumFeedCount, storeId);
         model.SearchResultsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.SearchResultsPageSize, storeId);
         model.ActiveDiscussionsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ActiveDiscussionsPageSize, storeId);
-
+        
         return model;
     }
 

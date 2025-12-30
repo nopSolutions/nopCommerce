@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Attributes;
 using Nop.Services.Common;
@@ -27,7 +27,7 @@ public partial class VendorController : BaseAdminController
 {
     #region Fields
 
-    protected readonly ForumSettings _forumSettings;
+    protected readonly CustomerSettings _customerSettings;
     protected readonly IAddressService _addressService;
     protected readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
     protected readonly IAttributeParser<VendorAttribute, VendorAttributeValue> _vendorAttributeParser;
@@ -49,7 +49,7 @@ public partial class VendorController : BaseAdminController
 
     #region Ctor
 
-    public VendorController(ForumSettings forumSettings,
+    public VendorController(CustomerSettings customerSettings,
         IAddressService addressService,
         IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
         IAttributeParser<VendorAttribute, VendorAttributeValue> vendorAttributeParser,
@@ -66,7 +66,7 @@ public partial class VendorController : BaseAdminController
         IVendorModelFactory vendorModelFactory,
         IVendorService vendorService)
     {
-        _forumSettings = forumSettings;
+        _customerSettings = customerSettings;
         _addressService = addressService;
         _addressAttributeParser = addressAttributeParser;
         _vendorAttributeParser = vendorAttributeParser;
@@ -352,7 +352,7 @@ public partial class VendorController : BaseAdminController
         //prepare model
         var model = await _vendorModelFactory.PrepareVendorModelAsync(null, vendor);
 
-        if (!_forumSettings.AllowPrivateMessages && model.PmCustomerId > 0)
+        if (!_customerSettings.AllowPrivateMessages && model.PmCustomerId > 0)
             _notificationService.WarningNotification("Private messages are disabled. Do not forget to enable them.");
 
         return View(model);

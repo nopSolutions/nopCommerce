@@ -5,7 +5,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Vendors;
@@ -33,7 +32,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CustomerSettings _customerSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly ICategoryService _categoryService;
     protected readonly ICategoryTemplateService _categoryTemplateService;
     protected readonly ICurrencyService _currencyService;
@@ -71,7 +69,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
     public CatalogModelFactory(CatalogSettings catalogSettings,
         CustomerSettings customerSettings,
-        ForumSettings forumSettings,
         ICategoryService categoryService,
         ICategoryTemplateService categoryTemplateService,
         ICurrencyService currencyService,
@@ -104,7 +101,6 @@ public partial class CatalogModelFactory : ICatalogModelFactory
     {
         _catalogSettings = catalogSettings;
         _customerSettings = customerSettings;
-        _forumSettings = forumSettings;
         _categoryService = categoryService;
         _categoryTemplateService = categoryTemplateService;
         _currencyService = currencyService;
@@ -1088,7 +1084,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             ProductReviews = await PrepareVendorProductReviewsModelAsync(vendor, new VendorReviewsPagingFilteringModel())
         };
 
-        if (_forumSettings.AllowPrivateMessages)
+        if (_customerSettings.AllowPrivateMessages)
             model.PmCustomerId = vendor.PmCustomerId;
 
         return model;

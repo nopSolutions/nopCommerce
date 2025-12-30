@@ -6942,6 +6942,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowCustomersToUploadAvatars.Hint">
     <Value>A value indicating whether customers are allowed to upload avatars.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowPrivateMessages">
+    <Value>Allow private messages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowPrivateMessages.Hint">
+    <Value>Determines whether to allow private messages.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToChangeUsernames">
     <Value>Allow customers to change their usernames</Value>
   </LocaleResource>
@@ -7134,6 +7140,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NeutralGenderEnabled">
     <Value>'Neutral' option enabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyAboutPrivateMessages">
+    <Value>Notify about private messages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyAboutPrivateMessages.Hint">
+    <Value>Indicates whether a customer should be notified by email about new private messages.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NeutralGenderEnabled.Hint">
     <Value>Set if you need three gender options available - Male, female, neutral (as per German laws).</Value>
   </LocaleResource>
@@ -7280,6 +7292,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RequireRegistrationForDownloadableProducts.Hint">
     <Value>Require account creation to purchase downloadable products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowAlertForPM">
+    <Value>Show alert for PM</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowAlertForPM.Hint">
+    <Value>Shows an alert for new Private Messages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersJoinDate">
     <Value>Show customers join date</Value>
@@ -7503,12 +7521,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowPostVoting.Hint">
     <Value>Set if you want to allow users to vote for posts.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowPrivateMessages">
-    <Value>Allow private messages</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowPrivateMessages.Hint">
-    <Value>Determines whether to allow private messages.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.BlockTitle.Common">
     <Value>Common</Value>
   </LocaleResource>
@@ -7551,12 +7563,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.Forums.MaxVotesPerDay.Hint">
     <Value>Maximum number of votes for user per day.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages">
-    <Value>Notify about private messages</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages.Hint">
-    <Value>Indicates whether a customer should be notified by email about new private messages.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.PostsPageSize">
     <Value>Posts page size</Value>
   </LocaleResource>
@@ -7574,12 +7580,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.SearchResultsPageSize.Hint">
     <Value>Set the page size for search results e.g. '10' results per page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ShowAlertForPM">
-    <Value>Show alert for PM</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ShowAlertForPM.Hint">
-    <Value>Shows an alert for new Private Messages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.ShowCustomersPostCount">
     <Value>Show customers post count</Value>

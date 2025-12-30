@@ -238,5 +238,17 @@ public partial record CustomerSettingsModel : BaseNopModel, ISettingsModel
     [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AcceptPrivacyPolicyEnabled")]
     public bool AcceptPrivacyPolicyEnabled { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowPrivateMessages")]
+    public bool AllowPrivateMessages { get; set; }
+    public bool AllowPrivateMessages_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.ShowAlertForPM")]
+    public bool ShowAlertForPM { get; set; }
+    public bool ShowAlertForPM_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.NotifyAboutPrivateMessages")]
+    public bool NotifyAboutPrivateMessages { get; set; }
+    public bool NotifyAboutPrivateMessages_OverrideForStore { get; set; }
+
     #endregion
 }

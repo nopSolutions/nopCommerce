@@ -1526,12 +1526,8 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     public virtual async Task AddPrivateMessageTokensAsync(IList<Token> tokens, PrivateMessage privateMessage)
     {
         //attributes
-        //we cannot inject IForumService into constructor because it'll cause circular references.
-        //that's why we resolve it here this way
-        var forumService = EngineContext.Current.Resolve<IForumService>();
-
         tokens.Add(new Token("PrivateMessage.Subject", privateMessage.Subject));
-        tokens.Add(new Token("PrivateMessage.Text", forumService.FormatPrivateMessageText(privateMessage), true));
+        tokens.Add(new Token("PrivateMessage.Text", _customerService.FormatPrivateMessageText(privateMessage), true));
 
         //event notification
         await _eventPublisher.EntityTokensAddedAsync(privateMessage, tokens);

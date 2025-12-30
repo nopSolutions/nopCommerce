@@ -43,10 +43,8 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly CommonSettings _commonSettings;
     protected readonly CurrencySettings _currencySettings;
     protected readonly CustomerSettings _customerSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
-    protected readonly IForumService _forumService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILanguageService _languageService;
@@ -78,7 +76,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         CommonSettings commonSettings,
         CurrencySettings currencySettings,
         CustomerSettings customerSettings,
-        ForumSettings forumSettings,
         ICurrencyService currencyService,
         ICustomerService customerService,
         IForumService forumService,
@@ -109,10 +106,8 @@ public partial class CommonModelFactory : ICommonModelFactory
         _commonSettings = commonSettings;
         _currencySettings = currencySettings;
         _customerSettings = customerSettings;
-        _forumSettings = forumSettings;
         _currencyService = currencyService;
         _customerService = customerService;
-        _forumService = forumService;
         _genericAttributeService = genericAttributeService;
         _httpContextAccessor = httpContextAccessor;
         _languageService = languageService;
@@ -164,10 +159,10 @@ public partial class CommonModelFactory : ICommonModelFactory
     {
         var result = 0;
         var customer = await _workContext.GetCurrentCustomerAsync();
-        if (_forumSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer))
+        if (_customerSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer))
         {
             var store = await _storeContext.GetCurrentStoreAsync();
-            var privateMessages = await _forumService.GetAllPrivateMessagesAsync(store.Id,
+            var privateMessages = await _customerService.GetAllPrivateMessagesAsync(store.Id,
                 0, customer.Id, false, null, false, string.Empty, 0, 1);
 
             if (privateMessages.TotalCount > 0)
@@ -328,7 +323,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             unreadMessage = string.Format(await _localizationService.GetResourceAsync("PrivateMessages.TotalUnread"), unreadMessageCount);
 
             //notifications here
-            if (_forumSettings.ShowAlertForPM &&
+            if (_customerSettings.ShowAlertForPM &&
                 !await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, store.Id))
             {
                 await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, true, store.Id);
@@ -344,7 +339,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             ShoppingCartEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART),
             UsePopupNotifications = _messagesSettings.UsePopupNotifications,
             WishlistEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST),
-            AllowPrivateMessages = await _customerService.IsRegisteredAsync(customer) && _forumSettings.AllowPrivateMessages,
+            AllowPrivateMessages = await _customerService.IsRegisteredAsync(customer) && _customerSettings.AllowPrivateMessages,
             UnreadPrivateMessages = unreadMessage,
             AlertMessage = alertMessage,
         };

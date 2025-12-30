@@ -28,4 +28,36 @@
             <span asp-validation-for="CustomerSettings.ShowCustomersJoinDate"></span>
         </div>
     </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="CustomerSettings.AllowPrivateMessages_OverrideForStore" asp-input="CustomerSettings.AllowPrivateMessages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="CustomerSettings.AllowPrivateMessages" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.AllowPrivateMessages" />
+            <span asp-validation-for="CustomerSettings.AllowPrivateMessages"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="CustomerSettings.AllowPrivateMessages">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CustomerSettings.ShowAlertForPM_OverrideForStore" asp-input="CustomerSettings.ShowAlertForPM" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CustomerSettings.ShowAlertForPM" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomerSettings.ShowAlertForPM" />
+                <span asp-validation-for="CustomerSettings.ShowAlertForPM"></span>
+            </div>
+        </div>
+        <div class="form-group row advanced-setting" id="pnlNotifyAboutPrivateMessages">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CustomerSettings.NotifyAboutPrivateMessages_OverrideForStore" asp-input="CustomerSettings.NotifyAboutPrivateMessages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CustomerSettings.NotifyAboutPrivateMessages" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomerSettings.NotifyAboutPrivateMessages" />
+                <span asp-validation-for="CustomerSettings.NotifyAboutPrivateMessages"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
 </div>

@@ -1,4 +1,4 @@
-﻿using Nop.Core.Domain.Forums;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Forums.Caching;

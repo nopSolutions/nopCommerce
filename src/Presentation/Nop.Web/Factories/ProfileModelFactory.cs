@@ -147,7 +147,7 @@ public partial class ProfileModelFactory : IProfileModelFactory
         }
 
         //private message
-        var pmEnabled = _forumSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer);
+        var pmEnabled = _customerSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer);
 
         //total forum posts
         var totalPostsEnabled = false;

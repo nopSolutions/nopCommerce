@@ -381,9 +381,6 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.PostsPageSize, model.PostsPageSize_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ForumEditor, model.ForumEditor_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.SignaturesEnabled, model.SignaturesEnabled_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.AllowPrivateMessages, model.AllowPrivateMessages_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ShowAlertForPM, model.ShowAlertForPM_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.NotifyAboutPrivateMessages, model.NotifyAboutPrivateMessages_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ActiveDiscussionsFeedEnabled, model.ActiveDiscussionsFeedEnabled_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ActiveDiscussionsFeedCount, model.ActiveDiscussionsFeedCount_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ForumFeedsEnabled, model.ForumFeedsEnabled_OverrideForStore, storeScope, false);
@@ -1279,6 +1276,16 @@ public partial class SettingController : BaseAdminController
             var multiFactorAuthenticationSettings = await _settingService.LoadSettingAsync<MultiFactorAuthenticationSettings>(storeScope);
 
             customerSettings = model.CustomerSettings.ToSettings(customerSettings);
+
+            //we do not clear cache after each setting update.
+            //this behavior can increase performance because cached settings will not be cleared 
+            //and loaded from database after each update
+            await _settingService.SaveSettingOverridablePerStoreAsync(customerSettings, x => x.AllowPrivateMessages, model.CustomerSettings.AllowPrivateMessages_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(customerSettings, x => x.ShowAlertForPM, model.CustomerSettings.ShowAlertForPM_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(customerSettings, x => x.NotifyAboutPrivateMessages, model.CustomerSettings.NotifyAboutPrivateMessages_OverrideForStore, storeScope, false);
+
+            //now clear settings cache
+            await _settingService.ClearCacheAsync();
 
             if (customerSettings.UsernameValidationEnabled && customerSettings.UsernameValidationUseRegex)
             {

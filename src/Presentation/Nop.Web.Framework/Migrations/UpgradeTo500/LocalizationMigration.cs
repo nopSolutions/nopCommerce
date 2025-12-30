@@ -199,7 +199,15 @@ public class LocalizationMigration : MigrationBase
 
         #region Rename locales
 
-        this.RenameLocales(new Dictionary<string, string>());
+        this.RenameLocales(new Dictionary<string, string>
+        {
+            ["Admin.Configuration.Settings.Forums.AllowPrivateMessages"] = "Admin.Configuration.Settings.CustomerUser.AllowPrivateMessages",
+            ["Admin.Configuration.Settings.Forums.AllowPrivateMessages.Hint"] = "Admin.Configuration.Settings.CustomerUser.AllowPrivateMessages.Hint",
+            ["Admin.Configuration.Settings.Forums.ShowAlertForPM"] = "Admin.Configuration.Settings.Forums.ShowAlertForPM",
+            ["Admin.Configuration.Settings.Forums.ShowAlertForPM.Hint"] = "Admin.Configuration.Settings.Forums.ShowAlertForPM.Hint",
+            ["Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages"] = "Admin.Configuration.Settings.CustomerUser.NotifyAboutPrivateMessages",
+            ["Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages.Hint"] = "Admin.Configuration.Settings.CustomerUser.NotifyAboutPrivateMessages.Hint",
+        });
 
         #endregion
 

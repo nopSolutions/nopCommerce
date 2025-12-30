@@ -2921,10 +2921,10 @@ public partial class ExportManager : IExportManager
         }, _catalogSettings);
 
         List<PrivateMessage> pmList = null;
-        if (_forumSettings.AllowPrivateMessages)
+        if (_customerSettings.AllowPrivateMessages)
         {
-            pmList = (await _forumService.GetAllPrivateMessagesAsync(storeId, customer.Id, 0, null, null, null, null)).ToList();
-            pmList.AddRange((await _forumService.GetAllPrivateMessagesAsync(storeId, 0, customer.Id, null, null, null, null)).ToList());
+            pmList = (await _customerService.GetAllPrivateMessagesAsync(storeId, customer.Id, 0, null, null, null, null)).ToList();
+            pmList.AddRange((await _customerService.GetAllPrivateMessagesAsync(storeId, 0, customer.Id, null, null, null, null)).ToList());
         }
 
         //customer GDPR logs

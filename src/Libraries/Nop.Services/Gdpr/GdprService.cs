@@ -290,12 +290,12 @@ public partial class GdprService : IGdprService
             await _shoppingCartService.DeleteShoppingCartItemAsync(sci);
 
         //private messages (sent)
-        foreach (var pm in await _forumService.GetAllPrivateMessagesAsync(0, customer.Id, 0, null, null, null, null))
-            await _forumService.DeletePrivateMessageAsync(pm);
+        foreach (var pm in await _customerService.GetAllPrivateMessagesAsync(0, customer.Id, 0, null, null, null, null))
+            await _customerService.DeletePrivateMessageAsync(pm);
 
         //private messages (received)
-        foreach (var pm in await _forumService.GetAllPrivateMessagesAsync(0, 0, customer.Id, null, null, null, null))
-            await _forumService.DeletePrivateMessageAsync(pm);
+        foreach (var pm in await _customerService.GetAllPrivateMessagesAsync(0, 0, customer.Id, null, null, null, null))
+            await _customerService.DeletePrivateMessageAsync(pm);
 
         //newsletter
         var newsletters = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(customer.Email);

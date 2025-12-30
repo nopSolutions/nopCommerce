@@ -30,7 +30,6 @@ public partial class ForumService : IForumService
     protected readonly IRepository<ForumPostVote> _forumPostVoteRepository;
     protected readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
     protected readonly IRepository<ForumTopic> _forumTopicRepository;
-    protected readonly IRepository<PrivateMessage> _forumPrivateMessageRepository;
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWorkContext _workContext;
@@ -52,7 +51,6 @@ public partial class ForumService : IForumService
         IRepository<ForumPostVote> forumPostVoteRepository,
         IRepository<ForumSubscription> forumSubscriptionRepository,
         IRepository<ForumTopic> forumTopicRepository,
-        IRepository<PrivateMessage> forumPrivateMessageRepository,
         IStaticCacheManager staticCacheManager,
         IUrlRecordService urlRecordService,
         IWorkContext workContext,
@@ -70,7 +68,6 @@ public partial class ForumService : IForumService
         _forumPostVoteRepository = forumPostVoteRepository;
         _forumSubscriptionRepository = forumSubscriptionRepository;
         _forumTopicRepository = forumTopicRepository;
-        _forumPrivateMessageRepository = forumPrivateMessageRepository;
         _staticCacheManager = staticCacheManager;
         _urlRecordService = urlRecordService;
         _workContext = workContext;
@@ -757,112 +754,6 @@ public partial class ForumService : IForumService
     }
 
     /// <summary>
-    /// Deletes a private message
-    /// </summary>
-    /// <param name="privateMessage">Private message</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task DeletePrivateMessageAsync(PrivateMessage privateMessage)
-    {
-        await _forumPrivateMessageRepository.DeleteAsync(privateMessage);
-    }
-
-    /// <summary>
-    /// Gets a private message
-    /// </summary>
-    /// <param name="privateMessageId">The private message identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the private message
-    /// </returns>
-    public virtual async Task<PrivateMessage> GetPrivateMessageByIdAsync(int privateMessageId)
-    {
-        return await _forumPrivateMessageRepository.GetByIdAsync(privateMessageId, cache => default, useShortTermCache: true);
-    }
-
-    /// <summary>
-    /// Gets private messages
-    /// </summary>
-    /// <param name="storeId">The store identifier; pass 0 to load all messages</param>
-    /// <param name="fromCustomerId">The customer identifier who sent the message</param>
-    /// <param name="toCustomerId">The customer identifier who should receive the message</param>
-    /// <param name="isRead">A value indicating whether loaded messages are read. false - to load not read messages only, 1 to load read messages only, null to load all messages</param>
-    /// <param name="isDeletedByAuthor">A value indicating whether loaded messages are deleted by author. false - messages are not deleted by author, null to load all messages</param>
-    /// <param name="isDeletedByRecipient">A value indicating whether loaded messages are deleted by recipient. false - messages are not deleted by recipient, null to load all messages</param>
-    /// <param name="keywords">Keywords</param>
-    /// <param name="pageIndex">Page index</param>
-    /// <param name="pageSize">Page size</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the private messages
-    /// </returns>
-    public virtual async Task<IPagedList<PrivateMessage>> GetAllPrivateMessagesAsync(int storeId, int fromCustomerId,
-        int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
-        string keywords, int pageIndex = 0, int pageSize = int.MaxValue)
-    {
-        var privateMessages = await _forumPrivateMessageRepository.GetAllPagedAsync(query =>
-        {
-            if (storeId > 0)
-                query = query.Where(pm => storeId == pm.StoreId);
-            if (fromCustomerId > 0)
-                query = query.Where(pm => fromCustomerId == pm.FromCustomerId);
-            if (toCustomerId > 0)
-                query = query.Where(pm => toCustomerId == pm.ToCustomerId);
-            if (isRead.HasValue)
-                query = query.Where(pm => isRead.Value == pm.IsRead);
-            if (isDeletedByAuthor.HasValue)
-                query = query.Where(pm => isDeletedByAuthor.Value == pm.IsDeletedByAuthor);
-            if (isDeletedByRecipient.HasValue)
-                query = query.Where(pm => isDeletedByRecipient.Value == pm.IsDeletedByRecipient);
-            if (!string.IsNullOrEmpty(keywords))
-            {
-                query = query.Where(pm => pm.Subject.Contains(keywords));
-                query = query.Where(pm => pm.Text.Contains(keywords));
-            }
-
-            query = query.OrderByDescending(pm => pm.CreatedOnUtc);
-
-            return query;
-        }, pageIndex, pageSize);
-
-        return privateMessages;
-    }
-
-    /// <summary>
-    /// Inserts a private message
-    /// </summary>
-    /// <param name="privateMessage">Private message</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task InsertPrivateMessageAsync(PrivateMessage privateMessage)
-    {
-        await _forumPrivateMessageRepository.InsertAsync(privateMessage);
-
-        var customerTo = await _customerService.GetCustomerByIdAsync(privateMessage.ToCustomerId)
-                         ?? throw new NopException("Recipient could not be loaded");
-
-        //UI notification
-        await _genericAttributeService.SaveAttributeAsync(customerTo, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, false, privateMessage.StoreId);
-
-        //Email notification
-        if (_forumSettings.NotifyAboutPrivateMessages)
-            await _workflowMessageService.SendPrivateMessageNotificationAsync(privateMessage, (await _workContext.GetWorkingLanguageAsync()).Id);
-    }
-
-    /// <summary>
-    /// Updates the private message
-    /// </summary>
-    /// <param name="privateMessage">Private message</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task UpdatePrivateMessageAsync(PrivateMessage privateMessage)
-    {
-        ArgumentNullException.ThrowIfNull(privateMessage);
-
-        if (privateMessage.IsDeletedByAuthor && privateMessage.IsDeletedByRecipient)
-            await _forumPrivateMessageRepository.DeleteAsync(privateMessage);
-        else
-            await _forumPrivateMessageRepository.UpdateAsync(privateMessage);
-    }
-
-    /// <summary>
     /// Deletes a forum subscription
     /// </summary>
     /// <param name="forumSubscription">Forum subscription</param>
@@ -1334,23 +1225,6 @@ public partial class ForumService : IForumService
             return string.Empty;
 
         text = _htmlFormatter.FormatText(text, false, true, false, false, false, false);
-        return text;
-    }
-
-    /// <summary>
-    /// Formats the private message text
-    /// </summary>
-    /// <param name="pm">Private message</param>
-    /// <returns>Formatted text</returns>
-    public virtual string FormatPrivateMessageText(PrivateMessage pm)
-    {
-        var text = pm.Text;
-
-        if (string.IsNullOrEmpty(text))
-            return string.Empty;
-
-        text = _htmlFormatter.FormatText(text, false, true, false, true, false, false);
-
         return text;
     }
 

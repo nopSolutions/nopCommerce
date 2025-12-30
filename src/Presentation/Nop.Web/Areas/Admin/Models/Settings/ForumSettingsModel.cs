@@ -70,18 +70,6 @@ public partial record ForumSettingsModel : BaseNopModel, ISettingsModel
     public bool SignaturesEnabled { get; set; }
     public bool SignaturesEnabled_OverrideForStore { get; set; }
 
-    [NopResourceDisplayName("Admin.Configuration.Settings.Forums.AllowPrivateMessages")]
-    public bool AllowPrivateMessages { get; set; }
-    public bool AllowPrivateMessages_OverrideForStore { get; set; }
-
-    [NopResourceDisplayName("Admin.Configuration.Settings.Forums.ShowAlertForPM")]
-    public bool ShowAlertForPM { get; set; }
-    public bool ShowAlertForPM_OverrideForStore { get; set; }
-
-    [NopResourceDisplayName("Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages")]
-    public bool NotifyAboutPrivateMessages { get; set; }
-    public bool NotifyAboutPrivateMessages_OverrideForStore { get; set; }
-
     [NopResourceDisplayName("Admin.Configuration.Settings.Forums.ActiveDiscussionsFeedEnabled")]
     public bool ActiveDiscussionsFeedEnabled { get; set; }
     public bool ActiveDiscussionsFeedEnabled_OverrideForStore { get; set; }

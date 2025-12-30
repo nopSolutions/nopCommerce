@@ -1590,7 +1590,13 @@ public partial class InstallationService
             PhoneNumberValidationEnabled = false,
             PhoneNumberValidationUseRegex = false,
             PhoneNumberValidationRule = "^[0-9]{1,14}?$",
-            DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == _installationSettings.RegionInfo.ThreeLetterISORegionName)
+            DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == _installationSettings.RegionInfo.ThreeLetterISORegionName),
+            AllowPrivateMessages = false,
+            ShowAlertForPM = false,
+            PrivateMessagesPageSize = 10,
+            NotifyAboutPrivateMessages = false,
+            PMSubjectMaxLength = 450,
+            PMTextMaxLength = 4000,
         });
 
         await SaveSettingAsync(dictionary, new MultiFactorAuthenticationSettings
@@ -1909,13 +1915,7 @@ public partial class InstallationService
             ShowCustomersPostCount = true,
             ForumEditor = EditorType.MarkdownEditor,
             SignaturesEnabled = true,
-            AllowPrivateMessages = false,
-            ShowAlertForPM = false,
-            PrivateMessagesPageSize = 10,
             ForumSubscriptionsPageSize = 10,
-            NotifyAboutPrivateMessages = false,
-            PMSubjectMaxLength = 450,
-            PMTextMaxLength = 4000,
             HomepageActiveDiscussionsTopicCount = 5,
             ActiveDiscussionsFeedEnabled = false,
             ActiveDiscussionsFeedCount = 25,

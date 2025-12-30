@@ -388,7 +388,7 @@ public partial class ForumModelFactory : IForumModelFactory
                 ForumPostCount = await _genericAttributeService.GetAttributeAsync<Customer, int>(post.CustomerId, NopCustomerDefaults.ForumPostCountAttribute),
                 ShowCustomersJoinDate = _customerSettings.ShowCustomersJoinDate && !customerIsGuest,
                 CustomerJoinDate = customer?.CreatedOnUtc ?? DateTime.Now,
-                AllowPrivateMessages = _forumSettings.AllowPrivateMessages && !customerIsGuest,
+                AllowPrivateMessages = _customerSettings.AllowPrivateMessages && !customerIsGuest,
                 SignaturesEnabled = _forumSettings.SignaturesEnabled,
                 FormattedSignature = _forumService.FormatForumSignatureText(await _genericAttributeService.GetAttributeAsync<Customer, string>(post.CustomerId, NopCustomerDefaults.SignatureAttribute)),
             };

@@ -13,6 +13,7 @@ using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Common;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Customers;
@@ -27,6 +28,7 @@ public partial class CustomerService : ICustomerService
     protected readonly CustomerSettings _customerSettings;
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IGenericAttributeService _genericAttributeService;
+    protected readonly IHtmlFormatter _htmlFormatter;
     protected readonly INopDataProvider _dataProvider;
     protected readonly IRepository<Address> _customerAddressRepository;
     protected readonly IRepository<BlogComment> _blogCommentRepository;
@@ -39,6 +41,7 @@ public partial class CustomerService : ICustomerService
     protected readonly IRepository<ForumTopic> _forumTopicRepository;
     protected readonly IRepository<GenericAttribute> _gaRepository;
     protected readonly IRepository<Order> _orderRepository;
+    protected readonly IRepository<PrivateMessage> _privateMessageRepository;
     protected readonly IRepository<ProductReview> _productReviewRepository;
     protected readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
     protected readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
@@ -55,6 +58,7 @@ public partial class CustomerService : ICustomerService
     public CustomerService(CustomerSettings customerSettings,
         IEventPublisher eventPublisher,
         IGenericAttributeService genericAttributeService,
+        IHtmlFormatter htmlFormatter,
         INopDataProvider dataProvider,
         IRepository<Address> customerAddressRepository,
         IRepository<BlogComment> blogCommentRepository,
@@ -67,6 +71,7 @@ public partial class CustomerService : ICustomerService
         IRepository<ForumTopic> forumTopicRepository,
         IRepository<GenericAttribute> gaRepository,
         IRepository<Order> orderRepository,
+        IRepository<PrivateMessage> privateMessageRepository,
         IRepository<ProductReview> productReviewRepository,
         IRepository<ProductReviewHelpfulness> productReviewHelpfulnessRepository,
         IRepository<ShoppingCartItem> shoppingCartRepository,
@@ -79,6 +84,7 @@ public partial class CustomerService : ICustomerService
         _customerSettings = customerSettings;
         _eventPublisher = eventPublisher;
         _genericAttributeService = genericAttributeService;
+        _htmlFormatter = htmlFormatter;
         _dataProvider = dataProvider;
         _customerAddressRepository = customerAddressRepository;
         _blogCommentRepository = blogCommentRepository;
@@ -91,6 +97,7 @@ public partial class CustomerService : ICustomerService
         _forumTopicRepository = forumTopicRepository;
         _gaRepository = gaRepository;
         _orderRepository = orderRepository;
+        _privateMessageRepository = privateMessageRepository;
         _productReviewRepository = productReviewRepository;
         _productReviewHelpfulnessRepository = productReviewHelpfulnessRepository;
         _shoppingCartRepository = shoppingCartRepository;
@@ -794,6 +801,23 @@ public partial class CustomerService : ICustomerService
         }
 
         return fullName;
+    }
+
+    /// <summary>
+    /// Formats the private message text
+    /// </summary>
+    /// <param name="pm">Private message</param>
+    /// <returns>Formatted text</returns>
+    public virtual string FormatPrivateMessageText(PrivateMessage pm)
+    {
+        var text = pm.Text;
+
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        text = _htmlFormatter.FormatText(text, false, true, false, true, false, false);
+
+        return text;
     }
 
     /// <summary>
@@ -1662,6 +1686,106 @@ public partial class CustomerService : ICustomerService
         ArgumentNullException.ThrowIfNull(customer);
 
         return await GetCustomerAddressAsync(customer.Id, customer.ShippingAddressId ?? 0);
+    }
+
+    #endregion
+
+    #region Private messages
+
+    /// <summary>
+    /// Deletes a private message
+    /// </summary>
+    /// <param name="privateMessage">Private message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeletePrivateMessageAsync(PrivateMessage privateMessage)
+    {
+        await _privateMessageRepository.DeleteAsync(privateMessage);
+    }
+
+    /// <summary>
+    /// Gets a private message
+    /// </summary>
+    /// <param name="privateMessageId">The private message identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the private message
+    /// </returns>
+    public virtual async Task<PrivateMessage> GetPrivateMessageByIdAsync(int privateMessageId)
+    {
+        return await _privateMessageRepository.GetByIdAsync(privateMessageId, cache => default, useShortTermCache: true);
+    }
+
+    /// <summary>
+    /// Gets private messages
+    /// </summary>
+    /// <param name="storeId">The store identifier; pass 0 to load all messages</param>
+    /// <param name="fromCustomerId">The customer identifier who sent the message</param>
+    /// <param name="toCustomerId">The customer identifier who should receive the message</param>
+    /// <param name="isRead">A value indicating whether loaded messages are read. false - to load not read messages only, 1 to load read messages only, null to load all messages</param>
+    /// <param name="isDeletedByAuthor">A value indicating whether loaded messages are deleted by author. false - messages are not deleted by author, null to load all messages</param>
+    /// <param name="isDeletedByRecipient">A value indicating whether loaded messages are deleted by recipient. false - messages are not deleted by recipient, null to load all messages</param>
+    /// <param name="keywords">Keywords</param>
+    /// <param name="pageIndex">Page index</param>
+    /// <param name="pageSize">Page size</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the private messages
+    /// </returns>
+    public virtual async Task<IPagedList<PrivateMessage>> GetAllPrivateMessagesAsync(int storeId, int fromCustomerId,
+        int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
+        string keywords, int pageIndex = 0, int pageSize = int.MaxValue)
+    {
+        var privateMessages = await _privateMessageRepository.GetAllPagedAsync(query =>
+        {
+            if (storeId > 0)
+                query = query.Where(pm => storeId == pm.StoreId);
+            if (fromCustomerId > 0)
+                query = query.Where(pm => fromCustomerId == pm.FromCustomerId);
+            if (toCustomerId > 0)
+                query = query.Where(pm => toCustomerId == pm.ToCustomerId);
+            if (isRead.HasValue)
+                query = query.Where(pm => isRead.Value == pm.IsRead);
+            if (isDeletedByAuthor.HasValue)
+                query = query.Where(pm => isDeletedByAuthor.Value == pm.IsDeletedByAuthor);
+            if (isDeletedByRecipient.HasValue)
+                query = query.Where(pm => isDeletedByRecipient.Value == pm.IsDeletedByRecipient);
+            if (!string.IsNullOrEmpty(keywords))
+            {
+                query = query.Where(pm => pm.Subject.Contains(keywords));
+                query = query.Where(pm => pm.Text.Contains(keywords));
+            }
+
+            query = query.OrderByDescending(pm => pm.CreatedOnUtc);
+
+            return query;
+        }, pageIndex, pageSize);
+
+        return privateMessages;
+    }
+
+    /// <summary>
+    /// Inserts a private message
+    /// </summary>
+    /// <param name="privateMessage">Private message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertPrivateMessageAsync(PrivateMessage privateMessage)
+    {
+        await _privateMessageRepository.InsertAsync(privateMessage);
+    }
+
+    /// <summary>
+    /// Updates the private message
+    /// </summary>
+    /// <param name="privateMessage">Private message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task UpdatePrivateMessageAsync(PrivateMessage privateMessage)
+    {
+        ArgumentNullException.ThrowIfNull(privateMessage);
+
+        if (privateMessage.IsDeletedByAuthor && privateMessage.IsDeletedByRecipient)
+            await _privateMessageRepository.DeleteAsync(privateMessage);
+        else
+            await _privateMessageRepository.UpdateAsync(privateMessage);
     }
 
     #endregion
