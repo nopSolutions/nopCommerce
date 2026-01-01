@@ -159,32 +159,36 @@ public class AliExpressService : IAliExpressService
             var parameters = new Dictionary<string, string>
             {
                 ["keyWord"] = keyword,
-                ["local"] = _settings.DefaultLanguage ?? "en",
+                ["local"] = _settings.DefaultLanguage ?? "en_US",
                 ["countryCode"] = _settings.DefaultShippingCountry ?? "ZA",
                 ["currency"] = _settings.DefaultCurrency ?? "ZAR",
-                ["pageSize"] = _settings.DefaultPageSize.ToString(),
-                ["pageIndex"] = _settings.DefaultPageIndex.ToString()
+                ["pageSize"] = pageSize.ToString(),
+                ["pageIndex"] = pageNo.ToString()
             };
             
-            // Use the affiliate product search
-            var responseResult = await client.CallApiDirectly("aliexpress.ds.text.search",parameters);
-            
-            var response = ParsTextResponse(responseResult.Data);
+            // Use the dropshipper product search API - matches ConsoleHarness exactly
+            var responseResult = await client.CallApiDirectly("aliexpress.ds.text.search", parameters);
 
-            if (responseResult.Ok && response.Data.Products != null)
+            if (responseResult.Ok && responseResult.Data is { } data)
             {
-                results = response.Data.Products.Product.Select(p => new AliExpressProductSearchResultModel
+                var response = System.Text.Json.JsonSerializer.Deserialize<ProductSearchResponse>(data.GetRawText());
+                
+                if (response?.AliexpressDsTextSearchResponse?.Data?.Products?.SelectionSearchProduct != null)
                 {
-                    ProductId = p.ProductId ?? 0,
-                    ProductTitle = p.ProductTitle,
-                    ProductUrl = p.ProductMainImageUrl,
-                    ImageUrl = p.ProductMainImageUrl,
-                    OriginalPrice = p.OriginalPrice?.Amount,
-                    SalePrice = p.SalePrice?.Amount,
-                    Currency = p.SalePrice?.Currency,
-                    SalesCount = p.Volume,
-                    Rating = (decimal?)p.EvaluateRate
-                }).ToList();
+                    results = response.AliexpressDsTextSearchResponse.Data.Products.SelectionSearchProduct
+                        .Select(p => new AliExpressProductSearchResultModel
+                        {
+                            ProductId = long.TryParse(p.ItemId, out var id) ? id : 0,
+                            ProductTitle = p.Title,
+                            ProductUrl = p.ItemUrl,
+                            ImageUrl = p.ItemMainPic,
+                            OriginalPrice = decimal.TryParse(p.TargetOriginalPrice, out var origPrice) ? origPrice : null,
+                            SalePrice = decimal.TryParse(p.TargetSalePrice, out var salePrice) ? salePrice : null,
+                            Currency = p.TargetOriginalPriceCurrency,
+                            SalesCount = null, // Not directly in the response
+                            Rating = decimal.TryParse(p.Score, out var score) ? score : null
+                        }).ToList();
+                }
             }
         }
         catch (Exception ex)
@@ -202,18 +206,47 @@ public class AliExpressService : IAliExpressService
             if (!IsTokenValid() || string.IsNullOrEmpty(_settings.AccessToken))
                 return null;
 
-            // This would use the dropshipper client for detailed product info
-            // Implementation depends on the actual SDK methods available
-            await _logger.InformationAsync($"Getting product details for {productId}");
+            var client = new AEBaseClient(_settings.AppKey, _settings.AppSecret, _settings.AccessToken);
             
-            // Placeholder - implement based on actual SDK capabilities
-            return null;
+            var parameters = new Dictionary<string, string>
+            {
+                ["product_id"] = productId.ToString(),
+                ["ship_to_country"] = shipToCountry ?? _settings.DefaultShippingCountry ?? "ZA",
+                ["target_currency"] = _settings.DefaultCurrency ?? "ZAR",
+                ["target_language"] = "en"
+            };
+            
+            var result = await client.CallApiDirectly("aliexpress.ds.product.get", parameters);
+
+            if (result.Ok && result.Data is { } data)
+            {
+                var response = System.Text.Json.JsonSerializer.Deserialize<ProductDetailsResponse>(data.GetRawText());
+                
+                if (response?.AliexpressDsProductGetResponse?.Result != null)
+                {
+                    var productResult = response.AliexpressDsProductGetResponse.Result;
+                    
+                    return new AliExpressProductDetailsModel
+                    {
+                        ProductId = productId,
+                        ProductTitle = productResult.Subject,
+                        ProductUrl = $"https://www.aliexpress.com/item/{productId}.html",
+                        ImageUrls = productResult.ProductMainImageUrl != null 
+                            ? new List<string> { productResult.ProductMainImageUrl } 
+                            : new List<string>(),
+                        Description = productResult.Subject,
+                        IsAvailable = productResult.AeItemSkuInfoDtos?.AeItemSkuInfoDto?.Any() ?? false,
+                        Currency = productResult.AeItemSkuInfoDtos?.AeItemSkuInfoDto?.FirstOrDefault()?.CurrencyCode
+                    };
+                }
+            }
         }
         catch (Exception ex)
         {
             await _logger.ErrorAsync($"Error getting product details: {ex.Message}", ex);
-            return null;
         }
+        
+        return null;
     }
 
     public async Task<List<AliExpressFreightModel>> GetFreightInfoAsync(long productId, int quantity, string countryCode)
@@ -225,9 +258,73 @@ public class AliExpressService : IAliExpressService
             if (!IsTokenValid() || string.IsNullOrEmpty(_settings.AccessToken))
                 return results;
 
-            await _logger.InformationAsync($"Getting freight info for product {productId}");
+            var client = new AEBaseClient(_settings.AppKey, _settings.AppSecret, _settings.AccessToken);
+
+            // First get product details to get SKU information
+            var productParams = new Dictionary<string, string>
+            {
+                ["product_id"] = productId.ToString(),
+                ["ship_to_country"] = countryCode,
+                ["target_currency"] = _settings.DefaultCurrency ?? "ZAR",
+                ["target_language"] = "en"
+            };
             
-            // Placeholder - implement based on actual SDK capabilities
+            var productResult = await client.CallApiDirectly("aliexpress.ds.product.get", productParams);
+            string? skuId = null;
+
+            if (productResult.Ok && productResult.Data is { } productData)
+            {
+                var productResponse = System.Text.Json.JsonSerializer.Deserialize<ProductDetailsResponse>(productData.GetRawText());
+                skuId = productResponse?.AliexpressDsProductGetResponse?.Result?.AeItemSkuInfoDtos?.AeItemSkuInfoDto?.FirstOrDefault()?.SkuId;
+            }
+
+            if (string.IsNullOrEmpty(skuId))
+            {
+                await _logger.WarningAsync($"No SKU found for product {productId}, cannot get freight info");
+                return results;
+            }
+
+            // Build the freight query request matching ConsoleHarness exactly
+            var queryDeliveryReq = new
+            {
+                quantity = quantity,
+                shipToCountry = countryCode,
+                productId = productId.ToString(),
+                provinceCode = "Western Cape", // Default for South Africa
+                cityCode = "Cape Town",
+                selectedSkuId = skuId,
+                language = "en_US",
+                currency = _settings.DefaultCurrency ?? "ZAR",
+                locale = "en_US"
+            };
+            
+            var parameters = new Dictionary<string, string>
+            {
+                ["queryDeliveryReq"] = System.Text.Json.JsonSerializer.Serialize(queryDeliveryReq, new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+                })
+            };
+            
+            var result = await client.CallApiDirectly("aliexpress.ds.freight.query", parameters);
+
+            if (result.Ok && result.Data is { } data)
+            {
+                var response = System.Text.Json.JsonSerializer.Deserialize<FreightEstimationResponse>(data.GetRawText());
+                
+                if (response?.AliexpressDsFreightQueryResponse?.Result?.DeliveryOptions?.DeliveryOptionDto != null)
+                {
+                    results = response.AliexpressDsFreightQueryResponse.Result.DeliveryOptions.DeliveryOptionDto
+                        .Select(d => new AliExpressFreightModel
+                        {
+                            ServiceName = d.Code,
+                            ShippingCost = d.FreeShipping ? 0 : 0, // Free shipping doesn't provide cost
+                            Currency = _settings.DefaultCurrency ?? "ZAR",
+                            EstimatedDeliveryDays = d.MaxDeliveryDays,
+                            TrackingAvailable = d.Tracking ? "Yes" : "No"
+                        }).ToList();
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -246,7 +343,16 @@ public class AliExpressService : IAliExpressService
 
             await _logger.InformationAsync($"Creating AliExpress order for NopCommerce order {nopOrderId}");
             
-            // Placeholder - implement order creation logic
+            // Note: This is a placeholder. The actual implementation would need:
+            // 1. Get the NopCommerce order details
+            // 2. Get the product mapping (AliExpress product ID, SKU)
+            // 3. Get customer shipping address
+            // 4. Get freight estimation to get logistics service name
+            // 5. Build the order request matching the ConsoleHarness CreateOrderWorkflowCommand
+            
+            // For now, returning null to indicate not implemented yet
+            // Full implementation would follow the exact pattern from CreateOrderWorkflowCommand.cs
+            
             return null;
         }
         catch (Exception ex)
@@ -351,6 +457,7 @@ public class AliExpressService : IAliExpressService
         }
         return null;
     }
+    
     private long GetLongProperty(System.Text.Json.JsonElement element, string propertyName)
     {
         if (element.TryGetProperty(propertyName, out var property))
@@ -370,62 +477,4 @@ public class AliExpressService : IAliExpressService
         }
         return 0;
     }
-    private async Task<(bool Success, JsonElement Data)> SearchProducts(string keyword)
-    {
-        Console.WriteLine("Calling aliexpress.ds.text.search...");
-        
-        var client = new AEBaseClient(_settings.AppKey, _settings.AppSecret, _settings.AccessToken);
-        
-        var parameters = new Dictionary<string, string>
-        {
-            ["keyWord"] = keyword,
-            ["local"] = "en_US",
-            ["countryCode"] = "ZA",
-            ["currency"] = "ZAR",
-            ["pageSize"] = "10",
-            ["pageIndex"] = "1"
-        };
-        
-        var ResponseResult = await client.CallApiDirectly("aliexpress.ds.text.search", parameters);
-
-        var result = ParsTextResponse(ResponseResult.Data);
-        
-        
-        if (result.Ok && result.Data is { } data)
-        {
-            
-            Console.WriteLine("Search request succeeded.");
-            Console.WriteLine();
-            
-            return (true, data);
-        }
-
-        Console.Error.WriteLine("Search request failed.");
-        if (!string.IsNullOrWhiteSpace(result.Message))
-        {
-            Console.Error.WriteLine($"Message: {result.Message}");
-        }
-
-      
-
-        return (false, default);
-    }
-
-    private ProductSearchResponse ParsTextResponse(JsonElement responseResultData)
-    {
-        
-        return new ProductSearchResponse
-        {
-            aliexpress_ds_text_search_response = new Aliexpress_ds_text_search_response
-            {
-                code = null,
-                data = null,
-                request_id = null,
-                _trace_id_ = null
-            }
-        }
-
-    }
-
-    
 }
