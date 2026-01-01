@@ -185,7 +185,7 @@ public class AliExpressService : IAliExpressService
                             OriginalPrice = decimal.TryParse(p.TargetOriginalPrice, out var origPrice) ? origPrice : null,
                             SalePrice = decimal.TryParse(p.TargetSalePrice, out var salePrice) ? salePrice : null,
                             Currency = p.TargetOriginalPriceCurrency,
-                            SalesCount = null, // Not directly in the response
+                            SalesCount = int.TryParse(p.Orders?.TrimEnd('+'), out var orders) ? (int?)orders : null,
                             Rating = decimal.TryParse(p.Score, out var score) ? score : null
                         }).ToList();
                 }
@@ -285,13 +285,16 @@ public class AliExpressService : IAliExpressService
             }
 
             // Build the freight query request matching ConsoleHarness exactly
+            // Note: Province and city are hardcoded for South African default.
+            // In production with actual orders, these should be obtained from the
+            // customer's shipping address to get accurate freight estimates.
             var queryDeliveryReq = new
             {
                 quantity = quantity,
                 shipToCountry = countryCode,
                 productId = productId.ToString(),
-                provinceCode = "Western Cape", // Default for South Africa
-                cityCode = "Cape Town",
+                provinceCode = "Western Cape", // TODO: Get from actual shipping address in order flow
+                cityCode = "Cape Town", // TODO: Get from actual shipping address in order flow
                 selectedSkuId = skuId,
                 language = "en_US",
                 currency = _settings.DefaultCurrency ?? "ZAR",
@@ -318,7 +321,10 @@ public class AliExpressService : IAliExpressService
                         .Select(d => new AliExpressFreightModel
                         {
                             ServiceName = d.Code,
-                            ShippingCost = d.FreeShipping ? 0 : 0, // Free shipping doesn't provide cost
+                            // Note: AliExpress API doesn't provide shipping cost in the freight query response
+                            // when free_shipping is true. For paid shipping, cost would need to be calculated
+                            // separately or obtained from a different API endpoint.
+                            ShippingCost = 0,
                             Currency = _settings.DefaultCurrency ?? "ZAR",
                             EstimatedDeliveryDays = d.MaxDeliveryDays,
                             TrackingAvailable = d.Tracking ? "Yes" : "No"
