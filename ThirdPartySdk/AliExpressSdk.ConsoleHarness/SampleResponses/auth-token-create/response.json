@@ -1,0 +1,19 @@
+{
+  "refresh_token_valid_time": 1772298253000,
+  "havana_id": "408081944474",
+  "expire_time": 1769706253000,
+  "locale": "zh_CN",
+  "user_nick": "de3031747246rfzae",
+  "access_token": "50000601321tVPzeueMseWqd7cbt6PwYd123fa0fanHRpwlTXIDYnuQaOPyV7Y6oZ3LN",
+  "refresh_token": "50001600a21OZh7gApapuEazGudlsEwTd1c5c74b4eFiy4sUYlGFymXdvTCIIuzh5YY2",
+  "user_id": "4641738246",
+  "account_platform": "buyerApp",
+  "refresh_expires_in": 5184000,
+  "expires_in": 2592000,
+  "sp": "ae",
+  "seller_id": "4641738246",
+  "account": "jmvan.niekerk@gmail.com",
+  "code": "0",
+  "request_id": "2151e8f117671142529742053",
+  "_trace_id_": "2102e09d17671142529718700e77dc"
+}

@@ -1,0 +1,3 @@
+{
+  "queryDeliveryReq": "{\u0022quantity\u0022:1,\u0022shipToCountry\u0022:\u0022ZA\u0022,\u0022productId\u0022:\u00221005008839327869\u0022,\u0022provinceCode\u0022:\u0022Western Cape\u0022,\u0022cityCode\u0022:\u0022Cape Town\u0022,\u0022selectedSkuId\u0022:\u002212000046899686894\u0022,\u0022language\u0022:\u0022en_US\u0022,\u0022currency\u0022:\u0022ZAR\u0022,\u0022locale\u0022:\u0022en_US\u0022}"
+}

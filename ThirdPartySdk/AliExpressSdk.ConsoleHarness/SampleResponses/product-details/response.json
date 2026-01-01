@@ -1,0 +1,2046 @@
+{
+  "aliexpress_ds_product_get_response": {
+    "result": {
+      "ae_item_sku_info_dtos": {
+        "ae_item_sku_info_d_t_o": [
+          {
+            "sku_attr": "14:350850#white501;200000124:200000333",
+            "offer_sale_price": "396.52",
+            "sku_id": "12000046899686894",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "793.03",
+            "offer_bulk_sale_price": "396.52",
+            "sku_available_stock": 60,
+            "id": "14:350850#white501;200000124:200000333",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "35",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000333,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:200000334",
+            "offer_sale_price": "417.37",
+            "sku_id": "12000046899686895",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "834.75",
+            "offer_bulk_sale_price": "417.37",
+            "sku_available_stock": 57,
+            "id": "14:350850#white501;200000124:200000334",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "36",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000334,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:200000332",
+            "offer_sale_price": "379.43",
+            "sku_id": "12000046899686892",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "758.86",
+            "offer_bulk_sale_price": "379.43",
+            "sku_available_stock": 60,
+            "id": "14:350850#white501;200000124:200000332",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "33",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000332,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:100010481",
+            "offer_sale_price": "379.43",
+            "sku_id": "12000046899686893",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "758.86",
+            "offer_bulk_sale_price": "379.43",
+            "sku_available_stock": 60,
+            "id": "14:350850#white501;200000124:100010481",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "34",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010481,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:200001014",
+            "offer_sale_price": "379.43",
+            "sku_id": "12000046899686890",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "758.86",
+            "offer_bulk_sale_price": "379.43",
+            "sku_available_stock": 60,
+            "id": "14:350850#white501;200000124:200001014",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "31",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200001014,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:200000331",
+            "offer_sale_price": "379.43",
+            "sku_id": "12000046899686891",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "758.86",
+            "offer_bulk_sale_price": "379.43",
+            "sku_available_stock": 60,
+            "id": "14:350850#white501;200000124:200000331",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "32",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000331,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:3116",
+            "offer_sale_price": "498.68",
+            "sku_id": "12000046899686888",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "997.35",
+            "offer_bulk_sale_price": "498.68",
+            "sku_available_stock": 53,
+            "id": "14:100018786#black501;200000124:3116",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "45",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 3116,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:200000899",
+            "offer_sale_price": "504.96",
+            "sku_id": "12000046899686889",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "1009.91",
+            "offer_bulk_sale_price": "504.96",
+            "sku_available_stock": 57,
+            "id": "14:100018786#black501;200000124:200000899",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "46",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000899,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:200000338",
+            "offer_sale_price": "476.16",
+            "sku_id": "12000046899686886",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "952.32",
+            "offer_bulk_sale_price": "476.16",
+            "sku_available_stock": 53,
+            "id": "14:100018786#black501;200000124:200000338",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "43",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000338,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:100010487",
+            "offer_sale_price": "492.02",
+            "sku_id": "12000046899686887",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "984.04",
+            "offer_bulk_sale_price": "492.02",
+            "sku_available_stock": 46,
+            "id": "14:100018786#black501;200000124:100010487",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "44",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010487,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:100010483",
+            "offer_sale_price": "463.26",
+            "sku_id": "12000046899686884",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "926.51",
+            "offer_bulk_sale_price": "463.26",
+            "sku_available_stock": 58,
+            "id": "14:100018786#black501;200000124:100010483",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "41",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010483,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:200000337",
+            "offer_sale_price": "471.56",
+            "sku_id": "12000046899686885",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "943.12",
+            "offer_bulk_sale_price": "471.56",
+            "sku_available_stock": 59,
+            "id": "14:100018786#black501;200000124:200000337",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "42",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000337,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:200000364",
+            "offer_sale_price": "438.64",
+            "sku_id": "12000046899686882",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "877.28",
+            "offer_bulk_sale_price": "438.64",
+            "sku_available_stock": 57,
+            "id": "14:100018786#black501;200000124:200000364",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "39",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000364,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:100013888",
+            "offer_sale_price": "453.22",
+            "sku_id": "12000046899686883",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "906.44",
+            "offer_bulk_sale_price": "453.22",
+            "sku_available_stock": 57,
+            "id": "14:100018786#black501;200000124:100013888",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "40",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100013888,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:100010482",
+            "offer_sale_price": "425.30",
+            "sku_id": "12000046899686880",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "850.61",
+            "offer_bulk_sale_price": "425.30",
+            "sku_available_stock": 59,
+            "id": "14:100018786#black501;200000124:100010482",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "37",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010482,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:200000898",
+            "offer_sale_price": "433.61",
+            "sku_id": "12000046899686881",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "867.22",
+            "offer_bulk_sale_price": "433.61",
+            "sku_available_stock": 57,
+            "id": "14:100018786#black501;200000124:200000898",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "38",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000898,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:3116",
+            "offer_sale_price": "500.77",
+            "sku_id": "12000046899686904",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "1001.55",
+            "offer_bulk_sale_price": "500.77",
+            "sku_available_stock": 56,
+            "id": "14:350850#white501;200000124:3116",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "45",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 3116,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:200000899",
+            "offer_sale_price": "508.28",
+            "sku_id": "12000046899686905",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "1016.56",
+            "offer_bulk_sale_price": "508.28",
+            "sku_available_stock": 56,
+            "id": "14:350850#white501;200000124:200000899",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "46",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000899,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:200000338",
+            "offer_sale_price": "479.92",
+            "sku_id": "12000046899686902",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "959.83",
+            "offer_bulk_sale_price": "479.92",
+            "sku_available_stock": 58,
+            "id": "14:350850#white501;200000124:200000338",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "43",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000338,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:100010487",
+            "offer_sale_price": "503.27",
+            "sku_id": "12000046899686903",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "1006.55",
+            "offer_bulk_sale_price": "503.27",
+            "sku_available_stock": 58,
+            "id": "14:350850#white501;200000124:100010487",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "44",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010487,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:100010483",
+            "offer_sale_price": "464.06",
+            "sku_id": "12000046899686900",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "928.11",
+            "offer_bulk_sale_price": "464.06",
+            "sku_available_stock": 59,
+            "id": "14:350850#white501;200000124:100010483",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "41",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010483,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:200000337",
+            "offer_sale_price": "467.40",
+            "sku_id": "12000046899686901",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "934.81",
+            "offer_bulk_sale_price": "467.40",
+            "sku_available_stock": 55,
+            "id": "14:350850#white501;200000124:200000337",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "42",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000337,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:200000364",
+            "offer_sale_price": "448.25",
+            "sku_id": "12000046899686898",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "896.49",
+            "offer_bulk_sale_price": "448.25",
+            "sku_available_stock": 60,
+            "id": "14:350850#white501;200000124:200000364",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "39",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000364,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:100013888",
+            "offer_sale_price": "456.55",
+            "sku_id": "12000046899686899",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "913.10",
+            "offer_bulk_sale_price": "456.55",
+            "sku_available_stock": 59,
+            "id": "14:350850#white501;200000124:100013888",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "40",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100013888,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:100010482",
+            "offer_sale_price": "440.74",
+            "sku_id": "12000046899686896",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "881.48",
+            "offer_bulk_sale_price": "440.74",
+            "sku_available_stock": 57,
+            "id": "14:350850#white501;200000124:100010482",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "37",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010482,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:350850#white501;200000124:200000898",
+            "offer_sale_price": "446.15",
+            "sku_id": "12000046899686897",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "892.29",
+            "offer_bulk_sale_price": "446.15",
+            "sku_available_stock": 57,
+            "id": "14:350850#white501;200000124:200000898",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Gold",
+                  "sku_image": "https://ae01.alicdn.com/kf/S8db49f0af5c1478f9ddbede428017ecds.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white501",
+                  "property_value_id": 350850,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "38",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000898,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:200000333",
+            "offer_sale_price": "344.80",
+            "sku_id": "12000046899686862",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "689.61",
+            "offer_bulk_sale_price": "344.80",
+            "sku_available_stock": 41,
+            "id": "14:365458#black;200000124:200000333",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "35",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000333,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:200000334",
+            "offer_sale_price": "344.80",
+            "sku_id": "12000046899686863",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "689.61",
+            "offer_bulk_sale_price": "344.80",
+            "sku_available_stock": 40,
+            "id": "14:365458#black;200000124:200000334",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "36",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000334,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:200000332",
+            "offer_sale_price": "336.87",
+            "sku_id": "12000046899686860",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "673.75",
+            "offer_bulk_sale_price": "336.87",
+            "sku_available_stock": 35,
+            "id": "14:365458#black;200000124:200000332",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "33",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000332,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:100010481",
+            "offer_sale_price": "343.98",
+            "sku_id": "12000046899686861",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "687.96",
+            "offer_bulk_sale_price": "343.98",
+            "sku_available_stock": 38,
+            "id": "14:365458#black;200000124:100010481",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "34",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010481,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:200001014",
+            "offer_sale_price": "310.18",
+            "sku_id": "12000046899686858",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "620.37",
+            "offer_bulk_sale_price": "310.18",
+            "sku_available_stock": 45,
+            "id": "14:365458#black;200000124:200001014",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "31",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200001014,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:200000331",
+            "offer_sale_price": "318.54",
+            "sku_id": "12000046899686859",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "637.08",
+            "offer_bulk_sale_price": "318.54",
+            "sku_available_stock": 49,
+            "id": "14:365458#black;200000124:200000331",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "32",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000331,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:3116",
+            "offer_sale_price": "437.36",
+            "sku_id": "12000046899686856",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "874.72",
+            "offer_bulk_sale_price": "437.36",
+            "sku_available_stock": 24,
+            "id": "14:1254#white;200000124:3116",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "45",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 3116,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:200000899",
+            "offer_sale_price": "426.95",
+            "sku_id": "12000046899686857",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "853.91",
+            "offer_bulk_sale_price": "426.95",
+            "sku_available_stock": 41,
+            "id": "14:1254#white;200000124:200000899",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "46",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000899,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:200000338",
+            "offer_sale_price": "404.01",
+            "sku_id": "12000046899686854",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "808.03",
+            "offer_bulk_sale_price": "404.01",
+            "sku_available_stock": 21,
+            "id": "14:1254#white;200000124:200000338",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "43",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000338,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:100010487",
+            "offer_sale_price": "421.98",
+            "sku_id": "12000046899686855",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "843.96",
+            "offer_bulk_sale_price": "421.98",
+            "sku_available_stock": 27,
+            "id": "14:1254#white;200000124:100010487",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "44",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010487,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:100010483",
+            "offer_sale_price": "383.18",
+            "sku_id": "12000046899686852",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "766.36",
+            "offer_bulk_sale_price": "383.18",
+            "sku_available_stock": 38,
+            "id": "14:1254#white;200000124:100010483",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "41",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010483,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:200000337",
+            "offer_sale_price": "389.44",
+            "sku_id": "12000046899686853",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "778.87",
+            "offer_bulk_sale_price": "389.44",
+            "sku_available_stock": 18,
+            "id": "14:1254#white;200000124:200000337",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "42",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000337,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:200000364",
+            "offer_sale_price": "372.35",
+            "sku_id": "12000046899686850",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "744.70",
+            "offer_bulk_sale_price": "372.35",
+            "sku_available_stock": 25,
+            "id": "14:1254#white;200000124:200000364",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "39",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000364,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:100013888",
+            "offer_sale_price": "378.17",
+            "sku_id": "12000046899686851",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "756.35",
+            "offer_bulk_sale_price": "378.17",
+            "sku_available_stock": 46,
+            "id": "14:1254#white;200000124:100013888",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "40",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100013888,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:100010482",
+            "offer_sale_price": "357.72",
+            "sku_id": "12000046899686848",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "715.43",
+            "offer_bulk_sale_price": "357.72",
+            "sku_available_stock": 40,
+            "id": "14:1254#white;200000124:100010482",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "37",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010482,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:200000898",
+            "offer_sale_price": "371.50",
+            "sku_id": "12000046899686849",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "743.00",
+            "offer_bulk_sale_price": "371.50",
+            "sku_available_stock": 27,
+            "id": "14:1254#white;200000124:200000898",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "38",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000898,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:200000333",
+            "offer_sale_price": "415.28",
+            "sku_id": "12000046899686878",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "830.55",
+            "offer_bulk_sale_price": "415.28",
+            "sku_available_stock": 59,
+            "id": "14:100018786#black501;200000124:200000333",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "35",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000333,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:200000334",
+            "offer_sale_price": "410.29",
+            "sku_id": "12000046899686879",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "820.59",
+            "offer_bulk_sale_price": "410.29",
+            "sku_available_stock": 60,
+            "id": "14:100018786#black501;200000124:200000334",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "36",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000334,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:200000332",
+            "offer_sale_price": "379.43",
+            "sku_id": "12000046899686876",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "758.86",
+            "offer_bulk_sale_price": "379.43",
+            "sku_available_stock": 60,
+            "id": "14:100018786#black501;200000124:200000332",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "33",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000332,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:100010481",
+            "offer_sale_price": "390.26",
+            "sku_id": "12000046899686877",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "780.52",
+            "offer_bulk_sale_price": "390.26",
+            "sku_available_stock": 59,
+            "id": "14:100018786#black501;200000124:100010481",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "34",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010481,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:200001014",
+            "offer_sale_price": "382.76",
+            "sku_id": "12000046899686874",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "765.51",
+            "offer_bulk_sale_price": "382.76",
+            "sku_available_stock": 59,
+            "id": "14:100018786#black501;200000124:200001014",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "31",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200001014,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:100018786#black501;200000124:200000331",
+            "offer_sale_price": "379.43",
+            "sku_id": "12000046899686875",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "758.86",
+            "offer_bulk_sale_price": "379.43",
+            "sku_available_stock": 60,
+            "id": "14:100018786#black501;200000124:200000331",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Clear",
+                  "sku_image": "https://ae01.alicdn.com/kf/S609bb6fcb1104346b7c3bf558fe88c01c.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black501",
+                  "property_value_id": 100018786,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "32",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000331,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:3116",
+            "offer_sale_price": "411.52",
+            "sku_id": "12000046899686872",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "823.04",
+            "offer_bulk_sale_price": "411.52",
+            "sku_available_stock": 15,
+            "id": "14:365458#black;200000124:3116",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "45",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 3116,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:200000899",
+            "offer_sale_price": "416.53",
+            "sku_id": "12000046899686873",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "833.05",
+            "offer_bulk_sale_price": "416.53",
+            "sku_available_stock": 18,
+            "id": "14:365458#black;200000124:200000899",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "46",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000899,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:200000338",
+            "offer_sale_price": "404.87",
+            "sku_id": "12000046899686870",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "809.74",
+            "offer_bulk_sale_price": "404.87",
+            "sku_available_stock": 21,
+            "id": "14:365458#black;200000124:200000338",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "43",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000338,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:100010487",
+            "offer_sale_price": "409.44",
+            "sku_id": "12000046899686871",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "818.89",
+            "offer_bulk_sale_price": "409.44",
+            "sku_available_stock": 30,
+            "id": "14:365458#black;200000124:100010487",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "44",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010487,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:100010483",
+            "offer_sale_price": "376.10",
+            "sku_id": "12000046899686868",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "752.20",
+            "offer_bulk_sale_price": "376.10",
+            "sku_available_stock": 16,
+            "id": "14:365458#black;200000124:100010483",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "41",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010483,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:200000337",
+            "offer_sale_price": "391.91",
+            "sku_id": "12000046899686869",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "783.82",
+            "offer_bulk_sale_price": "391.91",
+            "sku_available_stock": 15,
+            "id": "14:365458#black;200000124:200000337",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "42",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000337,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:200000364",
+            "offer_sale_price": "373.15",
+            "sku_id": "12000046899686866",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "746.30",
+            "offer_bulk_sale_price": "373.15",
+            "sku_available_stock": 28,
+            "id": "14:365458#black;200000124:200000364",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "39",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000364,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:100013888",
+            "offer_sale_price": "386.08",
+            "sku_id": "12000046899686867",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "772.16",
+            "offer_bulk_sale_price": "386.08",
+            "sku_available_stock": 29,
+            "id": "14:365458#black;200000124:100013888",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "40",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100013888,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:100010482",
+            "offer_sale_price": "364.00",
+            "sku_id": "12000046899686864",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "727.99",
+            "offer_bulk_sale_price": "364.00",
+            "sku_available_stock": 31,
+            "id": "14:365458#black;200000124:100010482",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "37",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010482,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:365458#black;200000124:200000898",
+            "offer_sale_price": "360.24",
+            "sku_id": "12000046899686865",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "720.48",
+            "offer_bulk_sale_price": "360.24",
+            "sku_available_stock": 21,
+            "id": "14:365458#black;200000124:200000898",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "Brown",
+                  "sku_image": "https://ae01.alicdn.com/kf/S712be0cb9ed84dfeaceedf0a3a08c04fo.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "black",
+                  "property_value_id": 365458,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "38",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000898,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:200000333",
+            "offer_sale_price": "335.62",
+            "sku_id": "12000046899686846",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "671.25",
+            "offer_bulk_sale_price": "335.62",
+            "sku_available_stock": 43,
+            "id": "14:1254#white;200000124:200000333",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "35",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000333,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:200000334",
+            "offer_sale_price": "353.16",
+            "sku_id": "12000046899686847",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "706.32",
+            "offer_bulk_sale_price": "353.16",
+            "sku_available_stock": 50,
+            "id": "14:1254#white;200000124:200000334",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "36",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000334,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:200000332",
+            "offer_sale_price": "340.63",
+            "sku_id": "12000046899686844",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "681.26",
+            "offer_bulk_sale_price": "340.63",
+            "sku_available_stock": 51,
+            "id": "14:1254#white;200000124:200000332",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "33",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000332,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:100010481",
+            "offer_sale_price": "333.55",
+            "sku_id": "12000046899686845",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "667.10",
+            "offer_bulk_sale_price": "333.55",
+            "sku_available_stock": 49,
+            "id": "14:1254#white;200000124:100010481",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "34",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 100010481,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:200001014",
+            "offer_sale_price": "326.47",
+            "sku_id": "12000046899686842",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "652.94",
+            "offer_bulk_sale_price": "326.47",
+            "sku_available_stock": 45,
+            "id": "14:1254#white;200000124:200001014",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "31",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200001014,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          },
+          {
+            "sku_attr": "14:1254#white;200000124:200000331",
+            "offer_sale_price": "329.80",
+            "sku_id": "12000046899686843",
+            "price_include_tax": false,
+            "currency_code": "ZAR",
+            "sku_price": "659.60",
+            "offer_bulk_sale_price": "329.80",
+            "sku_available_stock": 51,
+            "id": "14:1254#white;200000124:200000331",
+            "ae_sku_property_dtos": {
+              "ae_sku_property_d_t_o": [
+                {
+                  "sku_property_value": "SKY BLUE",
+                  "sku_image": "https://ae01.alicdn.com/kf/Sbb01886cc9e9428eaca309809f04e85az.jpg",
+                  "sku_property_name": "Color",
+                  "property_value_definition_name": "white",
+                  "property_value_id": 1254,
+                  "sku_property_id": 14
+                },
+                {
+                  "sku_property_value": "32",
+                  "sku_property_name": "Shoe Size",
+                  "property_value_id": 200000331,
+                  "sku_property_id": 200000124
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "ae_multimedia_info_dto": {
+        "image_urls": "https://ae01.alicdn.com/kf/S40f7ae6e8d0d4068be90ab91eed33083F.jpg;https://ae01.alicdn.com/kf/S5339b67a3b534b279be0b3a279be54daJ.jpg;https://ae01.alicdn.com/kf/S4ae4d00caf10425bb96197a590077a60X.jpg;https://ae01.alicdn.com/kf/S16462b00b4714e3fa743bc6e90eee255v.jpg;https://ae01.alicdn.com/kf/S33287857f1bc43959074caa55bfd7369d.jpg;https://ae01.alicdn.com/kf/S50111b04b3aa42e798e0b554d397da66q.jpg"
+      },
+      "package_info_dto": {
+        "package_width": 10,
+        "package_height": 10,
+        "package_length": 28,
+        "gross_weight": "0.453",
+        "package_type": false,
+        "product_unit": 100000013
+      },
+      "logistics_info_dto": {
+        "delivery_time": 7,
+        "ship_to_country": "ZA"
+      },
+      "product_id_converter_result": {
+        "main_product_id": 1005008839327869,
+        "sub_product_id": "{\u0022US\u0022:3256808653013117}"
+      },
+      "ae_item_base_info_dto": {
+        "mobile_detail": "{\u0022version\u0022:\u00222.0.0\u0022}",
+        "subject": "Kung Fu Karate Footwear Sports Training Sneakers Kung Fu Wushu Shoes Martial Arts Tai Chi Taekwondo Chinese Shoes Wushu Mujer",
+        "evaluation_count": "68",
+        "sales_count": "500\u002B",
+        "product_status_type": "onSelling",
+        "avg_evaluation_rating": "4.8",
+        "separated_listing": false,
+        "currency_code": "CNY",
+        "category_id": 200000965,
+        "product_id": 1005008839327869,
+        "detail": "\u003Cdiv class=\u0022detailmodule_html\u0022\u003E\u003Cdiv class=\u0022detail-desc-decorate-richtext\u0022\u003E\u003Cdiv id=\u0022offer-template-0\u0022\u003E\n\u003Cdiv\u003E\n\u003Cdiv\u003E\n\u003Cdiv\u003E\n\u003Cdiv\u003E\u003Ckse:widget data-widget-type=\u0022customText\u0022 id=\u00221005000001160946\u0022 type=\u0022relation\u0022\u003E\u003C/kse:widget\u003E\u003C/div\u003E\n\u003C/div\u003E\n\u003C/div\u003E\n\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cbr /\u003E\n\u003Cspan style=\u0022font-size:22pt\u0022\u003E28 Suitable for foot length 19cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E29 Suitable for foot length 19.5 cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E20 Suitable for foot length 20cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E31 Suitable for foot length 20.5 cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E32 Suitable for foot length 21 cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E33 Suitable for foot length 21.5 cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E34 Suitable for foot length 22cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E35 Suitable for foot length 22.5 cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E36 Suitable for foot length 23cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E37 Suitable for foot length 23.5 cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E38 Suitable for foot length 24cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E39 Suitable for foot length 24.5 cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E40 Suitable for foot length 25 cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E41 Suitable for foot length 25.5 cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E42 Suitable for foot length 26cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E43 Suitable for foot length 26.5 cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E44 Suitable for foot length 27cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E45 Suitable for foot length 27.5cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E46 Suitable for foot length 28cm\u003C/span\u003E\u003C/div\u003E\n\n\u003Cp align=\u0022left\u0022 style=\u0022text-align:left;margin:0px;margin-bottom:0px;margin-top:0px;margin-left:0px;margin-right:0px\u0022\u003E\u003Cimg referrerpolicy=\u0022no-referrer\u0022 slate-data-type=\u0022image\u0022 src=\u0022https://ae01.alicdn.com/kf/Sa34d080c046541f5864360bc898d6e90l.jpg\u0022 /\u003E\u003C/p\u003E\n\n\u003Cdiv\u003E\u003Cspan style=\u0022font-size:22pt\u0022\u003E\u003C/span\u003E\u003C/div\u003E\n\u003C/div\u003E\n\n\u003Cp\u003E\u0026nbsp;\u003C/p\u003E\n\u003C/div\u003E\u003C/div\u003E\r\n"
+      },
+      "has_whole_sale": false,
+      "ae_item_properties": {
+        "ae_item_property": [
+          {
+            "attr_name_id": 2,
+            "attr_value_id": 3117476056,
+            "attr_name": "Brand Name",
+            "attr_value": "GIOIO"
+          },
+          {
+            "attr_name_id": 400024206,
+            "attr_value_id": 668558552,
+            "attr_name": "Upper fixing method",
+            "attr_value": "sticking"
+          },
+          {
+            "attr_name_id": 219,
+            "attr_value_id": 9441741844,
+            "attr_name": "Origin",
+            "attr_value": "Mainland China"
+          },
+          {
+            "attr_name_id": 266081643,
+            "attr_value_id": 100015203,
+            "attr_name": "CN",
+            "attr_value": "Zhejiang"
+          },
+          {
+            "attr_name_id": 400029209,
+            "attr_value_id": 23399554847,
+            "attr_name": "Whether waterproof",
+            "attr_value": "No"
+          },
+          {
+            "attr_name_id": 400028612,
+            "attr_value_id": 23399554847,
+            "attr_name": "Whether with metal toe cap",
+            "attr_value": "No"
+          },
+          {
+            "attr_name_id": 10,
+            "attr_value_id": 47,
+            "attr_name": "Material",
+            "attr_value": "COTTON"
+          },
+          {
+            "attr_name_id": 400028614,
+            "attr_value_id": 23399591357,
+            "attr_name": "With or install Professional accessories ",
+            "attr_value": "None"
+          },
+          {
+            "attr_name_id": 284,
+            "attr_value_id": 493,
+            "attr_name": "Gender",
+            "attr_value": "Men"
+          },
+          {
+            "attr_name_id": 400028201,
+            "attr_value_id": 1982300828,
+            "attr_name": "Upper coverage",
+            "attr_value": "Not above ankle"
+          },
+          {
+            "attr_name_id": 200000043,
+            "attr_value_id": 1882,
+            "attr_name": "Department Name",
+            "attr_value": "Unisex"
+          },
+          {
+            "attr_name_id": 200001154,
+            "attr_value_id": 200002408,
+            "attr_name": "Outsole Material",
+            "attr_value": "Cow Muscle"
+          },
+          {
+            "attr_name_id": 20698,
+            "attr_value_id": 529,
+            "attr_name": "Upper Material",
+            "attr_value": "CANVAS"
+          },
+          {
+            "attr_name_id": 400000603,
+            "attr_value_id": 23399591357,
+            "attr_name": "High-concerned chemical",
+            "attr_value": "None"
+          },
+          {
+            "attr_name_id": 200241261,
+            "attr_value_id": 6149,
+            "attr_name": "Level Of Practice",
+            "attr_value": "Professional"
+          },
+          {
+            "attr_name_id": 100002013,
+            "attr_value_id": 6209,
+            "attr_name": "Feature",
+            "attr_value": "Breathable"
+          },
+          {
+            "attr_name_id": 200000126,
+            "attr_value_id": 200000307,
+            "attr_name": "Shoe Width",
+            "attr_value": "Medium(B,M)"
+          },
+          {
+            "attr_name_id": 20700,
+            "attr_value_id": 395,
+            "attr_name": "Insole Material",
+            "attr_value": "EVA"
+          },
+          {
+            "attr_name_id": 200044261,
+            "attr_value_id": 201632808,
+            "attr_name": "Fit",
+            "attr_value": "True to Size"
+          },
+          {
+            "attr_name_id": 200000874,
+            "attr_value_id": 200004350,
+            "attr_name": "Applicable Place",
+            "attr_value": "Concrete Floor"
+          },
+          {
+            "attr_name_id": 3,
+            "attr_value_id": -1,
+            "attr_name": "Model Number",
+            "attr_value": "WF240121"
+          },
+          {
+            "attr_name_id": -1,
+            "attr_name": "Choice",
+            "attr_value": "yes"
+          }
+        ]
+      },
+      "ae_store_info": {
+        "store_id": 1104705634,
+        "shipping_speed_rating": "4.7",
+        "communication_rating": "4.6",
+        "store_name": "Football Store",
+        "store_country_code": "CN",
+        "item_as_described_rating": "4.6"
+      }
+    },
+    "rsp_code": 200,
+    "rsp_msg": "Call succeeds",
+    "request_id": "213ba8d017671293393338994",
+    "_trace_id_": "2101364017671293393327343e53ad"
+  }
+}

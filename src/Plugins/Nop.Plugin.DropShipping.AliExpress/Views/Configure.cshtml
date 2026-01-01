@@ -1,0 +1,366 @@
+@model ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<style>
+    .aliexpress-section {
+        background: #fff;
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .aliexpress-section h3 {
+        display: flex;
+        align-items: center;
+        color: #333;
+        margin-bottom: 16px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .aliexpress-section h3 .material-icons {
+        margin-right: 8px;
+        color: #FF6A00;
+    }
+    .token-status {
+        padding: 12px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+    }
+    .token-status.valid {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+    }
+    .token-status.invalid {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+    }
+    .token-status .material-icons {
+        margin-right: 8px;
+    }
+    .auth-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 20px;
+        background: #FF6A00;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .auth-button:hover {
+        background: #E05A00;
+        color: #fff;
+    }
+    .auth-button .material-icons {
+        margin-right: 8px;
+    }
+    .info-box {
+        background: #e7f3ff;
+        border-left: 4px solid #2196F3;
+        padding: 12px;
+        margin-bottom: 16px;
+        border-radius: 4px;
+    }
+    .info-box .material-icons {
+        vertical-align: middle;
+        margin-right: 8px;
+        color: #2196F3;
+    }
+</style>
+
+<form asp-controller="AliExpress" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <!-- Authentication Section -->
+        <div class="card card-default">
+            <div class="card-body">
+                <div class="aliexpress-section">
+                    <h3>
+                        <span class="material-icons">vpn_key</span>
+                        Authentication Settings
+                    </h3>
+
+                    @if (Model.IsTokenValid)
+                    {
+                        <div class="token-status valid">
+                            <span class="material-icons">check_circle</span>
+                            <span>Access token is valid. Expires: @Model.AccessTokenExpiresOnUtc?.ToString("yyyy-MM-dd HH:mm") UTC</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="token-status invalid">
+                            <span class="material-icons">error</span>
+                            <span>Access token is invalid or expired. Please authorize the application.</span>
+                        </div>
+                    }
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AppKey" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AppKey" />
+                            <span asp-validation-for="AppKey"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AppSecret" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AppSecret" asp-password="true" />
+                            <span asp-validation-for="AppSecret"></span>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.AuthorizationUrl))
+                    {
+                        <div class="info-box">
+                            <span class="material-icons">info</span>
+                            <strong>Authorization Steps:</strong>
+                            <ol style="margin: 8px 0 0 32px; padding: 0;">
+                                <li>Click the "Authorize with AliExpress" button below</li>
+                                <li>Sign in to your AliExpress developer account</li>
+                                <li>Approve the authorization request</li>
+                                <li>Copy the authorization code from the redirect URL</li>
+                                <li>Paste it in the field below and click "Exchange Code for Token"</li>
+                            </ol>
+                        </div>
+
+                        <div style="margin-bottom: 16px;">
+                            <a href="@Model.AuthorizationUrl" target="_blank" class="auth-button">
+                                <span class="material-icons">launch</span>
+                                Authorize with AliExpress
+                            </a>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <label>Authorization Code</label>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <input type="text" id="authCode" class="form-control" placeholder="Paste authorization code here" />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary" onclick="exchangeAuthCode()">
+                                            <span class="material-icons" style="font-size: 18px; vertical-align: middle;">swap_horiz</span>
+                                            Exchange Code
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.IsTokenValid)
+                    {
+                        <div style="margin-top: 16px;">
+                            <button type="button" class="btn btn-secondary" onclick="refreshToken()">
+                                <span class="material-icons" style="font-size: 18px; vertical-align: middle;">refresh</span>
+                                Refresh Token Now
+                            </button>
+                        </div>
+                    }
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="TokenRefreshDaysBeforeExpiry" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="TokenRefreshDaysBeforeExpiry" />
+                            <span asp-validation-for="TokenRefreshDaysBeforeExpiry"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing Settings -->
+                <div class="aliexpress-section">
+                    <h3>
+                        <span class="material-icons">attach_money</span>
+                        Pricing & Calculation Settings
+                    </h3>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DefaultMarginPercentage" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DefaultMarginPercentage" />
+                            <span asp-validation-for="DefaultMarginPercentage"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="VatPercentage" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="VatPercentage" />
+                            <span asp-validation-for="VatPercentage"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CustomsDutyPercentage" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="CustomsDutyPercentage" />
+                            <span asp-validation-for="CustomsDutyPercentage"></span>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <span class="material-icons">calculate</span>
+                        <strong>Price Calculation Formula:</strong><br/>
+                        Final Price = ((Product Price + Shipping) × (1 + Customs Duty %) + VAT) × (1 + Margin %)
+                    </div>
+                </div>
+
+                <!-- Regional Settings -->
+                <div class="aliexpress-section">
+                    <h3>
+                        <span class="material-icons">public</span>
+                        Regional Settings
+                    </h3>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DefaultShippingCountry" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DefaultShippingCountry" />
+                            <span asp-validation-for="DefaultShippingCountry"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DefaultCurrency" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DefaultCurrency" />
+                            <span asp-validation-for="DefaultCurrency"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Automation Settings -->
+                <div class="aliexpress-section">
+                    <h3>
+                        <span class="material-icons">settings_suggest</span>
+                        Automation Settings
+                    </h3>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="EnableDailySync" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="EnableDailySync" />
+                            <span asp-validation-for="EnableDailySync"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DailySyncHour" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DailySyncHour" />
+                            <span asp-validation-for="DailySyncHour"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AutoCreateOrders" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AutoCreateOrders" />
+                            <span asp-validation-for="AutoCreateOrders"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AutoCreateLocalShipments" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AutoCreateLocalShipments" />
+                            <span asp-validation-for="AutoCreateLocalShipments"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="UseSandbox" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="UseSandbox" />
+                            <span asp-validation-for="UseSandbox"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <button type="submit" name="save" class="btn btn-primary">
+                        <span class="material-icons" style="font-size: 18px; vertical-align: middle;">save</span>
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    function exchangeAuthCode() {
+        var authCode = document.getElementById('authCode').value;
+        if (!authCode) {
+            alert('Please enter an authorization code');
+            return;
+        }
+
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '@Url.Action("ExchangeAuthCode", "AliExpress")';
+
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'authCode';
+        input.value = authCode;
+        form.appendChild(input);
+
+        var antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]').cloneNode();
+        form.appendChild(antiForgeryToken);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function refreshToken() {
+        if (confirm('Are you sure you want to refresh the access token now?')) {
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '@Url.Action("RefreshToken", "AliExpress")';
+
+            var antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]').cloneNode();
+            form.appendChild(antiForgeryToken);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>

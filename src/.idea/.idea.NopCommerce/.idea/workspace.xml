@@ -8,7 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="532d8e50-0d93-4165-a6fa-648fa1390b40" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Presentation/Nop.Web/Themes/KungFu/Content/topics/HomePageText/HomePageText.css" beforeDir="false" afterPath="$PROJECT_DIR$/Presentation/Nop.Web/Themes/KungFu/Content/topics/HomePageText/HomePageText.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Services/AuthenticationHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NopCommerce.sln" beforeDir="false" afterPath="$PROJECT_DIR$/NopCommerce.sln" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +26,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="jm/some-kung-fu-updates" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -38,6 +45,14 @@
     &quot;accountId&quot;: &quot;1302f6a1-ae58-4d05-bec7-695fed8ea22b&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/db1e35637ac541a28e9ab4e980a7939f37000/7f/ba3f22b3/RazorPage.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dd2b23956d324244aeba8e805a569abe5c00/31/b0b67fc3/AEBaseClient.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dd2b23956d324244aeba8e805a569abe5c00/68/7584d2a4/SignatureService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/cd856ab0648a6edbcf5e9ac9734c94fdb4487775fb823f1e3e32bf308d62ec33/RazorPage.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/.nuget/NuGet/NuGet.Config" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Services/AuthenticationHandler.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -61,7 +76,7 @@
     &quot;disable.download.node.interpreter.editor.notification&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/jvanniekerk/RiderProjects/online-store/src/Plugins/Nop.Plugin.Shipping.CourierGuy/Nop.Plugin.Shipping.CourierGuy.csproj&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/jvanniekerk/RiderProjects/03-DeveloperJohn/online-store/src/Plugins/Nop.Plugin.DropShipping.AliExpress/Nop.Plugin.DropShipping.AliExpress.csproj&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -107,6 +122,7 @@
       <updated>1764536496017</updated>
       <workItem from="1764536498941" duration="2195000" />
       <workItem from="1765102999887" duration="5527000" />
+      <workItem from="1767283124607" duration="4362000" />
     </task>
     <task id="LOCAL-00001" summary="Adds kung-fu theme and images">
       <option name="closed" value="true" />
