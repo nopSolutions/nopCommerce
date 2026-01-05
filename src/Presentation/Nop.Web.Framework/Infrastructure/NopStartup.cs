@@ -7,6 +7,7 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
+using Nop.Core.Middleware;
 using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.ArtificialIntelligence;
@@ -322,6 +323,9 @@ public partial class NopStartup : INopStartup
         var useAutofac = appSettings.Get<CommonConfig>().UseAutofac;
         if (!useAutofac)
             services.AddScoped(typeof(Lazy<>), typeof(LazyInstance<>));
+        
+        //middleware
+        services.AddSingleton<IObjectProcessingPublisher, ObjectProcessingPublisher>();
     }
 
     /// <summary>

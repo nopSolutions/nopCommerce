@@ -14,6 +14,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
+using Nop.Core.Middleware;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -57,6 +58,7 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly IJsonLdModelFactory _jsonLdModelFactory;
     protected readonly ILocalizationService _localizationService;
     protected readonly IManufacturerService _manufacturerService;
+    protected readonly IObjectProcessingPublisher _objectProcessingPublisher;
     protected readonly IPermissionService _permissionService;
     protected readonly IPictureService _pictureService;
     protected readonly IPriceCalculationService _priceCalculationService;
@@ -105,6 +107,7 @@ public partial class ProductModelFactory : IProductModelFactory
         IJsonLdModelFactory jsonLdModelFactory,
         ILocalizationService localizationService,
         IManufacturerService manufacturerService,
+        IObjectProcessingPublisher objectProcessingPublisher,
         IPermissionService permissionService,
         IPictureService pictureService,
         IPriceCalculationService priceCalculationService,
@@ -148,6 +151,7 @@ public partial class ProductModelFactory : IProductModelFactory
         _jsonLdModelFactory = jsonLdModelFactory;
         _localizationService = localizationService;
         _manufacturerService = manufacturerService;
+        _objectProcessingPublisher = objectProcessingPublisher;
         _permissionService = permissionService;
         _pictureService = pictureService;
         _priceCalculationService = priceCalculationService;
@@ -945,7 +949,14 @@ public partial class ProductModelFactory : IProductModelFactory
                         CustomerEntersQty = attributeValue.CustomerEntersQty,
                         Quantity = attributeValue.Quantity
                     };
-                    attributeModel.Values.Add(valueModel);
+                    
+                    var processedValueModel = await _objectProcessingPublisher.ProcessObjectAsync(valueModel);
+
+                    if (processedValueModel != null)
+                    {
+                        valueModel = processedValueModel;
+                        attributeModel.Values.Add(valueModel);
+                    }
 
                     //display price if allowed
                     if (await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES))
