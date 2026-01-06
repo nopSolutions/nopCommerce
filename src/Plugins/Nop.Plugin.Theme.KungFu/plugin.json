@@ -2,9 +2,9 @@
   "Group": "Themes",
   "FriendlyName": "Kung Fu Theme Manager",
   "SystemName": "Theme.KungFu",
-  "Version": "4.90.1",
+  "Version": "4.90.8",
   "SupportedVersions": ["4.90"],
-  "Author": "nopCommerce team",
+  "Author": "Register One NopTeam",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Theme.KungFu.dll",
   "Description": "Keeps the Kung Fu theme and its topics in sync with your storefront."

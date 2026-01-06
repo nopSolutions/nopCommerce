@@ -1,84 +1,12 @@
 @model ConfigurationModel
 @{
     Layout = "_ConfigurePlugin";
-}
+    }
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="@Url.Content("~/Plugins/DropShipping.AliExpress/Content/aliexpress-config.css")" />
 
-<style>
-    .aliexpress-section {
-        background: #fff;
-        border-radius: 8px;
-        padding: 24px;
-        margin-bottom: 24px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .aliexpress-section h3 {
-        display: flex;
-        align-items: center;
-        color: #333;
-        margin-bottom: 16px;
-        font-size: 18px;
-        font-weight: 600;
-    }
-    .aliexpress-section h3 .material-icons {
-        margin-right: 8px;
-        color: #FF6A00;
-    }
-    .token-status {
-        padding: 12px;
-        border-radius: 4px;
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-    }
-    .token-status.valid {
-        background: #d4edda;
-        border: 1px solid #c3e6cb;
-        color: #155724;
-    }
-    .token-status.invalid {
-        background: #f8d7da;
-        border: 1px solid #f5c6cb;
-        color: #721c24;
-    }
-    .token-status .material-icons {
-        margin-right: 8px;
-    }
-    .auth-button {
-        display: inline-flex;
-        align-items: center;
-        padding: 10px 20px;
-        background: #FF6A00;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        text-decoration: none;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
-    .auth-button:hover {
-        background: #E05A00;
-        color: #fff;
-    }
-    .auth-button .material-icons {
-        margin-right: 8px;
-    }
-    .info-box {
-        background: #e7f3ff;
-        border-left: 4px solid #2196F3;
-        padding: 12px;
-        margin-bottom: 16px;
-        border-radius: 4px;
-    }
-    .info-box .material-icons {
-        vertical-align: middle;
-        margin-right: 8px;
-        color: #2196F3;
-    }
-</style>
-
-<form asp-controller="AliExpress" asp-action="Configure" method="post">
+<form asp-controller="AliExpress" asp-action="Configure" method="post" id="aliexpress-config-root" data-exchange-auth-url="@Url.Action("ExchangeAuthCode", "AliExpress")" data-refresh-token-url="@Url.Action("RefreshToken", "AliExpress")">
     <div class="cards-group">
         <!-- Authentication Section -->
         <div class="card card-default">
@@ -124,7 +52,40 @@
                         </div>
                     </div>
 
-                    @if (!string.IsNullOrEmpty(Model.AuthorizationUrl))
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AuthorizationUrl" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AuthorizationUrl" />
+                            <span asp-validation-for="AuthorizationUrl"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="RedirectUri" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="RedirectUri" />
+                            <span asp-validation-for="RedirectUri"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="RedirectUriHost" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="RedirectUriHost" />
+                            <span asp-validation-for="RedirectUriHost"></span>
+                        </div>
+                    </div>
+
+                    
+                    
+                    
+                    @if (!string.IsNullOrEmpty(Model.AuthorizationLaunchUrl))
                     {
                         <div class="info-box">
                             <span class="material-icons">info</span>
@@ -139,7 +100,7 @@
                         </div>
 
                         <div style="margin-bottom: 16px;">
-                            <a href="@Model.AuthorizationUrl" target="_blank" class="auth-button">
+                            <a href="@Model.AuthorizationLaunchUrl" target="_blank" class="auth-button">
                                 <span class="material-icons">launch</span>
                                 Authorize with AliExpress
                             </a>
@@ -224,7 +185,60 @@
                     <div class="info-box">
                         <span class="material-icons">calculate</span>
                         <strong>Price Calculation Formula:</strong><br/>
-                        Final Price = ((Product Price + Shipping) × (1 + Customs Duty %) + VAT) × (1 + Margin %)
+                        Final Price = ((Product Price + Import Freight) × (1 + Customs Duty %) + VAT) × (1 + Margin %)
+                        Final Selling Price (ex VAT) =
+                        ((Product Price + International Shipping)
+                        × (1 + Customs Duty %)
+                        × (1 + VAT %))
+                        × (1 + Margin %)
+                        @* <div class="price-simulator"> *@
+                        @*     <h4><span class="material-icons">insights</span>Live Profitability Simulator</h4> *@
+                        @*     <div class="simulator-grid"> *@
+                        @*         <div> *@
+                        @*             <label>Product Price (R)</label> *@
+                        @*             <input type="number" id="simProductPrice" value="100" min="0" step="0.01" /> *@
+                        @*         </div> *@
+                        @*         <div> *@
+                        @*             <label>Import Freight (R)</label> *@
+                        @*             <input type="number" id="simFreight" value="25" min="0" step="0.01" /> *@
+                        @*         </div> *@
+                        @*         <div> *@
+                        @*             <label>International Shipping (R)</label> *@
+                        @*             <input type="number" id="simShipping" value="40" min="0" step="0.01" /> *@
+                        @*         </div> *@
+                        @*         <div> *@
+                        @*             <label>Customs Duty (%)</label> *@
+                        @*             <input type="number" id="simCustoms" value="15" min="0" step="0.1" /> *@
+                        @*         </div> *@
+                        @*         <div> *@
+                        @*             <label>VAT (%)</label> *@
+                        @*             <input type="number" id="simVat" value="15" min="0" step="0.1" /> *@
+                        @*         </div> *@
+                        @*         <div> *@
+                        @*             <label>Margin (%)</label> *@
+                        @*             <input type="number" id="simMargin" value="30" min="0" step="0.1" /> *@
+                        @*         </div> *@
+                        @*     </div> *@
+                        @*     <div class="simulator-metrics"> *@
+                        @*         <div class="metric-chip"> *@
+                        @*             <span>Final Selling Price</span> *@
+                        @*             <strong id="simFinalPrice">R0.00</strong> *@
+                        @*         </div> *@
+                        @*         <div class="metric-chip"> *@
+                        @*             <span>Unit Profit</span> *@
+                        @*             <strong id="simProfit">R0.00</strong> *@
+                        @*         </div> *@
+                        @*         <div class="metric-chip"> *@
+                        @*             <span>ROI</span> *@
+                        @*             <strong id="simRoi">0%</strong> *@
+                        @*         </div> *@
+                        @*         <div class="metric-chip"> *@
+                        @*             <span>Profit Health</span> *@
+                        @*             <strong id="simHealth">-</strong> *@
+                        @*         </div> *@
+                        @*     </div> *@
+                        @*     <div id="priceSimulatorChart"></div> *@
+                        @* </div> *@
                     </div>
                 </div>
 
@@ -325,42 +339,5 @@
     </div>
 </form>
 
-<script>
-    function exchangeAuthCode() {
-        var authCode = document.getElementById('authCode').value;
-        if (!authCode) {
-            alert('Please enter an authorization code');
-            return;
-        }
-
-        var form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '@Url.Action("ExchangeAuthCode", "AliExpress")';
-
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'authCode';
-        input.value = authCode;
-        form.appendChild(input);
-
-        var antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]').cloneNode();
-        form.appendChild(antiForgeryToken);
-
-        document.body.appendChild(form);
-        form.submit();
-    }
-
-    function refreshToken() {
-        if (confirm('Are you sure you want to refresh the access token now?')) {
-            var form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '@Url.Action("RefreshToken", "AliExpress")';
-
-            var antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]').cloneNode();
-            form.appendChild(antiForgeryToken);
-
-            document.body.appendChild(form);
-            form.submit();
-        }
-    }
-</script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="@Url.Content("~/Plugins/DropShipping.AliExpress/Content/aliexpress-config.js")"></script>

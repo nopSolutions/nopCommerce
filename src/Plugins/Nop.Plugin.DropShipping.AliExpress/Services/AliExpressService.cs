@@ -1,12 +1,15 @@
+using System.Text;
 using System.Text.Json;
 using AliExpressSdk.Clients;
 using AliExpressSdk.Models;
+using ClosedXML.Excel;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Plugin.DropShipping.AliExpress.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
+
 
 namespace Nop.Plugin.DropShipping.AliExpress.Services;
 
@@ -18,7 +21,7 @@ public class AliExpressService : IAliExpressService
     private readonly ISettingService _settingService;
     private readonly ILogger _logger;
     private readonly IStoreContext _storeContext;
-    private readonly AliExpressSettings _settings;
+
 
     public AliExpressService(
         ISettingService settingService,
@@ -28,60 +31,83 @@ public class AliExpressService : IAliExpressService
         _settingService = settingService;
         _logger = logger;
         _storeContext = storeContext;
-        
-        var storeId = _storeContext.GetCurrentStoreAsync().GetAwaiter().GetResult()?.Id ?? 0;
-        _settings = _settingService.LoadSettingAsync<AliExpressSettings>(storeId).GetAwaiter().GetResult();
     }
 
     public async Task<string> GetAuthorizationUrlAsync()
     {
-        if (string.IsNullOrEmpty(_settings.AppKey))
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var settings = await _settingService.LoadSettingAsync<AliExpressSettings>(store.Id);
+
+        if (string.IsNullOrEmpty(settings.AppKey))
             throw new NopException("App Key is not configured");
 
-        // Build the OAuth authorization URL
-        var redirectUri = "https://oauth.aliexpress.com/authorize";
-        var authUrl = $"https://oauth.aliexpress.com/authorize?response_type=code&client_id={_settings.AppKey}&redirect_uri={Uri.EscapeDataString(redirectUri)}";
+        settings.RedirectUriHost = Uri.TryCreate(settings.RedirectUriHost, UriKind.Absolute, out var host) ? host.ToString() : new AliExpressSettings().RedirectUriHost;
+        settings.RedirectUri = Uri.TryCreate(settings.RedirectUri, UriKind.Relative, out var redirect) ? redirect.ToString() : new AliExpressSettings().RedirectUri;
+        var builder = new UriBuilder(settings.RedirectUriHost);
+        builder.Path = settings.RedirectUri;
+        settings.RedirectUri = builder.Uri.PathAndQuery;
         
+
+        // Build the OAuth authorization URL
+        var redirectUri = $"{settings.RedirectUriHost}{settings.RedirectUri}";
+        var authUrl = BuildUrl(redirectUri, settings);
         return await Task.FromResult(authUrl);
     }
 
-    public async Task<bool> ExchangeAuthorizationCodeAsync(string code)
+    private string BuildUrl(
+        string redirectUri,
+        AliExpressSettings settings)
+    {
+        var uriBuilder = new UriBuilder(settings.AuthorizationUrl);
+        var queryStringBuilder = new StringBuilder();
+        queryStringBuilder.Append("response_type=code");
+        queryStringBuilder.Append("&force_auth=true");
+        queryStringBuilder.Append($"&redirect_uri={redirectUri ?? "https://localhost"}");
+        queryStringBuilder.Append($"&client_id={settings.AppKey}");
+        uriBuilder.Query = queryStringBuilder.ToString();
+        var uri = uriBuilder.ToString();
+        return uri;
+    }
+
+    public async Task<bool> ExchangeAuthorizationCodeAsync(
+        string code)
     {
         try
         {
-            if (string.IsNullOrEmpty(_settings.AppKey) || string.IsNullOrEmpty(_settings.AppSecret))
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var settings = await _settingService.LoadSettingAsync<AliExpressSettings>(store.Id);
+
+            if (string.IsNullOrEmpty(settings.AppKey) || string.IsNullOrEmpty(settings.AppSecret))
                 return false;
 
-            var client = new AESystemClient(_settings.AppKey, _settings.AppSecret, string.Empty);
+            var client = new AESystemClient(settings.AppKey, settings.AppSecret, string.Empty);
             var response = await client.GenerateToken(new Dictionary<string, string>()
             {
                 // Code = code
                 ["code"] = code
             });
 
-            var tokenResponse = 
+            var tokenResponse =
                 JsonConvert.DeserializeObject<TokenResponse>(response.Data.GetRawText());
-            
-            
-            
+
 
             if (response.Ok && tokenResponse.AccessToken != null)
             {
                 var storeId = (await _storeContext.GetCurrentStoreAsync())?.Id ?? 0;
-                
-                _settings.AccessToken = tokenResponse.AccessToken;
-                _settings.RefreshToken = tokenResponse.RefreshToken;
+
+                settings.AccessToken = tokenResponse.AccessToken;
+                settings.RefreshToken = tokenResponse.RefreshToken;
                 /*
                  * Here is a breakdown of the time duration:
                    Value: 2,592,000
                    Units: Seconds
-                   Equivalent time: 30 days (calculated as 2,592,000 seconds / 86,400 seconds per day). 
+                   Equivalent time: 30 days (calculated as 2,592,000 seconds / 86,400 seconds per day).
                  */
-                _settings.AccessTokenExpiresOnUtc = DateTime.UtcNow.AddSeconds(double.TryParse(tokenResponse.ExpiresIn.ToString(), out var expiresIn) ? expiresIn : 0);
-                _settings.RefreshTokenExpiresOnUtc = DateTime.UtcNow.AddSeconds(double.TryParse(tokenResponse.RefreshExpiresIn.ToString(), out var refreshExpiresIn) ? refreshExpiresIn : 0);
-                
-                await _settingService.SaveSettingAsync(_settings, storeId);
-                
+                settings.AccessTokenExpiresOnUtc = DateTime.UtcNow.AddSeconds(double.TryParse(tokenResponse.ExpiresIn.ToString(), out var expiresIn) ? expiresIn : 0);
+                settings.RefreshTokenExpiresOnUtc = DateTime.UtcNow.AddSeconds(double.TryParse(tokenResponse.RefreshExpiresIn.ToString(), out var refreshExpiresIn) ? refreshExpiresIn : 0);
+
+                await _settingService.SaveSettingAsync(settings, storeId);
+
                 return true;
             }
 
@@ -98,30 +124,31 @@ public class AliExpressService : IAliExpressService
     {
         try
         {
-            if (string.IsNullOrEmpty(_settings.AppKey) || 
-                string.IsNullOrEmpty(_settings.AppSecret) || 
-                string.IsNullOrEmpty(_settings.RefreshToken))
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var settings = await _settingService.LoadSettingAsync<AliExpressSettings>(store.Id);
+
+
+            if (string.IsNullOrEmpty(settings.AppKey) ||
+                string.IsNullOrEmpty(settings.AppSecret) ||
+                string.IsNullOrEmpty(settings.RefreshToken))
                 return false;
 
-            var client = new AESystemClient(_settings.AppKey, _settings.AppSecret, string.Empty);
-            var tokenResult = await client.RefreshToken(new Dictionary<string, string>()
-            {
-                ["refresh_token"] = _settings.RefreshToken
-            });
+            var client = new AESystemClient(settings.AppKey, settings.AppSecret, string.Empty);
+            var tokenResult = await client.RefreshToken(new Dictionary<string, string>() { ["refresh_token"] = settings.RefreshToken });
 
             var response = ParseTokenResponse(tokenResult.Data);
-            
+
             if (tokenResult.Ok && response.AccessToken != null)
             {
                 var storeId = (await _storeContext.GetCurrentStoreAsync())?.Id ?? 0;
-                
-                _settings.AccessToken = response.AccessToken;
-                _settings.RefreshToken = response.RefreshToken;
-                _settings.AccessTokenExpiresOnUtc = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
-                _settings.RefreshTokenExpiresOnUtc = DateTime.UtcNow.AddSeconds(response.RefreshTokenValidTime);
-                
-                await _settingService.SaveSettingAsync(_settings, storeId);
-                
+
+                settings.AccessToken = response.AccessToken;
+                settings.RefreshToken = response.RefreshToken;
+                settings.AccessTokenExpiresOnUtc = DateTime.UtcNow.AddSeconds(response.ExpiresIn);
+                settings.RefreshTokenExpiresOnUtc = DateTime.UtcNow.AddSeconds(response.RefreshTokenValidTime);
+
+                await _settingService.SaveSettingAsync(settings, storeId);
+
                 return true;
             }
 
@@ -134,45 +161,54 @@ public class AliExpressService : IAliExpressService
         }
     }
 
-    public bool IsTokenValid()
+    public async Task<bool> IsTokenValid()
     {
-        if (string.IsNullOrEmpty(_settings.AccessToken))
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var settings = await _settingService.LoadSettingAsync<AliExpressSettings>(store.Id);
+
+        if (string.IsNullOrEmpty(settings.AccessToken))
             return false;
 
-        if (!_settings.AccessTokenExpiresOnUtc.HasValue)
+        if (!settings.AccessTokenExpiresOnUtc.HasValue)
             return false;
 
-        return _settings.AccessTokenExpiresOnUtc.Value > DateTime.UtcNow;
+        return settings.AccessTokenExpiresOnUtc.Value > DateTime.UtcNow;
     }
 
-    public async Task<List<AliExpressProductSearchResultModel>> SearchProductsAsync(string keyword, int pageNo = 1, int pageSize = 20)
+    public async Task<List<AliExpressProductSearchResultModel>> SearchProductsAsync(
+        string keyword,
+        int pageNo = 1,
+        int pageSize = 20)
     {
         var results = new List<AliExpressProductSearchResultModel>();
 
         try
         {
-            if (!IsTokenValid() || string.IsNullOrEmpty(_settings.AccessToken))
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var settings = await _settingService.LoadSettingAsync<AliExpressSettings>(store.Id);
+
+            if (!await IsTokenValid() || string.IsNullOrEmpty(settings.AccessToken))
                 return results;
 
-            var client = new AEBaseClient(_settings.AppKey, _settings.AppSecret, _settings.AccessToken);
-            
+            var client = new AEBaseClient(settings.AppKey, settings.AppSecret, settings.AccessToken);
+
             var parameters = new Dictionary<string, string>
             {
                 ["keyWord"] = keyword,
-                ["local"] = _settings.DefaultLanguage ?? "en_US",
-                ["countryCode"] = _settings.DefaultShippingCountry ?? "ZA",
-                ["currency"] = _settings.DefaultCurrency ?? "ZAR",
+                ["local"] = settings.DefaultLanguage ?? "en_US",
+                ["countryCode"] = settings.DefaultShippingCountry ?? "ZA",
+                ["currency"] = settings.DefaultCurrency ?? "ZAR",
                 ["pageSize"] = pageSize.ToString(),
                 ["pageIndex"] = pageNo.ToString()
             };
-            
+
             // Use the dropshipper product search API - matches ConsoleHarness exactly
             var responseResult = await client.CallApiDirectly("aliexpress.ds.text.search", parameters);
 
             if (responseResult.Ok && responseResult.Data is { } data)
             {
                 var response = System.Text.Json.JsonSerializer.Deserialize<ProductSearchResponse>(data.GetRawText());
-                
+
                 if (response?.AliexpressDsTextSearchResponse?.Data?.Products?.SelectionSearchProduct != null)
                 {
                     results = response.AliexpressDsTextSearchResponse.Data.Products.SelectionSearchProduct
@@ -199,40 +235,42 @@ public class AliExpressService : IAliExpressService
         return results;
     }
 
-    public async Task<AliExpressProductDetailsModel?> GetProductDetailsAsync(long productId, string? shipToCountry = null)
+    public async Task<AliExpressProductDetailsModel?> GetProductDetailsAsync(
+        long productId,
+        string? shipToCountry = null)
     {
         try
         {
-            if (!IsTokenValid() || string.IsNullOrEmpty(_settings.AccessToken))
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var settings = await _settingService.LoadSettingAsync<AliExpressSettings>(store.Id);
+
+            if (!await IsTokenValid() || string.IsNullOrEmpty(settings.AccessToken))
                 return null;
 
-            var client = new AEBaseClient(_settings.AppKey, _settings.AppSecret, _settings.AccessToken);
-            
+            var client = new AEBaseClient(settings.AppKey, settings.AppSecret, settings.AccessToken);
+
             var parameters = new Dictionary<string, string>
             {
-                ["product_id"] = productId.ToString(),
-                ["ship_to_country"] = shipToCountry ?? _settings.DefaultShippingCountry ?? "ZA",
-                ["target_currency"] = _settings.DefaultCurrency ?? "ZAR",
-                ["target_language"] = "en"
+                ["product_id"] = productId.ToString(), ["ship_to_country"] = shipToCountry ?? settings.DefaultShippingCountry ?? "ZA", ["target_currency"] = settings.DefaultCurrency ?? "ZAR", ["target_language"] = "en"
             };
-            
+
             var result = await client.CallApiDirectly("aliexpress.ds.product.get", parameters);
 
             if (result.Ok && result.Data is { } data)
             {
                 var response = System.Text.Json.JsonSerializer.Deserialize<ProductDetailsResponse>(data.GetRawText());
-                
+
                 if (response?.AliexpressDsProductGetResponse?.Result != null)
                 {
                     var productResult = response.AliexpressDsProductGetResponse.Result;
-                    
+
                     return new AliExpressProductDetailsModel
                     {
                         ProductId = productId,
                         ProductTitle = productResult.Subject,
                         ProductUrl = $"https://www.aliexpress.com/item/{productId}.html",
-                        ImageUrls = productResult.ProductMainImageUrl != null 
-                            ? new List<string> { productResult.ProductMainImageUrl } 
+                        ImageUrls = productResult.ProductMainImageUrl != null
+                            ? new List<string> { productResult.ProductMainImageUrl }
                             : new List<string>(),
                         Description = productResult.Subject,
                         IsAvailable = productResult.AeItemSkuInfoDtos?.AeItemSkuInfoDto?.Any() ?? false,
@@ -245,30 +283,30 @@ public class AliExpressService : IAliExpressService
         {
             await _logger.ErrorAsync($"Error getting product details: {ex.Message}", ex);
         }
-        
+
         return null;
     }
 
-    public async Task<List<AliExpressFreightModel>> GetFreightInfoAsync(long productId, int quantity, string countryCode)
+    public async Task<List<AliExpressFreightModel>> GetFreightInfoAsync(
+        long productId,
+        int quantity,
+        string countryCode)
     {
         var results = new List<AliExpressFreightModel>();
 
         try
         {
-            if (!IsTokenValid() || string.IsNullOrEmpty(_settings.AccessToken))
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var settings = await _settingService.LoadSettingAsync<AliExpressSettings>(store.Id);
+
+            if (!await IsTokenValid() || string.IsNullOrEmpty(settings.AccessToken))
                 return results;
 
-            var client = new AEBaseClient(_settings.AppKey, _settings.AppSecret, _settings.AccessToken);
+            var client = new AEBaseClient(settings.AppKey, settings.AppSecret, settings.AccessToken);
 
             // First get product details to get SKU information
-            var productParams = new Dictionary<string, string>
-            {
-                ["product_id"] = productId.ToString(),
-                ["ship_to_country"] = countryCode,
-                ["target_currency"] = _settings.DefaultCurrency ?? "ZAR",
-                ["target_language"] = "en"
-            };
-            
+            var productParams = new Dictionary<string, string> { ["product_id"] = productId.ToString(), ["ship_to_country"] = countryCode, ["target_currency"] = settings.DefaultCurrency ?? "ZAR", ["target_language"] = "en" };
+
             var productResult = await client.CallApiDirectly("aliexpress.ds.product.get", productParams);
             string? skuId = null;
 
@@ -297,24 +335,21 @@ public class AliExpressService : IAliExpressService
                 cityCode = "Cape Town", // TODO: Get from actual shipping address in order flow
                 selectedSkuId = skuId,
                 language = "en_US",
-                currency = _settings.DefaultCurrency ?? "ZAR",
+                currency = settings.DefaultCurrency ?? "ZAR",
                 locale = "en_US"
             };
-            
+
             var parameters = new Dictionary<string, string>
             {
-                ["queryDeliveryReq"] = System.Text.Json.JsonSerializer.Serialize(queryDeliveryReq, new System.Text.Json.JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
-                })
+                ["queryDeliveryReq"] = System.Text.Json.JsonSerializer.Serialize(queryDeliveryReq, new System.Text.Json.JsonSerializerOptions { PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase })
             };
-            
+
             var result = await client.CallApiDirectly("aliexpress.ds.freight.query", parameters);
 
             if (result.Ok && result.Data is { } data)
             {
                 var response = System.Text.Json.JsonSerializer.Deserialize<FreightEstimationResponse>(data.GetRawText());
-                
+
                 if (response?.AliexpressDsFreightQueryResponse?.Result?.DeliveryOptions?.DeliveryOptionDto != null)
                 {
                     results = response.AliexpressDsFreightQueryResponse.Result.DeliveryOptions.DeliveryOptionDto
@@ -325,7 +360,7 @@ public class AliExpressService : IAliExpressService
                             // when free_shipping is true. For paid shipping, cost would need to be calculated
                             // separately or obtained from a different API endpoint.
                             ShippingCost = 0,
-                            Currency = _settings.DefaultCurrency ?? "ZAR",
+                            Currency = settings.DefaultCurrency ?? "ZAR",
                             EstimatedDeliveryDays = d.MaxDeliveryDays,
                             TrackingAvailable = d.Tracking ? "Yes" : "No"
                         }).ToList();
@@ -340,25 +375,28 @@ public class AliExpressService : IAliExpressService
         return results;
     }
 
-    public async Task<long?> CreateOrderAsync(int nopOrderId)
+    public async Task<long?> CreateOrderAsync(
+        int nopOrderId)
     {
         try
         {
-            if (!IsTokenValid() || string.IsNullOrEmpty(_settings.AccessToken))
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var settings = await _settingService.LoadSettingAsync<AliExpressSettings>(store.Id);
+            if (!await IsTokenValid() || string.IsNullOrEmpty(settings.AccessToken))
                 return null;
 
             await _logger.InformationAsync($"Creating AliExpress order for NopCommerce order {nopOrderId}");
-            
+
             // Note: This is a placeholder. The actual implementation would need:
             // 1. Get the NopCommerce order details
             // 2. Get the product mapping (AliExpress product ID, SKU)
             // 3. Get customer shipping address
             // 4. Get freight estimation to get logistics service name
             // 5. Build the order request matching the ConsoleHarness CreateOrderWorkflowCommand
-            
+
             // For now, returning null to indicate not implemented yet
             // Full implementation would follow the exact pattern from CreateOrderWorkflowCommand.cs
-            
+
             return null;
         }
         catch (Exception ex)
@@ -368,15 +406,20 @@ public class AliExpressService : IAliExpressService
         }
     }
 
-    public async Task<AliExpressOrderTrackingModel?> GetOrderTrackingAsync(long aliExpressOrderId)
+    public async Task<AliExpressOrderTrackingModel?> GetOrderTrackingAsync(
+        long aliExpressOrderId)
     {
         try
         {
-            if (!IsTokenValid() || string.IsNullOrEmpty(_settings.AccessToken))
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var settings = await _settingService.LoadSettingAsync<AliExpressSettings>(store.Id);
+
+
+            if (!await IsTokenValid() || string.IsNullOrEmpty(settings.AccessToken))
                 return null;
 
             await _logger.InformationAsync($"Getting tracking for AliExpress order {aliExpressOrderId}");
-            
+
             // Placeholder - implement tracking logic
             return null;
         }
@@ -386,13 +429,15 @@ public class AliExpressService : IAliExpressService
             return null;
         }
     }
-      private TokenResponse ParseTokenResponse(System.Text.Json.JsonElement data)
+
+    private TokenResponse ParseTokenResponse(
+        System.Text.Json.JsonElement data)
     {
         try
         {
             // Check if this is an error response
             // Error responses have "code" field that is not "0" (success)
-            if (data.TryGetProperty("code", out var codeProperty) && 
+            if (data.TryGetProperty("code", out var codeProperty) &&
                 codeProperty.ValueKind == System.Text.Json.JsonValueKind.String)
             {
                 var code = codeProperty.GetString();
@@ -403,13 +448,14 @@ public class AliExpressService : IAliExpressService
                     {
                         Console.Error.WriteLine($"API Error ({code}): {messageProperty.GetString()}");
                     }
+
                     return null;
                 }
             }
-            
+
             // The response might be nested under a specific property or be at root
             var tokenData = data;
-            
+
             // Try to find the token data - it might be nested
             if (data.ValueKind == System.Text.Json.JsonValueKind.Object)
             {
@@ -453,18 +499,24 @@ public class AliExpressService : IAliExpressService
             return null;
         }
     }
-    private string? GetStringProperty(System.Text.Json.JsonElement element, string propertyName)
+
+    private string? GetStringProperty(
+        System.Text.Json.JsonElement element,
+        string propertyName)
     {
         if (element.TryGetProperty(propertyName, out var property))
         {
-            return property.ValueKind == System.Text.Json.JsonValueKind.String 
-                ? property.GetString() 
+            return property.ValueKind == System.Text.Json.JsonValueKind.String
+                ? property.GetString()
                 : property.ToString();
         }
+
         return null;
     }
-    
-    private long GetLongProperty(System.Text.Json.JsonElement element, string propertyName)
+
+    private long GetLongProperty(
+        System.Text.Json.JsonElement element,
+        string propertyName)
     {
         if (element.TryGetProperty(propertyName, out var property))
         {
@@ -472,6 +524,7 @@ public class AliExpressService : IAliExpressService
             {
                 return property.GetInt64();
             }
+
             // Try to parse as string in case it's returned as a string
             if (property.ValueKind == System.Text.Json.JsonValueKind.String)
             {
@@ -481,6 +534,7 @@ public class AliExpressService : IAliExpressService
                 }
             }
         }
+
         return 0;
     }
 }

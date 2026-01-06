@@ -1,6 +1,9 @@
-﻿using Nop.Core.Domain.Shipping;
+﻿using ClosedXML.Excel;
+using Nop.Core;
+using Nop.Core.Domain.Shipping;
 using Nop.Services.Common;
 using Nop.Services.Directory;
+using Nop.Services.Messages;
 using Nop.Services.Shipping;
 
 namespace Nop.Plugin.Shipping.CourierGuy.Domain.NopEntityMappers;
@@ -10,6 +13,8 @@ public class CourierGuyNopEntityMapper(
     IStateProvinceService stateProvinceService,
     ICountryService countryService,
     IShippingService shippingService,
+    INotificationService notificationService,
+    IStoreContext storeContext,
     IWarehouseService warehouseService) : ICourierGuyNopEntityMapper
 {
     public async Task<List<CourierGuyRateRequest>> NopCourierGuyRateRequest(
@@ -18,7 +23,8 @@ public class CourierGuyNopEntityMapper(
         var shipTo = getShippingOptionRequest.ShippingAddress;
         if (shipTo == null || string.IsNullOrWhiteSpace(shipTo.Address1))
         {
-            return new List<CourierGuyRateRequest>();
+            throw new NopException(
+                "Shipping address is not set. Cannot calculate Courier Guy shipping rates");
         }
 
         var shipToStateProvince =
@@ -35,8 +41,14 @@ public class CourierGuyNopEntityMapper(
                 SubmittedHeightCm = x.Product.Height,
                 SubmittedWeightKg = x.Product.Weight
             };
-            var parcelWarehouse =
-                warehouseService.GetWarehouseByIdAsync(x.Product.WarehouseId).GetAwaiter().GetResult();
+            
+            if(x.Product.WarehouseId < 1)
+            {
+                x.Product.WarehouseId = warehouseService.GetWarehouseByIdAsync(1).GetAwaiter().GetResult().Id;
+            }
+            
+            var parcelWarehouse = warehouseService.GetWarehouseByIdAsync(x.Product.WarehouseId).GetAwaiter().GetResult();
+            
             var parcelShipFrom = addressService.GetAddressByIdAsync(parcelWarehouse.AddressId).GetAwaiter().GetResult();
             return (parcel, parcelShipFrom);
         }).ToList();
@@ -99,7 +111,7 @@ public class CourierGuyNopEntityMapper(
         var economyOptions = courierGuyRates
             .SelectMany(rateList =>
             {
-                var cheapest = rateList.OrderByDescending(rate => rate.ShippingOptionRate).LastOrDefault();
+                var cheapest = rateList.OrderBy(rate => rate.ShippingOptionRate).FirstOrDefault();
                 return rateList.Where(rate => rate.ServiceLevel.Equals(cheapest?.ServiceLevel));
             }).ToList();
 

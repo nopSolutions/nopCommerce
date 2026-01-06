@@ -1,15 +1,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ClosedXML.Excel;
 using Microsoft.Extensions.Logging;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Plugin.Theme.KungFu;
+using Nop.Plugin.Theme.KungFu.Seeding.Category;
+using Nop.Plugin.Theme.KungFu.Seeding.Email;
+using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Messages;
 using Nop.Services.Plugins;
 using Nop.Services.Topics;
+
 
 namespace Nop.Plugin.Theme.KungFu.Services;
 
@@ -19,10 +24,14 @@ public class ThemeKungFuService : IThemeKungFuService
     private readonly INopFileProvider _fileProvider;
     private readonly ISettingService _settingService;
     private readonly ITopicService _topicService;
+    private readonly ICategoryService _categoryService;
     private readonly ITopicTemplateService _topicTemplateService;
     private readonly IPluginService _pluginService;
     private readonly IMessageTemplateService _messageTemplateService;
-    private readonly IRepository<EmailAccount> _emailAccountRepository;
+    private readonly IEmailAccountService _emailAccountService;
+    private readonly ICategorySeeds _categorySeeds;
+    private readonly IEmailClientSeeds _emailClientSeeds;
+    
 
     public ThemeKungFuService(
         ILogger<ThemeKungFuService> logger,
@@ -32,7 +41,7 @@ public class ThemeKungFuService : IThemeKungFuService
         ITopicTemplateService topicTemplateService,
         IPluginService pluginService,
         IMessageTemplateService messageTemplateService,
-        IRepository<EmailAccount> emailAccountRepository)
+        IEmailAccountService emailAccountService, ICategorySeeds categorySeeds, ICategoryService categoryService, IEmailClientSeeds emailClientSeeds)
     {
         _logger = logger;
         _fileProvider = fileProvider;
@@ -41,7 +50,10 @@ public class ThemeKungFuService : IThemeKungFuService
         _topicTemplateService = topicTemplateService;
         _pluginService = pluginService;
         _messageTemplateService = messageTemplateService;
-        _emailAccountRepository = emailAccountRepository;
+        _emailAccountService = emailAccountService;
+        _categorySeeds = categorySeeds;
+        _categoryService = categoryService;
+        _emailClientSeeds = emailClientSeeds;
     }
 
     public async Task<ThemeSyncResult> EnsureSyncedAsync(bool force = false)
@@ -66,7 +78,7 @@ public class ThemeKungFuService : IThemeKungFuService
         await CopyThemeAsync(descriptor);
         await SeedTopicsAsync();
         await SeedMessageTemplatesAsync();
-
+        // await SeedCategoriesAsync();
         settings.LastSyncedOnUtc = DateTime.UtcNow;
         settings.LastSyncedVersion = pluginVersion;
         await _settingService.SaveSettingAsync(settings);
@@ -76,6 +88,22 @@ public class ThemeKungFuService : IThemeKungFuService
         result.WasOutdated = outdated;
 
         return result;
+    }
+
+    private async Task SeedCategoriesAsync()
+    {
+        var seedCategories = await _categorySeeds.GetCategoryiesForSeedAsync();
+        var categories = await _categoryService.GetAllCategoriesAsync();
+        
+        foreach (var category in seedCategories)
+        {
+            var existingCategory = categories.FirstOrDefault(c => c.Name.Equals(category.Name, StringComparison.OrdinalIgnoreCase));
+            if (existingCategory != null)
+            {
+                await _categoryService.UpdateCategoryAsync(existingCategory);
+            }
+            await _categoryService.InsertCategoryAsync(category);
+        }
     }
 
     public async Task<ThemeSyncResult> GetStatusAsync()
@@ -224,12 +252,17 @@ public class ThemeKungFuService : IThemeKungFuService
 
     private async Task SeedMessageTemplatesAsync()
     {
-        var emailAccount = await _emailAccountRepository.Table.FirstOrDefaultAsync();
-        if (emailAccount == null)
+        var emailAccount = await _emailAccountService.GetAllEmailAccountsAsync();
+        var seededEmailAccounts = await _emailClientSeeds.GetEmailClientForSeedAsync();
+        
+        // Ensure only 1 seeded email account exists
+        if (seededEmailAccounts.Length > 1)
         {
-            _logger.LogWarning("No email account found. Skipping message template sync.");
-            return;
+            _logger.LogWarning("Multiple seeded email accounts found. Only the first one will be used for message templates.");
         }
+        var emailAccountToUse = seededEmailAccounts.Length == 0
+            ? emailAccount.FirstOrDefault()
+            : seededEmailAccounts[0];
 
         foreach (var descriptor in GetMessageTemplateDescriptors())
         {
@@ -240,8 +273,23 @@ public class ThemeKungFuService : IThemeKungFuService
                 continue;
             }
 
-            await UpsertMessageTemplateAsync(descriptor, body, emailAccount.Id);
+            await UpsertMessageTemplateAsync(descriptor, body, emailAccountToUse!.Id);
         }
+        
+        // for all other message templates update the email account to the seeded one
+        // Remove any autocreated email accounts to avoid duplicates
+        foreach (var account in emailAccount)
+        {
+            if (!seededEmailAccounts.Any(s => s.Email.Equals(account.Email, StringComparison.OrdinalIgnoreCase)))
+            {
+                await _emailAccountService.DeleteEmailAccountAsync(account);
+            }
+        }
+        
+        // Set Default Email Account to the seeded one
+        var settings = await _settingService.LoadSettingAsync<EmailAccountSettings>();
+        settings.DefaultEmailAccountId = emailAccountToUse!.Id;
+        await _settingService.SaveSettingAsync(settings);
     }
 
     private async Task<string> LoadMessageTemplateBodyAsync(string fileName)
@@ -312,6 +360,8 @@ public class ThemeKungFuService : IThemeKungFuService
                 false) // Disabled by default until AI is configured
         };
     }
+    
+ 
 
     private record TopicSeedDescriptor(string SystemName, string Title, int DisplayOrder, string FileName, bool IncludeInSitemap = false);
     private record MessageTemplateSeedDescriptor(string SystemName, string Subject, string FileName, bool IsActive);

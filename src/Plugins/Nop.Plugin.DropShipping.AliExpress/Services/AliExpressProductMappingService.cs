@@ -2,6 +2,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Data;
 using Nop.Plugin.DropShipping.AliExpress.Domain;
 
+
 namespace Nop.Plugin.DropShipping.AliExpress.Services;
 
 /// <summary>
@@ -100,22 +101,29 @@ public class AliExpressProductMappingService : IAliExpressProductMappingService
         return await _mappingRepository.GetAllAsync(query => query);
     }
 
-    public decimal CalculateFinalPrice(decimal productPrice, decimal shippingCost, decimal vatPercentage, decimal customsDutyPercentage, decimal marginPercentage)
+    public decimal CalculateFinalPrice(
+        decimal productPrice,
+        decimal internationalShipping,
+        decimal vatPercentage,
+        decimal customsDutyPercentage,
+        decimal marginPercentage)
     {
-        // Base amount: product + shipping
-        var baseAmount = productPrice + shippingCost;
-        
-        // Add customs duty
-        var customsDuty = baseAmount * (customsDutyPercentage / 100);
-        var subtotal = baseAmount + customsDuty;
-        
-        // Add VAT
-        var vatAmount = subtotal * (vatPercentage / 100);
-        var totalBeforeMargin = subtotal + vatAmount;
-        
-        // Apply margin
-        var finalPrice = totalBeforeMargin * (1 + marginPercentage / 100);
-        
-        return Math.Round(finalPrice, 2);
+        // 1. Customs value (CIF without insurance for simplicity)
+        var customsValue = productPrice + internationalShipping;
+
+        // 2. Customs duty
+        var customsDuty = customsValue * (customsDutyPercentage / 100m);
+
+        // 3. VAT on (customs value + duty)
+        var vatAmount = (customsValue + customsDuty) * (vatPercentage / 100m);
+
+        // 4. Landed cost
+        var landedCost = customsValue + customsDuty + vatAmount;
+
+        // 5. Apply margin (markup)
+        var finalPriceExVat = landedCost * (1 + marginPercentage / 100m);
+
+        return Math.Round(finalPriceExVat, 2);
     }
+
 }

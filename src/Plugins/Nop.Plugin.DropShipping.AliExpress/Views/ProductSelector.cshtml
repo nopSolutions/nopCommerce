@@ -1,188 +1,9 @@
 @model ProductSelectorModel
 
-<div class="aliexpress-product-selector" data-product-id="@Model.ProductId">
-    <style>
-        .aliexpress-product-selector {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 16px;
-            margin: 16px 0;
-        }
-        .aliexpress-product-selector h4 {
-            display: flex;
-            align-items: center;
-            color: #FF6A00;
-            margin-bottom: 12px;
-            font-size: 16px;
-            font-weight: 600;
-        }
-        .aliexpress-product-selector h4 .material-icons {
-            margin-right: 8px;
-        }
-        .aliexpress-selected-product {
-            display: flex;
-            align-items: center;
-            background: #fff;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            padding: 12px;
-            margin-bottom: 12px;
-        }
-        .aliexpress-selected-product img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-right: 12px;
-        }
-        .aliexpress-selected-product-info {
-            flex: 1;
-        }
-        .aliexpress-selected-product-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .aliexpress-selected-product-price {
-            color: #28a745;
-            font-weight: 600;
-        }
-        .aliexpress-btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 8px 16px;
-            background: #FF6A00;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background 0.3s;
-        }
-        .aliexpress-btn:hover {
-            background: #E05A00;
-            color: #fff;
-        }
-        .aliexpress-btn .material-icons {
-            margin-right: 6px;
-            font-size: 18px;
-        }
-        .aliexpress-btn-secondary {
-            background: #6c757d;
-        }
-        .aliexpress-btn-secondary:hover {
-            background: #5a6268;
-        }
-        .aliexpress-search-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 10000;
-            overflow: auto;
-        }
-        .aliexpress-search-modal.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .aliexpress-search-modal-content {
-            background: #fff;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 900px;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .aliexpress-search-modal-header {
-            padding: 20px;
-            border-bottom: 1px solid #dee2e6;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .aliexpress-search-modal-header h3 {
-            margin: 0;
-            display: flex;
-            align-items: center;
-        }
-        .aliexpress-search-modal-body {
-            padding: 20px;
-            overflow-y: auto;
-        }
-        .aliexpress-search-box {
-            display: flex;
-            margin-bottom: 20px;
-        }
-        .aliexpress-search-box input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #dee2e6;
-            border-radius: 4px 0 0 4px;
-            font-size: 14px;
-        }
-        .aliexpress-search-box button {
-            padding: 10px 20px;
-            background: #FF6A00;
-            color: #fff;
-            border: none;
-            border-radius: 0 4px 4px 0;
-            cursor: pointer;
-        }
-        .aliexpress-search-results {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-        }
-        .aliexpress-search-result-item {
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            padding: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .aliexpress-search-result-item:hover {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
-        }
-        .aliexpress-search-result-item img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-bottom: 8px;
-        }
-        .aliexpress-search-result-title {
-            font-size: 13px;
-            margin-bottom: 4px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .aliexpress-search-result-price {
-            color: #28a745;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .aliexpress-loading {
-            text-align: center;
-            padding: 40px;
-        }
-        .aliexpress-close-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #6c757d;
-        }
-    </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="@Url.Content("~/Plugins/DropShipping.AliExpress/Content/aliexpress-product-selector.css")" />
 
+<div class="aliexpress-product-selector" data-product-id="@Model.ProductId" data-search-url="@Url.Action("SearchProducts", "AliExpress", new { area = "Admin" })" data-default-image="@Url.Content("~/images/default-image.png")">
     <h4>
         <span class="material-icons">shopping_bag</span>
         AliExpress Product Selection
@@ -196,7 +17,7 @@
                 <div class="aliexpress-selected-product-price" id="aliexpressSelectedPrice"></div>
                 <small class="text-muted">ID: <span id="aliexpressSelectedId"></span></small>
             </div>
-            <button type="button" class="aliexpress-btn aliexpress-btn-secondary" onclick="removeAliExpressProduct()">
+            <button type="button" class="aliexpress-btn aliexpress-btn-secondary" data-action="remove-product">
                 <span class="material-icons">delete</span>
                 Remove
             </button>
@@ -207,7 +28,7 @@
         <p class="text-muted">No AliExpress product selected for this product.</p>
     </div>
 
-    <button type="button" class="aliexpress-btn" onclick="openAliExpressSearch()">
+    <button type="button" class="aliexpress-btn" data-action="open-search">
         <span class="material-icons">search</span>
         Search AliExpress Products
     </button>
@@ -224,14 +45,14 @@
                 <span class="material-icons" style="margin-right: 8px; color: #FF6A00;">search</span>
                 Search AliExpress Products
             </h3>
-            <button class="aliexpress-close-btn" onclick="closeAliExpressSearch()">
+            <button class="aliexpress-close-btn" data-action="close-search">
                 <span class="material-icons">close</span>
             </button>
         </div>
         <div class="aliexpress-search-modal-body">
             <div class="aliexpress-search-box">
-                <input type="text" id="aliexpressSearchKeyword" placeholder="Enter search keyword..." onkeypress="if(event.key==='Enter'){searchAliExpressProducts();}">
-                <button onclick="searchAliExpressProducts()">
+                <input type="text" id="aliexpressSearchKeyword" placeholder="Enter search keyword...">
+                <button data-action="search-products">
                     <span class="material-icons">search</span>
                     Search
                 </button>
@@ -245,88 +66,4 @@
     </div>
 </div>
 
-<script>
-    function openAliExpressSearch() {
-        document.getElementById('aliexpressSearchModal').classList.add('show');
-    }
-
-    function closeAliExpressSearch() {
-        document.getElementById('aliexpressSearchModal').classList.remove('show');
-    }
-
-    function searchAliExpressProducts() {
-        const keyword = document.getElementById('aliexpressSearchKeyword').value;
-        if (!keyword) {
-            alert('Please enter a search keyword');
-            return;
-        }
-
-        const resultsDiv = document.getElementById('aliexpressSearchResults');
-        const loadingDiv = document.getElementById('aliexpressSearchLoading');
-        
-        resultsDiv.innerHTML = '';
-        loadingDiv.style.display = 'block';
-
-        fetch('/Admin/AliExpress/SearchProducts?keyword=' + encodeURIComponent(keyword))
-            .then(response => response.json())
-            .then(data => {
-                loadingDiv.style.display = 'none';
-                
-                if (data.success && data.data && data.data.length > 0) {
-                    data.data.forEach(product => {
-                        const item = document.createElement('div');
-                        item.className = 'aliexpress-search-result-item';
-                        item.onclick = () => selectAliExpressProduct(product);
-                        
-                        item.innerHTML = `
-                            <img src="${product.imageUrl || '/images/default-image.png'}" alt="${product.productTitle}">
-                            <div class="aliexpress-search-result-title">${product.productTitle}</div>
-                            <div class="aliexpress-search-result-price">${product.currency || 'USD'} ${product.salePrice || product.originalPrice || 'N/A'}</div>
-                        `;
-                        
-                        resultsDiv.appendChild(item);
-                    });
-                } else {
-                    resultsDiv.innerHTML = '<p class="text-center text-muted">No products found. Try a different keyword.</p>';
-                }
-            })
-            .catch(error => {
-                loadingDiv.style.display = 'none';
-                console.error('Error:', error);
-                resultsDiv.innerHTML = '<p class="text-center text-danger">Error searching products. Please try again.</p>';
-            });
-    }
-
-    function selectAliExpressProduct(product) {
-        document.getElementById('aliexpressProductId').value = product.productId;
-        document.getElementById('aliexpressProductData').value = JSON.stringify(product);
-        
-        document.getElementById('aliexpressSelectedImage').src = product.imageUrl || '/images/default-image.png';
-        document.getElementById('aliexpressSelectedTitle').textContent = product.productTitle;
-        document.getElementById('aliexpressSelectedPrice').textContent = `${product.currency || 'USD'} ${product.salePrice || product.originalPrice || 'N/A'}`;
-        document.getElementById('aliexpressSelectedId').textContent = product.productId;
-        
-        document.getElementById('aliexpressSelectedProduct').style.display = 'block';
-        document.getElementById('aliexpressNoSelection').style.display = 'none';
-        
-        closeAliExpressSearch();
-    }
-
-    function removeAliExpressProduct() {
-        if (confirm('Are you sure you want to remove the AliExpress product association?')) {
-            document.getElementById('aliexpressProductId').value = '';
-            document.getElementById('aliexpressProductData').value = '';
-            document.getElementById('aliexpressSelectedProduct').style.display = 'none';
-            document.getElementById('aliexpressNoSelection').style.display = 'block';
-        }
-    }
-
-    // Initialize display based on existing data
-    (function() {
-        const productId = document.getElementById('aliexpressProductId').value;
-        if (productId) {
-            document.getElementById('aliexpressSelectedProduct').style.display = 'block';
-            document.getElementById('aliexpressNoSelection').style.display = 'none';
-        }
-    })();
-</script>
+<script src="@Url.Content("~/Plugins/DropShipping.AliExpress/Content/aliexpress-product-selector.js")"></script>

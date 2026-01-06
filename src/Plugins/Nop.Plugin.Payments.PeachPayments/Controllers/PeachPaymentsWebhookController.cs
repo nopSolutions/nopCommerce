@@ -7,6 +7,8 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using ClosedXML.Excel;
+using LinqToDB.Common;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
@@ -16,7 +18,6 @@ using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
-using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Payments.PeachPayments.Controllers
 {

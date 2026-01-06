@@ -19,6 +19,8 @@
     <PackageReference Include="MailKit" Version="4.13.0" />
     <PackageReference Include="Markdig" Version="0.42.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="5.3.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.15.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.15.0" />
     <PackageReference Include="PdfRpt.Core" Version="1.5.16" />
     <PackageReference Include="System.ServiceModel.Http" Version="8.1.2" />
     <PackageReference Include="SkiaSharp" Version="3.119.0" />

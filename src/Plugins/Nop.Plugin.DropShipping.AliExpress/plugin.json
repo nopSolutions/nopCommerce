@@ -2,10 +2,13 @@
   "Group": "Drop Shipping",
   "FriendlyName": "AliExpress Drop Shipping",
   "SystemName": "DropShipping.AliExpress",
-  "Version": "1.0.0",
+  "Version": "4.91.2",
   "SupportedVersions": [ "4.90" ],
   "Author": "AliExpress Integration Team",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.DropShipping.AliExpress.dll",
-  "Description": "Automates drop shipping with AliExpress integration. Search and import products, sync prices, manage orders, and automate fulfillment with local courier integration."
+  "Description": "Automates drop shipping with AliExpress integration. Search and import products, sync prices, manage orders, and automate fulfillment with local courier integration.",
+  "DependsOn" : [
+    "Shipping.CourierGuy"
+  ]
 }

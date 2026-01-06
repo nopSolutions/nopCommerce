@@ -19,7 +19,9 @@ using Nop.Services.ScheduleTasks;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using NUglify.Helpers;
-using System.Linq; // added for LINQ operations
+using System.Linq;
+using ClosedXML.Excel;
+ // added for LINQ operations
 
 namespace Nop.Plugin.Shipping.CourierGuy;
 

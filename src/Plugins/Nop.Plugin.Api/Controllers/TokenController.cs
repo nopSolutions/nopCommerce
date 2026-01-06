@@ -115,7 +115,7 @@ namespace Nop.Plugin.Api.Controllers
 		}
 
 		[HttpGet]
-		[Authorize(Policy = JwtBearerDefaults.AuthenticationScheme, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] // this validates token
+		[Authorize(Policy = JwtBearerDefaults.AuthenticationScheme, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		[Route("/token/check", Name = "ValidateToken")]
 		[ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
 		[ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]

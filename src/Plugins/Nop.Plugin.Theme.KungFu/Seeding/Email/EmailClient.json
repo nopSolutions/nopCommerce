@@ -1,0 +1,17 @@
+[
+  {
+    "Id": 1,
+    "DisplayName": "Shop Kung Fu Store Mail",
+    "Email": "shop@kung-fu.co.za",
+    "Host": "smtp.zeptomail.com",
+    "Username": "emailapikey",
+    "Password": "wSsVR60g8hejCv95zzOkc+ptzwhUU16iEkgsjFv17nL8GvHLocdqlRKcAgOhGvgaFm84FjFGpbt7kRhRgDRYjot+nl0CXSiF9mqRe1U4J3x17qnvhDzOV2tckxGNLo4MzghpmmhiFMgr+g==",
+    "Port": 465,
+    "EnableSsl": 1,
+    "MaxNumberOfEmails": 2,
+    "EmailAuthenticationMethodId": 10,
+    "ClientId": null,
+    "ClientSecret": null,
+    "TenantId": null
+  }
+]

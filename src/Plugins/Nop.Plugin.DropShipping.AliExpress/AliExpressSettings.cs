@@ -99,4 +99,14 @@ public class AliExpressSettings : ISettings
 
     public int DefaultPageSize { get; set; } = 10;
     public int DefaultPageIndex { get; set; } = 1;
+    /*
+     *     "RedirectUri": "https://shop.kung-fu.co.za/ali-express/callback",
+       "AuthorizationUrl": "https://api-sg.aliexpress.com/oauth/authorize",
+
+     */
+    public string AuthorizationUrl { get; set; } = "https://api-sg.aliexpress.com/oauth/authorize";
+    public string RedirectUri { get; set; } = "ali-express/callback";
+    
+    public string RedirectUriHost { get; set; } = "https://shop.kung-fu.co.za";
+    public string AuthorizationLaunchUrl { get; set; }
 }

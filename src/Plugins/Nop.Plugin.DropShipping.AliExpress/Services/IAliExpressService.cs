@@ -25,7 +25,7 @@ public interface IAliExpressService
     /// <summary>
     /// Checks if the current token is valid
     /// </summary>
-    bool IsTokenValid();
+    Task<bool> IsTokenValid();
 
     /// <summary>
     /// Searches for products on AliExpress

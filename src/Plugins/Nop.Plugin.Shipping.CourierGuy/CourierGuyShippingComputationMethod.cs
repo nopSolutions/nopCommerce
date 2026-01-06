@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using System.Text;
+using ClosedXML.Excel;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
@@ -15,6 +16,7 @@ using Nop.Services.Logging;
 using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
+
 
 namespace Nop.Plugin.Shipping.CourierGuy;
 
@@ -32,13 +34,17 @@ public class CourierGuyShippingComputationMethod : BasePlugin, IShippingRateComp
     private CourierGuyHttpClientFactory _shipLogicHttpClientFactory;
     private readonly ILogger _logger;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IWarehouseService _warehouseService;
+    private readonly IAddressService _addressService;
+    private readonly IStateProvinceService _stateProvinceService;
+    private readonly ICountryService _countryService;
 
     public CourierGuyShippingComputationMethod(
         IWebHelper webHelper,
         ISettingService settingService,
         ILocalizationService localizationService,
         IHttpClientFactory httpClientFactory,
-        ICourierGuyNopEntityMapper courierGuyNopEntityMapper, ILogger logger)
+        ICourierGuyNopEntityMapper courierGuyNopEntityMapper, ILogger logger, IWarehouseService warehouseService, IAddressService addressService, ICountryService countryService, IStateProvinceService stateProvinceService)
     {
         _webHelper = webHelper;
         _settingService = settingService;
@@ -46,6 +52,10 @@ public class CourierGuyShippingComputationMethod : BasePlugin, IShippingRateComp
         _httpClientFactory = httpClientFactory;
         _courierGuyNopEntityMapper = courierGuyNopEntityMapper;
         _logger = logger;
+        _warehouseService = warehouseService;
+        _addressService = addressService;
+        _countryService = countryService;
+        _stateProvinceService = stateProvinceService;
         // https://api-docs.bob.co.za/shiplogic
         _shipLogicHttpClientFactory = new CourierGuyHttpClientFactory(httpClientFactory, _settingService);
     }
@@ -94,7 +104,46 @@ public class CourierGuyShippingComputationMethod : BasePlugin, IShippingRateComp
                 "The Shipment Request endpoint URI, appended to the base URL",
             ["Plugins.Shipping.CourierGuy.Instructions"] = "Courier Guy Ship Logic API Configuration Documentation Can be found at https://api-docs.bob.co.za/shiplogic",
         });
+        
+        await EnsureWarehouseExistsAsync(_settingService);
+        
         await base.InstallAsync();
+    }
+
+    private async Task EnsureWarehouseExistsAsync(ISettingService settingService)
+    {
+        var countries = await _countryService.GetAllCountriesAsync();
+        var country = countries.FirstOrDefault(c => c.TwoLetterIsoCode == "ZA");
+        var stateProvinces = await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id);
+        var westernCape = stateProvinces.FirstOrDefault(sp => sp.Abbreviation == "WC");
+        
+        var address = new Core.Domain.Common.Address
+        {
+            Address1 = "22 Guildford Road Parklands",
+            City = "Cape Town",
+            CountryId = country.Id,
+            StateProvinceId = westernCape.Id,
+            ZipPostalCode = "7441",
+            CreatedOnUtc = DateTime.UtcNow,
+            Company = "Register One (Pty) Ltd",
+            FirstName = "JohnMark",
+            LastName = "Van Niekerk",
+            Email = "sales@onlinemusicstore.co.za",
+            PhoneNumber = "0662929701", 
+            Id = 1
+        };
+
+        var warehouses = await _warehouseService.GetAllWarehousesAsync();
+        var ourWarehouse = warehouses.FirstOrDefault(w => w.Name == "Head Office Warehouse");
+        if (ourWarehouse == null)
+        {
+            await _addressService.InsertAddressAsync(address);
+            var insertedAddress = await _addressService.GetAddressByIdAsync(address.Id);
+
+            ourWarehouse = new Core.Domain.Shipping.Warehouse { Name = "Head Office Warehouse", AddressId = 1, };
+
+            await _warehouseService.InsertWarehouseAsync(ourWarehouse);
+        }
     }
 
     public async Task<GetShippingOptionResponse> GetShippingOptionsAsync(
@@ -149,14 +198,9 @@ public class CourierGuyShippingComputationMethod : BasePlugin, IShippingRateComp
             {
                 return null;
             }
-
-            var economyByLocalized =
-                await _localizationService.GetResourceAsync(
-                    "Plugins.Shipping.CourierGuy.ShippingComputationMethod.ECO.Description");
             return shippingOptions
                 .ShippingOptions
-                .Single(x => x.Name.Equals(economyByLocalized, StringComparison.OrdinalIgnoreCase))
-                .Rate;
+                .Min(x => x.Rate);
         }
         catch (Exception e)
         {

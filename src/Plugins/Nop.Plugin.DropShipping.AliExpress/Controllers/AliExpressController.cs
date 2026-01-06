@@ -12,6 +12,8 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using System.Text.Json;
+using ClosedXML.Excel;
+using Nop.Services.Plugins;
 
 namespace Nop.Plugin.DropShipping.AliExpress.Controllers;
 
@@ -28,6 +30,7 @@ public class AliExpressController : BasePluginController
     private readonly IAliExpressService _aliExpressService;
     private readonly IAliExpressProductMappingService _mappingService;
     private readonly IProductService _productService;
+    private readonly IPluginService _pluginService;
 
     public AliExpressController(
         ISettingService settingService,
@@ -37,7 +40,8 @@ public class AliExpressController : BasePluginController
         IPermissionService permissionService,
         IAliExpressService aliExpressService,
         IAliExpressProductMappingService mappingService,
-        IProductService productService)
+        IProductService productService,
+        IPluginService pluginService)
     {
         _settingService = settingService;
         _storeContext = storeContext;
@@ -47,6 +51,7 @@ public class AliExpressController : BasePluginController
         _aliExpressService = aliExpressService;
         _mappingService = mappingService;
         _productService = productService;
+        _pluginService = pluginService;
     }
 
     public async Task<IActionResult> Configure()
@@ -56,6 +61,7 @@ public class AliExpressController : BasePluginController
 
         var storeId = (await _storeContext.GetCurrentStoreAsync())?.Id ?? 0;
         var settings = await _settingService.LoadSettingAsync<AliExpressSettings>(storeId);
+        Dictionary<string, string> customProperties = new Dictionary<string, string>();
 
         var model = new ConfigurationModel
         {
@@ -76,12 +82,16 @@ public class AliExpressController : BasePluginController
             AutoCreateLocalShipments = settings.AutoCreateLocalShipments,
             TokenRefreshDaysBeforeExpiry = settings.TokenRefreshDaysBeforeExpiry,
             UseSandbox = settings.UseSandbox,
-            IsTokenValid = _aliExpressService.IsTokenValid()
+            AuthorizationUrl = settings.AuthorizationUrl,
+            RedirectUri = settings.RedirectUri,
+            RedirectUriHost = settings.RedirectUri,
+            IsTokenValid = await _aliExpressService.IsTokenValid(),
+            
         };
 
         if (!string.IsNullOrEmpty(settings.AppKey))
         {
-            model.AuthorizationUrl = await _aliExpressService.GetAuthorizationUrlAsync();
+            model.AuthorizationLaunchUrl = await _aliExpressService.GetAuthorizationUrlAsync();
         }
 
         return View("~/Plugins/DropShipping.AliExpress/Views/Configure.cshtml", model);
@@ -112,6 +122,10 @@ public class AliExpressController : BasePluginController
         settings.AutoCreateLocalShipments = model.AutoCreateLocalShipments;
         settings.TokenRefreshDaysBeforeExpiry = model.TokenRefreshDaysBeforeExpiry;
         settings.UseSandbox = model.UseSandbox;
+        settings.AuthorizationUrl = model.AuthorizationUrl;
+        settings.RedirectUri = model.RedirectUri;
+        settings.RedirectUriHost = settings.RedirectUriHost;
+        settings.AuthorizationLaunchUrl = await _aliExpressService.GetAuthorizationUrlAsync();
 
         await _settingService.SaveSettingAsync(settings, storeId);
 
@@ -250,7 +264,8 @@ public class AliExpressController : BasePluginController
                 // Update existing mapping
                 existingMapping.AliExpressProductId = aliExpressProductId;
                 existingMapping.AliExpressProductUrl = productInfo?.ProductUrl;
-                existingMapping.AliExpressPrice = productInfo?.SalePrice ?? productInfo?.OriginalPrice ?? existingMapping.AliExpressPrice;
+                existingMapping.AliExpressPrice = productInfo?.SalePrice ??
+                                                  productInfo?.OriginalPrice ?? existingMapping.AliExpressPrice;
                 existingMapping.LastSyncOnUtc = DateTime.UtcNow;
                 existingMapping.ProductDetailsJson = productData;
 
@@ -288,9 +303,11 @@ public class AliExpressController : BasePluginController
         if (mapping == null)
             return Json(new { success = false, message = "No mapping found" });
 
-        return Json(new { 
-            success = true, 
-            data = new {
+        return Json(new
+        {
+            success = true,
+            data = new
+            {
                 aliExpressProductId = mapping.AliExpressProductId,
                 productUrl = mapping.AliExpressProductUrl,
                 price = mapping.AliExpressPrice,

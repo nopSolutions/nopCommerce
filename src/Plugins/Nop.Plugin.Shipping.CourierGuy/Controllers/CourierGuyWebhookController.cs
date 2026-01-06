@@ -18,6 +18,7 @@ using System.Linq;
 using System;
 using System.IO;
 using System.Collections.Generic;
+using ClosedXML.Excel;
 
 namespace Nop.Plugin.Shipping.CourierGuy.Controllers
 {

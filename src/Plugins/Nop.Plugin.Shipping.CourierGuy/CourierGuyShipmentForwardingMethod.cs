@@ -19,6 +19,7 @@ using Nop.Services.Orders;
 using Nop.Services.Shipping;
 using NUglify.Helpers;
 
+
 namespace Nop.Plugin.Shipping.CourierGuy;
 
 public class CourierGuyShippingPaymentEventConsumer

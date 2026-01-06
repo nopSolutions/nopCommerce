@@ -6,6 +6,7 @@ using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Mvc.Routing;
 
+
 namespace Nop.Plugin.Theme.KungFu;
 
 public class ThemeKungFuPlugin : BasePlugin

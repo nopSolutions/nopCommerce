@@ -1,3 +1,4 @@
+using ClosedXML.Excel;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -59,6 +60,17 @@ public record ConfigurationModel : BaseNopModel
     [NopResourceDisplayName("Plugins.DropShipping.AliExpress.Fields.UseSandbox")]
     public bool UseSandbox { get; set; }
 
-    public string? AuthorizationUrl { get; set; }
+    [NopResourceDisplayName("Plugins.DropShipping.AliExpress.Fields.AuthorizationUrl")]
+    public string AuthorizationUrl { get; set; } = "https://api-sg.aliexpress.com/oauth/authorize";
+
+    [NopResourceDisplayName("Plugins.DropShipping.AliExpress.Fields.RedirectUri")]
+    public string RedirectUri { get; set; } = "ali-express/callback";
+
+    [NopResourceDisplayName("Plugins.DropShipping.AliExpress.Fields.AuthorizationLaunchUrl")]
+    public string? AuthorizationLaunchUrl { get; set; }
+
     public bool IsTokenValid { get; set; }
+    
+    [NopResourceDisplayName("Plugins.DropShipping.AliExpress.Fields.RedirectUriHost")]
+    public string RedirectUriHost { get; set; }
 }
