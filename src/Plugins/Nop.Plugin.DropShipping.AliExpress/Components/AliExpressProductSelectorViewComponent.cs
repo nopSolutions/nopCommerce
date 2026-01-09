@@ -45,7 +45,7 @@ public class AliExpressProductSelectorViewComponent : NopViewComponent
             var mapping = await _mappingService.GetMappingByProductIdAsync(productModel.Id);
             if (mapping != null)
             {
-                model.AliExpressProductId = mapping.AliExpressProductId.ToString();
+                model.AliExpressProductId = mapping.AliExpressProductId;
             }
         }
 
