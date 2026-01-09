@@ -123,7 +123,7 @@ public class AEBaseClient
         var p = new Dictionary<string, string>(parameters)
         {
             ["method"] = method,
-            ["session"] = Session,
+            ["session"] = string.IsNullOrWhiteSpace(Session) ? null : Session,
             ["app_key"] = AppKey,
             ["simplify"] = "true",
             ["sign_method"] = SignMethod,

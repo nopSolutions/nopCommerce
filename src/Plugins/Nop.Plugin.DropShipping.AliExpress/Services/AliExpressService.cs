@@ -1,15 +1,11 @@
 using System.Text;
-using System.Text.Json;
-using AliExpressSdk.Clients;
-using AliExpressSdk.Models;
-using ClosedXML.Excel;
 using Newtonsoft.Json;
 using Nop.Core;
+using Nop.Plugin.DropShipping.AliExpress.AliExpressSdk.Clients;
+using Nop.Plugin.DropShipping.AliExpress.AliExpressSdk.Models;
 using Nop.Plugin.DropShipping.AliExpress.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
-using JsonSerializer = Newtonsoft.Json.JsonSerializer;
-
 
 namespace Nop.Plugin.DropShipping.AliExpress.Services;
 
@@ -39,7 +35,7 @@ public class AliExpressService : IAliExpressService
         var settings = await _settingService.LoadSettingAsync<AliExpressSettings>(store.Id);
 
         if (string.IsNullOrEmpty(settings.AppKey))
-            throw new NopException("App Key is not configured");
+            return string.Empty;
 
         settings.RedirectUriHost = Uri.TryCreate(settings.RedirectUriHost, UriKind.Absolute, out var host) ? host.ToString() : new AliExpressSettings().RedirectUriHost;
         settings.RedirectUri = Uri.TryCreate(settings.RedirectUri, UriKind.Relative, out var redirect) ? redirect.ToString() : new AliExpressSettings().RedirectUri;
@@ -80,12 +76,15 @@ public class AliExpressService : IAliExpressService
             if (string.IsNullOrEmpty(settings.AppKey) || string.IsNullOrEmpty(settings.AppSecret))
                 return false;
 
-            var client = new AESystemClient(settings.AppKey, settings.AppSecret, string.Empty);
-            var response = await client.GenerateToken(new Dictionary<string, string>()
+            // Create parameters dictionary with only the token-specific parameters
+            // The Execute method in AESystemClient will add app_key, timestamp, sign_method, etc.
+            var parameters = new Dictionary<string, string>
             {
-                // Code = code
                 ["code"] = code
-            });
+            };
+            
+            var client = new AESystemClient(settings.AppKey, settings.AppSecret, "");
+            var response = await client.GenerateToken(parameters);
 
             var tokenResponse =
                 JsonConvert.DeserializeObject<TokenResponse>(response.Data.GetRawText());

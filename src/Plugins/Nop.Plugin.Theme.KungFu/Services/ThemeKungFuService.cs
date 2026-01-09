@@ -263,6 +263,20 @@ public class ThemeKungFuService : IThemeKungFuService
         var emailAccountToUse = seededEmailAccounts.Length == 0
             ? emailAccount.FirstOrDefault()
             : seededEmailAccounts[0];
+        
+        // Seed email account if it does not exist
+        if (emailAccountToUse != null)
+        {
+            var existingAccount = emailAccount.FirstOrDefault(e => e.Email.Equals(emailAccountToUse.Email, StringComparison.OrdinalIgnoreCase));
+            if (existingAccount == null)
+            {
+                await _emailAccountService.InsertEmailAccountAsync(emailAccountToUse);
+            }
+            else
+            {
+                emailAccountToUse = existingAccount;
+            }
+        }   
 
         foreach (var descriptor in GetMessageTemplateDescriptors())
         {

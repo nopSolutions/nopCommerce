@@ -1,4 +1,3 @@
-using ClosedXML.Excel;
 using Nop.Plugin.DropShipping.AliExpress.Services;
 using Nop.Services.Logging;
 using Nop.Services.ScheduleTasks;

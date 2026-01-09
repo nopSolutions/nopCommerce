@@ -12,7 +12,6 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using System.Text.Json;
-using ClosedXML.Excel;
 using Nop.Services.Plugins;
 
 namespace Nop.Plugin.DropShipping.AliExpress.Controllers;

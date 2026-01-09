@@ -5,8 +5,6 @@ using Nop.Services.Catalog;
 using Nop.Services.Events;
 using Nop.Services.Logging;
 using Nop.Services.Media;
-using System.Text.Json;
-using Nop.Plugin.DropShipping.AliExpress.Domain;
 
 
 namespace Nop.Plugin.DropShipping.AliExpress.EventConsumers;

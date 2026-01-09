@@ -39,7 +39,6 @@
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)\Presentation\Nop.Web\Nop.Web.csproj" />
     <ClearPluginAssemblies Include="$(SolutionDir)\Build\ClearPluginAssemblies.proj" />
-    <ProjectReference Include="..\..\..\ThirdPartySdk\AliExpressSdk\AliExpressSdk.csproj" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->

@@ -1,0 +1,4 @@
+{
+  "ds_extend_request": "{\u0022payment\u0022:{\u0022pay_currency\u0022:\u0022ZAR\u0022}}",
+  "param_place_order_request4_open_api_d_t_o": "{\u0022out_order_id\u0022:\u00227f86522e-0d50-4271-9c93-1f50699d3523\u0022,\u0022logistics_address\u0022:{\u0022address\u0022:\u002222 Guildford Road\u0022,\u0022city\u0022:\u0022Cape Town\u0022,\u0022contact_person\u0022:\u0022AliExpress Test\u0022,\u0022country\u0022:\u0022ZA\u0022,\u0022full_name\u0022:\u0022Test Customer\u0022,\u0022mobile_no\u0022:\u00220211234567\u0022,\u0022phone_country\u0022:\u0022\\u002B27\u0022,\u0022phone_number\u0022:\u00220211234567\u0022,\u0022province\u0022:\u0022Western Cape\u0022,\u0022zip\u0022:\u00227441\u0022},\u0022product_items\u0022:[{\u0022product_id\u0022:1005008839327869,\u0022product_count\u0022:1,\u0022sku_attr\u0022:\u002214:350850#white501;200000124:200000333\u0022,\u0022logistics_service_name\u0022:\u0022CAINIAO_FULFILLMENT_STD\u0022}]}"
+}

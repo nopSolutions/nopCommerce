@@ -3,10 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.DropShipping.AliExpress.Services;
-using Nop.Plugin.DropShipping.AliExpress.EventConsumers;
-using Nop.Core.Events;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Orders;
 
 namespace Nop.Plugin.DropShipping.AliExpress.Infrastructure;
 

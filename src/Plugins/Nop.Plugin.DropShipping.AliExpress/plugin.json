@@ -2,7 +2,7 @@
   "Group": "Drop Shipping",
   "FriendlyName": "AliExpress Drop Shipping",
   "SystemName": "DropShipping.AliExpress",
-  "Version": "4.91.2",
+  "Version": "4.91.8",
   "SupportedVersions": [ "4.90" ],
   "Author": "AliExpress Integration Team",
   "DisplayOrder": 1,

@@ -1,4 +1,3 @@
-using Nop.Core.Domain.Catalog;
 using Nop.Data;
 using Nop.Plugin.DropShipping.AliExpress.Domain;
 

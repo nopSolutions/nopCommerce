@@ -1,6 +1,4 @@
-using ClosedXML.Excel;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Events;
 using Nop.Data;
 using Nop.Plugin.DropShipping.AliExpress.Domain;
 using Nop.Plugin.DropShipping.AliExpress.Services;

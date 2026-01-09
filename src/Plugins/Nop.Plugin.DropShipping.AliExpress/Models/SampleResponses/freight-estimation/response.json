@@ -1,0 +1,28 @@
+{
+  "aliexpress_ds_freight_query_response": {
+    "result": {
+      "msg": "Call succeeds",
+      "code": 200,
+      "success": true,
+      "delivery_options": {
+        "delivery_option_d_t_o": [
+          {
+            "code": "CAINIAO_FULFILLMENT_STD",
+            "free_shipping": true,
+            "mayHavePFS": false,
+            "guaranteed_delivery_days": "60",
+            "max_delivery_days": 25,
+            "tracking": true,
+            "delivery_date_desc": "Jan 14 - 24",
+            "company": "AliExpress Selection Standard",
+            "ship_from_country": "CN",
+            "min_delivery_days": 15,
+            "available_stock": "60"
+          }
+        ]
+      }
+    },
+    "request_id": "0babe9e717671293410525015",
+    "_trace_id_": "2140f4b917671293410493515e53ec"
+  }
+}
