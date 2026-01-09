@@ -9,65 +9,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="532d8e50-0d93-4165-a6fa-648fa1390b40" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Clients/AEBaseClient.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Clients/AESystemClient.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Clients/AffiliateClient.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Docs/ApiSignatures.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Docs/FreightEstimation.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Docs/OrderCreation.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Docs/OrderCreationWorkflow.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Docs/ProductRetrieval.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Docs/SellerAuthorisation.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Docs/generateSecurityToken.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Docs/images/authPage.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Docs/images/authSteps.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Docs/images/serviceAddress.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Docs/images/tokenResponse.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Models/Freight/FreightQueryRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Models/Order/OrderCreateRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Models/ProductDetails/ProductDetailsRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Models/ProductSearch/ProductSearchRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Models/Result.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Models/SignedTokenRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Models/TokenRefreshRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Models/TokenRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Models/TokenRequestBase.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Models/TokenResponse.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/AliExpressSdk/Services/SignatureService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/SampleResponses/auth-token-create/request.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/SampleResponses/auth-token-create/response.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/SampleResponses/freight-estimation/request.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/SampleResponses/freight-estimation/response.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/SampleResponses/order-create/request.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/SampleResponses/order-create/response.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/SampleResponses/product-details/request.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/SampleResponses/product-details/response.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/SampleResponses/product-search/request.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/SampleResponses/product-search/response.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ThirdPartySdk/AliExpressSdk/AliExpressSdk.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../ThirdPartySdk/AliExpressSdk/AliExpressSdk.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ThirdPartySdk/AliExpressSdk/Clients/AEBaseClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../ThirdPartySdk/AliExpressSdk/Clients/AEBaseClient.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NopCommerce/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Controllers/AliExpressAuthController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Controllers/AliExpressAuthController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Controllers/AliExpressController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Controllers/AliExpressController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Controllers/AliExpressWebhookController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Controllers/AliExpressWebhookController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Domain/AliExpressOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Domain/AliExpressOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Domain/AliExpressProductMapping.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Domain/AliExpressProductMapping.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/EventConsumers/OrderPlacedEventConsumer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/EventConsumers/OrderPlacedEventConsumer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/EventConsumers/ProductEventConsumers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/EventConsumers/ProductEventConsumers.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Infrastructure/NopStartup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Infrastructure/NopStartup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/AliExpressModels.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/AliExpressModels.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/ConfigurationModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Models/ConfigurationModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Nop.Plugin.DropShipping.AliExpress.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Nop.Plugin.DropShipping.AliExpress.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/ScheduledTasks/OrderTrackingTask.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/ScheduledTasks/OrderTrackingTask.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/ScheduledTasks/ProductSyncTask.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/ScheduledTasks/ProductSyncTask.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/ScheduledTasks/TokenRefreshTask.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/ScheduledTasks/TokenRefreshTask.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Services/AliExpressOrderTrackingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Services/AliExpressOrderTrackingService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Services/AliExpressProductMappingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Services/AliExpressProductMappingService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Services/AliExpressService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Services/AliExpressService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Content/aliexpress-product-selector.js" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Content/aliexpress-product-selector.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/plugin.json" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/plugin.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Theme.KungFu/Services/ThemeKungFuService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Theme.KungFu/Services/ThemeKungFuService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/Nop.Plugin.Theme.KungFu/plugin.json" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/Nop.Plugin.Theme.KungFu/plugin.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Presentation/Nop.Web/App_Data/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Presentation/Nop.Web/App_Data/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -177,6 +121,7 @@
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
       <option name="PROJECT_KIND" value="DotNetCore" />
       <option name="PROJECT_TFM" value="net9.0" />
+      <browser with-js-debugger="true" />
       <method v="2">
         <option name="Build" />
       </method>
@@ -226,7 +171,7 @@
       <workItem from="1765102999887" duration="5527000" />
       <workItem from="1767283124607" duration="4362000" />
       <workItem from="1767803439426" duration="5776000" />
-      <workItem from="1767946581936" duration="6393000" />
+      <workItem from="1767946581936" duration="10144000" />
     </task>
     <task id="LOCAL-00001" summary="Adds kung-fu theme and images">
       <option name="closed" value="true" />
@@ -404,6 +349,12 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/Plugins/Nop.Plugin.DropShipping.AliExpress/Content/aliexpress-product-selector.js</url>
+          <line>45</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -47,9 +47,9 @@
                         item.className = 'aliexpress-search-result-item';
                         item.addEventListener('click', () => selectProduct(product));
                         item.innerHTML = `
-                            <img src="${product.imageUrl || defaultImage}" alt="${product.productTitle}">
-                            <div class="aliexpress-search-result-title">${product.productTitle}</div>
-                            <div class="aliexpress-search-result-price">${product.currency || 'USD'} ${product.salePrice || product.originalPrice || 'N/A'}</div>
+                            <img src="${product.ImageUrl || defaultImage}" alt="${product.ProductTitle}">
+                            <div class="aliexpress-search-result-title">${product.ProductTitle}</div>
+                            <div class="aliexpress-search-result-price">${product.Currency || 'USD'} ${product.SalePrice || product.OriginalPrice || 'N/A'}</div>
                         `;
                         searchResults.appendChild(item);
                     });
@@ -65,12 +65,12 @@
     };
 
     const selectProduct = (product) => {
-        productIdField.value = product.productId;
+        productIdField.value = product.ProductId;
         productDataField.value = JSON.stringify(product);
-        selectedImage.src = product.imageUrl || defaultImage;
-        selectedTitle.textContent = product.productTitle;
-        selectedPrice.textContent = `${product.currency || 'USD'} ${product.salePrice || product.originalPrice || 'N/A'}`;
-        selectedId.textContent = product.productId;
+        selectedImage.src = product.ImageUrl || defaultImage;
+        selectedTitle.textContent = product.ProductTitle;
+        selectedPrice.textContent = `${product.Currency || 'USD'} ${product.SalePrice || product.OriginalPrice || 'N/A'}`;
+        selectedId.textContent = product.ProductId;
         selectedProductBlock.style.display = 'block';
         noSelectionBlock.style.display = 'none';
         toggleModal(false);
