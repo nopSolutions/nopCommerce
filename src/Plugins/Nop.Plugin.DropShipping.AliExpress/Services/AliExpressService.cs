@@ -266,14 +266,14 @@ public class AliExpressService : IAliExpressService
                     return new AliExpressProductDetailsModel
                     {
                         ProductId = productId,
-                        ProductTitle = productResult.Subject,
+                        ProductTitle = productResult.BaseInfo?.Subject,
                         ProductUrl = $"https://www.aliexpress.com/item/{productId}.html",
-                        ImageUrls = productResult.ProductMainImageUrl != null
-                            ? new List<string> { productResult.ProductMainImageUrl }
+                        ImageUrls = !string.IsNullOrEmpty(productResult.MultimediaInfo?.ImageUrls)
+                            ? productResult.MultimediaInfo.ImageUrls.Split(';').ToList()
                             : new List<string>(),
-                        Description = productResult.Subject,
-                        IsAvailable = productResult.AeItemSkuInfoDtos?.AeItemSkuInfoDto?.Any() ?? false,
-                        Currency = productResult.AeItemSkuInfoDtos?.AeItemSkuInfoDto?.FirstOrDefault()?.CurrencyCode
+                        Description = productResult.BaseInfo?.Subject,
+                        IsAvailable = productResult.AeItemSkuInfoDtos?.SkuList?.Any() ?? false,
+                        Currency = productResult.AeItemSkuInfoDtos?.SkuList?.FirstOrDefault()?.CurrencyCode
                     };
                 }
             }
@@ -312,7 +312,7 @@ public class AliExpressService : IAliExpressService
             if (productResult.Ok && productResult.Data is { } productData)
             {
                 var productResponse = System.Text.Json.JsonSerializer.Deserialize<ProductDetailsResponse>(productData.GetRawText());
-                skuId = productResponse?.AliexpressDsProductGetResponse?.Result?.AeItemSkuInfoDtos?.AeItemSkuInfoDto?.FirstOrDefault()?.SkuId;
+                skuId = productResponse?.AliexpressDsProductGetResponse?.Result?.AeItemSkuInfoDtos?.SkuList?.FirstOrDefault()?.SkuId;
             }
 
             if (string.IsNullOrEmpty(skuId))

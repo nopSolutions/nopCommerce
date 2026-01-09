@@ -1,11 +1,14 @@
 using Nop.Core;
+using Nop.Plugin.DropShipping.AliExpress.Components;
 using Nop.Plugin.DropShipping.AliExpress.Services;
+using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Plugins;
 using Nop.Services.ScheduleTasks;
+using Nop.Web.Framework.Infrastructure;
 
 
 namespace Nop.Plugin.DropShipping.AliExpress;
@@ -13,7 +16,7 @@ namespace Nop.Plugin.DropShipping.AliExpress;
 /// <summary>
 /// AliExpress Drop Shipping plugin
 /// </summary>
-public class AliExpressPlugin : BasePlugin, IMiscPlugin
+public class AliExpressPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
 {
     private const string COURIER_GUY_PLUGIN_SYSTEM_NAME = "Shipping.CourierGuy";
     private readonly ISettingService _settingService;
@@ -273,4 +276,34 @@ public class AliExpressPlugin : BasePlugin, IMiscPlugin
         
         
     }
+
+    /// <summary>
+    /// Gets widget zones where this plugin should be rendered
+    /// </summary>
+    /// <returns>Widget zones</returns>
+    public Task<IList<string>> GetWidgetZonesAsync()
+    {
+        return Task.FromResult<IList<string>>(new List<string>
+        {
+            AdminWidgetZones.ProductDetailsBlock
+        });
+    }
+
+    /// <summary>
+    /// Gets a type of a view component for displaying widget
+    /// </summary>
+    /// <param name="widgetZone">Name of the widget zone</param>
+    /// <returns>View component type</returns>
+    public Type GetWidgetViewComponent(string widgetZone)
+    {
+        if (widgetZone == AdminWidgetZones.ProductDetailsBlock)
+            return typeof(AliExpressProductSelectorViewComponent);
+
+        return null;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
+    /// </summary>
+    public bool HideInWidgetList => false;
 }
