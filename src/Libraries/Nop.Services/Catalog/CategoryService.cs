@@ -208,8 +208,8 @@ public partial class CategoryService : ICategoryService
         foreach (var subcategory in subcategories)
         {
             subcategory.ParentCategoryId = 0;
-            await UpdateCategoryAsync(subcategory);
         }
+        await _categoryRepository.UpdateAsync(subcategories);
     }
 
     /// <summary>
