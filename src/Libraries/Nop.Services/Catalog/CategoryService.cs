@@ -205,10 +205,10 @@ public partial class CategoryService : ICategoryService
 
         //reset a "Parent category" property of all child subcategories
         var subcategories = await GetAllCategoriesByParentCategoryIdAsync(category.Id, true);
+
         foreach (var subcategory in subcategories)
-        {
             subcategory.ParentCategoryId = 0;
-        }
+
         await _categoryRepository.UpdateAsync(subcategories);
     }
 
