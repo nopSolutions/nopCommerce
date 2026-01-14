@@ -38,6 +38,11 @@ public partial class Order : BaseEntity, ISoftDeletedEntity
     public int? ShippingAddressId { get; set; }
 
     /// <summary>
+    /// Gets or sets the desired delivery date
+    /// </summary>
+    public DateTime? DesiredDeliveryDateUtc { get; set; }
+
+    /// <summary>
     /// Gets or sets the pickup address identifier
     /// </summary>
     public int? PickupAddressId { get; set; }

@@ -638,6 +638,9 @@ public partial class OrderModelFactory : IOrderModelFactory
         if (order.ShippingStatus == ShippingStatus.ShippingNotRequired)
             return;
 
+        if (order.DesiredDeliveryDateUtc.HasValue)
+            model.DesiredDeliveryDate = (await _dateTimeHelper.ConvertToUserTimeAsync(order.DesiredDeliveryDateUtc.Value, DateTimeKind.Utc)).ToString("d");
+
         model.IsShippable = true;
         model.ShippingMethod = order.ShippingMethod;
         model.CanAddNewShipments = await _orderService.HasItemsToAddToShipmentAsync(order);

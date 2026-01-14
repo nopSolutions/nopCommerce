@@ -1040,6 +1040,8 @@ public partial class SettingModelFactory : ISettingModelFactory
             model.DisplayShipmentEventsToStoreOwner_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.DisplayShipmentEventsToStoreOwner, storeId);
             model.HideShippingTotal_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.HideShippingTotal, storeId);
             model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.BypassShippingMethodSelectionIfOnlyOne, storeId);
+            model.AllowCustomerToChooseDeliveryDate_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.AllowCustomerToChooseDeliveryDate, storeId);
+            model.DeliveryDateRangeDays_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.DeliveryDateRangeDays, storeId);
             model.ConsiderAssociatedProductsDimensions_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.ConsiderAssociatedProductsDimensions, storeId);
             model.ShippingOriginAddress_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.ShippingOriginAddressId, storeId);
             model.ShippingSorting_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.ShippingSorting, storeId);
