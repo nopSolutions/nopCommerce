@@ -183,8 +183,10 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
             var sortedEntities = new List<TEntity>(listOfId.Count);
 
             foreach (var id in listOfId)
+            {
                 if (entitiesById.TryGetValue(id, out var entry))
                     sortedEntities.Add(entry);
+            }
 
             return sortedEntities;
         }

@@ -299,9 +299,8 @@ public class BrevoController : BasePluginController
         //synchronize contacts of selected store
         var messages = await _brevoEmailManager.SynchronizeAsync();
         foreach (var message in messages)
-        {
             _notificationService.Notification(message.Type, message.Message, false);
-        }
+
         if (!messages.Any(message => message.Type == NotifyType.Error))
         {
             ViewData["synchronizationStart"] = true;

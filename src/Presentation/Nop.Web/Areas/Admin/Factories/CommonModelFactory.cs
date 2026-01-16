@@ -800,11 +800,13 @@ public partial class CommonModelFactory : ICommonModelFactory
         foreach (var header in _httpContextAccessor.HttpContext.Request.Headers)
         {
             if (header.Key != HeaderNames.Cookie)
+            {
                 model.Headers.Add(new SystemInfoModel.HeaderModel
                 {
                     Name = header.Key,
                     Value = header.Value
                 });
+            }
         }
 
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -838,8 +840,10 @@ public partial class CommonModelFactory : ICommonModelFactory
         var currentStaticCacheManagerName = _staticCacheManager.GetType().Name;
 
         if (_appSettings.Get<DistributedCacheConfig>().Enabled)
+        {
             currentStaticCacheManagerName +=
                 $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.Get<DistributedCacheConfig>().DistributedCacheType)})";
+        }
 
         model.CurrentStaticCacheManager = currentStaticCacheManagerName;
 

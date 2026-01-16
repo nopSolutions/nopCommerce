@@ -378,8 +378,10 @@ public partial class ProductModelFactory : IProductModelFactory
                                         .ConditionAttributeXml);
                                 foreach (var attributeValue in selectedValues)
                                 foreach (var item in attributeModel.Values)
+                                {
                                     if (attributeValue.Id == item.Id)
                                         item.IsPreSelected = true;
+                                }
                             }
 
                             break;
@@ -1805,9 +1807,7 @@ public partial class ProductModelFactory : IProductModelFactory
         {
             //fill in model values from the entity
             if (model == null)
-            {
                 model = productTag.ToModel<ProductTagModel>();
-            }
 
             model.ProductCount = await _productTagService.GetProductCountByProductTagIdAsync(productTag.Id, storeId: 0, showHidden: true);
 
@@ -2205,9 +2205,7 @@ public partial class ProductModelFactory : IProductModelFactory
                 }
 
                 if (value.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                {
                     productAttributeValueModel.AssociatedProductName = (await _productService.GetProductByIdAsync(value.AssociatedProductId))?.Name ?? string.Empty;
-                }
 
                 var valuePicture = (await _productAttributeService.GetProductAttributeValuePicturesAsync(value.Id)).FirstOrDefault();
                 var pictureThumbnailUrl = await _pictureService.GetPictureUrlAsync(valuePicture?.PictureId ?? 0, 75, false);

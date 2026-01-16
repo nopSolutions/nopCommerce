@@ -838,9 +838,7 @@ public partial class ProductModelFactory : IProductModelFactory
         }
         //minimum quantity notification
         if (product.OrderMinimumQuantity > 1)
-        {
             model.MinimumQuantityNotification = string.Format(await _localizationService.GetResourceAsync("Products.MinimumQuantityNotification"), product.OrderMinimumQuantity);
-        }
 
         //'add to cart', 'add to wishlist' buttons
         model.DisableBuyButton = product.DisableBuyButton || !await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART);
@@ -1029,14 +1027,16 @@ public partial class ProductModelFactory : IProductModelFactory
                             var selectedValues = await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml);
                             foreach (var attributeValue in selectedValues)
                                 foreach (var item in attributeModel.Values)
-                                    if (attributeValue.Id == item.Id)
-                                    {
-                                        item.IsPreSelected = true;
+                            {
+                                if (attributeValue.Id == item.Id)
+                                {
+                                    item.IsPreSelected = true;
 
-                                        //set customer entered quantity
-                                        if (attributeValue.CustomerEntersQty)
-                                            item.Quantity = attributeValue.Quantity;
-                                    }
+                                    //set customer entered quantity
+                                    if (attributeValue.CustomerEntersQty)
+                                        item.Quantity = attributeValue.Quantity;
+                                }
+                            }
                         }
                     }
 
@@ -1336,21 +1336,15 @@ public partial class ProductModelFactory : IProductModelFactory
 
             //price
             if (preparePriceModel)
-            {
                 model.ProductPrice = await PrepareProductPriceModelAsync(product, true, forceRedirectionAfterAddingToCart);
-            }
 
             //picture
             if (preparePictureModel)
-            {
                 model.PictureModels = await PrepareProductOverviewPicturesModelAsync(product, productThumbPictureSize);
-            }
 
             //specs
             if (prepareSpecificationAttributes)
-            {
                 model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
-            }
 
             //reviews
             model.ReviewOverviewModel = await PrepareProductReviewOverviewModelAsync(product);
@@ -1478,9 +1472,7 @@ public partial class ProductModelFactory : IProductModelFactory
             //delivery date
             var deliveryDate = await _dateRangeService.GetDeliveryDateByIdAsync(product.DeliveryDateId);
             if (deliveryDate != null)
-            {
                 model.DeliveryDate = await _localizationService.GetLocalizedAsync(deliveryDate, dd => dd.Name);
-            }
         }
 
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -1544,16 +1536,12 @@ public partial class ProductModelFactory : IProductModelFactory
         //breadcrumb
         //do not prepare this model for the associated products. anyway it's not used
         if (_catalogSettings.CategoryBreadcrumbEnabled && !isAssociatedProduct)
-        {
             model.Breadcrumb = await PrepareProductBreadcrumbModelAsync(product);
-        }
 
         //product tags
         //do not prepare this model for the associated products. anyway it's not used
         if (!isAssociatedProduct)
-        {
             model.ProductTags = await PrepareProductTagModelsAsync(product);
-        }
 
         //pictures and videos
         model.DefaultPictureZoomEnabled = _mediaSettings.DefaultPictureZoomEnabled;
@@ -1600,9 +1588,7 @@ public partial class ProductModelFactory : IProductModelFactory
         //product specifications
         //do not prepare this model for the associated products. anyway it's not used
         if (!isAssociatedProduct)
-        {
             model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
-        }
 
         //product review overview
         model.ProductReviewOverview = await PrepareProductReviewOverviewModelAsync(product);
@@ -1820,9 +1806,7 @@ public partial class ProductModelFactory : IProductModelFactory
         var pageIndex = 0;
 
         if (page > 0)
-        {
             pageIndex = page.Value - 1;
-        }
 
         var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();

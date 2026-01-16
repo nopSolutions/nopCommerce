@@ -48,13 +48,17 @@ public static class ProductExtensions
                 };
 
             if (orderBy == ProductSortingEnum.NameAsc)
+            {
                 productsQuery = from item in query
                     orderby item.sortName
                     select item.product;
+            }
             else
+            {
                 productsQuery = from item in query
                     orderby item.sortName descending
                     select item.product;
+            }
 
             return productsQuery;
         }

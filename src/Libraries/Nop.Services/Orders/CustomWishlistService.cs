@@ -64,9 +64,7 @@ public partial class CustomWishlistService : ICustomWishlistService
     {
         var item = await _customWishlistRepository.GetByIdAsync(itemId);
         if (item != null)
-        {
             await _customWishlistRepository.DeleteAsync(item);
-        }
     }
 
     /// <summary>

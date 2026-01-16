@@ -113,18 +113,14 @@ public static class FilePermissionHelper
                 .ToList();
 
             foreach (var rule in rules.Where(rule => current.User?.Equals(rule.IdentityReference) ?? false))
-            {
                 CheckAccessRule(rule, ref deleteIsDeny, ref modifyIsDeny, ref readIsDeny, ref writeIsDeny, ref deleteIsAllow, ref modifyIsAllow, ref readIsAllow, ref writeIsAllow);
-            }
 
             if (current.Groups != null)
             {
                 foreach (var reference in current.Groups)
                 {
                     foreach (var rule in rules.Where(rule => reference.Equals(rule.IdentityReference)))
-                    {
                         CheckAccessRule(rule, ref deleteIsDeny, ref modifyIsDeny, ref readIsDeny, ref writeIsDeny, ref deleteIsAllow, ref modifyIsAllow, ref readIsAllow, ref writeIsAllow);
-                    }
                 }
             }
 

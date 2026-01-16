@@ -408,9 +408,7 @@ public partial class CountryController : BaseAdminController
             ?? throw new ArgumentException("No state found with the specified id");
 
         if (await _addressService.GetAddressTotalByStateProvinceIdAsync(state.Id) > 0)
-        {
             return ErrorJson(await _localizationService.GetResourceAsync("Admin.Configuration.Countries.States.CantDeleteWithAddresses"));
-        }
 
         //int countryId = state.CountryId;
         await _stateProvinceService.DeleteStateProvinceAsync(state);
@@ -444,13 +442,9 @@ public partial class CountryController : BaseAdminController
             {
                 //country is not selected ("choose country" item)
                 if (addSelectStateItem.HasValue && addSelectStateItem.Value)
-                {
                     result.Insert(0, new { id = 0, name = await _localizationService.GetResourceAsync("Admin.Address.SelectState") });
-                }
                 else
-                {
                     result.Insert(0, new { id = 0, name = await _localizationService.GetResourceAsync("Admin.Address.Other") });
-                }
             }
             else
             {
@@ -464,9 +458,7 @@ public partial class CountryController : BaseAdminController
                 {
                     //country has some states
                     if (addSelectStateItem.HasValue && addSelectStateItem.Value)
-                    {
                         result.Insert(0, new { id = 0, name = await _localizationService.GetResourceAsync("Admin.Address.SelectState") });
-                    }
                 }
             }
         }

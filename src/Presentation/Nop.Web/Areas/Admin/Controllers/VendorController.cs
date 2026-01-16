@@ -149,8 +149,10 @@ public partial class VendorController : BaseAdminController
                     {
                         var selectedAttributeId = int.Parse(ctrlAttributes);
                         if (selectedAttributeId > 0)
+                        {
                             attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                 attribute, selectedAttributeId.ToString());
+                        }
                     }
 
                     break;
@@ -162,8 +164,10 @@ public partial class VendorController : BaseAdminController
                         {
                             var selectedAttributeId = int.Parse(item);
                             if (selectedAttributeId > 0)
+                            {
                                 attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
+                            }
                         }
                     }
 
@@ -287,9 +291,7 @@ public partial class VendorController : BaseAdminController
         var vendorAttributesXml = await ParseVendorAttributesAsync(form);
         var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
         foreach (var warning in warnings)
-        {
             ModelState.AddModelError(string.Empty, warning);
-        }
 
         if (ModelState.IsValid)
         {
@@ -371,17 +373,13 @@ public partial class VendorController : BaseAdminController
         var vendorAttributesXml = await ParseVendorAttributesAsync(form);
         var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
         foreach (var warning in warnings)
-        {
             ModelState.AddModelError(string.Empty, warning);
-        }
 
         //custom address attributes
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
         foreach (var error in customAttributeWarnings)
-        {
             ModelState.AddModelError(string.Empty, error);
-        }
 
         if (ModelState.IsValid)
         {

@@ -108,8 +108,10 @@ public partial class RemotePost
         else
         {
             for (var i = 0; i < Params.Keys.Count; i++)
+            {
                 sb.Append(
                     $"<input name=\"{WebUtility.HtmlEncode(Params.Keys[i])}\" type=\"hidden\" value=\"{WebUtility.HtmlEncode(Params[Params.Keys[i]])}\">");
+            }
         }
         sb.Append("</form>");
         sb.Append("</body></html>");

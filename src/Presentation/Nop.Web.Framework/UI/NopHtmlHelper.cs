@@ -171,15 +171,11 @@ public partial class NopHtmlHelper : INopHtmlHelper
                 switch (_seoSettings.PageTitleSeoAdjustment)
                 {
                     case PageTitleSeoAdjustment.PagenameAfterStorename:
-                        {
-                            result = string.Join(_seoSettings.PageTitleSeparator, defaultTitle, specificTitle);
-                        }
+                        result = string.Join(_seoSettings.PageTitleSeparator, defaultTitle, specificTitle);
                         break;
                     case PageTitleSeoAdjustment.StorenameAfterPagename:
                     default:
-                        {
-                            result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, defaultTitle);
-                        }
+                        result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, defaultTitle);
                         break;
                 }
             }

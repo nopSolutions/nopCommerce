@@ -274,8 +274,10 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                             var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedCustomerAttributes);
                             foreach (var attributeValue in selectedValues)
                             foreach (var item in attributeModel.Values)
+                            {
                                 if (attributeValue.Id == item.Id)
                                     item.IsPreSelected = true;
+                            }
                         }
                     }
                         break;

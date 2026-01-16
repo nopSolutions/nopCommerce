@@ -208,18 +208,18 @@ public partial class CustomerService : ICustomerService
                 query = query.Where(c => c.ZipPostalCode.Contains(zipPostalCode));
 
             if (dayOfBirth > 0 && monthOfBirth > 0)
+            {
                 query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Day == dayOfBirth &&
-                                         c.DateOfBirth.Value.Month == monthOfBirth);
+                    c.DateOfBirth.Value.Month == monthOfBirth);
+            }
             else if (dayOfBirth > 0)
                 query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Day == dayOfBirth);
             else if (monthOfBirth > 0)
                 query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Month == monthOfBirth);
 
             //search by IpAddress
-            if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
-            {
+            if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress)) 
                 query = query.Where(w => w.LastIpAddress == ipAddress);
-            }
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
@@ -302,10 +302,12 @@ public partial class CustomerService : ICustomerService
 
         //filter customers by billing country
         if (countryId > 0)
+        {
             customers = from c in customers
                 join a in _customerAddressRepository.Table on c.BillingAddressId equals a.Id
                 where a.CountryId == countryId
                 select c;
+        }
 
         var customersWithCarts = from c in customers
             join item in items on c.Id equals item.CustomerId
@@ -973,8 +975,10 @@ public partial class CustomerService : ICustomerService
 
         //save again except removed one
         foreach (var existingCouponCode in existingCouponCodes)
+        {
             if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                 await ApplyDiscountCouponCodeAsync(customer, existingCouponCode);
+        }
     }
 
     /// <summary>
@@ -1105,8 +1109,10 @@ public partial class CustomerService : ICustomerService
 
         //save again except removed one
         foreach (var existingCouponCode in existingCouponCodes)
+        {
             if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                 await ApplyGiftCardCouponCodeAsync(customer, existingCouponCode);
+        }
     }
 
     /// <summary>

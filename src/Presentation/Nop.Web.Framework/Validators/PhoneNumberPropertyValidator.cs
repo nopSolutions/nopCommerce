@@ -44,9 +44,7 @@ public partial class PhoneNumberPropertyValidator<T, TProperty> : PropertyValida
             return true;
 
         if (string.IsNullOrEmpty(phoneNumber))
-        {
             return !customerSettings.PhoneRequired;
-        }
 
         return customerSettings.PhoneNumberValidationUseRegex
             ? Regex.IsMatch(phoneNumber, customerSettings.PhoneNumberValidationRule, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)

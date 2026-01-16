@@ -556,8 +556,10 @@ public partial class Pager : IHtmlContent
             url = webHelper.ModifyQueryString(url, routeValue.Key, routeValue.Value?.ToString());
 
         if (_renderEmptyParameters && parametersWithEmptyValues.Any())
+        {
             foreach (var key in parametersWithEmptyValues)
                 url = webHelper.ModifyQueryString(url, key);
+        }
 
         return url;
     }
