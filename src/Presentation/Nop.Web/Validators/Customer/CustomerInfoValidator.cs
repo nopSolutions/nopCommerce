@@ -47,7 +47,7 @@ public partial class CustomerInfoValidator : BaseNopValidator<CustomerInfoModel>
             customerSettings.StateProvinceEnabled &&
             customerSettings.StateProvinceRequired)
         {
-            RuleFor(x => x.StateProvinceId).MustAwait(async (x, context) =>
+            RuleFor(x => x.StateProvinceId).MustAsync(async (x, _, _) =>
             {
                 //does selected country have states?
                 var hasStates = (await stateProvinceService.GetStateProvincesByCountryIdAsync(x.CountryId)).Any();

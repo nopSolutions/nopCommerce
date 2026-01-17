@@ -38,7 +38,7 @@ public partial class AddressValidator : BaseNopValidator<AddressModel>
         }
         if (addressSettings.CountryEnabled && addressSettings.StateProvinceEnabled)
         {
-            RuleFor(x => x.StateProvinceId).MustAwait(async (x, context) =>
+            RuleFor(x => x.StateProvinceId).MustAsync(async (x, _, _) =>
             {
                 //does selected country has states?
                 var countryId = x.CountryId ?? 0;

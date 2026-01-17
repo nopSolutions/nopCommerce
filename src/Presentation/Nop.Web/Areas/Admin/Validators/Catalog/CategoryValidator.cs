@@ -30,7 +30,7 @@ public partial class CategoryValidator : BaseNopValidator<CategoryModel>
 
         RuleFor(x => x.PriceTo)
             .GreaterThan(x => x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero)
-            .WithMessage(x => string.Format(localizationService.GetResourceAsync("Admin.Catalog.Categories.Fields.PriceTo.GreaterThanZeroOrPriceFrom").Result, x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero))
+            .WithMessageAwait(async x => string.Format(await localizationService.GetResourceAsync("Admin.Catalog.Categories.Fields.PriceTo.GreaterThanZeroOrPriceFrom"), x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero))
             .When(x => x.PriceRangeFiltering && x.ManuallyPriceRange);
 
         SetDatabaseValidationRules<Category>();

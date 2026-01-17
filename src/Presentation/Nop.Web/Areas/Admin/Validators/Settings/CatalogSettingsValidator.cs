@@ -16,7 +16,7 @@ public partial class CatalogSettingsValidator : BaseNopValidator<CatalogSettings
 
         RuleFor(x => x.SearchPagePriceTo)
             .GreaterThan(x => x.SearchPagePriceFrom > decimal.Zero ? x.SearchPagePriceFrom : decimal.Zero)
-            .WithMessage(x => string.Format(localizationService.GetResourceAsync("Admin.Configuration.Settings.Catalog.SearchPagePriceTo.GreaterThanZeroOrPriceFrom").Result, x.SearchPagePriceFrom > decimal.Zero ? x.SearchPagePriceFrom : decimal.Zero))
+            .WithMessageAwait(async x => string.Format(await localizationService.GetResourceAsync("Admin.Configuration.Settings.Catalog.SearchPagePriceTo.GreaterThanZeroOrPriceFrom"), x.SearchPagePriceFrom > decimal.Zero ? x.SearchPagePriceFrom : decimal.Zero))
             .When(x => x.SearchPagePriceRangeFiltering && x.SearchPageManuallyPriceRange);
 
         RuleFor(x => x.ProductsByTagPriceFrom)
@@ -26,7 +26,7 @@ public partial class CatalogSettingsValidator : BaseNopValidator<CatalogSettings
 
         RuleFor(x => x.ProductsByTagPriceTo)
             .GreaterThan(x => x.ProductsByTagPriceFrom > decimal.Zero ? x.ProductsByTagPriceFrom : decimal.Zero)
-            .WithMessage(x => string.Format(localizationService.GetResourceAsync("Admin.Configuration.Settings.Catalog.ProductsByTagPriceTo.GreaterThanZeroOrPriceFrom").Result, x.ProductsByTagPriceFrom > decimal.Zero ? x.ProductsByTagPriceFrom : decimal.Zero))
+            .WithMessageAwait(async x => string.Format(await localizationService.GetResourceAsync("Admin.Configuration.Settings.Catalog.ProductsByTagPriceTo.GreaterThanZeroOrPriceFrom"), x.ProductsByTagPriceFrom > decimal.Zero ? x.ProductsByTagPriceFrom : decimal.Zero))
             .When(x => x.ProductsByTagPriceRangeFiltering && x.ProductsByTagManuallyPriceRange);
     }
 }

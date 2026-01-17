@@ -13,9 +13,9 @@ public partial class ReturnRequestValidator : BaseNopValidator<ReturnRequestMode
         RuleFor(x => x.ReasonForReturn).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.ReturnRequests.Fields.ReasonForReturn.Required"));
         RuleFor(x => x.RequestedAction).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.ReturnRequests.Fields.RequestedAction.Required"));
         RuleFor(x => x.Quantity).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.ReturnRequests.Fields.Quantity.Required"));
-        RuleFor(x => x.Quantity).Must((model, value) => value >= model.ReturnedQuantity).WithMessage(model => string.Format(localizationService.GetResourceAsync("Admin.ReturnRequests.Fields.Quantity.MustBeEqualOrGreaterThanReturnedQuantityField").Result, model.ReturnedQuantity));
+        RuleFor(x => x.Quantity).Must((model, value) => value >= model.ReturnedQuantity).WithMessageAwait(async model => string.Format(await localizationService.GetResourceAsync("Admin.ReturnRequests.Fields.Quantity.MustBeEqualOrGreaterThanReturnedQuantityField"), model.ReturnedQuantity));
         RuleFor(x => x.ReturnedQuantity).GreaterThan(-1).WithMessageAwait(localizationService.GetResourceAsync("Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeEqualOrGreaterThanZero"));
-        RuleFor(x => x.ReturnedQuantity).Must((model, value) => value <= model.Quantity).WithMessage(model => string.Format(localizationService.GetResourceAsync("Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeLessOrEqualQuantityField").Result, model.Quantity));
+        RuleFor(x => x.ReturnedQuantity).Must((model, value) => value <= model.Quantity).WithMessageAwait(async model => string.Format(await localizationService.GetResourceAsync("Admin.ReturnRequests.Fields.ReturnedQuantity.MustBeLessOrEqualQuantityField"), model.Quantity));
 
         SetDatabaseValidationRules<ReturnRequest>();
     }
