@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Templates;
@@ -10,8 +10,8 @@ public partial class ManufacturerTemplateValidator : BaseNopValidator<Manufactur
 {
     public ManufacturerTemplateValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.System.Templates.Manufacturer.Name.Required"));
-        RuleFor(x => x.ViewPath).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.System.Templates.Manufacturer.ViewPath.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.System.Templates.Manufacturer.Name.Required");
+        RuleFor(x => x.ViewPath).NotEmpty().WithMessage("Admin.System.Templates.Manufacturer.ViewPath.Required");
 
         SetDatabaseValidationRules<ManufacturerTemplate>();
     }

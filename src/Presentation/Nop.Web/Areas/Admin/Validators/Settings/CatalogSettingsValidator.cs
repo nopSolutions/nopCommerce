@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework.Validators;
@@ -11,7 +11,7 @@ public partial class CatalogSettingsValidator : BaseNopValidator<CatalogSettings
     {
         RuleFor(x => x.SearchPagePriceFrom)
             .GreaterThanOrEqualTo(0)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Settings.Catalog.SearchPagePriceFrom.GreaterThanOrEqualZero"))
+            .WithMessage("Admin.Configuration.Settings.Catalog.SearchPagePriceFrom.GreaterThanOrEqualZero")
             .When(x => x.SearchPagePriceRangeFiltering && x.SearchPageManuallyPriceRange);
 
         RuleFor(x => x.SearchPagePriceTo)
@@ -21,7 +21,7 @@ public partial class CatalogSettingsValidator : BaseNopValidator<CatalogSettings
 
         RuleFor(x => x.ProductsByTagPriceFrom)
             .GreaterThanOrEqualTo(0)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Settings.Catalog.ProductsByTagPriceFrom.GreaterThanOrEqualZero"))
+            .WithMessage("Admin.Configuration.Settings.Catalog.ProductsByTagPriceFrom.GreaterThanOrEqualZero")
             .When(x => x.ProductsByTagPriceRangeFiltering && x.ProductsByTagManuallyPriceRange);
 
         RuleFor(x => x.ProductsByTagPriceTo)

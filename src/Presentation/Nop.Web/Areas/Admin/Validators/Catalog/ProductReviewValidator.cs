@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Localization;
@@ -15,8 +15,8 @@ public partial class ProductReviewValidator : BaseNopValidator<ProductReviewMode
         //vendor can edit "Reply text" only
         if (!isLoggedInAsVendor)
         {
-            RuleFor(x => x.Title).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.ProductReviews.Fields.Title.Required"));
-            RuleFor(x => x.ReviewText).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.ProductReviews.Fields.ReviewText.Required"));
+            RuleFor(x => x.Title).NotEmpty().WithMessage("Admin.Catalog.ProductReviews.Fields.Title.Required");
+            RuleFor(x => x.ReviewText).NotEmpty().WithMessage("Admin.Catalog.ProductReviews.Fields.ReviewText.Required");
         }
 
         SetDatabaseValidationRules<ProductReview>();

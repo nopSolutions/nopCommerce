@@ -9,7 +9,7 @@ public partial class SendPrivateMessageValidator : BaseNopValidator<SendPrivateM
 {
     public SendPrivateMessageValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Subject).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("PrivateMessages.SubjectCannotBeEmpty"));
-        RuleFor(x => x.Message).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("PrivateMessages.MessageCannotBeEmpty"));
+        RuleFor(x => x.Subject).NotEmpty().WithMessage("PrivateMessages.SubjectCannotBeEmpty");
+        RuleFor(x => x.Message).NotEmpty().WithMessage("PrivateMessages.MessageCannotBeEmpty");
     }
 }

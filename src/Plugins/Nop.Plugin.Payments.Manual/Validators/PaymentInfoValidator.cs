@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Plugin.Payments.Manual.Models;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
@@ -16,11 +16,11 @@ public class PaymentInfoValidator : BaseNopValidator<PaymentInfoModel>
         //RuleFor(x => x.CardNumber).NotEmpty().WithMessage(localizationService.GetResource("Payment.CardNumber.Required"));
         //RuleFor(x => x.CardCode).NotEmpty().WithMessage(localizationService.GetResource("Payment.CardCode.Required"));
 
-        RuleFor(x => x.CardholderName).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Payment.CardholderName.Required"));
-        RuleFor(x => x.CardNumber).IsCreditCard().WithMessageAwait(localizationService.GetResourceAsync("Payment.CardNumber.Wrong"));
-        RuleFor(x => x.CardCode).Matches(@"^[0-9]{3,4}$").WithMessageAwait(localizationService.GetResourceAsync("Payment.CardCode.Wrong"));
-        RuleFor(x => x.ExpireMonth).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Payment.ExpireMonth.Required"));
-        RuleFor(x => x.ExpireYear).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Payment.ExpireYear.Required"));
+        RuleFor(x => x.CardholderName).NotEmpty().WithMessage("Payment.CardholderName.Required");
+        RuleFor(x => x.CardNumber).IsCreditCard().WithMessage("Payment.CardNumber.Wrong");
+        RuleFor(x => x.CardCode).Matches(@"^[0-9]{3,4}$").WithMessage("Payment.CardCode.Wrong");
+        RuleFor(x => x.ExpireMonth).NotEmpty().WithMessage("Payment.ExpireMonth.Required");
+        RuleFor(x => x.ExpireYear).NotEmpty().WithMessage("Payment.ExpireYear.Required");
         RuleFor(x => x.ExpireMonth).Must((x, context) =>
         {
             //not specified yet
@@ -35,6 +35,6 @@ public class PaymentInfoValidator : BaseNopValidator<PaymentInfoModel>
                 return false;
 
             return true;
-        }).WithMessageAwait(localizationService.GetResourceAsync("Payment.ExpirationDate.Expired"));
+        }).WithMessage("Payment.ExpirationDate.Expired");
     }
 }

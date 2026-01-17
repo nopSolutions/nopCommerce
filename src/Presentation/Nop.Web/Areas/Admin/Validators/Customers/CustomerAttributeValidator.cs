@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Customers;
@@ -10,7 +10,7 @@ public partial class CustomerAttributeValidator : BaseNopValidator<CustomerAttri
 {
     public CustomerAttributeValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.CustomerAttributes.Fields.Name.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.Customers.CustomerAttributes.Fields.Name.Required");
 
         SetDatabaseValidationRules<CustomerAttribute>();
     }

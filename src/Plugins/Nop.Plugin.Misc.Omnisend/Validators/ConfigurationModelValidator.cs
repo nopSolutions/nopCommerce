@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Plugin.Misc.Omnisend.Models;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
@@ -16,7 +16,7 @@ public class ConfigurationModelValidator : BaseNopValidator<ConfigurationModel>
     {
         RuleFor(model => model.ApiKey)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Misc.Omnisend.Fields.ApiKey.Required"));
+            .WithMessage("Plugins.Misc.Omnisend.Fields.ApiKey.Required");
     }
 
     #endregion

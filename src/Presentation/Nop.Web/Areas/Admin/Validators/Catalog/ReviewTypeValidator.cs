@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -13,8 +13,8 @@ public partial class ReviewTypeValidator : BaseNopValidator<ReviewTypeModel>
 {
     public ReviewTypeValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Settings.ReviewType.Fields.Name.Required"));
-        RuleFor(x => x.Description).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Settings.ReviewType.Fields.Description.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.Settings.ReviewType.Fields.Name.Required");
+        RuleFor(x => x.Description).NotEmpty().WithMessage("Admin.Settings.ReviewType.Fields.Description.Required");
 
         SetDatabaseValidationRules<ReviewType>();
     }

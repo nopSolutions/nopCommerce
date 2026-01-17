@@ -13,10 +13,10 @@ public partial class LoginValidator : BaseNopValidator<LoginModel>
         if (!customerSettings.UsernamesEnabled)
         {
             //login by email
-            RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Login.Fields.Email.Required"));
+            RuleFor(x => x.Email).NotEmpty().WithMessage("Account.Login.Fields.Email.Required");
             RuleFor(x => x.Email)
                 .IsEmailAddress()
-                .WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
+                .WithMessage("Common.WrongEmail");
         }
     }
 }

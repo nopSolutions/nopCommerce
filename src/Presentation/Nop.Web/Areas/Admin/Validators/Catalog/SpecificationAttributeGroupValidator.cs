@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -15,7 +15,7 @@ public partial class SpecificationAttributeGroupValidator : BaseNopValidator<Spe
     {
         RuleFor(x => x.Name)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.Name.Required"));
+            .WithMessage("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.Name.Required");
 
         SetDatabaseValidationRules<SpecificationAttributeGroup>();
     }

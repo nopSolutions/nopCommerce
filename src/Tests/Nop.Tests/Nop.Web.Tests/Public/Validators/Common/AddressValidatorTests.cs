@@ -462,7 +462,7 @@ public class AddressValidatorTests : BaseNopTest
     }
 
     [Test]
-    public void ShouldHaveErrorWhenStateIdIsNullOrZeroAnd()
+    public async Task ShouldHaveErrorWhenStateIdIsNullOrZeroAnd()
     {
         var validator = new AddressValidator(_localizationService, _stateProvinceService,
             new AddressSettings
@@ -476,11 +476,11 @@ public class AddressValidatorTests : BaseNopTest
             CountryId = 237, //USA
             StateProvinceId = null
         };
-        validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.StateProvinceId);
+        (await validator.TestValidateAsync(model)).ShouldHaveValidationErrorFor(x => x.StateProvinceId);
         model.StateProvinceId = 0;
-        validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.StateProvinceId);
+        (await validator.TestValidateAsync(model)).ShouldHaveValidationErrorFor(x => x.StateProvinceId);
         model.StateProvinceId = 1828; //New York
-        validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.StateProvinceId);
+        (await validator.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.StateProvinceId);
     }
 
     [Test]

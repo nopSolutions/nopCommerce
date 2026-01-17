@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Directory;
@@ -12,22 +12,22 @@ public partial class CountryValidator : BaseNopValidator<CountryModel>
     {
         RuleFor(x => x.Name)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Countries.Fields.Name.Required"));
+            .WithMessage("Admin.Configuration.Countries.Fields.Name.Required");
         RuleFor(p => p.Name).Length(1, 100);
 
         RuleFor(x => x.TwoLetterIsoCode)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Countries.Fields.TwoLetterIsoCode.Required"));
+            .WithMessage("Admin.Configuration.Countries.Fields.TwoLetterIsoCode.Required");
         RuleFor(x => x.TwoLetterIsoCode)
             .Length(2)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Countries.Fields.TwoLetterIsoCode.Length"));
+            .WithMessage("Admin.Configuration.Countries.Fields.TwoLetterIsoCode.Length");
 
         RuleFor(x => x.ThreeLetterIsoCode)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode.Required"));
+            .WithMessage("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode.Required");
         RuleFor(x => x.ThreeLetterIsoCode)
             .Length(3)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode.Length"));
+            .WithMessage("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode.Length");
 
         SetDatabaseValidationRules<Country>();
     }

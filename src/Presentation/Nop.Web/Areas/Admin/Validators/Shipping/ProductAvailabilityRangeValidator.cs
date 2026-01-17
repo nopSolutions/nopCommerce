@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Shipping;
@@ -10,7 +10,7 @@ public partial class ProductAvailabilityRangeValidator : BaseNopValidator<Produc
 {
     public ProductAvailabilityRangeValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name.Required");
 
         SetDatabaseValidationRules<ProductAvailabilityRange>();
     }

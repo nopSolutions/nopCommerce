@@ -9,11 +9,11 @@ public partial class ApplyVendorValidator : BaseNopValidator<ApplyVendorModel>
 {
     public ApplyVendorValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Vendors.ApplyAccount.Name.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Vendors.ApplyAccount.Name.Required");
 
-        RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Vendors.ApplyAccount.Email.Required"));
+        RuleFor(x => x.Email).NotEmpty().WithMessage("Vendors.ApplyAccount.Email.Required");
         RuleFor(x => x.Email)
             .IsEmailAddress()
-            .WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
+            .WithMessage("Common.WrongEmail");
     }
 }

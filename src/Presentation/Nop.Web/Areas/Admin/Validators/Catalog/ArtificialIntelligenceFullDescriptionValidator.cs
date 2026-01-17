@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -12,15 +12,15 @@ public partial class ArtificialIntelligenceFullDescriptionValidator : BaseNopVal
     {
         RuleFor(x => x.ProductName)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.AiFullDescription.ProductName.Required"));
+            .WithMessage("Admin.Catalog.Products.AiFullDescription.ProductName.Required");
 
         RuleFor(x => x.Keywords)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.AiFullDescription.Keywords.Required"));
+            .WithMessage("Admin.Catalog.Products.AiFullDescription.Keywords.Required");
 
         RuleFor(x => x.CustomToneOfVoice)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice.Required"))
+            .WithMessage("Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice.Required")
             .When(x => x.ToneOfVoiceId == (int)ToneOfVoiceType.Custom);
     }
 }

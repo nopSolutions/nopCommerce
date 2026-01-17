@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Configuration;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Settings;
@@ -10,7 +10,7 @@ public partial class SettingValidator : BaseNopValidator<SettingModel>
 {
     public SettingValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Settings.AllSettings.Fields.Name.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.Configuration.Settings.AllSettings.Fields.Name.Required");
 
         SetDatabaseValidationRules<Setting>();
     }

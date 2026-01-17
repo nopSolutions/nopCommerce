@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Localization;
@@ -16,11 +16,11 @@ public partial class LanguageResourceValidator : BaseNopValidator<LocaleResource
         {
             RuleFor(model => model.ResourceName)
                 .NotEmpty()
-                .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Languages.Resources.Fields.Name.Required"));
+                .WithMessage("Admin.Configuration.Languages.Resources.Fields.Name.Required");
 
             RuleFor(model => model.ResourceValue)
                 .NotEmpty()
-                .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Languages.Resources.Fields.Value.Required"));
+                .WithMessage("Admin.Configuration.Languages.Resources.Fields.Value.Required");
 
             SetDatabaseValidationRules<LocaleStringResource>();
         });

@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Plugin.DiscountRules.CustomerRoles.Models;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
@@ -14,9 +14,9 @@ public class RequirementModelValidator : BaseNopValidator<RequirementModel>
     {
         RuleFor(model => model.DiscountId)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Plugins.DiscountRules.CustomerRoles.Fields.DiscountId.Required"));
+            .WithMessage("Plugins.DiscountRules.CustomerRoles.Fields.DiscountId.Required");
         RuleFor(model => model.CustomerRoleId)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRoleId.Required"));
+            .WithMessage("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRoleId.Required");
     }
 }

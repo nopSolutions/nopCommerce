@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using FluentValidation;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Localization;
@@ -12,15 +12,15 @@ public partial class CurrencyValidator : BaseNopValidator<CurrencyModel>
     public CurrencyValidator(ILocalizationService localizationService)
     {
         RuleFor(x => x.Name)
-            .NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.Name.Required"))
-            .Length(1, 50).WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.Name.Range"));
+            .NotEmpty().WithMessage("Admin.Configuration.Currencies.Fields.Name.Required")
+            .Length(1, 50).WithMessage("Admin.Configuration.Currencies.Fields.Name.Range");
         RuleFor(x => x.CurrencyCode)
-            .NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.CurrencyCode.Required"))
-            .Length(1, 5).WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.CurrencyCode.Range"));
+            .NotEmpty().WithMessage("Admin.Configuration.Currencies.Fields.CurrencyCode.Required")
+            .Length(1, 5).WithMessage("Admin.Configuration.Currencies.Fields.CurrencyCode.Range");
         RuleFor(x => x.Rate)
-            .GreaterThan(0).WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.Rate.Range"));
+            .GreaterThan(0).WithMessage("Admin.Configuration.Currencies.Fields.Rate.Range");
         RuleFor(x => x.CustomFormatting)
-            .Length(0, 50).WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.CustomFormatting.Validation"));
+            .Length(0, 50).WithMessage("Admin.Configuration.Currencies.Fields.CustomFormatting.Validation");
         RuleFor(x => x.DisplayLocale)
             .Must(x =>
             {
@@ -38,7 +38,7 @@ public partial class CurrencyValidator : BaseNopValidator<CurrencyModel>
                     return false;
                 }
             })
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.DisplayLocale.Validation"));
+            .WithMessage("Admin.Configuration.Currencies.Fields.DisplayLocale.Validation");
 
         SetDatabaseValidationRules<Currency>();
     }

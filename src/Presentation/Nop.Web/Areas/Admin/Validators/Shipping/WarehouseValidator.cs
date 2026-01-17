@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Shipping;
@@ -10,7 +10,7 @@ public partial class WarehouseValidator : BaseNopValidator<WarehouseModel>
 {
     public WarehouseValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Shipping.Warehouses.Fields.Name.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.Configuration.Shipping.Warehouses.Fields.Name.Required");
 
         SetDatabaseValidationRules<Warehouse>();
     }

@@ -10,15 +10,15 @@ public partial class ContactVendorValidator : BaseNopValidator<ContactVendorMode
 {
     public ContactVendorValidator(ILocalizationService localizationService, CommonSettings commonSettings)
     {
-        RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("ContactVendor.Email.Required"));
+        RuleFor(x => x.Email).NotEmpty().WithMessage("ContactVendor.Email.Required");
         RuleFor(x => x.Email)
             .IsEmailAddress()
-            .WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
-        RuleFor(x => x.FullName).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("ContactVendor.FullName.Required"));
+            .WithMessage("Common.WrongEmail");
+        RuleFor(x => x.FullName).NotEmpty().WithMessage("ContactVendor.FullName.Required");
         if (commonSettings.SubjectFieldOnContactUsForm)
         {
-            RuleFor(x => x.Subject).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("ContactVendor.Subject.Required"));
+            RuleFor(x => x.Subject).NotEmpty().WithMessage("ContactVendor.Subject.Required");
         }
-        RuleFor(x => x.Enquiry).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("ContactVendor.Enquiry.Required"));
+        RuleFor(x => x.Enquiry).NotEmpty().WithMessage("ContactVendor.Enquiry.Required");
     }
 }

@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Orders;
@@ -10,7 +10,7 @@ public partial class CheckoutAttributeValueValidator : BaseNopValidator<Checkout
 {
     public CheckoutAttributeValueValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name.Required");
 
         SetDatabaseValidationRules<CheckoutAttributeValue>();
     }

@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Messages;
@@ -10,8 +10,8 @@ public partial class MessageTemplateValidator : BaseNopValidator<MessageTemplate
 {
     public MessageTemplateValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Subject).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Fields.Subject.Required"));
-        RuleFor(x => x.Body).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Fields.Body.Required"));
+        RuleFor(x => x.Subject).NotEmpty().WithMessage("Admin.ContentManagement.MessageTemplates.Fields.Subject.Required");
+        RuleFor(x => x.Body).NotEmpty().WithMessage("Admin.ContentManagement.MessageTemplates.Fields.Body.Required");
 
         SetDatabaseValidationRules<MessageTemplate>();
     }

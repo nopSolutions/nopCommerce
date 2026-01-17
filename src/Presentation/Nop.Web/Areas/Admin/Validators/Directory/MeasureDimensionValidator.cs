@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Directory;
@@ -10,8 +10,8 @@ public partial class MeasureDimensionValidator : BaseNopValidator<MeasureDimensi
 {
     public MeasureDimensionValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name.Required"));
-        RuleFor(x => x.SystemKeyword).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name.Required");
+        RuleFor(x => x.SystemKeyword).NotEmpty().WithMessage("Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword.Required");
 
         SetDatabaseValidationRules<MeasureDimension>();
     }

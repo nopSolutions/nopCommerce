@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
@@ -13,20 +13,20 @@ public partial class ProductValidator : BaseNopValidator<ProductModel>
     {
         RuleFor(x => x.Name)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.Name.Required"));
+            .WithMessage("Admin.Catalog.Products.Fields.Name.Required");
 
         RuleFor(x => x.SeName)
             .Length(0, NopSeoDefaults.SearchEngineNameLength)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.SearchEngineNameLength);
+            .WithMessage(string.Format("Admin.SEO.SeName.MaxLengthValidation", NopSeoDefaults.SearchEngineNameLength));
 
         RuleFor(x => x.RentalPriceLength)
             .GreaterThan(0)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.RentalPriceLength.ShouldBeGreaterThanZero"))
+            .WithMessage("Admin.Catalog.Products.Fields.RentalPriceLength.ShouldBeGreaterThanZero")
             .When(x => x.IsRental);
 
         RuleFor(x => x.MinimumAgeToPurchase)
             .GreaterThan(0)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.MinimumAgeToPurchase.ShouldBeGreaterThanZero"))
+            .WithMessage("Admin.Catalog.Products.Fields.MinimumAgeToPurchase.ShouldBeGreaterThanZero")
             .When(x => x.AgeVerification);
 
         SetDatabaseValidationRules<Product>();

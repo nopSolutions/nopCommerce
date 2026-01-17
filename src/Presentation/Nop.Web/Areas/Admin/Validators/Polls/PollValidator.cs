@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Polls;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Polls;
@@ -10,7 +10,7 @@ public partial class PollValidator : BaseNopValidator<PollModel>
 {
     public PollValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.ContentManagement.Polls.Fields.Name.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.ContentManagement.Polls.Fields.Name.Required");
 
         SetDatabaseValidationRules<Poll>();
     }

@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Orders;
@@ -10,7 +10,7 @@ public partial class ReturnRequestReasonValidator : BaseNopValidator<ReturnReque
 {
     public ReturnRequestReasonValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name.Required");
 
         SetDatabaseValidationRules<ReturnRequestReason>();
     }

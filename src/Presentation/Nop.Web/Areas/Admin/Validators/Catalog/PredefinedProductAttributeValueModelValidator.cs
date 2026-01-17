@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Validators;
@@ -11,6 +11,6 @@ public partial class PredefinedProductAttributeValueModelValidator : BaseNopVali
     {
         RuleFor(x => x.Name)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name.Required"));
+            .WithMessage("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name.Required");
     }
 }

@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Messages;
@@ -10,7 +10,7 @@ public partial class NewsLetterSubscriptionTypeValidator : BaseNopValidator<News
 {
     public NewsLetterSubscriptionTypeValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptionType.Fields.Name.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.Promotions.NewsLetterSubscriptionType.Fields.Name.Required");
 
         SetDatabaseValidationRules<NewsLetterSubscriptionType>();
     }

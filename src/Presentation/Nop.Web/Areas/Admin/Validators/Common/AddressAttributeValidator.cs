@@ -10,7 +10,7 @@ public partial class AddressAttributeValidator : BaseNopValidator<AddressAttribu
 {
     public AddressAttributeValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Address.AddressAttributes.Fields.Name.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.Address.AddressAttributes.Fields.Name.Required");
 
         SetDatabaseValidationRules<AddressAttribute>();
     }

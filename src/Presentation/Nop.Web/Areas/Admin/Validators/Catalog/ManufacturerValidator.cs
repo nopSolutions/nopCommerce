@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
@@ -11,21 +11,21 @@ public partial class ManufacturerValidator : BaseNopValidator<ManufacturerModel>
 {
     public ManufacturerValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Fields.Name.Required"));
-        RuleFor(x => x.PageSizeOptions).Must(ValidatorUtilities.PageSizeOptionsValidator).WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.Catalog.Manufacturers.Fields.Name.Required");
+        RuleFor(x => x.PageSizeOptions).Must(ValidatorUtilities.PageSizeOptionsValidator).WithMessage("Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems");
         RuleFor(x => x.PageSize).Must((x, context) =>
         {
             if (!x.AllowCustomersToSelectPageSize && x.PageSize <= 0)
                 return false;
 
             return true;
-        }).WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Fields.PageSize.Positive"));
+        }).WithMessage("Admin.Catalog.Manufacturers.Fields.PageSize.Positive");
         RuleFor(x => x.SeName).Length(0, NopSeoDefaults.SearchEngineNameLength)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.SearchEngineNameLength);
+            .WithMessage(string.Format("Admin.SEO.SeName.MaxLengthValidation", NopSeoDefaults.SearchEngineNameLength));
 
         RuleFor(x => x.PriceFrom)
             .GreaterThanOrEqualTo(0)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Fields.PriceFrom.GreaterThanOrEqualZero"))
+            .WithMessage("Admin.Catalog.Manufacturers.Fields.PriceFrom.GreaterThanOrEqualZero")
             .When(x => x.PriceRangeFiltering && x.ManuallyPriceRange);
 
         RuleFor(x => x.PriceTo)

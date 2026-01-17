@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Messages;
@@ -10,10 +10,10 @@ public partial class NewsLetterSubscriptionValidator : BaseNopValidator<NewsLett
 {
     public NewsLetterSubscriptionValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscription.Fields.Email.Required"));
+        RuleFor(x => x.Email).NotEmpty().WithMessage("Admin.Promotions.NewsLetterSubscription.Fields.Email.Required");
         RuleFor(x => x.Email)
             .IsEmailAddress()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"));
+            .WithMessage("Admin.Common.WrongEmail");
 
         SetDatabaseValidationRules<NewsLetterSubscription>();
     }

@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Menus;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Menus;
@@ -12,7 +12,7 @@ public partial class MenuValidator : BaseNopValidator<MenuModel>
 
     public MenuValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.ContentManagement.Menus.Fields.Name.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.ContentManagement.Menus.Fields.Name.Required");
 
         SetDatabaseValidationRules<Menu>();
     }

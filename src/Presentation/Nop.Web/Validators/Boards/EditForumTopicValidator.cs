@@ -9,7 +9,7 @@ public partial class EditForumTopicValidator : BaseNopValidator<EditForumTopicMo
 {
     public EditForumTopicValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Subject).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Forum.TopicSubjectCannotBeEmpty"));
-        RuleFor(x => x.Text).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Forum.TextCannotBeEmpty"));
+        RuleFor(x => x.Subject).NotEmpty().WithMessage("Forum.TopicSubjectCannotBeEmpty");
+        RuleFor(x => x.Text).NotEmpty().WithMessage("Forum.TextCannotBeEmpty");
     }
 }

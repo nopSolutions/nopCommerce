@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -12,16 +12,16 @@ public partial class ProductAttributeValueModelValidator : BaseNopValidator<Prod
     {
         RuleFor(x => x.Name)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name.Required"));
+            .WithMessage("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name.Required");
 
         RuleFor(x => x.Quantity)
             .GreaterThanOrEqualTo(1)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Quantity.GreaterThanOrEqualTo1"))
+            .WithMessage("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Quantity.GreaterThanOrEqualTo1")
             .When(x => x.AttributeValueTypeId == (int)AttributeValueType.AssociatedToProduct && !x.CustomerEntersQty);
 
         RuleFor(x => x.AssociatedProductId)
             .GreaterThanOrEqualTo(1)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Choose"))
+            .WithMessage("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Choose")
             .When(x => x.AttributeValueTypeId == (int)AttributeValueType.AssociatedToProduct);
 
         SetDatabaseValidationRules<ProductAttributeValue>();

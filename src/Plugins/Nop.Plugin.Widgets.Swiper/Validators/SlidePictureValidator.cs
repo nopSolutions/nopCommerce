@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Plugin.Widgets.Swiper.Models;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
@@ -16,7 +16,7 @@ public class SlidePictureValidator : BaseNopValidator<SlidePictureModel>
     {
         RuleFor(model => model.PictureId)
             .GreaterThan(0)
-            .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Widgets.Swiper.Picture.Required"));
+            .WithMessage("Plugins.Widgets.Swiper.Picture.Required");
     }
 
     #endregion

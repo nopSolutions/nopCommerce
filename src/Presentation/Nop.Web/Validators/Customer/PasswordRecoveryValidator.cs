@@ -9,9 +9,9 @@ public partial class PasswordRecoveryValidator : BaseNopValidator<PasswordRecove
 {
     public PasswordRecoveryValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.PasswordRecovery.Email.Required"));
+        RuleFor(x => x.Email).NotEmpty().WithMessage("Account.PasswordRecovery.Email.Required");
         RuleFor(x => x.Email)
             .IsEmailAddress()
-            .WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
+            .WithMessage("Common.WrongEmail");
     }
 }

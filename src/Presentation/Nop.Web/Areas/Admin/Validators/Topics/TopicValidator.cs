@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
@@ -13,16 +13,16 @@ public partial class TopicValidator : BaseNopValidator<TopicModel>
     {
         RuleFor(x => x.SeName)
             .Length(0, NopSeoDefaults.ForumTopicLength)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.ForumTopicLength);
+            .WithMessage(string.Format("Admin.SEO.SeName.MaxLengthValidation", NopSeoDefaults.ForumTopicLength));
 
         RuleFor(x => x.Password)
             .NotEmpty()
             .When(x => x.IsPasswordProtected)
-            .WithMessageAwait(localizationService.GetResourceAsync("Validation.Password.IsNotEmpty"));
+            .WithMessage("Validation.Password.IsNotEmpty");
 
         RuleFor(x => x.AvailableEndDateTimeUtc)
             .GreaterThanOrEqualTo(x => x.AvailableStartDateTimeUtc)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.ContentManagement.Topics.Fields.AvailableEndDateTime.GreaterThanOrEqualToStartDate"));
+            .WithMessage("Admin.ContentManagement.Topics.Fields.AvailableEndDateTime.GreaterThanOrEqualToStartDate");
         
         SetDatabaseValidationRules<Topic>();
     }

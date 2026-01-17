@@ -12,28 +12,28 @@ public partial class FilterLevelValueValidator : BaseNopValidator<FilterLevelVal
     public FilterLevelValueValidator(IFilterLevelValueService filterLevelValueService,
         ILocalizationService localizationService)
     {
-        var locale = localizationService.GetResourceAsync(NopValidationDefaults.NotNullValidationLocaleName);
+        var locale = NopValidationDefaults.NotNullValidationLocaleName;
         var (filterLevel1Disabled, filterLevel2Disabled, filterLevel3Disabled) = filterLevelValueService.IsFilterLevelDisabled();
 
         if (!filterLevel1Disabled)
         {
             RuleFor(x => x.FilterLevel1Value)
                 .NotEmpty()
-                .WithMessageAwait(locale, localizationService.GetLocalizedEnumAsync(FilterLevelEnum.FilterLevel1).Result);
+                .WithMessage(string.Format(locale, FilterLevelEnum.FilterLevel1));
         }
 
         if (!filterLevel2Disabled)
         {
             RuleFor(x => x.FilterLevel2Value)
                 .NotEmpty()
-                .WithMessageAwait(locale, localizationService.GetLocalizedEnumAsync(FilterLevelEnum.FilterLevel2).Result);
+                .WithMessage(string.Format(locale, FilterLevelEnum.FilterLevel2));
         }
             
         if (!filterLevel3Disabled)
         {
             RuleFor(x => x.FilterLevel3Value)
                 .NotEmpty()
-                .WithMessageAwait(locale, localizationService.GetLocalizedEnumAsync(FilterLevelEnum.FilterLevel3).Result);
+                .WithMessage(string.Format(locale, FilterLevelEnum.FilterLevel3));
         }
 
         SetDatabaseValidationRules<FilterLevelValue>();

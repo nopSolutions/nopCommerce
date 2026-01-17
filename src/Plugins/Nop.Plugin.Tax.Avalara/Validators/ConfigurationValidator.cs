@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Plugin.Tax.Avalara.Models.Configuration;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
@@ -16,15 +16,15 @@ public class ConfigurationValidator : BaseNopValidator<ConfigurationModel>
     {
         RuleFor(model => model.AccountId)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Tax.Avalara.Fields.AccountId.Required"))
+            .WithMessage("Plugins.Tax.Avalara.Fields.AccountId.Required")
             .When(model => !model.UseSandbox);
         RuleFor(model => model.LicenseKey)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Tax.Avalara.Fields.LicenseKey.Required"))
+            .WithMessage("Plugins.Tax.Avalara.Fields.LicenseKey.Required")
             .When(model => !model.UseSandbox);
         RuleFor(model => model.SelectedCountryIds)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Tax.Avalara.Fields.Countries.Required"))
+            .WithMessage("Plugins.Tax.Avalara.Fields.Countries.Required")
             .When(model => model.UseItemClassification);
     }
 

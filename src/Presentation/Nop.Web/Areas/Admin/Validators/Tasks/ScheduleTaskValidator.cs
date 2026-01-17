@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Tasks;
@@ -10,8 +10,8 @@ public partial class ScheduleTaskValidator : BaseNopValidator<ScheduleTaskModel>
 {
     public ScheduleTaskValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.System.ScheduleTasks.Name.Required"));
-        RuleFor(x => x.Seconds).GreaterThan(0).WithMessageAwait(localizationService.GetResourceAsync("Admin.System.ScheduleTasks.Seconds.Positive"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.System.ScheduleTasks.Name.Required");
+        RuleFor(x => x.Seconds).GreaterThan(0).WithMessage("Admin.System.ScheduleTasks.Seconds.Positive");
 
         SetDatabaseValidationRules<ScheduleTask>();
     }

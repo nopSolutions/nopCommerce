@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework.Validators;
@@ -11,10 +11,10 @@ public partial class CustomerUserSettingValidator : BaseNopValidator<CustomerUse
     {
         RuleFor(x => x.CustomerSettings.PasswordMinLength)
             .GreaterThan(0)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Settings.CustomerUser.PasswordMinLength.GreaterThanZero"));
+            .WithMessage("Admin.Configuration.Settings.CustomerUser.PasswordMinLength.GreaterThanZero");
 
         RuleFor(x => x.CustomerSettings.PasswordMaxLength)
             .GreaterThanOrEqualTo(x => x.CustomerSettings.PasswordMinLength)
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.GreaterThanOrEqualMinLength"));
+            .WithMessage("Admin.Configuration.Settings.CustomerUser.PasswordMaxLength.GreaterThanOrEqualMinLength");
     }
 }

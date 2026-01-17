@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Vendors;
@@ -10,7 +10,7 @@ public partial class VendorAttributeValidator : BaseNopValidator<VendorAttribute
 {
     public VendorAttributeValidator(ILocalizationService localizationService)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.VendorAttributes.Fields.Name.Required"));
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Admin.Vendors.VendorAttributes.Fields.Name.Required");
 
         SetDatabaseValidationRules<VendorAttribute>();
     }
