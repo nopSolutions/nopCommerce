@@ -32,12 +32,12 @@ public class NewsRssHeaderLinkViewComponent : NopViewComponent
     /// A task that represents the asynchronous operation
     /// The task result contains the view component result
     /// </returns>
-    public IViewComponentResult Invoke()
+    public async Task<IViewComponentResult> InvokeAsync()
     {
         if (!_newsSettings.Enabled || !_newsSettings.ShowHeaderRssUrl)
             return Content("");
 
-        return View("~/Plugins/Misc.News/Public/Views/Components/NewsRssHeaderLink.cshtml");
+        return await ViewAsync("~/Plugins/Misc.News/Public/Views/Components/NewsRssHeaderLink.cshtml");
     }
 
     #endregion

@@ -23,6 +23,6 @@ public partial class PollBlockViewComponent : NopViewComponent
         if (model == null)
             return Content("");
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

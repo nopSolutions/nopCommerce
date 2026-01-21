@@ -23,6 +23,6 @@ public partial class TaxTypeSelectorViewComponent : NopViewComponent
             return Content("");
 
         var model = await _commonModelFactory.PrepareTaxTypeSelectorModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

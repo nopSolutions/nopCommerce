@@ -13,11 +13,11 @@ public partial class BlogRssHeaderLinkViewComponent : NopViewComponent
         _blogSettings = blogSettings;
     }
 
-    public IViewComponentResult Invoke(int currentCategoryId, int currentProductId)
+    public async Task<IViewComponentResult> InvokeAsync(int currentCategoryId, int currentProductId)
     {
         if (!_blogSettings.Enabled || !_blogSettings.ShowHeaderRssUrl)
             return Content("");
 
-        return View();
+        return await ViewAsync();
     }
 }

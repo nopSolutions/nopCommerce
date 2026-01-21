@@ -16,6 +16,6 @@ public partial class ForumBreadcrumbViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync(int? forumGroupId, int? forumId, int? forumTopicId)
     {
         var model = await _forumModelFactory.PrepareForumBreadcrumbModelAsync(forumGroupId, forumId, forumTopicId);
-        return View(model);
+        return await ViewAsync(model);
     }
 }

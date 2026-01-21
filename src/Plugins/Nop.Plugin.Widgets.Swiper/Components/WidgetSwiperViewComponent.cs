@@ -100,7 +100,7 @@ public class WidgetSwiperViewComponent : NopViewComponent
         if (!model.Slides.Any())
             return Content("");
 
-        return View("~/Plugins/Widgets.Swiper/Views/PublicInfo.cshtml", model);
+        return await ViewAsync("~/Plugins/Widgets.Swiper/Views/PublicInfo.cshtml", model);
     }
 
     #endregion
