@@ -23,7 +23,7 @@
         }
         else
         {
-            <form asp-route="@NopRouteNames.Standard.RETURN_REQUEST" method="post">
+            <form id="return-request-form" asp-route="@NopRouteNames.Standard.RETURN_REQUEST" method="post">
                 <section class="section">
                     <h2 class="title">
                         @T("ReturnRequests.SelectProduct(s)")
@@ -180,6 +180,34 @@
                 <section class="buttons">
                     <button type="submit" name="submit-return-request" class="button-1 submit-return-request-button">@T("ReturnRequests.Submit")</button>
                 </section>
+                <script asp-location="Footer">
+                        document.addEventListener('DOMContentLoaded', function () {
+                        const form = document.getElementById('return-request-form');
+                        if (!form) return;
+
+                        form.addEventListener('submit', function (event) {
+                            if (!isAnyItemSelected()) {
+
+                                event.preventDefault();
+                                event.stopPropagation();
+                                displayBarNotification('@T("ReturnRequests.Submit.Errors.NothingSelected")', 'error', 4000);
+                                return false;
+                            }
+
+                        });
+                        function isAnyItemSelected(){
+                            const quantitySelects = document.querySelectorAll('select[name^="quantity"]');
+                            let hasSelection = false;
+
+                            quantitySelects.forEach(select => {
+                                if (parseInt(select.value, 10) > 0) {
+                                    hasSelection = true;
+                                }
+                            });
+                            return hasSelection;
+                        }
+                    });
+                </script>
             </form>
         }
     </div>
