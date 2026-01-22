@@ -61,142 +61,120 @@
                                 <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Currencies", Docs.Currencies + Utm.OnAdmin)" />
 
                                 @await Html.PartialAsync("Table", new DataTablesModel
-                            {
-                                Name = "currencies-grid",
-                                UrlRead = new DataUrl("ListGrid", "Currency", null),
-                                Length = Model.PageSize,
-                                LengthMenu = Model.AvailablePageSizes,
-                                ColumnCollection = new List<ColumnProperty>
                                 {
-                                    new ColumnProperty(nameof(CurrencyModel.Name))
+                                    Name = "currencies-grid",
+                                    UrlRead = new DataUrl("ListGrid", "Currency", null),
+                                    Length = Model.PageSize,
+                                    LengthMenu = Model.AvailablePageSizes,
+                                    ColumnCollection = new List<ColumnProperty>
                                     {
-                                        Title = T("Admin.Configuration.Currencies.Fields.Name").Text
-                                    },
-                                    new ColumnProperty(nameof(CurrencyModel.CurrencyCode))
-                                    {
-                                        Title = T("Admin.Configuration.Currencies.Fields.CurrencyCode").Text,
-                                        Width = "100"
-                                    },
-                                    new ColumnProperty(nameof(CurrencyModel.Rate))
-                                    {
-                                        Title = T("Admin.Configuration.Currencies.Fields.Rate").Text,
-                                        Width = "80"
-                                    },
-                                    new ColumnProperty(nameof(CurrencyModel.IsPrimaryExchangeRateCurrency))
-                                    {
-                                        Title = T("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency").Text,
-                                        Width = "100",
-                                        ClassName =  NopColumnClassDefaults.CenterAll,
-                                        Render = new RenderBoolean()
-                                    },
-                                    new ColumnProperty(nameof(CurrencyModel.Id))
-                                    {
-                                        Title = T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text,
-                                        ClassName =  NopColumnClassDefaults.CenterAll,
-                                        Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text)
+                                        new ColumnProperty(nameof(CurrencyModel.Name))
                                         {
-                                            OnClickFunctionName =  "markAsPrimaryExchangeRateCurrency"
-                                        }
-                                    },
-                                    new ColumnProperty(nameof(CurrencyModel.IsPrimaryStoreCurrency))
-                                    {
-                                        Title = T("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency").Text,
-                                        Width = "100",
-                                        ClassName =  NopColumnClassDefaults.CenterAll,
-                                        Render = new RenderBoolean()
-                                    },
-                                    new ColumnProperty(nameof(CurrencyModel.Id))
-                                    {
-                                        Title = T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text,                                        
-                                        ClassName =  NopColumnClassDefaults.CenterAll,
-                                        Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text)
+                                            Title = T("Admin.Configuration.Currencies.Fields.Name").Text
+                                        },
+                                        new ColumnProperty(nameof(CurrencyModel.CurrencyCode))
                                         {
-                                            OnClickFunctionName = "markAsPrimaryStoreCurrency"
+                                            Title = T("Admin.Configuration.Currencies.Fields.CurrencyCode").Text,
+                                            Width = "100"
+                                        },
+                                        new ColumnProperty(nameof(CurrencyModel.Rate))
+                                        {
+                                            Title = T("Admin.Configuration.Currencies.Fields.Rate").Text,
+                                            Width = "80"
+                                        },
+                                        new ColumnProperty(nameof(CurrencyModel.IsPrimaryExchangeRateCurrency))
+                                        {
+                                            Title = T("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency").Text,
+                                            Width = "100",
+                                            ClassName =  NopColumnClassDefaults.CenterAll,
+                                            Render = new RenderBoolean()
+                                        },
+                                        new ColumnProperty(nameof(CurrencyModel.Id))
+                                        {
+                                            Title = T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text,
+                                            ClassName =  NopColumnClassDefaults.CenterAll,
+                                            Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text)
+                                            {
+                                                OnClickFunctionName =  "SetPrimaryExchangeRateCurrency"
+                                            }
+                                        },
+                                        new ColumnProperty(nameof(CurrencyModel.IsPrimaryStoreCurrency))
+                                        {
+                                            Title = T("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency").Text,
+                                            Width = "100",
+                                            ClassName =  NopColumnClassDefaults.CenterAll,
+                                            Render = new RenderBoolean()
+                                        },
+                                        new ColumnProperty(nameof(CurrencyModel.Id))
+                                        {
+                                            Title = T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text,                                        
+                                            ClassName =  NopColumnClassDefaults.CenterAll,
+                                            Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text)
+                                            {
+                                                OnClickFunctionName = "SetPrimaryStoreCurrency"
+                                            }
+                                        },
+                                        new ColumnProperty(nameof(CurrencyModel.DisplayOrder))
+                                        {
+                                            Title = T("Admin.Configuration.Currencies.Fields.DisplayOrder").Text,
+                                            Width = "50",
+                                            ClassName =  NopColumnClassDefaults.CenterAll
+                                        },
+                                        new ColumnProperty(nameof(CurrencyModel.Published))
+                                        {
+                                            Title = T("Admin.Configuration.Currencies.Fields.Published").Text,
+                                            Width = "50",
+                                            ClassName =  NopColumnClassDefaults.CenterAll,
+                                            Render = new RenderBoolean()
+                                        },
+                                        new ColumnProperty(nameof(CurrencyModel.Id))
+                                        {
+                                            Title = T("Admin.Common.Edit").Text,
+                                            Width = "80",
+                                            ClassName =  NopColumnClassDefaults.Button,
+                                            Render = new RenderButtonEdit(new DataUrl("~/Admin/Currency/Edit"))
                                         }
-                                    },
-                                    new ColumnProperty(nameof(CurrencyModel.DisplayOrder))
-                                    {
-                                        Title = T("Admin.Configuration.Currencies.Fields.DisplayOrder").Text,
-                                        Width = "50",
-                                        ClassName =  NopColumnClassDefaults.CenterAll
-                                    },
-                                    new ColumnProperty(nameof(CurrencyModel.Published))
-                                    {
-                                        Title = T("Admin.Configuration.Currencies.Fields.Published").Text,
-                                        Width = "50",
-                                        ClassName =  NopColumnClassDefaults.CenterAll,
-                                        Render = new RenderBoolean()
-                                    },
-                                    new ColumnProperty(nameof(CurrencyModel.Id))
-                                    {
-                                        Title = T("Admin.Common.Edit").Text,
-                                        Width = "80",
-                                        ClassName =  NopColumnClassDefaults.Button,
-                                        Render = new RenderButtonEdit(new DataUrl("~/Admin/Currency/Edit"))
                                     }
-                                }
-                            })
-
-
-                                <button type="submit" class="btn btn-default" id="btnMarkPERC" style="display:none" />
-                                <button type="submit" class="btn btn-default" id="btnMarkPSC" style="display:none" />
+                                })
 
                                 <script>
-                        var selectedId;
+                                    function setPrimaryStoreCurrency(id) {
+                                        var postData = {
+                                            id: id
+                                        };
+                                        addAntiForgeryToken(postData);
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            url: "@(Url.Action("MarkAsPrimaryStoreCurrency", "Currency"))",
+                                            data: postData,
+                                            success: function (data, textStatus, jqXHR) {
+                                                updateTable('#currencies-grid');
+                                            },
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                $("#currencyAlert").trigger("click");
+                                            }
+                                        });
+                                    };
 
-                        $(function() {
-
-                            $("#btnMarkPSC-action-confirmation-submit-button").on("click", function () {
-                                var postData = {
-                                    id: selectedId
-                                };
-                                addAntiForgeryToken(postData);
-                                $.ajax({
-                                    cache: false,
-                                    type: "POST",
-                                    url: "@(Url.Action("MarkAsPrimaryStoreCurrency", "Currency"))",
-                                    data: postData,
-                                    success: function (data, textStatus, jqXHR) {
-                                        updateTable('#currencies-grid');
-                                    },
-                                    error: function (jqXHR, textStatus, errorThrown) {
-                                        $("#currencyAlert").trigger("click");
-                                    }
-                                });
-                                $('#btnMarkPSC-action-confirmation').modal('toggle');
-                            });
-
-                            $("#btnMarkPERC-action-confirmation-submit-button").on("click", function () {
-                                var postData = {
-                                    id: selectedId
-                                };
-                                addAntiForgeryToken(postData);
-                                $.ajax({
-                                    cache: false,
-                                    type: "POST",
-                                    url: "@(Url.Action("MarkAsPrimaryExchangeRateCurrency", "Currency"))",
-                                    data: postData,
-                                    success: function (data, textStatus, jqXHR) {
-                                        updateTable('#currencies-grid');
-                                    },
-                                    error: function (jqXHR, textStatus, errorThrown) {
-                                        $("#currencyAlert").trigger("click");
-                                    }
-                                });
-                                $('#btnMarkPERC-action-confirmation').modal('toggle');
-                            });
-
-                        });
-
-                        function markAsPrimaryExchangeRateCurrency(id) {
-                            selectedId = id;
-                            $("#btnMarkPERC").trigger("click");
-                        };
-
-                        function markAsPrimaryStoreCurrency(id) {
-                            selectedId = id;
-                            $("#btnMarkPSC").trigger("click");
-                        };
+                                    function setPrimaryExchangeRateCurrency(id) {
+                                        var postData = {
+                                            id: id
+                                        };
+                                        addAntiForgeryToken(postData);
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            url: "@(Url.Action("MarkAsPrimaryExchangeRateCurrency", "Currency"))",
+                                            data: postData,
+                                            success: function (data, textStatus, jqXHR) {
+                                                updateTable('#currencies-grid');
+                                            },
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                $("#currencyAlert").trigger("click");
+                                            }
+                                        });
+                                    };
                                 </script>
                             </div>
                         </div>
@@ -239,52 +217,52 @@
                                         }
                                     })
                                     <script>
-                                function renderColumnApplyRate(data, type, row, meta) {
-                                    return '<a onclick="applyCurrencyRate(\'' +
-                                        row.Rate +
-                                        '\',\'' +
-                                        row.CurrencyCode +
-                                        '\')" class="btn bg-olive">@T("Admin.Configuration.Currencies.ApplyRate")</a>';
-                                }
-
-                                function applyCurrencyRate(rate, currencyCode) {
-                                    var postData = {
-                                        rateModels: (rate && currencyCode) ? [{ CurrencyCode: currencyCode, Rate: rate }] : currencyrates_source
-                                    };
-                                    addAntiForgeryToken(postData);
-                                    $.ajax({
-                                        cache: false,
-                                        type: "POST",
-                                        url: "@(Url.Action("ApplyRates"))",
-                                        data: postData,
-                                        success: function (data, textStatus, jqXHR) {
-                                            updateTable('#currencies-grid');
-                                        },
-                                        error: function (jqXHR, textStatus, errorThrown) {
-                                            $("#currencyAlert").trigger("click");
+                                        function renderColumnApplyRate(data, type, row, meta) {
+                                            return '<a onclick="applyCurrencyRate(\'' +
+                                                row.Rate +
+                                                '\',\'' +
+                                                row.CurrencyCode +
+                                                '\')" class="btn bg-olive">@T("Admin.Configuration.Currencies.ApplyRate")</a>';
                                         }
-                                    });
-                                }
 
-                                //local datasource
-                                var currencyrates_source = [
-                                    @for (var i = 0; i < Model.ExchangeRateProviderModel.ExchangeRates.Count; i++)
-                                    {
-                                        var rate = Model.ExchangeRateProviderModel.ExchangeRates[i];
-                                        <text>
+                                        function applyCurrencyRate(rate, currencyCode) {
+                                            var postData = {
+                                                rateModels: (rate && currencyCode) ? [{ CurrencyCode: currencyCode, Rate: rate }] : currencyrates_source
+                                            };
+                                            addAntiForgeryToken(postData);
+                                            $.ajax({
+                                                cache: false,
+                                                type: "POST",
+                                                url: "@(Url.Action("ApplyRates"))",
+                                                data: postData,
+                                                success: function (data, textStatus, jqXHR) {
+                                                    updateTable('#currencies-grid');
+                                                },
+                                                error: function (jqXHR, textStatus, errorThrown) {
+                                                    $("#currencyAlert").trigger("click");
+                                                }
+                                            });
+                                        }
+
+                                        //local datasource
+                                        var currencyrates_source = [
+                                            @for (var i = 0; i < Model.ExchangeRateProviderModel.ExchangeRates.Count; i++)
                                             {
-                                                CurrencyCode:
-                                                    "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.CurrencyCode)))",
-                                                Rate:
-                                                    "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.Rate.ToString())))"
+                                                var rate = Model.ExchangeRateProviderModel.ExchangeRates[i];
+                                                <text>
+                                                    {
+                                                        CurrencyCode:
+                                                            "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.CurrencyCode)))",
+                                                        Rate:
+                                                            "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.Rate.ToString())))"
+                                                    }
+                                                </text>
+                                                if (i != Model.ExchangeRateProviderModel.ExchangeRates.Count - 1)
+                                                {
+                                                    <text>,</text>
+                                                }
                                             }
-                                        </text>
-                                        if (i != Model.ExchangeRateProviderModel.ExchangeRates.Count - 1)
-                                        {
-                                            <text>,</text>
-                                        }
-                                    }
-                                ];
+                                        ];
                                     </script>
                                 </div>
                             </div>
@@ -295,6 +273,6 @@
         </div>
     </section>
 </form>
-<nop-action-confirmation asp-button-id="btnMarkPERC" asp-additional-confirm="Admin.Configuration.Currencies.AdditionalConfirm" />
-<nop-action-confirmation asp-button-id="btnMarkPSC" asp-additional-confirm="Admin.Configuration.Currencies.AdditionalConfirm" />
+<nop-action-confirmation asp-callback="setPrimaryExchangeRateCurrency" asp-additional-confirm="Admin.Configuration.Currencies.AdditionalConfirm" />
+<nop-action-confirmation asp-callback="setPrimaryStoreCurrency" asp-additional-confirm="Admin.Configuration.Currencies.AdditionalConfirm" />
 <nop-alert asp-alert-id="currencyAlert" asp-alert-message="@T("Admin.Configuration.Currencies.Alert.Error")" />

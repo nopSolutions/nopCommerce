@@ -26,18 +26,78 @@
 
 <script>
     $(function(){
-        const openerBtn = document.getElementById('@Model.ButtonId');
+        @if (!string.IsNullOrEmpty(Model.Callback))
+        {
+            <text>
+                var callbackStr = '@Model.Callback';
+                var callbackFunctionName = callbackStr.split('(')[0];
+                var openFunctionName = callbackFunctionName.charAt(0).toUpperCase() + callbackFunctionName.slice(1);
 
-        openerBtn.type = "button";
-        openerBtn.setAttribute("data-toggle", "modal");
-        openerBtn.setAttribute("data-target", "#@Model.WindowId")
+                window[openFunctionName] = function(id) {
+                    const modalElement = document.getElementById('@Model.WindowId');
+                    if (id !== undefined && id !== null) {
+                        modalElement.setAttribute('data-id', id);
+                    }
+                    $(modalElement).modal('show');
+                };
+            </text>
+        }
+        else
+        {
+            <text>
+                const openerBtn = document.getElementById('@Model.ButtonId');
+                openerBtn.type = "button";
+                openerBtn.setAttribute("data-toggle", "modal");
+                openerBtn.setAttribute("data-target", "#@Model.WindowId");
+            </text>
+        }
 
         $('#@(Model.WindowId)-submit-button').on('click', function() {
-            if (!openerBtn.name)
-                return;
+            @if (!string.IsNullOrEmpty(Model.Callback))
+            {
+                <text>
+                    var callbackStr = '@Model.Callback';
+                    var match = callbackStr.match(/^(\w+)(?:\((.*)\))?$/);
+                    if (match) {
+                        var callbackName = match[1];
+                        var params = match[2] ? match[2].trim() : '';
 
-            openerBtn.type = "submit";
-            openerBtn.click();
+                        if (typeof window[callbackName] === 'function') {
+                            var modalElement = document.getElementById('@Model.WindowId');
+
+                            if (params) {
+                                var paramValue = modalElement.getAttribute('data-' + params);
+                                window[callbackName](paramValue);
+                            } else if ('@(!string.IsNullOrEmpty(Model.Callback))' === 'True') {
+                                var paramValue = modalElement.getAttribute('data-id');
+                                window[callbackName](paramValue);
+                            } else {
+                                window[callbackName]();
+                            }
+                            $('#@Model.WindowId').modal('hide');
+                        } else {
+                            console.error('Action confirmation callback "' + callbackName + '" not found');
+                        }
+                    } else {
+                        console.error('Invalid callback format: ' + callbackStr);
+                    }
+                </text>
+            }
+            else
+            {
+                <text>
+                    @if (string.IsNullOrEmpty(Model.Callback))
+                    {
+                        <text>
+                            const openerBtn = document.getElementById('@Model.ButtonId');
+                            if (openerBtn && openerBtn.name) {
+                                openerBtn.type = "submit";
+                                openerBtn.click();
+                            }
+                        </text>
+                    }
+                </text>
+            }
         });
     });
 </script>

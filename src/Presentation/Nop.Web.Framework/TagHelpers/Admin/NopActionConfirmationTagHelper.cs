@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin;
 /// <summary>
 /// "nop-action-confirmation" tag helper
 /// </summary>
-[HtmlTargetElement("nop-action-confirmation", Attributes = BUTTON_ID_ATTRIBUTE_NAME, TagStructure = TagStructure.WithoutEndTag)]
+[HtmlTargetElement("nop-action-confirmation", TagStructure = TagStructure.WithoutEndTag)]
 public partial class NopActionConfirmationTagHelper : TagHelper
 {
     #region Constants
@@ -18,6 +18,7 @@ public partial class NopActionConfirmationTagHelper : TagHelper
     protected const string BUTTON_ID_ATTRIBUTE_NAME = "asp-button-id";
     protected const string ACTION_ATTRIBUTE_NAME = "asp-action";
     protected const string ADDITIONAL_CONFIRM_TEXT = "asp-additional-confirm";
+    protected const string CALLBACK_ATTRIBUTE_NAME = "asp-callback";
 
     #endregion
 
@@ -57,6 +58,12 @@ public partial class NopActionConfirmationTagHelper : TagHelper
         if (string.IsNullOrEmpty(Action))
             Action = _htmlHelper.ViewContext.RouteData.Values["action"].ToString();
 
+        //generate ButtonId if not provided (for callback mode)
+        if (string.IsNullOrEmpty(ButtonId))
+        {
+            ButtonId = Guid.NewGuid().ToString("N").Substring(0, 8);
+        }
+
         var modalId = await new HtmlString(ButtonId + "-action-confirmation").RenderHtmlContentAsync();
 
         var actionConfirmationModel = new ActionConfirmationModel()
@@ -65,7 +72,8 @@ public partial class NopActionConfirmationTagHelper : TagHelper
             ActionName = Action,
             WindowId = modalId,
             ButtonId = ButtonId,
-            AdditonalConfirmText = ConfirmText
+            AdditonalConfirmText = ConfirmText,
+            Callback = Callback
         };
 
         //tag details
@@ -105,6 +113,12 @@ public partial class NopActionConfirmationTagHelper : TagHelper
     /// </summary>
     [HtmlAttributeName(ADDITIONAL_CONFIRM_TEXT)]
     public string ConfirmText { get; set; }
+
+    /// <summary>
+    /// JS Callback function name
+    /// </summary>
+    [HtmlAttributeName(CALLBACK_ATTRIBUTE_NAME)]
+    public string Callback { get; set; }
 
     /// <summary>
     /// ViewContext

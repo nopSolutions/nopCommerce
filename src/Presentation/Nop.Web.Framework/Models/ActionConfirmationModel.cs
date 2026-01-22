@@ -26,4 +26,8 @@ public partial class ActionConfirmationModel
     /// Additionl confirm text
     /// </summary>
     public string AdditonalConfirmText { get; set; }
+    /// <summary>
+    /// Callback function name
+    /// </summary>
+    public string Callback { get; set; }
 }
