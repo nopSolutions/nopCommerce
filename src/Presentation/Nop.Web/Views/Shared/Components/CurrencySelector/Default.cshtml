@@ -1,6 +1,7 @@
-﻿@model CurrencySelectorModel
+﻿@using Nop.Services.Helpers
+@model CurrencySelectorModel
 
-@inject Nop.Core.IWebHelper webHelper
+@inject IWebHelper webHelper
 
 @if (Model.AvailableCurrencies.Count > 1)
 {

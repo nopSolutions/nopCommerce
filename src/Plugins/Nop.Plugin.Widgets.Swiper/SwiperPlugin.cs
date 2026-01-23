@@ -6,6 +6,7 @@ using Nop.Plugin.Widgets.Swiper.Components;
 using Nop.Plugin.Widgets.Swiper.Domain;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Plugins;
@@ -67,7 +68,7 @@ public class SwiperPlugin : BasePlugin, IWidgetPlugin
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return _webHelper.GetStoreLocation() + "Admin/WidgetSwiper/Configure";
+        return $"{_webHelper.GetStoreLocation()}Admin/WidgetSwiper/Configure";
     }
 
     /// <summary>

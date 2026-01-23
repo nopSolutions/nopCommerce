@@ -8,6 +8,7 @@ using Nop.Core.Http;
 using Nop.Core.Rss;
 using Nop.Services.Blogs;
 using Nop.Services.Customers;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;

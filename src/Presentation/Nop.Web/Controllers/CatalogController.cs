@@ -10,6 +10,7 @@ using Nop.Core.Rss;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.FilterLevels;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
@@ -427,15 +428,10 @@ public partial class CatalogController : BasePublicController
         var showLinkToResultSearch = _catalogSettings.ShowLinkToAllResultInSearchAutoComplete && (products.TotalCount > productNumber);
 
         var models = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize)).ToList();
-        var result = (from p in models
-                select new
-                {
-                    label = p.Name,
-                    producturl = _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = p.SeName }).Result,
-                    productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
-                    showlinktoresultsearch = showLinkToResultSearch
-                })
-            .ToList();
+        var result = new List<object>();
+        foreach (var p in models)
+            result.Add(new { label = p.Name, producturl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = p.SeName }), productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl, showlinktoresultsearch = showLinkToResultSearch });
+
         return Json(result);
     }
 

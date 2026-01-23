@@ -1,6 +1,7 @@
-﻿@model LanguageSelectorModel
+﻿@using Nop.Services.Helpers
+@model LanguageSelectorModel
 
-@inject Nop.Core.IWebHelper webHelper
+@inject IWebHelper webHelper
 
 @if (Model.AvailableLanguages.Count > 1)
 {

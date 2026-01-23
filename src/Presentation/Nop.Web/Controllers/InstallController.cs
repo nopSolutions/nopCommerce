@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
-using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Http;
@@ -10,6 +9,7 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Configuration;
 using Nop.Services.Common;
+using Nop.Services.Helpers;
 using Nop.Services.Installation;
 using Nop.Services.Plugins;
 using Nop.Services.Security;

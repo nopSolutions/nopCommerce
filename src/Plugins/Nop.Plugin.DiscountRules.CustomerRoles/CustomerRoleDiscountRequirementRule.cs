@@ -1,7 +1,7 @@
-﻿using Nop.Core;
-using Nop.Services.Configuration;
+﻿using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Mvc.Routing;

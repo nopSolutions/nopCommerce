@@ -7,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Plugin.Misc.Omnisend.Services;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Helpers;
 using Nop.Web.Framework.Components;
 using Nop.Web.Framework.Infrastructure;
 using Nop.Web.Framework.Mvc.Routing;

@@ -21,6 +21,7 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -1637,7 +1638,7 @@ public partial class OrderProcessingService : IOrderProcessingService
             var cacheKey = _staticCacheManager.PrepareKey(NopOrderDefaults.OrderWithLockCacheKey, resource);
             cacheKey.CacheTime = _orderSettings.MinimumOrderPlacementInterval;
 
-            var exist = _staticCacheManager.Get(cacheKey, () => false);
+            var exist = _staticCacheManager.GetAsync(cacheKey, () => false).Result;
 
             if (exist)
             {

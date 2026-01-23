@@ -3,9 +3,9 @@ using elFinder.NetCore.Drivers.FileSystem;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
+using Nop.Services.Helpers;
 
 namespace Nop.Services.Media.ElFinder;
 

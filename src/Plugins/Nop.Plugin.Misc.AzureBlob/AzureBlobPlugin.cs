@@ -1,11 +1,11 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
-using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 

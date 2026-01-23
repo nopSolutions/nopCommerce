@@ -6,6 +6,7 @@ using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Common;
+using Nop.Services.Helpers;
 using Nop.Services.Installation;
 
 namespace Nop.Web.Infrastructure.Installation;

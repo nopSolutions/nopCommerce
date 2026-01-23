@@ -2,7 +2,7 @@
 using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Http;
-using Nop.Core;
+using Nop.Services.Helpers;
 
 namespace Nop.Web.Framework;
 
@@ -125,9 +125,7 @@ public partial class RemotePost
         response.ContentType = "text/html; charset=utf-8";
         response.ContentLength = data.Length;
 
-        response.Body
-            .WriteAsync(data, 0, data.Length)
-            .Wait();
+        response.Body.Write(data, 0, data.Length);
 
         //store a value indicating whether POST has been done
         _webHelper.IsPostBeingDone = true;

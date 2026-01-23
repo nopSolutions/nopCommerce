@@ -25,6 +25,7 @@ using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.FilterLevels;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;

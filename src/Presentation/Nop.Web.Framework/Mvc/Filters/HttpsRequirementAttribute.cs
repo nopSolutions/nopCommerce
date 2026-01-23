@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Core.Http.Extensions;
 using Nop.Data;
+using Nop.Services.Helpers;
 
 namespace Nop.Web.Framework.Mvc.Filters;
 

@@ -4,6 +4,7 @@ using Nop.Core.Http;
 using Nop.Plugin.Misc.Omnisend.Services;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Helpers;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Misc.Omnisend.Controllers;

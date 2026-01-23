@@ -5,6 +5,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Seo;
 using Nop.Data;
 using Nop.Services.Common;
+using Nop.Services.Helpers;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Affiliates;

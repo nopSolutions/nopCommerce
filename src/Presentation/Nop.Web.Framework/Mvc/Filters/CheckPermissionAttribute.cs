@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Nop.Core;
 using Nop.Data;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 

@@ -7,6 +7,7 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Logging;
 using Nop.Services.Seo;
 using SkiaSharp;

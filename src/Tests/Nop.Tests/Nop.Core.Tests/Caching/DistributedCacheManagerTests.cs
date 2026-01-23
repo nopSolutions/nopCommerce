@@ -59,7 +59,7 @@ public class DistributedCacheManagerTests : BaseNopTest
     public async Task CanGetFromCacheAndWillTrackRemoved()
     {
         await _distributedCache.SetAsync("some_key_3", Encoding.UTF8.GetBytes("3"));
-        _staticCacheManager.Get(new CacheKey("some_key_3"), () => 3);
+        await _staticCacheManager.GetAsync(new CacheKey("some_key_3"), () => 3);
         await _staticCacheManager.RemoveByPrefixAsync("some_key_3");
         (await _distributedCache.GetAsync("some_key_3")).Should().BeNullOrEmpty();
     }
@@ -80,15 +80,15 @@ public class DistributedCacheManagerTests : BaseNopTest
         {
             var manager = GetService<MemoryDistributedCacheManager>(scope);
             manager.Equals(_staticCacheManager).Should().BeFalse();
-            manager.Get<int?>(new CacheKey("some_key_1"), null).Should().Be(1);
-            manager.Get<int?>(new CacheKey("some_key_2"), null).Should().Be(2);
-            manager.Get<int?>(new CacheKey("some_key_3"), null).Should().Be(3);
+            (await manager.GetAsync(new CacheKey("some_key_1"), acquire: (Func<int?>)null)).Should().Be(1);
+            (await manager.GetAsync(new CacheKey("some_key_2"), acquire: (Func<int?>)null)).Should().Be(2);
+            (await manager.GetAsync(new CacheKey("some_key_3"), acquire: (Func<int?>)null)).Should().Be(3);
             await manager.ClearAsync();
         }
 
-        _staticCacheManager.Get<int?>(new CacheKey("some_key_1"), () => null).Should().BeNull();
-        _staticCacheManager.Get<int?>(new CacheKey("some_key_2"), () => null).Should().BeNull();
-        _staticCacheManager.Get<int?>(new CacheKey("some_key_3"), () => null).Should().BeNull();
+        (await _staticCacheManager.GetAsync(new CacheKey("some_key_1"), int? () => null)).Should().BeNull();
+        (await _staticCacheManager.GetAsync(new CacheKey("some_key_2"), int? () => null)).Should().BeNull();
+        (await _staticCacheManager.GetAsync(new CacheKey("some_key_3"), int? () => null)).Should().BeNull();
     }
 
     [Test]
@@ -115,16 +115,10 @@ public class DistributedCacheManagerTests : BaseNopTest
         await _distributedCache.SetAsync("some_key_2", Encoding.UTF8.GetBytes("2"));
         await _distributedCache.SetAsync("some_key_3", Encoding.UTF8.GetBytes("3"));
 
-        _staticCacheManager.Get<int?>(new CacheKey("some_key_1"), null).Should().Be(1);
-        _staticCacheManager.Get<int?>(new CacheKey("some_key_2"), null).Should().Be(2);
-        _staticCacheManager.Get<int?>(new CacheKey("some_key_3"), null).Should().Be(3);
-
-        _staticCacheManager.Get<int?>(new CacheKey("some_key_4"), () => 4).Should().Be(4);
 
         var rez = await _staticCacheManager.GetAsync<int?>(new CacheKey("some_key_1"), () => 3);
         rez.Should().Be(1);
-        rez = await _staticCacheManager.GetAsync(new CacheKey("some_key_1"),
-            async () => int.Parse(Encoding.UTF8.GetString(await _distributedCache.GetAsync("some_key_3"))));
+        rez = await _staticCacheManager.GetAsync(new CacheKey("some_key_1"), async () => int.Parse(Encoding.UTF8.GetString(await _distributedCache.GetAsync("some_key_3") ?? [])));
         rez.Should().Be(1);
     }
 
@@ -135,17 +129,17 @@ public class DistributedCacheManagerTests : BaseNopTest
         await _distributedCache.SetAsync("some_key_2", Encoding.UTF8.GetBytes("2"));
         await _staticCacheManager.SetAsync(new CacheKey("some_key_3"), "3");
 
-        _staticCacheManager.Get<string>(new CacheKey("some_key_1"), null).Should().Be("1");
-        _staticCacheManager.Get<string>(new CacheKey("some_key_2"), null).Should().Be("2");
-        _staticCacheManager.Get<string>(new CacheKey("some_key_3"), null).Should().Be("3");
+        (await _staticCacheManager.GetAsync(new CacheKey("some_key_1"), (Func<string>)null)).Should().Be("1");
+        (await _staticCacheManager.GetAsync(new CacheKey("some_key_2"), (Func<string>)null)).Should().Be("2");
+        (await _staticCacheManager.GetAsync(new CacheKey("some_key_3"), (Func<string>)null)).Should().Be("3");
 
         await _staticCacheManager.RemoveAsync(new CacheKey("some_key_1"));
         await _staticCacheManager.RemoveAsync(new CacheKey("some_key_2"));
         await _staticCacheManager.RemoveAsync(new CacheKey("some_key_3"));
 
-        _distributedCache.Get("some_key_1").Should().BeNullOrEmpty();
-        _distributedCache.Get("some_key_2").Should().BeNullOrEmpty();
-        _distributedCache.Get("some_key_3").Should().BeNullOrEmpty();
+        (await _distributedCache.GetAsync("some_key_1")).Should().BeNullOrEmpty();
+        (await _distributedCache.GetAsync("some_key_2")).Should().BeNullOrEmpty();
+        (await _distributedCache.GetAsync("some_key_3")).Should().BeNullOrEmpty();
     }
 
     [Test]

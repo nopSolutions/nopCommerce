@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Nop.Core;
+using Nop.Services.Helpers;
 
 namespace Nop.Web.Framework.TagHelpers.Public;
 

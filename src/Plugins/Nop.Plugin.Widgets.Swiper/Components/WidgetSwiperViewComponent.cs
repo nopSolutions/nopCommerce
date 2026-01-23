@@ -6,6 +6,7 @@ using Nop.Plugin.Widgets.Swiper.Domain;
 using Nop.Plugin.Widgets.Swiper.Infrastructure.Cache;
 using Nop.Plugin.Widgets.Swiper.Models;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Media;
 using Nop.Web.Framework.Components;
 
