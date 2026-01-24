@@ -189,95 +189,95 @@ public partial class ShoppingCartController : BasePublicController
                 case AttributeControlType.RadioList:
                 case AttributeControlType.ColorSquares:
                 case AttributeControlType.ImageSquares:
+                {
+                    var ctrlAttributes = form[controlId];
+                    if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                     {
-                        var ctrlAttributes = form[controlId];
-                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                        var selectedAttributeId = int.Parse(ctrlAttributes);
+                        if (selectedAttributeId > 0)
+                            attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
+                                attribute, selectedAttributeId.ToString());
+                    }
+                }
+
+                break;
+                case AttributeControlType.Checkboxes:
+                {
+                    var cblAttributes = form[controlId];
+                    if (!StringValues.IsNullOrEmpty(cblAttributes))
+                    {
+                        foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                         {
-                            var selectedAttributeId = int.Parse(ctrlAttributes);
+                            var selectedAttributeId = int.Parse(item);
                             if (selectedAttributeId > 0)
                                 attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                         }
                     }
+                }
 
-                    break;
-                case AttributeControlType.Checkboxes:
-                    {
-                        var cblAttributes = form[controlId];
-                        if (!StringValues.IsNullOrEmpty(cblAttributes))
-                        {
-                            foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries))
-                            {
-                                var selectedAttributeId = int.Parse(item);
-                                if (selectedAttributeId > 0)
-                                    attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString());
-                            }
-                        }
-                    }
-
-                    break;
+                break;
                 case AttributeControlType.ReadonlyCheckboxes:
+                {
+                    //load read-only (already server-side selected) values
+                    var attributeValues = await _checkoutAttributeService.GetAttributeValuesAsync(attribute.Id);
+                    foreach (var selectedAttributeId in attributeValues
+                                 .Where(v => v.IsPreSelected)
+                                 .Select(v => v.Id)
+                                 .ToList())
                     {
-                        //load read-only (already server-side selected) values
-                        var attributeValues = await _checkoutAttributeService.GetAttributeValuesAsync(attribute.Id);
-                        foreach (var selectedAttributeId in attributeValues
-                                     .Where(v => v.IsPreSelected)
-                                     .Select(v => v.Id)
-                                     .ToList())
-                        {
-                            attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
-                                attribute, selectedAttributeId.ToString());
-                        }
+                        attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
+                            attribute, selectedAttributeId.ToString());
                     }
+                }
 
-                    break;
+                break;
                 case AttributeControlType.TextBox:
                 case AttributeControlType.MultilineTextbox:
+                {
+                    var ctrlAttributes = form[controlId];
+                    if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                     {
-                        var ctrlAttributes = form[controlId];
-                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
-                        {
-                            var enteredText = ctrlAttributes.ToString().Trim();
-                            attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
-                                attribute, enteredText);
-                        }
+                        var enteredText = ctrlAttributes.ToString().Trim();
+                        attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
+                            attribute, enteredText);
                     }
+                }
 
-                    break;
+                break;
                 case AttributeControlType.Datepicker:
+                {
+                    var date = form[controlId + "_day"];
+                    var month = form[controlId + "_month"];
+                    var year = form[controlId + "_year"];
+                    DateTime? selectedDate = null;
+                    try
                     {
-                        var date = form[controlId + "_day"];
-                        var month = form[controlId + "_month"];
-                        var year = form[controlId + "_year"];
-                        DateTime? selectedDate = null;
-                        try
-                        {
-                            selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(date));
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
-
-                        if (selectedDate.HasValue)
-                            attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
-                                attribute, selectedDate.Value.ToString("D"));
+                        selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(date));
+                    }
+                    catch
+                    {
+                        // ignored
                     }
 
-                    break;
+                    if (selectedDate.HasValue)
+                        attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
+                            attribute, selectedDate.Value.ToString("D"));
+                }
+
+                break;
                 case AttributeControlType.FileUpload:
+                {
+                    _ = Guid.TryParse(form[controlId], out var downloadGuid);
+                    var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
+                    if (download != null)
                     {
-                        _ = Guid.TryParse(form[controlId], out var downloadGuid);
-                        var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
-                        if (download != null)
-                        {
-                            attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
-                                attribute, download.DownloadGuid.ToString());
-                        }
+                        attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
+                            attribute, download.DownloadGuid.ToString());
                     }
+                }
 
-                    break;
+                break;
                 default:
                     break;
             }
@@ -354,93 +354,93 @@ public partial class ShoppingCartController : BasePublicController
         switch (cartType)
         {
             case ShoppingCartType.Wishlist:
+            {
+                var wishlistRouteUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST);
+                //activity log
+                await _customerActivityService.InsertActivityAsync("PublicStore.AddToWishlist",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
+
+                if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct)
                 {
-                    var wishlistRouteUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST);
-                    //activity log
-                    await _customerActivityService.InsertActivityAsync("PublicStore.AddToWishlist",
-                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
-
-                    if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct)
+                    //redirect to the wishlist page
+                    return Json(new
                     {
-                        //redirect to the wishlist page
-                        return Json(new
-                        {
-                            redirect = wishlistRouteUrl
-                        });
-                    }
-
-                    //display notification message and update appropriate blocks
-                    var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id);
-
-                    var updateTopWishlistSectionHtml = string.Format(
-                        await _localizationService.GetResourceAsync("Wishlist.HeaderQuantity"),
-                        shoppingCarts.Sum(item => item.Quantity));
-
-                    var customWishlists = await _customWishlistService.GetAllCustomWishlistsAsync(customer.Id);
-                    var isGuest = await _customerService.IsGuestAsync(customer);
-
-                    if (!isGuest && customWishlists.Any())
-                    {
-                        var onclick = $"showMoveToWishlistModal({product.Id}); return false;";
-                        return Json(new
-                        {
-                            success = true,
-                            message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlistAndMoved.Link"), wishlistRouteUrl, onclick),
-                            updatetopwishlistsectionhtml = updateTopWishlistSectionHtml
-                        });
-                    }
-                    else
-                    {
-                        return Json(new
-                        {
-                            success = true,
-                            message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlist.Link"), wishlistRouteUrl),
-                            updatetopwishlistsectionhtml = updateTopWishlistSectionHtml
-                        });
-                    }
+                        redirect = wishlistRouteUrl
+                    });
                 }
 
-            case ShoppingCartType.ShoppingCart:
-            default:
+                //display notification message and update appropriate blocks
+                var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id);
+
+                var updateTopWishlistSectionHtml = string.Format(
+                    await _localizationService.GetResourceAsync("Wishlist.HeaderQuantity"),
+                    shoppingCarts.Sum(item => item.Quantity));
+
+                var customWishlists = await _customWishlistService.GetAllCustomWishlistsAsync(customer.Id);
+                var isGuest = await _customerService.IsGuestAsync(customer);
+
+                if (!isGuest && customWishlists.Any())
                 {
-                    //'Continue shopping' URL
-                    await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
-                        NopCustomerDefaults.LastContinueShoppingPageAttribute,
-                        string.Empty,
-                        store.Id);
-                    //activity log
-                    await _customerActivityService.InsertActivityAsync("PublicStore.AddToShoppingCart",
-                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToShoppingCart"), product.Name), product);
-
-                    if (_shoppingCartSettings.DisplayCartAfterAddingProduct)
-                    {
-                        //redirect to the shopping cart page
-                        return Json(new
-                        {
-                            redirect = Url.RouteUrl(NopRouteNames.General.CART)
-                        });
-                    }
-
-                    //display notification message and update appropriate blocks
-                    var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-                    var updateTopCartSectionHtml = string.Format(
-                        await _localizationService.GetResourceAsync("ShoppingCart.HeaderQuantity"),
-                        shoppingCarts.Sum(item => item.Quantity));
-
-                    var updateFlyoutCartSectionHtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                        ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
-                        : string.Empty;
-
+                    var onclick = $"showMoveToWishlistModal({product.Id}); return false;";
                     return Json(new
                     {
                         success = true,
-                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"),
-                            Url.RouteUrl(NopRouteNames.General.CART)),
-                        updatetopcartsectionhtml = updateTopCartSectionHtml,
-                        updateflyoutcartsectionhtml = updateFlyoutCartSectionHtml
+                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlistAndMoved.Link"), wishlistRouteUrl, onclick),
+                        updatetopwishlistsectionhtml = updateTopWishlistSectionHtml
                     });
                 }
+                else
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlist.Link"), wishlistRouteUrl),
+                        updatetopwishlistsectionhtml = updateTopWishlistSectionHtml
+                    });
+                }
+            }
+
+            case ShoppingCartType.ShoppingCart:
+            default:
+            {
+                //'Continue shopping' URL
+                await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
+                    NopCustomerDefaults.LastContinueShoppingPageAttribute,
+                    string.Empty,
+                    store.Id);
+                //activity log
+                await _customerActivityService.InsertActivityAsync("PublicStore.AddToShoppingCart",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToShoppingCart"), product.Name), product);
+
+                if (_shoppingCartSettings.DisplayCartAfterAddingProduct)
+                {
+                    //redirect to the shopping cart page
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl(NopRouteNames.General.CART)
+                    });
+                }
+
+                //display notification message and update appropriate blocks
+                var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+
+                var updateTopCartSectionHtml = string.Format(
+                    await _localizationService.GetResourceAsync("ShoppingCart.HeaderQuantity"),
+                    shoppingCarts.Sum(item => item.Quantity));
+
+                var updateFlyoutCartSectionHtml = _shoppingCartSettings.MiniShoppingCartEnabled
+                    ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
+                    : string.Empty;
+
+                return Json(new
+                {
+                    success = true,
+                    message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"),
+                        Url.RouteUrl(NopRouteNames.General.CART)),
+                    updatetopcartsectionhtml = updateTopCartSectionHtml,
+                    updateflyoutcartsectionhtml = updateFlyoutCartSectionHtml
+                });
+            }
         }
     }
 
@@ -667,93 +667,93 @@ public partial class ShoppingCartController : BasePublicController
         switch (cartType)
         {
             case ShoppingCartType.Wishlist:
+            {
+
+                var wishlistRouteUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST);
+                //activity log
+                await _customerActivityService.InsertActivityAsync("PublicStore.AddToWishlist",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
+
+                if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct || forceredirection)
                 {
-
-                    var wishlistRouteUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST);
-                    //activity log
-                    await _customerActivityService.InsertActivityAsync("PublicStore.AddToWishlist",
-                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToWishlist"), product.Name), product);
-
-                    if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct || forceredirection)
+                    //redirect to the wishlist page
+                    return Json(new
                     {
-                        //redirect to the wishlist page
-                        return Json(new
-                        {
-                            redirect = wishlistRouteUrl
-                        });
-                    }
-
-                    //display notification message and update appropriate blocks
-                    var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id);
-
-                    var updatetopwishlistsectionhtml = string.Format(await _localizationService.GetResourceAsync("Wishlist.HeaderQuantity"),
-                        shoppingCarts.Sum(item => item.Quantity));
-
-                    var customWishlists = await _customWishlistService.GetAllCustomWishlistsAsync(customer.Id);
-                    var isGuest = await _customerService.IsGuestAsync(customer);
-
-                    if (!isGuest && customWishlists.Any())
-                    {
-                        var onclick = $"showMoveToWishlistModal({productId}); return false;";
-                        return Json(new
-                        {
-                            success = true,
-                            message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlistAndMoved.Link"), wishlistRouteUrl, onclick),
-                            updatetopwishlistsectionhtml
-                        });
-                    }
-                    else
-                    {
-                        return Json(new
-                        {
-                            success = true,
-                            message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlist.Link"), wishlistRouteUrl),
-                            updatetopwishlistsectionhtml
-                        });
-                    }
+                        redirect = wishlistRouteUrl
+                    });
                 }
 
-            case ShoppingCartType.ShoppingCart:
-            default:
+                //display notification message and update appropriate blocks
+                var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id);
+
+                var updatetopwishlistsectionhtml = string.Format(await _localizationService.GetResourceAsync("Wishlist.HeaderQuantity"),
+                    shoppingCarts.Sum(item => item.Quantity));
+
+                var customWishlists = await _customWishlistService.GetAllCustomWishlistsAsync(customer.Id);
+                var isGuest = await _customerService.IsGuestAsync(customer);
+
+                if (!isGuest && customWishlists.Any())
                 {
-                    var referrerPageUrl = _webHelper.GetUrlReferrer();
-                    //'Continue shopping' URL
-                    await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
-                        NopCustomerDefaults.LastContinueShoppingPageAttribute,
-                        referrerPageUrl,
-                        store.Id);
-
-                    //activity log
-                    await _customerActivityService.InsertActivityAsync("PublicStore.AddToShoppingCart",
-                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToShoppingCart"), product.Name), product);
-
-                    if (_shoppingCartSettings.DisplayCartAfterAddingProduct || forceredirection)
-                    {
-                        //redirect to the shopping cart page
-                        return Json(new
-                        {
-                            redirect = Url.RouteUrl(NopRouteNames.General.CART)
-                        });
-                    }
-
-                    //display notification message and update appropriate blocks
-                    var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-                    var updatetopcartsectionhtml = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.HeaderQuantity"),
-                        shoppingCarts.Sum(item => item.Quantity));
-
-                    var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                        ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
-                        : string.Empty;
-
+                    var onclick = $"showMoveToWishlistModal({productId}); return false;";
                     return Json(new
                     {
                         success = true,
-                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl(NopRouteNames.General.CART)),
-                        updatetopcartsectionhtml,
-                        updateflyoutcartsectionhtml
+                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlistAndMoved.Link"), wishlistRouteUrl, onclick),
+                        updatetopwishlistsectionhtml
                     });
                 }
+                else
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlist.Link"), wishlistRouteUrl),
+                        updatetopwishlistsectionhtml
+                    });
+                }
+            }
+
+            case ShoppingCartType.ShoppingCart:
+            default:
+            {
+                var referrerPageUrl = _webHelper.GetUrlReferrer();
+                //'Continue shopping' URL
+                await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
+                    NopCustomerDefaults.LastContinueShoppingPageAttribute,
+                    referrerPageUrl,
+                    store.Id);
+
+                //activity log
+                await _customerActivityService.InsertActivityAsync("PublicStore.AddToShoppingCart",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddToShoppingCart"), product.Name), product);
+
+                if (_shoppingCartSettings.DisplayCartAfterAddingProduct || forceredirection)
+                {
+                    //redirect to the shopping cart page
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl(NopRouteNames.General.CART)
+                    });
+                }
+
+                //display notification message and update appropriate blocks
+                var shoppingCarts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+
+                var updatetopcartsectionhtml = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.HeaderQuantity"),
+                    shoppingCarts.Sum(item => item.Quantity));
+
+                var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
+                    ? await RenderViewComponentToStringAsync(typeof(FlyoutShoppingCartViewComponent))
+                    : string.Empty;
+
+                return Json(new
+                {
+                    success = true,
+                    message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl(NopRouteNames.General.CART)),
+                    updatetopcartsectionhtml,
+                    updateflyoutcartsectionhtml
+                });
+            }
         }
     }
 
@@ -1302,14 +1302,7 @@ public partial class ShoppingCartController : BasePublicController
         var returnUrl = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.LastContinueShoppingPageAttribute, store.Id);
 
         if (!string.IsNullOrEmpty(returnUrl))
-        {
-            //'Continue shopping' URL
-            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
-                NopCustomerDefaults.LastContinueShoppingPageAttribute,
-                string.Empty,
-                store.Id);
             return Redirect(returnUrl);
-        }
 
         return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
     }
