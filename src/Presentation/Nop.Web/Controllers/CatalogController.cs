@@ -397,13 +397,13 @@ public partial class CatalogController : BasePublicController
 
         var models = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize)).ToList();
         var result = (from p in models
-                      select new
-                      {
-                          label = p.Name,
-                          producturl = _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = p.SeName }).Result,
-                          productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
-                          showlinktoresultsearch = showLinkToResultSearch
-                      })
+                select new
+                {
+                    label = p.Name,
+                    producturl = _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = p.SeName }).Result,
+                    productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
+                    showlinktoresultsearch = showLinkToResultSearch
+                })
             .ToList();
         return Json(result);
     }
@@ -437,10 +437,10 @@ public partial class CatalogController : BasePublicController
         if (string.IsNullOrEmpty(filterLevel1Value))
         {
             var result = values
-                .Select(f => new
-                {
-                    filterLevel1Value = f.FilterLevel1Value,
-                    defaultItemText = defaultItemText
+                .Select(f => new 
+                { 
+                    filterLevel1Value = f.FilterLevel1Value, 
+                    defaultItemText = defaultItemText 
                 })
                 .Distinct();
             return Json(result);
