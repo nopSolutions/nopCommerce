@@ -626,9 +626,7 @@ public partial class OrderService : IOrderService
             var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
                 .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
             if (si != null)
-            {
                 totalInShipments += si.Quantity;
-            }
         }
 
         return totalInShipments;
@@ -692,9 +690,7 @@ public partial class OrderService : IOrderService
                     if (product.DownloadExpirationDays.HasValue)
                     {
                         if (order.PaidDateUtc.Value.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow)
-                        {
                             return true;
-                        }
                     }
                     else
                     {
@@ -710,9 +706,7 @@ public partial class OrderService : IOrderService
                     if (product.DownloadExpirationDays.HasValue)
                     {
                         if (order.CreatedOnUtc.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow)
-                        {
                             return true;
-                        }
                     }
                     else
                     {
@@ -800,9 +794,7 @@ public partial class OrderService : IOrderService
         var query = _orderNoteRepository.Table.Where(on => on.OrderId == orderId);
 
         if (displayToCustomer.HasValue)
-        {
             query = query.Where(on => on.DisplayToCustomer == displayToCustomer);
-        }
 
         return await query.ToListAsync();
     }

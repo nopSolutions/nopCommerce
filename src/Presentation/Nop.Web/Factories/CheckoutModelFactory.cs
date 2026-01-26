@@ -204,8 +204,10 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
                 }).ToListAsync();
             }
             else
+            {
                 foreach (var error in pickupPointsResponse.Errors)
                     model.Warnings.Add(error);
+            }
         }
 
         //only available pickup points
@@ -405,11 +407,13 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
 
             //sort shipping methods
             if (model.ShippingMethods.Count > 1)
+            {
                 model.ShippingMethods = (_shippingSettings.ShippingSorting switch
                 {
                     ShippingSortingEnum.ShippingCost => model.ShippingMethods.OrderBy(option => option.Rate),
                     _ => model.ShippingMethods.OrderBy(option => option.DisplayOrder)
                 }).ToList();
+            }
 
             //find a selected (previously) shipping method
             var selectedShippingOption = await _genericAttributeService.GetAttributeAsync<ShippingOption>(customer,
@@ -438,8 +442,10 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
                 model.NotifyCustomerAboutShippingFromMultipleLocations = getShippingOptionResponse.ShippingFromMultipleLocations;
         }
         else
+        {
             foreach (var error in getShippingOptionResponse.Errors)
                 model.Warnings.Add(error);
+        }
 
         return model;
     }

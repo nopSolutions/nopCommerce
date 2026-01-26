@@ -52,6 +52,7 @@ public class DataMigration : Migration
         var activityLogTypeTable = _dataProvider.GetTable<ActivityLogType>();
 
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "AddNewSpecAttributeGroup", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
@@ -60,8 +61,10 @@ public class DataMigration : Migration
                     Name = "Add a new specification attribute group"
                 }
             );
+        }
 
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "EditSpecAttributeGroup", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
@@ -70,8 +73,10 @@ public class DataMigration : Migration
                     Name = "Edit a specification attribute group"
                 }
             );
+        }
 
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "DeleteSpecAttributeGroup", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
@@ -80,6 +85,7 @@ public class DataMigration : Migration
                     Name = "Delete a specification attribute group"
                 }
             );
+        }
 
         //MFA #475
         if (!_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "ManageMultifactorAuthenticationMethods", StringComparison.InvariantCultureIgnoreCase) == 0))

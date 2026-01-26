@@ -295,9 +295,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                     model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
                     foreach (var s in states)
-                    {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
-                    }
                 }
                 else
                 {
@@ -498,9 +496,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                     model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
                     foreach (var s in states)
-                    {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
-                    }
                 }
                 else
                 {
@@ -526,9 +522,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         {
             var consents = (await _gdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayDuringRegistration).ToList();
             foreach (var consent in consents)
-            {
                 model.GdprConsents.Add(await PrepareGdprConsentModelAsync(consent, false));
-            }
         }
 
         return model;
@@ -1067,8 +1061,10 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                         var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedAttributesXml);
                         foreach (var attributeValue in selectedValues)
                         foreach (var item in attributeModel.Values)
+                        {
                             if (attributeValue.Id == item.Id)
                                 item.IsPreSelected = true;
+                        }
                     }
                 }
                     break;

@@ -74,16 +74,12 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
         {
             case "inbox":
                 if (page.HasValue)
-                {
                     inboxPage = page.Value;
-                }
 
                 break;
             case "sent":
                 if (page.HasValue)
-                {
                     sentItemsPage = page.Value;
-                }
 
                 sentItemsTabSelected = true;
 
@@ -114,9 +110,7 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
     public virtual async Task<PrivateMessageListModel> PrepareInboxModelAsync(int page, string tab)
     {
         if (page > 0)
-        {
             page -= 1;
-        }
 
         var pageSize = _forumSettings.PrivateMessagesPageSize;
 
@@ -161,9 +155,7 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
     public virtual async Task<PrivateMessageListModel> PrepareSentModelAsync(int page, string tab)
     {
         if (page > 0)
-        {
             page -= 1;
-        }
 
         var pageSize = _forumSettings.PrivateMessagesPageSize;
 

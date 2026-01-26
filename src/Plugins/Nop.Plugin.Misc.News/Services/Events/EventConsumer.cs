@@ -180,9 +180,7 @@ public class EventConsumer : IConsumer<CustomerPermanentlyDeleted>,
                 .Where(urlModel => string.Equals(urlModel.EntityName, nameof(NewsItem), StringComparison.InvariantCultureIgnoreCase))
                 .ToList();
             foreach (var newsItemModel in newsItemsModels)
-            {
                 newsItemModel.DetailsUrl = _nopUrlHelper.RouteUrl(NewsDefaults.Routes.Admin.NewsItemEditRouteName, new { id = newsItemModel.EntityId });
-            }
         }
     }
 

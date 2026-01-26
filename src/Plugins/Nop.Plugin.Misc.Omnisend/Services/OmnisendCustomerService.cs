@@ -136,8 +136,10 @@ public class OmnisendCustomerService
             OmnisendDefaults.StoredCustomerShoppingCartIdAttribute);
 
         if (string.IsNullOrEmpty(cartId))
+        {
             await _genericAttributeService.SaveAttributeAsync(customer,
                 OmnisendDefaults.StoredCustomerShoppingCartIdAttribute, await GetCartIdAsync(customer));
+        }
     }
 
     /// <summary>

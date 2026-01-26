@@ -85,6 +85,7 @@ public class AclMigration : Migration
                     continue;
 
                 foreach (var role in roles)
+                {
                     try
                     {
                         _dataProvider.InsertEntity(
@@ -98,6 +99,7 @@ public class AclMigration : Migration
                     {
                         //ignore
                     }
+                }
             }
 
             _dataProvider.DeleteEntity(record);

@@ -507,8 +507,10 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 var categoryIds = new List<int> { category.Id };
                 //include subcategories
                 if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
+                {
                     categoryIds.AddRange(
                         await _categoryService.GetChildCategoryIdsAsync(category.Id, store.Id));
+                }
 
                 categoryModel.NumberOfProducts =
                     await _productService.GetNumberOfProductsInCategoryAsync(categoryIds, store.Id);
@@ -780,9 +782,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             .GetFiltrableSpecificationAttributeOptionsByCategoryIdAsync(category.Id);
 
         if (_catalogSettings.EnableSpecificationAttributeFiltering)
-        {
             model.SpecificationFilter = await PrepareSpecificationFilterModel(command.Specs, filterableOptions);
-        }
 
         //filterable manufacturers
         if (_catalogSettings.EnableManufacturerFiltering)
@@ -934,9 +934,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             .GetFiltrableSpecificationAttributeOptionsByManufacturerIdAsync(manufacturer.Id);
 
         if (_catalogSettings.EnableSpecificationAttributeFiltering)
-        {
             model.SpecificationFilter = await PrepareSpecificationFilterModel(command.Specs, filterableOptions);
-        }
 
         var filteredSpecs = command.Specs is null ? null : filterableOptions.Where(fo => command.Specs.Contains(fo.Id)).ToList();
 
@@ -1594,12 +1592,14 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 Text = await _localizationService.GetResourceAsync("Common.All")
             });
             foreach (var m in manufacturers)
+            {
                 model.AvailableManufacturers.Add(new SelectListItem
                 {
                     Value = m.Id.ToString(),
                     Text = await _localizationService.GetLocalizedAsync(m, x => x.Name),
                     Selected = model.mid == m.Id
                 });
+            }
         }
 
         model.asv = _vendorSettings.AllowSearchByVendor;
@@ -1614,12 +1614,14 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                     Text = await _localizationService.GetResourceAsync("Common.All")
                 });
                 foreach (var vendor in vendors)
+                {
                     model.AvailableVendors.Add(new SelectListItem
                     {
                         Value = vendor.Id.ToString(),
                         Text = await _localizationService.GetLocalizedAsync(vendor, x => x.Name),
                         Selected = model.vid == vendor.Id
                     });
+                }
             }
         }
 
@@ -1747,11 +1749,13 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                         };
                     }
                     else
+                    {
                         availablePriceRange = new PriceRangeModel
                         {
                             From = await getProductPriceAsync(ProductSortingEnum.PriceAsc),
                             To = await getProductPriceAsync(ProductSortingEnum.PriceDesc)
                         };
+                    }
 
                     model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
                 }
@@ -1860,9 +1864,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         {
             var filterLevelValue = (await _filterLevelValueService.GetAllFilterLevelValuesAsync(flv1, flv2, flv3)).FirstOrDefault();
             if (filterLevelValue == null)
-            {
                 return model;
-            }
 
             var store = await _storeContext.GetCurrentStoreAsync();
 
@@ -2078,9 +2080,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
         //ensure pge size is specified
         if (command.PageSize <= 0)
-        {
             command.PageSize = fixedPageSize;
-        }
 
         return Task.CompletedTask;
     }

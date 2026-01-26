@@ -110,9 +110,7 @@ public partial class MessageTemplateService : IMessageTemplateService
                 .Where(messageTemplate => messageTemplate.Name.Equals(messageTemplateName));
 
             if (storeId.HasValue && storeId.Value > 0)
-            {
                 templatesQuery = await _storeMappingService.ApplyStoreMapping(templatesQuery, storeId.Value);
-            }
 
             return await templatesQuery.OrderBy(messageTemplate => messageTemplate.Id)
             .ToListAsync();
@@ -147,9 +145,11 @@ public partial class MessageTemplateService : IMessageTemplateService
             messageTemplates = messageTemplates.Where(mt => mt.EmailAccountId == emailAccountId).ToList();
 
         if (!string.IsNullOrWhiteSpace(keywords))
+        {
             messageTemplates = messageTemplates.Where(x => (x.Subject?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)
                 || (x.Body?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)
                 || (x.Name?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false)).ToList();
+        }
 
         return messageTemplates;
     }

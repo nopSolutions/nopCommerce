@@ -946,8 +946,10 @@ public partial class ExportManager : IExportManager
 
             var properties = await _localizedEntityService.GetEntityLocalizedPropertiesAsync(entity.Id, localeKeyGroup, localeKey);
             foreach (var language in languages)
+            {
                 if (properties.FirstOrDefault(lp => lp.LanguageId == language.Id) is LocalizedProperty localizedProperty)
                     await xmlWriter.WriteStringAsync(language.UniqueSeoCode, localizedProperty.LocaleValue);
+            }
 
             await xmlWriter.WriteEndElementAsync();
         }
@@ -977,8 +979,10 @@ public partial class ExportManager : IExportManager
             await xmlWriter.WriteStartElementAsync("Locales");
 
             foreach (var language in languages)
+            {
                 if (await _urlRecordService.GetSeNameAsync(entity, language.Id, returnDefaultValue: false) is string seName && !string.IsNullOrWhiteSpace(seName))
                     await xmlWriter.WriteStringAsync(language.UniqueSeoCode, seName);
+            }
 
             await xmlWriter.WriteEndElementAsync();
         }

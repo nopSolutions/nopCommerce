@@ -1143,10 +1143,12 @@ public partial class InstallationService
 
         var sb = new StringBuilder();
         foreach (var c in name.Trim().ToLowerInvariant())
+        {
             if (seoCharacterTable.TryGetValue(c, out var transliteration))
                 sb.Append(transliteration.ToLowerInvariant());
             else if (okChars.Contains(c))
                 sb.Append(c);
+        }
 
         var seName = new Regex(@"[\s-]+").Replace(sb.ToString(), "-");
         seName = new Regex("_+").Replace(seName, "_");
@@ -1306,12 +1308,14 @@ public partial class InstallationService
                 new SpecificationAttributeGroup { Name = jsonModel.Name });
 
             foreach (var data in jsonModel.Attributes)
+            {
                 attributes.Add(data, new SpecificationAttribute
                 {
                     Name = data.Name,
                     DisplayOrder = data.DisplayOrder,
                     SpecificationAttributeGroupId = specificationAttributeGroup.Id
                 });
+            }
         }
 
         await _dataProvider.BulkInsertEntitiesAsync(attributes.Values);

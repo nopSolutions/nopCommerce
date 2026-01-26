@@ -434,9 +434,7 @@ public partial class BaseNopTest
         {
             var interfaces = consumer.FindInterfaces((type, criteria) => type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition()), typeof(IConsumer<>));
             foreach (var findInterface in interfaces)
-            {
                 services.AddTransient(findInterface, consumer);
-            }
         }
 
         services.AddSingleton<IInstallationService, InstallationService>();

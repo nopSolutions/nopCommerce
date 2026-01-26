@@ -262,9 +262,7 @@ public partial class SlugRouteTransformer : DynamicRouteValueTransformer
         values[NopRoutingDefaults.RouteValue.Action] = action;
         values[NopRoutingDefaults.RouteValue.SeName] = slug;
         foreach (var (key, value) in parameters)
-        {
             values[key] = value;
-        }
     }
 
     #endregion

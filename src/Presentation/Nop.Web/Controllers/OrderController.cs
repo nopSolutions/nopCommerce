@@ -104,14 +104,14 @@ public partial class OrderController : BasePublicController
         //get recurring payment identifier
         var recurringPaymentId = 0;
         foreach (var formValue in form.Keys)
+        {
             if (formValue.StartsWith("cancelRecurringPayment", StringComparison.InvariantCultureIgnoreCase))
                 recurringPaymentId = Convert.ToInt32(formValue["cancelRecurringPayment".Length..]);
+        }
 
         var recurringPayment = await _orderService.GetRecurringPaymentByIdAsync(recurringPaymentId);
         if (recurringPayment == null)
-        {
             return RedirectToRoute(NopRouteNames.Standard.CUSTOMER_RECURRING_PAYMENTS);
-        }
 
         if (await _orderProcessingService.CanCancelRecurringPaymentAsync(customer, recurringPayment))
         {
@@ -139,9 +139,7 @@ public partial class OrderController : BasePublicController
         var recurringPaymentId = 0;
         if (!form.Keys.Any(formValue => formValue.StartsWith("retryLastPayment", StringComparison.InvariantCultureIgnoreCase) &&
                                         int.TryParse(formValue[(formValue.IndexOf('_') + 1)..], out recurringPaymentId)))
-        {
             return RedirectToRoute(NopRouteNames.Standard.CUSTOMER_RECURRING_PAYMENTS);
-        }
 
         var recurringPayment = await _orderService.GetRecurringPaymentByIdAsync(recurringPaymentId);
         if (recurringPayment == null)

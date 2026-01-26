@@ -754,9 +754,7 @@ public partial class SettingModelFactory : ISettingModelFactory
 
         //fill in overridden values
         if (storeId > 0)
-        {
             model.UseRichEditorInMessageTemplates_OverrideForStore = await _settingService.SettingExistsAsync(adminAreaSettings, x => x.UseRichEditorInMessageTemplates, storeId);
-        }
 
         return model;
     }
@@ -838,11 +836,13 @@ public partial class SettingModelFactory : ISettingModelFactory
         };
 
         if (!model.AvailableLanguages.Any())
+        {
             (model.AvailableLanguages as List<SelectListItem>)?.AddRange((await _languageService.GetAllLanguagesAsync(storeId: storeId)).Select(p => new SelectListItem
             {
                 Value = p.Id.ToString(),
                 Text = p.Name
             }));
+        }
 
         model.AdditionsInstruction = additionsInstruction;
 

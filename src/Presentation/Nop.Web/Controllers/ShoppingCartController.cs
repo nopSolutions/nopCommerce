@@ -195,8 +195,10 @@ public partial class ShoppingCartController : BasePublicController
                     {
                         var selectedAttributeId = int.Parse(ctrlAttributes);
                         if (selectedAttributeId > 0)
+                        {
                             attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
                                 attribute, selectedAttributeId.ToString());
+                        }
                     }
                 }
 
@@ -210,8 +212,10 @@ public partial class ShoppingCartController : BasePublicController
                         {
                             var selectedAttributeId = int.Parse(item);
                             if (selectedAttributeId > 0)
+                            {
                                 attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
+                            }
                         }
                     }
                 }
@@ -261,8 +265,10 @@ public partial class ShoppingCartController : BasePublicController
                     }
 
                     if (selectedDate.HasValue)
+                    {
                         attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
                             attribute, selectedDate.Value.ToString("D"));
+                    }
                 }
 
                 break;
@@ -503,11 +509,13 @@ public partial class ShoppingCartController : BasePublicController
             errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.Country.Required"));
 
         if (errors.Count > 0)
+        {
             return Json(new
             {
                 success = false,
                 errors = errors
             });
+        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -541,8 +549,10 @@ public partial class ShoppingCartController : BasePublicController
                 if (getShippingOptionResponse.Success)
                     shippingOptions = getShippingOptionResponse.ShippingOptions.ToList();
                 else
+                {
                     foreach (var error in getShippingOptionResponse.Errors)
                         errors.Add(error);
+                }
             }
         }
 
@@ -551,11 +561,13 @@ public partial class ShoppingCartController : BasePublicController
             errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound"));
 
         if (errors.Count > 0)
+        {
             return Json(new
             {
                 success = false,
                 errors = errors
             });
+        }
 
         //reset pickup point
         await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer,
@@ -585,11 +597,13 @@ public partial class ShoppingCartController : BasePublicController
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null)
             //no product found
+        {
             return Json(new
             {
                 success = false,
                 message = "No product found with the specified ID"
             });
+        }
 
         var redirectUrl = await _nopUrlHelper.RouteGenericUrlAsync(product);
 
@@ -799,11 +813,13 @@ public partial class ShoppingCartController : BasePublicController
         //update existing shopping cart item
         var updatecartitemid = 0;
         foreach (var formKey in form.Keys)
+        {
             if (formKey.Equals($"addtocart_{productId}.UpdatedShoppingCartItemId", StringComparison.InvariantCultureIgnoreCase))
             {
                 _ = int.TryParse(form[formKey], out updatecartitemid);
                 break;
             }
+        }
 
         ShoppingCartItem updatecartitem = null;
         if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
@@ -875,9 +891,7 @@ public partial class ShoppingCartController : BasePublicController
         DateTime? rentalStartDate = null;
         DateTime? rentalEndDate = null;
         if (product.IsRental)
-        {
             _productAttributeParser.ParseRentalDates(product, form, out rentalStartDate, out rentalEndDate);
-        }
 
         //sku, mpn, gtin
         var sku = await _productService.FormatSkuAsync(product, attributeXml);
@@ -1483,11 +1497,13 @@ public partial class ShoppingCartController : BasePublicController
             errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.Country.Required"));
 
         if (errors.Count > 0)
+        {
             return Json(new
             {
                 Success = false,
                 Errors = errors
             });
+        }
 
         var store = await _storeContext.GetCurrentStoreAsync();
         var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, store.Id);
@@ -1508,8 +1524,11 @@ public partial class ShoppingCartController : BasePublicController
         //get discount identifier
         var discountId = 0;
         foreach (var formValue in form.Keys)
+        {
             if (formValue.StartsWith("removediscount-", StringComparison.InvariantCultureIgnoreCase))
                 discountId = Convert.ToInt32(formValue["removediscount-".Length..]);
+        }
+
         var discount = await _discountService.GetDiscountByIdAsync(discountId);
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (discount != null)
@@ -1531,8 +1550,11 @@ public partial class ShoppingCartController : BasePublicController
         //get gift card identifier
         var giftCardId = 0;
         foreach (var formValue in form.Keys)
+        {
             if (formValue.StartsWith("removegiftcard-", StringComparison.InvariantCultureIgnoreCase))
                 giftCardId = Convert.ToInt32(formValue["removegiftcard-".Length..]);
+        }
+
         var gc = await _giftCardService.GetGiftCardByIdAsync(giftCardId);
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (gc != null)
@@ -1595,6 +1617,7 @@ public partial class ShoppingCartController : BasePublicController
             else
             {
                 foreach (var formKey in form.Keys)
+                {
                     if (formKey.Equals($"itemquantity{sci.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
                         if (int.TryParse(form[formKey], out var newQuantity))
@@ -1608,6 +1631,7 @@ public partial class ShoppingCartController : BasePublicController
 
                         break;
                     }
+                }
             }
         }
 
@@ -1624,9 +1648,13 @@ public partial class ShoppingCartController : BasePublicController
             //find model
             var sciModel = model.Items.FirstOrDefault(x => x.Id == sciId);
             if (sciModel != null)
+            {
                 foreach (var w in warnings)
+                {
                     if (!sciModel.Warnings.Contains(w))
                         sciModel.Warnings.Add(w);
+                }
+            }
         }
 
         return View(model);
@@ -1687,9 +1715,7 @@ public partial class ShoppingCartController : BasePublicController
             //redirect to the shopping cart page
 
             if (allWarnings.Any())
-            {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Wishlist.AddToCart.Error"));
-            }
 
             return RedirectToRoute(NopRouteNames.General.CART);
         }
@@ -1700,9 +1726,7 @@ public partial class ShoppingCartController : BasePublicController
         //no items added. redisplay the wishlist page
 
         if (allWarnings.Any())
-        {
             _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Wishlist.AddToCart.Error"));
-        }
 
         var cart = await _shoppingCartService.GetShoppingCartAsync(pageCustomer, ShoppingCartType.Wishlist, store.Id, customWishlistId: wishlistModel.ListId);
 
@@ -1744,15 +1768,11 @@ public partial class ShoppingCartController : BasePublicController
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage && !captchaValid)
-        {
             ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         //check whether the current customer is guest and is allowed to email wishlist
         if (await _customerService.IsGuestAsync(customer) && !_shoppingCartSettings.AllowAnonymousUsersToEmailWishlist)
-        {
             ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Wishlist.EmailAFriend.OnlyRegisteredUsers"));
-        }
 
         if (ModelState.IsValid)
         {
@@ -1839,9 +1859,7 @@ public partial class ShoppingCartController : BasePublicController
 
         var product = await _productService.GetProductByIdAsync(productId);
         if (product != null)
-        {
             await MoveProductToCustomWishlist(product.Id, customWishlist.Id);
-        }
 
         return Json(new
         {
@@ -1910,11 +1928,13 @@ public partial class ShoppingCartController : BasePublicController
             var wishlist = await _customWishlistService.GetCustomWishlistByIdAsync(customWishlistId);
 
             if (wishlist == null || wishlist.CustomerId != customer.Id)
+            {
                 return Json(new
                 {
                     success = false,
                     message = await _localizationService.GetResourceAsync("Wishlist.NotFound")
                 });
+            }
 
             await _shoppingCartService.MoveItemToCustomWishlistAsync(shoppingCartItemId, wishlist.Id);
         }
@@ -1987,9 +2007,7 @@ public partial class ShoppingCartController : BasePublicController
         var store = await _storeContext.GetCurrentStoreAsync();
         var cartItems = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id, customWishlistId: wishlist.Id);
         foreach (var item in cartItems)
-        {
             await _shoppingCartService.DeleteShoppingCartItemAsync(item);
-        }
 
         // Delete the wishlist itself
         await _customWishlistService.RemoveCustomWishlistAsync(wishlist.Id);

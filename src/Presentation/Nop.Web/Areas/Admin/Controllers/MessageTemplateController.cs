@@ -239,6 +239,7 @@ public partial class MessageTemplateController : BaseAdminController
 
         var tokens = new List<Token>();
         foreach (var formKey in form.Keys)
+        {
             if (formKey.StartsWith("token_", StringComparison.InvariantCultureIgnoreCase))
             {
                 var tokenKey = formKey["token_".Length..].Replace("%", string.Empty);
@@ -257,13 +258,12 @@ public partial class MessageTemplateController : BaseAdminController
 
                 tokens.Add(new Token(tokenKey, tokenValue));
             }
+        }
 
         await _workflowMessageService.SendTestEmailAsync(messageTemplate.Id, model.SendTo, tokens, model.LanguageId);
 
         if (ModelState.IsValid)
-        {
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Test.Success"));
-        }
 
         return RedirectToAction("Edit", new { id = messageTemplate.Id });
     }

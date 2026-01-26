@@ -75,9 +75,11 @@ public class DataMigration : Migration
         //delete the index if it already exists to prevent a problem
         //with altering NewsLetterSubscription table
         if (Schema.Table(newsLetterSubscriptionTableName).Index(typeIdIndexName).Exists())
+        {
             Delete.Index(typeIdIndexName)
                 .OnTable(newsLetterSubscriptionTableName)
                 .OnColumn(typeIdCollumnName);
+        }
 
         //alter columns
         this.AddOrAlterColumnFor<NewsLetterSubscription>(t => t.TypeId)

@@ -347,8 +347,10 @@ public partial class OrderProcessingService : IOrderProcessingService
 
         //discount history
         foreach (var disc in appliedDiscounts)
+        {
             if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
                 details.AppliedDiscounts.Add(disc);
+        }
 
         //sub total (excl tax)
         details.OrderSubTotalExclTax = subTotalWithoutDiscountExclTax;
@@ -364,8 +366,10 @@ public partial class OrderProcessingService : IOrderProcessingService
         details.OrderShippingTotalExclTax = orderShippingTotalExclTax.Value;
 
         foreach (var disc in shippingTotalDiscounts)
+        {
             if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
                 details.AppliedDiscounts.Add(disc);
+        }
 
         //payment total
         var paymentAdditionalFee = await _paymentService.GetAdditionalHandlingFeeAsync(details.Cart, processPaymentRequest.PaymentMethodSystemName);
@@ -397,8 +401,10 @@ public partial class OrderProcessingService : IOrderProcessingService
 
         //discount history
         foreach (var disc in orderAppliedDiscounts)
+        {
             if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
                 details.AppliedDiscounts.Add(disc);
+        }
 
         processPaymentRequest.OrderTotal = details.OrderTotal;
     }
@@ -1158,8 +1164,10 @@ public partial class OrderProcessingService : IOrderProcessingService
             //bundled (associated) products
             var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(orderItem.AttributesXml);
             foreach (var attributeValue in attributeValues)
+            {
                 if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
                     purchasedProductIds.Add(attributeValue.AssociatedProductId);
+            }
         }
 
         //list of customer roles
@@ -1174,6 +1182,7 @@ public partial class OrderProcessingService : IOrderProcessingService
         var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 
         foreach (var customerRole in customerRoles)
+        {
             if (!await _customerService.IsInCustomerRoleAsync(customer, customerRole.SystemName))
             {
                 //not in the list yet
@@ -1188,6 +1197,7 @@ public partial class OrderProcessingService : IOrderProcessingService
                     //remove
                     await _customerService.RemoveCustomerRoleMappingAsync(customer, customerRole);
             }
+        }
     }
 
     /// <summary>
@@ -1268,8 +1278,10 @@ public partial class OrderProcessingService : IOrderProcessingService
             var discountAmountInclTax = await _taxService.GetProductPriceAsync(product, discountAmount, true, details.Customer);
             var discountAmountExclTax = await _taxService.GetProductPriceAsync(product, discountAmount, false, details.Customer);
             foreach (var disc in scDiscounts)
+            {
                 if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
                     details.AppliedDiscounts.Add(disc);
+            }
 
             //attributes
             var store = await _storeService.GetStoreByIdAsync(sc.StoreId);
@@ -1411,6 +1423,7 @@ public partial class OrderProcessingService : IOrderProcessingService
             return;
 
         foreach (var agc in details.AppliedGiftCards)
+        {
             await _giftCardService.InsertGiftCardUsageHistoryAsync(new GiftCardUsageHistory
             {
                 GiftCardId = agc.GiftCard.Id,
@@ -1418,6 +1431,7 @@ public partial class OrderProcessingService : IOrderProcessingService
                 UsedValue = agc.AmountCanBeUsed,
                 CreatedOnUtc = DateTime.UtcNow
             });
+        }
     }
 
     /// <summary>
@@ -1473,9 +1487,11 @@ public partial class OrderProcessingService : IOrderProcessingService
                 completed = true;
             else
                 //shipping is required
+            {
                 completed = _orderSettings.CompleteOrderWhenDelivered
                     ? order.ShippingStatus == ShippingStatus.Delivered
                     : order.ShippingStatus == ShippingStatus.Shipped || order.ShippingStatus == ShippingStatus.Delivered;
+            }
         }
 
         switch (order.OrderStatus)
@@ -1596,9 +1612,13 @@ public partial class OrderProcessingService : IOrderProcessingService
                         await ProcessOrderPaidAsync(order);
                 }
                 else
+                {
                     foreach (var paymentError in processPaymentResult.Errors)
+                    {
                         result.AddError(string.Format(
                             await _localizationService.GetResourceAsync("Checkout.PaymentError"), paymentError));
+                    }
+                }
             }
             catch (Exception exc)
             {
@@ -1741,12 +1761,14 @@ public partial class OrderProcessingService : IOrderProcessingService
 
             var d = await _discountService.GetDiscountByIdAsync(discount.Id);
             if (d != null)
+            {
                 await _discountService.InsertDiscountUsageHistoryAsync(new DiscountUsageHistory
                 {
                     DiscountId = d.Id,
                     OrderId = updatedOrder.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 });
+            }
         }
 
         async Task<(List<ShoppingCartItem> restoredCart, ShoppingCartItem updatedShoppingCartItem)> restoreShoppingCartAsync(Order order, int updatedOrderItemId)
@@ -1998,9 +2020,7 @@ public partial class OrderProcessingService : IOrderProcessingService
                 //cancel recurring payment
                 var errors = (await CancelRecurringPaymentAsync(recurringPayment)).ToList();
                 foreach (var error in errors)
-                {
                     await _logger.ErrorAsync(error);
-                }
 
                 //notify a customer about cancelled payment
                 await _workflowMessageService.SendRecurringPaymentCancelledCustomerNotificationAsync(recurringPayment, initialOrder.CustomerLanguageId);
@@ -2120,8 +2140,10 @@ public partial class OrderProcessingService : IOrderProcessingService
             return false;
 
         if (!await _customerService.IsAdminAsync(customerToValidate))
+        {
             if (customer.Id != customerToValidate.Id)
                 return false;
+        }
 
         if (await GetNextPaymentDateAsync(recurringPayment) is null)
             return false;

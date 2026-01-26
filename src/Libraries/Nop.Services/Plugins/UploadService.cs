@@ -450,9 +450,7 @@ public partial class UploadService : IUploadService
                 //4. Search in the temp unpacked archive a folder with locales by culture
                 var sourcelocalePath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.Name);
                 if (_fileProvider.DirectoryExists(sourcelocalePath))
-                {
                     cultureToUse = currentCulture.Name;
-                }
 
                 var sourcelocaleISOPath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.TwoLetterISOLanguageName);
                 if (_fileProvider.DirectoryExists(sourcelocaleISOPath))
@@ -466,9 +464,7 @@ public partial class UploadService : IUploadService
                 {
                     var destlocalePath = getPath(NopCommonDefaults.LocalePatternPath, cultureToUse);
                     if (_fileProvider.DirectoryExists(destlocalePath))
-                    {
                         _fileProvider.DeleteDirectory(destlocalePath);
-                    }
 
                     _fileProvider.DirectoryMove(sourcelocalePath, destlocalePath);
                 }

@@ -126,11 +126,14 @@ public partial class ReturnRequestController : BasePublicController
         {
             var quantity = 0; //parse quantity
             foreach (var formKey in form.Keys)
+            {
                 if (formKey.Equals($"quantity{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                 {
                     _ = int.TryParse(form[formKey], out quantity);
                     break;
                 }
+            }
+
             if (quantity > 0)
             {
                 var rrr = await _returnRequestService.GetReturnRequestReasonByIdAsync(model.ReturnRequestReasonId);

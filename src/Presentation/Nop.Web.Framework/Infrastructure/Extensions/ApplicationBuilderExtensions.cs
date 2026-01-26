@@ -406,9 +406,7 @@ public static class ApplicationBuilderExtensions
 
         var fontPaths = fileProvider.EnumerateFiles(fileProvider.MapPath(NopCommonDefaults.PdfFontDirectoryPath), "*.ttf") ?? Enumerable.Empty<string>();
         foreach (var fp in fontPaths)
-        {
             FontFactory.Register(fp, fileProvider.GetFileNameWithoutExtension(fp));
-        }
     }
 
     /// <summary>

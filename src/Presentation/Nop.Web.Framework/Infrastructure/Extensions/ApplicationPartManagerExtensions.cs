@@ -40,14 +40,18 @@ public static partial class ApplicationPartManagerExtensions
 
         //get all libraries from base site directory
         if (!AppDomain.CurrentDomain.BaseDirectory.Equals(Environment.CurrentDirectory, StringComparison.InvariantCultureIgnoreCase))
+        {
             foreach (var file in _fileProvider.GetFiles(Environment.CurrentDirectory, "*.dll"))
                 _baseAppLibraries.Add(new KeyValuePair<string, Version>(_fileProvider.GetFileName(file), GetAssemblyVersion(file)));
+        }
 
         //get all libraries from refs directory
         var refsPathName = _fileProvider.Combine(Environment.CurrentDirectory, NopPluginDefaults.RefsPathName);
         if (_fileProvider.DirectoryExists(refsPathName))
+        {
             foreach (var file in _fileProvider.GetFiles(refsPathName, "*.dll"))
                 _baseAppLibraries.Add(new KeyValuePair<string, Version>(_fileProvider.GetFileName(file), GetAssemblyVersion(file)));
+        }
     }
 
     #endregion
@@ -153,8 +157,10 @@ public static partial class ApplicationPartManagerExtensions
         //ensure for proper directory structure
         if (string.IsNullOrEmpty(assemblyFile) ||
             string.IsNullOrEmpty(fileProvider.GetParentDirectory(assemblyFile)))
+        {
             throw new InvalidOperationException(
                 $"The plugin directory for the {fileProvider.GetFileName(assemblyFile)} file exists in a directory outside of the allowed nopCommerce directory hierarchy");
+        }
 
         var assembly =
             AddApplicationParts(applicationPartManager, assemblyFile, pluginConfig.UseUnsafeLoadAssembly);

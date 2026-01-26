@@ -107,10 +107,8 @@ public partial class HtmlFormat : SourceFormat
             var sb = new StringBuilder();
             while ((line = reader.ReadLine()) != null)
             {
-                if (sb.Length > 0)
-                {
+                if (sb.Length > 0) 
                     sb.Append('\n');
-                }
 
                 sb.Append("<span class=\"rem\">");
                 sb.Append(line);
@@ -121,34 +119,22 @@ public partial class HtmlFormat : SourceFormat
         }
 
         if (match.Groups[3].Success) //asp tag
-        {
             return "<span class=\"asp\">" + match + "</span>";
-        }
 
         if (match.Groups[4].Success) //asp C# code
-        {
             return _csf.FormatSubCode(match.ToString());
-        }
 
         if (match.Groups[5].Success) //tag delimiter
-        {
             return "<span class=\"kwrd\">" + match + "</span>";
-        }
 
         if (match.Groups[6].Success) //html tagname
-        {
             return "<span class=\"html\">" + match + "</span>";
-        }
 
         if (match.Groups[7].Success) //attributes
-        {
             return _attributeRegex.Replace(match.ToString(), AttributeMatchEval);
-        }
 
         if (match.Groups[8].Success) //entity
-        {
             return "<span class=\"attr\">" + match + "</span>";
-        }
 
         return match.ToString();
     }

@@ -365,11 +365,13 @@ public class OmnisendEventsService
 
         if ((await _shipmentService.GetShipmentsByOrderIdAsync(order.Id)).LastOrDefault() is { } shipment &&
             await _shipmentService.GetShipmentTrackerAsync(shipment) is { } shipmentTracker)
+        {
             property.Tracking = new TrackingItem
             {
                 Code = shipment.TrackingNumber,
                 CourierURL = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber, shipment)
             };
+        }
     }
 
     private async Task<OrderProductItem> OrderItemToProductItemAsync(OrderItem orderItem)

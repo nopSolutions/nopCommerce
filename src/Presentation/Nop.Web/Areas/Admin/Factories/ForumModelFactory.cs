@@ -185,9 +185,7 @@ public partial class ForumModelFactory : IForumModelFactory
 
         //prepare available forum groups
         foreach (var forumGroup in await _forumService.GetAllForumGroupsAsync())
-        {
             model.ForumGroups.Add(forumGroup.ToModel<ForumGroupModel>());
-        }
 
         return model;
     }

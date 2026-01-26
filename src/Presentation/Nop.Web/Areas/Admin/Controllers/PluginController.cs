@@ -222,8 +222,10 @@ public partial class PluginController : BaseAdminController
             //get plugin system name
             string systemName = null;
             foreach (var formValue in form.Keys)
+            {
                 if (formValue.StartsWith("install-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                     systemName = formValue["install-plugin-link-".Length..];
+            }
 
             var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
@@ -256,8 +258,10 @@ public partial class PluginController : BaseAdminController
             //get plugin system name
             string systemName = null;
             foreach (var formValue in form.Keys)
+            {
                 if (formValue.StartsWith("uninstall-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                     systemName = formValue["uninstall-plugin-link-".Length..];
+            }
 
             var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
@@ -290,8 +294,10 @@ public partial class PluginController : BaseAdminController
             //get plugin system name
             string systemName = null;
             foreach (var formValue in form.Keys)
+            {
                 if (formValue.StartsWith("delete-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                     systemName = formValue["delete-plugin-link-".Length..];
+            }
 
             var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
 
@@ -398,9 +404,7 @@ public partial class PluginController : BaseAdminController
             //locales
             var pluginInstance = pluginDescriptor.Instance<IPlugin>();
             foreach (var localized in model.Locales)
-            {
                 await _localizationService.SaveLocalizedFriendlyNameAsync(pluginInstance, localized.LanguageId, localized.FriendlyName);
-            }
 
             //enabled/disabled
             if (!pluginDescriptor.Installed)

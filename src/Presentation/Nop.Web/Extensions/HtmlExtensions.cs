@@ -51,21 +51,13 @@ public static class HtmlExtensions
 
         // Convert month
         if (currentFormat.Contains("MMMM"))
-        {
             currentFormat = currentFormat.Replace("MMMM", "MM");
-        }
         else if (currentFormat.Contains("MMM"))
-        {
             currentFormat = currentFormat.Replace("MMM", "M");
-        }
         else if (currentFormat.Contains("MM"))
-        {
             currentFormat = currentFormat.Replace("MM", "mm");
-        }
         else
-        {
             currentFormat = currentFormat.Replace("M", "m");
-        }
 
         // Convert year
         currentFormat = currentFormat.Contains("yyyy") ?

@@ -220,10 +220,8 @@ public partial class PdfService : IPdfService
             var paymentMethodStr = paymentMethod != null
                 ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, lang.Id)
                 : order.PaymentMethodSystemName;
-            if (!string.IsNullOrEmpty(paymentMethodStr))
-            {
+            if (!string.IsNullOrEmpty(paymentMethodStr)) 
                 addressResult.PaymentMethod = paymentMethodStr;
-            }
 
             //payment custom values
             addressResult.CustomValues.AddRange(customValues.Where(value => value.DisplayLocation == CustomValueDisplayLocation.Payment));
@@ -295,10 +293,8 @@ public partial class PdfService : IPdfService
                 var stateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress);
                 addressResult.StateProvinceName = stateProvince != null ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, lang.Id) : string.Empty;
 
-                if (_addressSettings.CountryEnabled && await _countryService.GetCountryByAddressAsync(shippingAddress) is Country country)
-                {
+                if (_addressSettings.CountryEnabled && await _countryService.GetCountryByAddressAsync(shippingAddress) is Country country) 
                     addressResult.Country = await _localizationService.GetLocalizedAsync(country, x => x.Name, lang.Id);
-                }
 
                 var (addressLine, _) = await _addressService.FormatAddressAsync(shippingAddress, lang.Id);
                 addressResult.AddressLine = addressLine;
@@ -602,10 +598,8 @@ public partial class PdfService : IPdfService
             }
         }
 
-        if (displayTax)
-        {
+        if (displayTax) 
             result.Tax = taxStr;
-        }
 
         if (displayTaxRates)
         {

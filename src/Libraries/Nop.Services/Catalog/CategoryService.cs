@@ -488,10 +488,12 @@ public partial class CategoryService : ICategoryService
         var categories = _categoryRepository.Table;
 
         if (discountId.HasValue)
+        {
             categories = from category in categories
                 join dcm in _discountCategoryMappingRepository.Table on category.Id equals dcm.EntityId
                 where dcm.DiscountId == discountId.Value
                 select category;
+        }
 
         if (!showHidden)
             categories = categories.Where(category => !category.Deleted);

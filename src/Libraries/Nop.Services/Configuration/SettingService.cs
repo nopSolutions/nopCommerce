@@ -60,10 +60,12 @@ public partial class SettingService : ISettingService
                 };
                 if (!dictionary.TryGetValue(resourceName, out var value))
                     //first setting
+                {
                     dictionary.Add(resourceName, new List<Setting>
                     {
                         settingForCaching
                     });
+                }
                 else
                     //already added
                     //most probably it's the setting with the same name but for some certain store (storeId > 0)
