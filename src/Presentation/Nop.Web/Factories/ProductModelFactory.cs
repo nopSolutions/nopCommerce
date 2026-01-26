@@ -46,6 +46,7 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly CaptchaSettings _captchaSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CustomerSettings _customerSettings;
+    protected readonly GpsrSettings _gpsrSettings;
     protected readonly ICategoryService _categoryService;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
@@ -94,6 +95,7 @@ public partial class ProductModelFactory : IProductModelFactory
     public ProductModelFactory(CaptchaSettings captchaSettings,
         CatalogSettings catalogSettings,
         CustomerSettings customerSettings,
+        GpsrSettings gpsrSettings,
         ICategoryService categoryService,
         ICurrencyService currencyService,
         ICustomerService customerService,
@@ -137,6 +139,7 @@ public partial class ProductModelFactory : IProductModelFactory
         _captchaSettings = captchaSettings;
         _catalogSettings = catalogSettings;
         _customerSettings = customerSettings;
+        _gpsrSettings = gpsrSettings;
         _categoryService = categoryService;
         _currencyService = currencyService;
         _customerService = customerService;
@@ -1168,6 +1171,15 @@ public partial class ProductModelFactory : IProductModelFactory
                     Name = await _localizationService.GetLocalizedAsync(manufacturer, x => x.Name),
                     SeName = await _urlRecordService.GetSeNameAsync(manufacturer)
                 };
+
+                if (_gpsrSettings.Enabled)
+                {
+                    modelMan.PhysicalAddress = string.IsNullOrEmpty(manufacturer.PhysicalAddress) ? string.Empty : string.Format(await _localizationService.GetResourceAsync("Products.Manufacturers.PhysicalAddress"), manufacturer.PhysicalAddress);
+                    modelMan.ElectronicAddress = string.IsNullOrEmpty(manufacturer.ElectronicAddress) ? string.Empty : string.Format(await _localizationService.GetResourceAsync("Products.Manufacturers.ElectronicAddress"), manufacturer.ElectronicAddress);
+                    modelMan.ResponsiblePerson = string.IsNullOrEmpty(manufacturer.ResponsiblePerson) ? string.Empty : string.Format(await _localizationService.GetResourceAsync("Products.Manufacturers.ResponsiblePerson"), manufacturer.ResponsiblePerson);
+                    modelMan.ResponsiblePersonPhysicalAddress = string.IsNullOrEmpty(manufacturer.ResponsiblePersonPhysicalAddress) ? string.Empty : string.Format(await _localizationService.GetResourceAsync("Products.Manufacturers.ResponsiblePersonPhysicalAddress"), manufacturer.ResponsiblePersonPhysicalAddress);
+                    modelMan.ResponsiblePersonElectronicAddress = string.IsNullOrEmpty(manufacturer.ResponsiblePersonElectronicAddress) ? string.Empty : string.Format(await _localizationService.GetResourceAsync("Products.Manufacturers.ResponsiblePersonElectronicAddress"), manufacturer.ResponsiblePersonElectronicAddress);
+                }
 
                 return modelMan;
             }).ToListAsync();

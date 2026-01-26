@@ -1045,6 +1045,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                     SeName = await _urlRecordService.GetSeNameAsync(manufacturer),
                     IsActive = currentManufacturer != null && currentManufacturer.Id == manufacturer.Id,
                 };
+
                 model.Manufacturers.Add(modelMan);
             }
 

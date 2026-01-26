@@ -2532,6 +2532,12 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ElectronicAddress">
+    <Value>Manufacturer electronic address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ElectronicAddress.Hint">
+    <Value>The e-mail or other electronic contact information.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DisplayOrder.Hint">
     <Value>Set the manufacturer's display order. 1 represents the top of the list.</Value>
   </LocaleResource>
@@ -2598,6 +2604,12 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems">
     <Value>Page size options should have unique items.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PhysicalAddress">
+    <Value>Manufacturer physical address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PhysicalAddress.Hint">
+    <Value>The physical address of the manufacturer.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Picture">
     <Value>Picture</Value>
   </LocaleResource>
@@ -2634,17 +2646,41 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Published.Hint">
     <Value>Check to publish this manufacturer (visible in store). Uncheck to unpublish (manufacturer not available in store).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ResponsiblePerson">
+    <Value>Responsible person name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ResponsiblePerson.Hint">
+    <Value>The name of the manufacturer's responsible person</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ResponsiblePersonElectronicAddress">
+    <Value>Responsible person electronic address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ResponsiblePersonElectronicAddress.Hint">
+    <Value>The e-mail or other electronic contact information of the manufacturer's responsible person.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ResponsiblePersonPhysicalAddress">
+    <Value>Responsible person physical address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ResponsiblePersonPhysicalAddress.Hint">
+    <Value>The physical address of the manufacturer's responsible person.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SeName">
     <Value>Search engine friendly page name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name e.g. 'the-best-manufacturer' to make your page URL 'http://www.yourStore.com/the-best-manufacturer'. Leave empty to generate it automatically based on the name of the manufacturer.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Gpsr">
+    <Value>GPSR</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Imported">
     <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Info">
     <Value>Manufacturer info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Gpsr.Information">
+    <Value><![CDATA[<p>The General Product Safety Regulation (GPSR) is a European Union (EU) law that came into effect in December 2024. The GPSR regulates the advertising and sale of consumer products in the European Union.</p><p>If you are in the EU, you have to fill in the manufacturer’s name, physical address and e-mail or other electronic contact information.</p><p>If the manufacturer is not located in the European Union, the EU Responsible Person and their contact details. The EU Responsible Person is a person or entity located in the European Union that the seller designates to act as a point of contact with the EU authorities.</p>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.List.ImportFromExcelTip">
     <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. You should not specify ID (leave 0) for new manufacturers.</Value>
@@ -6195,6 +6231,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.ExportImport">
     <Value>Export/Import</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Gpsr">
+    <Value>GPSR</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Performance">
     <Value>Performance</Value>
   </LocaleResource>
@@ -8277,6 +8316,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.YoutubeLink.Hint">
     <Value>Specify your YouTube channel URL. Leave empty if you have no such page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gpsr.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gpsr.Enabled.Hint">
+    <Value>Check to display GPSR information in public store. The General Product Safety Regulation (GPSR) is a European Union (EU) law that came into effect in December 2024. The GPSR regulates the advertising and sale of consumer products in the European Union</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media">
     <Value>Media settings</Value>
@@ -19561,6 +19606,21 @@
   </LocaleResource>
   <LocaleResource Name="Products.Manufacturers">
     <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Manufacturers.ElectronicAddress">
+    <Value>Manufacturer electronic address: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Manufacturers.PhysicalAddress">
+    <Value>Manufacturer physical address: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Manufacturers.ResponsiblePerson">
+    <Value>Responsible person name: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Manufacturers.ResponsiblePersonElectronicAddress">
+    <Value>Responsible person electronic address: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Manufacturers.ResponsiblePersonPhysicalAddress">
+    <Value>Responsible person physical address: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Products.MinimumQuantityNotification">
     <Value>This product has a minimum quantity of {0}</Value>

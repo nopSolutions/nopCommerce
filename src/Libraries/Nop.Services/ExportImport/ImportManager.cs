@@ -3044,6 +3044,21 @@ public partial class ImportManager : IImportManager
                     case "SeName":
                         seName = property.StringValue;
                         break;
+                    case "PhysicalAddress":
+                        manufacturer.PhysicalAddress = property.StringValue;
+                        break;
+                    case "ElectronicAddress":
+                        manufacturer.ElectronicAddress = property.StringValue;
+                        break;
+                    case "ResponsiblePerson":
+                        manufacturer.ResponsiblePerson = property.StringValue;
+                        break;
+                    case "ResponsiblePersonPhysicalAddress":
+                        manufacturer.ResponsiblePersonPhysicalAddress = property.StringValue;
+                        break;
+                    case "ResponsiblePersonElectronicAddress":
+                        manufacturer.ResponsiblePersonElectronicAddress = property.StringValue;
+                        break;
                 }
             }
 
