@@ -1,0 +1,57 @@
+@model BabakItemSearchModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">@T("Nop.Plugin.Misc.Babak.Title")</h1>
+    <div class="float-right">
+        <a asp-controller="Babak" asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-square-plus"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "babak-item-grid",
+                        UrlRead = new DataUrl("List", "Babak", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(BabakItemModel.Name))
+                            {
+                                Title = T("Nop.Plugin.Misc.Babak.Fields.Name").Text
+                            },
+                            new ColumnProperty(nameof(BabakItemModel.Description))
+                            {
+                                Title = T("Nop.Plugin.Misc.Babak.Fields.Description").Text
+                            },
+                            new ColumnProperty(nameof(BabakItemModel.IsActive))
+                            {
+                                Title = T("Nop.Plugin.Misc.Babak.Fields.IsActive").Text,
+                                Width = "120",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(BabakItemModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                Render = new RenderButtonEdit(new DataUrl("~/Admin/Babak/Edit/"))
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
