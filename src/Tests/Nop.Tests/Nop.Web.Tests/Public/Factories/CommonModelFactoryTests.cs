@@ -241,6 +241,78 @@ public class CommonModelFactoryTests : BaseNopTest
         var model = await _commonModelFactory.PrepareRobotsTextFileAsync();
         model.Should().NotBeNullOrEmpty();
 
-        model.Trim().Split(Environment.NewLine).Length.Should().Be(165);
+        var allRows = new[]
+        {
+            "User-agent: *", "Sitemap: http://127.0.0.1/sitemap.xml", "Host: http://127.0.0.1/", "Disallow: /admin",
+            "Disallow: /bin/", "Disallow: /files/", "Disallow: /files/exportimport/", "Disallow: /install",
+            "Disallow: /*?*returnUrl=", "Disallow: /*?*returnurl=", "Disallow: /*?*ReturnUrl=",
+            "Disallow: /cart/estimateshipping", "Disallow: /cart/selectshippingoption",
+            "Disallow: /customer/addressdelete", "Disallow: /customer/removeexternalassociation",
+            "Disallow: /customer/checkusernameavailability", "Disallow: /catalog/searchtermautocomplete",
+            "Disallow: /addproducttocart/catalog/*", "Disallow: /addproducttocart/details/*",
+            "Disallow: /compareproducts/add/*", "Disallow: /backinstocksubscribe/*",
+            "Disallow: /subscribenewsletter", "Disallow: /t-popup/*", "Disallow: /setproductreviewhelpfulness",
+            "Disallow: /country/getstatesbycountryid/", "Disallow: /eucookielawaccept",
+            "Disallow: /topic/authenticate", "Disallow: /category/products/", "Disallow: /product/combinations",
+            "Disallow: /uploadfileproductattribute/*", "Disallow: /shoppingcart/productdetails_attributechange/*",
+            "Disallow: /uploadfilereturnrequest", "Disallow: /boards/topicwatch/*",
+            "Disallow: /boards/forumwatch/*", "Disallow: /install/restartapplication", "Disallow: /boards/postvote",
+            "Disallow: /product/estimateshipping/*", "Disallow: /shoppingcart/checkoutattributechange/*",
+            "Disallow: /addproducttocart/catalog/", "Disallow: /addproducttocart/details/",
+            "Disallow: /backinstocksubscriptions/manage", "Disallow: /boards/forumsubscriptions",
+            "Disallow: /boards/forumwatch", "Disallow: /boards/postedit", "Disallow: /boards/postdelete",
+            "Disallow: /boards/postcreate", "Disallow: /boards/topicedit", "Disallow: /boards/topicdelete",
+            "Disallow: /boards/topiccreate", "Disallow: /boards/topicmove", "Disallow: /boards/topicwatch",
+            "Disallow: /cart$", "Disallow: /changecurrency", "Disallow: /changelanguage",
+            "Disallow: /changetaxtype", "Disallow: /checkout", "Disallow: /checkout/billingaddress",
+            "Disallow: /checkout/completed", "Disallow: /checkout/confirm", "Disallow: /checkout/shippingaddress",
+            "Disallow: /checkout/shippingmethod", "Disallow: /checkout/paymentinfo",
+            "Disallow: /checkout/paymentmethod", "Disallow: /clearcomparelist", "Disallow: /compareproducts",
+            "Disallow: /compareproducts/add/*", "Disallow: /customer/avatar", "Disallow: /customer/activation",
+            "Disallow: /customer/addresses", "Disallow: /customer/changepassword",
+            "Disallow: /customer/checkusernameavailability", "Disallow: /customer/downloadableproducts",
+            "Disallow: /customer/info", "Disallow: /customer/productreviews", "Disallow: /deletepm",
+            "Disallow: /emailwishlist", "Disallow: /eucookielawaccept", "Disallow: /inboxupdate",
+            "Disallow: /newsletter/subscriptionactivation", "Disallow: /onepagecheckout",
+            "Disallow: /order/history", "Disallow: /orderdetails", "Disallow: /passwordrecovery/confirm",
+            "Disallow: /privatemessages", "Disallow: /recentlyviewedproducts", "Disallow: /returnrequest",
+            "Disallow: /returnrequest/history", "Disallow: /rewardpoints/history", "Disallow: /search?",
+            "Disallow: /sendpm", "Disallow: /sentupdate", "Disallow: /shoppingcart/*", "Disallow: /storeclosed",
+            "Disallow: /subscribenewsletter", "Disallow: /topic/authenticate", "Disallow: /viewpm",
+            "Disallow: /uploadfilecheckoutattribute", "Disallow: /uploadfileproductattribute",
+            "Disallow: /uploadfilereturnrequest", "Disallow: /wishlist", "Disallow: /en/addproducttocart/catalog/",
+            "Disallow: /en/addproducttocart/details/", "Disallow: /en/backinstocksubscriptions/manage",
+            "Disallow: /en/boards/forumsubscriptions", "Disallow: /en/boards/forumwatch",
+            "Disallow: /en/boards/postedit", "Disallow: /en/boards/postdelete", "Disallow: /en/boards/postcreate",
+            "Disallow: /en/boards/topicedit", "Disallow: /en/boards/topicdelete",
+            "Disallow: /en/boards/topiccreate", "Disallow: /en/boards/topicmove", "Disallow: /en/boards/topicwatch",
+            "Disallow: /en/cart$", "Disallow: /en/changecurrency", "Disallow: /en/changelanguage",
+            "Disallow: /en/changetaxtype", "Disallow: /en/checkout", "Disallow: /en/checkout/billingaddress",
+            "Disallow: /en/checkout/completed", "Disallow: /en/checkout/confirm",
+            "Disallow: /en/checkout/shippingaddress", "Disallow: /en/checkout/shippingmethod",
+            "Disallow: /en/checkout/paymentinfo", "Disallow: /en/checkout/paymentmethod",
+            "Disallow: /en/clearcomparelist", "Disallow: /en/compareproducts",
+            "Disallow: /en/compareproducts/add/*", "Disallow: /en/customer/avatar",
+            "Disallow: /en/customer/activation", "Disallow: /en/customer/addresses",
+            "Disallow: /en/customer/changepassword", "Disallow: /en/customer/checkusernameavailability",
+            "Disallow: /en/customer/downloadableproducts", "Disallow: /en/customer/info",
+            "Disallow: /en/customer/productreviews", "Disallow: /en/deletepm", "Disallow: /en/emailwishlist",
+            "Disallow: /en/eucookielawaccept", "Disallow: /en/inboxupdate",
+            "Disallow: /en/newsletter/subscriptionactivation", "Disallow: /en/onepagecheckout",
+            "Disallow: /en/order/history", "Disallow: /en/orderdetails", "Disallow: /en/passwordrecovery/confirm",
+            "Disallow: /en/privatemessages", "Disallow: /en/recentlyviewedproducts", "Disallow: /en/returnrequest",
+            "Disallow: /en/returnrequest/history", "Disallow: /en/rewardpoints/history", "Disallow: /en/search?",
+            "Disallow: /en/sendpm", "Disallow: /en/sentupdate", "Disallow: /en/shoppingcart/*",
+            "Disallow: /en/storeclosed", "Disallow: /en/subscribenewsletter", "Disallow: /en/topic/authenticate",
+            "Disallow: /en/viewpm", "Disallow: /en/uploadfilecheckoutattribute",
+            "Disallow: /en/uploadfileproductattribute", "Disallow: /en/uploadfilereturnrequest",
+            "Disallow: /en/wishlist",
+        };
+
+        var rowsForTests = model.Trim().Split(Environment.NewLine);
+
+        rowsForTests.Length.Should().BeGreaterThanOrEqualTo(allRows.Length);
+
+        allRows.All(r => rowsForTests.Contains(r)).Should().BeTrue();
     }
 }
