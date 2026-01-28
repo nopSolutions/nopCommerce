@@ -596,14 +596,23 @@ public partial class ShoppingCartController : BasePublicController
 
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null)
-            //no product found
         {
+            //no product found
             return Json(new
             {
                 success = false,
                 message = "No product found with the specified ID"
             });
         }
+
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var referrerPageUrl = _webHelper.GetUrlReferrer();
+        //'Continue shopping' URL
+        await _genericAttributeService.SaveAttributeAsync(customer,
+            NopCustomerDefaults.LastContinueShoppingPageAttribute,
+            referrerPageUrl,
+            store.Id);
 
         var redirectUrl = await _nopUrlHelper.RouteGenericUrlAsync(product);
 
@@ -664,8 +673,6 @@ public partial class ShoppingCartController : BasePublicController
 
         //get standard warnings without attribute validations
         //first, try to find existing shopping cart item
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
         var cart = await _shoppingCartService.GetShoppingCartAsync(customer, cartType, store.Id);
         var shoppingCartItem = await _shoppingCartService.FindShoppingCartItemInTheCartAsync(cart, cartType, product);
         //if we already have the same product in the cart, then use the total quantity to validate
