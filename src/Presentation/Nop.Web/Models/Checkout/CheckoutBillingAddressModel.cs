@@ -31,4 +31,8 @@ public partial record CheckoutBillingAddressModel : BaseNopModel
 
     [NopResourceDisplayName("Checkout.VatNumber")]
     public string VatNumber { get; set; }
+
+
+    // New properties
+    public int? SelectedBillingAddressId { get; set; }
 }

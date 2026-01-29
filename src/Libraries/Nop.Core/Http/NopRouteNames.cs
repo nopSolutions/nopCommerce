@@ -131,6 +131,8 @@ public static partial class NopRouteNames
         /// </summary>
         public const string CHECKOUT_ONE_PAGE = "CheckoutOnePage";
 
+        public const string CHECKOUT_SINGLE_PAGE = "CheckoutSinglePage";
+
         /// <summary>
         /// Gets the checkout shipping address route name
         /// </summary>
