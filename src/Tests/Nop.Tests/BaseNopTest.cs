@@ -65,7 +65,6 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
-using Nop.Services.Polls;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -379,7 +378,6 @@ public partial class BaseNopTest
         services.AddTransient<ICustomerActivityService, CustomerActivityService>();
         services.AddTransient<IForumService, ForumService>();
         services.AddTransient<IGdprService, GdprService>();
-        services.AddTransient<IPollService, PollService>();
         services.AddTransient<IBlogService, BlogService>();
         services.AddTransient<ITopicService, TopicService>();
         services.AddTransient<IDateTimeHelper, DateTimeHelper>();
@@ -436,9 +434,7 @@ public partial class BaseNopTest
         {
             var interfaces = consumer.FindInterfaces((type, criteria) => type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition()), typeof(IConsumer<>));
             foreach (var findInterface in interfaces)
-            {
                 services.AddTransient(findInterface, consumer);
-            }
         }
 
         services.AddSingleton<IInstallationService, InstallationService>();
@@ -510,7 +506,6 @@ public partial class BaseNopTest
         services.AddTransient<IOrderModelFactory, OrderModelFactory>();
         services.AddTransient<IPaymentModelFactory, PaymentModelFactory>();
         services.AddTransient<IPluginModelFactory, PluginModelFactory>();
-        services.AddTransient<IPollModelFactory, PollModelFactory>();
         services.AddTransient<IProductModelFactory, ProductModelFactory>();
         services.AddTransient<ProductModelFactoryTests.ProductModelFactoryForTest>();
         services.AddTransient<IProductAttributeModelFactory, ProductAttributeModelFactory>();
@@ -549,7 +544,6 @@ public partial class BaseNopTest
         services.AddTransient<Web.Factories.IJsonLdModelFactory, Web.Factories.JsonLdModelFactory>();
         services.AddTransient<Web.Factories.INewsLetterModelFactory, Web.Factories.NewsLetterModelFactory>();
         services.AddTransient<Web.Factories.IOrderModelFactory, Web.Factories.OrderModelFactory>();
-        services.AddTransient<Web.Factories.IPollModelFactory, Web.Factories.PollModelFactory>();
         services
             .AddTransient<Web.Factories.IPrivateMessagesModelFactory, Web.Factories.PrivateMessagesModelFactory>();
         services.AddTransient<Web.Factories.IProductModelFactory, Web.Factories.ProductModelFactory>();

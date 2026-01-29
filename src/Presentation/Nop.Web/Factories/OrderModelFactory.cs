@@ -629,9 +629,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                 orderItemModel.LicenseId = orderItem.LicenseDownloadId ?? 0;
 
             if (_orderSettings.ShowProductThumbnailInOrderDetailsPage)
-            {
                 orderItemModel.Picture = await PrepareOrderItemPictureModelAsync(orderItem, _mediaSettings.OrderThumbPictureSize, true, orderItemModel.ProductName);
-            }
         }
 
         return model;

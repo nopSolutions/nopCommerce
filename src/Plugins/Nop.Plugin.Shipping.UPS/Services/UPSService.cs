@@ -405,18 +405,22 @@ public class UPSService
 
         //set negotiated rates details
         if (!string.IsNullOrEmpty(_upsSettings.AccountNumber) && !string.IsNullOrEmpty(stateCodeTo))
+        {
             request.Shipment.ShipmentRatingOptions = new Shipment_ShipmentRatingOptions
             {
                 NegotiatedRatesIndicator = string.Empty,
                 UserLevelDiscountIndicator = string.Empty
             };
+        }
 
         //set Saturday delivery details
         if (saturdayDelivery)
+        {
             request.Shipment.ShipmentServiceOptions = new Shipment_ShipmentServiceOptions
             {
                 SaturdayDeliveryIndicator = string.Empty
             };
+        }
 
         //set packages details
         request.Shipment.Package = _upsSettings.PackingType switch
@@ -990,9 +994,7 @@ public class UPSService
         {
             var (saturdayShippingOptions, saturdayError) = await GetShippingOptionsAsync(shippingOptionRequest, true);
             foreach (var shippingOption in saturdayShippingOptions)
-            {
                 response.ShippingOptions.Add(shippingOption);
-            }
             if (!string.IsNullOrEmpty(saturdayError))
                 response.Errors.Add(saturdayError);
         }

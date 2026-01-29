@@ -145,11 +145,11 @@ public partial class NopScriptTagHelper : UrlResolutionTagHelper
 
         if (Location == ResourceLocation.None)
         {
-            if (!string.IsNullOrEmpty(Src))
-            {
-                ProcessSrcAttribute(context, output);
-                ProcessAsset(output);
-            }
+            if (string.IsNullOrEmpty(Src))
+                return;
+
+            ProcessSrcAttribute(context, output);
+            ProcessAsset(output);
 
             return;
         }

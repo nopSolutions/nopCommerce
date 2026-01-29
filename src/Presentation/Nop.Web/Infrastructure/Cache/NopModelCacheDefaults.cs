@@ -239,25 +239,6 @@ public static partial class NopModelCacheDefaults
     public static string OrderPicturePrefixCacheKey => "Nop.pres.order.picture";
 
     /// <summary>
-    /// Key for home page polls
-    /// </summary>
-    /// <remarks>
-    /// {0} : language ID
-    /// {1} : current store ID
-    /// </remarks>
-    public static CacheKey HomepagePollsModelKey => new("Nop.pres.poll.homepage-{0}-{1}");
-    /// <summary>
-    /// Key for polls by system name
-    /// </summary>
-    /// <remarks>
-    /// {0} : poll system name
-    /// {1} : language ID
-    /// {2} : current store ID
-    /// </remarks>
-    public static CacheKey PollBySystemNameModelKey => new("Nop.pres.poll.systemname-{0}-{1}-{2}");
-    public static string PollsPrefixCacheKey => "Nop.pres.poll";
-
-    /// <summary>
     /// Key for blog archive (years, months) block model
     /// </summary>
     /// <remarks>

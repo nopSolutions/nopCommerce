@@ -195,9 +195,7 @@ public partial class CommonController : BasePublicController
     {
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
-        {
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         model = await _commonModelFactory.PrepareContactUsModelAsync(model, true);
 
@@ -251,9 +249,7 @@ public partial class CommonController : BasePublicController
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
-        {
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         model = await _commonModelFactory.PrepareContactVendorModelAsync(model, vendor, true);
 

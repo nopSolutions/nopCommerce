@@ -102,8 +102,6 @@ public partial class StandardPermission
         public const string BLOG_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.BlogCreateEditDelete";
         public const string BLOG_COMMENTS_VIEW = $"{nameof(ContentManagement)}.BlogCommentsView";
         public const string BLOG_COMMENTS_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.BlogCommentsCreateEditDelete";
-        public const string POLLS_VIEW = $"{nameof(ContentManagement)}.PollsView";
-        public const string POLLS_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.PollsCreateEditDelete";
         public const string FORUMS_VIEW = $"{nameof(ContentManagement)}.ForumsView";
         public const string FORUMS_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.ForumsCreateEditDelete";
         public const string MENU_VIEW = $"{nameof(ContentManagement)}.MenusView";

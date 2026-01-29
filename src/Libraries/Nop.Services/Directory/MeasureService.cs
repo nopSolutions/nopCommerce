@@ -72,8 +72,11 @@ public partial class MeasureService : IMeasureService
 
         var measureDimensions = await GetAllMeasureDimensionsAsync();
         foreach (var measureDimension in measureDimensions)
+        {
             if (measureDimension.SystemKeyword.ToLowerInvariant() == systemKeyword.ToLowerInvariant())
                 return measureDimension;
+        }
+
         return null;
     }
 
@@ -244,8 +247,11 @@ public partial class MeasureService : IMeasureService
 
         var measureWeights = await GetAllMeasureWeightsAsync();
         foreach (var measureWeight in measureWeights)
+        {
             if (measureWeight.SystemKeyword.ToLowerInvariant() == systemKeyword.ToLowerInvariant())
                 return measureWeight;
+        }
+
         return null;
     }
 

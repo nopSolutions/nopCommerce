@@ -52,9 +52,7 @@ public class UploadedImagesMigration : Migration
         var uniquePath = _nopFileProvider.GetAbsolutePath(directoryPath, $"{fileName}.{fileExt}");
         var i = 0;
         while (_nopFileProvider.GetFileInfo(uniquePath) is IFileInfo fileInfo && fileInfo.Exists)
-        {
             uniquePath = _nopFileProvider.GetAbsolutePath(directoryPath, $"{fileName}-Copy-{++i}.{fileExt}");
-        }
 
         using var memoryStream = new MemoryStream(pictureBinary);
         using var stream = _nopFileProvider.GetOrCreateFile(uniquePath);

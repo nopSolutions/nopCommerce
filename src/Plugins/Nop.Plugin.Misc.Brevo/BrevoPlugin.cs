@@ -220,9 +220,7 @@ public class BrevoPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
         {
             var messageTemplates = await _messageTemplateService.GetAllMessageTemplatesAsync(store.Id);
             foreach (var messageTemplate in messageTemplates)
-            {
                 await _genericAttributeService.SaveAttributeAsync<int?>(messageTemplate, BrevoDefaults.TemplateIdAttribute, null);
-            }
         }
 
         //schedule task

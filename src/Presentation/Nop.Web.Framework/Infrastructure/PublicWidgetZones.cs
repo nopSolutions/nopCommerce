@@ -123,7 +123,6 @@ public static partial class PublicWidgetZones
     public static string HeadHtmlTag => "head_html_tag";
     public static string HomepageBeforeBestSellers => "home_page_before_best_sellers";
     public static string HomepageBeforeCategories => "home_page_before_categories";
-    public static string HomepageBeforePoll => "home_page_before_poll";
     public static string HomepageBeforeProducts => "home_page_before_products";
     public static string HomepageBottom => "home_page_bottom";
     public static string HomepageTop => "home_page_top";

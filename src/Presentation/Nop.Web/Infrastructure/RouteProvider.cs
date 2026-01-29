@@ -513,11 +513,6 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/customer/multifactorauthentication",
             defaults: new { controller = "Customer", action = "MultiFactorAuthentication" });
 
-        //poll vote (AJAX)
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.POLL_VOTE,
-            pattern: $"poll/vote",
-            defaults: new { controller = "Poll", action = "Vote" });
-
         //comparing products
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.REMOVE_PRODUCT_FROM_COMPARE_LIST,
             pattern: $"{lang}/compareproducts/remove/{{productId}}",

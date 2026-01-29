@@ -199,9 +199,7 @@ public partial class PluginService : IPluginService
 
         //mark update migrations as applied
         if (migrationProcessType == MigrationProcessType.Installation)
-        {
             _migrationManager.Value.ApplyUpMigrations(assembly, MigrationProcessType.Update, true);
-        }
     }
 
     #endregion

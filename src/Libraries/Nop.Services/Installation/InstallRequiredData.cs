@@ -195,12 +195,14 @@ public partial class InstallationService
 
                 using var languageReader = xmlReader.ReadSubtree();
                 while (languageReader.ReadToFollowing("LocaleResource"))
+                {
                     if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.GetAttribute("Name") is { } name)
                     {
                         using var lrReader = languageReader.ReadSubtree();
                         if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element)
                             result.Add((name.ToLowerInvariant(), lrReader.ReadString()));
                     }
+                }
 
                 break;
             }
@@ -221,6 +223,7 @@ public partial class InstallationService
         var lrsToInsertList = new Dictionary<string, LocaleStringResource>();
 
         foreach (var (name, value) in loadLocaleResourcesFromStream())
+        {
             if (lsNamesList.TryGetValue(name, out var localString))
             {
                 if (!updateExistingResources)
@@ -230,12 +233,15 @@ public partial class InstallationService
                 lrsToUpdateList.Add(localString);
             }
             else
+            {
                 lrsToInsertList[name] = new LocaleStringResource
                 {
                     LanguageId = language.Id,
                     ResourceName = name,
                     ResourceValue = value
                 };
+            }
+        }
 
         await _dataProvider.UpdateEntitiesAsync(lrsToUpdateList);
         await _dataProvider.BulkInsertEntitiesAsync(lrsToInsertList.Values);
@@ -1242,10 +1248,12 @@ public partial class InstallationService
             };
             if (!dictionary.TryGetValue(resourceName, out var value))
                 //first setting
+            {
                 dictionary.Add(resourceName, new List<Setting>
                 {
                     settingForCaching
                 });
+            }
             else
                 //already added
                 //most probably it's the setting with the same name but for some certain store (storeId > 0)
@@ -2016,7 +2024,6 @@ public partial class InstallationService
                 "/subscribenewsletter",
                 "/t-popup/*",
                 "/setproductreviewhelpfulness",
-                "/poll/vote",
                 "/country/getstatesbycountryid/",
                 "/eucookielawaccept",
                 "/topic/authenticate",
@@ -2079,7 +2086,6 @@ public partial class InstallationService
                 "/order/history",
                 "/orderdetails",
                 "/passwordrecovery/confirm",
-                "/poll/vote",
                 "/privatemessages",
                 "/recentlyviewedproducts",
                 "/returnrequest",

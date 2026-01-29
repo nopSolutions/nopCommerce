@@ -14,7 +14,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
@@ -1144,10 +1143,12 @@ public partial class InstallationService
 
         var sb = new StringBuilder();
         foreach (var c in name.Trim().ToLowerInvariant())
+        {
             if (seoCharacterTable.TryGetValue(c, out var transliteration))
                 sb.Append(transliteration.ToLowerInvariant());
             else if (okChars.Contains(c))
                 sb.Append(c);
+        }
 
         var seName = new Regex(@"[\s-]+").Replace(sb.ToString(), "-");
         seName = new Regex("_+").Replace(seName, "_");
@@ -1307,12 +1308,14 @@ public partial class InstallationService
                 new SpecificationAttributeGroup { Name = jsonModel.Name });
 
             foreach (var data in jsonModel.Attributes)
+            {
                 attributes.Add(data, new SpecificationAttribute
                 {
                     Name = data.Name,
                     DisplayOrder = data.DisplayOrder,
                     SpecificationAttributeGroupId = specificationAttributeGroup.Id
                 });
+            }
         }
 
         await _dataProvider.BulkInsertEntitiesAsync(attributes.Values);
@@ -1544,37 +1547,6 @@ public partial class InstallationService
             StoreId = storeId,
             CreatedOnUtc = DateTime.UtcNow
         })));
-    }
-
-    /// <summary>
-    /// Installs a sample polls
-    /// </summary>
-    /// <param name="samplePolls">Sample polls to install</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task InstallPollsAsync(IList<SamplePoll> samplePolls)
-    {
-        var languageId = await GetDefaultLanguageIdAsync();
-
-        var polls = samplePolls.ToDictionary(sp => new Poll
-        {
-            LanguageId = languageId,
-            Name = sp.Name,
-            SystemKeyword = sp.SystemKeyword,
-            Published = sp.Published,
-            ShowOnHomepage = sp.ShowOnHomepage,
-            DisplayOrder = sp.DisplayOrder
-        }, sp => sp.Answers);
-
-        await _dataProvider.BulkInsertEntitiesAsync(polls.Keys);
-
-        await _dataProvider.BulkInsertEntitiesAsync(
-            polls.SelectMany(sp => sp.Value.Select(spa => new PollAnswer
-            {
-                Name = spa.Name,
-                DisplayOrder = spa.DisplayOrder,
-                PollId = sp.Key.Id
-            }))
-        );
     }
 
     /// <summary>

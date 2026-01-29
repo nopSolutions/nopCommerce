@@ -739,11 +739,6 @@ public static partial class NopRouteNames
         public const string TOPIC_POPUP = "TopicPopup";
 
         /// <summary>
-        /// Gets the poll vote route name
-        /// </summary>
-        public const string POLL_VOTE = "PollVote";
-
-        /// <summary>
         /// Gets the state list by country ID route name
         /// </summary>
         public const string GET_STATES_BY_COUNTRY_ID = "GetStatesByCountryId";

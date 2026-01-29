@@ -94,8 +94,10 @@ public abstract partial class BaseNopValidator<TModel> : AbstractValidator<TMode
         //define decimal validation rules
         var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
         foreach (var expression in maxValueExpressions)
+        {
             RuleFor(expression.Expression).IsDecimal(expression.MaxValue)
                 .WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.Validation.Decimal.Max"), expression.MaxValue - 1);
+        }
     }
 
     #endregion

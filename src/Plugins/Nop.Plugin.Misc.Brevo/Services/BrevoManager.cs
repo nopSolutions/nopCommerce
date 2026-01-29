@@ -891,9 +891,7 @@ public partial class BrevoManager
                 return false;
 
             foreach (var storeCredential in storeCredentials)
-            {
                 await HttpBrevoClientAsync(storeCredential.Key, storeCredential.Value);
-            }
         }
         catch (Exception exception)
         {
@@ -1003,9 +1001,7 @@ public partial class BrevoManager
 
             //prepare id-name pairs
             foreach (var sender in senders.Senders)
-            {
                 availableSenders.Add((sender.Id.ToString(), $"{sender.Name} ({sender.Email})"));
-            }
         }
         catch (Exception exception)
         {
@@ -1203,9 +1199,7 @@ public partial class BrevoManager
             //prepare attributes to create
             var newAttributes = new List<(CategoryEnum category, string Name, string Value, CreateAttribute.TypeEnum? Type)>();
             foreach (var token in tokens)
-            {
                 newAttributes.Add((CategoryEnum.Transactional, token, null, CreateAttribute.TypeEnum.Text));
-            }
 
             return await CreateAttributesAsync(newAttributes);
         }

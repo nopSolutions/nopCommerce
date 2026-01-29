@@ -107,27 +107,19 @@ public partial class HtmlFormatter : IHtmlFormatter
 
         try
         {
-            if (stripTags)
-            {
+            if (stripTags) 
                 text = StripTags(text);
-            }
 
             text = allowHtml ? EnsureOnlyAllowedHtml(text) : WebUtility.HtmlEncode(text);
 
-            if (convertPlainTextToHtml)
-            {
+            if (convertPlainTextToHtml) 
                 text = ConvertPlainTextToHtml(text);
-            }
 
-            if (allowBBCode)
-            {
+            if (allowBBCode) 
                 text = _bbCodeHelper.FormatText(text, true, true, true, true, true, true, true);
-            }
 
-            if (resolveLinks)
-            {
+            if (resolveLinks) 
                 text = ResolveLinksHelper.FormatText(text);
-            }
 
             if (addNoFollowTag)
             {

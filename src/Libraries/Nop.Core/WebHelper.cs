@@ -194,8 +194,10 @@ public partial class WebHelper : IWebHelper
 
         //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
         if (string.IsNullOrEmpty(storeHost))
+        {
             storeLocation = _storeContext.Value.GetCurrentStoreAsync().Result?.Url
-                            ?? throw new Exception("Current store cannot be loaded");
+                ?? throw new Exception("Current store cannot be loaded");
+        }
 
         //ensure that URL is ended with slash
         storeLocation = $"{storeLocation.TrimEnd('/')}/";

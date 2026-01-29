@@ -182,9 +182,6 @@ public static partial class AdminWidgetZones
     public static string PluginDetailsButtons => "admin_plugin_details_buttons";
     public static string PluginDetailsTop => "admin_plugin_details_top";
     public static string PluginListButtons => "admin_plugin_list_buttons";
-    public static string PollDetailsBlock => "admin_poll_details_block";
-    public static string PollDetailsButtons => "admin_poll_details_buttons";
-    public static string PollListButtons => "admin_poll_list_buttons";
     public static string ProductAttributeCombinationDetailsBottom => "admin_product_attribute_combination_details_bottom";
     public static string ProductAttributeCombinationDetailsButtons => "admin_product_attribute_combination_details_buttons";
     public static string ProductAttributeCombinationDetailsTop => "admin_product_attribute_combination_details_top";

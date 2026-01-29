@@ -41,7 +41,6 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Plugins.Marketplace;
-using Nop.Services.Polls;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -220,7 +219,6 @@ public partial class NopStartup : INopStartup
         services.AddScoped<ICustomerActivityService, CustomerActivityService>();
         services.AddScoped<IForumService, ForumService>();
         services.AddScoped<IGdprService, GdprService>();
-        services.AddScoped<IPollService, PollService>();
         services.AddScoped<IBlogService, BlogService>();
         services.AddScoped<ITopicService, TopicService>();
         services.AddScoped<IDateTimeHelper, DateTimeHelper>();

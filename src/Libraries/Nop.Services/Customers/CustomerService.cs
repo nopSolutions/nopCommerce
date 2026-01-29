@@ -7,7 +7,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
@@ -42,7 +41,6 @@ public partial class CustomerService : ICustomerService
     protected readonly IRepository<Order> _orderRepository;
     protected readonly IRepository<ProductReview> _productReviewRepository;
     protected readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
-    protected readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
     protected readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
     protected readonly IShortTermCacheManager _shortTermCacheManager;
     protected readonly IStaticCacheManager _staticCacheManager;
@@ -71,7 +69,6 @@ public partial class CustomerService : ICustomerService
         IRepository<Order> orderRepository,
         IRepository<ProductReview> productReviewRepository,
         IRepository<ProductReviewHelpfulness> productReviewHelpfulnessRepository,
-        IRepository<PollVotingRecord> pollVotingRecordRepository,
         IRepository<ShoppingCartItem> shoppingCartRepository,
         IShortTermCacheManager shortTermCacheManager,
         IStaticCacheManager staticCacheManager,
@@ -96,7 +93,6 @@ public partial class CustomerService : ICustomerService
         _orderRepository = orderRepository;
         _productReviewRepository = productReviewRepository;
         _productReviewHelpfulnessRepository = productReviewHelpfulnessRepository;
-        _pollVotingRecordRepository = pollVotingRecordRepository;
         _shoppingCartRepository = shoppingCartRepository;
         _shortTermCacheManager = shortTermCacheManager;
         _staticCacheManager = staticCacheManager;
@@ -208,18 +204,18 @@ public partial class CustomerService : ICustomerService
                 query = query.Where(c => c.ZipPostalCode.Contains(zipPostalCode));
 
             if (dayOfBirth > 0 && monthOfBirth > 0)
+            {
                 query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Day == dayOfBirth &&
-                                         c.DateOfBirth.Value.Month == monthOfBirth);
+                    c.DateOfBirth.Value.Month == monthOfBirth);
+            }
             else if (dayOfBirth > 0)
                 query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Day == dayOfBirth);
             else if (monthOfBirth > 0)
                 query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Month == monthOfBirth);
 
             //search by IpAddress
-            if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
-            {
+            if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress)) 
                 query = query.Where(w => w.LastIpAddress == ipAddress);
-            }
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
@@ -302,10 +298,12 @@ public partial class CustomerService : ICustomerService
 
         //filter customers by billing country
         if (countryId > 0)
+        {
             customers = from c in customers
                 join a in _customerAddressRepository.Table on c.BillingAddressId equals a.Id
                 where a.CountryId == countryId
                 select c;
+        }
 
         var customersWithCarts = from c in customers
             join item in items on c.Id equals item.CustomerId
@@ -689,12 +687,11 @@ public partial class CustomerService : ICustomerService
             from blogComment in _blogCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             from productReview in _productReviewRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             from productReviewHelpfulness in _productReviewHelpfulnessRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from pollVotingRecord in _pollVotingRecordRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             from forumTopic in _forumTopicRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             from forumPost in _forumPostRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             where (!onlyWithoutShoppingCart || sCart == null) &&
                   order == null && blogComment == null && productReview == null && productReviewHelpfulness == null &&
-                  pollVotingRecord == null && forumTopic == null && forumPost == null &&
+                  forumTopic == null && forumPost == null &&
                   !guest.IsSystemAccount &&
                   (createdFromUtc == null || guest.CreatedOnUtc > createdFromUtc) &&
                   (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
@@ -973,8 +970,10 @@ public partial class CustomerService : ICustomerService
 
         //save again except removed one
         foreach (var existingCouponCode in existingCouponCodes)
+        {
             if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                 await ApplyDiscountCouponCodeAsync(customer, existingCouponCode);
+        }
     }
 
     /// <summary>
@@ -1105,8 +1104,10 @@ public partial class CustomerService : ICustomerService
 
         //save again except removed one
         foreach (var existingCouponCode in existingCouponCodes)
+        {
             if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                 await ApplyGiftCardCouponCodeAsync(customer, existingCouponCode);
+        }
     }
 
     /// <summary>

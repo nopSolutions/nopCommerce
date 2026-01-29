@@ -190,13 +190,9 @@ public abstract partial class SourceFormat
             {
                 i++;
                 if (alternate && i % 2 == 1)
-                {
                     sb.Append("<pre class=\"alt\">");
-                }
                 else
-                {
                     sb.Append("<pre>");
-                }
 
                 if (lineNumbers)
                 {

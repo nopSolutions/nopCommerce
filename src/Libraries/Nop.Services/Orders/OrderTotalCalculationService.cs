@@ -165,9 +165,11 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
             var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
 
             foreach (var discount in allDiscounts)
+            {
                 if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
                     (await _discountService.ValidateDiscountAsync(discount, customer, couponCodesToValidate)).IsValid)
                     allowedDiscounts.Add(discount);
+            }
         }
 
         appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, shippingTotal, out shippingDiscountAmount);
@@ -294,8 +296,10 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
         updatedOrder.OrderTotal = total;
 
         foreach (var discount in orderAppliedDiscounts)
+        {
             if (!_discountService.ContainsDiscount(updateOrderParameters.AppliedDiscounts, discount))
                 updateOrderParameters.AppliedDiscounts.Add(discount);
+        }
     }
 
     /// <summary>
@@ -434,8 +438,10 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
                                 if (selectedPickupPoint != null)
                                     shippingTotal = selectedPickupPoint.PickupFee;
                                 else
+                                {
                                     updateOrderParameters.Warnings.Add(
                                         $"Shipping method {updatedOrder.ShippingMethod} could not be loaded");
+                                }
                             }
                             else
                                 updateOrderParameters.Warnings.AddRange(pickupPointsResponse.Errors);
@@ -455,8 +461,10 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
                             if (shippingOption != null)
                                 shippingTotal = shippingOption.Rate;
                             else
+                            {
                                 updateOrderParameters.Warnings.Add(
                                     $"Shipping method {updatedOrder.ShippingMethod} could not be loaded");
+                            }
                         }
                         else
                             updateOrderParameters.Warnings.AddRange(shippingOptionsResponse.Errors);
@@ -541,8 +549,10 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
                     updatedOrder.ShippingStatus = ShippingStatus.PartiallyShipped;
 
                 foreach (var discount in shippingTotalDiscounts)
+                {
                     if (!_discountService.ContainsDiscount(updateOrderParameters.AppliedDiscounts, discount))
                         updateOrderParameters.AppliedDiscounts.Add(discount);
+                }
             }
         }
         else
@@ -657,8 +667,10 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
         updatedOrder.OrderSubTotalDiscountInclTax = discountAmountInclTax;
 
         foreach (var discount in subTotalDiscounts)
+        {
             if (!_discountService.ContainsDiscount(updateOrderParameters.AppliedDiscounts, discount))
                 updateOrderParameters.AppliedDiscounts.Add(discount);
+        }
 
         return (subTotalExclTax, subTotalInclTax, subTotalTaxRates, discountAmountExclTax);
     }
@@ -1051,9 +1063,7 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
         var adjustedRate = shippingRate;
 
         if (!(applyToPickupInStore && _shippingSettings.AllowPickupInStore && pickupPoint != null && _shippingSettings.IgnoreAdditionalShippingChargeForPickupInStore))
-        {
             adjustedRate += await GetShoppingCartAdditionalShippingChargeAsync(cart);
-        }
 
         //discount
         var (discountAmount, appliedDiscounts) = await GetShippingDiscountAsync(customer, adjustedRate);
@@ -1352,9 +1362,7 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
         var resultTemp = decimal.Zero;
         resultTemp += subtotalBase;
         if (shoppingCartShipping.HasValue)
-        {
             resultTemp += shoppingCartShipping.Value;
-        }
 
         resultTemp += paymentMethodAdditionalFeeWithoutTax;
         resultTemp += shoppingCartTax;

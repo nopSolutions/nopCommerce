@@ -46,7 +46,6 @@
         @await Component.InvokeAsync(typeof(VendorNavigationViewComponent))
         @await Component.InvokeAsync(typeof(RecentlyViewedProductsBlockViewComponent), new { productThumbPictureSize = 64 })
         @await Component.InvokeAsync(typeof(PopularProductTagsViewComponent))
-        @await Component.InvokeAsync(typeof(PollBlockViewComponent), new { systemKeyword = "LeftColumnPoll" })
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.LeftSideColumnAfter })
     }
 </aside>

@@ -77,9 +77,11 @@ public partial class PriceCalculationService : IPriceCalculationService
         var couponCodesToValidate = await _customerService.ParseAppliedDiscountCouponCodesAsync(customer);
 
         foreach (var discount in await _discountService.GetAppliedDiscountsAsync(product))
+        {
             if (discount.DiscountType == DiscountType.AssignedToSkus &&
                 (await _discountService.ValidateDiscountAsync(discount, customer, couponCodesToValidate)).IsValid)
                 allowedDiscounts.Add(discount);
+        }
 
         return allowedDiscounts;
     }
@@ -195,18 +197,24 @@ public partial class PriceCalculationService : IPriceCalculationService
 
         //discounts applied to products
         foreach (var discount in await GetAllowedDiscountsAppliedToProductAsync(product, customer))
+        {
             if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
                 allowedDiscounts.Add(discount);
+        }
 
         //discounts applied to categories
         foreach (var discount in await GetAllowedDiscountsAppliedToCategoriesAsync(product, customer))
+        {
             if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
                 allowedDiscounts.Add(discount);
+        }
 
         //discounts applied to manufacturers
         foreach (var discount in await GetAllowedDiscountsAppliedToManufacturersAsync(product, customer))
+        {
             if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
                 allowedDiscounts.Add(discount);
+        }
 
         return allowedDiscounts;
     }
@@ -372,8 +380,10 @@ public partial class PriceCalculationService : IPriceCalculationService
 
             //rental products
             if (product.IsRental)
+            {
                 if (rentalStartDate.HasValue && rentalEndDate.HasValue)
                     price *= _productService.GetRentalPeriods(product, rentalStartDate.Value, rentalEndDate.Value);
+            }
 
             var priceWithoutDiscount = price;
 

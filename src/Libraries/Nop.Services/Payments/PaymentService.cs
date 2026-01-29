@@ -350,9 +350,7 @@ public partial class PaymentService : IPaymentService
         var last4 = creditCardNumber[(creditCardNumber.Length - 4)..creditCardNumber.Length];
         var maskedChars = string.Empty;
         for (var i = 0; i < creditCardNumber.Length - 4; i++)
-        {
             maskedChars += "*";
-        }
 
         return maskedChars + last4;
     }
