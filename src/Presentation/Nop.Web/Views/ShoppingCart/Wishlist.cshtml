@@ -57,6 +57,7 @@
                 @foreach (var customWishlist in Model.CustomWishlistItems)
                 {
                     <button type="button" class="button-2 custom-wishlist-button" onclick="setLocation('@(Url.RouteUrl(NopRouteNames.General.WISHLIST, new { list = customWishlist.Id }))')">@customWishlist.Name</button>
+                    @await Html.PartialAsync("_RenameWishlistModal", (customWishlist.Id, customWishlist.Name))
                 }
             </div>
 
@@ -307,6 +308,9 @@
                             <button type="button" name="deletewishlistbutton" class="button-2 delete-wishlist-button" onclick="deleteCustomWishlist()">
                                 @T("Wishlist.DeleteWishlist")
                             </button>
+                            <button type="button" name="renamewishlistbutton" class="button-2 rename-wishlist-button" onclick="showRenameWishlistModal(@Model.ListId)">
+                                @T("Wishlist.RenameCustomWishlist")
+                            </button>
                         }
                     </div>
                     <input type="hidden" name="listId" value="@Model.ListId"/>
@@ -323,6 +327,7 @@
                 <div class="wishlist-content">
                     <div class="buttons">
                         <button type="button" name="deletewishlistbutton" class="button-2 delete-wishlist-button" onclick="deleteCustomWishlist()">@T("Wishlist.DeleteWishlist")</button>
+                        <button type="button" name="renamewishlistbutton" class="button-2 rename-wishlist-button" onclick="showRenameWishlistModal(@Model.ListId)">@T("Wishlist.RenameCustomWishlist")</button>
                     </div>
                 </div>
             }

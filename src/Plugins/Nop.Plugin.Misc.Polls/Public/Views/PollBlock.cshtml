@@ -1,0 +1,12 @@
+﻿@model PollModel
+
+<link href="~/Plugins/Misc.Polls/Content/styles.css" rel="stylesheet">
+
+<section class="block block-poll">
+    <h2 class="title">
+        @T("Plugins.Misc.Polls.Title")
+    </h2>
+    <div class="listbox">
+        @await Html.PartialAsync("~/Plugins/Misc.Polls/Public/Views/_Poll.cshtml", Model)
+    </div>
+</section>

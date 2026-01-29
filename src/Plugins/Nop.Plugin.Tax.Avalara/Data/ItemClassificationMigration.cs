@@ -3,8 +3,6 @@ using Nop.Data;
 using Nop.Data.Extensions;
 using Nop.Data.Migrations;
 using Nop.Plugin.Tax.Avalara.Domain;
-using Nop.Services.Configuration;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.Tax.Avalara.Data;
@@ -12,30 +10,6 @@ namespace Nop.Plugin.Tax.Avalara.Data;
 [NopMigration("2023-05-01 00:00:02", "Tax.Avalara 4.70.2. Add Item classification feature", MigrationProcessType.Update)]
 public class ItemClassificationMigration : MigrationBase
 {
-    #region Fields
-
-    protected readonly AvalaraTaxSettings _avalaraTaxSettings;
-    protected readonly ILanguageService _languageService;
-    protected readonly ILocalizationService _localizationService;
-    protected readonly ISettingService _settingService;
-
-    #endregion
-
-    #region Ctor
-
-    public ItemClassificationMigration(AvalaraTaxSettings avalaraTaxSettings,
-        ILanguageService languageService,
-        ILocalizationService localizationService,
-        ISettingService settingService)
-    {
-        _avalaraTaxSettings = avalaraTaxSettings;
-        _languageService = languageService;
-        _localizationService = localizationService;
-        _settingService = settingService;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -49,9 +23,7 @@ public class ItemClassificationMigration : MigrationBase
         this.CreateTableIfNotExists<ItemClassification>();
 
         //locales
-        var (languageId, languages) = this.GetLanguageData();
-
-        _localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
             ["Plugins.Tax.Avalara.ItemClassification"] = "Item Classification",
             ["Plugins.Tax.Avalara.Fields.UseItemClassification"] = "Use item classification",
@@ -78,16 +50,11 @@ public class ItemClassificationMigration : MigrationBase
             ["Plugins.Tax.Avalara.ItemClassification.UpdatedDate"] = "Updated on",
             ["Plugins.Tax.Avalara.ItemClassification.Deleted"] = "The item classification entry has been deleted successfully.",
             ["Plugins.Tax.Avalara.ItemClassification.AddProduct"] = "Add product",
-        }, languageId);
+        });
 
         //settings
-        if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.UseItemClassification))
-            _avalaraTaxSettings.UseItemClassification = false;
-
-        if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.SelectedCountryIds))
-            _avalaraTaxSettings.SelectedCountryIds = null;
-
-        _settingService.SaveSetting(_avalaraTaxSettings);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.UseItemClassification, false);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, List<int>>(settings => settings.SelectedCountryIds, (List<int>)null);
     }
 
     /// <summary>

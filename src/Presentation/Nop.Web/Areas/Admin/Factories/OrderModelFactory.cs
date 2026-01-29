@@ -926,9 +926,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                 var ids = searchModel.OrderStatusIds.Select(id => id.ToString());
                 var statusItems = searchModel.AvailableOrderStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
                 foreach (var statusItem in statusItems)
-                {
                     statusItem.Selected = true;
-                }
             }
             else
                 searchModel.AvailableOrderStatuses.FirstOrDefault().Selected = true;
@@ -942,9 +940,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                 var ids = searchModel.PaymentStatusIds.Select(id => id.ToString());
                 var statusItems = searchModel.AvailablePaymentStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
                 foreach (var statusItem in statusItems)
-                {
                     statusItem.Selected = true;
-                }
             }
             else
                 searchModel.AvailablePaymentStatuses.FirstOrDefault().Selected = true;
@@ -958,9 +954,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                 var ids = searchModel.ShippingStatusIds.Select(id => id.ToString());
                 var statusItems = searchModel.AvailableShippingStatuses.Where(statusItem => ids.Contains(statusItem.Value)).ToList();
                 foreach (var statusItem in statusItems)
-                {
                     statusItem.Selected = true;
-                }
             }
             else
                 searchModel.AvailableShippingStatuses.FirstOrDefault().Selected = true;

@@ -95,12 +95,14 @@ public sealed class FormValueRequiredAttribute : ActionMethodSelectorAttribute
                         {
                             //validate "value"
                             foreach (var formValue in form.Keys)
+                            {
                                 if (formValue.StartsWith(buttonName, StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     var value = form[formValue];
                                     if (!string.IsNullOrEmpty(value))
                                         return true;
                                 }
+                            }
                         }
                     }
                         break;

@@ -194,8 +194,10 @@ public partial class CustomerController : BaseAdminController
                     {
                         var selectedAttributeId = int.Parse(ctrlAttributes);
                         if (selectedAttributeId > 0)
+                        {
                             attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                                 attribute, selectedAttributeId.ToString());
+                        }
                     }
 
                     break;
@@ -208,8 +210,10 @@ public partial class CustomerController : BaseAdminController
                         {
                             var selectedAttributeId = int.Parse(item);
                             if (selectedAttributeId > 0)
+                            {
                                 attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
+                            }
                         }
                     }
 
@@ -313,8 +317,11 @@ public partial class CustomerController : BaseAdminController
         var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
         var newCustomerRoles = new List<CustomerRole>();
         foreach (var customerRole in allCustomerRoles)
+        {
             if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 newCustomerRoles.Add(customerRole);
+        }
+
         var customerRolesError = await ValidateCustomerRolesAsync(newCustomerRoles, new List<CustomerRole>());
         if (!string.IsNullOrEmpty(customerRolesError))
         {
@@ -337,9 +344,7 @@ public partial class CustomerController : BaseAdminController
         {
             var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
-            {
                 ModelState.AddModelError(string.Empty, error);
-            }
         }
 
         if (ModelState.IsValid)
@@ -478,8 +483,10 @@ public partial class CustomerController : BaseAdminController
         var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
         var newCustomerRoles = new List<CustomerRole>();
         foreach (var customerRole in allCustomerRoles)
+        {
             if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 newCustomerRoles.Add(customerRole);
+        }
 
         var customerRolesError = await ValidateCustomerRolesAsync(newCustomerRoles, await _customerService.GetCustomerRolesAsync(customer));
 
@@ -503,9 +510,7 @@ public partial class CustomerController : BaseAdminController
         {
             var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
-            {
                 ModelState.AddModelError(string.Empty, error);
-            }
         }
 
         if (ModelState.IsValid)
@@ -547,9 +552,7 @@ public partial class CustomerController : BaseAdminController
                     if (!string.IsNullOrEmpty(model.VatNumber))
                     {
                         if (!model.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase))
-                        {
                             customer.VatNumberStatusId = (int)(await _taxService.GetVatNumberStatusAsync(model.VatNumber)).vatNumberStatus;
-                        }
                     }
                     else
                         customer.VatNumberStatusId = (int)VatNumberStatus.Empty;
@@ -602,7 +605,9 @@ public partial class CustomerController : BaseAdminController
                     //if he's not an admin himself
                     if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName &&
                         !await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()))
+                    {
                         continue;
+                    }
 
                     if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     {
@@ -691,10 +696,14 @@ public partial class CustomerController : BaseAdminController
             false, _customerSettings.DefaultPasswordFormat, model.Password);
         var changePassResult = await _customerRegistrationService.ChangePasswordAsync(changePassRequest);
         if (changePassResult.Success)
+        {
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.PasswordChanged"));
+        }
         else
+        {
             foreach (var error in changePassResult.Errors)
                 _notificationService.ErrorNotification(error);
+        }
 
         return RedirectToAction("Edit", new { id = customer.Id });
     }
@@ -1111,9 +1120,7 @@ public partial class CustomerController : BaseAdminController
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
         foreach (var error in customAttributeWarnings)
-        {
             ModelState.AddModelError(string.Empty, error);
-        }
 
         if (ModelState.IsValid)
         {
@@ -1180,9 +1187,7 @@ public partial class CustomerController : BaseAdminController
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
         foreach (var error in customAttributeWarnings)
-        {
             ModelState.AddModelError(string.Empty, error);
-        }
 
         if (ModelState.IsValid)
         {
@@ -1589,7 +1594,9 @@ public partial class CustomerController : BaseAdminController
         try
         {
             if ((importexcelfile?.Length ?? 0) > 0)
+            {
                 await _importManager.ImportCustomersFromXlsxAsync(importexcelfile.OpenReadStream());
+            }
             else
             {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));

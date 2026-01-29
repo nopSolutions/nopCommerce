@@ -1,9 +1,8 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.ArtificialIntelligence;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Configuration;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo500;
 
@@ -15,18 +14,9 @@ public class SettingMigration : MigrationBase
     {
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
-
-        //do not use DI, because it produces exception on the installation process
-        var settingService = EngineContext.Current.Resolve<ISettingService>();
         
         //#7898
-        var aiSettings = settingService.LoadSetting<ArtificialIntelligenceSettings>();
-
-        if (!settingService.SettingExists(aiSettings, settings => settings.LogRequests))
-        {
-            aiSettings.LogRequests = false;
-            settingService.SaveSetting(aiSettings, settings => settings.LogRequests);
-        }
+        this.SetSettingIfNotExists<ArtificialIntelligenceSettings, bool>(settings => settings.LogRequests, false);
     }
 
     public override void Down()

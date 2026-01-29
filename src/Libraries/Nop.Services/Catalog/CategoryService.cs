@@ -205,11 +205,11 @@ public partial class CategoryService : ICategoryService
 
         //reset a "Parent category" property of all child subcategories
         var subcategories = await GetAllCategoriesByParentCategoryIdAsync(category.Id, true);
+
         foreach (var subcategory in subcategories)
-        {
             subcategory.ParentCategoryId = 0;
-            await UpdateCategoryAsync(subcategory);
-        }
+
+        await _categoryRepository.UpdateAsync(subcategories);
     }
 
     /// <summary>
@@ -488,10 +488,12 @@ public partial class CategoryService : ICategoryService
         var categories = _categoryRepository.Table;
 
         if (discountId.HasValue)
+        {
             categories = from category in categories
-                         join dcm in _discountCategoryMappingRepository.Table on category.Id equals dcm.EntityId
-                         where dcm.DiscountId == discountId.Value
-                         select category;
+                join dcm in _discountCategoryMappingRepository.Table on category.Id equals dcm.EntityId
+                where dcm.DiscountId == discountId.Value
+                select category;
+        }
 
         if (!showHidden)
             categories = categories.Where(category => !category.Deleted);

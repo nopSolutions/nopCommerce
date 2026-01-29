@@ -203,10 +203,8 @@ public partial class RedisConnectionWrapper : IRedisConnectionWrapper
         await Task.WhenAll(endPoints.Select(async endPoint =>
         {
             var server = await GetServerAsync(endPoint);
-            if (!server.IsReplica)
-            {
+            if (!server.IsReplica) 
                 await server.FlushDatabaseAsync();
-            }
         }));
     }
 

@@ -313,9 +313,7 @@ public partial class InstallController : Controller
                 .ToList();
 
             foreach (var plugin in plugins)
-            {
                 await _pluginService.Value.PreparePluginToInstallAsync(plugin.SystemName, checkDependencies: false);
-            }
 
             return View(new InstallModel { RestartUrl = Url.RouteUrl(NopRouteNames.General.HOMEPAGE) });
 

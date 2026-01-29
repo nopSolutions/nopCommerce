@@ -999,9 +999,9 @@ public partial class PictureService : IPictureService
     /// <param name="fileName">Name of file</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the picture binary or throws an exception
+    /// The task result contains the picture binary or throws a <see cref="NopException"/>
     /// </returns>
-    public virtual async Task<byte[]> ValidatePictureAsync(byte[] pictureBinary, string mimeType, string fileName)
+    public virtual Task<byte[]> ValidatePictureAsync(byte[] pictureBinary, string mimeType, string fileName)
     {
         try
         {
@@ -1018,17 +1018,16 @@ public partial class PictureService : IPictureService
 
             //resize the image in accordance with the maximum size
             if (Math.Max(image.Height, image.Width) <= _mediaSettings.MaximumImageSize)
-                return pictureBinary;
+                return Task.FromResult(pictureBinary);
 
             var format = GetImageFormatByMimeType(mimeType);
             pictureBinary = ImageResize(image, format, _mediaSettings.MaximumImageSize);
 
-            return pictureBinary;
+            return Task.FromResult(pictureBinary);
         }
         catch (Exception exc)
         {
-            await _logger.ErrorAsync($"Cannot decode picture binary (file name: {fileName})", exc);
-            return pictureBinary;
+            throw new NopException($"Cannot decode picture binary (file name: {fileName})", exc);
         }
     }
 

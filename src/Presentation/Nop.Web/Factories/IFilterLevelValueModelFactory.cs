@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core.Domain.FilterLevels;
+﻿using Nop.Core.Domain.FilterLevels;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Factories;

@@ -1,5 +1,8 @@
 ﻿@model ProductDetailsModel.AddToCartModel
+@using Nop.Core
 @using Nop.Core.Domain.Orders
+
+@inject IWebHelper webHelper
 
 @if (!Model.DisableWishlistButton)
 {
@@ -15,7 +18,8 @@
 
     @await Html.PartialAsync("_MoveToWishlistModal", Model.ProductToWishlist)
 
+    var customWishlistId = webHelper.QueryString<string>("customwishlistid");
     <div class="add-to-wishlist">
-        <button type="button" id="add-to-wishlist-button-@Model.ProductId" class="button-2 add-to-wishlist-button" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl(NopRouteNames.Ajax.ADD_PRODUCT_TO_CART_DETAILS, new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.Wishlist })', '#product-details-form');return false;">@addToWishlistText</button>
+        <button type="button" id="add-to-wishlist-button-@Model.ProductId" class="button-2 add-to-wishlist-button" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl(NopRouteNames.Ajax.ADD_PRODUCT_TO_CART_DETAILS, new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, customwishlistid = @customWishlistId })', '#product-details-form');return false;">@addToWishlistText</button>
     </div>
 }

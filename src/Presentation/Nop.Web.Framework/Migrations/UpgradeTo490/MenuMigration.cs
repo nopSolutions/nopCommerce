@@ -1,18 +1,18 @@
 ﻿using FluentMigrator;
-using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Configuration;
+using Nop.Services.Helpers;
+using Nop.Web.Framework.Extensions;
 using M = Nop.Core.Domain.Menus;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo490;
@@ -23,33 +23,26 @@ public class MenuMigration : Migration
     #region Fields
 
     private readonly IRepository<M.Menu> _menuRepository;
-    private readonly IRepository<M.MenuItem> _menuItemRepository;
     private readonly IRepository<Topic> _topicRepository;
-    private readonly ISettingService _settingService;
 
     #endregion
 
     #region Ctor
 
     public MenuMigration(IRepository<M.Menu> menuRepository,
-        IRepository<M.MenuItem> menuItemRepository,
-        IRepository<Topic> topicRepository,
-        ISettingService settingService)
+        IRepository<Topic> topicRepository)
     {
         _menuRepository = menuRepository;
-        _menuItemRepository = menuItemRepository;
         _topicRepository = topicRepository;
-        _settingService = settingService;
     }
 
     #endregion
 
     #region Utilities
 
-    private bool IsSettingEnabled(string key, out Setting setting)
+    private bool IsSettingEnabled(string key)
     {
-        setting = _settingService.GetSetting(key);
-        return setting is not null && CommonHelper.To<bool>(setting.Value);
+        return this.GetSettingByKey(key, defaultValue: false);
     }
 
     #endregion
@@ -61,9 +54,11 @@ public class MenuMigration : Migration
     /// </summary>
     public override void Up()
     {
+        var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
+
         if (!_menuRepository.Table.Any(m => m.MenuTypeId == (int)MenuType.Main))
         {
-            _menuRepository.Insert(new M.Menu
+            syncCodeHelper.InsertEntity(new M.Menu
             {
                 Name = "Categories",
                 MenuType = MenuType.Main,
@@ -76,7 +71,6 @@ public class MenuMigration : Migration
             return;
 
         var topics = _topicRepository.Table.ToList();
-        var catalogSettings = _settingService.LoadSetting<CatalogSettings>();
 
         #region Information
 
@@ -87,44 +81,41 @@ public class MenuMigration : Migration
             DisplayOrder = 0,
             Published = true
         };
-        _menuRepository.Insert(footerInformation);
+        syncCodeHelper.InsertEntity(footerInformation);
 
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerInformation.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.SITEMAP,
             Title = "Sitemap",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaysitemapfooteritem", out var displaysitemapfooteritem) && _settingService.LoadSetting<SitemapSettings>().SitemapEnabled
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaysitemapfooteritem") && IsSettingEnabled($"{nameof(SitemapSettings)}.{nameof(SitemapSettings.SitemapEnabled)}")
         });
 
-        if (displaysitemapfooteritem is not null)
-            _settingService.DeleteSetting(displaysitemapfooteritem);
-
-        _menuItemRepository.Insert(
+        syncCodeHelper.InsertEntities(
         [
-            new()
+            new MenuItem
             {
                 MenuId = footerInformation.Id,
                 MenuItemType = MenuItemType.TopicPage,
                 EntityId = topics.FirstOrDefault(t => t.SystemName == "ShippingInfo")?.Id,
                 Published = true
             },
-            new()
+            new MenuItem
             {
                 MenuId = footerInformation.Id,
                 MenuItemType = MenuItemType.TopicPage,
                 EntityId = topics.FirstOrDefault(t => t.SystemName == "PrivacyInfo")?.Id,
                 Published = true
             },
-            new()
+            new MenuItem
             {
                 MenuId = footerInformation.Id,
                 MenuItemType = MenuItemType.TopicPage,
                 EntityId = topics.FirstOrDefault(t => t.SystemName == "ConditionsOfUse")?.Id,
                 Published = true
             },
-            new()
+            new MenuItem
             {
                 MenuId = footerInformation.Id,
                 MenuItemType = MenuItemType.TopicPage,
@@ -133,17 +124,14 @@ public class MenuMigration : Migration
             }
         ]);
 
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerInformation.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.CONTACT_US,
             Title = "Contact us",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaycontactusfooteritem", out var displaycontactusfooteritem)
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaycontactusfooteritem")
         });
-
-        if (displaycontactusfooteritem is not null)
-            _settingService.DeleteSetting(displaycontactusfooteritem);
 
         #endregion
 
@@ -156,87 +144,69 @@ public class MenuMigration : Migration
             DisplayOrder = 1,
             Published = true
         };
-        _menuRepository.Insert(footerCustomerService);
+        syncCodeHelper.InsertEntity(footerCustomerService);
 
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerCustomerService.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.SEARCH,
             Title = "Search",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayproductsearchfooteritem", out var displayproductsearchfooteritem) && catalogSettings.ProductSearchEnabled
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayproductsearchfooteritem") && IsSettingEnabled($"{nameof(CatalogSettings)}.{nameof(CatalogSettings.ProductSearchEnabled)}")
         });
 
-        if (displayproductsearchfooteritem is not null)
-            _settingService.DeleteSetting(displayproductsearchfooteritem);
-
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerCustomerService.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.BLOG,
             Title = "Blog",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayblogfooteritem", out var displayblogfooteritem) && _settingService.LoadSetting<BlogSettings>().Enabled
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayblogfooteritem") && IsSettingEnabled($"{nameof(BlogSettings)}.{nameof(BlogSettings.Enabled)}")
         });
 
-        if (displayblogfooteritem is not null)
-            _settingService.DeleteSetting(displayblogfooteritem);
-
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerCustomerService.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.BOARDS,
             Title = "Forum",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayforumsfooteritem", out var displayforumsfooteritem) && _settingService.LoadSetting<ForumSettings>().ForumsEnabled
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayforumsfooteritem") && IsSettingEnabled($"{nameof(ForumSettings)}.{nameof(ForumSettings.ForumsEnabled)}")
         });
 
-        if (displayforumsfooteritem is not null)
-            _settingService.DeleteSetting(displayforumsfooteritem);
-
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerCustomerService.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.RECENTLY_VIEWED_PRODUCTS,
             Title = "Recently viewed products",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayrecentlyviewedproductsfooteritem", out var displayrecentlyviewedproductsfooteritem) && catalogSettings.RecentlyViewedProductsEnabled
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayrecentlyviewedproductsfooteritem") && IsSettingEnabled($"{nameof(CatalogSettings)}.{nameof(CatalogSettings.RecentlyViewedProductsEnabled)}")
         });
 
-        if (displayrecentlyviewedproductsfooteritem is not null)
-            _settingService.DeleteSetting(displayrecentlyviewedproductsfooteritem);
-
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerCustomerService.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.COMPARE_PRODUCTS,
             Title = "Compare products list",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaycompareproductsfooteritem", out var displaycompareproductsfooteritem) && catalogSettings.CompareProductsEnabled
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaycompareproductsfooteritem") && IsSettingEnabled($"{nameof(CatalogSettings)}.{nameof(CatalogSettings.CompareProductsEnabled)}")
         });
 
-        if (displaycompareproductsfooteritem is not null)
-            _settingService.DeleteSetting(displaycompareproductsfooteritem);
-
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerCustomerService.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.NEW_PRODUCTS,
             Title = "New products",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaynewproductsfooteritem", out var displaynewproductsfooteritem) && catalogSettings.NewProductsEnabled
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaynewproductsfooteritem") && IsSettingEnabled($"{nameof(CatalogSettings)}.{nameof(CatalogSettings.NewProductsEnabled)}")
         });
 
-        if (displaynewproductsfooteritem is not null)
-            _settingService.DeleteSetting(displaynewproductsfooteritem);
-
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerCustomerService.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.CHECK_GIFT_CARD_BALANCE,
             Title = "Check gift card balance",
-            Published = _settingService.LoadSetting<CustomerSettings>().AllowCustomersToCheckGiftCardBalance
+            Published = IsSettingEnabled($"{nameof(CustomerSettings)}.{nameof(CustomerSettings.AllowCustomersToCheckGiftCardBalance)}")
         });
 
         #endregion
@@ -251,82 +221,81 @@ public class MenuMigration : Migration
             Published = true
         };
 
-        _menuRepository.Insert(footerMyAccount);
+        syncCodeHelper.InsertEntity(footerMyAccount);
 
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerMyAccount.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.CUSTOMER_INFO,
             Title = "My account",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaycustomerinfofooteritem", out var displaycustomerinfofooteritem)
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaycustomerinfofooteritem")
         });
 
-        if (displaycustomerinfofooteritem is not null)
-            _settingService.DeleteSetting(displaycustomerinfofooteritem);
-
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerMyAccount.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.CUSTOMER_ORDERS,
             Title = "Orders",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaycustomerordersfooteritem", out var displaycustomerordersfooteritem)
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaycustomerordersfooteritem")
         });
 
-        if (displaycustomerordersfooteritem is not null)
-            _settingService.DeleteSetting(displaycustomerordersfooteritem);
-
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerMyAccount.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.CUSTOMER_ADDRESSES,
             Title = "Addresses",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaycustomeraddressesfooteritem", out var displaycustomeraddressesfooteritem)
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaycustomeraddressesfooteritem")
         });
 
-        if (displaycustomeraddressesfooteritem is not null)
-            _settingService.DeleteSetting(displaycustomeraddressesfooteritem);
-
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerMyAccount.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.CART,
             Title = "Shopping cart",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayshoppingcartfooteritem", out var displayshoppingcartfooteritem)
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayshoppingcartfooteritem")
         });
 
-        if (displayshoppingcartfooteritem is not null)
-            _settingService.DeleteSetting(displayshoppingcartfooteritem);
-
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerMyAccount.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.WISHLIST,
             Title = "Wishlist",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaywishlistfooteritem", out var displaywishlistfooteritem)
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displaywishlistfooteritem")
         });
 
-        if (displaywishlistfooteritem is not null)
-            _settingService.DeleteSetting(displaywishlistfooteritem);
-
-        _menuItemRepository.Insert(new M.MenuItem
+        syncCodeHelper.InsertEntity(new MenuItem
         {
             MenuId = footerMyAccount.Id,
             MenuItemType = MenuItemType.StandardPage,
             RouteName = NopRouteNames.General.APPLY_VENDOR_ACCOUNT,
             Title = "Apply for vendor account",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayapplyvendoraccountfooteritem", out var displayapplyvendoraccountfooteritem) &&
-                _settingService.LoadSetting<VendorSettings>().AllowCustomersToApplyForVendorAccount
+            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayapplyvendoraccountfooteritem") && IsSettingEnabled($"{nameof(VendorSettings)}.{nameof(VendorSettings.AllowCustomersToApplyForVendorAccount)}")
         });
 
-        if (displayapplyvendoraccountfooteritem is not null)
-            _settingService.DeleteSetting(displayapplyvendoraccountfooteritem);
-
         #endregion
+
+        this.DeleteSettingsByNames([
+            "displaydefaultfooteritemsettings.displaysitemapfooteritem",
+            "displaydefaultfooteritemsettings.displaycontactusfooteritem",
+            "displaydefaultfooteritemsettings.displayproductsearchfooteritem",
+            "displaydefaultfooteritemsettings.displaynewsfooteritem",
+            "displaydefaultfooteritemsettings.displayblogfooteritem",
+            "displaydefaultfooteritemsettings.displayforumsfooteritem",
+            "displaydefaultfooteritemsettings.displayrecentlyviewedproductsfooteritem",
+            "displaydefaultfooteritemsettings.displaycompareproductsfooteritem",
+            "displaydefaultfooteritemsettings.displaynewproductsfooteritem",
+            "displaydefaultfooteritemsettings.displaycustomerinfofooteritem",
+            "displaydefaultfooteritemsettings.displaycustomerordersfooteritem",
+            "displaydefaultfooteritemsettings.displaycustomeraddressesfooteritem",
+            "displaydefaultfooteritemsettings.displayshoppingcartfooteritem",
+            "displaydefaultfooteritemsettings.displaywishlistfooteritem",
+            "displaydefaultfooteritemsettings.displayapplyvendoraccountfooteritem"
+        ]);
     }
 
     /// <summary>

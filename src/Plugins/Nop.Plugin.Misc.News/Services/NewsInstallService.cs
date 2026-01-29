@@ -123,11 +123,11 @@ public class NewsInstallService
             }
         }
 
-        var seoSettings = _settingService.LoadSetting<SeoSettings>();
+        var seoSettings = await _settingService.LoadSettingAsync<SeoSettings>();
         if (!seoSettings.ReservedUrlRecordSlugs.Contains(NewsDefaults.ReservedUrlRecord))
         {
             seoSettings.ReservedUrlRecordSlugs.Add(NewsDefaults.ReservedUrlRecord);
-            _settingService.SaveSetting(seoSettings, settings => seoSettings.ReservedUrlRecordSlugs);
+            await _settingService.SaveSettingAsync(seoSettings, settings => seoSettings.ReservedUrlRecordSlugs);
         }
     }
 
@@ -407,8 +407,8 @@ public class NewsInstallService
                     }
                 }
 
-                _permissionMappingRepository.Delete(pr => pr.PermissionRecordId == oldRec.Id);
-                _permissionRepository.Delete(pr => pr.Id == oldRec.Id);
+                await _permissionMappingRepository.DeleteAsync(pr => pr.PermissionRecordId == oldRec.Id);
+                await _permissionRepository.DeleteAsync(pr => pr.Id == oldRec.Id);
             }
         }
     }
@@ -465,12 +465,12 @@ public class NewsInstallService
             await _messageTemplateService.DeleteMessageTemplateAsync(mt);
 
         //activity log type
-        _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.AddNewNews);
-        _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.DeleteNews);
-        _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.EditNews);
-        _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.DeleteNewsComment);
-        _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.EditNewsComment);
-        _activityLogTypeRepository.Delete(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.PublicStoreAddNewsComment);
+        await _activityLogTypeRepository.DeleteAsync(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.AddNewNews);
+        await _activityLogTypeRepository.DeleteAsync(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.DeleteNews);
+        await _activityLogTypeRepository.DeleteAsync(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.EditNews);
+        await _activityLogTypeRepository.DeleteAsync(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.DeleteNewsComment);
+        await _activityLogTypeRepository.DeleteAsync(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.EditNewsComment);
+        await _activityLogTypeRepository.DeleteAsync(at => at.SystemKeyword == NewsDefaults.ActivityLogTypeSystemNames.PublicStoreAddNewsComment);
 
         //permission
         await _permissionRepository.DeleteAsync(record => record.SystemName == NewsDefaults.Permissions.NEWS_VIEW

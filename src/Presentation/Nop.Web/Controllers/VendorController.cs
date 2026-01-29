@@ -116,8 +116,10 @@ public partial class VendorController : BasePublicController
                     {
                         var selectedAttributeId = int.Parse(ctrlAttributes);
                         if (selectedAttributeId > 0)
+                        {
                             attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                 attribute, selectedAttributeId.ToString());
+                        }
                     }
                 }
                     break;
@@ -131,8 +133,10 @@ public partial class VendorController : BasePublicController
                         {
                             var selectedAttributeId = int.Parse(item);
                             if (selectedAttributeId > 0)
+                            {
                                 attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
+                            }
                         }
                     }
                 }
@@ -209,9 +213,7 @@ public partial class VendorController : BasePublicController
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage && !captchaValid)
-        {
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         var pictureId = 0;
 
@@ -242,9 +244,7 @@ public partial class VendorController : BasePublicController
         var vendorAttributesXml = await ParseVendorAttributesAsync(form);
         var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
         foreach (var warning in warnings)
-        {
             ModelState.AddModelError(string.Empty, warning);
-        }
 
         if (ModelState.IsValid)
         {
@@ -344,9 +344,7 @@ public partial class VendorController : BasePublicController
         var vendorAttributesXml = await ParseVendorAttributesAsync(form);
         var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
         foreach (var warning in warnings)
-        {
             ModelState.AddModelError(string.Empty, warning);
-        }
 
         if (ModelState.IsValid)
         {

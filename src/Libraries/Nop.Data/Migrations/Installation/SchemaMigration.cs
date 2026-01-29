@@ -16,7 +16,6 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
@@ -153,9 +152,6 @@ public class SchemaMigration : ForwardOnlyMigration
         this.CreateTableIfNotExists<NewsLetterSubscriptionType>();
         this.CreateTableIfNotExists<NewsLetterSubscription>();
         this.CreateTableIfNotExists<QueuedEmail>();
-        this.CreateTableIfNotExists<Poll>();
-        this.CreateTableIfNotExists<PollAnswer>();
-        this.CreateTableIfNotExists<PollVotingRecord>();
         this.CreateTableIfNotExists<AclRecord>();
         this.CreateTableIfNotExists<PermissionRecord>();
         this.CreateTableIfNotExists<PermissionRecordCustomerRoleMapping>();

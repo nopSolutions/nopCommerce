@@ -265,8 +265,11 @@ public partial class ImportManager : IImportManager
         ArgumentNullException.ThrowIfNull(columnName);
 
         for (var i = 0; i < properties.Length; i++)
+        {
             if (properties[i].Equals(columnName, StringComparison.InvariantCultureIgnoreCase))
                 return i + 1; //excel indexes start from 1
+        }
+
         return 0;
     }
 
@@ -320,6 +323,7 @@ public partial class ImportManager : IImportManager
             return null;
 
         var newPicture = await _pictureService.InsertPictureAsync(newPictureBinary, mimeType, await _pictureService.GetPictureSeNameAsync(name));
+        
         return newPicture;
     }
 
@@ -1237,6 +1241,14 @@ public partial class ImportManager : IImportManager
         tempProperty = manager.GetDefaultProperty("LimitedToStores");
         var limitedToStoresCellNum = tempProperty?.PropertyOrderPosition ?? -1;
 
+        tempProperty = manager.GetDefaultProperty("RequireOtherProducts");
+        var requireOtherProductsCellNum = tempProperty?.PropertyOrderPosition ?? -1;
+
+        tempProperty = manager.GetDefaultProperty("RequiredProductIds");
+        var requiredProductIdsCellNum = tempProperty?.PropertyOrderPosition ?? -1;
+
+        var requiredProductsData = new Dictionary<string, string>();
+        
         if (_catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities)
         {
             tierPriceManager.SetSelectList("Store", (await _storeService.GetAllStoresAsync()).ToSelectList(p => (p as Store)?.Name ?? string.Empty));
@@ -1356,14 +1368,18 @@ public partial class ImportManager : IImportManager
                 var categoryIds = defaultWorksheet.Row(endRow).Cell(categoryCellNum).Value.ToString() ?? string.Empty;
 
                 if (!string.IsNullOrEmpty(categoryIds))
+                {
                     allCategories.AddRange(categoryIds
                         .Split(new[] { ";", ">>" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim())
                         .Distinct());
+                }
             }
+
+            var sku = string.Empty;
 
             if (skuCellNum > 0)
             {
-                var sku = defaultWorksheet.Row(endRow).Cell(skuCellNum).Value.ToString() ?? string.Empty;
+                sku = defaultWorksheet.Row(endRow).Cell(skuCellNum).Value.ToString() ?? string.Empty;
 
                 if (!string.IsNullOrEmpty(sku))
                     allSku.Add(sku);
@@ -1374,8 +1390,10 @@ public partial class ImportManager : IImportManager
                 var manufacturerIds = defaultWorksheet.Row(endRow).Cell(manufacturerCellNum).Value.ToString() ??
                                       string.Empty;
                 if (!string.IsNullOrEmpty(manufacturerIds))
+                {
                     allManufacturers.AddRange(manufacturerIds
                         .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
+                }
             }
 
             if (limitedToStoresCellNum > 0)
@@ -1383,8 +1401,18 @@ public partial class ImportManager : IImportManager
                 var storeIds = defaultWorksheet.Row(endRow).Cell(limitedToStoresCellNum).Value.ToString() ??
                                string.Empty;
                 if (!string.IsNullOrEmpty(storeIds))
+                {
                     allStores.AddRange(storeIds
                         .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(sku) && requireOtherProductsCellNum > 0 && requiredProductIdsCellNum > 0)
+            {
+                var requiredProductIds = defaultWorksheet.Row(endRow).Cell(requiredProductIdsCellNum).Value.ToString() ?? string.Empty;
+
+                if (!string.IsNullOrEmpty(requiredProductIds))
+                    requiredProductsData.TryAdd(sku, requiredProductIds);
             }
 
             //counting the number of products
@@ -1395,31 +1423,23 @@ public partial class ImportManager : IImportManager
 
         //performance optimization, the check for the existence of the categories in one SQL request
         var notExistingCategories = await _categoryService.GetNotExistingCategoriesAsync(allCategories.ToArray());
-        if (notExistingCategories.Any())
-        {
+        if (notExistingCategories.Any()) 
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.CategoriesDontExist"), string.Join(", ", notExistingCategories)));
-        }
 
         //performance optimization, the check for the existence of the manufacturers in one SQL request
         var notExistingManufacturers = await _manufacturerService.GetNotExistingManufacturersAsync(allManufacturers.ToArray());
-        if (notExistingManufacturers.Any())
-        {
+        if (notExistingManufacturers.Any()) 
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.ManufacturersDontExist"), string.Join(", ", notExistingManufacturers)));
-        }
 
         //performance optimization, the check for the existence of the product attributes in one SQL request
         var notExistingProductAttributes = await _productAttributeService.GetNotExistingAttributesAsync(allAttributeIds.ToArray());
-        if (notExistingProductAttributes.Any())
-        {
+        if (notExistingProductAttributes.Any()) 
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.ProductAttributesDontExist"), string.Join(", ", notExistingProductAttributes)));
-        }
 
         //performance optimization, the check for the existence of the specification attribute options in one SQL request
         var notExistingSpecificationAttributeOptions = await _specificationAttributeService.GetNotExistingSpecificationAttributeOptionsAsync(allSpecificationAttributeOptionIds.Where(saoId => saoId != 0).ToArray());
-        if (notExistingSpecificationAttributeOptions.Any())
-        {
+        if (notExistingSpecificationAttributeOptions.Any()) 
             throw new ArgumentException($"The following specification attribute option ID(s) don't exist - {string.Join(", ", notExistingSpecificationAttributeOptions)}");
-        }
 
         //performance optimization, the check for the existence of the stores in one SQL request
         var notExistingStores = await _storeService.GetNotExistingStoresAsync(allStores.ToArray());
@@ -1438,7 +1458,8 @@ public partial class ImportManager : IImportManager
             SpecificationAttributeManager = specificationAttributeManager,
             TierPriceManager = tierPriceManager,
             SkuCellNum = skuCellNum,
-            AllSku = allSku
+            AllSku = allSku,
+            RequiredProductsData = requiredProductsData
         };
     }
 
@@ -1559,10 +1580,8 @@ public partial class ImportManager : IImportManager
                 orderItemManager.ReadDefaultFromXlsx(worksheet, endRow, 2);
 
                 //skip caption row
-                if (!orderItemManager.IsCaption)
-                {
+                if (!orderItemManager.IsCaption) 
                     allOrderItemSkus.Add(orderItemManager.GetDefaultProperty("Sku").StringValue);
-                }
 
                 endRow++;
                 continue;
@@ -1590,17 +1609,13 @@ public partial class ImportManager : IImportManager
 
         //performance optimization, the check for the existence of the customers in one SQL request
         var notExistingCustomerGuids = await _customerService.GetNotExistingCustomersAsync(allCustomerGuids.ToArray());
-        if (notExistingCustomerGuids.Any())
-        {
+        if (notExistingCustomerGuids.Any()) 
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.CustomersDontExist"), string.Join(", ", notExistingCustomerGuids)));
-        }
 
         //performance optimization, the check for the existence of the order items in one SQL request
         var notExistingProductSkus = await _productService.GetNotExistingProductsAsync(allOrderItemSkus.ToArray());
-        if (notExistingProductSkus.Any())
-        {
+        if (notExistingProductSkus.Any()) 
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.ProductsDontExist"), string.Join(", ", notExistingProductSkus)));
-        }
 
         return (new ImportOrderMetadata
         {
@@ -1759,8 +1774,10 @@ public partial class ImportManager : IImportManager
         }
 
         foreach (var ws in workbook.Worksheets.Skip(1))
+        {
             if (languages.Any(l => l.UniqueSeoCode.Equals(ws.Name, StringComparison.InvariantCultureIgnoreCase)))
                 localizedWorksheets.Add(ws);
+        }
 
         if (localizedWorksheets.Any())
         {
@@ -1848,11 +1865,13 @@ public partial class ImportManager : IImportManager
             var isNew = customer == null;
 
             if (isNew)
+            {
                 customer = new Customer
                 {
                     CustomerGuid = Guid.Empty.Equals(customerGuid) ? Guid.NewGuid() : customerGuid,
                     CreatedOnUtc = DateTime.UtcNow
                 };
+            }
 
             var rolesToSave = new List<int>();
 
@@ -1874,6 +1893,7 @@ public partial class ImportManager : IImportManager
                         break;
                     case "Vendor":
                         if (!string.IsNullOrEmpty(property.StringValue))
+                        {
                             if (int.TryParse(property.StringValue, out var vendorId))
                                 customer.VendorId = vendorId;
                             else
@@ -1881,6 +1901,7 @@ public partial class ImportManager : IImportManager
                                 var vendors = await _vendorService.GetAllVendorsAsync(property.StringValue);
                                 customer.VendorId = vendors.FirstOrDefault()?.Id ?? 0;
                             }
+                        }
                         else
                             customer.VendorId = 0;
                         break;
@@ -1891,6 +1912,7 @@ public partial class ImportManager : IImportManager
                         var roles = property.StringValue.Split(", ");
 
                         foreach (var role in roles)
+                        {
                             if (int.TryParse(role, out var roleId))
                                 rolesToSave.Add(roleId);
                             else
@@ -1901,6 +1923,8 @@ public partial class ImportManager : IImportManager
                                 if (currentRole != null)
                                     rolesToSave.Add(currentRole.Id);
                             }
+                        }
+
                         break;
                     case "CreatedOnUtc":
                         if (DateTime.TryParse(property.StringValue, out var date))
@@ -2009,16 +2033,22 @@ public partial class ImportManager : IImportManager
             }
 
             if (!isNew && rolesToSave.Any())
+            {
                 foreach (var customerRole in customerRoles.Where(cr => !rolesToSave.Contains(cr.Id)).ToList())
                     await _customerService.RemoveCustomerRoleMappingAsync(customer, customerRole);
+            }
 
             if (avatarPictureId.HasValue)
+            {
                 await _genericAttributeService.SaveAttributeAsync(customer,
                     NopCustomerDefaults.AvatarPictureIdAttribute, avatarPictureId.Value);
+            }
 
             if (!string.IsNullOrEmpty(signature))
+            {
                 await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SignatureAttribute,
                     signature);
+            }
 
             if (_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword &&
                 !string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(passwordSalt))
@@ -2026,6 +2056,7 @@ public partial class ImportManager : IImportManager
                 var lastPassword = isNew ? null : await _customerService.GetCurrentPasswordAsync(customer.Id);
 
                 if (lastPassword == null || !(lastPassword.Password.Equals(password) && lastPassword.PasswordSalt.Equals(passwordSalt)))
+                {
                     await _customerService.InsertCustomerPasswordAsync(new CustomerPassword
                     {
                         CustomerId = customer.Id,
@@ -2034,6 +2065,7 @@ public partial class ImportManager : IImportManager
                         PasswordFormat = PasswordFormat.Hashed,
                         CreatedOnUtc = DateTime.UtcNow
                     });
+                }
             }
 
             iRow++;
@@ -2078,11 +2110,23 @@ public partial class ImportManager : IImportManager
                 throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
         }
 
+        //validate Circular dependency for required products
+        var circularDependencyProducts = new List<Product>();
+        
+        foreach (var data in metadata.RequiredProductsData)
+        {
+            if (isCyclicallyRequired(data, out var product))
+                circularDependencyProducts.Add(product);
+        }
+
+        if(circularDependencyProducts.Any())
+            throw new ArgumentException($"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.RelatedProducts.CyclicallyRelated")} ({string.Join(", ", circularDependencyProducts.Select(p=>p.Name).Distinct())})");
+
         //performance optimization, load all categories IDs for products in one SQL request
         var allProductsCategoryIds = await _categoryService.GetProductCategoryIdsAsync(allProductsBySku.Select(p => p.Id).ToArray());
 
         //performance optimization, load all categories in one SQL request
-        Dictionary<CategoryKey, Category> allCategories = new();
+        Dictionary<CategoryKey, Category> allCategories;
         try
         {
             var allCategoryList = await _categoryService.GetAllCategoriesAsync(showHidden: true);
@@ -2701,6 +2745,38 @@ public partial class ImportManager : IImportManager
 
         //activity log
         await _customerActivityService.InsertActivityAsync("ImportProducts", string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportProducts"), metadata.CountProductsInFile));
+
+        return;
+
+        bool isCyclicallyRequired(KeyValuePair<string, string> data, out Product product)
+        {
+            product = allProductsBySku.FirstOrDefault(p=>p.Sku.Equals(data.Key));
+
+            if (product == null)
+                return false;
+
+            var prevRequiredProductIds = product.RequiredProductIds;
+            product.RequiredProductIds = data.Value;
+
+            var requiredProductIds = _productService.ParseRequiredProductIds(product);
+            product.RequiredProductIds = prevRequiredProductIds;
+
+            if (requiredProductIds.Contains(product.Id))
+                return true;
+
+            var skuList = allProductsBySku.Where(p => requiredProductIds.Contains(p.Id)).Select(p => p.Sku);
+
+            foreach (var sku in skuList)
+            {
+                if (!metadata.RequiredProductsData.TryGetValue(sku, out var value))
+                    continue;
+
+                if (isCyclicallyRequired(new KeyValuePair<string, string>(sku, value), out _))
+                    return true;
+            }
+
+            return false;
+        }
     }
 
     /// <summary>
@@ -2981,6 +3057,21 @@ public partial class ImportManager : IImportManager
                     case "SeName":
                         seName = property.StringValue;
                         break;
+                    case "PhysicalAddress":
+                        manufacturer.PhysicalAddress = property.StringValue;
+                        break;
+                    case "ElectronicAddress":
+                        manufacturer.ElectronicAddress = property.StringValue;
+                        break;
+                    case "ResponsiblePerson":
+                        manufacturer.ResponsiblePerson = property.StringValue;
+                        break;
+                    case "ResponsiblePersonPhysicalAddress":
+                        manufacturer.ResponsiblePersonPhysicalAddress = property.StringValue;
+                        break;
+                    case "ResponsiblePersonElectronicAddress":
+                        manufacturer.ResponsiblePersonElectronicAddress = property.StringValue;
+                        break;
                 }
             }
 
@@ -3184,6 +3275,7 @@ public partial class ImportManager : IImportManager
             var shippingStateProvinceAbbreviation = string.Empty;
 
             foreach (var property in metadata.Manager.GetDefaultProperties)
+            {
                 switch (property.PropertyName)
                 {
                     case "StoreId":
@@ -3358,6 +3450,7 @@ public partial class ImportManager : IImportManager
                             orderAddress.CountryId = shippingCountry.Id;
                         break;
                 }
+            }
 
             if (await _stateProvinceService.GetStateProvinceByAbbreviationAsync(billingStateProvinceAbbreviation, orderBillingAddress.CountryId) is { } billingState)
                 orderBillingAddress.StateProvinceId = billingState.Id;

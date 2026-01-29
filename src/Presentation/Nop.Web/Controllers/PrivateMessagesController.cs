@@ -57,14 +57,10 @@ public partial class PrivateMessagesController : BasePublicController
     public virtual async Task<IActionResult> Index(int? pageNumber, string tab)
     {
         if (!_forumSettings.AllowPrivateMessages)
-        {
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
-        }
 
         if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
-        {
             return Challenge();
-        }
 
         var model = await _privateMessagesModelFactory.PreparePrivateMessageIndexModelAsync(pageNumber, tab);
         return View(model);
@@ -185,15 +181,11 @@ public partial class PrivateMessagesController : BasePublicController
     public virtual async Task<IActionResult> SendPM(SendPrivateMessageModel model)
     {
         if (!_forumSettings.AllowPrivateMessages)
-        {
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
-        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (await _customerService.IsGuestAsync(customer))
-        {
             return Challenge();
-        }
 
         Customer toCustomer;
         var replyToPM = await _forumService.GetPrivateMessageByIdAsync(model.ReplyToMessageId);
@@ -208,9 +200,7 @@ public partial class PrivateMessagesController : BasePublicController
                     : replyToPM.FromCustomerId);
             }
             else
-            {
                 return RedirectToRoute(NopRouteNames.Standard.PRIVATE_MESSAGES);
-            }
         }
         else
         {
@@ -219,9 +209,7 @@ public partial class PrivateMessagesController : BasePublicController
         }
 
         if (toCustomer == null || await _customerService.IsGuestAsync(toCustomer))
-        {
             return RedirectToRoute(NopRouteNames.Standard.PRIVATE_MESSAGES);
-        }
 
         if (ModelState.IsValid)
         {
@@ -229,15 +217,11 @@ public partial class PrivateMessagesController : BasePublicController
             {
                 var subject = model.Subject;
                 if (_forumSettings.PMSubjectMaxLength > 0 && subject.Length > _forumSettings.PMSubjectMaxLength)
-                {
                     subject = subject[0.._forumSettings.PMSubjectMaxLength];
-                }
 
                 var text = model.Message;
                 if (_forumSettings.PMTextMaxLength > 0 && text.Length > _forumSettings.PMTextMaxLength)
-                {
                     text = text[0.._forumSettings.PMTextMaxLength];
-                }
 
                 var nowUtc = DateTime.UtcNow;
                 var store = await _storeContext.GetCurrentStoreAsync();
@@ -276,23 +260,17 @@ public partial class PrivateMessagesController : BasePublicController
     public virtual async Task<IActionResult> ViewPM(int privateMessageId)
     {
         if (!_forumSettings.AllowPrivateMessages)
-        {
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
-        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (await _customerService.IsGuestAsync(customer))
-        {
             return Challenge();
-        }
 
         var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
         if (pm != null)
         {
             if (pm.ToCustomerId != customer.Id && pm.FromCustomerId != customer.Id)
-            {
                 return RedirectToRoute(NopRouteNames.Standard.PRIVATE_MESSAGES);
-            }
 
             if (!pm.IsRead && pm.ToCustomerId == customer.Id)
             {
@@ -301,9 +279,7 @@ public partial class PrivateMessagesController : BasePublicController
             }
         }
         else
-        {
             return RedirectToRoute(NopRouteNames.Standard.PRIVATE_MESSAGES);
-        }
 
         var model = await _privateMessagesModelFactory.PreparePrivateMessageModelAsync(pm);
         return View(model);
@@ -312,15 +288,11 @@ public partial class PrivateMessagesController : BasePublicController
     public virtual async Task<IActionResult> DeletePM(int privateMessageId)
     {
         if (!_forumSettings.AllowPrivateMessages)
-        {
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
-        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (await _customerService.IsGuestAsync(customer))
-        {
             return Challenge();
-        }
 
         var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
         if (pm != null)

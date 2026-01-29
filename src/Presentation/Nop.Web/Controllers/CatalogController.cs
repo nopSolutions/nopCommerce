@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
@@ -119,12 +118,6 @@ public partial class CatalogController : BasePublicController
 
         var store = await _storeContext.GetCurrentStoreAsync();
 
-        //'Continue shopping' URL
-        await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
-            NopCustomerDefaults.LastContinueShoppingPageAttribute,
-            _webHelper.GetThisPageUrl(false),
-            store.Id);
-
         //display "edit" (manage) link
         if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Catalog.CATEGORIES_VIEW))
             DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = AreaNames.ADMIN }));
@@ -164,14 +157,6 @@ public partial class CatalogController : BasePublicController
 
         if (!await CheckManufacturerAvailabilityAsync(manufacturer))
             return InvokeHttp404();
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-
-        //'Continue shopping' URL
-        await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
-            NopCustomerDefaults.LastContinueShoppingPageAttribute,
-            _webHelper.GetThisPageUrl(false),
-            store.Id);
 
         //display "edit" (manage) link
         if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Catalog.MANUFACTURER_VIEW))
@@ -220,14 +205,6 @@ public partial class CatalogController : BasePublicController
 
         if (!await CheckVendorAvailabilityAsync(vendor))
             return InvokeHttp404();
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-
-        //'Continue shopping' URL
-        await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
-            NopCustomerDefaults.LastContinueShoppingPageAttribute,
-            _webHelper.GetThisPageUrl(false),
-            store.Id);
 
         //display "edit" (manage) link
         if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Customers.VENDORS_VIEW))
@@ -380,14 +357,6 @@ public partial class CatalogController : BasePublicController
 
     public virtual async Task<IActionResult> Search(SearchModel model, CatalogProductsCommand command)
     {
-        var store = await _storeContext.GetCurrentStoreAsync();
-
-        //'Continue shopping' URL
-        await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
-            NopCustomerDefaults.LastContinueShoppingPageAttribute,
-            _webHelper.GetThisPageUrl(true),
-            store.Id);
-
         if (model == null)
             model = new SearchModel();
 
@@ -527,14 +496,6 @@ public partial class CatalogController : BasePublicController
     {
         if (!_filterLevelSettings.FilterLevelEnabled)
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-
-        //'Continue shopping' URL
-        await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
-            NopCustomerDefaults.LastContinueShoppingPageAttribute,
-            _webHelper.GetThisPageUrl(true),
-            store.Id);
 
         if (model == null)
             model = new SearchFilterLevelValueModel();

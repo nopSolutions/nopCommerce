@@ -60,8 +60,10 @@ public class GoogleAnalyticsHttpClient
             var result = JsonConvert.DeserializeObject<Response>(responseString);
 
             if (googleAnalyticsSettings.UseSandbox && (result?.ValidationMessages.Any() ?? false))
+            {
                 throw new NopException($@"Google Analytics validation error (Measurement Protocol):
                         {responseString}");
+            }
         }
         catch (AggregateException exception)
         {

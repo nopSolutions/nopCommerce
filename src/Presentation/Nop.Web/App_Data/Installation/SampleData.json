@@ -2842,32 +2842,6 @@
       "Comments": [ "This is a sample comment for this blog post" ]
     }
   ],
-  "Polls": [
-    {
-      "Name": "Do you like nopCommerce?",
-      "DisplayOrder": 1,
-      "Answers": [
-        {
-          "Name": "Excellent",
-          "DisplayOrder": 1
-        },
-        {
-          "Name": "Good",
-          "DisplayOrder": 2
-        },
-        {
-          "Name": "Poor",
-          "DisplayOrder": 3
-        },
-        {
-          "Name": "Very bad",
-          "DisplayOrder": 4
-        }
-      ],
-      "Published": true,
-      "ShowOnHomepage": true
-    }
-  ],
   "Warehouses": [
     {
       "Name": "Warehouse 1 (New York)",

@@ -233,13 +233,9 @@ public abstract partial class BaseController : Controller
 
         const string dataKey = "nop.selected-card-name";
         if (persistForTheNextRequest)
-        {
             TempData[dataKey] = cardName;
-        }
         else
-        {
             ViewData[dataKey] = cardName;
-        }
     }
 
     /// <summary>
@@ -259,8 +255,10 @@ public abstract partial class BaseController : Controller
         var form = await Request.ReadFormAsync();
 
         foreach (var item in form)
+        {
             if (item.Key.StartsWith("selected-tab-name-", StringComparison.InvariantCultureIgnoreCase))
                 SaveSelectedTabName(null, item.Value, item.Key["selected-tab-name-".Length..], persistForTheNextRequest);
+        }
     }
 
     /// <summary>

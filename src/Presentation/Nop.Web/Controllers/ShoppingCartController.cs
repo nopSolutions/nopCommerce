@@ -195,8 +195,10 @@ public partial class ShoppingCartController : BasePublicController
                     {
                         var selectedAttributeId = int.Parse(ctrlAttributes);
                         if (selectedAttributeId > 0)
+                        {
                             attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
                                 attribute, selectedAttributeId.ToString());
+                        }
                     }
                 }
 
@@ -210,8 +212,10 @@ public partial class ShoppingCartController : BasePublicController
                         {
                             var selectedAttributeId = int.Parse(item);
                             if (selectedAttributeId > 0)
+                            {
                                 attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
+                            }
                         }
                     }
                 }
@@ -261,8 +265,10 @@ public partial class ShoppingCartController : BasePublicController
                     }
 
                     if (selectedDate.HasValue)
+                    {
                         attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml,
                             attribute, selectedDate.Value.ToString("D"));
+                    }
                 }
 
                 break;
@@ -335,7 +341,7 @@ public partial class ShoppingCartController : BasePublicController
     }
 
     protected virtual async Task<IActionResult> GetProductToCartDetailsAsync(List<string> addToCartWarnings, ShoppingCartType cartType,
-        Product product)
+        Product product, ShoppingCartItem updateCartItem = null, int? customWishlistId = null)
     {
         if (addToCartWarnings.Any())
         {
@@ -379,22 +385,37 @@ public partial class ShoppingCartController : BasePublicController
                 var customWishlists = await _customWishlistService.GetAllCustomWishlistsAsync(customer.Id);
                 var isGuest = await _customerService.IsGuestAsync(customer);
 
-                if (!isGuest && customWishlists.Any())
+                if (updateCartItem == null)
                 {
-                    var onclick = $"showMoveToWishlistModal({product.Id}); return false;";
-                    return Json(new
+                    if (!isGuest && customWishlists.Any())
                     {
-                        success = true,
-                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlistAndMoved.Link"), wishlistRouteUrl, onclick),
-                        updatetopwishlistsectionhtml = updateTopWishlistSectionHtml
-                    });
+                        var onclick = $"showMoveToWishlistModal({product.Id}); return false;";
+                        return Json(new
+                        {
+                            success = true,
+                            message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlistAndMoved.Link"), wishlistRouteUrl, onclick),
+                            updatetopwishlistsectionhtml = updateTopWishlistSectionHtml
+                        });
+                    }
+                    else
+                    {
+                        return Json(new
+                        {
+                            success = true,
+                            message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlist.Link"), wishlistRouteUrl),
+                            updatetopwishlistsectionhtml = updateTopWishlistSectionHtml
+                        });
+                    }
                 }
                 else
                 {
+                    if (customWishlistId != null)
+                        wishlistRouteUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST, new { list = customWishlistId });
+                    
                     return Json(new
                     {
                         success = true,
-                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenAddedToTheWishlist.Link"), wishlistRouteUrl),
+                        message = string.Format(await _localizationService.GetResourceAsync("Products.ProductHasBeenUpdatedInTheWishlist.Link"), wishlistRouteUrl),
                         updatetopwishlistsectionhtml = updateTopWishlistSectionHtml
                     });
                 }
@@ -458,6 +479,18 @@ public partial class ShoppingCartController : BasePublicController
         return string.Empty;
     }
 
+    protected virtual async Task<string> CheckDuplicateWishlistNameAsync(int customerId, string wishlistName, IList<CustomWishlist> selectedWishlists = null)
+    {
+        var currentWishlists = selectedWishlists ?? await _customWishlistService.GetAllCustomWishlistsAsync(customerId);
+        if (currentWishlists.Any(wishlist => string.Equals(wishlist.Name, wishlistName, StringComparison.InvariantCultureIgnoreCase)))
+        {
+            var errorMessage = await _localizationService.GetResourceAsync("Wishlist.DuplicateName");
+            return errorMessage;
+        }
+
+        return string.Empty;
+    }
+
     #endregion
 
     #region Shopping cart
@@ -476,11 +509,13 @@ public partial class ShoppingCartController : BasePublicController
             errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.Country.Required"));
 
         if (errors.Count > 0)
+        {
             return Json(new
             {
                 success = false,
                 errors = errors
             });
+        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -514,8 +549,10 @@ public partial class ShoppingCartController : BasePublicController
                 if (getShippingOptionResponse.Success)
                     shippingOptions = getShippingOptionResponse.ShippingOptions.ToList();
                 else
+                {
                     foreach (var error in getShippingOptionResponse.Errors)
                         errors.Add(error);
+                }
             }
         }
 
@@ -524,11 +561,13 @@ public partial class ShoppingCartController : BasePublicController
             errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound"));
 
         if (errors.Count > 0)
+        {
             return Json(new
             {
                 success = false,
                 errors = errors
             });
+        }
 
         //reset pickup point
         await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer,
@@ -557,12 +596,23 @@ public partial class ShoppingCartController : BasePublicController
 
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null)
+        {
             //no product found
             return Json(new
             {
                 success = false,
                 message = "No product found with the specified ID"
             });
+        }
+
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var referrerPageUrl = _webHelper.GetUrlReferrer();
+        //'Continue shopping' URL
+        await _genericAttributeService.SaveAttributeAsync(customer,
+            NopCustomerDefaults.LastContinueShoppingPageAttribute,
+            referrerPageUrl,
+            store.Id);
 
         var redirectUrl = await _nopUrlHelper.RouteGenericUrlAsync(product);
 
@@ -623,8 +673,6 @@ public partial class ShoppingCartController : BasePublicController
 
         //get standard warnings without attribute validations
         //first, try to find existing shopping cart item
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
         var cart = await _shoppingCartService.GetShoppingCartAsync(customer, cartType, store.Id);
         var shoppingCartItem = await _shoppingCartService.FindShoppingCartItemInTheCartAsync(cart, cartType, product);
         //if we already have the same product in the cart, then use the total quantity to validate
@@ -748,7 +796,7 @@ public partial class ShoppingCartController : BasePublicController
     //add product to cart using AJAX
     //currently we use this method on the product details pages
     [HttpPost]
-    public virtual async Task<IActionResult> AddProductToCart_Details(int productId, int shoppingCartTypeId, IFormCollection form)
+    public virtual async Task<IActionResult> AddProductToCart_Details(int productId, int shoppingCartTypeId, IFormCollection form, int? customwishlistid = null)
     {
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null)
@@ -772,18 +820,21 @@ public partial class ShoppingCartController : BasePublicController
         //update existing shopping cart item
         var updatecartitemid = 0;
         foreach (var formKey in form.Keys)
+        {
             if (formKey.Equals($"addtocart_{productId}.UpdatedShoppingCartItemId", StringComparison.InvariantCultureIgnoreCase))
             {
                 _ = int.TryParse(form[formKey], out updatecartitemid);
                 break;
             }
+        }
 
         ShoppingCartItem updatecartitem = null;
         if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
         {
             var store = await _storeContext.GetCurrentStoreAsync();
             //search with the same cart type as specified
-            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), (ShoppingCartType)shoppingCartTypeId, store.Id);
+            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), 
+                (ShoppingCartType)shoppingCartTypeId, store.Id, customWishlistId: customwishlistid);
 
             updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
             //not found? let's ignore it. in this case we'll add a new item
@@ -827,7 +878,7 @@ public partial class ShoppingCartController : BasePublicController
         await SaveItemAsync(updatecartitem, addToCartWarnings, product, cartType, attributes, customerEnteredPriceConverted, rentalStartDate, rentalEndDate, quantity);
 
         //return result
-        return await GetProductToCartDetailsAsync(addToCartWarnings, cartType, product);
+        return await GetProductToCartDetailsAsync(addToCartWarnings, cartType, product, updatecartitem, customwishlistid);
     }
 
     //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
@@ -847,9 +898,7 @@ public partial class ShoppingCartController : BasePublicController
         DateTime? rentalStartDate = null;
         DateTime? rentalEndDate = null;
         if (product.IsRental)
-        {
             _productAttributeParser.ParseRentalDates(product, form, out rentalStartDate, out rentalEndDate);
-        }
 
         //sku, mpn, gtin
         var sku = await _productService.FormatSkuAsync(product, attributeXml);
@@ -1455,11 +1504,13 @@ public partial class ShoppingCartController : BasePublicController
             errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.Country.Required"));
 
         if (errors.Count > 0)
+        {
             return Json(new
             {
                 Success = false,
                 Errors = errors
             });
+        }
 
         var store = await _storeContext.GetCurrentStoreAsync();
         var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, store.Id);
@@ -1480,8 +1531,11 @@ public partial class ShoppingCartController : BasePublicController
         //get discount identifier
         var discountId = 0;
         foreach (var formValue in form.Keys)
+        {
             if (formValue.StartsWith("removediscount-", StringComparison.InvariantCultureIgnoreCase))
                 discountId = Convert.ToInt32(formValue["removediscount-".Length..]);
+        }
+
         var discount = await _discountService.GetDiscountByIdAsync(discountId);
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (discount != null)
@@ -1503,8 +1557,11 @@ public partial class ShoppingCartController : BasePublicController
         //get gift card identifier
         var giftCardId = 0;
         foreach (var formValue in form.Keys)
+        {
             if (formValue.StartsWith("removegiftcard-", StringComparison.InvariantCultureIgnoreCase))
                 giftCardId = Convert.ToInt32(formValue["removegiftcard-".Length..]);
+        }
+
         var gc = await _giftCardService.GetGiftCardByIdAsync(giftCardId);
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (gc != null)
@@ -1567,6 +1624,7 @@ public partial class ShoppingCartController : BasePublicController
             else
             {
                 foreach (var formKey in form.Keys)
+                {
                     if (formKey.Equals($"itemquantity{sci.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
                         if (int.TryParse(form[formKey], out var newQuantity))
@@ -1580,6 +1638,7 @@ public partial class ShoppingCartController : BasePublicController
 
                         break;
                     }
+                }
             }
         }
 
@@ -1596,9 +1655,13 @@ public partial class ShoppingCartController : BasePublicController
             //find model
             var sciModel = model.Items.FirstOrDefault(x => x.Id == sciId);
             if (sciModel != null)
+            {
                 foreach (var w in warnings)
+                {
                     if (!sciModel.Warnings.Contains(w))
                         sciModel.Warnings.Add(w);
+                }
+            }
         }
 
         return View(model);
@@ -1659,9 +1722,7 @@ public partial class ShoppingCartController : BasePublicController
             //redirect to the shopping cart page
 
             if (allWarnings.Any())
-            {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Wishlist.AddToCart.Error"));
-            }
 
             return RedirectToRoute(NopRouteNames.General.CART);
         }
@@ -1672,9 +1733,7 @@ public partial class ShoppingCartController : BasePublicController
         //no items added. redisplay the wishlist page
 
         if (allWarnings.Any())
-        {
             _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Wishlist.AddToCart.Error"));
-        }
 
         var cart = await _shoppingCartService.GetShoppingCartAsync(pageCustomer, ShoppingCartType.Wishlist, store.Id, customWishlistId: wishlistModel.ListId);
 
@@ -1716,15 +1775,11 @@ public partial class ShoppingCartController : BasePublicController
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage && !captchaValid)
-        {
             ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         //check whether the current customer is guest and is allowed to email wishlist
         if (await _customerService.IsGuestAsync(customer) && !_shoppingCartSettings.AllowAnonymousUsersToEmailWishlist)
-        {
             ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Wishlist.EmailAFriend.OnlyRegisteredUsers"));
-        }
 
         if (ModelState.IsValid)
         {
@@ -1774,9 +1829,22 @@ public partial class ShoppingCartController : BasePublicController
             });
         }
 
-        // Check if customer has reached the maximum number of custom wishlists allowed
         var currentWishlists = await _customWishlistService.GetAllCustomWishlistsAsync(customer.Id);
-        var maximumNumberOfCustomWishlist = _shoppingCartSettings.MaximumNumberOfCustomWishlist;
+        var normalizedName = name.Trim();
+
+        // Check if a wishlist with the same name already exists
+        var errorMessage = await CheckDuplicateWishlistNameAsync(customer.Id, normalizedName, currentWishlists);
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            return Json(new
+            {
+                success = false,
+                message = errorMessage
+            });
+        }
+
+        // Check if customer has reached the maximum number of custom wishlists allowed
+        var maximumNumberOfCustomWishlist = _shoppingCartSettings.MaximumNumberOfCustomWishlist;        
         if (currentWishlists.Count >= maximumNumberOfCustomWishlist)
         {
             return Json(new
@@ -1789,7 +1857,7 @@ public partial class ShoppingCartController : BasePublicController
         var customWishlist = new CustomWishlist
         {
             CustomerId = customer.Id,
-            Name = name.Trim(),
+            Name = normalizedName,
             CreatedOnUtc = DateTime.UtcNow
         };
 
@@ -1798,9 +1866,7 @@ public partial class ShoppingCartController : BasePublicController
 
         var product = await _productService.GetProductByIdAsync(productId);
         if (product != null)
-        {
             await MoveProductToCustomWishlist(product.Id, customWishlist.Id);
-        }
 
         return Json(new
         {
@@ -1869,11 +1935,13 @@ public partial class ShoppingCartController : BasePublicController
             var wishlist = await _customWishlistService.GetCustomWishlistByIdAsync(customWishlistId);
 
             if (wishlist == null || wishlist.CustomerId != customer.Id)
+            {
                 return Json(new
                 {
                     success = false,
                     message = await _localizationService.GetResourceAsync("Wishlist.NotFound")
                 });
+            }
 
             await _shoppingCartService.MoveItemToCustomWishlistAsync(shoppingCartItemId, wishlist.Id);
         }
@@ -1888,6 +1956,45 @@ public partial class ShoppingCartController : BasePublicController
         });
     }
 
+    [HttpPost]
+    public virtual async Task<IActionResult> RenameWishlist(string wishlistName, int wishlistId)
+    {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var wishlist = await _customWishlistService.GetCustomWishlistByIdAsync(wishlistId);
+
+        if (wishlist == null || wishlist.CustomerId != customer.Id)
+        {
+            return Json(new
+            {
+                success = false,
+                message = await _localizationService.GetResourceAsync("Wishlist.NotFound")
+            });
+        }
+
+        var normalizedName = wishlistName.Trim();
+
+        // Check if a wishlist with the same name already exists
+        var errorMessage = await CheckDuplicateWishlistNameAsync(customer.Id, normalizedName);
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            return Json(new
+            {
+                success = false,
+                message = errorMessage
+            });
+        }
+
+        // rename a wishlist
+        wishlist.Name = normalizedName;
+        await _customWishlistService.UpdateCustomWishlistAsync(wishlist);
+
+        return Json(new
+        {
+            success = true,
+            redirect = Url.RouteUrl(NopRouteNames.General.WISHLIST, new { list = wishlistId })
+        });
+    }
+    
     [HttpPost]
     public virtual async Task<IActionResult> DeleteWishlist(int wishlistId)
     {
@@ -1907,9 +2014,7 @@ public partial class ShoppingCartController : BasePublicController
         var store = await _storeContext.GetCurrentStoreAsync();
         var cartItems = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id, customWishlistId: wishlist.Id);
         foreach (var item in cartItems)
-        {
             await _shoppingCartService.DeleteShoppingCartItemAsync(item);
-        }
 
         // Delete the wishlist itself
         await _customWishlistService.RemoveCustomWishlistAsync(wishlist.Id);

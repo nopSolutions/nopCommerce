@@ -319,7 +319,6 @@ public partial class GdprService : IGdprService
         //ignore ActivityLog
         //ignore ForumPost, ForumTopic, ignore ForumPostVote
         //ignore Log
-        //ignore PollVotingRecord
         //ignore ProductReviewHelpfulness
         //ignore RecurringPayment 
         //ignore ReturnRequest

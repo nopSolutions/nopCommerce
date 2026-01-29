@@ -101,10 +101,12 @@ public partial class ExternalAuthenticationService : IExternalAuthenticationServ
 
         //account is already assigned to another user
         if (currentLoggedInUser.Id != associatedUser.Id)
+        {
             return await ErrorAuthenticationAsync(new[]
             {
                 await _localizationService.GetResourceAsync("Account.AssociatedExternalAuth.AccountAlreadyAssigned")
             }, returnUrl);
+        }
 
         //or the user try to log in as himself. bit weird
         return SuccessfulAuthentication(returnUrl);

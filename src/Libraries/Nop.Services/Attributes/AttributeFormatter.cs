@@ -114,8 +114,10 @@ public partial class
                         var attributeValue = await _attributeService.GetAttributeValueByIdAsync(attributeValueId);
 
                         if (attributeValue != null)
+                        {
                             formattedAttribute =
                                 $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
+                        }
 
                         //encode (if required)
                         if (htmlEncode)

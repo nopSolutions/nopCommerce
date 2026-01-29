@@ -274,8 +274,10 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                             var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedCustomerAttributes);
                             foreach (var attributeValue in selectedValues)
                             foreach (var item in attributeModel.Values)
+                            {
                                 if (attributeValue.Id == item.Id)
                                     item.IsPreSelected = true;
+                            }
                         }
                     }
                         break;
@@ -1169,7 +1171,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 customerModel.LastIpAddress = _customerSettings.StoreIpAddresses
                     ? customer.LastIpAddress
                     : await _localizationService.GetResourceAsync("Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled");
-                customerModel.Location = _geoLookupService.LookupCountryName(customer.LastIpAddress);
+                customerModel.Location = await _geoLookupService.LookupCountryNameAsync(customer.LastIpAddress);
                 customerModel.LastVisitedPage = _customerSettings.StoreLastVisitedPage
                     ? await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute)
                     : await _localizationService.GetResourceAsync("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled");

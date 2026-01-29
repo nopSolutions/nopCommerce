@@ -2532,6 +2532,12 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ElectronicAddress">
+    <Value>Manufacturer electronic address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ElectronicAddress.Hint">
+    <Value>The e-mail or other electronic contact information.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DisplayOrder.Hint">
     <Value>Set the manufacturer's display order. 1 represents the top of the list.</Value>
   </LocaleResource>
@@ -2598,6 +2604,12 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems">
     <Value>Page size options should have unique items.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PhysicalAddress">
+    <Value>Manufacturer physical address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PhysicalAddress.Hint">
+    <Value>The physical address of the manufacturer.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Picture">
     <Value>Picture</Value>
   </LocaleResource>
@@ -2634,17 +2646,41 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Published.Hint">
     <Value>Check to publish this manufacturer (visible in store). Uncheck to unpublish (manufacturer not available in store).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ResponsiblePerson">
+    <Value>Responsible person name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ResponsiblePerson.Hint">
+    <Value>The name of the manufacturer's responsible person</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ResponsiblePersonElectronicAddress">
+    <Value>Responsible person electronic address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ResponsiblePersonElectronicAddress.Hint">
+    <Value>The e-mail or other electronic contact information of the manufacturer's responsible person.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ResponsiblePersonPhysicalAddress">
+    <Value>Responsible person physical address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ResponsiblePersonPhysicalAddress.Hint">
+    <Value>The physical address of the manufacturer's responsible person.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SeName">
     <Value>Search engine friendly page name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name e.g. 'the-best-manufacturer' to make your page URL 'http://www.yourStore.com/the-best-manufacturer'. Leave empty to generate it automatically based on the name of the manufacturer.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Gpsr">
+    <Value>GPSR</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Imported">
     <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Info">
     <Value>Manufacturer info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Gpsr.Information">
+    <Value><![CDATA[<p>The General Product Safety Regulation (GPSR) is a European Union (EU) law that came into effect in December 2024. The GPSR regulates the advertising and sale of consumer products in the European Union.</p><p>If you are in the EU, you have to fill in the manufacturer’s name, physical address and e-mail or other electronic contact information.</p><p>If the manufacturer is not located in the European Union, the EU Responsible Person and their contact details. The EU Responsible Person is a person or entity located in the European Union that the seller designates to act as a point of contact with the EU authorities.</p>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.List.ImportFromExcelTip">
     <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. You should not specify ID (leave 0) for new manufacturers.</Value>
@@ -4259,6 +4295,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.RelatedProducts.AddNew">
     <Value>Add new related product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.RelatedProducts.CyclicallyRelated">
+    <Value>Circular dependency is not allowed for required products (e.g. product A requires product B. And product B requires product A)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder">
     <Value>Display order</Value>
@@ -6191,6 +6230,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.ExportImport">
     <Value>Export/Import</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Gpsr">
+    <Value>GPSR</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.Performance">
     <Value>Performance</Value>
@@ -8274,6 +8316,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.YoutubeLink.Hint">
     <Value>Specify your YouTube channel URL. Leave empty if you have no such page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gpsr.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gpsr.Enabled.Hint">
+    <Value>Check to display GPSR information in public store. The General Product Safety Regulation (GPSR) is a European Union (EU) law that came into effect in December 2024. The GPSR regulates the advertising and sale of consumer products in the European Union</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media">
     <Value>Media settings</Value>
@@ -11519,123 +11567,6 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Updated">
     <Value>The message template has been updated successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls">
-    <Value>Polls</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Added">
-    <Value>The new poll has been added successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.AddNew">
-    <Value>Add a new poll</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Answers">
-    <Value>Poll answers</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder">
-    <Value>Display order</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder.Hint">
-    <Value>The display order of this poll answer. 1 represents the top of the list.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.Name">
-    <Value>Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.Name.Hint">
-    <Value>Enter the poll answer name.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.Name.Required">
-    <Value>Name is required.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.NumberOfVotes">
-    <Value>Number of votes</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.SaveBeforeEdit">
-    <Value>You need to save the poll before you can add answers for this poll page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.BackToList">
-    <Value>back to poll list</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Deleted">
-    <Value>The poll has been deleted successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.EditPollDetails">
-    <Value>Edit poll details</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.AllowGuestsToVote">
-    <Value>Allow guests to vote</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.AllowGuestsToVote.Hint">
-    <Value>Check to allow guests to vote.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.DisplayOrder">
-    <Value>Display order</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.DisplayOrder.Hint">
-    <Value>The display order of this poll. 1 represents the top of the list.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.EndDate">
-    <Value>End date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.EndDate.Hint">
-    <Value>Set the poll end date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Language">
-    <Value>Language</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Language.Hint">
-    <Value>The language of this poll. A customer will only see the polls for their selected language.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.LimitedToStores">
-    <Value>Limited to stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.LimitedToStores.Hint">
-    <Value>Option to limit this poll to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Name">
-    <Value>Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Name.Hint">
-    <Value>The name of this poll.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Name.Required">
-    <Value>Name is required.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Published">
-    <Value>Published</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Published.Hint">
-    <Value>Determines whether this poll is published (visible) in your store.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomepage">
-    <Value>Show on home page</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.ShowOnHomepage.Hint">
-    <Value>Check if you want to show poll on the home page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.StartDate">
-    <Value>Start date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.StartDate.Hint">
-    <Value>Set the poll start date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.SystemKeyword">
-    <Value>System keyword</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.SystemKeyword.Hint">
-    <Value>The system keyword for this poll. For example, you can enter 'LeftColumnPoll' in order to display it in the left column.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Info">
-    <Value>Poll Info</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.List.SearchStore">
-    <Value>Store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.List.SearchStore.Hint">
-    <Value>Search by a specific store.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Polls.Updated">
-    <Value>The poll has been updated successfully.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics">
     <Value>Topics (pages)</Value>
   </LocaleResource>
@@ -12946,9 +12877,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Plugins">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">plugins in nopCommerce</a>]]></Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Documentation.Reference.Polls">
-    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">polls</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ProductAttributes">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">product attributes</a>]]></Value>
@@ -19400,24 +19328,6 @@
   <LocaleResource Name="Pdf.TaxRate">
     <Value>Tax {0}%</Value>
   </LocaleResource>
-  <LocaleResource Name="Polls.OnlyRegisteredUsersVote">
-    <Value>Only registered users can vote.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Polls.SelectAnswer">
-    <Value>Please select an answer</Value>
-  </LocaleResource>
-  <LocaleResource Name="Polls.Title">
-    <Value>Community poll</Value>
-  </LocaleResource>
-  <LocaleResource Name="Polls.TotalVotes">
-    <Value>{0} vote(s)...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Polls.Vote">
-    <Value>Vote</Value>
-  </LocaleResource>
-  <LocaleResource Name="Polls.VotesResultLine">
-    <Value>{0} ({1} vote(s) - {2}%)</Value>
-  </LocaleResource>
   <LocaleResource Name="PrivateMessages.Inbox">
     <Value>Inbox</Value>
   </LocaleResource>
@@ -19697,6 +19607,21 @@
   <LocaleResource Name="Products.Manufacturers">
     <Value>Manufacturers</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Manufacturers.ElectronicAddress">
+    <Value>Manufacturer electronic address: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Manufacturers.PhysicalAddress">
+    <Value>Manufacturer physical address: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Manufacturers.ResponsiblePerson">
+    <Value>Responsible person name: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Manufacturers.ResponsiblePersonElectronicAddress">
+    <Value>Responsible person electronic address: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Manufacturers.ResponsiblePersonPhysicalAddress">
+    <Value>Responsible person physical address: {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.MinimumQuantityNotification">
     <Value>This product has a minimum quantity of {0}</Value>
   </LocaleResource>
@@ -19783,6 +19708,9 @@
   </LocaleResource>
   <LocaleResource Name="Products.ProductHasBeenAddedToTheWishlistAndMoved.Link">
     <Value><![CDATA[The product has been added to your <a href="{0}">wishlist</a>. Want to move it to a <a href="#" onclick="{1}">custom wishlist</a>?]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenUpdatedInTheWishlist.Link">
+    <Value><![CDATA[The product has been updated in your <a href="{0}">wishlist</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Products.Qty">
     <Value>Qty</Value>
@@ -20242,12 +20170,6 @@
   </LocaleResource>
   <LocaleResource Name="Security.Permission.ContentManagement.MessageTemplatesView">
     <Value>Admin area. Message Templates. View</Value>
-  </LocaleResource>
-  <LocaleResource Name="Security.Permission.ContentManagement.PollsCreateEditDelete">
-    <Value>Admin area. Polls. Create, edit, delete</Value>
-  </LocaleResource>
-  <LocaleResource Name="Security.Permission.ContentManagement.PollsView">
-    <Value>Admin area. Polls. View</Value>
   </LocaleResource>
   <LocaleResource Name="Security.Permission.ContentManagement.TopicsCreateEditDelete">
     <Value>Admin area. Topics. Create, edit, delete</Value>
@@ -20987,6 +20909,9 @@
   <LocaleResource Name="Wishlist.DeleteWishlist">
     <Value>Delete wishlist</Value>
   </LocaleResource>
+  <LocaleResource Name="Wishlist.DuplicateName">
+    <Value>A wishlist with this name already exists.</Value>
+  </LocaleResource>
   <LocaleResource Name="Wishlist.EmailAFriend">
     <Value>Email a friend</Value>
   </LocaleResource>
@@ -21049,6 +20974,9 @@
   </LocaleResource>
   <LocaleResource Name="Wishlist.NotFound">
     <Value>Wishlist not found.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.RenameCustomWishlist">
+    <Value>Rename wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Wishlist.SelectWishlist">
     <Value>Specify your wishlist</Value>

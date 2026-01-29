@@ -146,8 +146,10 @@ public partial class WebAppTypeFinder : ITypeFinder
             var msg = string.Empty;
 
             if (ex.LoaderExceptions.Any())
+            {
                 msg = ex.LoaderExceptions.Where(e => e != null)
                     .Aggregate(msg, (current, e) => $"{current}{e.Message + Environment.NewLine}");
+            }
 
             var fail = new Exception(msg, ex);
             Debug.WriteLine(fail.Message, fail);
@@ -188,6 +190,7 @@ public partial class WebAppTypeFinder : ITypeFinder
                     continue;
 
                 foreach (var dllPath in _fileProvider.GetFiles(directoriesToLoadAssembly, "*.dll"))
+                {
                     try
                     {
                         var an = AssemblyName.GetAssemblyName(dllPath);
@@ -215,6 +218,7 @@ public partial class WebAppTypeFinder : ITypeFinder
                     {
                         Trace.TraceError(ex.ToString());
                     }
+                }
             }
 
             _loaded = true;

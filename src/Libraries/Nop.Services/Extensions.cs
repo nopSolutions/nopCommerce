@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Services.Catalog;
 using Nop.Services.Localization;
 
 namespace Nop.Services;

@@ -654,6 +654,11 @@ public static partial class NopRouteNames
         public const string ADD_WISHLIST = "AddWishlist";
 
         /// <summary>
+        /// Gets the rename custom wishlist route name
+        /// </summary>
+        public const string RENAME_WISHLIST = "RenameWishlist";
+
+        /// <summary>
         /// Gets the back in stock subscribe send route name
         /// </summary>
         public const string BACK_IN_STOCK_SUBSCRIBE_SEND = "BackInStockSubscribeSend";
@@ -732,11 +737,6 @@ public static partial class NopRouteNames
         /// Gets the topics route name
         /// </summary>
         public const string TOPIC_POPUP = "TopicPopup";
-
-        /// <summary>
-        /// Gets the poll vote route name
-        /// </summary>
-        public const string POLL_VOTE = "PollVote";
 
         /// <summary>
         /// Gets the state list by country ID route name

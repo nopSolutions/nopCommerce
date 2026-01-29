@@ -371,6 +371,7 @@ public class OmnisendService
         };
 
         if (combinations.Any())
+        {
             dto.Variants.AddRange(await combinations.SelectAwait(async c => new ProductDto.Variant
             {
                 VariantId = c.Id.ToString(),
@@ -379,6 +380,7 @@ public class OmnisendService
                 Status = await getProductStatus(c),
                 Price = (c.OverriddenPrice ?? product.Price).ToCents()
             }).ToListAsync());
+        }
 
         return dto;
     }
@@ -638,8 +640,10 @@ public class OmnisendService
             }
         }
         else
+        {
             foreach (var newsLetterSubscription in su)
                 await UpdateOrCreateContactAsync(newsLetterSubscription as CreateContactRequest);
+        }
     }
 
     /// <summary>
@@ -669,11 +673,13 @@ public class OmnisendService
             }
         }
         else
+        {
             foreach (var category in categories)
             {
                 var data = JsonConvert.SerializeObject(CategoryToDto(category));
                 await _omnisendHttpClient.PerformRequestAsync(OmnisendDefaults.CategoriesApiUrl, data, HttpMethod.Post);
             }
+        }
     }
 
     /// <summary>
@@ -712,8 +718,10 @@ public class OmnisendService
             }
         }
         else
+        {
             foreach (var product in products)
                 await AddNewProductAsync(product);
+        }
     }
 
     /// <summary>
@@ -751,8 +759,10 @@ public class OmnisendService
             }
         }
         else
+        {
             foreach (var order in orders)
                 await CreateOrderAsync(order);
+        }
     }
 
     /// <summary>

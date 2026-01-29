@@ -1,4 +1,4 @@
-﻿@using Nop.Services.Localization
+@using Nop.Services.Localization
 @using Nop.Core
 @inject ILocalizationService localizationService
 @inject IStoreContext storeContext
@@ -36,8 +36,6 @@
         @await Component.InvokeAsync(typeof(HomepageProductsViewComponent))
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBeforeBestSellers })
         @await Component.InvokeAsync(typeof(HomepageBestSellersViewComponent))
-        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBeforePoll })
-        @await Component.InvokeAsync(typeof(HomepagePollsViewComponent))
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBottom })
     </div>
 </div>

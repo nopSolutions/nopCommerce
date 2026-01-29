@@ -86,6 +86,7 @@ public class RfqAdminController : BasePluginController
 
     #region Configure
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public IActionResult Configure()
     {
         var model = new ConfigurationModel
@@ -100,6 +101,7 @@ public class RfqAdminController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
         if (!ModelState.IsValid)

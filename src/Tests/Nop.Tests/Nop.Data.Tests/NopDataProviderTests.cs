@@ -117,7 +117,7 @@ public class NopDataProviderTests : BaseNopTest
         await using var data = await dataProvider.CreateTempDataStorageAsync(tableName,
             productRepository.Table.Select(p => new { p.Name, p.Id, p.Deleted }));
 
-        data.Count().Should().Be(productRepository.GetAll(query => query).Count);
+        data.Count().Should().Be(productRepository.GetAllAsync(query => query).Result.Count);
 
         var rez = await dataProvider.QueryAsync<object>($"select * from {tableName}");
 

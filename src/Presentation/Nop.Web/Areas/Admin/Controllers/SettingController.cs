@@ -733,6 +733,10 @@ public partial class SettingController : BaseAdminController
 
             await _settingService.SaveSettingAsync(artificialIntelligenceSettings);
 
+            var gpsrSettings = await _settingService.LoadSettingAsync<GpsrSettings>(storeScope);
+            gpsrSettings.Enabled = model.GpsrSettingsModel.Enabled;
+            await _settingService.SaveSettingOverridablePerStoreAsync(gpsrSettings, x => x.Enabled, model.GpsrSettingsModel.Enabled_OverrideForStore, storeScope, false);
+
             //now clear settings cache
             await _settingService.ClearCacheAsync();
 
@@ -1624,9 +1628,14 @@ public partial class SettingController : BaseAdminController
                 securitySettings.AdminAreaAllowedIpAddresses = new List<string>();
             securitySettings.AdminAreaAllowedIpAddresses.Clear();
             if (!string.IsNullOrEmpty(model.SecuritySettings.AdminAreaAllowedIpAddresses))
+            {
                 foreach (var s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(_separator, StringSplitOptions.RemoveEmptyEntries))
+                {
                     if (!string.IsNullOrWhiteSpace(s))
                         securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
+                }
+            }
+
             securitySettings.HoneypotEnabled = model.SecuritySettings.HoneypotEnabled;
             await _settingService.SaveSettingAsync(securitySettings);
 
@@ -1727,9 +1736,7 @@ public partial class SettingController : BaseAdminController
             var localizationSettings = await _settingService.LoadSettingAsync<LocalizationSettings>(storeScope);
             localizationSettings.UseImagesForLanguageSelection = model.LocalizationSettings.UseImagesForLanguageSelection;
             if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled != model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-            {
                 localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
-            }
 
             localizationSettings.AutomaticallyDetectLanguage = model.LocalizationSettings.AutomaticallyDetectLanguage;
             localizationSettings.LoadAllLocaleRecordsOnStartup = model.LocalizationSettings.LoadAllLocaleRecordsOnStartup;
@@ -1916,9 +1923,7 @@ public partial class SettingController : BaseAdminController
             //delete old favicon icon if exist
             var oldFaviconIconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.OldFaviconIconName, storeScope));
             if (_fileProvider.FileExists(oldFaviconIconPath))
-            {
                 _fileProvider.DeleteFile(oldFaviconIconPath);
-            }
 
             //activity log
             await _customerActivityService.InsertActivityAsync("UploadIcons", string.Format(await _localizationService.GetResourceAsync("ActivityLog.UploadNewIcons"), storeScope));
