@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
@@ -109,15 +110,14 @@ public partial class CatalogController : BasePublicController
 
     #region Categories
 
+    [SaveLastContinueShoppingPage]
     public virtual async Task<IActionResult> Category(int categoryId, CatalogProductsCommand command)
     {
         var category = await _categoryService.GetCategoryByIdAsync(categoryId);
 
         if (!await CheckCategoryAvailabilityAsync(category))
             return InvokeHttp404();
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-
+        
         //display "edit" (manage) link
         if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Catalog.CATEGORIES_VIEW))
             DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = AreaNames.ADMIN }));
@@ -151,6 +151,7 @@ public partial class CatalogController : BasePublicController
 
     #region Manufacturers
 
+    [SaveLastContinueShoppingPage]
     public virtual async Task<IActionResult> Manufacturer(int manufacturerId, CatalogProductsCommand command)
     {
         var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId);
@@ -199,13 +200,14 @@ public partial class CatalogController : BasePublicController
 
     #region Vendors
 
+    [SaveLastContinueShoppingPage]
     public virtual async Task<IActionResult> Vendor(int vendorId, CatalogProductsCommand command)
     {
         var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
 
         if (!await CheckVendorAvailabilityAsync(vendor))
             return InvokeHttp404();
-
+        
         //display "edit" (manage) link
         if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Customers.VENDORS_VIEW))
             DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = AreaNames.ADMIN }));
@@ -355,6 +357,7 @@ public partial class CatalogController : BasePublicController
 
     #region Searching
 
+    [SaveLastContinueShoppingPage]
     public virtual async Task<IActionResult> Search(SearchModel model, CatalogProductsCommand command)
     {
         if (model == null)
@@ -492,11 +495,12 @@ public partial class CatalogController : BasePublicController
         return Json(finalResult);
     }
 
+    [SaveLastContinueShoppingPage]
     public virtual async Task<IActionResult> SearchByFilterLevelValues(SearchFilterLevelValueModel model, CatalogProductsCommand command)
     {
         if (!_filterLevelSettings.FilterLevelEnabled)
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
-
+        
         if (model == null)
             model = new SearchFilterLevelValueModel();
 
