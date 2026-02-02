@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
-using Nop.Core;
 using Nop.Core.Domain.Security;
 using Nop.Core.Http;
+using Nop.Services.Helpers;
 
 namespace Nop.Web.Framework.Mvc.Routing;
 
@@ -44,7 +44,7 @@ public partial class NopLocalRedirectResultExecutor : LocalRedirectResultExecuto
     /// <param name="context">Action context</param>
     /// <param name="result">Redirect result</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public override Task ExecuteAsync(ActionContext context, LocalRedirectResult result)
+    public override async Task ExecuteAsync(ActionContext context, LocalRedirectResult result)
     {
         ArgumentNullException.ThrowIfNull(result);
 
@@ -71,7 +71,7 @@ public partial class NopLocalRedirectResultExecutor : LocalRedirectResultExecuto
                 result.Url = urlHelper.RouteUrl(NopRouteNames.General.HOMEPAGE);
         }
 
-        return base.ExecuteAsync(context, result);
+        await base.ExecuteAsync(context, result);
     }
 
     #endregion

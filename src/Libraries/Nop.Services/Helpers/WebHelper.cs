@@ -1,17 +1,17 @@
-﻿using System.Net;
+﻿﻿using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
+using Nop.Core;
 using Nop.Core.Http;
+using Nop.Core.Infrastructure;
 
-namespace Nop.Core;
+namespace Nop.Services.Helpers;
 
 /// <summary>
 /// Represents a web helper
@@ -20,27 +20,20 @@ public partial class WebHelper : IWebHelper
 {
     #region Fields  
 
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IHostApplicationLifetime _hostApplicationLifetime;
     protected readonly IHttpContextAccessor _httpContextAccessor;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
-    protected readonly Lazy<IStoreContext> _storeContext;
+
+    private static string _cachedStoreUrl;
 
     #endregion
 
     #region Ctor
 
-    public WebHelper(IActionContextAccessor actionContextAccessor,
-        IHostApplicationLifetime hostApplicationLifetime,
-        IHttpContextAccessor httpContextAccessor,
-        IUrlHelperFactory urlHelperFactory,
-        Lazy<IStoreContext> storeContext)
+    public WebHelper(IHostApplicationLifetime hostApplicationLifetime,
+        IHttpContextAccessor httpContextAccessor)
     {
-        _actionContextAccessor = actionContextAccessor;
         _hostApplicationLifetime = hostApplicationLifetime;
         _httpContextAccessor = httpContextAccessor;
-        _urlHelperFactory = urlHelperFactory;
-        _storeContext = storeContext;
     }
 
     #endregion
@@ -84,6 +77,57 @@ public partial class WebHelper : IWebHelper
     #endregion
 
     #region Methods
+
+    /// <summary>
+    /// Determines whether the specified URL is a local URL that is safe for redirection within the application.
+    /// </summary>
+    /// <remarks>A local URL is one that starts with '/' (but not '//' or '/\') or with '~/' (but not '~//' or '~/\'), and does not contain ASCII control characters. This method helps prevent open redirect vulnerabilities by ensuring only safe, local URLs are accepted for redirection.</remarks>
+    /// <param name="url">The URL to validate. This can be an absolute or relative URL.</param>
+    /// <returns>true if the URL is considered local and safe for redirection; otherwise, false.</returns>
+    public virtual bool CheckIsLocalUrl(string url)
+    {
+        if (string.IsNullOrEmpty(url))
+            return false;
+
+        switch (url[0])
+        {
+            //allows "/" or "/foo" but not "//" or "/\".
+            //url is exactly "/"
+            case '/' when url.Length == 1:
+                return true;
+            //url doesn't start with "//" or "/\"
+            case '/' when url[1] != '/' && url[1] != '\\':
+                return !hasControlCharacter(url.AsSpan(1));
+            case '/':
+                break;
+            //allows "~/" or "~/foo" but not "~//" or "~/\".
+            case '~' when url.Length > 1 && url[1] == '/':
+            {
+                //url is exactly "~/"
+                if (url.Length == 2)
+                    return true;
+
+                //url doesn't start with "~//" or "~/\"
+                if (url[2] != '/' && url[2] != '\\')
+                    return !hasControlCharacter(url.AsSpan(2));
+                break;
+            }
+        }
+
+        return false;
+
+        static bool hasControlCharacter(ReadOnlySpan<char> readOnlySpan)
+        {
+            //URLs may not contain ASCII control characters.
+            foreach (var t in readOnlySpan)
+            {
+                if (char.IsControl(t))
+                    return true;
+            }
+
+            return false;
+        }
+    }
 
     /// <summary>
     /// Get URL referrer if exists
@@ -189,14 +233,20 @@ public partial class WebHelper : IWebHelper
         if (!string.IsNullOrEmpty(storeHost))
         {
             //add application path base if exists
-            storeLocation = IsRequestAvailable() ? $"{storeHost.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.PathBase}" : storeHost;
+            storeLocation = IsRequestAvailable()
+                ? $"{storeHost.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.PathBase}"
+                : storeHost;
         }
 
         //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
         if (string.IsNullOrEmpty(storeHost))
         {
-            storeLocation = _storeContext.Value.GetCurrentStoreAsync().Result?.Url
-                ?? throw new Exception("Current store cannot be loaded");
+            if (_cachedStoreUrl is null)
+            {
+                var syncCodeHelper = EngineContext.Current.Resolve<ISyncCodeHelper>();
+                _cachedStoreUrl = syncCodeHelper.GetCurrentStore()?.Url;
+            }
+            storeLocation = _cachedStoreUrl ?? throw new Exception("Current store cannot be loaded");
         }
 
         //ensure that URL is ended with slash
@@ -239,8 +289,7 @@ public partial class WebHelper : IWebHelper
             return url;
 
         //prepare URI object
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-        var isLocalUrl = urlHelper.IsLocalUrl(url);
+        var isLocalUrl = CheckIsLocalUrl(url);
 
         var uriStr = url;
         if (isLocalUrl)
@@ -287,8 +336,7 @@ public partial class WebHelper : IWebHelper
             return url;
 
         //prepare URI object
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-        var isLocalUrl = urlHelper.IsLocalUrl(url);
+        var isLocalUrl = CheckIsLocalUrl(url);
         var uri = new Uri(isLocalUrl ? $"{GetStoreLocation().TrimEnd('/')}{url}" : url, UriKind.Absolute);
 
         //get current query parameters

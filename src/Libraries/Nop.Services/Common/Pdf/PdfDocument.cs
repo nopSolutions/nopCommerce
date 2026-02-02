@@ -295,7 +295,7 @@ public abstract class PdfDocument<TItem>
         var expression = (MemberExpression)propertyExpression.Body;
         var propertyInfo = (PropertyInfo)expression.Member;
 
-        var label = propertyInfo.GetCustomAttributes<DisplayNameAttribute>(true).FirstOrDefault() is DisplayNameAttribute attr
+        var label = propertyInfo.GetCustomAttributes<DisplayNameAttribute>(true).FirstOrDefault() is { } attr
             ? GetResourceAsync(attr.DisplayName, language?.Id ?? 0).Result
             : string.Empty;
 

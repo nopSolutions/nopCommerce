@@ -7,6 +7,7 @@ using Nop.Core.Http;
 using Nop.Core.Rss;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Mvc;

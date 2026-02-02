@@ -51,6 +51,6 @@ public class PaymentManualViewComponent : NopViewComponent
                 selectedYear.Selected = true;
         }
 
-        return View("~/Plugins/Payments.Manual/Views/PaymentInfo.cshtml", model);
+        return await ViewAsync("~/Plugins/Payments.Manual/Views/PaymentInfo.cshtml", model);
     }
 }

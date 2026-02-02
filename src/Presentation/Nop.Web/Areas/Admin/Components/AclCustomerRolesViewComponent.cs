@@ -11,12 +11,12 @@ public partial class AclCustomerRolesViewComponent : NopViewComponent
 {
     #region Methods
 
-    public IViewComponentResult Invoke(object additionalData)
+    public async Task<IViewComponentResult> InvokeAsync(object additionalData)
     {
         if (additionalData is not IAclSupportedModel model)
             return Content(string.Empty);
         
-        return View(model);
+        return await ViewAsync(model);
     }
 
     #endregion

@@ -41,7 +41,7 @@ public class HomepageNewsViewComponent : NopViewComponent
             return Content("");
 
         var model = await _newsModelFactory.PrepareHomepageNewsItemsModelAsync();
-        return View("~/Plugins/Misc.News/Public/Views/Components/HomepageNews.cshtml", model);
+        return await ViewAsync("~/Plugins/Misc.News/Public/Views/Components/HomepageNews.cshtml", model);
     }
 
     #endregion

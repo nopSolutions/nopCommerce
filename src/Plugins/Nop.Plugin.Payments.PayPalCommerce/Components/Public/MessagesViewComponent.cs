@@ -73,7 +73,7 @@ public class MessagesViewComponent : NopViewComponent
         var placement = isCartPage ? ButtonPlacement.Cart : ButtonPlacement.PaymentMethod;
         var model = await _modelFactory.PrepareMessagesModelAsync(placement, loadScript);
 
-        return View("~/Plugins/Payments.PayPalCommerce/Views/Public/_Messages.cshtml", model);
+        return await ViewAsync("~/Plugins/Payments.PayPalCommerce/Views/Public/_Messages.cshtml", model);
     }
 
     #endregion

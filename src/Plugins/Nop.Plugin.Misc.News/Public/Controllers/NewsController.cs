@@ -9,6 +9,7 @@ using Nop.Plugin.Misc.News.Public.Factories;
 using Nop.Plugin.Misc.News.Public.Models;
 using Nop.Plugin.Misc.News.Services;
 using Nop.Services.Customers;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;

@@ -25,7 +25,7 @@ public partial class CatalogDocument : PdfDocument<CatalogItem>
 
         foreach (var path in picPaths)
         {
-            var image = PdfImageHelper.GetITextSharpImageFromByteArray(GetImageAsync(path).Result ?? Array.Empty<byte>());
+            var image = PdfImageHelper.GetITextSharpImageFromByteArray(GetImageAsync(path).Result ?? []);
             image.ScaleToFit(ImageTargetSize, ImageTargetSize);
 
             var imageCell = new PdfPCell(image, fit: false)

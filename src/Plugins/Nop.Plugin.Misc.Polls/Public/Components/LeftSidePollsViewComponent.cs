@@ -41,10 +41,11 @@ public class LeftSidePollsViewComponent : NopViewComponent
             return Content(string.Empty);
 
         var model = await _pollModelFactory.PrepareLeftSidePollModelAsync();
+        
         if (model is null)
             return Content(string.Empty);
 
-        return View("~/Plugins/Misc.Polls/Public/Views/PollBlock.cshtml", model);
+        return await ViewAsync("~/Plugins/Misc.Polls/Public/Views/PollBlock.cshtml", model);
     }
 
     #endregion

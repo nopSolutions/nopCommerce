@@ -15,6 +15,7 @@ using Nop.Plugin.Misc.Brevo.Domain;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;

@@ -53,7 +53,7 @@ public class ExportItemsViewComponent : NopViewComponent
         if (!widgetZone.Equals(AdminWidgetZones.ProductListButtons))
             return Content(string.Empty);
 
-        return View("~/Plugins/Tax.Avalara/Views/Product/ExportItems.cshtml");
+        return await ViewAsync("~/Plugins/Tax.Avalara/Views/Product/ExportItems.cshtml");
     }
 
     #endregion

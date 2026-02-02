@@ -57,7 +57,7 @@ public sealed class FormValueRequiredAttribute : ActionMethodSelectorAttribute
         if (!routeContext.HttpContext.Request.IsPostRequest())
             return false;
 
-        var form = routeContext.HttpContext.Request.ReadFormAsync().Result;
+        var form = routeContext.HttpContext.Request.Form;
 
         foreach (var buttonName in _submitButtonNames)
         {

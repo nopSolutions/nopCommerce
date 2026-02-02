@@ -71,24 +71,6 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     /// <summary>
     /// Get all entity entries
     /// </summary>
-    /// <param name="getAll">Function to select entries</param>
-    /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
-    /// <returns>Entity entries</returns>
-    protected virtual IList<TEntity> GetEntities(Func<IList<TEntity>> getAll, Func<IStaticCacheManager, CacheKey> getCacheKey)
-    {
-        if (getCacheKey == null)
-            return getAll();
-
-        //caching
-        var cacheKey = getCacheKey(_staticCacheManager)
-                       ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.AllCacheKey);
-
-        return _staticCacheManager.Get(cacheKey, getAll);
-    }
-
-    /// <summary>
-    /// Get all entity entries
-    /// </summary>
     /// <param name="getAllAsync">Function to select entries</param>
     /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
     /// <returns>

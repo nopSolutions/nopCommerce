@@ -24,7 +24,7 @@ public partial class FilterLevelValueSearchViewComponent : NopViewComponent
         {
             var model = await _filterLevelValueModelFactory.PrepareFilterLevelValueSearchModelAsync(new FilterLevelValueSearchModel());
 
-            return View(model);
+            return await ViewAsync(model);
         }
 
         return Content(string.Empty);

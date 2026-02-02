@@ -19,6 +19,6 @@ public partial class HomepageCategoriesViewComponent : NopViewComponent
         if (!model.Any())
             return Content("");
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

@@ -19,6 +19,6 @@ public partial class ForumActiveDiscussionsSmallViewComponent : NopViewComponent
         if (!model.ForumTopics.Any())
             return Content("");
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

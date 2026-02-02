@@ -31,6 +31,6 @@ public partial class OrderTotalsViewComponent : NopViewComponent
         var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, store.Id);
 
         var model = await _shoppingCartModelFactory.PrepareOrderTotalsModelAsync(cart, isEditable);
-        return View(model);
+        return await ViewAsync(model);
     }
 }

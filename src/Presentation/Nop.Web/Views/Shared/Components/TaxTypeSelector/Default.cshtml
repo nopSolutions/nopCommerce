@@ -1,6 +1,7 @@
 ﻿@model TaxTypeSelectorModel
 @using Nop.Core.Domain.Tax
-@inject Nop.Core.IWebHelper webHelper
+@using Nop.Services.Helpers
+@inject IWebHelper webHelper
 
 @{
     var returnUrl = webHelper.GetRawUrl(Context.Request);

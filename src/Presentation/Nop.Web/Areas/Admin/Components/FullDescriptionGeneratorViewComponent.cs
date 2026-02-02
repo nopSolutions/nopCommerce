@@ -27,12 +27,12 @@ public partial class FullDescriptionGeneratorViewComponent : NopViewComponent
 
     #region Methods
 
-    public IViewComponentResult Invoke(FullDescriptionGeneratorModel model)
+    public async Task<IViewComponentResult> InvokeAsync(FullDescriptionGeneratorModel model)
     {
         if (!_artificialIntelligenceSettings.Enabled)
             return Content(string.Empty);
 
-        return View(model);
+        return await ViewAsync(model);
     }
 
     #endregion

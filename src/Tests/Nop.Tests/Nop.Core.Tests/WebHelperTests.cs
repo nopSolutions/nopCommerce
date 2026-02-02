@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Nop.Core;
+using Nop.Services.Helpers;
 using NUnit.Framework;
 
 namespace Nop.Tests.Nop.Core.Tests;

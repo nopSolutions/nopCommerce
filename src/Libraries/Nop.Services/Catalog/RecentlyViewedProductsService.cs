@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Http;
 using Nop.Core.Security;
+using Nop.Services.Helpers;
 
 namespace Nop.Services.Catalog;
 

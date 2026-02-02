@@ -41,10 +41,11 @@ public class HomepagePollsViewComponent : NopViewComponent
             return Content(string.Empty);
 
         var model = await _pollModelFactory.PrepareHomepagePollModelsAsync();
+        
         if (!model.Any())
             return Content(string.Empty);
 
-        return View("~/Plugins/Misc.Polls/Public/Views/HomepagePolls.cshtml", model);
+        return await ViewAsync("~/Plugins/Misc.Polls/Public/Views/HomepagePolls.cshtml", model);
     }
 
     #endregion

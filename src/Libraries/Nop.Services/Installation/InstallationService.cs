@@ -7,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Helpers;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Installation;

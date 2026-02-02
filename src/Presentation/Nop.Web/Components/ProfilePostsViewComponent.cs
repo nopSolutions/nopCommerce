@@ -22,6 +22,6 @@ public partial class ProfilePostsViewComponent : NopViewComponent
         ArgumentNullException.ThrowIfNull(customer);
 
         var model = await _profileModelFactory.PrepareProfilePostsModelAsync(customer, pageNumber);
-        return View(model);
+        return await ViewAsync(model);
     }
 }

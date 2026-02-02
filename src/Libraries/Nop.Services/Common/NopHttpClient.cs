@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Rss;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 

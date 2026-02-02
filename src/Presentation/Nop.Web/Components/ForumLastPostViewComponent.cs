@@ -21,6 +21,6 @@ public partial class ForumLastPostViewComponent : NopViewComponent
         var forumPost = await _forumService.GetPostByIdAsync(forumPostId);
         var model = await _forumModelFactory.PrepareLastPostModelAsync(forumPost, showTopic);
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

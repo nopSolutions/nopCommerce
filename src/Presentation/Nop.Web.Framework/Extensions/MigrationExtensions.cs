@@ -202,7 +202,7 @@ public static partial class MigrationExtensions
             resourceNames.Contains(locale.ResourceName, StringComparer.InvariantCultureIgnoreCase));
 
         //clear cache
-        staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
+        staticCacheManager.RemoveByPrefixAsync(NopEntityCacheDefaults<LocaleStringResource>.Prefix).Wait();
     }
 
     /// <summary>
@@ -239,7 +239,7 @@ public static partial class MigrationExtensions
         }
 
         //clear cache
-        staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
+        staticCacheManager.RemoveByPrefixAsync(NopEntityCacheDefaults<LocaleStringResource>.Prefix).Wait();
 
         return;
 
