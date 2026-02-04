@@ -61,6 +61,9 @@ public sealed class SaveLastContinueShoppingPageAttribute : TypeFilterAttribute
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
                 store.Id);
+
+            if (context.Result == null)
+                await next();
         }
 
         #endregion
