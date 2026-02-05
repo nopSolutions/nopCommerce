@@ -22,16 +22,16 @@
     <Value>Le classement est requis</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>Le '{0}'compte n'est pas accordé avec l'autorisation de modification sur le dossier '{1}'. S'il vous plaît configurer ces autorisations</Value>
+    <Value>Le compte '{0}' n'a pas l'autorisation de modification sur le dossier '{1}'. Veuillez configurer ces autorisations.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>Le '{0}'compte n'est pas accordé avec l'autorisation de modification sur le fichier '{1}'. S'il vous plaît configurer ces autorisations</Value>
+    <Value>Le compte '{0}' n'est pas autorisé à modifier le fichier '{1}'. Veuillez configurer ces autorisations.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
     <Value>Confirmez le mot de passe</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>Entrez le mot de passe de confirmer</Value>
+    <Value>Entrez la confirmation du mot de passe</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
     <Value>chaîne de connexion</Value>
@@ -40,7 +40,7 @@
     <Value>Une chaîne de connexion SQL est requise</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>Mauvaise format de chaîne de connexion SQL</Value>
+    <Value>Mauvais format de la chaîne de connexion SQL</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
     <Value>Pays</Value>
@@ -52,7 +52,7 @@
     <Value>Créer base de données si elle n'existe pas</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
-    <Value>Créer données-échantillon</Value>
+    <Value>Créer données d'exemple</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
     <Value>Spécifiez le classement personnalisé</Value>
@@ -64,13 +64,13 @@
     <Value>Une erreur s'est produite lors de la création de base de données: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
-    <Value>base de données des informations</Value>
+    <Value>Infos de la base de données</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
     <Value>nom de la base</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>Base de données n'existe pas ou vous ne disposez pas des autorisations pour se connecter à l'</Value>
+    <Value>La base de données n'existe pas ou vous ne disposez pas des autorisations pour s'y connecter.</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
     <Value>Sélectionnez le fournisseur de données</Value>
@@ -103,7 +103,7 @@
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>Entrez la chaîne de connexion brut (avancé)</Value>
+    <Value>Entrez la chaîne de connexion brute (avancé)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
     <Value>redémarrez l'installation</Value>
@@ -124,10 +124,10 @@
     <Value>Échec du programme: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
-    <Value>SQL Mot de passe</Value>
+    <Value>Mot de passe SQL</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>Mot de passe SQL est requise</Value>
+    <Value>Mot de passe SQL est requis</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
     <Value>Microsoft SQL Server</Value>
@@ -136,18 +136,18 @@
     <Value>Nom d'utilisateur SQL</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>Nom d'utilisateur SQL est requise</Value>
+    <Value>Nom d'utilisateur SQL est requis</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>informations sur le magasin</Value>
+    <Value>informations sur le. stockage</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
     <Value>S'abonner à la newsletter nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>l'installation nopCommerce</Value>
+    <Value>Installation nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>Pour compléter cet assistant, vous devez connaître certaines informations concernant votre serveur de base de données ("chaîne de connexion"). S'il vous plaît contactez votre FAI si nécessaire. Si vous installez sur une machine locale ou serveur que vous pourriez avoir besoin d'informations à partir de votre système d'administration</Value>
+    <Value>Pour compléter cet assistant, vous devez connaître certaines informations concernant votre serveur de base de données ("chaîne de connexion"). Veuillez contacter votre hébergeur si nécessaire. Si vous installez sur une machine locale ou serveur local, vous pourriez avoir besoin d'informations à partir de votre système d'administration.</Value>
   </LocaleResource>
 </Language>

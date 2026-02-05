@@ -94,7 +94,7 @@
     <Value>Tümleşik Windows kimlik doğrulamasını kullan</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
-    <Value>MYSQL</Value>
+    <Value>MySQL</Value>
   </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>Şifreler eşleşmiyor</Value>
