@@ -21,7 +21,7 @@ namespace Nop.Data.Extensions;
 /// </summary>
 public static class FluentMigratorExtensions
 {
-    #region  Utils
+    #region Utilities
 
     private const int DATE_TIME_PRECISION = 6;
 

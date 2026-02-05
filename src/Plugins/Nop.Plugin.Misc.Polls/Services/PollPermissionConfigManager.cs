@@ -4,7 +4,7 @@ using Nop.Services.Security;
 namespace Nop.Plugin.Misc.Polls.Services;
 
 /// <summary>
-/// News permission congiguration manager
+/// News permission configuration manager
 /// </summary>
 public class PollPermissionConfigManager : IPermissionConfigManager
 {
