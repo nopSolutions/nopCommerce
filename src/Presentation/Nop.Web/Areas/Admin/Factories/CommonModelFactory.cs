@@ -981,6 +981,10 @@ public partial class CommonModelFactory : ICommonModelFactory
         model.DeleteAlreadySentQueuedEmails.EndDate = DateTime.UtcNow.AddDays(-7);
 
         model.BackupSupported = _dataProvider.BackupSupported;
+        model.DatabaseSize =
+            string.Format(
+                await _localizationService.GetResourceAsync("Admin.System.Maintenance.ShrinkDatabase.DatabaseSize"),
+                Math.Round(await _dataProvider.GetDatabaseSizeAsync() / 1024.0M, 2));
 
         //prepare nested search model
         PrepareBackupFileSearchModel(model.BackupFileSearchModel);

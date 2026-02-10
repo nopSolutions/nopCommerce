@@ -345,6 +345,21 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     }
 
     /// <summary>
+    /// Gets the database size in Kb
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the database size
+    /// </returns>
+    public virtual async Task<long> GetDatabaseSizeAsync()
+    {
+        using var currentConnection = CreateDataConnection();
+        var result = await currentConnection.QueryToListAsync<long>($"SELECT pg_database_size('{GetConnectionStringBuilder().Database}') / 1024 as sizebytes");
+
+        return result.FirstOrDefault();
+    }
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>

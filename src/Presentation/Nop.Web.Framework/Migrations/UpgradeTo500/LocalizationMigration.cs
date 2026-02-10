@@ -244,6 +244,9 @@ public class LocalizationMigration : MigrationBase
             ["Products.Manufacturers.ResponsiblePerson"] = "Responsible person name: {0}",
             ["Products.Manufacturers.ResponsiblePersonPhysicalAddress"] = "Responsible person physical address: {0}",
             ["Products.Manufacturers.ResponsiblePersonElectronicAddress"] = "Responsible person electronic address: {0}",
+            
+            //#8075
+            ["Admin.System.Maintenance.ShrinkDatabase.DatabaseSize"] = "Current database size is {0} MB",
         });
 
         #endregion

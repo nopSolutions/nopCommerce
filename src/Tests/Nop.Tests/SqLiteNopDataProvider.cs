@@ -274,6 +274,21 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
     }
 
     /// <summary>
+    /// Gets the database size in Kb
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the database size
+    /// </returns>
+    public virtual async Task<long> GetDatabaseSizeAsync()
+    {
+        using var currentConnection = CreateDataConnection();
+        var result = await currentConnection.QueryToListAsync<long>("SELECT page_count * page_size as size FROM pragma_page_count(), pragma_page_size()");
+
+        return result.FirstOrDefault();
+    }
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>

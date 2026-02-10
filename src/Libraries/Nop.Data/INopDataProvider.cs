@@ -233,6 +233,15 @@ public partial interface INopDataProvider
     Task ShrinkDatabaseAsync();
 
     /// <summary>
+    /// Gets the database size in Kb
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the database size
+    /// </returns>
+    Task<long> GetDatabaseSizeAsync();
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>
