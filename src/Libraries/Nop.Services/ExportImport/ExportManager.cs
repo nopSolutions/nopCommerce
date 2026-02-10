@@ -90,6 +90,7 @@ public partial class ExportManager : IExportManager
     protected readonly IVendorService _vendorService;
     protected readonly IWorkContext _workContext;
     protected readonly OrderSettings _orderSettings;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
     protected readonly ProductEditorSettings _productEditorSettings;
 
     #endregion
@@ -136,6 +137,7 @@ public partial class ExportManager : IExportManager
         IVendorService vendorService,
         IWorkContext workContext,
         OrderSettings orderSettings,
+        PrivateMessageSettings privateMessageSettings,
         ProductEditorSettings productEditorSettings)
     {
         _addressSettings = addressSettings;
@@ -178,6 +180,7 @@ public partial class ExportManager : IExportManager
         _vendorService = vendorService;
         _workContext = workContext;
         _orderSettings = orderSettings;
+        _privateMessageSettings = privateMessageSettings;
         _productEditorSettings = productEditorSettings;
     }
 
@@ -2907,7 +2910,7 @@ public partial class ExportManager : IExportManager
         }, _catalogSettings);
 
         List<PrivateMessage> pmList = null;
-        if (_customerSettings.AllowPrivateMessages)
+        if (_privateMessageSettings.AllowPrivateMessages)
         {
             pmList = (await _customerService.GetAllPrivateMessagesAsync(storeId, customer.Id, 0, null, null, null, null)).ToList();
             pmList.AddRange((await _customerService.GetAllPrivateMessagesAsync(storeId, 0, customer.Id, null, null, null, null)).ToList());

@@ -61,6 +61,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly LocalizationSettings _localizationSettings;
     protected readonly MediaSettings _mediaSettings;
     protected readonly MessagesSettings _messagesSettings;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
     protected readonly RobotsTxtSettings _robotsTxtSettings;
     protected readonly SitemapXmlSettings _sitemapXmlSettings;
     protected readonly StoreInformationSettings _storeInformationSettings;
@@ -94,6 +95,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         LocalizationSettings localizationSettings,
         MediaSettings mediaSettings,
         MessagesSettings messagesSettings,
+        PrivateMessageSettings privateMessageSettings,
         RobotsTxtSettings robotsTxtSettings,
         SitemapXmlSettings sitemapXmlSettings,
         StoreInformationSettings storeInformationSettings)
@@ -122,6 +124,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _workContext = workContext;
         _mediaSettings = mediaSettings;
         _messagesSettings = messagesSettings;
+        _privateMessageSettings = privateMessageSettings;
         _localizationSettings = localizationSettings;
         _robotsTxtSettings = robotsTxtSettings;
         _sitemapXmlSettings = sitemapXmlSettings;
@@ -156,7 +159,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     {
         var result = 0;
         var customer = await _workContext.GetCurrentCustomerAsync();
-        if (_customerSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer))
+        if (_privateMessageSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer))
         {
             var store = await _storeContext.GetCurrentStoreAsync();
             var privateMessages = await _customerService.GetAllPrivateMessagesAsync(store.Id,
@@ -320,7 +323,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             unreadMessage = string.Format(await _localizationService.GetResourceAsync("PrivateMessages.TotalUnread"), unreadMessageCount);
 
             //notifications here
-            if (_customerSettings.ShowAlertForPM &&
+            if (_privateMessageSettings.ShowAlertForPM &&
                 !await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, store.Id))
             {
                 await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, true, store.Id);
@@ -336,7 +339,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             ShoppingCartEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART),
             UsePopupNotifications = _messagesSettings.UsePopupNotifications,
             WishlistEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST),
-            AllowPrivateMessages = await _customerService.IsRegisteredAsync(customer) && _customerSettings.AllowPrivateMessages,
+            AllowPrivateMessages = await _customerService.IsRegisteredAsync(customer) && _privateMessageSettings.AllowPrivateMessages,
             UnreadPrivateMessages = unreadMessage,
             AlertMessage = alertMessage,
         };

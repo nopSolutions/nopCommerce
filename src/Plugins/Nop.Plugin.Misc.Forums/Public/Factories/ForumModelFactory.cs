@@ -50,6 +50,7 @@ public class ForumModelFactory
     private readonly IWebHelper _webHelper;
     private readonly IWorkContext _workContext;
     private readonly MediaSettings _mediaSettings;
+    private readonly PrivateMessageSettings _privateMessageSettings;
     private readonly SeoSettings _seoSettings;
 
     #endregion
@@ -70,6 +71,7 @@ public class ForumModelFactory
         IPictureService pictureService,
         IWebHelper webHelper,
         IWorkContext workContext,
+        PrivateMessageSettings privateMessageSettings,
         MediaSettings mediaSettings,
         SeoSettings seoSettings)
     {
@@ -87,6 +89,7 @@ public class ForumModelFactory
         _pictureService = pictureService;
         _webHelper = webHelper;
         _workContext = workContext;
+        _privateMessageSettings = privateMessageSettings;
         _mediaSettings = mediaSettings;
         _seoSettings = seoSettings;
     }
@@ -459,7 +462,7 @@ public class ForumModelFactory
                 ForumPostCount = await _genericAttributeService.GetAttributeAsync<Customer, int>(post.CustomerId, ForumDefaults.ForumPostCountAttribute),
                 ShowCustomersJoinDate = _customerSettings.ShowCustomersJoinDate && !customerIsGuest,
                 CustomerJoinDate = customer?.CreatedOnUtc ?? DateTime.Now,
-                AllowPrivateMessages = _customerSettings.AllowPrivateMessages && !customerIsGuest,
+                AllowPrivateMessages = _privateMessageSettings.AllowPrivateMessages && !customerIsGuest,
                 SignaturesEnabled = _forumSettings.SignaturesEnabled,
                 FormattedSignature = _forumService
                     .FormatForumSignatureText(await _genericAttributeService.GetAttributeAsync<Customer, string>(post.CustomerId, ForumDefaults.SignatureAttribute)),

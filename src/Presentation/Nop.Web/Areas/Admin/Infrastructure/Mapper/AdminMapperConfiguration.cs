@@ -430,7 +430,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore())
             .ForMember(settings => settings.UseStandardSearchWhenSearchProviderThrowsException, options => options.Ignore())
             .ForMember(settings => settings.ActiveSearchProviderSystemName, options => options.Ignore())
-            .ForMember(settings => settings.VendorProductReviewsPageSize, options => options.Ignore());        
+            .ForMember(settings => settings.VendorProductReviewsPageSize, options => options.Ignore());
 
         CreateMap<ProductCategory, CategoryProductModel>()
             .ForMember(model => model.ProductName, options => options.Ignore());
@@ -786,10 +786,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateMap<CustomerRoleModel, CustomerRole>();
 
         CreateMap<CustomerSettings, CustomerSettingsModel>()
-            .ForMember(model => model.AvailableCountries, options => options.Ignore())
-            .ForMember(model => model.AllowPrivateMessages_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NotifyAboutPrivateMessages_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowAlertForPM_OverrideForStore, options => options.Ignore());
+            .ForMember(model => model.AvailableCountries, options => options.Ignore());
         CreateMap<CustomerSettingsModel, CustomerSettings>()
             .ForMember(settings => settings.AvatarMaximumSizeBytes, options => options.Ignore())
             .ForMember(settings => settings.DeleteGuestTaskOlderThanMinutes, options => options.Ignore())
@@ -798,14 +795,21 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.OnlineCustomerMinutes, options => options.Ignore())
             .ForMember(settings => settings.SuffixDeletedCustomers, options => options.Ignore())
             .ForMember(settings => settings.LastActivityMinutes, options => options.Ignore())
-            .ForMember(settings => settings.RequiredReLoginAfterPasswordChange, options => options.Ignore())
-            .ForMember(settings => settings.PMSubjectMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.PMTextMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.PrivateMessagesPageSize, options => options.Ignore());
+            .ForMember(settings => settings.RequiredReLoginAfterPasswordChange, options => options.Ignore());
 
         CreateMap<MultiFactorAuthenticationSettings, MultiFactorAuthenticationSettingsModel>();
         CreateMap<MultiFactorAuthenticationSettingsModel, MultiFactorAuthenticationSettings>()
             .ForMember(settings => settings.ActiveAuthenticationMethodSystemNames, option => option.Ignore());
+
+        CreateMap<PrivateMessageSettings, PrivateMessageSettingsModel>()
+            .ForMember(model => model.AllowPrivateMessages_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.NotifyAboutPrivateMessages_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.ShowAlertForPM_OverrideForStore, options => options.Ignore());
+
+        CreateMap<PrivateMessageSettingsModel, PrivateMessageSettings>()
+            .ForMember(settings => settings.PMSubjectMaxLength, options => options.Ignore())
+            .ForMember(settings => settings.PMTextMaxLength, options => options.Ignore())
+            .ForMember(settings => settings.PrivateMessagesPageSize, options => options.Ignore());
 
         CreateMap<RewardPointsSettings, RewardPointsSettingsModel>()
             .ForMember(model => model.ActivatePointsImmediately, options => options.Ignore())

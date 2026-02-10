@@ -415,8 +415,8 @@ public class LocalizationMigration : MigrationBase
         {
             ["Admin.Configuration.Settings.Forums.AllowPrivateMessages"] = "Admin.Configuration.Settings.CustomerUser.AllowPrivateMessages",
             ["Admin.Configuration.Settings.Forums.AllowPrivateMessages.Hint"] = "Admin.Configuration.Settings.CustomerUser.AllowPrivateMessages.Hint",
-            ["Admin.Configuration.Settings.Forums.ShowAlertForPM"] = "Admin.Configuration.Settings.Forums.ShowAlertForPM",
-            ["Admin.Configuration.Settings.Forums.ShowAlertForPM.Hint"] = "Admin.Configuration.Settings.Forums.ShowAlertForPM.Hint",
+            ["Admin.Configuration.Settings.Forums.ShowAlertForPM"] = "Admin.Configuration.Settings.CustomerUser.ShowAlertForPM",
+            ["Admin.Configuration.Settings.Forums.ShowAlertForPM.Hint"] = "Admin.Configuration.Settings.CustomerUser.ShowAlertForPM.Hint",
             ["Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages"] = "Admin.Configuration.Settings.CustomerUser.NotifyAboutPrivateMessages",
             ["Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages.Hint"] = "Admin.Configuration.Settings.CustomerUser.NotifyAboutPrivateMessages.Hint",
         });
@@ -445,6 +445,7 @@ public class LocalizationMigration : MigrationBase
 
             //#7336
             ["Admin.ContentManagement.MessageTemplates.Description.Customer.NewPM"] = "This message template is used when the customer gets a notification about a new private message being received. You can set up this option by ticking the checkbox <strong>Show alert for PM</strong> in Configuration - Settings - Customer settings.",
+            ["Admin.Configuration.Settings.CustomerUser.BlockTitle.PrivateMessage"] = "Private messages",
 
         });
 

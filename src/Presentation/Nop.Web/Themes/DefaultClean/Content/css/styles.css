@@ -5980,21 +5980,21 @@ label, label + * {
   margin: auto;
 }
 
-.PRIVATE-MESSAGES .buttons button:hover,
-.PRIVATE-MESSAGES .buttons button:focus {
+.private-messages .buttons button:hover,
+.private-messages .buttons button:focus {
   background-color: #888;
 }
 
-.PRIVATE-MESSAGES .buttons .button-1 {
+.private-messages .buttons .button-1 {
   background-color: var(--accent-blue-color);
 }
 
-.PRIVATE-MESSAGES .buttons .button-1:hover,
-.PRIVATE-MESSAGES .buttons .button-1:focus {
+.private-messages .buttons .button-1:hover,
+.private-messages .buttons .button-1:focus {
   background-color: var(--accent-blue-active-color);
 }
 
-.PRIVATE-MESSAGES .buttons button {
+.private-messages .buttons button {
   min-width: 140px;
   border: none;
   background-color: #999;
@@ -6081,44 +6081,44 @@ label, label + * {
 
 /* inbox & view message */
 
-.PRIVATE-MESSAGES-page .table-wrapper,
+.private-messages-page .table-wrapper,
 .private-message-view-page .view-message {
   margin: 0 0 30px;
 }
 
-.PRIVATE-MESSAGES-page th.select {
+.private-messages-page th.select {
   text-align: center;
 }
 
-.PRIVATE-MESSAGES-page td.from,
-.PRIVATE-MESSAGES-page td.to,
-.PRIVATE-MESSAGES-page td.subject {
+.private-messages-page td.from,
+.private-messages-page td.to,
+.private-messages-page td.subject {
   min-width: 150px;
 }
 
-.PRIVATE-MESSAGES-page td.date {
+.private-messages-page td.date {
   white-space: nowrap;
 }
 
-.PRIVATE-MESSAGES-page td.subject a {
+.private-messages-page td.subject a {
   color: var(--dark-gray-color);
 }
 
-.PRIVATE-MESSAGES-page td.subject a.pm-unread {
+.private-messages-page td.subject a.pm-unread {
   color: var(--accent-blue-color);
 }
 
-.PRIVATE-MESSAGES-page .pager {
+.private-messages-page .pager {
   margin: 0 0 30px;
 }
 
-.PRIVATE-MESSAGES-page .buttons,
+.private-messages-page .buttons,
 .private-message-view-page .buttons {
   font-size: 0;
 }
 
-.PRIVATE-MESSAGES-page .buttons .button-1,
-.PRIVATE-MESSAGES-page .buttons .button-2,
+.private-messages-page .buttons .button-1,
+.private-messages-page .buttons .button-2,
 .private-message-view-page .buttons .button-1,
 .private-message-view-page .buttons .button-2 {
   display: block;
@@ -6127,7 +6127,7 @@ label, label + * {
   font-size: 15px; /*reset zeroing*/
 }
 
-.PRIVATE-MESSAGES-page .no-items {
+.private-messages-page .no-items {
   padding: 20px;
   text-align: center;
 }
@@ -6589,8 +6589,8 @@ label, label + * {
     margin: 0 5px -1px !important;
   }
 
-  .PRIVATE-MESSAGES-page .buttons .button-1,
-  .PRIVATE-MESSAGES-page .buttons .button-2,
+  .private-messages-page .buttons .button-1,
+  .private-messages-page .buttons .button-2,
   .private-message-view-page .buttons .button-1,
   .private-message-view-page .buttons .button-2 {
     display: inline-block;

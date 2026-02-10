@@ -1,15 +1,12 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
-using Nop.Core.Http;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
-using Nop.Web.Framework.Extensions;
-using Nop.Web.Models.Common;
 using Nop.Web.Models.Profile;
 
 namespace Nop.Web.Factories;
@@ -30,6 +27,7 @@ public partial class ProfileModelFactory : IProfileModelFactory
     protected readonly IPictureService _pictureService;
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
 
     #endregion
 
@@ -43,7 +41,8 @@ public partial class ProfileModelFactory : IProfileModelFactory
         ILocalizationService localizationService,
         IPictureService pictureService,
         IWorkContext workContext,
-        MediaSettings mediaSettings)
+        MediaSettings mediaSettings,
+        PrivateMessageSettings privateMessageSettings)
     {
         _customerSettings = customerSettings;
         _countryService = countryService;
@@ -54,6 +53,7 @@ public partial class ProfileModelFactory : IProfileModelFactory
         _pictureService = pictureService;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
+        _privateMessageSettings = privateMessageSettings;
     }
 
     #endregion
@@ -126,7 +126,7 @@ public partial class ProfileModelFactory : IProfileModelFactory
         }
 
         //private message
-        var pmEnabled = _customerSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer);
+        var pmEnabled = _privateMessageSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer);
 
         //registration date
         var joinDateEnabled = false;

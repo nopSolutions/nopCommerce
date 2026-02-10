@@ -1576,12 +1576,16 @@ public partial class InstallationService
             PhoneNumberValidationUseRegex = false,
             PhoneNumberValidationRule = "^[0-9]{1,14}?$",
             DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == _installationSettings.RegionInfo.ThreeLetterISORegionName),
+        });
+
+        await SaveSettingAsync(dictionary, new PrivateMessageSettings
+        {
             AllowPrivateMessages = false,
             ShowAlertForPM = false,
             PrivateMessagesPageSize = 10,
             NotifyAboutPrivateMessages = false,
             PMSubjectMaxLength = 450,
-            PMTextMaxLength = 4000,
+            PMTextMaxLength = 4000
         });
 
         await SaveSettingAsync(dictionary, new MultiFactorAuthenticationSettings

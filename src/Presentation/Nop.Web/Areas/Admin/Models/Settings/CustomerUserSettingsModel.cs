@@ -18,6 +18,7 @@ public partial record CustomerUserSettingsModel : BaseNopModel, ISettingsModel
         DateTimeSettings = new DateTimeSettingsModel();
         ExternalAuthenticationSettings = new ExternalAuthenticationSettingsModel();
         MultiFactorAuthenticationSettings = new MultiFactorAuthenticationSettingsModel();
+        PrivateMessageSettings = new PrivateMessageSettingsModel();
         CustomerAttributeSearchModel = new CustomerAttributeSearchModel();
         AddressAttributeSearchModel = new AddressAttributeSearchModel();
     }
@@ -37,6 +38,8 @@ public partial record CustomerUserSettingsModel : BaseNopModel, ISettingsModel
     public ExternalAuthenticationSettingsModel ExternalAuthenticationSettings { get; set; }
 
     public MultiFactorAuthenticationSettingsModel MultiFactorAuthenticationSettings { get; set; }
+
+    public PrivateMessageSettingsModel PrivateMessageSettings { get; set; }
 
     public CustomerAttributeSearchModel CustomerAttributeSearchModel { get; set; }
 

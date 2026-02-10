@@ -22,6 +22,7 @@ public class CommonModelFactoryTests : BaseNopTest
     private CustomerSettings _customerSettings;
     private StoreInformationSettings _storeInformationSettings;
     private CommonSettings _commonSettings;
+    private PrivateMessageSettings _privateMessageSettings;
     private Vendor _vendor;
     private ISettingService _settingsService;
 
@@ -33,8 +34,10 @@ public class CommonModelFactoryTests : BaseNopTest
 
         _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = true;
         await _settingsService.SaveSettingAsync(_localizationSettings);
-        _customerSettings.AllowPrivateMessages = true;
-        await _settingsService.SaveSettingAsync(_customerSettings);
+
+        _privateMessageSettings = GetService<PrivateMessageSettings>();
+        _privateMessageSettings.AllowPrivateMessages = true;
+        await _settingsService.SaveSettingAsync(_privateMessageSettings);
 
         _commonModelFactory = GetService<ICommonModelFactory>();
 
@@ -52,8 +55,8 @@ public class CommonModelFactoryTests : BaseNopTest
     {
         _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = false;
         await _settingsService.SaveSettingAsync(_localizationSettings);
-        _customerSettings.AllowPrivateMessages = false;
-        await _settingsService.SaveSettingAsync(_customerSettings);
+        _privateMessageSettings.AllowPrivateMessages = false;
+        await _settingsService.SaveSettingAsync(_privateMessageSettings);
     }
 
     [Test]
@@ -108,7 +111,7 @@ public class CommonModelFactoryTests : BaseNopTest
         model.CustomerName.Should().Be("John");
         model.ShoppingCartEnabled.Should().BeTrue();
         model.WishlistEnabled.Should().BeTrue();
-        model.AllowPrivateMessages.Should().Be(_customerSettings.AllowPrivateMessages);
+        model.AllowPrivateMessages.Should().Be(_privateMessageSettings.AllowPrivateMessages);
         model.UnreadPrivateMessages.Should().BeEmpty();
         model.AlertMessage.Should().BeEmpty();
         model.ShoppingCartItems.Should().Be(0);

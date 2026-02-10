@@ -64,6 +64,7 @@ public partial class CustomerController : BaseAdminController
     protected readonly ITaxService _taxService;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
     protected readonly TaxSettings _taxSettings;
     private static readonly char[] _separator = [','];
 
@@ -100,6 +101,7 @@ public partial class CustomerController : BaseAdminController
         ITaxService taxService,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
+        PrivateMessageSettings privateMessageSettings,
         TaxSettings taxSettings)
     {
         _customerSettings = customerSettings;
@@ -131,6 +133,7 @@ public partial class CustomerController : BaseAdminController
         _taxService = taxService;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
+        _privateMessageSettings = privateMessageSettings;
         _taxSettings = taxSettings;
     }
 
@@ -943,7 +946,7 @@ public partial class CustomerController : BaseAdminController
 
         try
         {
-            if (!_customerSettings.AllowPrivateMessages)
+            if (!_privateMessageSettings.AllowPrivateMessages)
                 throw new NopException("Private messages are disabled");
             if (await _customerService.IsGuestAsync(customer))
                 throw new NopException("Customer should be registered");
@@ -977,7 +980,7 @@ public partial class CustomerController : BaseAdminController
             await _genericAttributeService.SaveAttributeAsync(customerTo, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, false, privateMessage.StoreId);
 
             //Email notification
-            if (_customerSettings.NotifyAboutPrivateMessages)
+            if (_privateMessageSettings.NotifyAboutPrivateMessages)
                 await _workflowMessageService.SendPrivateMessageNotificationAsync(privateMessage, (await _workContext.GetWorkingLanguageAsync())?.Id ?? 0);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.SendPM.Sent"));

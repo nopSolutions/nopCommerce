@@ -23,6 +23,7 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
     protected readonly ILocalizationService _localizationService;
     protected readonly IStoreContext _storeContext;
     protected readonly IWorkContext _workContext;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
 
     #endregion
 
@@ -33,7 +34,8 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
         IDateTimeHelper dateTimeHelper,
         ILocalizationService localizationService,
         IStoreContext storeContext,
-        IWorkContext workContext)
+        IWorkContext workContext,
+        PrivateMessageSettings privateMessageSettings)
     {
         _customerSettings = customerSettings;
         _customerService = customerService;
@@ -41,6 +43,7 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
         _localizationService = localizationService;
         _storeContext = storeContext;
         _workContext = workContext;
+        _privateMessageSettings = privateMessageSettings;
     }
 
     #endregion
@@ -110,7 +113,7 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
             page -= 1;
         }
 
-        var pageSize = _customerSettings.PrivateMessagesPageSize;
+        var pageSize = _privateMessageSettings.PrivateMessagesPageSize;
 
         var messages = new List<PrivateMessageModel>();
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -153,17 +156,16 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
     public virtual async Task<PrivateMessageListModel> PrepareSentModelAsync(int page, string tab)
     {
         if (page > 0)
-        {
             page -= 1;
-        }
 
-        var pageSize = _customerSettings.PrivateMessagesPageSize;
+        var pageSize = _privateMessageSettings.PrivateMessagesPageSize;
 
         var messages = new List<PrivateMessageModel>();
         var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();
         var list = await _customerService.GetAllPrivateMessagesAsync(store.Id,
             customer.Id, 0, null, false, null, string.Empty, page, pageSize);
+
         foreach (var pm in list)
             messages.Add(await PreparePrivateMessageModelAsync(pm));
 

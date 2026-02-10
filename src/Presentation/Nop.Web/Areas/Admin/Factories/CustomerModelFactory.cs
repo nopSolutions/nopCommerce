@@ -74,6 +74,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly ITaxService _taxService;
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
     protected readonly RewardPointsSettings _rewardPointsSettings;
     protected readonly TaxSettings _taxSettings;
 
@@ -117,6 +118,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         ITaxService taxService,
         IWorkContext workContext,
         MediaSettings mediaSettings,
+        PrivateMessageSettings privateMessageSettings,
         RewardPointsSettings rewardPointsSettings,
         TaxSettings taxSettings)
     {
@@ -156,6 +158,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _taxService = taxService;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
+        _privateMessageSettings = privateMessageSettings;
         _rewardPointsSettings = rewardPointsSettings;
         _taxSettings = taxSettings;
     }
@@ -648,7 +651,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             model.Id = customer.Id;
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.AllowSendingOfPrivateMessage = await _customerService.IsRegisteredAsync(customer) &&
-                                                 _customerSettings.AllowPrivateMessages;
+                                                 _privateMessageSettings.AllowPrivateMessages;
             model.AllowSendingOfWelcomeMessage = await _customerService.IsRegisteredAsync(customer) &&
                                                  _customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval;
             model.AllowReSendingOfActivationMessage = await _customerService.IsRegisteredAsync(customer) && !customer.Active &&

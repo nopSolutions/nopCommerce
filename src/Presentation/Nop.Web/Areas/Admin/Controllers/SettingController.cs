@@ -1212,14 +1212,20 @@ public partial class SettingController : BaseAdminController
             var externalAuthenticationSettings = await _settingService.LoadSettingAsync<ExternalAuthenticationSettings>(storeScope);
             var multiFactorAuthenticationSettings = await _settingService.LoadSettingAsync<MultiFactorAuthenticationSettings>(storeScope);
 
-            customerSettings = model.CustomerSettings.ToSettings(customerSettings);
+            var privateMessageSettings = await _settingService.LoadSettingAsync<PrivateMessageSettings>(storeScope);
+            privateMessageSettings = model.PrivateMessageSettings.ToSettings(privateMessageSettings);
 
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
             //and loaded from database after each update
-            await _settingService.SaveSettingOverridablePerStoreAsync(customerSettings, x => x.AllowPrivateMessages, model.CustomerSettings.AllowPrivateMessages_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(customerSettings, x => x.ShowAlertForPM, model.CustomerSettings.ShowAlertForPM_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(customerSettings, x => x.NotifyAboutPrivateMessages, model.CustomerSettings.NotifyAboutPrivateMessages_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(privateMessageSettings, x => x.AllowPrivateMessages, model.PrivateMessageSettings.AllowPrivateMessages_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(privateMessageSettings, x => x.ShowAlertForPM, model.PrivateMessageSettings.ShowAlertForPM_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(privateMessageSettings, x => x.NotifyAboutPrivateMessages, model.PrivateMessageSettings.NotifyAboutPrivateMessages_OverrideForStore, storeScope, false);
+
+            //now clear settings cache
+            await _settingService.ClearCacheAsync();
+
+            customerSettings = model.CustomerSettings.ToSettings(customerSettings);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();
@@ -1261,6 +1267,9 @@ public partial class SettingController : BaseAdminController
             }
 
             await _settingService.SaveSettingAsync(customerSettings);
+
+            privateMessageSettings = model.PrivateMessageSettings.ToSettings(privateMessageSettings);
+            await _settingService.SaveSettingAsync(privateMessageSettings);
 
             addressSettings = model.AddressSettings.ToSettings(addressSettings);
             await _settingService.SaveSettingAsync(addressSettings);

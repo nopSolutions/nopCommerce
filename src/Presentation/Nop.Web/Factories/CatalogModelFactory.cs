@@ -59,6 +59,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
     protected readonly SeoSettings _seoSettings;
     protected readonly VendorSettings _vendorSettings;
     private static readonly char[] _separator = [',', ' '];
@@ -96,6 +97,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         IWebHelper webHelper,
         IWorkContext workContext,
         MediaSettings mediaSettings,
+        PrivateMessageSettings privateMessageSettings,
         SeoSettings seoSettings,
         VendorSettings vendorSettings)
     {
@@ -128,6 +130,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         _webHelper = webHelper;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
+        _privateMessageSettings = privateMessageSettings;
         _seoSettings = seoSettings;
         _vendorSettings = vendorSettings;
     }
@@ -1084,7 +1087,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             ProductReviews = await PrepareVendorProductReviewsModelAsync(vendor, new VendorReviewsPagingFilteringModel())
         };
 
-        if (_customerSettings.AllowPrivateMessages)
+        if (_privateMessageSettings.AllowPrivateMessages)
             model.PmCustomerId = vendor.PmCustomerId;
 
         return model;

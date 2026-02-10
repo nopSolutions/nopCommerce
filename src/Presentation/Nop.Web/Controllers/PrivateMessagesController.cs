@@ -18,7 +18,6 @@ public partial class PrivateMessagesController : BasePublicController
 {
     #region Fields
 
-    protected readonly CustomerSettings _customerSettings;
     protected readonly ICustomerActivityService _customerActivityService;
     protected readonly ICustomerService _customerService;
     protected readonly IGenericAttributeService _genericAttributeService;
@@ -27,22 +26,22 @@ public partial class PrivateMessagesController : BasePublicController
     protected readonly IStoreContext _storeContext;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
 
     #endregion
 
     #region Ctor
 
-    public PrivateMessagesController(CustomerSettings customerSettings,
-        ICustomerActivityService customerActivityService,
+    public PrivateMessagesController(ICustomerActivityService customerActivityService,
         ICustomerService customerService,
         IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
         IPrivateMessagesModelFactory privateMessagesModelFactory,
         IStoreContext storeContext,
         IWorkContext workContext,
-        IWorkflowMessageService workflowMessageService)
+        IWorkflowMessageService workflowMessageService,
+        PrivateMessageSettings privateMessageSettings)
     {
-        _customerSettings = customerSettings;
         _customerActivityService = customerActivityService;
         _customerService = customerService;
         _genericAttributeService = genericAttributeService;
@@ -51,6 +50,7 @@ public partial class PrivateMessagesController : BasePublicController
         _storeContext = storeContext;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
+        _privateMessageSettings = privateMessageSettings;
     }
 
     #endregion
@@ -59,7 +59,7 @@ public partial class PrivateMessagesController : BasePublicController
 
     public virtual async Task<IActionResult> Index(int? pageNumber, string tab)
     {
-        if (!_customerSettings.AllowPrivateMessages)
+        if (!_privateMessageSettings.AllowPrivateMessages)
         {
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
         }
@@ -163,7 +163,7 @@ public partial class PrivateMessagesController : BasePublicController
 
     public virtual async Task<IActionResult> SendPM(int toCustomerId, int? replyToMessageId)
     {
-        if (!_customerSettings.AllowPrivateMessages)
+        if (!_privateMessageSettings.AllowPrivateMessages)
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -187,7 +187,7 @@ public partial class PrivateMessagesController : BasePublicController
     [HttpPost]
     public virtual async Task<IActionResult> SendPM(SendPrivateMessageModel model)
     {
-        if (!_customerSettings.AllowPrivateMessages)
+        if (!_privateMessageSettings.AllowPrivateMessages)
         {
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
         }
@@ -231,15 +231,15 @@ public partial class PrivateMessagesController : BasePublicController
             try
             {
                 var subject = model.Subject;
-                if (_customerSettings.PMSubjectMaxLength > 0 && subject.Length > _customerSettings.PMSubjectMaxLength)
+                if (_privateMessageSettings.PMSubjectMaxLength > 0 && subject.Length > _privateMessageSettings.PMSubjectMaxLength)
                 {
-                    subject = subject[0.._customerSettings.PMSubjectMaxLength];
+                    subject = subject[0.._privateMessageSettings.PMSubjectMaxLength];
                 }
 
                 var text = model.Message;
-                if (_customerSettings.PMTextMaxLength > 0 && text.Length > _customerSettings.PMTextMaxLength)
+                if (_privateMessageSettings.PMTextMaxLength > 0 && text.Length > _privateMessageSettings.PMTextMaxLength)
                 {
-                    text = text[0.._customerSettings.PMTextMaxLength];
+                    text = text[0.._privateMessageSettings.PMTextMaxLength];
                 }
 
                 var nowUtc = DateTime.UtcNow;
@@ -264,7 +264,7 @@ public partial class PrivateMessagesController : BasePublicController
                 await _genericAttributeService.SaveAttributeAsync(toCustomer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, false, privateMessage.StoreId);
 
                 //Email notification
-                if (_customerSettings.NotifyAboutPrivateMessages)
+                if (_privateMessageSettings.NotifyAboutPrivateMessages)
                     await _workflowMessageService.SendPrivateMessageNotificationAsync(privateMessage, (await _workContext.GetWorkingLanguageAsync())?.Id ?? 0);
 
                 //activity log
@@ -285,7 +285,7 @@ public partial class PrivateMessagesController : BasePublicController
 
     public virtual async Task<IActionResult> ViewPM(int privateMessageId)
     {
-        if (!_customerSettings.AllowPrivateMessages)
+        if (!_privateMessageSettings.AllowPrivateMessages)
         {
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
         }
@@ -321,7 +321,7 @@ public partial class PrivateMessagesController : BasePublicController
 
     public virtual async Task<IActionResult> DeletePM(int privateMessageId)
     {
-        if (!_customerSettings.AllowPrivateMessages)
+        if (!_privateMessageSettings.AllowPrivateMessages)
         {
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
         }
