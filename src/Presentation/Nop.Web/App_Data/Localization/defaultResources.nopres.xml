@@ -16439,6 +16439,12 @@
   <LocaleResource Name="Admin.System.SystemInfo.ServerTimeZone.Hint">
     <Value>Server time zone.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UsedMemory">
+    <Value>Used memory (MB)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UsedMemory.Hint">
+    <Value>Total megabytes (MB) in use by the application.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UTCTime">
     <Value>Coordinated Universal Time (UTC)</Value>
   </LocaleResource>

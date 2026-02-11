@@ -782,6 +782,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         model.ServerLocalTime = DateTime.Now;
         model.UtcTime = DateTime.UtcNow;
         model.CurrentUserTime = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
+        model.UsedMemory = Math.Round((GC.GetTotalMemory(false) / 1024.0f / 1024.0f), 2);
         model.HttpHost = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
 
         //ensure no exception is thrown
