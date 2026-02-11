@@ -1,0 +1,184 @@
+﻿@model PhoneVerificationModel
+@{
+    Layout = "_ColumnsOne";
+
+    var formTitle = "";
+    var pageTitle = "";
+    var pageBodyText = "";
+
+    switch (Model.VerificationFlow)
+    {
+        case PhoneVerificationFlowEnum.ChangePhoneNumber:
+            formTitle = "PageTitle.ChengePhone";
+            pageTitle = "PageTitle.ChengePhone";
+            pageBodyText = "Account.OtpPhoneVerification.OtpUpdatePhoneSmsText";
+            break;
+        case PhoneVerificationFlowEnum.RegisterStandard:
+        case PhoneVerificationFlowEnum.RegisterEmailValidation:
+        case PhoneVerificationFlowEnum.RegisterAdminApproval:
+            formTitle = "PageTitle.RegisterOtp";
+            pageTitle = "Account.Register";
+            pageBodyText = "Account.Register.OtpRegisterSmsText";
+            break;
+        case PhoneVerificationFlowEnum.Login:
+            formTitle = "PageTitle.LoginOtp";
+            pageTitle = "Account.Login";
+            pageBodyText = "Account.Login.OtpLoginSmsText";
+            break;
+    }
+
+    NopHtml.AddTitleParts(T(formTitle).Text);
+    NopHtml.AppendPageCssClassParts("html-otp-verification-page");
+}
+<div class="page phone-verification-page">
+    <div class="page-title">
+        <h1>@T(pageTitle)</h1>
+    </div>
+    <div class="result">
+        @T(pageBodyText)
+    </div>
+    <div class="page-body">
+        <div class="form-fields" data-mode-root>
+
+            @* Phone display *@
+            <div class="inputs" data-mode="phone-display">
+                <label asp-for="Phone" asp-postfix=":"></label>
+                <input asp-for="Phone" class="phone" asp-disabled="true" />
+            </div>
+
+            @* OTP input container *@
+            <div class="otp-code-container" data-mode="otp-input">
+                <div class="inputs">
+                    <label asp-for="OtpCode" asp-postfix=":"></label>
+                    <input asp-for="OtpCode" class="otp-code" />
+                    <span asp-validation-for="OtpCode"></span>
+                </div>
+                <div class="timer-container" data-mode="timer">
+                    <div class="timer-text">@T("PhoneVerification.OtpCodeExpires"): <span id="otpTimer">0</span>s</div>
+                    <div class="phone-info">
+                        <span id="phoneInfo">-</span>
+                    </div>
+                    <button type="button" id="confirmOtpBtn" class="button-1 confirm-otp-btn">@T("Common.Confirm")</button>
+                </div>
+            </div>
+        </div>
+
+        @* Send SMS button *@
+        <div class="buttons">
+            <button type="button" class="button-1 send-sms-button" id="sendSmsBtn">@T("PhoneVerification.SendSms")</button>
+        </div>
+    </div>
+</div>
+
+<script asp-location="Footer">
+    $(function() {
+
+        const root = $("[data-mode-root]");
+        const otpContainer = $("[data-mode='otp-input']");
+        const timerContainer = $("[data-mode='timer']");
+        const otpTimer = $("#otpTimer");
+        const phoneInfo = $("#phoneInfo");
+        const phoneInput = $("#@Html.IdFor(m => m.Phone)");
+        const otpInput = $("#@Html.IdFor(m => m.OtpCode)");
+        const sendSmsBtn = $("#sendSmsBtn");
+        const confirmOtpBtn = $("#confirmOtpBtn");
+        let timerInterval = null;
+
+        function startTimer(seconds, phoneText) {
+            otpTimer.text(seconds);
+            phoneInfo.text(phoneText);
+            timerContainer.show();
+            otpContainer.show();
+            sendSmsBtn.hide();
+
+            timerInterval = setInterval(function() {
+                seconds--;
+                otpTimer.text(seconds);
+                if (seconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerContainer.hide();
+                    otpContainer.hide();
+                    sendSmsBtn.show();
+                    sendSmsBtn.prop("disabled", false);
+                }
+            }, 1000);
+        }
+
+        // Send SMS
+        sendSmsBtn.on("click", function(e) {
+            e.preventDefault();
+            const phone = phoneInput.val();
+            const $btn = $(this);
+            $btn.prop("disabled", true);
+
+            var postData = { phone: phone };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                type: 'POST',
+                url: "@(Url.RouteUrl(NopRouteNames.Ajax.SEND_OTP))",
+                data: postData,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.success && result.remainingSeconds) {
+                        startTimer(result.remainingSeconds, result.phoneInfo);
+                        otpInput.focus();
+                    } else {
+                        alert(result.message || "@T("PhoneVerification.OtpCode.Error.SendError")");
+                        $btn.prop("disabled", false);
+                    }
+                },
+                error: function() {
+                    alert("@T("PhoneVerification.OtpCode.Error.SendError")");
+                    $btn.prop("disabled", false);
+                }
+            });
+        });
+
+        // Confirm OTP
+        confirmOtpBtn.on("click", function(e) {
+            e.preventDefault();
+            const phone = phoneInput.val();
+            const otpCode = otpInput.val();
+
+            if (!phone || !otpCode) {
+                alert("@T("PhoneVerification.OtpCode.Required")");
+                return;
+            }
+
+            otpInput.prop("disabled", true);
+
+            var postData = {
+                phone: phone,
+                otpCode: otpCode,
+                operationType: @((int)Model.VerificationFlow)
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                type: 'POST',
+                url: "@(Url.RouteUrl(NopRouteNames.Ajax.COMMON_VERIFICATION_OTP))",
+                data: postData,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.success) {
+                        window.location.href = '@Model.ReturnUrl';
+                    } else {
+                        alert(result.message || "@T("PhoneVerification.OtpCode.Error.Verification")");
+                        otpInput.val("").prop("disabled", false).focus();
+                    }
+                },
+                error: function(xhr) {
+                    let message = "@T("PhoneVerification.OtpCode.Error.Verification")";
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.message) message = response.message;
+                    } catch { }
+                    alert(message);
+                    otpInput.val("").prop("disabled", false).focus();
+                }
+            });
+        });
+
+    });
+</script>

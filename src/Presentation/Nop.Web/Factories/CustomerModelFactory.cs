@@ -76,6 +76,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
     protected readonly OrderSettings _orderSettings;
+    protected readonly OtpSettings _otpSettings;
     protected readonly RewardPointsSettings _rewardPointsSettings;
     protected readonly SecuritySettings _securitySettings;
     protected readonly TaxSettings _taxSettings;
@@ -121,6 +122,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         IWorkContext workContext,
         MediaSettings mediaSettings,
         OrderSettings orderSettings,
+        OtpSettings otpSettings,
         RewardPointsSettings rewardPointsSettings,
         SecuritySettings securitySettings,
         TaxSettings taxSettings,
@@ -162,6 +164,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _workContext = workContext;
         _mediaSettings = mediaSettings;
         _orderSettings = orderSettings;
+        _otpSettings = otpSettings;
         _rewardPointsSettings = rewardPointsSettings;
         _securitySettings = securitySettings;
         _taxSettings = taxSettings;
@@ -342,6 +345,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.StateProvinceRequired = _customerSettings.StateProvinceRequired;
         model.PhoneEnabled = _customerSettings.PhoneEnabled;
         model.PhoneRequired = _customerSettings.PhoneRequired;
+        model.LoginByPhoneEnabled = _otpSettings.LoginByPhoneEnabled;
+        model.PhoneSmsVerified = customer.PhoneSmsVerified;
         model.FaxEnabled = _customerSettings.FaxEnabled;
         model.FaxRequired = _customerSettings.FaxRequired;
         model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
@@ -446,6 +451,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.StateProvinceRequired = _customerSettings.StateProvinceRequired;
         model.PhoneEnabled = _customerSettings.PhoneEnabled;
         model.PhoneRequired = _customerSettings.PhoneRequired;
+        model.LoginByPhoneEnabled = _otpSettings.LoginByPhoneEnabled;
         model.FaxEnabled = _customerSettings.FaxEnabled;
         model.FaxRequired = _customerSettings.FaxRequired;
         model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
@@ -547,6 +553,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         var model = new LoginModel
         {
             UsernamesEnabled = _customerSettings.UsernamesEnabled,
+            LoginByPhoneEnabled = _otpSettings.LoginByPhoneEnabled,
             RegistrationType = _customerSettings.UserRegistrationType,
             CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault(),
             DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage
@@ -597,6 +604,41 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             Result = resultText,
             ReturnUrl = returnUrl
         };
+
+        return model;
+    }
+
+    /// <summary>
+    /// Prepare the phone verification model
+    /// </summary>
+    /// <param name="typeId">Value of UserPhoneVerificationType enum</param>
+    /// <param name="returnUrl">URL to redirect</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the phone verification model
+    /// </returns>
+    public virtual async Task<PhoneVerificationModel> PreparePhoneVerificationModelAsync(int typeId, string returnUrl)
+    {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var model = new PhoneVerificationModel
+        {
+            ReturnUrl = returnUrl,
+            Phone = customer.Phone,
+            VerificationFlow = (PhoneVerificationFlowEnum)typeId
+        };
+
+        switch (typeId)
+        {
+            case (int)PhoneVerificationFlowEnum.RegisterStandard:
+                model.Result = await _localizationService.GetResourceAsync("Account.Register.Result.Standard");
+                break;
+            case (int)PhoneVerificationFlowEnum.RegisterEmailValidation:
+                model.Result = await _localizationService.GetResourceAsync("Account.Register.Result.EmailValidation");
+                break;
+            case (int)PhoneVerificationFlowEnum.RegisterAdminApproval:
+                model.Result = await _localizationService.GetResourceAsync("Account.Register.Result.AdminApproval");
+                break;
+        }
 
         return model;
     }

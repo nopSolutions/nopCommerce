@@ -51,11 +51,13 @@ public partial class PluginController : BaseAdminController
     protected readonly IPluginService _pluginService;
     protected readonly ISearchPluginManager _searchPluginManager;
     protected readonly ISettingService _settingService;
+    protected readonly ISmsPluginManager _smsPluginManager;
     protected readonly IShippingPluginManager _shippingPluginManager;
     protected readonly IUploadService _uploadService;
     protected readonly IWidgetPluginManager _widgetPluginManager;
     protected readonly IWorkContext _workContext;
     protected readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
+    protected readonly OtpSettings _otpSettings;
     protected readonly PaymentSettings _paymentSettings;
     protected readonly ShippingSettings _shippingSettings;
     protected readonly TaxSettings _taxSettings;
@@ -81,11 +83,13 @@ public partial class PluginController : BaseAdminController
         IPluginService pluginService,
         ISearchPluginManager searchPluginManager,
         ISettingService settingService,
+        ISmsPluginManager smsPluginManager,
         IShippingPluginManager shippingPluginManager,
         IUploadService uploadService,
         IWidgetPluginManager widgetPluginManager,
         IWorkContext workContext,
         MultiFactorAuthenticationSettings multiFactorAuthenticationSettings,
+        OtpSettings otpSettings,
         PaymentSettings paymentSettings,
         ShippingSettings shippingSettings,
         TaxSettings taxSettings,
@@ -107,11 +111,13 @@ public partial class PluginController : BaseAdminController
         _pluginService = pluginService;
         _searchPluginManager = searchPluginManager;
         _settingService = settingService;
+        _smsPluginManager = smsPluginManager;
         _shippingPluginManager = shippingPluginManager;
         _uploadService = uploadService;
         _widgetPluginManager = widgetPluginManager;
         _workContext = workContext;
         _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
+        _otpSettings = otpSettings;
         _paymentSettings = paymentSettings;
         _shippingSettings = shippingSettings;
         _taxSettings = taxSettings;
@@ -512,7 +518,6 @@ public partial class PluginController : BaseAdminController
                     }
 
                     break;
-
                 case ISearchProvider _:
                     if (!model.IsEnabled)
                     {

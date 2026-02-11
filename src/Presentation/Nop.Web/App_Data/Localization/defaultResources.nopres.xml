@@ -153,6 +153,9 @@
   <LocaleResource Name="Account.CustomerInfo">
     <Value>Customer info</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerInfo.VerifyPhoneNumber">
+    <Value>Verify phone number</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.CustomerInfo.Updated">
     <Value>The customer info has been updated successfully.</Value>
   </LocaleResource>
@@ -398,9 +401,12 @@
   </LocaleResource>
   <LocaleResource Name="Account.Fields.Phone.NotValid">
     <Value>Phone number is not valid</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Account.Fields.Phone.Required">
     <Value>Phone is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Phone.Status.NotVerified">
+    <Value>Phone number is not verified</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.Signature">
     <Value>Signature</Value>
@@ -495,6 +501,9 @@
   <LocaleResource Name="Account.ImpersonatedAs.Finish.Hint">
     <Value>Click here to finish impersonated session.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.IsAlreadyExistsVerifiedPhoneNumber">
+    <Value>A customer with the specified verified phone number already exists.</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Login">
     <Value>Log in</Value>
   </LocaleResource>
@@ -522,12 +531,27 @@
   <LocaleResource Name="Account.Login.Fields.Username">
     <Value>Username</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.Login.ForgotPassword">
-    <Value>Forgot password?</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.Login.LoginButton">
-    <Value>Log in</Value>
-  </LocaleResource>
+   <LocaleResource Name="Account.Login.ForgotPassword">
+     <Value>Forgot password?</Value>
+   </LocaleResource>
+   <LocaleResource Name="Account.Login.Fields.Phone">
+     <Value>Phone</Value>
+   </LocaleResource>   
+   <LocaleResource Name="Account.Login.EmailMode">
+     <Value>Login with email</Value>
+   </LocaleResource>
+   <LocaleResource Name="Account.Login.OtpLoginSmsText">
+     <Value>We'll send you a code via SMS to confirm your login.</Value>
+   </LocaleResource>
+   <LocaleResource Name="Account.Login.PhoneMode">
+     <Value>Login with phone</Value>
+   </LocaleResource>   
+   <LocaleResource Name="Account.Login.Phone.Required">
+     <Value>Phone number is required</Value>
+   </LocaleResource>
+   <LocaleResource Name="Account.Login.LoginButton">
+     <Value>Log in</Value>
+   </LocaleResource>
   <LocaleResource Name="Account.Login.NewCustomer">
     <Value>New Customer</Value>
   </LocaleResource>
@@ -590,6 +614,9 @@
   </LocaleResource>
   <LocaleResource Name="Account.Options">
     <Value>Options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.OtpPhoneVerification.OtpUpdatePhoneSmsText">
+    <Value>We'll send you a code via SMS to confirm changing your phone number.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery">
     <Value>Password recovery</Value>
@@ -662,6 +689,9 @@
   </LocaleResource>
   <LocaleResource Name="Account.Register.Errors.UsernameIsNotProvided">
     <Value>Username is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.OtpRegisterSmsText">
+    <Value>"We'll send you a code via SMS to complete registration.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Register.Result.AdminApproval">
     <Value>Your account will be activated after approving by administrator.</Value>
@@ -7167,6 +7197,15 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameRequired.Hint">
     <Value>Check if 'Last name' is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LoginByPhoneEnabled">
+    <Value>'Login by phone' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LoginByPhoneEnabled.Hint">
+    <Value>Check if 'Login by phone' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LoginByPhoneEnabled.Warning">
+    <Value>Warning - Login by Phone requires the following prerequisites: Phone numbers enabled, Phone numbers required, and Phone number validation enabled. Please configure these settings accordingly.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe">
     <Value>Newsletter box. Allow to unsubscribe</Value>
   </LocaleResource>
@@ -7190,6 +7229,30 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyNewCustomerRegistration.Hint">
     <Value>Notify the store owner when a new customer is registered.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpCountAttemptsToSendCode">
+    <Value>OTP code send attempts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpCountAttemptsToSendCode.Hint">
+    <Value>The number of attempts to send the OTP code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpLength">
+    <Value>OTP code length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpLength.Hint">
+    <Value>The length of the OTP code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpTimeLife">
+    <Value>OTP code time to live</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpTimeLife.Hint">
+    <Value>The time (in seconds) during which the OTP code is valid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpTimeToRepeat">
+    <Value>OTP code resend time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpTimeToRepeat.Hint">
+    <Value>The time (in minutes) before the OTP code can be resent.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordLifetime">
     <Value>Password lifetime</Value>
@@ -9992,6 +10055,30 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Updated">
     <Value>The warehouse has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Sms.Providers">
+    <Value>Sms providers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Sms.Providers.BackToList">
+    <Value>back to sms provider list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Sms.Providers.Configure">
+    <Value>Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Sms.Providers.DownloadMorePlugins">
+    <Value><![CDATA[You can download more plugins in our <a href="{0}" target="_blank">marketplace</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Sms.Providers.Fields.FriendlyName">
+    <Value>Friendly name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Sms.Providers.Fields.IsPrimaryProvider">
+    <Value>Is primary provider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Sms.Providers.Fields.MarkAsPrimaryProvider">
+    <Value>Mark as primary provider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Sms.Providers.Fields.SystemName">
+    <Value>System name</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores">
     <Value>Stores</Value>
   </LocaleResource>
@@ -12374,6 +12461,12 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.Phone.Required">
     <Value>Phone is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.PhoneSmsVerified">
+    <Value>Is phone verified</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.PhoneSmsVerified.Hint">
+    <Value>Indicates whether the customer's phone number has been verified via SMS.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.RegisteredInStore">
     <Value>Registered in the store</Value>
   </LocaleResource>
@@ -12991,6 +13084,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ShoppingCartsAndWishlists">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">shopping carts and wishlists</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documentation.Reference.SmsProviders">
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">sms providers</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.SpecificationAttributes">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">specification attributes</a>]]></Value>
@@ -19151,6 +19247,9 @@
   <LocaleResource Name="PageTitle.Checkout">
     <Value>Checkout</Value>
   </LocaleResource>
+  <LocaleResource Name="PageTitle.ChengePhone">
+    <Value>Chenge phone number</Value>
+  </LocaleResource>
   <LocaleResource Name="PageTitle.CompareProducts">
     <Value>Compare Products</Value>
   </LocaleResource>
@@ -19168,6 +19267,9 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.Login">
     <Value>Login</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.LoginOtp">
+    <Value>Phone number verification</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.Manufacturers">
     <Value>Manufacturers</Value>
@@ -19210,6 +19312,9 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.Register">
     <Value>Register</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.RegisterOtp">
+    <Value>Phone number verification</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.ReturnItems">
     <Value>Return Item(s)</Value>
@@ -19402,6 +19507,36 @@
   </LocaleResource>
   <LocaleResource Name="Pdf.TaxRate">
     <Value>Tax {0}%</Value>
+  </LocaleResource>
+  <LocaleResource Name="PhoneVerification.Fields.OtpCode">
+    <Value>SMS code</Value>
+  </LocaleResource>
+  <LocaleResource Name="PhoneVerification.Fields.Phone">
+    <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="PhoneVerification.OtpCodeExpires">
+    <Value>Code expires in</Value>
+  </LocaleResource>
+  <LocaleResource Name="PhoneVerification.OtpCode.Error.Expired">
+    <Value>The SMS code has expired.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PhoneVerification.OtpCode.Error.Invalid">
+    <Value>The SMS code you entered is invalid. Please try again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PhoneVerification.OtpCode.Error.NotRequested">
+    <Value>You have not requested an SMS code. Please request a code and try again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PhoneVerification.OtpCode.Error.SendError">
+    <Value>Failed to send SMS code. Please try again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PhoneVerification.OtpCode.Error.Verification">
+    <Value>SMS verification error.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PhoneVerification.OtpCode.Required">
+    <Value>SMS code is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PhoneVerification.SendSms">
+    <Value>Send SMS</Value>
   </LocaleResource>
   <LocaleResource Name="Polls.OnlyRegisteredUsersVote">
     <Value>Only registered users can vote.</Value>

@@ -7,6 +7,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Plugins.Marketplace;
@@ -38,6 +39,7 @@ public partial class PluginModelFactory : IPluginModelFactory
     protected readonly IPluginService _pluginService;
     protected readonly ISearchPluginManager _searchPluginManager;
     protected readonly IShippingPluginManager _shippingPluginManager;
+    protected readonly ISmsPluginManager _smsPluginManager;
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
     protected readonly ITaxPluginManager _taxPluginManager;
@@ -59,6 +61,7 @@ public partial class PluginModelFactory : IPluginModelFactory
         IPluginService pluginService,
         ISearchPluginManager searchPluginManager,
         IShippingPluginManager shippingPluginManager,
+        ISmsPluginManager smsPluginManager,
         IStaticCacheManager staticCacheManager,
         IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
         ITaxPluginManager taxPluginManager,
@@ -76,6 +79,7 @@ public partial class PluginModelFactory : IPluginModelFactory
         _pluginService = pluginService;
         _searchPluginManager = searchPluginManager;
         _shippingPluginManager = shippingPluginManager;
+        _smsPluginManager = smsPluginManager;
         _staticCacheManager = staticCacheManager;
         _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         _taxPluginManager = taxPluginManager;
@@ -136,6 +140,10 @@ public partial class PluginModelFactory : IPluginModelFactory
 
             case ISearchProvider searchProvider:
                 model.IsEnabled = _searchPluginManager.IsPluginActive(searchProvider);
+                break;
+
+            case ISmsProvider smsProvider:
+                model.IsEnabled = _smsPluginManager.IsPluginActive(smsProvider);
                 break;
 
             case IWidgetPlugin widgetPlugin:

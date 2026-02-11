@@ -3941,6 +3941,11 @@ label, label + * {
   text-transform: uppercase;
 }
 
+.registration-page .button-1,
+.login-page .button-1 {
+  min-width: 160px;
+}
+
 .registration-page .button-1:hover,
 .registration-page .button-1:focus,
 .registration-result-page .button-1:hover,
@@ -3982,13 +3987,21 @@ label, label + * {
 
 .customer-info-page .email-to-revalidate,
 .customer-info-page .readonly-username,
-.customer-info-page .vat-status {
+.customer-info-page .vat-status,
+.customer-info-page .phone-status {
   margin: 0 5px;
   font-size: 14px;
 }
 
-.customer-info-page .vat-status {
+.customer-info-page .vat-status,
+.customer-info-page .phone-status {
   display: block;
+}
+
+.registration-page .phone-info {
+  text-align: center;
+  display: block;
+  margin-top: -14px;
 }
 
 .registration-page .vat-note,
@@ -8965,11 +8978,13 @@ label, label + * {
 
   .customer-info-page .vat-note,
   .customer-info-page .vat-status,
+  .customer-info-page .phone-status,
   .customer-info-page .email-to-revalidate-note {
     margin-right: 150px;
   }
 
-  .customer-info-page .vat-status {
+  .customer-info-page .vat-status,
+  .customer-info-page .phone-status {
     display: inline-block;
   }
 
@@ -9198,6 +9213,7 @@ label, label + * {
 
   .customer-info-page .vat-note,
   .customer-info-page .vat-status,
+  .customer-info-page .phone-status,
   .customer-info-page .email-to-revalidate-note {
     margin-right: 225px;
   }
@@ -9294,4 +9310,74 @@ a.skip:hover {
   text-align: center;
   width: 100%;
   font-size: 16px;
+}
+
+/* Phone Login Mode Switcher */
+.login-page .mode-button {
+  background-color: #eaeaea;
+  color: var(--gray-color);
+  border: 0;
+  padding: 10px 22px;
+  font-size: 15px;
+  cursor: pointer;
+  display: inline-block;
+  min-width: 160px;
+}
+
+.login-page .mode-button:hover {
+  background-color: #ddd;
+}
+
+.login-page .mode-switcher {
+  display: flex;
+  margin-top: 10px;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Send SMS page*/
+.phone-verification-page .send-sms-button,
+.phone-verification-page .confirm-otp-btn {
+  min-width: 140px;
+  border: none;
+  background-color: var(--accent-blue-color);
+  padding: 10px 30px;
+  text-align: center;
+  font-size: 15px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.phone-verification-page .buttons {
+  background-color: #fff;
+  padding: 30px 0;
+}
+
+.phone-verification-page .result {
+  padding: 15px 15px;
+  text-align: center;
+}
+
+.phone-verification-page .send-sms-button:hover,
+.phone-verification-page .confirm-otp-btn:hover,
+.phone-verification-page:focus {
+  background-color: var(--accent-blue-active-color);
+}
+
+.otp-code-container, .timer-container {
+  display: none;
+}
+
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.timer-container .timer-text,
+.timer-container .phone-info {
+  margin-bottom: 8px;
 }

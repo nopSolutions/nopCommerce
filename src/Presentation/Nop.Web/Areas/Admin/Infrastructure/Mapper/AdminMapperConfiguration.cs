@@ -32,6 +32,7 @@ using Nop.Data.Configuration;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Cms;
+using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Shipping;
@@ -59,6 +60,7 @@ using Nop.Web.Areas.Admin.Models.Polls;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Shipping;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
+using Nop.Web.Areas.Admin.Models.Sms;
 using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Areas.Admin.Models.Tax;
@@ -108,6 +110,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateShippingMaps();
         CreateStoresMaps();
         CreateTasksMaps();
+        CreateSmsMaps();
         CreateTaxMaps();
         CreateTopicsMaps();
         CreateVendorsMaps();
@@ -805,7 +808,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
 
         CreateMap<MultiFactorAuthenticationSettings, MultiFactorAuthenticationSettingsModel>();
         CreateMap<MultiFactorAuthenticationSettingsModel, MultiFactorAuthenticationSettings>()
-            .ForMember(settings => settings.ActiveAuthenticationMethodSystemNames, option => option.Ignore());
+            .ForMember(settings => settings.ActiveAuthenticationMethodSystemNames, option => option.Ignore());        
 
         CreateMap<RewardPointsSettings, RewardPointsSettingsModel>()
             .ForMember(model => model.ActivatePointsImmediately, options => options.Ignore())
@@ -840,6 +843,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.FullName, options => options.Ignore())
             .ForMember(model => model.Company, options => options.Ignore())
             .ForMember(model => model.Phone, options => options.Ignore())
+            .ForMember(model => model.PhoneSmsVerified, options => options.Ignore())
             .ForMember(model => model.ZipPostalCode, options => options.Ignore())
             .ForMember(model => model.CreatedOn, options => options.Ignore())
             .ForMember(model => model.LastActivityDate, options => options.Ignore())
@@ -1638,6 +1642,19 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(entity => entity.LastEndUtc, options => options.Ignore())
             .ForMember(entity => entity.LastSuccessUtc, options => options.Ignore())
             .ForMember(entity => entity.LastEnabledUtc, options => options.Ignore());
+    }
+
+    /// <summary>
+    /// Create tax maps 
+    /// </summary>
+    protected virtual void CreateSmsMaps()
+    {
+        CreateMap<ISmsProvider, SmsProviderModel>()
+            .ForMember(model => model.IsPrimaryProvider, options => options.Ignore());
+
+        CreateMap<OtpSettings, OtpSettingsModel>();
+        CreateMap<OtpSettingsModel, OtpSettings>()
+            .ForMember(settings => settings.ActiveSmsProviderSystemName, options => options.Ignore());
     }
 
     /// <summary>

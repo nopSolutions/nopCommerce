@@ -277,6 +277,11 @@ public static partial class NopLinksDefaults
         public static string ShippingProviders => "https://docs.nopcommerce.com/getting-started/configure-shipping/shipping-providers/index.html";
 
         /// <summary>
+        /// Gets a URL of the SMS providers docs page
+        /// </summary>
+        public static string SmsProviders => "https://docs.nopcommerce.com/en/getting-started/advanced-configuration/index.html";
+
+        /// <summary>
         /// Gets a URL of the warehouses docs page
         /// </summary>
         public static string Warehouses => "https://docs.nopcommerce.com/getting-started/configure-shipping/advanced-configuration/warehouses.html";

@@ -30,6 +30,7 @@ using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
@@ -86,11 +87,12 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IPaymentPluginManager _paymentPluginManager;
     protected readonly IPickupPluginManager _pickupPluginManager;
     protected readonly IPluginService _pluginService;
-    protected readonly IProductService _productService;
+    protected readonly IProductService _productService;    
     protected readonly IReturnRequestService _returnRequestService;
     protected readonly ISearchTermService _searchTermService;
     protected readonly IServiceCollection _serviceCollection;
     protected readonly IShippingPluginManager _shippingPluginManager;
+    protected readonly ISmsPluginManager _smsPluginManager;
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreService _storeService;
@@ -142,6 +144,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         ISearchTermService searchTermService,
         IServiceCollection serviceCollection,
         IShippingPluginManager shippingPluginManager,
+        ISmsPluginManager smsPluginManager,
         IStaticCacheManager staticCacheManager,
         IStoreContext storeContext,
         IStoreService storeService,
@@ -189,6 +192,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _searchTermService = searchTermService;
         _serviceCollection = serviceCollection;
         _shippingPluginManager = shippingPluginManager;
+        _smsPluginManager = smsPluginManager;
         _staticCacheManager = staticCacheManager;
         _storeContext = storeContext;
         _storeService = storeService;
@@ -736,6 +740,10 @@ public partial class CommonModelFactory : ICommonModelFactory
 
                 case IExchangeRateProvider exchangeRateProvider:
                     isEnabled = _exchangeRatePluginManager.IsPluginActive(exchangeRateProvider);
+                    break;
+                
+                case ISmsProvider smsProvider:
+                    isEnabled = _smsPluginManager.IsPluginActive(smsProvider);
                     break;
             }
 

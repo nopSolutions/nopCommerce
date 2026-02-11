@@ -15,7 +15,7 @@ public class LoginValidatorTests : BaseNopTest
     [OneTimeSetUp]
     public void Setup()
     {
-        _validator = new LoginValidator(GetService<ILocalizationService>(), GetService<CustomerSettings>());
+        _validator = new LoginValidator(GetService<ILocalizationService>(), GetService<CustomerSettings>(), GetService<OtpSettings>());
     }
 
     [Test]
@@ -57,7 +57,13 @@ public class LoginValidatorTests : BaseNopTest
         {
             UsernamesEnabled = true
         };
-        _validator = new LoginValidator(GetService<ILocalizationService>(), customerSettings);
+
+        var otpSettings = new OtpSettings
+        {
+            LoginByPhoneEnabled = false
+        };
+
+        _validator = new LoginValidator(GetService<ILocalizationService>(), customerSettings, otpSettings);
 
         var model = new LoginModel
         {

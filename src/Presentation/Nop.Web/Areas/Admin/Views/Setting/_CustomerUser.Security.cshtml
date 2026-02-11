@@ -138,4 +138,51 @@
                 <span asp-validation-for="MultiFactorAuthenticationSettings.ForceMultifactorAuthentication"></span>
             </div>
         </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="OtpSettings.LoginByPhoneEnabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="OtpSettings.LoginByPhoneEnabled" />
+                <span asp-validation-for="OtpSettings.LoginByPhoneEnabled"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="OtpSettings.LoginByPhoneEnabled">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="OtpSettings.OtpTimeLife" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="OtpSettings.OtpTimeLife" />
+                    <span asp-validation-for="OtpSettings.OtpTimeLife"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="OtpSettings.OtpCountAttemptsToSendCode" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="OtpSettings.OtpCountAttemptsToSendCode" />
+                    <span asp-validation-for="OtpSettings.OtpCountAttemptsToSendCode"></span>
+                </div>
+            </div>
+             <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="OtpSettings.OtpTimeToRepeat" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="OtpSettings.OtpTimeToRepeat" />
+                    <span asp-validation-for="OtpSettings.OtpTimeToRepeat"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="OtpSettings.OtpLength" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="OtpSettings.OtpLength" />
+                    <span asp-validation-for="OtpSettings.OtpLength"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
     </div>

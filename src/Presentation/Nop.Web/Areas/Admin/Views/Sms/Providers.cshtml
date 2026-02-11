@@ -1,0 +1,94 @@
+@model SmsProviderSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Sms.Providers").Text;
+
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Sms providers");
+}
+
+<form asp-controller="Sms" asp-action="Providers" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Sms.Providers")
+        </h1>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SmsProviderListButtons, additionalData = Model })
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <p>
+                                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.SmsProviders", Docs.SmsProviders + Utm.OnAdmin)" asp-add-wrapper="false"/>
+                                @T("Admin.Configuration.Sms.Providers.DownloadMorePlugins", OfficialSite.Marketplace + Utm.OnAdminAllPlugins.Replace('?', '&'))
+                            </p>
+
+                            <div id="sms-providers-area">
+                                @await Html.PartialAsync("Table", new DataTablesModel
+                                {
+                                    Name = "sms-providers-grid",
+                                    RowIdBasedOnField = nameof(PaymentMethodModel.SystemName),
+                                    UrlRead = new DataUrl("Providers", "Sms", null),
+                                    Length = Model.PageSize,
+                                    LengthMenu = Model.AvailablePageSizes,
+                                    ColumnCollection = new List<ColumnProperty>
+                                    {
+                                        new ColumnProperty(nameof(SmsProviderModel.FriendlyName))
+                                        {
+                                            Title = T("Admin.Configuration.Sms.Providers.Fields.FriendlyName").Text,
+                                            Width = "250"
+                                        },
+                                        new ColumnProperty(nameof(SmsProviderModel.SystemName))
+                                        {
+                                            Title = T("Admin.Configuration.Sms.Providers.Fields.SystemName").Text,
+                                            Width = "250"
+                                        },
+                                        new ColumnProperty(nameof(SmsProviderModel.IsPrimaryProvider))
+                                        {
+                                            Title = T("Admin.Configuration.Sms.Providers.Fields.IsPrimaryProvider").Text,
+                                            Width = "100",
+                                            ClassName =  NopColumnClassDefaults.CenterAll,
+                                            Render = new RenderBoolean()
+                                        },
+                                        new ColumnProperty(nameof(SmsProviderModel.SystemName))
+                                        {
+                                            Title = T("Admin.Configuration.Sms.Providers.Fields.MarkAsPrimaryProvider").Text,
+                                            Width = "200",
+                                            ClassName =  NopColumnClassDefaults.Button + " column-primary",
+                                            Render = new RenderCustom("renderColumnSystemName")
+                                        },
+                                        new ColumnProperty(nameof(SmsProviderModel.SystemName))
+                                        {
+                                            Title = T("Admin.Configuration.Sms.Providers.Configure").Text,
+                                            Width = "150",
+                                            ClassName =  NopColumnClassDefaults.Button + " column-configure",
+                                            Render = new RenderCustom("renderColumnConfigure")
+                                        }
+                                    }
+                                })
+                            </div>
+
+                            <script>
+                            function renderColumnSystemName(data, type, row, meta) {
+                                return '<a href="@Url.Content("~/Admin/Sms/MarkAsPrimaryProvider/")?systemName=' + row.SystemName +'" class="btn bg-green">@T("Admin.Configuration.Sms.Providers.Fields.MarkAsPrimaryProvider").Text</a>';
+                            }
+
+                            function renderColumnConfigure(data, type, row, meta) {
+                                if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                                    return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fas fa-gear"></i>@T("Admin.Configuration.Sms.Providers.Configure").Text</a>';
+                                } else {
+                                    return '';
+                                }
+                            }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

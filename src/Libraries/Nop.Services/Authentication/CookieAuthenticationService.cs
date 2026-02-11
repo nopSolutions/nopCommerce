@@ -55,6 +55,9 @@ public partial class CookieAuthenticationService : IAuthenticationService
         if (!string.IsNullOrEmpty(customer.Email))
             claims.Add(new Claim(ClaimTypes.Email, customer.Email, ClaimValueTypes.Email, NopAuthenticationDefaults.ClaimsIssuer));
 
+        if (!string.IsNullOrEmpty(customer.Phone))
+            claims.Add(new Claim(ClaimTypes.MobilePhone, customer.Phone, ClaimValueTypes.String, NopAuthenticationDefaults.ClaimsIssuer));
+
         //create principal for the current authentication scheme
         var userIdentity = new ClaimsIdentity(claims, NopAuthenticationDefaults.AuthenticationScheme);
         var userPrincipal = new ClaimsPrincipal(userIdentity);

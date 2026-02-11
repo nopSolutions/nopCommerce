@@ -276,7 +276,12 @@
                                     <nop-required />
                                 }
                                 <span asp-validation-for="Phone"></span>
+                                
                             </div>
+                            @if (Model.LoginByPhoneEnabled)
+                            {
+                                <span class="phone-info" style="color: var(--gray-color);">@T("Account.Register.OtpRegisterSmsText")</span>
+                            }
                         }
                         @if (Model.FaxEnabled)
                         {

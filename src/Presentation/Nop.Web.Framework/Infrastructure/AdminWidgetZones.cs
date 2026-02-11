@@ -263,6 +263,7 @@ public static partial class AdminWidgetZones
     public static string ShippingSettingsButtons => "admin_shipping_settings_buttons";
     public static string ShoppingCartSettingsDetailsBlock => "admin_shopping_cart_settings_details_block";
     public static string ShoppingCartSettingsButtons => "admin_shopping_cart_settings_buttons";
+    public static string SmsProviderListButtons => "admin_sms_provider_list_buttons";
     public static string SpecificationAttributeDetailsBlock => "admin_specification_attribute_details_block";
     public static string SpecificationAttributeDetailsButtons => "admin_specification_attribute_details_buttons";
     public static string SpecificationAttributeListButtons => "admin_specification_attribute_list_buttons";

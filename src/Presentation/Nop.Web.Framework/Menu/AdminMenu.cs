@@ -635,6 +635,14 @@ public partial class AdminMenu : IAdminMenu
                         },
                         new()
                         {
+                            SystemName = "Sms providers",
+                            Title = await _localizationService.GetResourceAsync("Admin.Configuration.Sms.Providers"),
+                            PermissionNames = new List<string> { StandardPermission.Configuration.MANAGE_SETTINGS },
+                            Url = GetMenuItemUrl("Sms", "Providers"),
+                            IconClass = "far fa-dot-circle"
+                        },
+                        new()
+                        {
                             SystemName = "Tax providers",
                             Title = await _localizationService.GetResourceAsync("Admin.Configuration.Tax.Providers"),
                             PermissionNames = new List<string> { StandardPermission.Configuration.MANAGE_TAX_SETTINGS },

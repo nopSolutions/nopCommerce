@@ -73,5 +73,18 @@
                     forceMultifactorAuthentication: $('#@Html.IdFor(model => model.MultiFactorAuthenticationSettings.ForceMultifactorAuthentication)').is(':checked')
                 });
         }
+
+        $(function() {
+            $("#@Html.IdFor(model => model.OtpSettings.LoginByPhoneEnabled)").click(toggleForceLoginByPhoneEnabled);
+            toggleForceLoginByPhoneEnabled();
+        });
+
+        function toggleForceLoginByPhoneEnabled() {
+            warningValidation('@Url.Action("LoginByPhoneEnabledWarning", "Setting")',
+                '@Html.NameFor(model => model.OtpSettings.LoginByPhoneEnabled)',
+                {
+                    loginByPhoneEnabled: $('#@Html.IdFor(model => model.OtpSettings.LoginByPhoneEnabled)').is(':checked')
+                });
+        }
     </script>
 </form>

@@ -70,6 +70,17 @@ public partial interface ICustomerModelFactory
     Task<RegisterResultModel> PrepareRegisterResultModelAsync(int resultId, string returnUrl);
 
     /// <summary>
+    /// Prepare the phone verification model
+    /// </summary>
+    /// <param name="typeId">Value of UserPhoneVerificationType enum</param>
+    /// <param name="returnUrl">URL to redirect</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the phone verification model
+    /// </returns>
+    Task<PhoneVerificationModel> PreparePhoneVerificationModelAsync(int typeId, string returnUrl);
+
+    /// <summary>
     /// Prepare the customer navigation model
     /// </summary>
     /// <param name="selectedTabId">Identifier of the selected tab</param>

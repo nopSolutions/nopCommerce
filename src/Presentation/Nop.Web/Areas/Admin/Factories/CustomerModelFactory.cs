@@ -610,6 +610,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 customerModel.FullName = await _customerService.GetCustomerFullNameAsync(customer);
                 customerModel.Company = customer.Company;
                 customerModel.Phone = customer.Phone;
+                customerModel.PhoneSmsVerified = customer.PhoneSmsVerified;
                 customerModel.ZipPostalCode = customer.ZipPostalCode;
 
                 customerModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
@@ -684,6 +685,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 model.CountryId = customer.CountryId;
                 model.StateProvinceId = customer.StateProvinceId;
                 model.Phone = customer.Phone;
+                model.PhoneSmsVerified = customer.PhoneSmsVerified;
                 model.Fax = customer.Fax;
                 model.TimeZoneId = customer.TimeZoneId;
                 model.VatNumber = customer.VatNumber;

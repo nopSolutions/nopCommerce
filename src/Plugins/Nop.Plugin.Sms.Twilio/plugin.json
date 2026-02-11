@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Sms providers",
+  "FriendlyName": "Twilio",
+  "SystemName": "Sms.Twilio",
+  "Version": "5.00.1",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Sms.Twilio.dll",
+  "Description": "Quickly integrate a one-time password authentication (OTP) solution that handles your connectivity, channels, code generation, fraud monitoring, and prevention."
+}

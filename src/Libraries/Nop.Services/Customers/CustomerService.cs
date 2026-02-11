@@ -569,6 +569,46 @@ public partial class CustomerService : ICustomerService
     }
 
     /// <summary>
+    /// Get customer by their phone number.
+    /// </summary>
+    /// <param name="phone">The phone number of the customer
+    /// <returns>A task that represents the asynchronous operation
+    /// The task result contains the <see cref="Customer"/> 
+    /// </returns>
+    public virtual async Task<Customer> GetCustomerByPhoneAsync(string phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone))
+            return null;
+
+        var cutomers = _customerRepository.Table.Where(customer => customer.Active && !customer.Deleted);
+        var query = from c in cutomers
+                    orderby c.Id
+                    where c.Phone == phone
+                    select c;
+        var customer = await query.FirstOrDefaultAsync();
+        return customer;
+    }
+
+    /// <summary>
+    /// Determines whether a verified phone number is already associated with a customer other than the specified
+    /// customer.
+    /// </summary>
+    /// <param name="customer">The customer</param>
+    /// <param name="phone">The phone number</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains <see langword="true"/> if a
+    /// different customer with the specified verified phone number exists; otherwise, <see langword="false"/>.</returns>
+    public virtual async Task<bool> IsAlreadyExistsVerifiedPhoneNumberAsync(Customer customer, string phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone))
+            return false;
+
+        var customerByphone = await GetCustomerByPhoneAsync(phone);
+        if (customerByphone == null)
+            return false;
+        return (customer.Id != customerByphone.Id) && customerByphone.PhoneSmsVerified;
+    }
+
+    /// <summary>
     /// Insert a guest customer
     /// </summary>
     /// <returns>

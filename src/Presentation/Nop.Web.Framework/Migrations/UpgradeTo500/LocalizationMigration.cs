@@ -160,7 +160,7 @@ public class LocalizationMigration : MigrationBase
 
             //#7989
             ["Products.ProductHasBeenUpdatedInTheWishlist.Link"] = "The product has been updated in your <a href=\"{0}\">wishlist</a>",
-            
+
             //#8021
             ["Admin.Catalog.Products.RelatedProducts.CyclicallyRelated"] = "Circular dependency is not allowed for required products (e.g. product A requires product B. And product B requires product A)",
 
@@ -169,6 +169,63 @@ public class LocalizationMigration : MigrationBase
 
             //#7907
             ["Wishlist.RenameCustomWishlist"] = "Rename wishlist",
+
+            //#2430
+            ["Admin.Customers.Customers.Fields.PhoneSmsVerified"] = "Is phone verified",
+            ["Admin.Customers.Customers.Fields.PhoneSmsVerified.Hint"] = "Indicates whether the customer's phone number has been verified via SMS.",
+
+            ["Admin.Configuration.Settings.CustomerUser.LoginByPhoneEnabled"] = "'Login by phone' enabled",
+            ["Admin.Configuration.Settings.CustomerUser.LoginByPhoneEnabled.Hint"] = "Check if 'Login by phone' is enabled.",
+            ["Admin.Configuration.Settings.CustomerUser.OtpTimeLife"] = "OTP code time to live",
+            ["Admin.Configuration.Settings.CustomerUser.OtpTimeLife.Hint"] = "The time (in seconds) during which the OTP code is valid.",
+            ["Admin.Configuration.Settings.CustomerUser.OtpCountAttemptsToSendCode"] = "OTP code send attempts",
+            ["Admin.Configuration.Settings.CustomerUser.OtpCountAttemptsToSendCode.Hint"] = "The number of attempts to send the OTP code.",
+            ["Admin.Configuration.Settings.CustomerUser.OtpTimeToRepeat"] = "OTP code resend time",
+            ["Admin.Configuration.Settings.CustomerUser.OtpTimeToRepeat.Hint"] = "The time (in minutes) before the OTP code can be resent.",
+            ["Admin.Configuration.Settings.CustomerUser.OtpLength"] = "OTP code length",
+            ["Admin.Configuration.Settings.CustomerUser.OtpLength.Hint"] = "The length of the OTP code.",
+
+            ["Admin.Configuration.Settings.CustomerUser.LoginByPhoneEnabled.Warning"] = "Warning - Login by Phone requires the following prerequisites: Phone numbers enabled, Phone numbers required, and Phone number validation enabled. Please configure these settings accordingly.",
+            ["Account.Login.Fields.Phone"] = "Phone",
+            ["Account.Login.EmailMode"] = "Login with email",
+            ["Account.Login.PhoneMode"] = "Login with phone",
+
+            // Phone verification
+            ["PageTitle.ChengePhone"] = "Change phone number",
+            ["PageTitle.RegisterOtp"] = "Phone number verification",
+            ["PageTitle.LoginOtp"] = "Phone number verification",
+
+            ["Account.IsAlreadyExistsVerifiedPhoneNumber"] = "A customer with the specified verified phone number already exists.",
+            ["Account.Register.OtpRegisterSmsText"] = "We'll send you a code via SMS to complete registration.",
+            ["Account.OtpPhoneVerification.OtpUpdatePhoneSmsText"] = "We'll send you a code via SMS to confirm changing your phone number.",
+            ["Account.Login.OtpLoginSmsText"] = "We'll send you a code via SMS to confirm your login.",
+
+            ["PhoneVerification.SendSms"] = "Send SMS",
+            ["PhoneVerification.OtpCodeExpires"] = "Code expires in",
+            ["PhoneVerification.Fields.OtpCode"] = "SMS code",
+            ["PhoneVerification.Fields.Phone"] = "Phone",
+            ["PhoneVerification.OtpCode.Required"] = "SMS code is required.",
+            ["PhoneVerification.OtpCode.Error.SendError"] = "Failed to send SMS code. Please try again.",
+            ["PhoneVerification.OtpCode.Error.NotRequested"] = "You have not requested an SMS code. Please request a code and try again.",
+            ["PhoneVerification.OtpCode.Error.Expired"] = "The SMS code has expired.",
+            ["PhoneVerification.OtpCode.Error.Invalid"] = "The SMS code you entered is invalid. Please try again.",
+            ["PhoneVerification.OtpCode.Error.Verification"] = "SMS verification error.",
+
+            //menu
+            ["Admin.Configuration.Sms.Providers"] = "Sms providers",
+            ["Admin.Configuration.Sms.Providers.BackToList"] = "back to sms provider list",
+            ["Admin.Configuration.Sms.Providers.Configure"] = "Configure",
+            ["Admin.Configuration.Sms.Providers.DownloadMorePlugins"] = "You can download more plugins in our <a href=\"{0}\" target=\"_blank\">marketplace</a>",
+            ["Admin.Configuration.Sms.Providers.Fields.FriendlyName"] = "Friendly name",
+            ["Admin.Configuration.Sms.Providers.Fields.IsPrimaryProvider"] = "Is primary provider",
+            ["Admin.Configuration.Sms.Providers.Fields.MarkAsPrimaryProvider"] = "Mark as primary provider",
+            ["Admin.Configuration.Sms.Providers.Fields.SystemName"] = "System name",
+            ["Admin.Documentation.Reference.SmsProviders"] = "Learn more about <a target=\"_blank\" href=\"{0}\">sms providers</a>.",
+
+            //customer info
+            ["Account.CustomerInfo.VerifyPhoneNumber"] = "Verify phone number",
+            ["Account.Fields.Phone.Status.NotVerified"] = "Phone number is not verified",
+            
         });
 
         #endregion

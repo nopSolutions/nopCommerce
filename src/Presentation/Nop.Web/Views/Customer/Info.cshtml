@@ -296,7 +296,17 @@
                                     <nop-required />
                                 }
                                 <span asp-validation-for="Phone"></span>
+                                @if (!Model.PhoneSmsVerified)
+                                {
+                                    <span class="phone-status" style="color: var(--error-red-color);">@T("Account.Fields.Phone.Status.NotVerified")</span>
+                                }
                             </div>
+                            @if (Model.LoginByPhoneEnabled && !Model.PhoneSmsVerified)
+                            {
+                                <div class="buttons">
+                                    <button type="button" class="button-1 change-phone-btn" id="change-phone-btn" onclick="location.href='@Url.RouteUrl(NopRouteNames.Standard.OTP_PHONE_VERIFICATION, new { typeId = (int)PhoneVerificationFlowEnum.ChangePhoneNumber })'">@T("Account.CustomerInfo.VerifyPhoneNumber")</button>
+                                </div>
+                            }
                         }
                         @if (Model.FaxEnabled)
                         {

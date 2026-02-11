@@ -67,25 +67,28 @@
                     <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
                     <h2 class="title">
                         @T("Account.Login.ReturningCustomer")
-                    </h2>
+                    </h2>                    
                     <div class="form-fields">
-                        @if (Model.UsernamesEnabled)
-                        {
-                            <div class="inputs">
+                        <div class="inputs" data-mode="email">
+                            @if (Model.UsernamesEnabled)
+                            {
                                 <label asp-for="Username" asp-postfix=":"></label>
                                 <input asp-for="Username" class="username" autofocus="autofocus" />
                                 <span asp-validation-for="Username"></span>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="inputs">
+                            }
+                            else
+                            {
                                 <label asp-for="Email" asp-postfix=":"></label>
                                 <input asp-for="Email" class="email" autofocus="autofocus" />
                                 <span asp-validation-for="Email"></span>
-                            </div>
-                        }
-                        <div class="inputs">
+                            }
+                        </div>
+                        <div class="inputs" data-mode="phone">
+                            <label asp-for="Phone" asp-postfix=":"></label>
+                            <input asp-for="Phone" class="phone" />
+                            <span asp-validation-for="Phone"></span>
+                        </div>
+                        <div class="inputs" data-mode="email">
                             <label asp-for="Password" asp-postfix=":"></label>
                             <div class="login-password">
                                 <input asp-for="Password" class="password" />
@@ -93,7 +96,7 @@
                             </div>
                             <span asp-validation-for="Password"></span>
                         </div>
-                        <div class="inputs reversed">
+                        <div class="inputs reversed" data-mode="email">
                             <input asp-for="RememberMe" />
                             <label asp-for="RememberMe"></label>
                             <span class="forgot-password">
@@ -104,9 +107,17 @@
                         {
                             <nop-captcha />
                         }
+                        
                     </div>
+
                     <div class="buttons">
                         <button type="submit" class="button-1 login-button">@T("Account.Login.LoginButton")</button>
+                        @* Mode switcher *@
+                        <div class="mode-switcher" data-mode-root>
+                            <button type="button" data-set-mode="email" class="mode-button" id="emailModeBtn">@T("Account.Login.EmailMode")</button>
+                            <button type="button" data-set-mode="phone" class="mode-button" id="phoneModeBtn">@T("Account.Login.PhoneMode")</button>
+                            <input asp-for="LoginByPhoneEnabled" id="LoginByPhoneEnabled" class="mode-checkbox" style="display: none;" />
+                        </div>
                     </div>
                 </form>
             </div>
@@ -120,16 +131,39 @@
 </div>
 
 <script asp-location="Footer">
-    $(function () {
-        const password = $("#@Html.IdFor(m => m.Password)");
+    $(function() {
 
-        $(".password-eye").on("click", function () {
-            // toggle the type attribute
+        const checkbox = $("#LoginByPhoneEnabled");
+        const root = $("[data-mode-root]");
+
+        function applyMode() {
+            const isPhone = checkbox.prop("checked");
+            const mode = isPhone ? "phone" : "email";
+
+            $("[data-mode]").hide();
+            $(`[data-mode="${mode}"]`).show();
+
+            $("#emailModeBtn").toggle(isPhone);
+            $("#phoneModeBtn").toggle(!isPhone);
+
+            const firstInput = $(`[data-mode="${mode}"]`).find("input").first();
+            firstInput.focus();
+        }
+
+        root.on("click", "[data-set-mode]", function() {
+            const mode = $(this).data("set-mode");
+            checkbox.prop("checked", mode === "phone");
+            applyMode();
+        });
+
+        // password toggle
+        $(".password-eye").on("click", function() {
+            const password = $("#@Html.IdFor(m => m.Password)");
             const type = password.attr("type") === "password" ? "text" : "password";
             password.attr("type", type);
-
-            // toggle the icon
             $(this).toggleClass("password-eye-open");
         });
+
+        applyMode();
     });
 </script>

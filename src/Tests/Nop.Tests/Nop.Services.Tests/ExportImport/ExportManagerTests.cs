@@ -340,7 +340,7 @@ public class ExportManagerTests : ServiceTest
 
         var ignore = new List<string> { "Id", "ExternalAuthenticationRecords", "ShoppingCartItems",
             "ReturnRequests", "BillingAddress", "ShippingAddress", "Addresses", "AdminComment",
-            "EmailToRevalidate", "HasShoppingCartItems", "RequireReLogin", "FailedLoginAttempts",
+            "EmailToRevalidate", "PhoneSmsVerified", "HasShoppingCartItems", "RequireReLogin", "FailedLoginAttempts",
             "CannotLoginUntilDateUtc", "Deleted", "IsSystemAccount", "SystemName", "LastIpAddress",
             "LastLoginDateUtc", "LastActivityDateUtc", "RegisteredInStoreId", "BillingAddressId", "ShippingAddressId",
             "CustomerCustomerRoleMappings", "CustomerAddressMappings", "EntityCacheKey", "VendorId",
