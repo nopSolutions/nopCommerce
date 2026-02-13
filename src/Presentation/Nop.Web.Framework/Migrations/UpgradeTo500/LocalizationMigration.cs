@@ -248,6 +248,9 @@ public class LocalizationMigration : MigrationBase
             //#8074
             ["Admin.System.SystemInfo.UsedMemory"] = "Used memory (MB)",
             ["Admin.System.SystemInfo.UsedMemory.Hint"] = "Total megabytes (MB) in use by the application.",
+            
+            //#8075
+            ["Admin.System.Maintenance.ShrinkDatabase.DatabaseSize"] = "Current database size is {0} MB",
         });
 
         #endregion

@@ -16046,11 +16046,14 @@
   <LocaleResource Name="Admin.System.Maintenance.ShrinkDatabase.Complete">
     <Value>Database shrinking completed</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ShrinkDatabase.DatabaseSize">
+    <Value>Current database size is {0} MB</Value>
+  </LocaleResource>    
   <LocaleResource Name="Admin.System.Maintenance.ShrinkDatabase.Progress">
     <Value>Processing...</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.ShrinkDatabase.Text">
-    <Value>Reclaim disk space by reorganizing physical data storage</Value>
+    <Value>Reclaim disk space by reorganizing physical data storage.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails">
     <Value>Message queue</Value>
