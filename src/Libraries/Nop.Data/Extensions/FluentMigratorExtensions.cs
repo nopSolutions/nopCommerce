@@ -266,4 +266,24 @@ public static class FluentMigratorExtensions
             return (typeToMap, false);
         }
     }
+
+    /// <summary>
+    /// Delete a database table for the specified entity type if the table exist.
+    /// </summary>
+    /// <typeparam name="TEntity">
+    /// The entity type mapped to the database table.
+    /// </typeparam>
+    /// <param name="migration">
+    /// The migration context used to inspect the schema and create the table.
+    /// </param>
+    public static void DeleteTableIfExists<TEntity>(this Migration migration) where TEntity : BaseEntity
+    {
+        var type = typeof(TEntity);
+        var tableName = NameCompatibilityManager.GetTableName(type);
+
+        if (!migration.Schema.Table(tableName).Exists())
+            return;
+
+        migration.Delete.Table(tableName);
+    }
 }

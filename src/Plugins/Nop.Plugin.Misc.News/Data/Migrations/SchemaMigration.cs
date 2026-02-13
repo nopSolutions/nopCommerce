@@ -73,8 +73,8 @@ public class SchemaMigration : Migration
     /// </summary>
     public override void Down()
     {
-        Delete.Table(NameCompatibilityManager.GetTableName(typeof(NewsComment)));
-        Delete.Table(NameCompatibilityManager.GetTableName(typeof(NewsItem)));
+        this.DeleteTableIfExists<NewsComment>();
+        this.DeleteTableIfExists<NewsItem>();
     }
 
     #endregion
