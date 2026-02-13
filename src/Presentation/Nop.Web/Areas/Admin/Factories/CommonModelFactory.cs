@@ -49,6 +49,7 @@ using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security;
+using ILogger = Nop.Services.Logging.ILogger;
 
 namespace Nop.Web.Areas.Admin.Factories;
 
@@ -75,6 +76,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
+    protected readonly ILogger _logger;
     protected readonly IMaintenanceService _maintenanceService;
     protected readonly IManufacturerService _manufacturerService;
     protected readonly IMeasureService _measureService;
@@ -126,6 +128,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         IHttpContextAccessor httpContextAccessor,
         ILanguageService languageService,
         ILocalizationService localizationService,
+        ILogger logger,
         IMaintenanceService maintenanceService,
         IManufacturerService manufacturerService,
         IMeasureService measureService,
@@ -174,6 +177,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _httpContextAccessor = httpContextAccessor;
         _languageService = languageService;
         _localizationService = localizationService;
+        _logger = logger;
         _maintenanceService = maintenanceService;
         _manufacturerService = manufacturerService;
         _measureService = measureService;
@@ -982,10 +986,19 @@ public partial class CommonModelFactory : ICommonModelFactory
         model.DeleteAlreadySentQueuedEmails.EndDate = DateTime.UtcNow.AddDays(-7);
 
         model.BackupSupported = _dataProvider.BackupSupported;
-        model.DatabaseSize =
-            string.Format(
-                await _localizationService.GetResourceAsync("Admin.System.Maintenance.ShrinkDatabase.DatabaseSize"),
-                Math.Round(await _dataProvider.GetDatabaseSizeAsync() / 1024.0M, 2));
+
+        try
+        {
+            model.DatabaseSize =
+                string.Format(
+                    await _localizationService.GetResourceAsync("Admin.System.Maintenance.ShrinkDatabase.DatabaseSize"),
+                    Math.Round(await _dataProvider.GetDatabaseSizeAsync() / 1024.0M, 2));
+        }
+        catch (Exception e)
+        {
+            model.DatabaseSize = e.Message;
+            await _logger.ErrorAsync(e.Message, e);
+        }
 
         //prepare nested search model
         PrepareBackupFileSearchModel(model.BackupFileSearchModel);
