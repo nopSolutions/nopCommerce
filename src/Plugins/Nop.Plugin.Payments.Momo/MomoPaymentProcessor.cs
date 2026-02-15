@@ -61,14 +61,109 @@ public class MomoPaymentProcessor : BasePlugin, IPaymentMethod
     /// A task that represents the asynchronous operation
     /// The task result contains the process payment result
     /// </returns>
-    public Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
+    public async Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
     {
-        if (processPaymentRequest.CustomValues.TryGetValue("PaymentCompleted", out var paymentValue) &&
-            paymentValue.Value == "true")
+        try
         {
-            return Task.FromResult(new ProcessPaymentResult { NewPaymentStatus = PaymentStatus.Paid, });
+            // Extract phone number from custom values
+            if (!processPaymentRequest.CustomValues.TryGetValue("PhoneNumber", out var phoneValue) || 
+                string.IsNullOrWhiteSpace(phoneValue.Value))
+            {
+                return new ProcessPaymentResult 
+                { 
+                    Errors = new[] { "Phone number is required for MoMo payment" } 
+                };
+            }
+
+            var phoneNumber = phoneValue.Value;
+
+            // Validate phone number format (Ghana numbers)
+            if (!IsValidPhoneNumber(phoneNumber))
+            {
+                return new ProcessPaymentResult 
+                { 
+                    Errors = new[] { "Invalid phone number format" } 
+                };
+            }
+
+            // Call MoMo API to request payment
+            var response = await _momoPaymentClient.RequestToPayAsync(
+                phoneNumber,
+                processPaymentRequest.OrderTotal,
+                _momoPaymentSettings.Currency
+            );
+
+            // Check if API call was successful
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return new ProcessPaymentResult 
+                { 
+                    Errors = new[] { $"Payment initiation failed: {response.StatusCode} - {errorContent}" } 
+                };
+            }
+
+            // Extract reference ID from response headers
+            var referenceId = string.Empty;
+            if (response.Headers.TryGetValues("X-Reference-Id", out var refIdValues))
+            {
+                referenceId = refIdValues.FirstOrDefault() ?? string.Empty;
+            }
+
+            // Payment initiated successfully - order will be in pending state
+            // Payment status will be updated via callback or polling mechanism
+            return new ProcessPaymentResult 
+            { 
+                NewPaymentStatus = PaymentStatus.Pending,
+                AuthorizationTransactionId = referenceId,
+                AuthorizationTransactionCode = referenceId
+            };
         }
-        return Task.FromResult(new ProcessPaymentResult { NewPaymentStatus = PaymentStatus.Pending, });
+        catch (Exception ex)
+        {
+            return new ProcessPaymentResult 
+            { 
+                Errors = new[] { $"Payment processing error: {ex.Message}" } 
+            };
+        }
+    }
+
+    /// <summary>
+    /// Validates Ghana phone number format
+    /// </summary>
+    /// <param name="phoneNumber">Phone number to validate</param>
+    /// <returns>True if valid, false otherwise</returns>
+    private bool IsValidPhoneNumber(string phoneNumber)
+    {
+        if (string.IsNullOrWhiteSpace(phoneNumber))
+            return false;
+
+        // Remove spaces and dashes
+        var cleaned = phoneNumber.Replace(" ", "").Replace("-", "");
+
+        // Convert international format to domestic if needed
+        if (cleaned.StartsWith("233"))
+        {
+            cleaned = "0" + cleaned.Substring(3);
+        }
+
+        // Check if 10 digits
+        if (cleaned.Length != 10)
+            return false;
+
+        // Check if starts with 0
+        if (!cleaned.StartsWith("0"))
+            return false;
+
+        // Check if contains only digits
+        if (!System.Text.RegularExpressions.Regex.IsMatch(cleaned, @"^\d+$"))
+            return false;
+
+        // Check valid network prefixes for Ghana
+        var validPrefixes = new[] { "020", "024", "025", "026", "027", "028", "050", "051", "055", "056", "057" };
+        var prefix = cleaned.Substring(0, 3);
+
+        return validPrefixes.Contains(prefix);
     }
 
     /// <summary>

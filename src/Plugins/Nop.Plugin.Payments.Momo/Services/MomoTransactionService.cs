@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Core;
-using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Plugin.Payments.Momo.Models;
 
@@ -16,7 +10,7 @@ public class MomoTransactionService : IMomoTransactionService
 {
     #region Fields
 
-    private readonly IRepository<MomoTransactionModel> _transactionRepository;
+    private readonly IRepository<MomoTransaction> _transactionRepository;
     private readonly MomoPaymentSettings _momoPaymentSettings;
 
     #endregion
@@ -24,7 +18,7 @@ public class MomoTransactionService : IMomoTransactionService
     #region Ctor
 
     public MomoTransactionService(
-        IRepository<MomoTransactionModel> transactionRepository,
+        IRepository<MomoTransaction> transactionRepository,
         MomoPaymentSettings momoPaymentSettings)
     {
         _transactionRepository = transactionRepository;
@@ -38,15 +32,15 @@ public class MomoTransactionService : IMomoTransactionService
     /// <summary>
     /// Creates a new transaction
     /// </summary>
-    public virtual async Task<MomoTransactionModel> CreateTransactionAsync(string phoneNumber, decimal amount, string currency, int orderId)
+    public virtual async Task<MomoTransaction> CreateTransactionAsync(string phoneNumber, decimal amount, string currency, int orderId, string referenceId)
     {
-        var transaction = new MomoTransactionModel
+        var transaction = new MomoTransaction
         {
-            ReferenceId = Guid.NewGuid().ToString(),
+            ReferenceId = referenceId,
             PhoneNumber = phoneNumber,
             Amount = amount,
             Currency = currency,
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = DateTime.Now,
             Status = "PENDING",
             OrderId = orderId
         };
@@ -59,7 +53,7 @@ public class MomoTransactionService : IMomoTransactionService
     /// <summary>
     /// Updates a transaction status
     /// </summary>
-    public virtual async Task<MomoTransactionModel> UpdateTransactionStatusAsync(string referenceId, string status, string errorMessage = null)
+    public virtual async Task<MomoTransaction> UpdateTransactionStatusAsync(string referenceId, string status, string errorMessage = null)
     {
         var transaction = await _transactionRepository.Table
             .FirstOrDefaultAsync(t => t.ReferenceId == referenceId);
@@ -69,7 +63,26 @@ public class MomoTransactionService : IMomoTransactionService
 
         transaction.Status = status;
         transaction.ErrorMessage = errorMessage;
-        transaction.UpdatedAt = DateTime.UtcNow;
+        transaction.UpdatedAt = DateTime.Now;
+
+        await _transactionRepository.UpdateAsync(transaction);
+
+        return transaction;
+    }
+
+    /// <summary>
+    /// Updates a transaction with order ID
+    /// </summary>
+    public virtual async Task<MomoTransaction> UpdateTransactionOrderIdAsync(string referenceId, int orderId)
+    {
+        var transaction = await _transactionRepository.Table
+            .FirstOrDefaultAsync(t => t.ReferenceId == referenceId);
+
+        if (transaction == null)
+            return null;
+
+        transaction.OrderId = orderId;
+        transaction.UpdatedAt = DateTime.Now;
 
         await _transactionRepository.UpdateAsync(transaction);
 
@@ -79,7 +92,7 @@ public class MomoTransactionService : IMomoTransactionService
     /// <summary>
     /// Gets a transaction by reference ID
     /// </summary>
-    public virtual async Task<MomoTransactionModel> GetTransactionAsync(string referenceId)
+    public virtual async Task<MomoTransaction> GetTransactionAsync(string referenceId)
     {
         return await _transactionRepository.Table
             .FirstOrDefaultAsync(t => t.ReferenceId == referenceId);
@@ -88,7 +101,7 @@ public class MomoTransactionService : IMomoTransactionService
     /// <summary>
     /// Gets transaction history
     /// </summary>
-    public virtual async Task<IList<MomoTransactionModel>> GetTransactionHistoryAsync(DateTime? fromDate = null, DateTime? toDate = null, int? orderId = null)
+    public virtual async Task<IList<MomoTransaction>> GetTransactionHistoryAsync(DateTime? fromDate = null, DateTime? toDate = null, int? orderId = null)
     {
         var query = _transactionRepository.Table;
 

@@ -8,7 +8,7 @@ namespace Nop.Plugin.Payments.Momo.Data;
 /// <summary>
 /// Represents a MoMo transaction entity builder
 /// </summary>
-public class MomoTransactionBuilder : NopEntityBuilder<MomoTransactionModel>
+public class MomoTransactionBuilder : NopEntityBuilder<MomoTransaction>
 {
     /// <summary>
     /// Apply entity configuration
@@ -17,14 +17,14 @@ public class MomoTransactionBuilder : NopEntityBuilder<MomoTransactionModel>
     public override void MapEntity(CreateTableExpressionBuilder table)
     {
         table
-            .WithColumn(nameof(MomoTransactionModel.ReferenceId)).AsString(50).NotNullable()
-            .WithColumn(nameof(MomoTransactionModel.PhoneNumber)).AsString(20).NotNullable()
-            .WithColumn(nameof(MomoTransactionModel.Amount)).AsDecimal(18, 4).NotNullable()
-            .WithColumn(nameof(MomoTransactionModel.Currency)).AsString(5).NotNullable()
-            .WithColumn(nameof(MomoTransactionModel.Status)).AsString(20).NotNullable()
-            .WithColumn(nameof(MomoTransactionModel.CreatedAt)).AsDateTime().NotNullable()
-            .WithColumn(nameof(MomoTransactionModel.UpdatedAt)).AsDateTime().Nullable()
-            .WithColumn(nameof(MomoTransactionModel.ErrorMessage)).AsString(int.MaxValue).Nullable()
-            .WithColumn(nameof(MomoTransactionModel.OrderId)).AsInt32().NotNullable();
+            .WithColumn(nameof(MomoTransaction.ReferenceId)).AsString(50).NotNullable()
+            .WithColumn(nameof(MomoTransaction.PhoneNumber)).AsString(20).NotNullable()
+            .WithColumn(nameof(MomoTransaction.Amount)).AsDecimal(18, 4).NotNullable()
+            .WithColumn(nameof(MomoTransaction.Currency)).AsString(5).NotNullable()
+            .WithColumn(nameof(MomoTransaction.Status)).AsString(20).NotNullable()
+            .WithColumn(nameof(MomoTransaction.CreatedAt)).AsDateTime().NotNullable()
+            .WithColumn(nameof(MomoTransaction.UpdatedAt)).AsDateTime().Nullable()
+            .WithColumn(nameof(MomoTransaction.ErrorMessage)).AsString(int.MaxValue).Nullable()
+            .WithColumn(nameof(MomoTransaction.OrderId)).AsInt32().NotNullable();
     }
 }

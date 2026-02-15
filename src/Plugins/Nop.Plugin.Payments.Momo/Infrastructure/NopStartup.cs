@@ -25,5 +25,6 @@ public partial class NopStartup : INopStartup
 
         //services
         services.AddScoped<IMomoTransactionService, MomoTransactionService>();
+        services.AddScoped<IMomoPaymentService, MomoPaymentService>();
     }
 }

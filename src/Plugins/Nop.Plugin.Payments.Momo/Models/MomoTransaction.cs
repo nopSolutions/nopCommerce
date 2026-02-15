@@ -1,13 +1,11 @@
-using System;
 using Nop.Core;
-using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Payments.Momo.Models;
 
 /// <summary>
 /// Represents a MoMo transaction
 /// </summary>
-public class MomoTransactionModel : BaseEntity
+public class MomoTransaction : BaseEntity
 {
     /// <summary>
     /// Gets or sets the reference ID (from MTN MoMo)
