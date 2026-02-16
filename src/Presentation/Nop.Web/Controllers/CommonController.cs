@@ -14,10 +14,10 @@ using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
+using Nop.Services.Themes;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Themes;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Sitemap;
 

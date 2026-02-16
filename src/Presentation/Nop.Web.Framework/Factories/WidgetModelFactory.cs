@@ -3,8 +3,8 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Services.Cms;
 using Nop.Services.Customers;
+using Nop.Services.Themes;
 using Nop.Web.Framework.Models.Cms;
-using Nop.Web.Framework.Themes;
 
 namespace Nop.Web.Framework.Factories;
 

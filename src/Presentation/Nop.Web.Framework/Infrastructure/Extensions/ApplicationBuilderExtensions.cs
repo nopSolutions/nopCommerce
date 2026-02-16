@@ -30,6 +30,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Themes;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.WebOptimizer;
@@ -370,6 +371,15 @@ public static class ApplicationBuilderExtensions
     public static void UseKeepAlive(this IApplicationBuilder application)
     {
         application.UseMiddleware<KeepAliveMiddleware>();
+    }
+
+    /// <summary>
+    /// Configure middleware storing the current user theme in the context
+    /// </summary>
+    /// <param name="application">Builder for configuring an application's request pipeline</param>
+    public static void UseThemes(this IApplicationBuilder application)
+    {
+        application.UseMiddleware<ThemesMiddleware>();
     }
 
     /// <summary>

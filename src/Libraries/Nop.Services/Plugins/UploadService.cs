@@ -83,8 +83,8 @@ public partial class UploadService : IUploadService
 
         //get path to the themes directory
         var themesDirectory = string.Empty;
-        if (!string.IsNullOrEmpty(NopPluginDefaults.ThemesPath))
-            themesDirectory = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
+        if (!string.IsNullOrEmpty(NopThemeDefaults.ThemesPath))
+            themesDirectory = _fileProvider.MapPath(NopThemeDefaults.ThemesPath);
 
         IDescriptor descriptor = null;
         string uploadedItemDirectoryName;
@@ -112,7 +112,7 @@ public partial class UploadService : IUploadService
 
                 //or whether it's a theme descriptor
                 var isThemeDescriptor = entry.FullName
-                    .Equals($"{uploadedItemDirectoryName}/{NopPluginDefaults.ThemeDescriptionFileName}", StringComparison.InvariantCultureIgnoreCase);
+                    .Equals($"{uploadedItemDirectoryName}/{NopThemeDefaults.ThemeDescriptionFileName}", StringComparison.InvariantCultureIgnoreCase);
 
                 if (!isPluginDescriptor && !isThemeDescriptor)
                     continue;
@@ -180,8 +180,8 @@ public partial class UploadService : IUploadService
 
         //get path to the themes directory
         var themesDirectory = string.Empty;
-        if (!string.IsNullOrEmpty(NopPluginDefaults.ThemesPath))
-            themesDirectory = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
+        if (!string.IsNullOrEmpty(NopThemeDefaults.ThemesPath))
+            themesDirectory = _fileProvider.MapPath(NopThemeDefaults.ThemesPath);
 
         //get descriptors of items contained in the archive
         var descriptors = new List<IDescriptor>();
@@ -204,8 +204,8 @@ public partial class UploadService : IUploadService
                 if (item.Type == UploadedItemType.Plugin)
                     descriptorPath = $"{itemPath}{NopPluginDefaults.DescriptionFileName}";
 
-                if (item.Type == UploadedItemType.Theme && !string.IsNullOrEmpty(NopPluginDefaults.ThemeDescriptionFileName))
-                    descriptorPath = $"{itemPath}{NopPluginDefaults.ThemeDescriptionFileName}";
+                if (item.Type == UploadedItemType.Theme && !string.IsNullOrEmpty(NopThemeDefaults.ThemeDescriptionFileName))
+                    descriptorPath = $"{itemPath}{NopThemeDefaults.ThemeDescriptionFileName}";
 
                 //try to get the descriptor entry
                 var descriptorEntry = archive.Entries.FirstOrDefault(entry => entry.FullName.Equals(descriptorPath, StringComparison.InvariantCultureIgnoreCase));

@@ -65,6 +65,9 @@ public partial class NopCommonStartup : INopStartup
 
         //configure PDF
         application.UseNopPdf();
+
+        //configure Themes
+        application.UseThemes();
     }
 
     /// <summary>
