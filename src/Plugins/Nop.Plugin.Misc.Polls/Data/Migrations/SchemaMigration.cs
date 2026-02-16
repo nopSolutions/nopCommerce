@@ -30,9 +30,9 @@ public class SchemaMigration : Migration
     /// </summary>
     public override void Down()
     {
-        Delete.Table(NameCompatibilityManager.GetTableName(typeof(PollVotingRecord)));
-        Delete.Table(NameCompatibilityManager.GetTableName(typeof(PollAnswer)));
-        Delete.Table(NameCompatibilityManager.GetTableName(typeof(Poll)));
+        this.DeleteTableIfExists<PollVotingRecord>();
+        this.DeleteTableIfExists<PollAnswer>();
+        this.DeleteTableIfExists<Poll>();
     }
 
     #endregion

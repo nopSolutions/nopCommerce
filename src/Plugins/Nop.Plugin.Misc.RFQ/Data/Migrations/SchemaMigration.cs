@@ -6,7 +6,7 @@ using Nop.Plugin.Misc.RFQ.Domains;
 namespace Nop.Plugin.Misc.RFQ.Data.Migrations;
 
 [NopMigration("2024/07/03 10:30:08:1687554", "Nop.Plugin.Misc.RFQ schema", MigrationProcessType.Installation)]
-public class SchemaMigration : AutoReversingMigration
+public class SchemaMigration : Migration
 {
     /// <summary>
     /// Collect the UP migration expressions
@@ -18,5 +18,17 @@ public class SchemaMigration : AutoReversingMigration
 
         this.CreateTableIfNotExists<Quote>();
         this.CreateTableIfNotExists<QuoteItem>();
+    }
+
+    /// <summary>
+    /// Collects the DOWN migration expressions
+    /// </summary>
+    public override void Down()
+    {
+        this.DeleteTableIfExists<QuoteItem>();
+        this.DeleteTableIfExists<Quote>();
+
+        this.DeleteTableIfExists<RequestQuoteItem>();
+        this.DeleteTableIfExists<RequestQuote>();
     }
 }
