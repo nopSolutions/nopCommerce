@@ -3,7 +3,6 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
@@ -162,15 +161,6 @@ public class MenuMigration : Migration
             RouteName = NopRouteNames.General.BLOG,
             Title = "Blog",
             Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayblogfooteritem") && IsSettingEnabled($"{nameof(BlogSettings)}.{nameof(BlogSettings.Enabled)}")
-        });
-
-        syncCodeHelper.InsertEntity(new MenuItem
-        {
-            MenuId = footerCustomerService.Id,
-            MenuItemType = MenuItemType.StandardPage,
-            RouteName = NopRouteNames.General.BOARDS,
-            Title = "Forum",
-            Published = IsSettingEnabled("displaydefaultfooteritemsettings.displayforumsfooteritem") && IsSettingEnabled($"{nameof(ForumSettings)}.{nameof(ForumSettings.ForumsEnabled)}")
         });
 
         syncCodeHelper.InsertEntity(new MenuItem

@@ -3,7 +3,6 @@ using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Configuration;
@@ -21,9 +20,9 @@ public class CommonModelFactoryTests : BaseNopTest
     private LocalizationSettings _localizationSettings;
     private IWorkContext _workContext;
     private CustomerSettings _customerSettings;
-    private ForumSettings _forumSettings;
     private StoreInformationSettings _storeInformationSettings;
     private CommonSettings _commonSettings;
+    private PrivateMessageSettings _privateMessageSettings;
     private Vendor _vendor;
     private ISettingService _settingsService;
 
@@ -32,12 +31,13 @@ public class CommonModelFactoryTests : BaseNopTest
     {
         _settingsService = GetService<ISettingService>();
         _localizationSettings = GetService<LocalizationSettings>();
-        _forumSettings = GetService<ForumSettings>();
 
         _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = true;
         await _settingsService.SaveSettingAsync(_localizationSettings);
-        _forumSettings.AllowPrivateMessages = true;
-        await _settingsService.SaveSettingAsync(_forumSettings);
+
+        _privateMessageSettings = GetService<PrivateMessageSettings>();
+        _privateMessageSettings.AllowPrivateMessages = true;
+        await _settingsService.SaveSettingAsync(_privateMessageSettings);
 
         _commonModelFactory = GetService<ICommonModelFactory>();
 
@@ -55,8 +55,8 @@ public class CommonModelFactoryTests : BaseNopTest
     {
         _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = false;
         await _settingsService.SaveSettingAsync(_localizationSettings);
-        _forumSettings.AllowPrivateMessages = false;
-        await _settingsService.SaveSettingAsync(_forumSettings);
+        _privateMessageSettings.AllowPrivateMessages = false;
+        await _settingsService.SaveSettingAsync(_privateMessageSettings);
     }
 
     [Test]
@@ -111,7 +111,7 @@ public class CommonModelFactoryTests : BaseNopTest
         model.CustomerName.Should().Be("John");
         model.ShoppingCartEnabled.Should().BeTrue();
         model.WishlistEnabled.Should().BeTrue();
-        model.AllowPrivateMessages.Should().Be(_forumSettings.AllowPrivateMessages);
+        model.AllowPrivateMessages.Should().Be(_privateMessageSettings.AllowPrivateMessages);
         model.UnreadPrivateMessages.Should().BeEmpty();
         model.AlertMessage.Should().BeEmpty();
         model.ShoppingCartItems.Should().Be(0);

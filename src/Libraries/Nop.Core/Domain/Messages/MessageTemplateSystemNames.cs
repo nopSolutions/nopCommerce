@@ -42,6 +42,11 @@ public static partial class MessageTemplateSystemNames
     /// </summary>
     public const string CUSTOMER_FAILED_LOGIN_ATTEMPT_NOTIFICATION = "Customer.FailedLoginAttempt";
 
+    /// <summary>
+    /// Represents system name of notification about new private message
+    /// </summary>
+    public const string PRIVATE_MESSAGE_NOTIFICATION = "Customer.NewPM";
+
     #endregion
 
     #region Order
@@ -207,25 +212,6 @@ public static partial class MessageTemplateSystemNames
     /// Represents system name of notification customer about changing return request status
     /// </summary>
     public const string RETURN_REQUEST_STATUS_CHANGED_CUSTOMER_NOTIFICATION = "ReturnRequestStatusChanged.CustomerNotification";
-
-    #endregion
-
-    #region Forum
-
-    /// <summary>
-    /// Represents system name of notification about new forum topic
-    /// </summary>
-    public const string NEW_FORUM_TOPIC_MESSAGE = "Forums.NewForumTopic";
-
-    /// <summary>
-    /// Represents system name of notification about new forum post
-    /// </summary>
-    public const string NEW_FORUM_POST_MESSAGE = "Forums.NewForumPost";
-
-    /// <summary>
-    /// Represents system name of notification about new private message
-    /// </summary>
-    public const string PRIVATE_MESSAGE_NOTIFICATION = "Customer.NewPM";
 
     #endregion
 

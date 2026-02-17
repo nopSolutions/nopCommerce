@@ -8,5 +8,4 @@ public partial record ProfileIndexModel : BaseNopModel
     public string ProfileTitle { get; set; }
     public int PostsPage { get; set; }
     public bool PagingPosts { get; set; }
-    public bool ForumsEnabled { get; set; }
 }

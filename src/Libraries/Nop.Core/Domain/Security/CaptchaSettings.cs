@@ -68,11 +68,6 @@ public partial class CaptchaSettings : ISettings
     public bool ShowOnForgotPasswordPage { get; set; }
 
     /// <summary>
-    /// A value indicating whether CAPTCHA should be displayed on the Forum
-    /// </summary>
-    public bool ShowOnForum { get; set; }
-
-    /// <summary>
     /// A value indicating whether CAPTCHA should be displayed on the checkout page for guest customers
     /// </summary>
     public bool ShowOnCheckoutPageForGuests { get; set; }

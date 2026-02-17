@@ -1,7 +1,6 @@
 ﻿using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
@@ -470,36 +469,7 @@ public partial interface IWorkflowMessageService
 
     #endregion
 
-    #region Forum Notifications
-
-    /// <summary>
-    /// Sends a forum subscription message to a customer
-    /// </summary>
-    /// <param name="customer">Customer instance</param>
-    /// <param name="forumTopic">Forum Topic</param>
-    /// <param name="forum">Forum</param>
-    /// <param name="languageId">Message language identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the queued email identifier
-    /// </returns>
-    Task<IList<int>> SendNewForumTopicMessageAsync(Customer customer, ForumTopic forumTopic, Forum forum, int languageId);
-
-    /// <summary>
-    /// Sends a forum subscription message to a customer
-    /// </summary>
-    /// <param name="customer">Customer instance</param>
-    /// <param name="forumPost">Forum post</param>
-    /// <param name="forumTopic">Forum Topic</param>
-    /// <param name="forum">Forum</param>
-    /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
-    /// <param name="languageId">Message language identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the queued email identifier
-    /// </returns>
-    Task<IList<int>> SendNewForumPostMessageAsync(Customer customer, ForumPost forumPost,
-        ForumTopic forumTopic, Forum forum, int friendlyForumTopicPageIndex, int languageId);
+    #region Messages
 
     /// <summary>
     /// Sends a private message notification

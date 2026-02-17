@@ -15,7 +15,6 @@ using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.FilterLevels;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
@@ -770,20 +769,6 @@ public partial class InstallationService
                     Name = MessageTemplateSystemNames.CUSTOMER_WELCOME_MESSAGE,
                     Subject = "Welcome to %Store.Name%",
                     Body = $"We welcome you to <a href=\"%Store.URL%\"> %Store.Name%</a>.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}You can now take part in the various services we have to offer you. Some of these services include:{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Permanent Cart - Any products added to your online cart remain there until you remove them, or check them out.{Environment.NewLine}<br />{Environment.NewLine}Address Book - We can now deliver your products to another address other than yours! This is perfect to send birthday gifts direct to the birthday-person themselves.{Environment.NewLine}<br />{Environment.NewLine}Order History - View your history of purchases that you have made with us.{Environment.NewLine}<br />{Environment.NewLine}Products Reviews - Share your opinions on products with our other customers.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}For help with any of our online services, please email the store-owner: <a href=\"mailto:%Store.Email%\">%Store.Email%</a>.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Note: This email address was provided on our registration page. If you own the email and did not register on our site, please send an email to <a href=\"mailto:%Store.Email%\">%Store.Email%</a>.{Environment.NewLine}",
-                    IsActive = true,
-                    EmailAccountId = eaGeneral.Id
-                },
-                new() {
-                    Name = MessageTemplateSystemNames.NEW_FORUM_POST_MESSAGE,
-                    Subject = "%Store.Name%. New Post Notification.",
-                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}A new post has been created in the topic <a href=\"%Forums.TopicURL%\">\"%Forums.TopicName%\"</a> at <a href=\"%Forums.ForumURL%\">\"%Forums.ForumName%\"</a> forum.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Click <a href=\"%Forums.TopicURL%\">here</a> for more info.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Post author: %Forums.PostAuthor%{Environment.NewLine}<br />{Environment.NewLine}Post body: %Forums.PostBody%{Environment.NewLine}</p>{Environment.NewLine}",
-                    IsActive = true,
-                    EmailAccountId = eaGeneral.Id
-                },
-                new() {
-                    Name = MessageTemplateSystemNames.NEW_FORUM_TOPIC_MESSAGE,
-                    Subject = "%Store.Name%. New Topic Notification.",
-                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}A new topic <a href=\"%Forums.TopicURL%\">\"%Forums.TopicName%\"</a> has been created at <a href=\"%Forums.ForumURL%\">\"%Forums.ForumName%\"</a> forum.{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Click <a href=\"%Forums.TopicURL%\">here</a> for more info.{Environment.NewLine}</p>{Environment.NewLine}",
                     IsActive = true,
                     EmailAccountId = eaGeneral.Id
                 },
@@ -1598,7 +1583,17 @@ public partial class InstallationService
             PhoneNumberValidationEnabled = false,
             PhoneNumberValidationUseRegex = false,
             PhoneNumberValidationRule = "^[0-9]{1,14}?$",
-            DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == _installationSettings.RegionInfo.ThreeLetterISORegionName)
+            DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == _installationSettings.RegionInfo.ThreeLetterISORegionName),
+        });
+
+        await SaveSettingAsync(dictionary, new PrivateMessageSettings
+        {
+            AllowPrivateMessages = false,
+            ShowAlertForPM = false,
+            PrivateMessagesPageSize = 10,
+            NotifyAboutPrivateMessages = false,
+            PMSubjectMaxLength = 450,
+            PMTextMaxLength = 4000
         });
 
         await SaveSettingAsync(dictionary, new MultiFactorAuthenticationSettings
@@ -1895,44 +1890,6 @@ public partial class InstallationService
             ShowBlogCommentsPerStore = false
         });
 
-        await SaveSettingAsync(dictionary, new ForumSettings
-        {
-            ForumsEnabled = false,
-            RelativeDateTimeFormattingEnabled = true,
-            AllowCustomersToDeletePosts = false,
-            AllowCustomersToEditPosts = false,
-            AllowCustomersToManageSubscriptions = false,
-            AllowGuestsToCreatePosts = false,
-            AllowGuestsToCreateTopics = false,
-            AllowPostVoting = true,
-            MaxVotesPerDay = 30,
-            TopicSubjectMaxLength = 450,
-            PostMaxLength = 4000,
-            StrippedTopicMaxLength = 45,
-            TopicsPageSize = 10,
-            PostsPageSize = 10,
-            SearchResultsPageSize = 10,
-            ActiveDiscussionsPageSize = 50,
-            LatestCustomerPostsPageSize = 10,
-            ShowCustomersPostCount = true,
-            ForumEditor = EditorType.MarkdownEditor,
-            SignaturesEnabled = true,
-            AllowPrivateMessages = false,
-            ShowAlertForPM = false,
-            PrivateMessagesPageSize = 10,
-            ForumSubscriptionsPageSize = 10,
-            NotifyAboutPrivateMessages = false,
-            PMSubjectMaxLength = 450,
-            PMTextMaxLength = 4000,
-            HomepageActiveDiscussionsTopicCount = 5,
-            ActiveDiscussionsFeedEnabled = false,
-            ActiveDiscussionsFeedCount = 25,
-            ForumFeedsEnabled = false,
-            ForumFeedCount = 10,
-            ForumSearchTermMinimumLength = 3,
-            TopicMetaDescriptionLength = 160
-        });
-
         await SaveSettingAsync(dictionary, new VendorSettings
         {
             DefaultVendorPageSizeOptions = "6, 3, 9",
@@ -1969,7 +1926,6 @@ public partial class InstallationService
             ShowOnEmailProductToFriendPage = false,
             ShowOnEmailWishlistToFriendPage = false,
             ShowOnForgotPasswordPage = false,
-            ShowOnForum = false,
             ShowOnLoginPage = false,
             ShowOnNewsletterPage = false,
             ShowOnProductReviewPage = false,
@@ -2032,10 +1988,7 @@ public partial class InstallationService
                 "/uploadfileproductattribute/*",
                 "/shoppingcart/productdetails_attributechange/*",
                 "/uploadfilereturnrequest",
-                "/boards/topicwatch/*",
-                "/boards/forumwatch/*",
                 "/install/restartapplication",
-                "/boards/postvote",
                 "/product/estimateshipping/*",
                 "/shoppingcart/checkoutattributechange/*"
             ],
@@ -2044,16 +1997,6 @@ public partial class InstallationService
                 "/addproducttocart/catalog/",
                 "/addproducttocart/details/",
                 "/backinstocksubscriptions/manage",
-                "/boards/forumsubscriptions",
-                "/boards/forumwatch",
-                "/boards/postedit",
-                "/boards/postdelete",
-                "/boards/postcreate",
-                "/boards/topicedit",
-                "/boards/topicdelete",
-                "/boards/topiccreate",
-                "/boards/topicmove",
-                "/boards/topicwatch",
                 "/cart$",
                 "/changecurrency",
                 "/changelanguage",
@@ -2135,13 +2078,6 @@ public partial class InstallationService
             IsSystemRole = true,
             SystemName = NopCustomerDefaults.AdministratorsRoleName
         };
-        var crForumModerators = new CustomerRole
-        {
-            Name = "Forum Moderators",
-            Active = true,
-            IsSystemRole = true,
-            SystemName = NopCustomerDefaults.ForumModeratorsRoleName
-        };
         var crRegistered = new CustomerRole
         {
             Name = "Registered",
@@ -2166,7 +2102,6 @@ public partial class InstallationService
         var customerRoles = new List<CustomerRole>
             {
                 crAdministrators,
-                crForumModerators,
                 crRegistered,
                 crGuests,
                 crVendors
@@ -2220,7 +2155,6 @@ public partial class InstallationService
 
         await _dataProvider.BulkInsertEntitiesAsync(new[]{
             new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crAdministrators.Id },
-            new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crForumModerators.Id },
             new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crRegistered.Id }});
 
         //set hashed admin password
@@ -2329,16 +2263,6 @@ public partial class InstallationService
                     Published = true,
                     Title = string.Empty,
                     Body = "<p>Put your contact information here. You can edit this in the admin site.</p>",
-                    TopicTemplateId = defaultTopicTemplate.Id
-                },
-                new() {
-                    SystemName = "ForumWelcomeMessage",
-                    IncludeInSitemap = false,
-                    IsPasswordProtected = false,
-                    DisplayOrder = 1,
-                    Published = true,
-                    Title = "Forums",
-                    Body = "<p>Put your welcome message here. You can edit this in the admin site.</p>",
                     TopicTemplateId = defaultTopicTemplate.Id
                 },
                 new() {
@@ -3262,36 +3186,6 @@ public partial class InstallationService
                     SystemKeyword = "PublicStore.AddBlogComment",
                     Enabled = false,
                     Name = "Public store. Add blog comment"
-                },
-                new() {
-                    SystemKeyword = "PublicStore.AddForumTopic",
-                    Enabled = false,
-                    Name = "Public store. Add forum topic"
-                },
-                new() {
-                    SystemKeyword = "PublicStore.EditForumTopic",
-                    Enabled = false,
-                    Name = "Public store. Edit forum topic"
-                },
-                new() {
-                    SystemKeyword = "PublicStore.DeleteForumTopic",
-                    Enabled = false,
-                    Name = "Public store. Delete forum topic"
-                },
-                new() {
-                    SystemKeyword = "PublicStore.AddForumPost",
-                    Enabled = false,
-                    Name = "Public store. Add forum post"
-                },
-                new() {
-                    SystemKeyword = "PublicStore.EditForumPost",
-                    Enabled = false,
-                    Name = "Public store. Edit forum post"
-                },
-                new() {
-                    SystemKeyword = "PublicStore.DeleteForumPost",
-                    Enabled = false,
-                    Name = "Public store. Delete forum post"
                 },
                 new() {
                     SystemKeyword = "UploadNewPlugin",

@@ -56,21 +56,6 @@ public static partial class TokenGroupNames
     public static string ReturnRequestTokens => "Return request tokens";
 
     /// <summary>
-    /// Represents tokens with information about the forum
-    /// </summary>
-    public static string ForumTokens => "Forum tokens";
-
-    /// <summary>
-    /// Represents tokens with information about the forum topic
-    /// </summary>
-    public static string ForumTopicTokens => "Forum topic tokens";
-
-    /// <summary>
-    /// Represents tokens with information about the forum post
-    /// </summary>
-    public static string ForumPostTokens => "Forum post tokens";
-
-    /// <summary>
     /// Represents tokens with information about the private message
     /// </summary>
     public static string PrivateMessageTokens => "Private message tokens";

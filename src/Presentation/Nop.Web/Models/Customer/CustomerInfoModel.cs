@@ -118,11 +118,6 @@ public partial record CustomerInfoModel : BaseNopModel
 
     public IList<NewsLetterSubscriptionModel> NewsLetterSubscriptions { get; set; }
 
-    //preferences
-    public bool SignatureEnabled { get; set; }
-    [NopResourceDisplayName("Account.Fields.Signature")]
-    public string Signature { get; set; }
-
     //time zone
     [NopResourceDisplayName("Account.Fields.TimeZone")]
     public string TimeZoneId { get; set; }

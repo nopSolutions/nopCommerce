@@ -8,7 +8,6 @@ using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
-using Nop.Services.Forums;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 
@@ -27,7 +26,6 @@ public partial class GdprService : IGdprService
     protected readonly ICustomerService _customerService;
     protected readonly IExternalAuthenticationService _externalAuthenticationService;
     protected readonly IEventPublisher _eventPublisher;
-    protected readonly IForumService _forumService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
     protected readonly IProductReviewService _productReviewService;
@@ -46,7 +44,6 @@ public partial class GdprService : IGdprService
         ICustomerService customerService,
         IExternalAuthenticationService externalAuthenticationService,
         IEventPublisher eventPublisher,
-        IForumService forumService,
         IGenericAttributeService genericAttributeService,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
         IProductReviewService productReviewService,
@@ -61,7 +58,6 @@ public partial class GdprService : IGdprService
         _customerService = customerService;
         _externalAuthenticationService = externalAuthenticationService;
         _eventPublisher = eventPublisher;
-        _forumService = forumService;
         _genericAttributeService = genericAttributeService;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
         _productReviewService = productReviewService;
@@ -280,22 +276,17 @@ public partial class GdprService : IGdprService
         foreach (var ear in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
             await _externalAuthenticationService.DeleteExternalAuthenticationRecordAsync(ear);
 
-        //forum subscriptions
-        var forumSubscriptions = await _forumService.GetAllSubscriptionsAsync(customer.Id);
-        foreach (var forumSubscription in forumSubscriptions)
-            await _forumService.DeleteSubscriptionAsync(forumSubscription);
-
         //shopping cart items
         foreach (var sci in await _shoppingCartService.GetShoppingCartAsync(customer))
             await _shoppingCartService.DeleteShoppingCartItemAsync(sci);
 
         //private messages (sent)
-        foreach (var pm in await _forumService.GetAllPrivateMessagesAsync(0, customer.Id, 0, null, null, null, null))
-            await _forumService.DeletePrivateMessageAsync(pm);
+        foreach (var pm in await _customerService.GetAllPrivateMessagesAsync(0, customer.Id, 0, null, null, null, null))
+            await _customerService.DeletePrivateMessageAsync(pm);
 
         //private messages (received)
-        foreach (var pm in await _forumService.GetAllPrivateMessagesAsync(0, 0, customer.Id, null, null, null, null))
-            await _forumService.DeletePrivateMessageAsync(pm);
+        foreach (var pm in await _customerService.GetAllPrivateMessagesAsync(0, 0, customer.Id, null, null, null, null))
+            await _customerService.DeletePrivateMessageAsync(pm);
 
         //newsletter
         var newsletters = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(customer.Email);
@@ -317,7 +308,6 @@ public partial class GdprService : IGdprService
         await _genericAttributeService.DeleteAttributesAsync(genericAttributes);
 
         //ignore ActivityLog
-        //ignore ForumPost, ForumTopic, ignore ForumPostVote
         //ignore Log
         //ignore ProductReviewHelpfulness
         //ignore RecurringPayment 

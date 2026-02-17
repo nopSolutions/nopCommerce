@@ -4,7 +4,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
@@ -220,26 +219,6 @@ public class Indexes : ForwardOnlyMigration
         Create.Index("IX_GenericAttribute_EntityId_and_KeyGroup").OnTable(nameof(GenericAttribute))
             .OnColumn(nameof(GenericAttribute.EntityId)).Ascending()
             .OnColumn(nameof(GenericAttribute.KeyGroup)).Ascending()
-            .WithOptions().NonClustered();
-
-        Create.Index("IX_Forums_Subscription_TopicId").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumSubscription)))
-            .OnColumn(nameof(ForumSubscription.TopicId)).Ascending()
-            .WithOptions().NonClustered();
-
-        Create.Index("IX_Forums_Subscription_ForumId").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumSubscription)))
-            .OnColumn(nameof(ForumSubscription.ForumId)).Ascending()
-            .WithOptions().NonClustered();
-
-        Create.Index("IX_Forums_Group_DisplayOrder").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumGroup)))
-            .OnColumn(nameof(ForumGroup.DisplayOrder)).Ascending()
-            .WithOptions().NonClustered();
-
-        Create.Index("IX_Forums_Forum_DisplayOrder").OnTable(NameCompatibilityManager.GetTableName(typeof(Forum)))
-            .OnColumn(nameof(Forum.DisplayOrder)).Ascending()
-            .WithOptions().NonClustered();
-
-        Create.Index("IX_Forums_Topic_Subject").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
-            .OnColumn(nameof(ForumTopic.Subject)).Ascending()
             .WithOptions().NonClustered();
 
         Create.Index("IX_Customer_Username").OnTable(nameof(Customer))

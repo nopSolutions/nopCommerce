@@ -6,7 +6,6 @@ using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
@@ -52,7 +51,6 @@ public partial class CustomerController : BasePublicController
     protected readonly CaptchaSettings _captchaSettings;
     protected readonly CustomerSettings _customerSettings;
     protected readonly DateTimeSettings _dateTimeSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly GdprSettings _gdprSettings;
     protected readonly HtmlEncoder _htmlEncoder;
     protected readonly IAddressModelFactory _addressModelFactory;
@@ -104,7 +102,6 @@ public partial class CustomerController : BasePublicController
         CaptchaSettings captchaSettings,
         CustomerSettings customerSettings,
         DateTimeSettings dateTimeSettings,
-        ForumSettings forumSettings,
         GdprSettings gdprSettings,
         HtmlEncoder htmlEncoder,
         IAddressModelFactory addressModelFactory,
@@ -151,7 +148,6 @@ public partial class CustomerController : BasePublicController
         _captchaSettings = captchaSettings;
         _customerSettings = customerSettings;
         _dateTimeSettings = dateTimeSettings;
-        _forumSettings = forumSettings;
         _gdprSettings = gdprSettings;
         _htmlEncoder = htmlEncoder;
         _addressModelFactory = addressModelFactory;
@@ -1366,9 +1362,6 @@ public partial class CustomerController : BasePublicController
                         }
                     }
                 }
-
-                if (_forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled)
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SignatureAttribute, model.Signature);
 
                 //GDPR
                 if (_gdprSettings.GdprEnabled)

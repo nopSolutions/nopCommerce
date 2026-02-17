@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Http;
+using Nop.Services.Common;
 using Nop.Services.Customers;
-using Nop.Services.Forums;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Models.PrivateMessages;
@@ -18,36 +18,39 @@ public partial class PrivateMessagesController : BasePublicController
 {
     #region Fields
 
-    protected readonly ForumSettings _forumSettings;
     protected readonly ICustomerActivityService _customerActivityService;
     protected readonly ICustomerService _customerService;
-    protected readonly IForumService _forumService;
+    protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
     protected readonly IStoreContext _storeContext;
     protected readonly IWorkContext _workContext;
+    protected readonly IWorkflowMessageService _workflowMessageService;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
 
     #endregion
 
     #region Ctor
 
-    public PrivateMessagesController(ForumSettings forumSettings,
-        ICustomerActivityService customerActivityService,
+    public PrivateMessagesController(ICustomerActivityService customerActivityService,
         ICustomerService customerService,
-        IForumService forumService,
+        IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
         IPrivateMessagesModelFactory privateMessagesModelFactory,
         IStoreContext storeContext,
-        IWorkContext workContext)
+        IWorkContext workContext,
+        IWorkflowMessageService workflowMessageService,
+        PrivateMessageSettings privateMessageSettings)
     {
-        _forumSettings = forumSettings;
         _customerActivityService = customerActivityService;
         _customerService = customerService;
-        _forumService = forumService;
+        _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
         _privateMessagesModelFactory = privateMessagesModelFactory;
         _storeContext = storeContext;
         _workContext = workContext;
+        _workflowMessageService = workflowMessageService;
+        _privateMessageSettings = privateMessageSettings;
     }
 
     #endregion
@@ -56,11 +59,15 @@ public partial class PrivateMessagesController : BasePublicController
 
     public virtual async Task<IActionResult> Index(int? pageNumber, string tab)
     {
-        if (!_forumSettings.AllowPrivateMessages)
+        if (!_privateMessageSettings.AllowPrivateMessages)
+        {
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
+        }
 
         if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
+        {
             return Challenge();
+        }
 
         var model = await _privateMessagesModelFactory.PreparePrivateMessageIndexModelAsync(pageNumber, tab);
         return View(model);
@@ -78,7 +85,7 @@ public partial class PrivateMessagesController : BasePublicController
                 var id = key.Replace("pm", "").Trim();
                 if (int.TryParse(id, out var privateMessageId))
                 {
-                    var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
+                    var pm = await _customerService.GetPrivateMessageByIdAsync(privateMessageId);
                     if (pm != null)
                     {
                         var customer = await _workContext.GetCurrentCustomerAsync();
@@ -86,7 +93,7 @@ public partial class PrivateMessagesController : BasePublicController
                         if (pm.ToCustomerId == customer.Id)
                         {
                             pm.IsDeletedByRecipient = true;
-                            await _forumService.UpdatePrivateMessageAsync(pm);
+                            await _customerService.UpdatePrivateMessageAsync(pm);
                         }
                     }
                 }
@@ -107,7 +114,7 @@ public partial class PrivateMessagesController : BasePublicController
                 var id = key.Replace("pm", "").Trim();
                 if (int.TryParse(id, out var privateMessageId))
                 {
-                    var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
+                    var pm = await _customerService.GetPrivateMessageByIdAsync(privateMessageId);
                     if (pm != null)
                     {
                         var customer = await _workContext.GetCurrentCustomerAsync();
@@ -115,7 +122,7 @@ public partial class PrivateMessagesController : BasePublicController
                         if (pm.ToCustomerId == customer.Id)
                         {
                             pm.IsRead = false;
-                            await _forumService.UpdatePrivateMessageAsync(pm);
+                            await _customerService.UpdatePrivateMessageAsync(pm);
                         }
                     }
                 }
@@ -137,7 +144,7 @@ public partial class PrivateMessagesController : BasePublicController
                 var id = key.Replace("si", "").Trim();
                 if (int.TryParse(id, out var privateMessageId))
                 {
-                    var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
+                    var pm = await _customerService.GetPrivateMessageByIdAsync(privateMessageId);
                     if (pm != null)
                     {
                         var customer = await _workContext.GetCurrentCustomerAsync();
@@ -145,7 +152,7 @@ public partial class PrivateMessagesController : BasePublicController
                         if (pm.FromCustomerId == customer.Id)
                         {
                             pm.IsDeletedByAuthor = true;
-                            await _forumService.UpdatePrivateMessageAsync(pm);
+                            await _customerService.UpdatePrivateMessageAsync(pm);
                         }
                     }
                 }
@@ -156,7 +163,7 @@ public partial class PrivateMessagesController : BasePublicController
 
     public virtual async Task<IActionResult> SendPM(int toCustomerId, int? replyToMessageId)
     {
-        if (!_forumSettings.AllowPrivateMessages)
+        if (!_privateMessageSettings.AllowPrivateMessages)
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -170,7 +177,7 @@ public partial class PrivateMessagesController : BasePublicController
         if (replyToMessageId.HasValue)
         {
             //reply to a previous PM
-            replyToPM = await _forumService.GetPrivateMessageByIdAsync(replyToMessageId.Value);
+            replyToPM = await _customerService.GetPrivateMessageByIdAsync(replyToMessageId.Value);
         }
 
         var model = await _privateMessagesModelFactory.PrepareSendPrivateMessageModelAsync(customerTo, replyToPM);
@@ -180,15 +187,19 @@ public partial class PrivateMessagesController : BasePublicController
     [HttpPost]
     public virtual async Task<IActionResult> SendPM(SendPrivateMessageModel model)
     {
-        if (!_forumSettings.AllowPrivateMessages)
+        if (!_privateMessageSettings.AllowPrivateMessages)
+        {
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
+        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (await _customerService.IsGuestAsync(customer))
+        {
             return Challenge();
+        }
 
         Customer toCustomer;
-        var replyToPM = await _forumService.GetPrivateMessageByIdAsync(model.ReplyToMessageId);
+        var replyToPM = await _customerService.GetPrivateMessageByIdAsync(model.ReplyToMessageId);
         if (replyToPM != null)
         {
             //reply to a previous PM
@@ -200,7 +211,9 @@ public partial class PrivateMessagesController : BasePublicController
                     : replyToPM.FromCustomerId);
             }
             else
+            {
                 return RedirectToRoute(NopRouteNames.Standard.PRIVATE_MESSAGES);
+            }
         }
         else
         {
@@ -209,19 +222,25 @@ public partial class PrivateMessagesController : BasePublicController
         }
 
         if (toCustomer == null || await _customerService.IsGuestAsync(toCustomer))
+        {
             return RedirectToRoute(NopRouteNames.Standard.PRIVATE_MESSAGES);
+        }
 
         if (ModelState.IsValid)
         {
             try
             {
                 var subject = model.Subject;
-                if (_forumSettings.PMSubjectMaxLength > 0 && subject.Length > _forumSettings.PMSubjectMaxLength)
-                    subject = subject[0.._forumSettings.PMSubjectMaxLength];
+                if (_privateMessageSettings.PMSubjectMaxLength > 0 && subject.Length > _privateMessageSettings.PMSubjectMaxLength)
+                {
+                    subject = subject[0.._privateMessageSettings.PMSubjectMaxLength];
+                }
 
                 var text = model.Message;
-                if (_forumSettings.PMTextMaxLength > 0 && text.Length > _forumSettings.PMTextMaxLength)
-                    text = text[0.._forumSettings.PMTextMaxLength];
+                if (_privateMessageSettings.PMTextMaxLength > 0 && text.Length > _privateMessageSettings.PMTextMaxLength)
+                {
+                    text = text[0.._privateMessageSettings.PMTextMaxLength];
+                }
 
                 var nowUtc = DateTime.UtcNow;
                 var store = await _storeContext.GetCurrentStoreAsync();
@@ -239,7 +258,14 @@ public partial class PrivateMessagesController : BasePublicController
                     CreatedOnUtc = nowUtc
                 };
 
-                await _forumService.InsertPrivateMessageAsync(privateMessage);
+                await _customerService.InsertPrivateMessageAsync(privateMessage);
+
+                //UI notification
+                await _genericAttributeService.SaveAttributeAsync(toCustomer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, false, privateMessage.StoreId);
+
+                //Email notification
+                if (_privateMessageSettings.NotifyAboutPrivateMessages)
+                    await _workflowMessageService.SendPrivateMessageNotificationAsync(privateMessage, (await _workContext.GetWorkingLanguageAsync())?.Id ?? 0);
 
                 //activity log
                 await _customerActivityService.InsertActivityAsync("PublicStore.SendPM",
@@ -259,27 +285,35 @@ public partial class PrivateMessagesController : BasePublicController
 
     public virtual async Task<IActionResult> ViewPM(int privateMessageId)
     {
-        if (!_forumSettings.AllowPrivateMessages)
+        if (!_privateMessageSettings.AllowPrivateMessages)
+        {
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
+        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (await _customerService.IsGuestAsync(customer))
+        {
             return Challenge();
+        }
 
-        var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
+        var pm = await _customerService.GetPrivateMessageByIdAsync(privateMessageId);
         if (pm != null)
         {
             if (pm.ToCustomerId != customer.Id && pm.FromCustomerId != customer.Id)
+            {
                 return RedirectToRoute(NopRouteNames.Standard.PRIVATE_MESSAGES);
+            }
 
             if (!pm.IsRead && pm.ToCustomerId == customer.Id)
             {
                 pm.IsRead = true;
-                await _forumService.UpdatePrivateMessageAsync(pm);
+                await _customerService.UpdatePrivateMessageAsync(pm);
             }
         }
         else
+        {
             return RedirectToRoute(NopRouteNames.Standard.PRIVATE_MESSAGES);
+        }
 
         var model = await _privateMessagesModelFactory.PreparePrivateMessageModelAsync(pm);
         return View(model);
@@ -287,26 +321,30 @@ public partial class PrivateMessagesController : BasePublicController
 
     public virtual async Task<IActionResult> DeletePM(int privateMessageId)
     {
-        if (!_forumSettings.AllowPrivateMessages)
+        if (!_privateMessageSettings.AllowPrivateMessages)
+        {
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
+        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (await _customerService.IsGuestAsync(customer))
+        {
             return Challenge();
+        }
 
-        var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
+        var pm = await _customerService.GetPrivateMessageByIdAsync(privateMessageId);
         if (pm != null)
         {
             if (pm.FromCustomerId == customer.Id)
             {
                 pm.IsDeletedByAuthor = true;
-                await _forumService.UpdatePrivateMessageAsync(pm);
+                await _customerService.UpdatePrivateMessageAsync(pm);
             }
 
             if (pm.ToCustomerId == customer.Id)
             {
                 pm.IsDeletedByRecipient = true;
-                await _forumService.UpdatePrivateMessageAsync(pm);
+                await _customerService.UpdatePrivateMessageAsync(pm);
             }
         }
         return RedirectToRoute(NopRouteNames.Standard.PRIVATE_MESSAGES);

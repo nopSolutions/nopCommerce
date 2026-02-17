@@ -10,7 +10,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.FilterLevels;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
@@ -45,7 +44,6 @@ using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Discounts;
 using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
-using Nop.Web.Areas.Admin.Models.Forums;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Areas.Admin.Models.Logging;
 using Nop.Web.Areas.Admin.Models.Menus;
@@ -90,7 +88,6 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateCustomersMaps();
         CreateDirectoryMaps();
         CreateDiscountsMaps();
-        CreateForumsMaps();
         CreateFilterLevelMaps();
         CreateGdprMaps();
         CreateLocalizationMaps();
@@ -805,6 +802,16 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateMap<MultiFactorAuthenticationSettingsModel, MultiFactorAuthenticationSettings>()
             .ForMember(settings => settings.ActiveAuthenticationMethodSystemNames, option => option.Ignore());
 
+        CreateMap<PrivateMessageSettings, PrivateMessageSettingsModel>()
+            .ForMember(model => model.AllowPrivateMessages_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.NotifyAboutPrivateMessages_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.ShowAlertForPM_OverrideForStore, options => options.Ignore());
+
+        CreateMap<PrivateMessageSettingsModel, PrivateMessageSettings>()
+            .ForMember(settings => settings.PMSubjectMaxLength, options => options.Ignore())
+            .ForMember(settings => settings.PMTextMaxLength, options => options.Ignore())
+            .ForMember(settings => settings.PrivateMessagesPageSize, options => options.Ignore());
+
         CreateMap<RewardPointsSettings, RewardPointsSettingsModel>()
             .ForMember(model => model.ActivatePointsImmediately, options => options.Ignore())
             .ForMember(model => model.ActivationDelay_OverrideForStore, options => options.Ignore())
@@ -1007,69 +1014,6 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateMap<Manufacturer, DiscountManufacturerModel>()
             .ForMember(entity => entity.ManufacturerId, options => options.Ignore())
             .ForMember(entity => entity.ManufacturerName, options => options.Ignore());
-    }
-
-    /// <summary>
-    /// Create forums maps 
-    /// </summary>
-    protected virtual void CreateForumsMaps()
-    {
-        CreateMap<Forum, ForumModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore())
-            .ForMember(model => model.ForumGroups, options => options.Ignore());
-        CreateMap<ForumModel, Forum>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.LastPostCustomerId, options => options.Ignore())
-            .ForMember(entity => entity.LastPostId, options => options.Ignore())
-            .ForMember(entity => entity.LastPostTime, options => options.Ignore())
-            .ForMember(entity => entity.LastTopicId, options => options.Ignore())
-            .ForMember(entity => entity.NumPosts, options => options.Ignore())
-            .ForMember(entity => entity.NumTopics, options => options.Ignore())
-            .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
-
-        CreateMap<ForumGroup, ForumGroupModel>()
-            .ForMember(model => model.CreatedOn, options => options.Ignore());
-        CreateMap<ForumGroupModel, ForumGroup>()
-            .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-            .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
-
-        CreateMap<ForumSettings, ForumSettingsModel>()
-            .ForMember(model => model.ActiveDiscussionsFeedCount_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ActiveDiscussionsFeedEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ActiveDiscussionsPageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowCustomersToDeletePosts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowCustomersToEditPosts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowCustomersToManageSubscriptions_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowGuestsToCreatePosts_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowGuestsToCreateTopics_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowPostVoting_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowPrivateMessages_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ForumEditorValues, options => options.Ignore())
-            .ForMember(model => model.ForumEditor_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ForumFeedCount_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ForumFeedsEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ForumsEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.MaxVotesPerDay_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.NotifyAboutPrivateMessages_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.PostsPageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.RelativeDateTimeFormattingEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.SearchResultsPageSize_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowAlertForPM_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowCustomersPostCount_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.SignaturesEnabled_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.TopicsPageSize_OverrideForStore, options => options.Ignore());
-        CreateMap<ForumSettingsModel, ForumSettings>()
-            .ForMember(settings => settings.ForumSearchTermMinimumLength, options => options.Ignore())
-            .ForMember(settings => settings.ForumSubscriptionsPageSize, options => options.Ignore())
-            .ForMember(settings => settings.HomepageActiveDiscussionsTopicCount, options => options.Ignore())
-            .ForMember(settings => settings.LatestCustomerPostsPageSize, options => options.Ignore())
-            .ForMember(settings => settings.PMSubjectMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.PMTextMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.PostMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.PrivateMessagesPageSize, options => options.Ignore())
-            .ForMember(settings => settings.StrippedTopicMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.TopicSubjectMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.TopicMetaDescriptionLength, options => options.Ignore());
     }
 
     /// <summary>
@@ -1504,7 +1448,6 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.ShowOnProductReviewPage_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowOnRegistrationPage_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowOnForgotPasswordPage_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowOnForum_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowOnCheckoutPageForGuests_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowOnCheckGiftCardBalance_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.CaptchaType_OverrideForStore, options => options.Ignore())

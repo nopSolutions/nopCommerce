@@ -52,7 +52,6 @@ using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.ExportImport;
 using Nop.Services.FilterLevels;
-using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Html;
@@ -376,7 +375,6 @@ public partial class BaseNopTest
         services.AddTransient<ITaxService, TaxService>();
         services.AddTransient<ILogger, DefaultLogger>();
         services.AddTransient<ICustomerActivityService, CustomerActivityService>();
-        services.AddTransient<IForumService, ForumService>();
         services.AddTransient<IGdprService, GdprService>();
         services.AddTransient<IBlogService, BlogService>();
         services.AddTransient<ITopicService, TopicService>();
@@ -493,9 +491,7 @@ public partial class BaseNopTest
         services.AddTransient<ICustomerRoleModelFactory, CustomerRoleModelFactory>();
         services.AddTransient<IDiscountModelFactory, DiscountModelFactory>();
         services.AddTransient<IEmailAccountModelFactory, EmailAccountModelFactory>();
-        services
-            .AddTransient<IExternalAuthenticationMethodModelFactory, ExternalAuthenticationMethodModelFactory>();
-        services.AddTransient<IForumModelFactory, ForumModelFactory>();
+        services.AddTransient<IExternalAuthenticationMethodModelFactory, ExternalAuthenticationMethodModelFactory>();
         services.AddTransient<IGiftCardModelFactory, GiftCardModelFactory>();
         services.AddTransient<IHomeModelFactory, HomeModelFactory>();
         services.AddTransient<ILanguageModelFactory, LanguageModelFactory>();
@@ -537,10 +533,7 @@ public partial class BaseNopTest
         services.AddTransient<Web.Factories.ICommonModelFactory, Web.Factories.CommonModelFactory>();
         services.AddTransient<Web.Factories.ICountryModelFactory, Web.Factories.CountryModelFactory>();
         services.AddTransient<Web.Factories.ICustomerModelFactory, Web.Factories.CustomerModelFactory>();
-        services.AddTransient<Web.Factories.IForumModelFactory, Web.Factories.ForumModelFactory>();
-        services
-            .AddTransient<Web.Factories.IExternalAuthenticationModelFactory,
-                Web.Factories.ExternalAuthenticationModelFactory>();
+        services.AddTransient<Web.Factories.IExternalAuthenticationModelFactory, Web.Factories.ExternalAuthenticationModelFactory>();
         services.AddTransient<Web.Factories.IJsonLdModelFactory, Web.Factories.JsonLdModelFactory>();
         services.AddTransient<Web.Factories.INewsLetterModelFactory, Web.Factories.NewsLetterModelFactory>();
         services.AddTransient<Web.Factories.IOrderModelFactory, Web.Factories.OrderModelFactory>();

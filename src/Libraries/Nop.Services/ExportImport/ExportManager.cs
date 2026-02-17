@@ -10,7 +10,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.FilterLevels;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
@@ -29,7 +28,6 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.ExportImport.Help;
-using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -58,7 +56,6 @@ public partial class ExportManager : IExportManager
     protected readonly ICustomerActivityService _customerActivityService;
     protected readonly CustomerSettings _customerSettings;
     protected readonly DateTimeSettings _dateTimeSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly IAddressService _addressService;
     protected readonly ICategoryService _categoryService;
     protected readonly ICountryService _countryService;
@@ -68,7 +65,6 @@ public partial class ExportManager : IExportManager
     protected readonly IDateRangeService _dateRangeService;
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IDiscountService _discountService;
-    protected readonly IForumService _forumService;
     protected readonly IGdprService _gdprService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILanguageService _languageService;
@@ -94,6 +90,7 @@ public partial class ExportManager : IExportManager
     protected readonly IVendorService _vendorService;
     protected readonly IWorkContext _workContext;
     protected readonly OrderSettings _orderSettings;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
     protected readonly ProductEditorSettings _productEditorSettings;
 
     #endregion
@@ -105,7 +102,6 @@ public partial class ExportManager : IExportManager
         SecuritySettings securitySettings,
         CustomerSettings customerSettings,
         DateTimeSettings dateTimeSettings,
-        ForumSettings forumSettings,
         IAddressService addressService,
         IAttributeFormatter<CustomerAttribute, CustomerAttributeValue> customerAttributeFormatter,
         ICategoryService categoryService,
@@ -116,7 +112,6 @@ public partial class ExportManager : IExportManager
         IDateRangeService dateRangeService,
         IDateTimeHelper dateTimeHelper,
         IDiscountService discountService,
-        IForumService forumService,
         IGdprService gdprService,
         IGenericAttributeService genericAttributeService,
         ILanguageService languageService,
@@ -142,6 +137,7 @@ public partial class ExportManager : IExportManager
         IVendorService vendorService,
         IWorkContext workContext,
         OrderSettings orderSettings,
+        PrivateMessageSettings privateMessageSettings,
         ProductEditorSettings productEditorSettings)
     {
         _addressSettings = addressSettings;
@@ -151,7 +147,6 @@ public partial class ExportManager : IExportManager
         _dateTimeSettings = dateTimeSettings;
         _addressService = addressService;
         _customerAttributeFormatter = customerAttributeFormatter;
-        _forumSettings = forumSettings;
         _categoryService = categoryService;
         _countryService = countryService;
         _currencyService = currencyService;
@@ -160,7 +155,6 @@ public partial class ExportManager : IExportManager
         _dateRangeService = dateRangeService;
         _dateTimeHelper = dateTimeHelper;
         _discountService = discountService;
-        _forumService = forumService;
         _gdprService = gdprService;
         _genericAttributeService = genericAttributeService;
         _languageService = languageService;
@@ -186,6 +180,7 @@ public partial class ExportManager : IExportManager
         _vendorService = vendorService;
         _workContext = workContext;
         _orderSettings = orderSettings;
+        _privateMessageSettings = privateMessageSettings;
         _productEditorSettings = productEditorSettings;
     }
 
@@ -2580,7 +2575,6 @@ public partial class ExportManager : IExportManager
             new PropertyByName<Customer>("IsGuest", async (p, _) => await _customerService.IsGuestAsync(p)),
             new PropertyByName<Customer>("IsRegistered", async (p, _) => await _customerService.IsRegisteredAsync(p)),
             new PropertyByName<Customer>("IsAdministrator", async (p, _) => await _customerService.IsAdminAsync(p)),
-            new PropertyByName<Customer>("IsForumModerator", async (p, _) => await _customerService.IsForumModeratorAsync(p)),
             new PropertyByName<Customer>("IsVendor", async (p, _) => await _customerService.IsVendorAsync(p)),
             new PropertyByName<Customer>("CreatedOnUtc", (p, _) => p.CreatedOnUtc),
             //attributes
@@ -2604,8 +2598,6 @@ public partial class ExportManager : IExportManager
             },
             new PropertyByName<Customer>("TimeZone", (p, _) => p.TimeZoneId, !_dateTimeSettings.AllowCustomersToSetTimeZone),
             new PropertyByName<Customer>("AvatarPictureId", async (p, _) => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.AvatarPictureIdAttribute), !_customerSettings.AllowCustomersToUploadAvatars),
-            new PropertyByName<Customer>("ForumPostCount", async (p, _) => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.ForumPostCountAttribute)),
-            new PropertyByName<Customer>("Signature", async (p, _) => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.SignatureAttribute)),
             new PropertyByName<Customer>("CustomCustomerAttributes", async (p, _) => await GetCustomCustomerAttributesAsync(p)),
             new PropertyByName<Customer>("CustomCustomerAttributesXML", (p, _) => p.CustomCustomerAttributesXML),
             new PropertyByName<Customer>("Password", async (p, _) =>
@@ -2688,7 +2680,6 @@ public partial class ExportManager : IExportManager
             await xmlWriter.WriteElementStringAsync("IsGuest", null, (await _customerService.IsGuestAsync(customer)).ToString());
             await xmlWriter.WriteElementStringAsync("IsRegistered", null, (await _customerService.IsRegisteredAsync(customer)).ToString());
             await xmlWriter.WriteElementStringAsync("IsAdministrator", null, (await _customerService.IsAdminAsync(customer)).ToString());
-            await xmlWriter.WriteElementStringAsync("IsForumModerator", null, (await _customerService.IsForumModeratorAsync(customer)).ToString());
             await xmlWriter.WriteElementStringAsync("CreatedOnUtc", null, customer.CreatedOnUtc.ToString(CultureInfo.InvariantCulture));
 
             await xmlWriter.WriteElementStringAsync("FirstName", null, customer.FirstName);
@@ -2710,8 +2701,6 @@ public partial class ExportManager : IExportManager
             await xmlWriter.WriteElementStringAsync("TimeZoneId", null, customer.TimeZoneId);
 
             await xmlWriter.WriteElementStringAsync("AvatarPictureId", null, (await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute)).ToString());
-            await xmlWriter.WriteElementStringAsync("ForumPostCount", null, (await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.ForumPostCountAttribute)).ToString());
-            await xmlWriter.WriteElementStringAsync("Signature", null, await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute));
 
             if (!string.IsNullOrEmpty(customer.CustomCustomerAttributesXML))
             {
@@ -2935,10 +2924,10 @@ public partial class ExportManager : IExportManager
         }, _catalogSettings);
 
         List<PrivateMessage> pmList = null;
-        if (_forumSettings.AllowPrivateMessages)
+        if (_privateMessageSettings.AllowPrivateMessages)
         {
-            pmList = (await _forumService.GetAllPrivateMessagesAsync(storeId, customer.Id, 0, null, null, null, null)).ToList();
-            pmList.AddRange((await _forumService.GetAllPrivateMessagesAsync(storeId, 0, customer.Id, null, null, null, null)).ToList());
+            pmList = (await _customerService.GetAllPrivateMessagesAsync(storeId, customer.Id, 0, null, null, null, null)).ToList();
+            pmList.AddRange((await _customerService.GetAllPrivateMessagesAsync(storeId, 0, customer.Id, null, null, null, null)).ToList());
         }
 
         //customer GDPR logs

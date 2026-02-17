@@ -1858,7 +1858,6 @@ public partial class ImportManager : IImportManager
                            await _customerService.GetCustomerByEmailAsync(manager.GetDefaultProperty("Email").StringValue);
 
             int? avatarPictureId = null;
-            string signature = null;
             string password = null;
             string passwordSalt = null;
 
@@ -1999,9 +1998,6 @@ public partial class ImportManager : IImportManager
                     case "AvatarPictureId":
                         avatarPictureId = property.IntValueNullable;
                         break;
-                    case "Signature":
-                        signature = property.StringValue;
-                        break;
                     case "CustomCustomerAttributesXML":
                         customer.CustomCustomerAttributesXML = property.StringValue;
                         break;
@@ -2042,12 +2038,6 @@ public partial class ImportManager : IImportManager
             {
                 await _genericAttributeService.SaveAttributeAsync(customer,
                     NopCustomerDefaults.AvatarPictureIdAttribute, avatarPictureId.Value);
-            }
-
-            if (!string.IsNullOrEmpty(signature))
-            {
-                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SignatureAttribute,
-                    signature);
             }
 
             if (_securitySettings.AllowStoreOwnerExportImportCustomersWithHashedPassword &&

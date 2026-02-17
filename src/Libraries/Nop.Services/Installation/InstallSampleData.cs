@@ -9,7 +9,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
@@ -1452,42 +1451,6 @@ public partial class InstallationService
 
         //search engine names
         await InsertSearchEngineNamesAsync(allManufacturers, manufacturer => manufacturer.Name);
-    }
-
-    /// <summary>
-    /// Installs a sample forums
-    /// </summary>
-    /// <param name="sampleForumGroups">Sample forum groups to install</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task InstallForumsAsync(List<SampleForumGroup> sampleForumGroups)
-    {
-        foreach (var sampleForumGroup in sampleForumGroups)
-        {
-            var forumGroup = await _dataProvider.InsertEntityAsync(new ForumGroup
-            {
-                Name = sampleForumGroup.Name,
-                DisplayOrder = sampleForumGroup.DisplayOrder,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            });
-
-            if (!sampleForumGroup.Forums.Any())
-                continue;
-
-            await _dataProvider.BulkInsertEntitiesAsync(sampleForumGroup.Forums.Select(sf => new Forum
-            {
-                ForumGroupId = forumGroup.Id,
-                Name = sf.Name,
-                Description = sf.Description,
-                NumTopics = 0,
-                NumPosts = 0,
-                LastPostCustomerId = 0,
-                LastPostTime = null,
-                DisplayOrder = sf.DisplayOrder,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            }));
-        }
     }
 
     /// <summary>

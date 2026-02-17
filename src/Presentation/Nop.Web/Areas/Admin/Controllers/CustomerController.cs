@@ -6,7 +6,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Tax;
@@ -15,7 +14,6 @@ using Nop.Services.Attributes;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.ExportImport;
-using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -40,7 +38,6 @@ public partial class CustomerController : BaseAdminController
     protected readonly CustomerSettings _customerSettings;
     protected readonly DateTimeSettings _dateTimeSettings;
     protected readonly EmailAccountSettings _emailAccountSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly GdprSettings _gdprSettings;
     protected readonly IAddressService _addressService;
     protected readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
@@ -54,7 +51,6 @@ public partial class CustomerController : BaseAdminController
     protected readonly IEmailAccountService _emailAccountService;
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IExportManager _exportManager;
-    protected readonly IForumService _forumService;
     protected readonly IGdprService _gdprService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IImportManager _importManager;
@@ -68,6 +64,7 @@ public partial class CustomerController : BaseAdminController
     protected readonly ITaxService _taxService;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
     protected readonly TaxSettings _taxSettings;
     private static readonly char[] _separator = [','];
 
@@ -78,7 +75,6 @@ public partial class CustomerController : BaseAdminController
     public CustomerController(CustomerSettings customerSettings,
         DateTimeSettings dateTimeSettings,
         EmailAccountSettings emailAccountSettings,
-        ForumSettings forumSettings,
         GdprSettings gdprSettings,
         IAddressService addressService,
         IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
@@ -92,7 +88,6 @@ public partial class CustomerController : BaseAdminController
         IEmailAccountService emailAccountService,
         IEventPublisher eventPublisher,
         IExportManager exportManager,
-        IForumService forumService,
         IGdprService gdprService,
         IGenericAttributeService genericAttributeService,
         IImportManager importManager,
@@ -106,12 +101,12 @@ public partial class CustomerController : BaseAdminController
         ITaxService taxService,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
+        PrivateMessageSettings privateMessageSettings,
         TaxSettings taxSettings)
     {
         _customerSettings = customerSettings;
         _dateTimeSettings = dateTimeSettings;
         _emailAccountSettings = emailAccountSettings;
-        _forumSettings = forumSettings;
         _gdprSettings = gdprSettings;
         _addressService = addressService;
         _addressAttributeParser = addressAttributeParser;
@@ -125,7 +120,6 @@ public partial class CustomerController : BaseAdminController
         _emailAccountService = emailAccountService;
         _eventPublisher = eventPublisher;
         _exportManager = exportManager;
-        _forumService = forumService;
         _gdprService = gdprService;
         _genericAttributeService = genericAttributeService;
         _importManager = importManager;
@@ -139,6 +133,7 @@ public partial class CustomerController : BaseAdminController
         _taxService = taxService;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
+        _privateMessageSettings = privateMessageSettings;
         _taxSettings = taxSettings;
     }
 
@@ -960,7 +955,7 @@ public partial class CustomerController : BaseAdminController
 
         try
         {
-            if (!_forumSettings.AllowPrivateMessages)
+            if (!_privateMessageSettings.AllowPrivateMessages)
                 throw new NopException("Private messages are disabled");
             if (await _customerService.IsGuestAsync(customer))
                 throw new NopException("Customer should be registered");
@@ -985,7 +980,17 @@ public partial class CustomerController : BaseAdminController
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            await _forumService.InsertPrivateMessageAsync(privateMessage);
+            await _customerService.InsertPrivateMessageAsync(privateMessage);
+
+            var customerTo = await _customerService.GetCustomerByIdAsync(privateMessage.ToCustomerId)
+                 ?? throw new NopException("Recipient could not be loaded");
+
+            //UI notification
+            await _genericAttributeService.SaveAttributeAsync(customerTo, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, false, privateMessage.StoreId);
+
+            //Email notification
+            if (_privateMessageSettings.NotifyAboutPrivateMessages)
+                await _workflowMessageService.SendPrivateMessageNotificationAsync(privateMessage, (await _workContext.GetWorkingLanguageAsync())?.Id ?? 0);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.SendPM.Sent"));
         }

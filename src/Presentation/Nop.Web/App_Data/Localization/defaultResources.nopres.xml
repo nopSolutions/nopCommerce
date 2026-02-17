@@ -450,21 +450,6 @@
   <LocaleResource Name="Account.Fields.ZipPostalCode.Required">
     <Value>Zip / postal code is required</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.ForumSubscriptions">
-    <Value>Forum subscriptions</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.ForumSubscriptions.DeleteSelected">
-    <Value>Delete Selected</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.ForumSubscriptions.Description">
-    <Value>You will receive an email when a new forum topic/post is created.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.ForumSubscriptions.InfoColumn">
-    <Value>Forum/Topic</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.ForumSubscriptions.NoSubscriptions">
-    <Value>You are not currently subscribed to any forums</Value>
-  </LocaleResource>
   <LocaleResource Name="Account.Gdpr">
     <Value>GDPR tools</Value>
   </LocaleResource>
@@ -6981,6 +6966,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowCustomersToUploadAvatars.Hint">
     <Value>A value indicating whether customers are allowed to upload avatars.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowPrivateMessages">
+    <Value>Allow private messages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowPrivateMessages.Hint">
+    <Value>Determines whether to allow private messages.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToChangeUsernames">
     <Value>Allow customers to change their usernames</Value>
   </LocaleResource>
@@ -7173,6 +7164,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NeutralGenderEnabled">
     <Value>'Neutral' option enabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyAboutPrivateMessages">
+    <Value>Notify about private messages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyAboutPrivateMessages.Hint">
+    <Value>Indicates whether a customer should be notified by email about new private messages.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NeutralGenderEnabled.Hint">
     <Value>Set if you need three gender options available - Male, female, neutral (as per German laws).</Value>
   </LocaleResource>
@@ -7319,6 +7316,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RequireRegistrationForDownloadableProducts.Hint">
     <Value>Require account creation to purchase downloadable products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowAlertForPM">
+    <Value>Show alert for PM</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowAlertForPM.Hint">
+    <Value>Shows an alert for new Private Messages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersJoinDate">
     <Value>Show customers join date</Value>
@@ -7484,159 +7487,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.FilterLevel.Updated">
     <Value>The filter level has been updated successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums">
-    <Value>Forum settings</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ActiveDiscussionsFeedCount">
-    <Value>Active discussions feed count</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ActiveDiscussionsFeedCount.Hint">
-    <Value>The count of topics to include in the Active Discussion feed.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ActiveDiscussionsFeedEnabled">
-    <Value>Active discussions feed enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ActiveDiscussionsFeedEnabled.Hint">
-    <Value>Enables RSS feed for Active Discussions topics.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ActiveDiscussionsPageSize">
-    <Value>Active discussions page size</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ActiveDiscussionsPageSize.Hint">
-    <Value>Set the page size for active discussions page e.g. '10' results per page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowCustomersToDeletePosts">
-    <Value>Allow customers to delete posts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowCustomersToDeletePosts.Hint">
-    <Value>A value indicating whether customers are allowed to delete posts that they created.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowCustomersToEditPosts">
-    <Value>Allow customers to edit posts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowCustomersToEditPosts.Hint">
-    <Value>A value indicating whether customers are allowed to edit posts that they created.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowCustomersToManageSubscriptions">
-    <Value>Allow customers to manage forum subscriptions</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowCustomersToManageSubscriptions.Hint">
-    <Value>Check if you want to allow customers to manage forum subscriptions.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowGuestsToCreatePosts">
-    <Value>Allow guests to create posts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowGuestsToCreatePosts.Hint">
-    <Value>Set if you want to allow guests to create posts.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowGuestsToCreateTopics">
-    <Value>Allow guests to create topics</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowGuestsToCreateTopics.Hint">
-    <Value>Set if you want to allow guests to create topics.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowPostVoting">
-    <Value>Allow users to vote for posts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowPostVoting.Hint">
-    <Value>Set if you want to allow users to vote for posts.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowPrivateMessages">
-    <Value>Allow private messages</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowPrivateMessages.Hint">
-    <Value>Determines whether to allow private messages.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.BlockTitle.Common">
-    <Value>Common</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.BlockTitle.Feeds">
-    <Value>Feeds</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.BlockTitle.PageSizes">
-    <Value>Page sizes</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.BlockTitle.Permissions">
-    <Value>Permissions</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ForumEditor">
-    <Value>Forum editor</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ForumEditor.Hint">
-    <Value>Forum editor type. WARNING: not recommended to change in production environment.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ForumFeedCount">
-    <Value>Forum feed count</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ForumFeedCount.Hint">
-    <Value>The count of topics to include in the forum feed.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ForumFeedsEnabled">
-    <Value>Forum feeds enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ForumFeedsEnabled.Hint">
-    <Value>Enables RSS feed for each forum.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ForumsEnabled">
-    <Value>Forums enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ForumsEnabled.Hint">
-    <Value>Check to enable forums.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.MaxVotesPerDay">
-    <Value>Maximum votes per day</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.MaxVotesPerDay.Hint">
-    <Value>Maximum number of votes for user per day.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages">
-    <Value>Notify about private messages</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages.Hint">
-    <Value>Indicates whether a customer should be notified by email about new private messages.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.PostsPageSize">
-    <Value>Posts page size</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.PostsPageSize.Hint">
-    <Value>Set the page size for posts in topics e.g. '10' posts per page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.RelativeDateTimeFormattingEnabled">
-    <Value>Relative date and time formatting</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.RelativeDateTimeFormattingEnabled.Hint">
-    <Value>Click to enable relative date and time formatting (e.g. 2 hours ago, a month ago).</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.SearchResultsPageSize">
-    <Value>Search results page size</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.SearchResultsPageSize.Hint">
-    <Value>Set the page size for search results e.g. '10' results per page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ShowAlertForPM">
-    <Value>Show alert for PM</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ShowAlertForPM.Hint">
-    <Value>Shows an alert for new Private Messages.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ShowCustomersPostCount">
-    <Value>Show customers post count</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.ShowCustomersPostCount.Hint">
-    <Value>A value indicating whether to show customers post count.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.SignaturesEnabled">
-    <Value>Signature enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.SignaturesEnabled.Hint">
-    <Value>Add an opportunity for customers to specify signature. Signature will be displayed below each forum post.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.TopicsPageSize">
-    <Value>Topics page size</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Forums.TopicsPageSize.Hint">
-    <Value>Set the page size for topics in forums e.g. '10' topics per page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Gdpr">
     <Value>GDPR settings</Value>
@@ -7883,12 +7733,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage.Hint">
     <Value>Check to show CAPTCHA on forgot password page when restore password.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForum">
-    <Value>Show on forum</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForum.Hint">
-    <Value>Check to show CAPTCHA on forum, when editing and creating a topic or post.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnLoginPage">
     <Value>Show on login page</Value>
@@ -10889,102 +10733,6 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.List.SearchText.Hint">
     <Value>Search in comment text.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums">
-    <Value>Forums</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum">
-    <Value>Forum</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Added">
-    <Value>The new forum has been added successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.BackToList">
-    <Value>back to forum list</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.CreateForum">
-    <Value>Add New Forum</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Deleted">
-    <Value>The forum has been deleted successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.EditForum">
-    <Value>Edit forum details</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.CreatedOn">
-    <Value>Created on</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.Description">
-    <Value>Description</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.Description.Hint">
-    <Value>The description of the forum. This is the description that the customer will see.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.DisplayOrder">
-    <Value>Display Order</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.DisplayOrder.Hint">
-    <Value>The display order of the forum. 1 represents the top of the list.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.ForumGroupId">
-    <Value>Forum Group</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.ForumGroupId.Hint">
-    <Value>Choose a forum group.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.ForumGroupId.Required">
-    <Value>Forum group is required.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.Name">
-    <Value>Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.Name.Hint">
-    <Value>The name of this forum. This is the name that the customer will see.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.Name.Required">
-    <Value>Forum name is required.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Updated">
-    <Value>The forum has been updated successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup">
-    <Value>Forum Group</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Added">
-    <Value>The new forum group has been added successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.BackToList">
-    <Value>back to forum group list</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.CreateForumGroup">
-    <Value>Add New Forum Group</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Deleted">
-    <Value>The forum group has been deleted successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.EditForumGroup">
-    <Value>Edit Forum Group Details</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Fields.CreatedOn">
-    <Value>Created on</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder">
-    <Value>Display Order</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder.Hint">
-    <Value>The display order of the forum group. 1 represents the top of the list.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Fields.Name">
-    <Value>Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Fields.Name.Hint">
-    <Value>The name of this forum group. This is the name that the customer will see.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Fields.Name.Required">
-    <Value>Forum Group Name is required.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Updated">
-    <Value>The forum group has been updated successfully.</Value>
-  </LocaleResource>
 <LocaleResource Name="Admin.ContentManagement.Menus">
   <Value>Menus</Value>
 </LocaleResource>
@@ -11268,7 +11016,7 @@
     <Value>This message template is used when the customer gets a notification about a new order being placed from this account.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.NewPM">
-    <Value><![CDATA[This message template is used when the customer gets a notification about a new private message being received. You can set up this option by ticking the checkbox <strong>Show alert for PM</strong> in Configuration - Settings - Forum settings.]]></Value>
+    <Value><![CDATA[This message template is used when the customer gets a notification about a new private message being received. You can set up this option by ticking the checkbox <strong>Show alert for PM</strong> in Configuration - Settings - Customer settings.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.PasswordRecovery">
     <Value>This message template is used when a customer forgets a password needed to log in the account. The customer receives a message with a link for entering a new password.</Value>
@@ -11278,12 +11026,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.Gdpr.DeleteRequest">
     <Value>This message template is used when customer create a new request to delete account. The message is received by a store owner.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Forums.NewForumPost">
-    <Value>This message template is used when a new forum post in certain forum topic is created. The message is received by a store owner.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Forums.NewForumTopic">
-    <Value>This message template is used when a new forum topic is created. The message is received by a store owner.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.GiftCard.Notification">
     <Value>This message template is used to send a notification to a customer about getting a gift card.</Value>
@@ -12823,9 +12565,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ExternalAuthentication">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">external authentication methods</a>]]></Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Documentation.Reference.Forums">
-    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">forums</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Gdpr">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">GDPR in nopCommerce</a>]]></Value>
@@ -17882,36 +17621,6 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel3.Hint">
     <Value>Set the filter value.</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Forums.EditorType.BBCodeEditor">
-    <Value>BBCode editor</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Forums.EditorType.HtmlEditor">
-    <Value>Html editor</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Forums.EditorType.MarkdownEditor">
-    <Value>Markdown editor</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Forums.EditorType.SimpleTextBox">
-    <Value>Simple textbox</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Forums.ForumSearchType.All">
-    <Value>Topic titles and post text</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Forums.ForumSearchType.PostTextOnly">
-    <Value>Post text only</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Forums.ForumSearchType.TopicTitlesOnly">
-    <Value>Topic titles only</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Forums.ForumTopicType.Announcement">
-    <Value>Announcement</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Forums.ForumTopicType.Normal">
-    <Value>Normal</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Forums.ForumTopicType.Sticky">
-    <Value>Sticky</Value>
-  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Gdpr.GdprRequestType.ConsentAgree">
     <Value>Consent (agree)</Value>
   </LocaleResource>
@@ -18242,306 +17951,6 @@
   <LocaleResource Name="FormattedAttributes.PriceAdjustment">
     <Value> [{0}{1}{2}]</Value>
   </LocaleResource>
-  <LocaleResource Name="Forum.ActiveDiscussions">
-    <Value>Active discussions</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.ActiveDiscussions.ViewAll">
-    <Value>View all</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.ActiveDiscussionsFeedDescription">
-    <Value>Topics with active discussions.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.ActiveDiscussionsFeedTitle">
-    <Value>{0} - Active Discussions</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.ActiveDiscussionsRSSLinkTitle">
-    <Value>Click here to be informed automatically of active discussion topics</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.AdvancedSearch">
-    <Value>Advanced search</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Announcement">
-    <Value>Announcement</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Author">
-    <Value>Author</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Breadcrumb.ForumGroupTitle">
-    <Value>Forum Group</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Breadcrumb.ForumHomeTitle">
-    <Value>Forum Home Page</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Breadcrumb.ForumTitle">
-    <Value>Forum</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Breadcrumb.HomeTitle">
-    <Value>Home Page</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Breadcrumb.TopicTitle">
-    <Value>Topic</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.By">
-    <Value>By</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Cancel">
-    <Value>Cancel</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.DeletePost">
-    <Value>Delete Post</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.DeleteTopic">
-    <Value>Delete Topic</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.EditPost">
-    <Value>Edit Post</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.EditTopic">
-    <Value>Edit Topic</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Forum">
-    <Value>Forum</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.ForumFeedDescription">
-    <Value>Forum's topics with newest posts.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.ForumFeedTitle">
-    <Value>{0} - Forum: {1}</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.ForumName">
-    <Value>Forum Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.ForumRSSLinkTitle">
-    <Value>Click here to be informed automatically of new posts and topics in the forum</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Forums">
-    <Value>Forums</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Home">
-    <Value>Home</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.In">
-    <Value>In</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Joined">
-    <Value>Joined</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.LatestPost">
-    <Value>Latest Post</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Location">
-    <Value>Location</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Moderator">
-    <Value>Moderator</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.MoveTopic">
-    <Value>Move Topic</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.NewPost">
-    <Value>New Post</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.NewTopic">
-    <Value>New Topic</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.NoPosts">
-    <Value>No Posts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Normal">
-    <Value>Normal</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.NotifyWhenSomeonePostsInThisTopic">
-    <Value>Notify me via email when someone posts in this topic</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.PageTitle.ActiveDiscussions">
-    <Value>Active discussions</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.PageTitle.Default">
-    <Value>Forums</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.PageTitle.MoveTopic">
-    <Value>Move Topic</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.PageTitle.PostEdit">
-    <Value>Edit Post</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.PageTitle.PostNew">
-    <Value>New Post</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.PageTitle.Search">
-    <Value>Search Forums</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.PageTitle.TopicEdit">
-    <Value>Edit Topic</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.PageTitle.TopicNew">
-    <Value>New Topic</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Post.IsNotUseful">
-    <Value>This post/answer is not useful</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Post.IsUseful">
-    <Value>This post/answer is useful</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Post.Text">
-    <Value>Post</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Posted">
-    <Value>Posted</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.PostLinkTitle">
-    <Value>Link to this post</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Posts">
-    <Value>Posts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Priority">
-    <Value>Priority</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.PrivateMessages.PM">
-    <Value>PM</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.QuotePost">
-    <Value>Quote</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Replies">
-    <Value>Replies</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Reply">
-    <Value>Reply</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.RSS">
-    <Value>RSS</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search">
-    <Value>Search Forums</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.AdvancedSearch">
-    <Value>Advanced search</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.LimitResultsToPrevious">
-    <Value>Limit results to previous:</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.LimitResultsToPrevious.1day">
-    <Value>1 day</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.LimitResultsToPrevious.1month">
-    <Value>1 month</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.LimitResultsToPrevious.1year">
-    <Value>1 year</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.LimitResultsToPrevious.2weeks">
-    <Value>2 weeks</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.LimitResultsToPrevious.3months">
-    <Value>3 months</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.LimitResultsToPrevious.6months">
-    <Value>6 months</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.LimitResultsToPrevious.7days">
-    <Value>7 days</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.LimitResultsToPrevious.AllResults">
-    <Value>All results</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.SearchInForum">
-    <Value>Search in forum:</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.SearchInForum.All">
-    <Value>All forums</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.SearchKeyword">
-    <Value>Search keyword:</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.SearchWithin">
-    <Value>Search within:</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.SearchWithin.All">
-    <Value>Topic titles and post text</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.SearchWithin.PostTextOnly">
-    <Value>Post text only</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Search.SearchWithin.TopicTitlesOnly">
-    <Value>Topic titles only</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.SearchButton">
-    <Value>Search</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.SearchForumsTooltip">
-    <Value>Search forums</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.SearchNoResultsText">
-    <Value>No posts were found that matched your criteria.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.SearchTermMinimumLengthIsNCharacters">
-    <Value>Search term minimum length is {0} characters</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.SelectTheForumToMoveTopic">
-    <Value>Select the forum you want to move the post to</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Status">
-    <Value>Status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Sticky">
-    <Value>Sticky</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Submit">
-    <Value>Submit</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.TextCannotBeEmpty">
-    <Value>Text cannot be empty</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Topics">
-    <Value>Topics</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Topics.GotoPostPager">
-    <Value>[Go to page: {0}]</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.TopicSubjectCannotBeEmpty">
-    <Value>Topic subject can not be empty</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.TopicTitle">
-    <Value>Topic Title</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.TruncatePostfix">
-    <Value>...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.TotalPosts">
-    <Value>Total Posts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.UnwatchForum">
-    <Value>Unwatch Forum</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.UnwatchTopic">
-    <Value>Unwatch Topic</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Views">
-    <Value>Views</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Votes">
-    <Value>Votes</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Votes.AlreadyVoted">
-    <Value>You already voted for this post</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Votes.Login">
-    <Value>You need to log in to vote for post</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Votes.MaxVotesReached">
-    <Value>A maximum of {0} votes can be cast per user per day</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.Votes.OwnPost">
-    <Value>You cannot vote for your own post</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.WatchForum">
-    <Value>Watch Forum</Value>
-  </LocaleResource>
-  <LocaleResource Name="Forum.WatchTopic">
-    <Value>Watch Topic</Value>
-  </LocaleResource>
   <LocaleResource Name="Gdpr.Consent.Newsletter">
     <Value>Newsletter</Value>
   </LocaleResource>
@@ -18625,9 +18034,6 @@
   </LocaleResource>
   <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Blog">
     <Value>Blog</Value>
-  </LocaleResource>
-  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.Boards">
-    <Value>Forums</Value>
   </LocaleResource>
   <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.ProductTags">
     <Value>Product tags</Value>
@@ -19096,9 +18502,6 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.CustomerProductReviews">
     <Value>My product reviews</Value>
-  </LocaleResource>
-  <LocaleResource Name="PageTitle.ForumSubscriptions">
-    <Value>Forum Subscriptions</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.Login">
     <Value>Login</Value>
@@ -19799,12 +19202,6 @@
   <LocaleResource Name="Profile.JoinDate">
     <Value>Join Date</Value>
   </LocaleResource>
-  <LocaleResource Name="Profile.LatestPosts">
-    <Value>Latest Posts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Profile.LatestPosts.NoPosts">
-    <Value>No posts found</Value>
-  </LocaleResource>
   <LocaleResource Name="Profile.PersonalInfo">
     <Value>Profile Info</Value>
   </LocaleResource>
@@ -20167,12 +19564,6 @@
   </LocaleResource>
   <LocaleResource Name="Security.Permission.ContentManagement.BlogView">
     <Value>Admin area. Blog. View</Value>
-  </LocaleResource>
-  <LocaleResource Name="Security.Permission.ContentManagement.ForumsCreateEditDelete">
-    <Value>Admin area. Forums. Create, edit, delete</Value>
-  </LocaleResource>
-  <LocaleResource Name="Security.Permission.ContentManagement.ForumsView">
-    <Value>Admin area. Forums. View</Value>
   </LocaleResource>
   <LocaleResource Name="Security.Permission.ContentManagement.MessageTemplatesCreateEditDelete">
     <Value>Admin area. Message Templates. Create, edit, delete</Value>

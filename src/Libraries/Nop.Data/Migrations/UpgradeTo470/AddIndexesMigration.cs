@@ -2,7 +2,6 @@
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
 using Nop.Data.Mapping;
@@ -33,24 +32,6 @@ public class AddIndexesMigration : ForwardOnlyMigration
                 .OnTable(NameCompatibilityManager.GetTableName(typeof(CustomerCustomerRoleMapping)))
                 .OnColumn(NameCompatibilityManager.GetColumnName(typeof(CustomerCustomerRoleMapping),
                     nameof(CustomerCustomerRoleMapping.CustomerId))).Ascending()
-                .WithOptions().NonClustered();
-        }
-
-        if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
-                .Index("IX_ForumTopic_CustomerId").Exists())
-        {
-            IfDatabase(databaseType).Create.Index("IX_ForumTopic_CustomerId")
-                .OnTable(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
-                .OnColumn(nameof(ForumTopic.CustomerId)).Ascending()
-                .WithOptions().NonClustered();
-        }
-
-        if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(ForumPost))).Index("IX_ForumPost_CustomerId")
-                .Exists())
-        {
-            IfDatabase(databaseType).Create.Index("IX_ForumPost_CustomerId")
-                .OnTable(NameCompatibilityManager.GetTableName(typeof(ForumPost)))
-                .OnColumn(nameof(ForumPost.CustomerId)).Ascending()
                 .WithOptions().NonClustered();
         }
 
@@ -86,15 +67,6 @@ public class AddIndexesMigration : ForwardOnlyMigration
             IfDatabase(databaseType).Create.Index("IX_PrivateMessage_ToCustomerId")
                 .OnTable(NameCompatibilityManager.GetTableName(typeof(PrivateMessage)))
                 .OnColumn(nameof(PrivateMessage.ToCustomerId)).Ascending()
-                .WithOptions().NonClustered();
-        }
-
-        if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(ForumSubscription)))
-                .Index("IX_ForumSubscription_CustomerId").Exists())
-        {
-            IfDatabase(databaseType).Create.Index("IX_ForumSubscription_CustomerId")
-                .OnTable(NameCompatibilityManager.GetTableName(typeof(ForumSubscription)))
-                .OnColumn(nameof(ForumSubscription.CustomerId)).Ascending()
                 .WithOptions().NonClustered();
         }
 
@@ -175,12 +147,5 @@ public class AddIndexesMigration : ForwardOnlyMigration
                 .WithOptions().NonClustered();
         }
 
-        if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(ForumTopic))).Index("IX_Forums_Topic_Subject").Exists())
-        {
-            Create.Index("IX_Forums_Topic_Subject")
-                .OnTable(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
-                .OnColumn(nameof(ForumTopic.Subject)).Ascending()
-                .WithOptions().NonClustered();
-        }
     }
 }

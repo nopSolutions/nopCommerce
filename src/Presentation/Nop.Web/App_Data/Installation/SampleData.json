@@ -2781,29 +2781,6 @@
       }
     ]
   },
-  "ForumGroups": [
-    {
-      "Name": "General",
-      "DisplayOrder": 5,
-      "Forums": [
-        {
-          "Name": "New Products",
-          "Description": "Discuss new products and industry trends",
-          "DisplayOrder": 1
-        },
-        {
-          "Name": "Mobile Devices Forum",
-          "Description": "Discuss the mobile phone market",
-          "DisplayOrder": 10
-        },
-        {
-          "Name": "Packaging & Shipping",
-          "Description": "Discuss packaging & shipping",
-          "DisplayOrder": 20
-        }
-      ]
-    }
-  ],
   "Discounts": [
     {
       "Name": "Sample discount with coupon code",
