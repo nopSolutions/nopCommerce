@@ -134,7 +134,7 @@ public partial class ProductAttributeFormatter : IProductAttributeFormatter
                                 attributeName = WebUtility.HtmlEncode(attributeName);
 
                             //we never encode multiline textbox input
-                            formattedAttribute = $"{attributeName}: {_htmlFormatter.FormatText(value, false, true, false, false, false, false)}";
+                            formattedAttribute = $"{attributeName}: {_htmlFormatter.FormatText(value, false, true, false, false, false)}";
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                         {

@@ -233,7 +233,6 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IReviewTypeService, ReviewTypeService>();
         services.AddSingleton<IEventPublisher, EventPublisher>();
         services.AddScoped<ISettingService, SettingService>();
-        services.AddScoped<IBBCodeHelper, BBCodeHelper>();
         services.AddScoped<IHtmlFormatter, HtmlFormatter>();
         services.AddScoped<IVideoService, VideoService>();
         services.AddScoped<INopUrlHelper, NopUrlHelper>();

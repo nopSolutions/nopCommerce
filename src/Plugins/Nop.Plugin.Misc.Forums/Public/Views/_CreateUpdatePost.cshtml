@@ -43,7 +43,7 @@
                         <span asp-validation-for="Text"></span>
                     </div>
                 }
-                @if ((Model.ForumEditor == EditorType.SimpleTextBox))
+                @if (Model.ForumEditor == EditorType.SimpleTextBox)
                 {
                     <div class="inputs">
                         <textarea aria-label="@T("Plugins.Misc.Forums.Post.Text")" asp-for="Text" class="forum-post-text"></textarea>

@@ -1,4 +1,6 @@
-﻿using Nop.Core;
+﻿using System.Net;
+using Markdig;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Seo;
@@ -21,6 +23,7 @@ public class ForumService
 {
     #region Fields
 
+    private readonly BBCodeHelper _bbCodeHelper;
     private readonly ForumSettings _forumSettings;
     private readonly ICustomerService _customerService;
     private readonly IGenericAttributeService _genericAttributeService;
@@ -46,7 +49,8 @@ public class ForumService
 
     #region Ctor
 
-    public ForumService(ForumSettings forumSettings,
+    public ForumService(BBCodeHelper bbCodeHelper,
+        ForumSettings forumSettings,
         ICustomerService customerService,
         IGenericAttributeService genericAttributeService,
         IHtmlFormatter htmlFormatter,
@@ -67,6 +71,7 @@ public class ForumService
         IWorkflowMessageService workflowMessageService,
         SeoSettings seoSettings)
     {
+        _bbCodeHelper = bbCodeHelper;
         _forumSettings = forumSettings;
         _customerService = customerService;
         _genericAttributeService = genericAttributeService;
@@ -92,6 +97,39 @@ public class ForumService
     #endregion
 
     #region Utilities
+
+    /// <summary>
+    /// Formats the text
+    /// </summary>
+    /// <param name="text">Text</param>
+    /// <param name="textFormatType">Text format type</param>
+    /// <returns>Formatted text</returns>
+    private string FormatText(string text, TextFormatType textFormatType = TextFormatType.PlainText)
+    {
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        try
+        {
+            text = textFormatType == TextFormatType.HTML ? _htmlFormatter.EnsureOnlyAllowedHtml(text) : WebUtility.HtmlEncode(text);
+
+            if (textFormatType != TextFormatType.HTML)
+                text = _htmlFormatter.ConvertPlainTextToHtml(text);
+
+            text = textFormatType switch
+            {
+                TextFormatType.BBCode => _bbCodeHelper.FormatText(text),
+                TextFormatType.Markdown => Markdown.ToHtml(CSharpFormat.FormatTextSimple(text)),
+                _ => null
+            };
+        }
+        catch (Exception exc)
+        {
+            text = $"Text cannot be formatted. Error: {exc.Message}";
+        }
+
+        return text;
+    }
 
     /// <summary>
     /// Add forum tokens
@@ -1281,16 +1319,13 @@ public class ForumService
         if (string.IsNullOrEmpty(text))
             return string.Empty;
 
-        switch (_forumSettings.ForumEditor)
+        text = _forumSettings.ForumEditor switch
         {
-            case EditorType.SimpleTextBox:
-                text = _htmlFormatter.FormatText(text, false, true, false, false, false, false);
-                break;
-
-            case EditorType.BBCodeEditor:
-                text = _htmlFormatter.FormatText(text, false, true, false, true, false, false);
-                break;
-        }
+            EditorType.SimpleTextBox => FormatText(text),
+            EditorType.BBCodeEditor => FormatText(text, TextFormatType.BBCode),
+            EditorType.MarkdownEditor => FormatText(text, TextFormatType.Markdown),
+            _ => text
+        };
 
         return text;
     }
@@ -1334,7 +1369,7 @@ public class ForumService
         if (string.IsNullOrEmpty(text))
             return string.Empty;
 
-        text = _htmlFormatter.FormatText(text, false, true, false, false, false, false);
+        text = _htmlFormatter.FormatText(text, false, true, false, false, false);
         return text;
     }
 

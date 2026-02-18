@@ -1291,7 +1291,6 @@ public partial class InstallationService
             DisplayJavaScriptDisabledWarning = false,
             Log404Errors = true,
             BreadcrumbDelimiter = "/",
-            BbcodeEditorOpenLinksInNewWindow = false,
             PopupForTermsOfServiceLinks = true,
             JqueryMigrateScriptLoggingActive = false,
             UseResponseCompression = true,

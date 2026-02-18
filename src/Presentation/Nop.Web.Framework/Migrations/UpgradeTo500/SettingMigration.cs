@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.ArtificialIntelligence;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -37,6 +38,8 @@ public class SettingMigration : MigrationBase
 
         this.SetSettingIfNotExists<PrivateMessageSettings, int>(settings => settings.PrivateMessagesPageSize,
             this.GetSettingByKey($"ForumSettings.{nameof(PrivateMessageSettings.PrivateMessagesPageSize)}", 10));
+
+        this.DeleteSettingsByNames([$"{nameof(CommonSettings)}.BbcodeEditorOpenLinksInNewWindow"]);
     }
 
     public override void Down()

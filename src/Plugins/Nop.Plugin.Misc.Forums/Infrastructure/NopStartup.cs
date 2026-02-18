@@ -23,6 +23,7 @@ public class NopStartup : INopStartup
         services.AddScoped<Public.Factories.ForumModelFactory>();
         services.AddScoped<ForumService>();
         services.AddScoped<ForumInstallService>();
+        services.AddScoped<BBCodeHelper>();
     }
 
     /// <summary>
