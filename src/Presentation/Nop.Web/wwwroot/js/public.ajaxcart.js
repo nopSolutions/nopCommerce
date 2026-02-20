@@ -194,6 +194,6 @@ var AjaxCart = {
     },
 
     ajaxFailure: function () {
-      alert(this.localized_data.AjaxCartFailure);
+      alert(AjaxCart.localized_data.AjaxCartFailure);
     }
 };
