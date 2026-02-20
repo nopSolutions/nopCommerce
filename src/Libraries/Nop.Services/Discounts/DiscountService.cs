@@ -135,22 +135,6 @@ public partial class DiscountService : IDiscountService
 
         return result;
     }
-    
-    /// <summary>
-    /// Get discount validation result
-    /// </summary>
-    /// <param name="requirements">Collection of discount requirement to validate rules</param>
-    /// <param name="groupInteractionType">Interaction type within the group of requirements</param>
-    /// <param name="customer">Customer</param>
-    /// <param name="errors">Errors</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains true if result is valid; otherwise false
-    /// </returns>
-    protected virtual async Task<bool> GetValidationResultAsync(IList<DiscountRequirement> requirements, RequirementGroupInteractionType groupInteractionType, Customer customer, List<string> errors)
-    {
-        return await GetValidationResultAsync(requirements, requirements, groupInteractionType, customer, errors);
-    }
 
     #endregion
 
