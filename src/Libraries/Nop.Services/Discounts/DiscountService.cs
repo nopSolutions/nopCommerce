@@ -67,7 +67,8 @@ public partial class DiscountService : IDiscountService
     /// <summary>
     /// Get discount validation result
     /// </summary>
-    /// <param name="requirements">Collection of discount requirement</param>
+    /// <param name="requirementsToValidate">Collection of discount requirement to validate rules</param>
+    /// <param name="allRequirements">Collection of all discount requirement related to discount</param>
     /// <param name="groupInteractionType">Interaction type within the group of requirements</param>
     /// <param name="customer">Customer</param>
     /// <param name="errors">Errors</param>
@@ -75,24 +76,24 @@ public partial class DiscountService : IDiscountService
     /// A task that represents the asynchronous operation
     /// The task result contains true if result is valid; otherwise false
     /// </returns>
-    protected virtual async Task<bool> GetValidationResultAsync(IList<DiscountRequirement> requirements,
+    protected virtual async Task<bool> GetValidationResultAsync(IList<DiscountRequirement> requirementsToValidate, IList<DiscountRequirement> allRequirements,
         RequirementGroupInteractionType groupInteractionType, Customer customer, List<string> errors)
     {
         var result = false;
 
-        var requirementsForCheck = requirements.Any(r => !r.ParentId.HasValue)
-            ? requirements.Where(r => !r.ParentId.HasValue)
-            : requirements;
+        var requirementsForCheck = requirementsToValidate.Any(r => !r.ParentId.HasValue)
+            ? requirementsToValidate.Where(r => !r.ParentId.HasValue)
+            : requirementsToValidate;
 
         foreach (var requirement in requirementsForCheck)
         {
             if (requirement.IsGroup)
             {
-                var childRequirements = requirements.Where(r => r.ParentId == requirement.Id).ToList();
+                var childRequirements = allRequirements.Where(r => r.ParentId == requirement.Id).ToList();
 
                 //get child requirements for the group
                 var interactionType = requirement.InteractionType ?? RequirementGroupInteractionType.And;
-                result = await GetValidationResultAsync(childRequirements, interactionType, customer, errors);
+                result = await GetValidationResultAsync(childRequirements, allRequirements, interactionType, customer, errors);
             }
             else
             {
@@ -133,6 +134,22 @@ public partial class DiscountService : IDiscountService
         }
 
         return result;
+    }
+    
+    /// <summary>
+    /// Get discount validation result
+    /// </summary>
+    /// <param name="requirements">Collection of discount requirement to validate rules</param>
+    /// <param name="groupInteractionType">Interaction type within the group of requirements</param>
+    /// <param name="customer">Customer</param>
+    /// <param name="errors">Errors</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains true if result is valid; otherwise false
+    /// </returns>
+    protected virtual async Task<bool> GetValidationResultAsync(IList<DiscountRequirement> requirements, RequirementGroupInteractionType groupInteractionType, Customer customer, List<string> errors)
+    {
+        return await GetValidationResultAsync(requirements, requirements, groupInteractionType, customer, errors);
     }
 
     #endregion
@@ -606,7 +623,7 @@ public partial class DiscountService : IDiscountService
         //requirements exist, let's check them
         var errors = new List<string>();
 
-        result.IsValid = await GetValidationResultAsync(requirements, topLevelGroup.InteractionType.Value, customer, errors);
+        result.IsValid = await GetValidationResultAsync(requirements, requirements, topLevelGroup.InteractionType.Value, customer, errors);
 
         //set errors if result is not valid
         if (!result.IsValid)
