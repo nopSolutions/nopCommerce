@@ -1,0 +1,84 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+    NopHtml.SetActiveMenuItemSystemName("Sms providers");
+
+     var signUpUrl = $"https://www.twilio.com/try-twilio";
+}
+
+<form asp-controller="Twilio" asp-action="Configure" method="post" id="configuration-form">
+    <section class="content">
+        <div class="cards-group">
+            <div class="card card-default no-margin">
+                <div class="card-header">
+                    @T("Plugins.Sms.Twilio.Credentials")
+                </div>
+                <div class="card-body">
+                     <p>
+                        To enable this plugin, you'll need to:
+                        <ol>
+                          <li><a href="@signUpUrl" target="_blank">Sign up for Twilio</a>.</li>
+                          <li>To get a phone that has SMS capabilities, do either of the following:</li>
+                            <ul>
+                              <li>In the <b>Account Dashboard</b>, click <b>Get a phone number</b></li>
+                              <li>In the navigation menu, go to <b>Phone Numbers > Manage > Buy a number</b></li>
+                            </ul>
+                          <li>In the Account Dashboard, copy your <b>Account SID</b> and <b>Auth Token</b> and paste it into the fields on this plugin configuration page.</li>
+                          <li>Complete any applicable verification or registration requirements.</li>
+                        </ol>
+                        <em>Note: Use the Virtual Phone to test SMS messaging from your environment. The Virtual Phone interface displays messages sent to the Virtual Phone's toll-free number: +18777804236. Twilio filters messages by account, so other users can't see messages you send to the Virtual Phone.</em><br />
+                    </p>
+                    @if (Model.IsConfigured)
+                    {
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="BalanceInfo" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="BalanceInfo" html-attributes="@(new { disabled = true })" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-9 offset-md-3">
+                                <button type="submit" name="checkbalance" class="btn bg-olive">@T("Plugins.Sms.Twilio.Credentials.CheckBalance")</button>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AccountSID" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AccountSID" />
+                            <span asp-validation-for="AccountSID"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AuthToken" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AuthToken" />
+                            <span asp-validation-for="AuthToken"></span>
+                        </div>
+                    </div>                    
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="PhoneNumber" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="PhoneNumber" />
+                            <span asp-validation-for="PhoneNumber"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-9 offset-md-3">
+                            <button type="submit" name="credentials" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

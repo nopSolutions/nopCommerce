@@ -576,14 +576,14 @@ public partial class CustomerController : BasePublicController
             if (remainingMin < 0)
                 remainingMin = 0;
 
-            return Json(new { success = false, message = $"Attempt limit exceeded. Try again in {remainingMin} minutes." });
+            return Json(new { success = false, message = string.Format(await _localizationService.GetResourceAsync("PhoneVerification.OtpCode.Error.AttemptLimit"), remainingMin) });
         }
 
         // Check if OTP was recently sent
         if (context.CodeGeneratedAtUtc.HasValue &&
             DateTime.UtcNow < context.CodeGeneratedAtUtc.Value.AddSeconds(_otpSettings.OtpTimeLife))
         {
-            return Json(new { success = false, message = $"The code has already been sent. Please wait {_otpSettings.OtpTimeLife} seconds." });
+            return Json(new { success = false, message = string.Format(await _localizationService.GetResourceAsync("PhoneVerification.OtpCode.Error.RecentlySent"), _otpSettings.OtpTimeLife) });
         }
 
         // Generate OTP code
@@ -597,7 +597,7 @@ public partial class CustomerController : BasePublicController
         await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.OtpContextAttribute, JsonConvert.SerializeObject(context));
 
         // Send SMS with OTP code using SMS service
-        await _smsService.SendSmsAsync(phone, $"Your OTP code is: {otpCode}");
+        await _smsService.SendSmsAsync(phone, string.Format(await _localizationService.GetResourceAsync("PhoneVerification.OtpCode.Message"), otpCode));
 
         // Return remaining time in seconds
         return Json(new 
@@ -605,7 +605,7 @@ public partial class CustomerController : BasePublicController
             success = true, 
             remainingSeconds = _otpSettings.OtpTimeLife,
             attemptsLeft = _otpSettings.OtpCountAttemptsToSendCode - context.SentCount,
-            phoneInfo = otpCode,
+            phoneInfo = otpCode, //TODO: only for testing
             message = "OTP sent successfully"
         });
     }

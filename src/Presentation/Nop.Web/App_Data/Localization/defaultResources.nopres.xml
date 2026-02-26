@@ -19517,6 +19517,9 @@
   <LocaleResource Name="PhoneVerification.OtpCodeExpires">
     <Value>Code expires in</Value>
   </LocaleResource>
+  <LocaleResource Name="PhoneVerification.OtpCode.Error.AttemptLimit">
+    <Value>Attempt limit exceeded. Try again in {0} minutes.</Value>
+  </LocaleResource>
   <LocaleResource Name="PhoneVerification.OtpCode.Error.Expired">
     <Value>The SMS code has expired.</Value>
   </LocaleResource>
@@ -19526,11 +19529,17 @@
   <LocaleResource Name="PhoneVerification.OtpCode.Error.NotRequested">
     <Value>You have not requested an SMS code. Please request a code and try again.</Value>
   </LocaleResource>
+  <LocaleResource Name="PhoneVerification.OtpCode.Error.RecentlySent">
+    <Value>The code has already been sent. Please wait {0} seconds.</Value>
+  </LocaleResource>
   <LocaleResource Name="PhoneVerification.OtpCode.Error.SendError">
     <Value>Failed to send SMS code. Please try again.</Value>
   </LocaleResource>
   <LocaleResource Name="PhoneVerification.OtpCode.Error.Verification">
     <Value>SMS verification error.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PhoneVerification.OtpCode.Message">
+    <Value>Your OTP code is: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="PhoneVerification.OtpCode.Required">
     <Value>SMS code is required.</Value>
