@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Common;
@@ -2141,6 +2141,18 @@ public partial class CheckoutController : BasePublicController
             //ensure that order has been just placed
             if ((DateTime.UtcNow - order.CreatedOnUtc).TotalMinutes > 3)
                 return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
+
+            //If opened in popup, set cookie so callback can redirect to popup-complete page
+            if (string.Equals(Request.Query["popup"], "1", StringComparison.OrdinalIgnoreCase))
+            {
+                Response.Cookies.Append("PaystackPopup", "1", new CookieOptions
+                {
+                    Path = "/",
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.Lax,
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(10)
+                });
+            }
 
             //Redirection will not work on one page checkout page because it's AJAX request.
             //That's why we process it here

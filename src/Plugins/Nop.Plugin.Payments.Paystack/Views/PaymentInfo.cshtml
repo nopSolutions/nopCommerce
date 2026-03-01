@@ -1,0 +1,20 @@
+@model Nop.Plugin.Payments.Paystack.Models.PaymentInfoModel
+@{
+    Layout = "";
+}
+
+<div class="paystack-payment-info">
+    <p class="payment-note">@Model.PaymentNote</p>
+    @if (Model.EmailRequired)
+    {
+        <div class="form-group">
+            <label for="Email">@T("Plugins.Payments.Paystack.Fields.Email")</label>
+            <input type="email" id="Email" name="Email" class="form-control" value="@Model.Email" required />
+        </div>
+    }
+    else
+    {
+        <input type="hidden" name="Email" value="@Model.Email" />
+    }
+    <p class="order-total"><strong>@T("ShoppingCart.Totals.OrderTotal"):</strong> @Model.OrderTotal</p>
+</div>
