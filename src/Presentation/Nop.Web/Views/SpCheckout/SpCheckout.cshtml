@@ -1,0 +1,140 @@
+﻿@using Nop.Services.Helpers
+@using Nop.Web.Controllers
+@inject IWebHelper webHelper
+
+@{
+    Layout = "_ColumnsOne";
+    var storeLocation = webHelper.GetStoreLocation();
+    NopHtml.AddTitleParts(T("PageTitle.Checkout").Text);
+}
+
+<script src="~/js/public.singlepagecheckout.js" asp-location="Footer"></script>
+
+@* Temporarily here until the desired design is reached. *@
+<style>
+    .inputs label {
+        width:150px;
+    }
+
+    .checkout-section.is-waiting {
+        opacity: 0.6;
+        position: relative;
+    }
+
+    .section-waiting {
+        position: absolute;
+        inset: 0;
+        background: rgba(255,255,255,0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+    }
+
+/*     .waiting-indicator.hidden {
+        display: none;
+    } */
+
+    .opc .section {
+        text-align: center;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<div class="page checkout-page">
+    <div class="page-title">
+        <h1>@T("Checkout")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        <div class="checkout-layout">
+            <div class="opc checkout-sections">
+                <div id="billing-address-section-content" class="step"></div>
+
+                <div id="shipping-address-section-content" class="step"></div>
+
+                <div id="shipping-methods-section-content" class="step"></div>
+
+                <div id="payment-methods-section-content" class="step"></div>
+
+                <div id="payment-info-section-content" class="step"></div>
+
+                <div id="confirm-order-section-content" class="step"></div>
+
+                <div id="confirm-button-section">
+                    <button type="button"
+                            class="button-1 confirm-order-next-step-button"
+                            onclick="CheckoutManager.confirmOrder()">
+                        @T("Checkout.ConfirmButton")
+                    </button>
+
+                    <span class="waiting-indicator hidden please-wait"
+                          style="">@T("Checkout.SubmittingOrder")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script asp-location="Footer">
+        var urls = {
+            renderBillingAddress: '@Url.RouteUrl("SpCheckoutRenderBillingAddress")',
+            renderShippingAddress: '@Url.RouteUrl("SpCheckoutRenderShippingAddress")',
+            renderShippingMethods: '@Url.RouteUrl("SpCheckoutRenderShippingMethods")',
+            renderPaymentMethods: '@Url.RouteUrl("SpCheckoutRenderPaymentMethods")',
+            renderPaymentInfo: '@Url.RouteUrl("SpCheckoutRenderPaymentInfo")',
+            renderConfirmOrder: '@Url.RouteUrl("SpCheckoutRenderConfirmOrder")',
+
+            // Represents API methods (could be used by SPA clients too)
+            selectShippingAddress: '@Url.RouteUrl("SpCheckoutSelectShippingAddress")',
+            selectBillingAddress: '@Url.RouteUrl("SpCheckoutSelectBillingAddress")',
+            selectShippingMethod: '@Url.RouteUrl("SpCheckoutSelectShippingMethod")',
+            selectPaymentMethod: '@Url.RouteUrl("SpCheckoutSelectPaymentMethod")',
+            toggleShipToSameAddress: '@Url.RouteUrl("SpCheckoutToggleShipToSameAddress")',
+            togglePickupInStore: '@Url.RouteUrl("SpCheckoutTogglePickupInStore")',
+            selectPickupPoint: '@Url.RouteUrl("SpCheckoutSelectPickupPoint")',
+            confirmOrder: '@Url.RouteUrl("SpCheckoutConfirmOrder")',
+            getCheckoutConfiguration: '@Url.RouteUrl("SpCheckoutConfiguration")',
+            getCheckoutState: '@Url.RouteUrl("SpCheckoutState")',
+            deleteAddress: '@Url.RouteUrl("SpCheckoutDeleteAddress")',
+
+            confirmSuccess: '@Url.RouteUrl(NopRouteNames.Standard.CHECKOUT_COMPLETED)',
+            failureUrl: '@(storeLocation)cart/'
+        }
+
+        CheckoutManager.init(urls);
+
+        var editorUrls = {
+            renderEditor: '@Url.RouteUrl("SpCheckoutRenderAddressEditor")',
+            saveBillingAddress: '@Url.RouteUrl("SpCheckoutSaveBillingAddress")',
+            saveShippingAddress: '@Url.RouteUrl("SpCheckoutSaveShippingAddress")'
+        };
+
+        // TODO: Rename form
+        AddressEditor.init('#address-edit-form', editorUrls);
+    </script>
+</div>
+
+@* Temporarily here until the desired design is reached *@
+<style>
+    /* An issue with jQuery
+           jQuery UI applies font-size: 1em relative to the parent. If the parent has
+           font-size: 0 or very small, the input becomes unreadable.
+        */
+    #edit-address-form input,
+    #edit-address-form select,
+    #edit-address-form textarea {
+        font-size: 14px !important; /* or whatever size you want */
+    }
+</style>
+
+@* <div id="billing-new-address-form" *@
+<div id="edit-address-form"
+     class="new-billing-address"
+     title="@T("")"
+     style="display:none;">
+
+    <div id="address-editor-content"></div>
+
+</div>

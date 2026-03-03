@@ -21,4 +21,9 @@ public partial record CheckoutShippingAddressModel : BaseNopModel
 
     public bool DisplayPickupInStore { get; set; }
     public CheckoutPickupPointsModel PickupPointsModel { get; set; }
+
+    // New properties.
+
+    public int? SelectedShippingAddressId { get; set; }
+    public bool SameAsBillingAddress { get; set; }
 }

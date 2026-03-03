@@ -1,10 +1,12 @@
-﻿using Nop.Core;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -362,7 +364,9 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the shipping method model
     /// </returns>
-    public virtual async Task<CheckoutShippingMethodModel> PrepareShippingMethodModelAsync(IList<ShoppingCartItem> cart, Address shippingAddress)
+    public virtual async Task<CheckoutShippingMethodModel> PrepareShippingMethodModelAsync(
+        IList<ShoppingCartItem> cart,
+        Address shippingAddress)
     {
         var model = new CheckoutShippingMethodModel
         {
@@ -374,6 +378,7 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         var store = await _storeContext.GetCurrentStoreAsync();
+
         var getShippingOptionResponse = await _shippingService.GetShippingOptionsAsync(cart, shippingAddress, customer, storeId: store.Id);
         if (getShippingOptionResponse.Success)
         {
@@ -418,6 +423,7 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
             //find a selected (previously) shipping method
             var selectedShippingOption = await _genericAttributeService.GetAttributeAsync<ShippingOption>(customer,
                 NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
+
             if (selectedShippingOption != null)
             {
                 var shippingOptionToSelect = model.ShippingMethods.ToList()
@@ -426,19 +432,20 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
                         so.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) &&
                         !string.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName) &&
                         so.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
-                if (shippingOptionToSelect != null) 
+                if (shippingOptionToSelect != null)
                     shippingOptionToSelect.Selected = true;
             }
+
             //if no option has been selected, let's do it for the first one
             if (model.ShippingMethods.FirstOrDefault(so => so.Selected) == null)
             {
                 var shippingOptionToSelect = model.ShippingMethods.FirstOrDefault();
-                if (shippingOptionToSelect != null) 
+                if (shippingOptionToSelect != null)
                     shippingOptionToSelect.Selected = true;
             }
 
             //notify about shipping from multiple locations
-            if (_shippingSettings.NotifyCustomerAboutShippingFromMultipleLocations) 
+            if (_shippingSettings.NotifyCustomerAboutShippingFromMultipleLocations)
                 model.NotifyCustomerAboutShippingFromMultipleLocations = getShippingOptionResponse.ShippingFromMultipleLocations;
         }
         else
@@ -459,7 +466,9 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the payment method model
     /// </returns>
-    public virtual async Task<CheckoutPaymentMethodModel> PreparePaymentMethodModelAsync(IList<ShoppingCartItem> cart, int filterByCountryId)
+    public virtual async Task<CheckoutPaymentMethodModel> PreparePaymentMethodModelAsync(
+        IList<ShoppingCartItem> cart,
+        int filterByCountryId)
     {
         var model = new CheckoutPaymentMethodModel();
 
@@ -511,9 +520,10 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
             model.PaymentMethods.Add(pmModel);
         }
 
-        //find a selected (previously) payment method
+        // find a selected (previously) payment method
         var selectedPaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
             NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
+
         if (!string.IsNullOrEmpty(selectedPaymentMethodSystemName))
         {
             var paymentMethodToSelect = model.PaymentMethods.ToList()
@@ -521,12 +531,19 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
             if (paymentMethodToSelect != null)
                 paymentMethodToSelect.Selected = true;
         }
+
         //if no option has been selected, let's do it for the first one
         if (model.PaymentMethods.FirstOrDefault(so => so.Selected) == null)
         {
             var paymentMethodToSelect = model.PaymentMethods.FirstOrDefault();
             if (paymentMethodToSelect != null)
+            {
                 paymentMethodToSelect.Selected = true;
+
+                // NEW: Update the state.
+                await _genericAttributeService.SaveAttributeAsync<string>(customer,
+            NopCustomerDefaults.SelectedPaymentMethodAttribute, paymentMethodToSelect.PaymentMethodSystemName , store.Id);
+            }
         }
 
         return model;
@@ -640,6 +657,297 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
         await PrepareBillingAddressModelAsync(model.BillingAddress, cart, prePopulateNewAddressWithCustomerFields: true);
 
         return model;
+    }
+
+    /**
+     * DisableBillingAddressCheckoutStep cannot be used if checkout guest is enabled.
+     * Privously, enabling this setting, led to an automatic submission of the billing
+     * address step using JavaScript. If the sumbission didn't work, the billing step was displayed.
+     * 
+     * This automatic submission amounted to selecting the first available billing address,
+     * since NewAddressPreselected is only true when rerendering the view in case of validation
+     * errors.
+     * 
+     * In this new implementation, selecting the first available address is implemented by
+     * default, therefore there is no need for any thing similar to automatic submission
+     * of a form.
+     * 
+     * However, what if choosing the first address led to an error? In the previous implementation
+     * we had something like this:
+     * if (response.wrong_billing_address) {
+     *  Accordion.showSection('#opc-billing');
+     * }
+     * 
+     * Yet, I don't see anyway where both disableBillingAddressStep and wrong_billing_address
+     * could be true at the same time in the old implementation. Auto submititng the form
+     * executed the following branch inside OpcSaveBilling()
+     * 
+     *  if (billingAddressId > 0)
+     *  {
+     *      //existing address
+     *      var address = await _customerService.GetCustomerAddressAsync(customer.Id, billingAddressId)
+     *          ?? throw new Exception(await _localizationService.GetResourceAsync("Checkout.Address.NotFound"));
+     *          
+     *      customer.BillingAddressId = address.Id;
+     *      await _customerService.UpdateCustomerAsync(customer);
+     *  }
+     *  
+     *  which never set wrong_billing_address in the response.
+     */
+    public virtual async Task<CheckoutCofigurationModel> PrepareCheckoutConfigurationModelAsync(IList<ShoppingCartItem> cart)
+    {
+        ArgumentNullException.ThrowIfNull(cart);
+
+        var customer = await _workContext.GetCurrentCustomerAsync();
+
+        var model = new CheckoutCofigurationModel
+        {
+            DisableBillingAddressSection = _orderSettings.DisableBillingAddressCheckoutStep && (await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).Any(),
+            DisplayCaptcha = await _customerService.IsGuestAsync(await _customerService.GetShoppingCartCustomerAsync(cart)) && _captchaSettings.Enabled && _captchaSettings.ShowOnCheckoutPageForGuests,
+            IsReCaptchaV3 = _captchaSettings.CaptchaType == CaptchaType.ReCaptchaV3,
+            ReCaptchaPublicKey = _captchaSettings.ReCaptchaPublicKey
+        };
+
+        return model;
+    }
+
+    public virtual async Task<CheckoutStateModel> PrepareCheckoutStateModelAsync()
+    {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+
+        // Try to select the first available address.
+
+        var billingAddressId = customer.BillingAddressId;
+        if (billingAddressId is null)
+        {
+            var firstAddress = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
+                .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is
+                {
+                    Published: true,
+                    AllowsBilling: true
+                } country
+                    &&
+                    //enabled for the current store
+                    await _storeMappingService.AuthorizeAsync(country))
+                .FirstOrDefaultAsync();
+
+            if (firstAddress is not null)
+            {
+                customer.BillingAddressId = firstAddress.Id;
+                await _customerService.UpdateCustomerAsync(customer);
+
+                billingAddressId = firstAddress.Id;
+            }
+            else
+            {
+                // Make sure the payment method is reset if the address is null.
+                await _genericAttributeService.SaveAttributeAsync<string>(customer,
+                    NopCustomerDefaults.SelectedPaymentMethodAttribute, null, store.Id);
+            }
+        }
+
+        var shippingAddressId = customer.ShippingAddressId;
+        if (shippingAddressId is null)
+        {
+            var firstAddress = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
+                .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is
+                {
+                    Published: true,
+                    AllowsShipping: true
+                } country
+                    &&
+                    //enabled for the current store
+                    await _storeMappingService.AuthorizeAsync(country))
+                .FirstOrDefaultAsync();
+
+            if (firstAddress is not null)
+            {
+                customer.ShippingAddressId = firstAddress.Id;
+                await _customerService.UpdateCustomerAsync(customer);
+
+                shippingAddressId = firstAddress.Id;
+            }
+            else
+            {
+                // Make sure the shipping method is reset if the address is null.
+                await _genericAttributeService
+                    .SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, store.Id);
+            }
+        }
+
+        // Shipping
+        // Return the currently selected shipping option.
+        // First, if an option is selected, check if it is "Pickup".
+        // In this case, return the pickup point (or select the first one).
+        // If it is not pickup, make sure that the pickup point is null.
+        //
+        // If, however, no option is selected, try to select one.
+
+        var selectedPickupPoint = await _genericAttributeService
+            .GetAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, store.Id);
+
+        var shippingOption = await _genericAttributeService
+            .GetAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
+
+        var pickupInStore = shippingOption is not null && shippingOption.IsPickupInStore;
+        PickupPoint? pickupPoint = null;
+
+        if (pickupInStore is true)
+        {
+            pickupPoint = await _genericAttributeService.GetAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, store.Id);
+
+            if (pickupPoint is null)
+            {
+                // Try to select the first available point
+
+                var address = customer.BillingAddressId.HasValue
+                    ? await _addressService.GetAddressByIdAsync(customer.BillingAddressId.Value)
+                    : null;
+                var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(cart, address,
+                    customer, storeId: store.Id);
+                if (pickupPointsResponse.Success)
+                {
+                    pickupPoint = pickupPointsResponse.PickupPoints.FirstOrDefault();
+                }
+            }
+        }
+        else
+        {
+            await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
+        }
+
+        if (shippingOption is null && shippingAddressId is not null)
+        {
+            Address shippingAddress = await _customerService.GetCustomerAddressAsync(customer.Id, shippingAddressId.Value);
+
+            // TODO: Does this include "Pickup In Store"
+            var getShippingOptionResponse = await _shippingService.GetShippingOptionsAsync(cart, shippingAddress, customer, storeId: store.Id);
+            if (getShippingOptionResponse.Success)
+            {
+                //performance optimization. cache returned shipping options.
+                await _genericAttributeService.SaveAttributeAsync(customer,
+                    NopCustomerDefaults.OfferedShippingOptionsAttribute,
+                    getShippingOptionResponse.ShippingOptions,
+                    store.Id);
+
+                var availableOptions = getShippingOptionResponse.ShippingOptions;
+
+                // Sort
+                if (availableOptions.Count > 1)
+                {
+                    availableOptions = (_shippingSettings.ShippingSorting switch
+                    {
+                        ShippingSortingEnum.ShippingCost => availableOptions.OrderBy(option => option.Rate),
+                        _ => availableOptions.OrderBy(option => option.DisplayOrder)
+                    }).ToList();
+                }
+
+                var shippingOptionToSelect = availableOptions.FirstOrDefault();
+
+                if (shippingOptionToSelect is not null)
+                {
+                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, shippingOptionToSelect, store.Id);
+                    shippingOption = shippingOptionToSelect;
+                }
+            }
+        }
+
+        var paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
+            NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
+
+        if (paymentMethodSystemName is null && billingAddressId is not null)
+        {
+            var filterByCountryId = 0;
+            if (_addressSettings.CountryEnabled)
+                filterByCountryId = (await _customerService.GetCustomerBillingAddressAsync(customer))?.CountryId ?? 0;
+
+            var paymentMethods = await (await _paymentPluginManager
+                .LoadActivePluginsAsync(customer, store.Id, filterByCountryId))
+                .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
+                .WhereAwait(async pm => !await pm.HidePaymentMethodAsync(cart))
+                .ToListAsync();
+
+            var availableMethods = new List<IPaymentMethod>();
+            foreach (var pm in paymentMethods)
+            {
+                if (await _shoppingCartService.ShoppingCartIsRecurringAsync(cart) && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
+                    continue;
+
+                availableMethods.Add(pm);
+            }
+
+            var paymentMethodToSelect = availableMethods.FirstOrDefault();
+            if (paymentMethodToSelect != null)
+            {
+                await _genericAttributeService.SaveAttributeAsync<string>(customer,
+            NopCustomerDefaults.SelectedPaymentMethodAttribute, paymentMethodToSelect.PluginDescriptor.SystemName, store.Id);
+                paymentMethodSystemName = paymentMethodToSelect.PluginDescriptor.SystemName;
+            }
+        }
+
+        // Ship to Same Address
+
+        return new CheckoutStateModel
+        {
+            BillingAddressId = billingAddressId,
+            ShippingAddressId = shippingAddressId,
+            ShippingOption = shippingOption is null ? null : $"{shippingOption.Name}___{shippingOption.ShippingRateComputationMethodSystemName}",
+            PaymentMethodSystemName = paymentMethodSystemName,
+            ShipToSameAddress = await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.ShipToSameAddressAttribute, store.Id),
+            PickupInStore = pickupInStore,
+            PickupPoint = pickupPoint is null ? null : $"{pickupPoint.Id}___{pickupPoint.ProviderSystemName}"
+        };
+    }
+
+    public virtual async Task<CheckoutRequirementsModel> PrepareCheckoutRequirementsModelAsync()
+    {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+
+        var shippingRequired = await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart);
+
+        var shippingMethodRequired = shippingRequired;
+
+        if (shippingMethodRequired)
+        {
+            var shippingOption = await _genericAttributeService
+                .GetAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
+
+            var pickupInStore = shippingOption is not null && shippingOption.IsPickupInStore;
+
+            shippingMethodRequired = !pickupInStore;
+        }
+
+        var paymentRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
+
+        bool paymentInfoRequired = paymentRequired;
+
+        // Payment info won't be required only there is specific payment method that
+        // does not require entering payment info. If the method is null, we assume
+        // that it is going to be required.
+        if (paymentInfoRequired)
+        {
+            var paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
+        NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
+            var paymentMethod = await _paymentPluginManager
+                .LoadPluginBySystemNameAsync(paymentMethodSystemName, customer, store.Id);
+            if (paymentMethod is not null)
+            {
+                paymentInfoRequired = !(paymentMethod.SkipPaymentInfo ||
+                    (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection && _paymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods));
+            }
+        }
+
+        return new CheckoutRequirementsModel
+        {
+            ShippingRequired = shippingRequired,
+            ShippingMethodRequired = shippingMethodRequired,
+            PaymentRequired = paymentRequired,
+            PaymentInfoRequired = paymentInfoRequired
+        };
     }
 
     #endregion

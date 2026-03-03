@@ -1,0 +1,50 @@
+﻿@model AddressModel
+@using Nop.Services.Helpers
+@inject IWebHelper webHelper
+
+@{
+    var storeLocation = webHelper.GetStoreLocation();
+}
+
+@* The form was originally in OnePageCheckout.cshtml *@
+<form id="address-edit-form" action="" method="post">
+
+    @* TODO: Handle Vat. Only in billing address *@
+@* 	@if (Model.EuVatEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="VatNumber" asp-postfix=":"></label>
+            @if (Model.EuVatEnabledForGuests)
+            {
+                <input asp-for="VatNumber" />
+                <span asp-validation-for="VatNumber"></span>
+            }
+            else
+            {
+                <span class="vat-number-warning">
+                    @T("Checkout.VatNumber.Disabled", Url.RouteUrl(NopRouteNames.General.CUSTOMER_INFO))
+                </span>
+            }
+        </div>
+    } *@
+
+
+    <div class="enter-address">
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        @{
+            // TODO: Fix here.
+
+            // var dataDictAddress = new ViewDataDictionary(ViewData);
+            // dataDictAddress.TemplateInfo.HtmlFieldPrefix = "BillingNewAddress";
+            @await Html.PartialAsync("_CreateOrUpdateAddress", Model)
+        }
+    </div>
+
+    <div class="checkout-page buttons">
+        <button id="save-billing-address-button"
+                type="button" class="button-1"
+                onclick="AddressEditor.saveEditAddress(); return false;"
+        >@T("Common.Save")</button>
+    </div>
+
+</form>

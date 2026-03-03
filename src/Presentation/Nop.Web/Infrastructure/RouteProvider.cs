@@ -1,4 +1,5 @@
-﻿using Nop.Core.Http;
+﻿﻿using Nop.Core.Http;
+﻿using Microsoft.AspNetCore.Routing;
 using Nop.Services.Installation;
 using Nop.Web.Framework.Mvc.Routing;
 
@@ -264,6 +265,104 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"download/getfileupload/{{downloadId}}",
             defaults: new { controller = "Download", action = "GetFileUpload" });
 
+
+
+
+
+
+        // Single-page checkout
+
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CHECKOUT_SINGLE_PAGE,
+            pattern: $"{lang}/spcheckout/",
+            defaults: new { controller = "SpCheckout", action = "SpCheckout" });
+
+        // Single-page checkout rendering routes (return partial views)
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutRenderBillingAddress",
+            "spcheckout/render/billing-address",
+            new { controller = "SpCheckout", action = "RenderBillingAddress" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutRenderShippingAddress",
+            "spcheckout/render/shipping-address",
+            new { controller = "SpCheckout", action = "RenderShippingAddress" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutRenderShippingMethods",
+            "spcheckout/render/shipping-methods",
+            new { controller = "SpCheckout", action = "RenderShippingMethods" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutRenderPaymentMethods",
+            "spcheckout/render/payment-methods",
+            new { controller = "SpCheckout", action = "RenderPaymentMethods" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutRenderPaymentInfo",
+            "spcheckout/render/payment-info",
+            new { controller = "SpCheckout", action = "RenderPaymentInfo" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutRenderConfirmOrder",
+            "spcheckout/render/confirm-order",
+            new { controller = "SpCheckout", action = "RenderConfirmOrder" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutRenderAddressEditor",
+            "spcheckout/render/address-editor",
+            new { controller = "SpCheckout", action = "RenderAddressEditor" });
+
+        // Single-page checkout state updating routes (AJAX / fetch)
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutSelectShippingAddress",
+            "spcheckout/shipping-address/select",
+            new { controller = "SpCheckout", action = "SelectShippingAddress" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutSelectBillingAddress",
+            "spcheckout/billing-address/select",
+            new { controller = "SpCheckout", action = "SelectBillingAddress" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutSelectShippingMethod",
+            "spcheckout/shipping-method/select",
+            new { controller = "SpCheckout", action = "SelectShippingMethod" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutSelectPickupPoint",
+            "spcheckout/pickup-point/select",
+            new { controller = "SpCheckout", action = "SelectPickupPoint" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutSelectPaymentMethod",
+            "spcheckout/payment-method/select",
+            new { controller = "SpCheckout", action = "SelectPaymentMethod" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutToggleShipToSameAddress",
+            "spcheckout/billing-address/toggle-same-address",
+            new { controller = "SpCheckout", action = "ToggleShipToSameAddress" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutTogglePickupInStore",
+            "spcheckout/billing-address/toggle-pickup-in-store",
+            new { controller = "SpCheckout", action = "TogglePickupInStore" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutConfirmOrder",
+            "spcheckout/confirm-order",
+            new { controller = "SpCheckout", action = "ConfirmOrder" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutConfiguration",
+            "spcheckout/configuration",
+            new { controller = "SpCheckout", action = "GetCheckoutConfiguration" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutState",
+            "spcheckout/state",
+            new { controller = "SpCheckout", action = "GetCheckoutState" });
+
+        // Single-page checkout address modification routes (AJAX / fetch)
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutSaveBillingAddress",
+            "spcheckout/save-billing-address",
+            new { controller = "SpCheckout", action = "SaveEditBillingAddress" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutSaveShippingAddress",
+            "spcheckout/save-shipping-address",
+            new { controller = "SpCheckout", action = "SaveEditShippingAddress" });
+
+        endpointRouteBuilder.MapControllerRoute("SpCheckoutDeleteAddress",
+            "spcheckout/delete-address",
+            new { controller = "SpCheckout", action = "DeleteAddress" });
+
+
         //checkout pages
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CHECKOUT,
             pattern: $"{lang}/checkout/",
@@ -294,7 +393,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Checkout", action = "ShippingMethod" });
 
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CHECKOUT_PAYMENT_METHOD,
-            pattern: $"{lang}/checkout/paymentmethod",
+        pattern: $"{lang}/checkout/paymentmethod",
             defaults: new { controller = "Checkout", action = "PaymentMethod" });
 
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CHECKOUT_PAYMENT_INFO,

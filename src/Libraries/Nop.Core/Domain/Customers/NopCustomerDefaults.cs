@@ -100,6 +100,8 @@ public static partial class NopCustomerDefaults
     /// </summary>
     public static string SelectedPaymentMethodAttribute => "SelectedPaymentMethod";
 
+    public static string ShipToSameAddressAttribute => "ShipToSameAddress";
+
     /// <summary>
     /// Gets a name of generic attribute to store the value of 'SelectedShippingOption'
     /// </summary>

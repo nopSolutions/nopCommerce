@@ -177,6 +177,7 @@ var Billing = {
   nextStep: function(response) {
     //ensure that response.wrong_billing_address is set
     //if not set, "true" is the default value
+    // TODO: Is the above comment wrong or the current implementation?
     if (typeof response.wrong_billing_address === 'undefined') {
       response.wrong_billing_address = false;
     }
@@ -339,7 +340,7 @@ var Shipping = {
         this.saveUrl = saveUrl;
     },
 
-  newAddress: function (id, billingAddressId) {
+    newAddress: function (id, billingAddressId) {
     isNew = !id;    
         if (isNew) {
           this.resetSelectedAddress();         

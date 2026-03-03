@@ -7,6 +7,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Http;
 using Nop.Services.Attributes;
@@ -381,6 +382,9 @@ public partial class CheckoutController : BasePublicController
 
         if (_orderSettings.OnePageCheckoutEnabled)
             return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE);
+
+        if (_orderSettings.SinglePageCheckoutEnabled)
+            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_SINGLE_PAGE);
 
         return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_BILLING_ADDRESS);
     }
@@ -1723,7 +1727,7 @@ public partial class CheckoutController : BasePublicController
                             .Select(p => p.ErrorMessage))
                     });
                 }
-
+                
                 //try to find an address with the same values (don't duplicate records)
                 var address = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
                     newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,

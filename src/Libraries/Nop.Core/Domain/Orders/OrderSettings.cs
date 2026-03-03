@@ -58,6 +58,8 @@ public partial class OrderSettings : ISettings
     /// </summary>
     public bool OnePageCheckoutEnabled { get; set; }
 
+    public bool SinglePageCheckoutEnabled { get; set; }
+
     /// <summary>
     /// Gets or sets a value indicating whether order totals should be displayed on 'Payment info' tab of 'One-page checkout' page
     /// </summary>

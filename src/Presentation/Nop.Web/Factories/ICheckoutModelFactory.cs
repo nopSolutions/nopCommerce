@@ -104,4 +104,10 @@ public partial interface ICheckoutModelFactory
     /// The task result contains the one page checkout model
     /// </returns>
     Task<OnePageCheckoutModel> PrepareOnePageCheckoutModelAsync(IList<ShoppingCartItem> cart);
+
+    Task<CheckoutCofigurationModel> PrepareCheckoutConfigurationModelAsync(IList<ShoppingCartItem> cart);
+
+    Task<CheckoutStateModel> PrepareCheckoutStateModelAsync();
+
+    Task<CheckoutRequirementsModel> PrepareCheckoutRequirementsModelAsync();
 }
