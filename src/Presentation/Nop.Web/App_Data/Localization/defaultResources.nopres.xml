@@ -6703,16 +6703,16 @@
     <Value>Check to show best sellers on home page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowCategoryProductNumber">
-    <Value>Show the number of distinct products besides each category</Value>
+    <Value>Show the number of products next to each category</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowCategoryProductNumber.Hint">
-    <Value>Check to show the number of products besides each category (category navigation block).</Value>
+    <Value>Check to show the number of products next to each category (category navigation block).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowCategoryProductNumberIncludingSubcategories">
-    <Value>Include subcategories (number of distinct products)</Value>
+    <Value>Include subcategories (number of products)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowCategoryProductNumberIncludingSubcategories.Hint">
-    <Value>Check to including when showing the number of products besides each category.</Value>
+    <Value>Check to include subcategories when showing the number of products next to each category.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowFreeShippingNotification">
     <Value>Show "free shipping" icon</Value>

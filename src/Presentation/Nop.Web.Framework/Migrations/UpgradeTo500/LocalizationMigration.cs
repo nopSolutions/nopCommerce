@@ -447,6 +447,12 @@ public class LocalizationMigration : MigrationBase
             ["Admin.ContentManagement.MessageTemplates.Description.Customer.NewPM"] = "This message template is used when the customer gets a notification about a new private message being received. You can set up this option by ticking the checkbox <strong>Show alert for PM</strong> in Configuration - Settings - Customer settings.",
             ["Admin.Configuration.Settings.CustomerUser.BlockTitle.PrivateMessage"] = "Private messages",
 
+            //#8125
+            ["Admin.Configuration.Settings.Catalog.ShowCategoryProductNumber"] = "Show the number of products next to each category",
+            ["Admin.Configuration.Settings.Catalog.ShowCategoryProductNumber.Hint"] = "Check to show the number of products next to each category (category navigation block).",
+            ["Admin.Configuration.Settings.Catalog.ShowCategoryProductNumberIncludingSubcategories"] = "Include subcategories (number of products)",
+            ["Admin.Configuration.Settings.Catalog.ShowCategoryProductNumberIncludingSubcategories.Hint"] = "Check to include subcategories when showing the number of products next to each category.",
+
         });
 
         #endregion
