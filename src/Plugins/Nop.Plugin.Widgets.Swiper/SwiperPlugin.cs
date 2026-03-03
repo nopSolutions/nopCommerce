@@ -89,6 +89,8 @@ public class SwiperPlugin : BasePlugin, IWidgetPlugin
     {
         //pictures
         var sampleImagesPath = _fileProvider.MapPath("~/Plugins/Widgets.Swiper/Content/sample-images/");
+        var sampleBanner1Text = "iPhone 16";
+        var sampleBanner2Text = "Salaxy S24";
 
         //settings
 
@@ -97,15 +99,15 @@ public class SwiperPlugin : BasePlugin, IWidgetPlugin
             new()
             {
                 PictureId = (await _pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "banner_01.webp")), MimeTypes.ImageWebp, "banner_1")).Id,
-                TitleText = string.Empty,
-                AltText = "Sample slide name",
+                TitleText = sampleBanner1Text,
+                AltText = sampleBanner1Text,
                 LinkUrl = _webHelper.GetStoreLocation(),
             },
             new()
             {
                 PictureId = (await _pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "banner_02.webp")), MimeTypes.ImageWebp, "banner_2")).Id,
-                TitleText = string.Empty,
-                AltText = "Sample slide name",
+                TitleText = sampleBanner2Text,
+                AltText = sampleBanner2Text,
                 LinkUrl = _webHelper.GetStoreLocation(),
             }
         };
