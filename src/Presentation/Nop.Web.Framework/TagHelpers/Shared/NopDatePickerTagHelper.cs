@@ -97,7 +97,7 @@ public partial class NopDatePickerTagHelper : TagHelper
         monthsList.MergeAttributes(htmlAttributesDictionary, true);
         yearsList.MergeAttributes(htmlAttributesDictionary, true);
 
-        var currentCalendar = CultureInfo.CurrentCulture.Calendar;
+        var currentCalendar = CultureInfo.CurrentCulture.DateTimeFormat.Calendar;
 
         var days = new StringBuilder();
         var months = new StringBuilder();
