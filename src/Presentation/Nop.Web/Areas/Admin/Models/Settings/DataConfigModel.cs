@@ -23,5 +23,11 @@ public partial record DataConfigModel : BaseNopModel, IConfigModel
     [NopResourceDisplayName("Admin.Configuration.AppSettings.Data.WithNoLock")]
     public bool WithNoLock { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.AppSettings.Data.CloseDataContextAfterUse")]
+    public bool CloseDataContextAfterUse { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.AppSettings.Data.BulkCopyWithCheckConstraints")]
+    public bool BulkCopyWithCheckConstraints { get; set; }
+
     #endregion
 }

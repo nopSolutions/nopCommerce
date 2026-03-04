@@ -453,6 +453,11 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Catalog.ShowCategoryProductNumberIncludingSubcategories"] = "Include subcategories (number of products)",
             ["Admin.Configuration.Settings.Catalog.ShowCategoryProductNumberIncludingSubcategories.Hint"] = "Check to include subcategories when showing the number of products next to each category.",
 
+            //#8117
+            ["Admin.Configuration.Settings.Data.CloseDataContextAfterUse"] = "Close data context after use",
+            ["Admin.Configuration.Settings.Data.CloseDataContextAfterUse.Hint"] = "Check to automatically dispose the data context after each operation, which helps prevent resource leaks. Uncheck if you need to keep the data context open for multiple sequential operations.",
+            ["Admin.Configuration.Settings.Data.BulkCopyWithCheckConstraints"] = "Check constraints during bulk copy operations",
+            ["Admin.Configuration.Settings.Data.BulkCopyWithCheckConstraints.Hint"] = "Check to validate data inserted by bulk copy operations against the check constraints defined in the target table. Uncheck to improve performance, but be aware that it can result in data that does not meet the table's integrity requirements.",
         });
 
         #endregion
