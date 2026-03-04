@@ -409,18 +409,15 @@
                     {
                         new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.AuthMethodName))
                         {
-                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName").Text,
-                            Width = "100"
+                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName").Text
                         },
                         new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.Email))
                         {
-                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email").Text,
-                            Width = "100"
+                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email").Text
                         },
                         new ColumnProperty(nameof(CustomerAssociatedExternalAuthModel.ExternalIdentifier))
                         {
-                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier").Text,
-                            Width = "300"
+                            Title = T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier").Text
                         }
                     },
                     Data = JsonConvert.SerializeObject(Model.CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords.Select(externalAuthRecord => new

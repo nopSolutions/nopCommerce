@@ -50,19 +50,17 @@
                                 },
                                 new ColumnProperty(nameof(LanguageModel.LanguageCulture))
                                 {
-                                    Title = T("Admin.Configuration.Languages.Fields.LanguageCulture").Text,
-                                    Width = "200"
+                                    Title = T("Admin.Configuration.Languages.Fields.LanguageCulture").Text
                                 },
                                 new ColumnProperty(nameof(LanguageModel.DisplayOrder))
                                 {
                                     Title = T("Admin.Configuration.Languages.Fields.DisplayOrder").Text,
-                                    Width = "150",
                                     ClassName =  NopColumnClassDefaults.CenterAll
                                 },
                                 new ColumnProperty(nameof(LanguageModel.Published))
                                 {
                                     Title = T("Admin.Configuration.Languages.Fields.Published").Text,
-                                    Width = "150",
+                                    Width = "100",
                                     ClassName =  NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean()
                                 },
