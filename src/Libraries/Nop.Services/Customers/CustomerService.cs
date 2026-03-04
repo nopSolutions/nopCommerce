@@ -652,6 +652,7 @@ public partial class CustomerService : ICustomerService
             await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, storeId);
             await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.OfferedShippingOptionsAttribute, null, storeId);
             await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, storeId);
+            await _genericAttributeService.SaveAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DesiredDeliveryDate, null, storeId);
         }
 
         //clear selected payment method

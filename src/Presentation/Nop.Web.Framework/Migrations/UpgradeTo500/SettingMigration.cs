@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Shipping;
 using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Web.Framework.Extensions;
@@ -37,6 +38,10 @@ public class SettingMigration : MigrationBase
 
         this.SetSettingIfNotExists<PrivateMessageSettings, int>(settings => settings.PrivateMessagesPageSize,
             this.GetSettingByKey($"ForumSettings.{nameof(PrivateMessageSettings.PrivateMessagesPageSize)}", 10));
+
+        //#7386
+        this.SetSettingIfNotExists<ShippingSettings, bool>(settings => settings.AllowCustomerToChooseDeliveryDate, true);
+        this.SetSettingIfNotExists<ShippingSettings, int>(settings => settings.DeliveryDateRangeDays, 7);
     }
 
     public override void Down()

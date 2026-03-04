@@ -8998,6 +8998,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickupInStore">
     <Value>"Pick Up in Store" enabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowCustomerToChooseDeliveryDate">
+    <Value>"Allow customers to choose the desired delivery date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowCustomerToChooseDeliveryDate.Hint">
+    <Value>"Enables customers to select their preferred delivery date during checkout. This option is available only when the selected shipping method has a defined TransitDays value.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickupInStore.Hint">
     <Value>A value indicating whether "Pick Up in Store" option is enabled during checkout. Please ensure that you have at least one active pickup point provider.</Value>
   </LocaleResource>
@@ -9021,6 +9027,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions.Hint">
     <Value>Check to consider associated products dimensions and weight on shipping, uncheck for example, if the main product already includes them.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DeliveryDateRangeDays">
+    <Value>Range of days to choose from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DeliveryDateRangeDays.Hint">
+    <Value>Specifies how many delivery date options will be available to customers, starting from the earliest possible delivery date calculated using TransitDays.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayPickupPointsOnMap">
     <Value>Display pickup points on the map</Value>
@@ -13112,6 +13124,12 @@
   <LocaleResource Name="Admin.Orders.Fields.CustomValues.Hint">
     <Value>Custom values from the payment method.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.DesiredDeliveryDate">
+    <Value>Desired delivery date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.DesiredDeliveryDate.Hint">
+    <Value>The delivery date selected by the customer during checkout.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Edit.ExclTax">
     <Value>excl tax:</Value>
   </LocaleResource>
@@ -17006,6 +17024,9 @@
   <LocaleResource Name="Checkout.SelectBillingAddressOrEnterNewOne">
     <Value>Select a billing address from your address book or enter a new address.</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.SelectDesiredDeliveryDate">
+    <Value>Select desired delivery date</Value>
+  </LocaleResource>
   <LocaleResource Name="Checkout.SelectPaymentMethod">
     <Value>Select payment method</Value>
   </LocaleResource>
@@ -18406,6 +18427,9 @@
   </LocaleResource>
   <LocaleResource Name="Order.Shipping">
     <Value>Shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipping.DesiredDeliveryDate">
+    <Value>Desired delivery date</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Shipping.Name">
     <Value>Shipping Method</Value>

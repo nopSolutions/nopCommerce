@@ -5083,6 +5083,11 @@ label, label + * {
   font-size: 0;
 }
 
+.shipping-method .delivery-date-selector {
+  text-align: center;
+  margin: 0 auto 30px;
+}
+
 .shipping-method .method-list li,
 .payment-method .method-list li {
   margin: 20px 0;
@@ -5098,6 +5103,10 @@ label, label + * {
 
 .shipping-method .method-description {
   margin: 5px 0 0;
+}
+
+.shipping-method  .delivery-date-selector {
+  margin-top: 5px;
 }
 
 .payment-method .use-reward-points {

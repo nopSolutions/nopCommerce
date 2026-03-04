@@ -789,6 +789,16 @@ public partial class OrderProcessingService : IOrderProcessingService
             order.ShippingAddressId = details.ShippingAddress.Id;
         }
 
+        if (_shippingSettings.AllowCustomerToChooseDeliveryDate)
+        {
+            var desiredDate = await _genericAttributeService.GetAttributeAsync<DateTime?>(details.Customer, NopCustomerDefaults.DesiredDeliveryDate, order.StoreId);
+            if (desiredDate.HasValue)
+            {
+                order.DesiredDeliveryDateUtc = desiredDate;
+                await _genericAttributeService.SaveAttributeAsync<DateTime?>(details.Customer, NopCustomerDefaults.DesiredDeliveryDate, null, order.StoreId);
+            }
+        }
+
         await _orderService.InsertOrderAsync(order);
 
         //generate and set custom order number

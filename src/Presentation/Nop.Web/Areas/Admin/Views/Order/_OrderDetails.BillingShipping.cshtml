@@ -631,6 +631,17 @@
                         </div>
                     </div>
                 }
+                @if (!string.IsNullOrEmpty(Model.DesiredDeliveryDate))
+                {
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                            <nop-label asp-for="DesiredDeliveryDate" />
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="form-text-row">@Model.DesiredDeliveryDate</div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
         if (canShipmentsView)

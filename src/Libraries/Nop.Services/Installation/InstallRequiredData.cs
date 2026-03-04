@@ -1818,6 +1818,8 @@ public partial class InstallationService
             HideShippingTotal = false,
             ReturnValidOptionsIfThereAreAny = true,
             BypassShippingMethodSelectionIfOnlyOne = false,
+            AllowCustomerToChooseDeliveryDate = true,
+            DeliveryDateRangeDays = 7,
             UseCubeRootMethod = true,
             ConsiderAssociatedProductsDimensions = true,
             ShipSeparatelyOneItemEach = false,

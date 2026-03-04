@@ -363,6 +363,9 @@ public partial class OrderModelFactory : IOrderModelFactory
 
             model.ShippingMethod = order.ShippingMethod;
 
+            if (order.ShippingStatus == ShippingStatus.NotYetShipped && order.DesiredDeliveryDateUtc.HasValue)
+                model.DesiredDeliveryDate = (await _dateTimeHelper.ConvertToUserTimeAsync(order.DesiredDeliveryDateUtc.Value, DateTimeKind.Utc)).ToString("D");
+
             //shipments (only already shipped or ready for pickup)
             var shipments = (await _shipmentService.GetShipmentsByOrderIdAsync(order.Id, !order.PickupInStore, order.PickupInStore)).OrderBy(x => x.CreatedOnUtc).ToList();
             foreach (var shipment in shipments)

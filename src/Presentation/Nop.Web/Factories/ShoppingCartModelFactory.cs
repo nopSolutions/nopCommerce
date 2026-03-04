@@ -746,6 +746,12 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
                 NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
             if (shippingOption != null)
                 model.ShippingMethod = shippingOption.Name;
+
+            //selected delivery date
+            var desiredDeliveryDate = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer,
+                NopCustomerDefaults.DesiredDeliveryDate, store.Id);
+            if (desiredDeliveryDate.HasValue)
+                model.DesiredDeliveryDate = (await _dateTimeHelper.ConvertToUserTimeAsync(desiredDeliveryDate.Value, DateTimeKind.Utc)).ToString("D");
         }
 
         //payment info

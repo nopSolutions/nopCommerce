@@ -215,6 +215,32 @@ public partial class CheckoutController : BasePublicController
     }
 
     /// <summary>
+    /// Parse the desired delivery date selected by the customer for a specific shipping method
+    /// </summary>    
+    /// <param name="shippingOption">The shipping option selected by the customer</param>
+    /// <param name="shippingOptions">The list of available shipping options for the current shipment</param>
+    /// <param name="form">The form collection containing user-submitted values</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the date time of the desired delivery date if selected; otherwise, null
+    /// </returns>
+    protected virtual Task<DateTime?> ParseSelectedShippingMethodDeliveryDateAsync(ShippingOption shippingOption, List<ShippingOption> shippingOptions, IFormCollection form)
+    {
+        if (_shippingSettings.AllowCustomerToChooseDeliveryDate && shippingOption != null && shippingOptions != null && shippingOptions.Any())
+        {
+            var selectedIndex = shippingOptions.IndexOf(shippingOption);
+            if (selectedIndex >= 0)
+            {
+                var deliveryDateString = form[$"ShippingMethods[{selectedIndex}].DesiredDeliveryDate.SelectedDate"].FirstOrDefault();
+                if (!string.IsNullOrEmpty(deliveryDateString) && DateTime.TryParse(deliveryDateString, out var desiredDeliveryDate))
+                    return Task.FromResult<DateTime?>(desiredDeliveryDate);
+            }
+        }
+
+        return Task.FromResult<DateTime?>(null);
+    }
+
+    /// <summary>
     /// Save customer VAT number
     /// </summary>
     /// <param name="fullVatNumber">The full VAT number</param>
@@ -1011,6 +1037,11 @@ public partial class CheckoutController : BasePublicController
             .Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
         if (shippingOption == null)
             return await ShippingMethod();
+
+        //parse DesiredDeliveryDate
+        var desiredDeliveryDate = await ParseSelectedShippingMethodDeliveryDateAsync(shippingOption, shippingOptions, form);
+        if (desiredDeliveryDate != null)
+            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DesiredDeliveryDate, desiredDeliveryDate, store.Id);
 
         //save
         await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, shippingOption, store.Id);
@@ -1826,6 +1857,11 @@ public partial class CheckoutController : BasePublicController
 
             var shippingOption = shippingOptions.Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase))
                                  ?? throw new Exception("Selected shipping method can't be loaded");
+
+            //parse DesiredDeliveryDate
+            var desiredDeliveryDate = await ParseSelectedShippingMethodDeliveryDateAsync(shippingOption, shippingOptions, form);
+            if (desiredDeliveryDate != null)
+                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DesiredDeliveryDate, desiredDeliveryDate, store.Id);
 
             //save
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, shippingOption, store.Id);

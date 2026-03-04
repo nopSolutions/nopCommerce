@@ -453,6 +453,15 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Catalog.ShowCategoryProductNumberIncludingSubcategories"] = "Include subcategories (number of products)",
             ["Admin.Configuration.Settings.Catalog.ShowCategoryProductNumberIncludingSubcategories.Hint"] = "Check to include subcategories when showing the number of products next to each category.",
 
+            //#7386
+            ["Admin.Configuration.Settings.Shipping.AllowCustomerToChooseDeliveryDate"] = "Allow customers to choose delivery date",
+            ["Admin.Configuration.Settings.Shipping.AllowCustomerToChooseDeliveryDate.Hint"] = "Enables customers to select their preferred delivery date during checkout. This option is available only when the selected shipping method has a defined TransitDays value.",
+            ["Admin.Configuration.Settings.Shipping.DeliveryDateRangeDays"] = "Range of days to choose from",
+            ["Admin.Configuration.Settings.Shipping.DeliveryDateRangeDays.Hint"] = "Specifies how many delivery date options will be available to customers, starting from the earliest possible delivery date calculated using TransitDays.",
+            ["Checkout.SelectDesiredDeliveryDate"] = "Select desired delivery date",
+            ["Admin.Orders.Fields.DesiredDeliveryDate"] = "Desired delivery date",
+            ["Admin.Orders.Fields.DesiredDeliveryDate.Hint"] = "The delivery date selected by the customer during checkout.",
+            ["Order.Shipping.DesiredDeliveryDate"] = "Desired delivery date",
         });
 
         #endregion
