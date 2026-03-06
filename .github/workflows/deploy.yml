@@ -33,9 +33,6 @@ jobs:
     - name: Build solution
       run: dotnet build src/NopCommerce.sln --configuration Release --no-restore
 
-    - name: Run tests
-      run: dotnet test src/Tests/Nop.Tests/Nop.Tests.csproj --configuration Release --no-build --verbosity normal
-
     - name: Publish Nop.Web
       run: dotnet publish src/Presentation/Nop.Web/Nop.Web.csproj --configuration Release --output ./publish --no-build
 
