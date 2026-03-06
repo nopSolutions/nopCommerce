@@ -1,0 +1,54 @@
+name: Deploy to SmarterASP.NET
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Restore dependencies
+      run: dotnet restore src/NopCommerce.sln
+
+    - name: Build solution
+      run: dotnet build src/NopCommerce.sln --configuration Release --no-restore
+
+    - name: Run tests
+      run: dotnet test src/Tests/Nop.Tests/Nop.Tests.csproj --configuration Release --no-build --verbosity normal
+
+    - name: Publish Nop.Web
+      run: dotnet publish src/Presentation/Nop.Web/Nop.Web.csproj --configuration Release --output ./publish --no-build
+
+    - name: Create app_offline.htm
+      run: echo '<html><body>Site is being updated...</body></html>' > ./publish/app_offline.htm
+
+    - name: Remove app_offline.htm
+      run: |
+        curl -u ${{ secrets.SMARTERASP_FTP_USERNAME }}:${{ secrets.SMARTERASP_FTP_PASSWORD }} ftp://${{ secrets.SMARTERASP_FTP_HOST }}/ -Q "DELE app_offline.htm"
+
+    - name: Health check
+      run: |
+        # Wait a moment for the application to start
+        sleep 30
+        # Check if the site is responding (replace with your actual domain)
+        curl -f --max-time 30 https://yourdomain.com || echo "Health check failed - site may not be responding"
