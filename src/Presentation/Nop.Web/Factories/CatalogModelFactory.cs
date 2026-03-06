@@ -1780,23 +1780,14 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                 //search term statistics
                 if (!string.IsNullOrEmpty(searchTerms))
                 {
-                    var searchTerm =
-                        await _searchTermService.GetSearchTermByKeywordAsync(searchTerms, currentStore.Id);
-                    if (searchTerm != null)
+                    var customer = await _workContext.GetCurrentCustomerAsync();
+                    await _searchTermService.InsertSearchTermAsync(new SearchTerm
                     {
-                        searchTerm.Count++;
-                        await _searchTermService.UpdateSearchTermAsync(searchTerm);
-                    }
-                    else
-                    {
-                        searchTerm = new SearchTerm
-                        {
-                            Keyword = searchTerms,
-                            StoreId = currentStore.Id,
-                            Count = 1
-                        };
-                        await _searchTermService.InsertSearchTermAsync(searchTerm);
-                    }
+                        Keyword = searchTerms,
+                        StoreId = currentStore.Id,
+                        CustomerId = customer.Id,
+                        CreatedOnUtc = DateTime.UtcNow
+                    });
                 }
 
                 //event
@@ -1898,6 +1889,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             SearchTermMinimumLength = _catalogSettings.ProductSearchTermMinimumLength,
             ShowSearchBox = _catalogSettings.ProductSearchEnabled,
             ShowSearchBoxCategories = _catalogSettings.ShowSearchBoxCategories,
+            SearchHistoryEnabled = _catalogSettings.ShowSearchTermHistory
         };
 
         if (_catalogSettings.ShowSearchBoxCategories)

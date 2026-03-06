@@ -1034,6 +1034,19 @@ label, label + * {
   background: #fff url('../images/ajax-loader-small.gif') left center no-repeat;
 }
 
+.search-box-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.search-box-item .search-box-remove {
+  padding: 15px;
+}
+
+.search-box-item .search-box-link {
+  flex-grow: 1;
+}
+
 .ui-helper-hidden-accessible {
   display: none !important;
 }

@@ -6504,6 +6504,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NumberOfProductTags.Hint">
     <Value>The number of product tags that appear in the tag cloud.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NumberOfSearchTermHistoryItems">
+    <Value>Max number of term history items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NumberOfSearchTermHistoryItems.Hint">
+    <Value>The maximum number of search term history items to display.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer">
     <Value>One review per product from customer</Value>
   </LocaleResource>
@@ -6767,6 +6773,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSearchBoxCategories.Hint">
     <Value>Check to display the category drop-down list next to the search box.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSearchTermHistory">
+    <Value>Show the term history</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSearchTermHistory.Hint">
+    <Value>Show the search term history in the autocomplete list of the search box.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton">
     <Value>Show a share button</Value>
@@ -15664,6 +15676,24 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Restore">
     <Value>Restore</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ClearSearchHistory">
+    <Value>Clear search history</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ClearSearchHistory.Button">
+    <Value>Clear</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ClearSearchHistory.Complete">
+    <Value>Clearing search history data completed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ClearSearchHistory.Progress">
+    <Value>Clearing...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ClearSearchHistory.Text">
+    <Value>Delete search history data from the database.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ClearSearchHistory.TotalDeleted">
+    <Value>{0} items were deleted</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.DeleteAbandonedCarts">
     <Value>Deleting abandoned shopping carts</Value>

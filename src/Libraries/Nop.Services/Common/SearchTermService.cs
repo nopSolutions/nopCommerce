@@ -27,26 +27,55 @@ public partial class SearchTermService : ISearchTermService
     #region Methods
 
     /// <summary>
-    /// Gets a search term record by keyword
+    /// Deletes a search term records by keyword
     /// </summary>
     /// <param name="keyword">Search term keyword</param>
+    /// <param name="customerId">Customer identifier</param>
     /// <param name="storeId">Store identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the search term
     /// </returns>
-    public virtual async Task<SearchTerm> GetSearchTermByKeywordAsync(string keyword, int storeId)
+    public virtual async Task DeleteSearchTermsByAsyncKeyword(string keyword, int customerId, int storeId)
     {
         if (string.IsNullOrEmpty(keyword))
-            return null;
+            return;
 
-        var query = from st in _searchTermRepository.Table
-            where st.Keyword == keyword && st.StoreId == storeId
-            orderby st.Id
-            select st;
-        var searchTerm = await query.FirstOrDefaultAsync();
+        await _searchTermRepository.DeleteAsync(t => t.CustomerId == customerId && t.StoreId == storeId && t.Keyword == keyword);
+    }
 
-        return searchTerm;
+    /// <summary>
+    /// Gets a search term record by keyword
+    /// </summary>
+    /// <param name="keyword">Search term keyword</param>
+    /// <param name="customerId">Customer identifier; pass 0 to load all records</param>
+    /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+    /// <param name="pageIndex">Page index</param>
+    /// <param name="pageSize">Page size</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the search terms
+    /// </returns>
+    public virtual async Task<IPagedList<SearchTerm>> GetSearchTermsAsync(string keyword, int customerId = 0, int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
+    {
+        var searchTerms = _searchTermRepository.Table;
+
+        if (storeId > 0)
+            searchTerms = searchTerms.Where(st => st.StoreId == storeId);
+
+        if (customerId > 0)
+            searchTerms = searchTerms.Where(st => st.CustomerId == customerId);
+
+        if (!string.IsNullOrEmpty(keyword))
+            searchTerms = searchTerms.Where(st => st.Keyword == keyword);
+
+        var query = from t in searchTerms
+                    group t by t.Keyword into groupedResult
+                    select new { Id = groupedResult.Max(x => x.Id) };
+
+        return await (from t in searchTerms
+                      join ut in query on t.Id equals ut.Id
+                      orderby t.CreatedOnUtc descending
+                      select t).ToPagedListAsync(pageIndex, pageSize);
     }
 
     /// <summary>
@@ -61,12 +90,12 @@ public partial class SearchTermService : ISearchTermService
     public virtual async Task<IPagedList<SearchTermReportLine>> GetStatsAsync(int pageIndex = 0, int pageSize = int.MaxValue)
     {
         var query = (from st in _searchTermRepository.Table
-                group st by st.Keyword into groupedResult
-                select new
-                {
-                    Keyword = groupedResult.Key,
-                    Count = groupedResult.Sum(o => o.Count)
-                })
+                     group st by st.Keyword into groupedResult
+                     select new
+                     {
+                         Keyword = groupedResult.Key,
+                         Count = groupedResult.Count()
+                     })
             .OrderByDescending(m => m.Count)
             .Select(r => new SearchTermReportLine
             {

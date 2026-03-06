@@ -16,7 +16,12 @@ public partial class SearchTerm : BaseEntity
     public int StoreId { get; set; }
 
     /// <summary>
-    /// Gets or sets search count
+    /// Gets or sets the customer identifier
     /// </summary>
-    public int Count { get; set; }
+    public int CustomerId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the date and time of instance creation
+    /// </summary>
+    public DateTime CreatedOnUtc { get; set; }
 }

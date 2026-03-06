@@ -1256,6 +1256,8 @@ public partial class SettingModelFactory : ISettingModelFactory
             model.AllowCustomersToSearchWithCategoryName_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.AllowCustomersToSearchWithCategoryName, storeId);
             model.DisplayAllPicturesOnCatalogPages_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.DisplayAllPicturesOnCatalogPages, storeId);
             model.ProductUrlStructureTypeId_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductUrlStructureTypeId, storeId);
+            model.ShowSearchTermHistory_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ShowSearchTermHistory, storeId);
+            model.NumberOfSearchTermHistoryItems_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.NumberOfSearchTermHistoryItems, storeId);
         }
 
         //prepare nested search model

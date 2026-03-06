@@ -44,6 +44,7 @@ public partial class CatalogController : BasePublicController
     protected readonly IProductModelFactory _productModelFactory;
     protected readonly IProductService _productService;
     protected readonly IProductTagService _productTagService;
+    protected readonly ISearchTermService _searchTermService;
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly IVendorService _vendorService;
@@ -72,6 +73,7 @@ public partial class CatalogController : BasePublicController
         IProductModelFactory productModelFactory,
         IProductService productService,
         IProductTagService productTagService,
+        ISearchTermService searchTermService,
         IStoreContext storeContext,
         IStoreMappingService storeMappingService,
         IVendorService vendorService,
@@ -96,6 +98,7 @@ public partial class CatalogController : BasePublicController
         _productModelFactory = productModelFactory;
         _productService = productService;
         _productTagService = productTagService;
+        _searchTermService = searchTermService;
         _storeContext = storeContext;
         _storeMappingService = storeMappingService;
         _vendorService = vendorService;
@@ -117,7 +120,7 @@ public partial class CatalogController : BasePublicController
 
         if (!await CheckCategoryAvailabilityAsync(category))
             return InvokeHttp404();
-        
+
         //display "edit" (manage) link
         if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Catalog.CATEGORIES_VIEW))
             DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = AreaNames.ADMIN }));
@@ -207,7 +210,7 @@ public partial class CatalogController : BasePublicController
 
         if (!await CheckVendorAvailabilityAsync(vendor))
             return InvokeHttp404();
-        
+
         //display "edit" (manage) link
         if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Customers.VENDORS_VIEW))
             DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = AreaNames.ADMIN }));
@@ -406,6 +409,36 @@ public partial class CatalogController : BasePublicController
         return Json(result);
     }
 
+    [CheckLanguageSeoCode(ignore: true)]
+    public virtual async Task<IActionResult> SearchTermHistoryAutoComplete()
+    {
+        if (!_catalogSettings.ShowSearchTermHistory)
+            return Content("");
+
+        //products
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+
+        var terms = await _searchTermService.GetSearchTermsAsync(string.Empty, currentCustomer.Id, store.Id);
+
+        return Json(terms.Select(t => new { label = t.Keyword, IsKeyword = true }));
+    }
+
+    [HttpPost]
+    public virtual async Task<IActionResult> DeleteProductSearchTermItems(string term)
+    {
+        if (!_catalogSettings.ShowSearchTermHistory || string.IsNullOrEmpty(term))
+            return Content("");
+
+        //products
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+
+        await _searchTermService.DeleteSearchTermsByAsyncKeyword(term, currentCustomer.Id, store.Id);
+
+        return Json(new { Result = true });
+    }
+
     [HttpPost]
     public virtual async Task<IActionResult> SearchProducts(SearchModel searchModel, CatalogProductsCommand command)
     {
@@ -435,10 +468,10 @@ public partial class CatalogController : BasePublicController
         if (string.IsNullOrEmpty(filterLevel1Value))
         {
             var result = values
-                .Select(f => new 
-                { 
-                    filterLevel1Value = f.FilterLevel1Value, 
-                    defaultItemText = defaultItemText 
+                .Select(f => new
+                {
+                    filterLevel1Value = f.FilterLevel1Value,
+                    defaultItemText = defaultItemText
                 })
                 .Distinct();
             return Json(result);
@@ -495,7 +528,7 @@ public partial class CatalogController : BasePublicController
     {
         if (!_filterLevelSettings.FilterLevelEnabled)
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
-        
+
         if (model == null)
             model = new SearchFilterLevelValueModel();
 

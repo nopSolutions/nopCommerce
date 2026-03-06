@@ -453,6 +453,17 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Catalog.ShowCategoryProductNumberIncludingSubcategories"] = "Include subcategories (number of products)",
             ["Admin.Configuration.Settings.Catalog.ShowCategoryProductNumberIncludingSubcategories.Hint"] = "Check to include subcategories when showing the number of products next to each category.",
 
+            //#8069
+            ["Admin.Configuration.Settings.Catalog.ShowSearchTermHistory"] = "Show the term history",
+            ["Admin.Configuration.Settings.Catalog.ShowSearchTermHistory.Hint"] = "Show the search term history in the autocomplete list of the search box.",
+            ["Admin.Configuration.Settings.Catalog.NumberOfSearchTermHistoryItems"] = "Max number of term history items",
+            ["Admin.Configuration.Settings.Catalog.NumberOfSearchTermHistoryItems.Hint"] = "The maximum number of search term history items to display.",
+            ["Admin.System.Maintenance.ClearSearchHistory"] = "Clear search history",
+            ["Admin.System.Maintenance.ClearSearchHistory.Button"] = "Clear",
+            ["Admin.System.Maintenance.ClearSearchHistory.Progress"] = "Clearing...",
+            ["Admin.System.Maintenance.ClearSearchHistory.Text"] = "Delete search history data from the database.",
+            ["Admin.System.Maintenance.ClearSearchHistory.Complete"] = "Clearing search history data completed",
+            ["Admin.System.Maintenance.ClearSearchHistory.TotalDeleted"] = "{0} items were deleted",
         });
 
         #endregion

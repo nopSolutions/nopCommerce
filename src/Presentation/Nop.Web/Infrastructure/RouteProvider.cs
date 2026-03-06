@@ -127,6 +127,14 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"catalog/searchtermautocomplete",
             defaults: new { controller = "Catalog", action = "SearchTermAutoComplete" });
 
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.PRODUCT_SEARCH_HISTORY_AUTOCOMPLETE,
+            pattern: $"catalog/searchtermhistoryautocomplete",
+            defaults: new { controller = "Catalog", action = "SearchTermHistoryAutoComplete" });
+
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.DELETE_PRODUCT_SEARCH_TERMS,
+            pattern: $"catalog/deleteproductsearchterms",
+            defaults: new { controller = "Catalog", action = "DeleteProductSearchTermItems" });
+
         //change currency
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CHANGE_CURRENCY,
             pattern: $"{lang}/changecurrency/{{customercurrency:min(0)}}",

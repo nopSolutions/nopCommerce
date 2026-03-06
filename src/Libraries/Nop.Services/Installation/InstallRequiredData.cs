@@ -1469,7 +1469,9 @@ public partial class InstallationService
             DisplayAllPicturesOnCatalogPages = false,
             ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product,
             ActiveSearchProviderSystemName = string.Empty,
-            UseStandardSearchWhenSearchProviderThrowsException = true
+            UseStandardSearchWhenSearchProviderThrowsException = true,
+            ShowSearchTermHistory = true,
+            NumberOfSearchTermHistoryItems = 10
         });
 
         await SaveSettingAsync(dictionary, new ArtificialIntelligenceSettings

@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.ArtificialIntelligence;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -37,6 +38,10 @@ public class SettingMigration : MigrationBase
 
         this.SetSettingIfNotExists<PrivateMessageSettings, int>(settings => settings.PrivateMessagesPageSize,
             this.GetSettingByKey($"ForumSettings.{nameof(PrivateMessageSettings.PrivateMessagesPageSize)}", 10));
+
+        //#8069
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.ShowSearchTermHistory, true);
+        this.SetSettingIfNotExists<CatalogSettings, int>(settings => settings.NumberOfSearchTermHistoryItems, 10);
     }
 
     public override void Down()

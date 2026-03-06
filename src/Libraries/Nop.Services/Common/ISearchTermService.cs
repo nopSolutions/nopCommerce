@@ -9,15 +9,29 @@ namespace Nop.Services.Common;
 public partial interface ISearchTermService
 {
     /// <summary>
-    /// Gets a search term record by keyword
+    /// Deletes a search term records by keyword
     /// </summary>
     /// <param name="keyword">Search term keyword</param>
+    /// <param name="customerId">Customer identifier</param>
     /// <param name="storeId">Store identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the search term
     /// </returns>
-    Task<SearchTerm> GetSearchTermByKeywordAsync(string keyword, int storeId);
+    Task DeleteSearchTermsByAsyncKeyword(string keyword, int customerId, int storeId);
+
+    /// <summary>
+    /// Gets a search term record by keyword
+    /// </summary>
+    /// <param name="keyword">Search term keyword</param>
+    /// <param name="customerId">Customer identifier; pass 0 to load all records</param>
+    /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+    /// <param name="pageIndex">Page index</param>
+    /// <param name="pageSize">Page size</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the search terms
+    /// </returns>
+    Task<IPagedList<SearchTerm>> GetSearchTermsAsync(string keyword, int customerId = 0, int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
 
     /// <summary>
     /// Gets a search term statistics

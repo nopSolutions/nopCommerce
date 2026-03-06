@@ -623,6 +623,16 @@ public static partial class NopRouteNames
         public const string PRODUCT_SEARCH_AUTOCOMPLETE = "ProductSearchAutoComplete";
 
         /// <summary>
+        /// Gets the product search history route name
+        /// </summary>
+        public const string PRODUCT_SEARCH_HISTORY_AUTOCOMPLETE = "ProductSearchHistoryAutoComplete";
+
+        /// <summary>
+        /// Gets the delete product search terms route name
+        /// </summary>
+        public const string DELETE_PRODUCT_SEARCH_TERMS = "DeleteProductSearchTerms";
+
+        /// <summary>
         /// Gets the set review helpfulness route name
         /// </summary>
         public const string SET_PRODUCT_REVIEW_HELPFULNESS = "SetProductReviewHelpfulness";

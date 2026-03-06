@@ -3144,29 +3144,11 @@
     }
   ],
   "SearchTerms": [
-    {
-      "Count": 34,
-      "Keyword": "computer"
-    },
-    {
-      "Count": 30,
-      "Keyword": "camera"
-    },
-    {
-      "Count": 27,
-      "Keyword": "jewelry"
-    },
-    {
-      "Count": 26,
-      "Keyword": "shoes"
-    },
-    {
-      "Count": 19,
-      "Keyword": "jeans"
-    },
-    {
-      "Count": 10,
-      "Keyword": "gift"
-    }
+    "computer",
+    "camera",
+    "jewelry",
+    "shoes",
+    "jeans",
+    "gift"
   ]
 }

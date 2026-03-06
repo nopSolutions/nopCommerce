@@ -1796,15 +1796,17 @@ public partial class InstallationService
     /// </summary>
     /// <param name="sampleSearchTerms">Sample search terms to install</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task InstallSearchTermsAsync(IList<SampleSearchTerm> sampleSearchTerms)
+    protected virtual async Task InstallSearchTermsAsync(IList<string> sampleSearchTerms)
     {
         var storeId = await GetDefaultStoreIdAsync();
+        var customerId = await GetDefaultCustomerIdAsync();
 
-        await _dataProvider.BulkInsertEntitiesAsync(sampleSearchTerms.Select(sst => new SearchTerm
+        await _dataProvider.BulkInsertEntitiesAsync(sampleSearchTerms.Select(keyword => new SearchTerm
         {
-            Count = sst.Count,
-            Keyword = sst.Keyword,
-            StoreId = storeId
+            Keyword = keyword,
+            CreatedOnUtc = DateTime.UtcNow,
+            StoreId = storeId,
+            CustomerId = customerId
         }));
     }
 

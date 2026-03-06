@@ -68,9 +68,26 @@
 
                     $('#@searchBoxId').autocomplete({
                         delay: 500,
-                        minLength: @Model.SearchTermMinimumLength,
+                        minLength: 0,
                         source: function (request, response) {
                             var term = request.term && request.term.trim().toLowerCase();
+                            @if(Model.SearchHistoryEnabled)
+                            {
+                            <text>
+                            if (term.length == 0) {
+                                $.getJSON('@(Url.RouteUrl(NopRouteNames.Ajax.PRODUCT_SEARCH_HISTORY_AUTOCOMPLETE))', function (data, status, xhr) {
+                                  response(data);
+                                });
+                                return;
+                            }
+                            </text>
+                            }
+
+                            if (term.length < @Model.SearchTermMinimumLength) {
+                                response();
+                                return;
+                            }
+
                             var categoryElement = $('#@Html.IdFor(m => m.SearchCategoryId)');
                             var categoryId = categoryElement.length == 0 ? 0 : categoryElement.val()
 
@@ -111,11 +128,39 @@
                         //html encode
                         t = htmlEncode(t);
                         imageWidth = '@(Model.AutoCompleteSearchThumbPictureSize)';
-                        return $("<li></li>")
-                            .data("item.autocomplete", item)
-                                .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"' width='\" + imageWidth + \"'>") : null)<span>" + t + "</span></a>")
-                            .appendTo(ul);
+
+                        var li = $("<li class='search-box-item'></li>");
+
+                        li.data("item.autocomplete", item);
+
+                        var link = $("<a class='search-box-link'>@(Model.ShowProductImagesInSearchAutoComplete? Html.Raw("<img src='\" + item.productpictureurl + \"' width='\" + imageWidth + \"'>") : null)<span>" + t + "</span></a>");
+
+                        if (item.IsKeyword)
+                            link.prop("href", "@Url.RouteUrl(NopRouteNames.General.SEARCH)?q=" + t)
+                        
+                        li.append(link);
+                        
+                        if (item.IsKeyword) {
+                            var removeBtn = $("<span class='search-box-remove'>x</span>");
+                            removeBtn.on("click", function(e) {
+                                e.preventDefault();
+
+                                var postData = { term: t };
+                                addAntiForgeryToken(postData);
+
+                                $.post("@Url.RouteUrl(NopRouteNames.Ajax.DELETE_PRODUCT_SEARCH_TERMS)", postData, function() {
+                                    $('#@searchBoxId').autocomplete("search", "");
+                                });
+
+                                return false;
+                            });
+
+                            li.append(removeBtn);
+                        }
+
+                        return li.appendTo(ul);
                     };
+
                 });
             </script>
         }

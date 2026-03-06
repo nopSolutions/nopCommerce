@@ -240,6 +240,16 @@ public partial class CatalogSettings : ISettings
     public int ProductSearchTermMinimumLength { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether to display the search term history in the autocomplete list of the search box
+    /// </summary>
+    public bool ShowSearchTermHistory { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum number of search term history items to display
+    /// </summary>
+    public int NumberOfSearchTermHistoryItems { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether to show bestsellers on home page
     /// </summary>
     public bool ShowBestsellersOnHomepage { get; set; }

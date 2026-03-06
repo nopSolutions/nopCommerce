@@ -459,10 +459,14 @@ public abstract partial class BaseDataProvider
     /// </summary>
     /// <param name="resetIdentity">Performs reset identity column</param>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public virtual async Task TruncateAsync<TEntity>(bool resetIdentity = false) where TEntity : BaseEntity
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the number of records, affected by command execution.
+    /// </returns>
+    public virtual async Task<int> TruncateAsync<TEntity>(bool resetIdentity = false) where TEntity : BaseEntity
     {
         using var dataContext = CreateDataConnection(LinqToDbDataProvider);
-        await dataContext.GetTable<TEntity>().TruncateAsync(resetIdentity);
+        return await dataContext.GetTable<TEntity>().TruncateAsync(resetIdentity);
     }
 
     #endregion

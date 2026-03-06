@@ -35,6 +35,9 @@
 
     const string hideDeleteThumbFilesBlockAttributeName = "MaintenancePage.HideDeleteThumbFilesBlock";
     var hideDeleteThumbFilesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDeleteThumbFilesBlockAttributeName);
+
+    const string hideClearSearchHistoryAttributeName = "MaintenancePage.HideClearSearchHistoryBlock";
+    var hideClearSearchHistoryBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideClearSearchHistoryAttributeName);
 }
 
 <div class="content-header clearfix">
@@ -76,6 +79,7 @@
                     </div>
                     <div class="row">
                         <nop-card class="col-md-6 col-xs-12 margin-t-5" asp-name="delete-thumb-files" asp-icon="fas fa-trash-alt" asp-title="@T("Admin.System.Maintenance.DeleteThumbFiles")" asp-hide-block-attribute-name="@hideDeleteThumbFilesBlockAttributeName" asp-hide="@hideDeleteThumbFilesBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.DeleteThumbFiles", Model)</nop-card>
+                        <nop-card class="col-md-6 col-xs-12 margin-t-5" asp-name="delete-thumb-files" asp-icon="fas fa-trash-alt" asp-title="@T("Admin.System.Maintenance.ClearSearchHistory")" asp-hide-block-attribute-name="@hideClearSearchHistoryAttributeName" asp-hide="@hideClearSearchHistoryBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.ClearSearchHistory", Model)</nop-card>
                     </div>
                     @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MaintenanceDetailsBlock, additionalData = Model })
                 </nop-cards>

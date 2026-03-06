@@ -64,6 +64,29 @@
                 <span asp-validation-for="ShowProductImagesInSearchAutoComplete"></span>
             </div>
         </div>
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ShowSearchTermHistory_OverrideForStore" asp-input="ShowSearchTermHistory" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ShowSearchTermHistory" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ShowSearchTermHistory" />
+                <span asp-validation-for="ShowSearchTermHistory"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="ShowSearchTermHistory">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="NumberOfSearchTermHistoryItems_OverrideForStore" asp-input="NumberOfSearchTermHistoryItems" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="NumberOfSearchTermHistoryItems" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="NumberOfSearchTermHistoryItems" />
+                    <span asp-validation-for="NumberOfSearchTermHistoryItems"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
     </nop-nested-setting>
     <div class="form-group row advanced-setting">
         <div class="col-md-3">
