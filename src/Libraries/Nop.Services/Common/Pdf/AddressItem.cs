@@ -6,7 +6,7 @@ namespace Nop.Services.Common.Pdf;
 /// <summary>
 /// Represents the address
 /// </summary>
-public partial record AddressItem
+public partial class AddressItem
 {
     #region Properties
 

@@ -8,9 +8,7 @@ using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
-using Nop.Services.Forums;
 using Nop.Services.Messages;
-using Nop.Services.News;
 using Nop.Services.Orders;
 
 namespace Nop.Services.Gdpr;
@@ -28,10 +26,8 @@ public partial class GdprService : IGdprService
     protected readonly ICustomerService _customerService;
     protected readonly IExternalAuthenticationService _externalAuthenticationService;
     protected readonly IEventPublisher _eventPublisher;
-    protected readonly IForumService _forumService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-    protected readonly INewsService _newsService;
     protected readonly IProductReviewService _productReviewService;
     protected readonly IProductService _productService;
     protected readonly IRepository<GdprConsent> _gdprConsentRepository;
@@ -48,9 +44,7 @@ public partial class GdprService : IGdprService
         ICustomerService customerService,
         IExternalAuthenticationService externalAuthenticationService,
         IEventPublisher eventPublisher,
-        IForumService forumService,
         IGenericAttributeService genericAttributeService,
-        INewsService newsService,
         INewsLetterSubscriptionService newsLetterSubscriptionService,
         IProductReviewService productReviewService,
         IProductService productService,
@@ -64,9 +58,7 @@ public partial class GdprService : IGdprService
         _customerService = customerService;
         _externalAuthenticationService = externalAuthenticationService;
         _eventPublisher = eventPublisher;
-        _forumService = forumService;
         _genericAttributeService = genericAttributeService;
-        _newsService = newsService;
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
         _productReviewService = productReviewService;
         _productService = productService;
@@ -267,10 +259,6 @@ public partial class GdprService : IGdprService
         var blogComments = await _blogService.GetAllCommentsAsync(customerId: customer.Id);
         await _blogService.DeleteBlogCommentsAsync(blogComments);
 
-        //news comments
-        var newsComments = await _newsService.GetAllCommentsAsync(customerId: customer.Id);
-        await _newsService.DeleteNewsCommentsAsync(newsComments);
-
         //back in stock subscriptions
         var backInStockSubscriptions = await _backInStockSubscriptionService.GetAllSubscriptionsByCustomerIdAsync(customer.Id);
         foreach (var backInStockSubscription in backInStockSubscriptions)
@@ -288,22 +276,17 @@ public partial class GdprService : IGdprService
         foreach (var ear in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
             await _externalAuthenticationService.DeleteExternalAuthenticationRecordAsync(ear);
 
-        //forum subscriptions
-        var forumSubscriptions = await _forumService.GetAllSubscriptionsAsync(customer.Id);
-        foreach (var forumSubscription in forumSubscriptions)
-            await _forumService.DeleteSubscriptionAsync(forumSubscription);
-
         //shopping cart items
         foreach (var sci in await _shoppingCartService.GetShoppingCartAsync(customer))
             await _shoppingCartService.DeleteShoppingCartItemAsync(sci);
 
         //private messages (sent)
-        foreach (var pm in await _forumService.GetAllPrivateMessagesAsync(0, customer.Id, 0, null, null, null, null))
-            await _forumService.DeletePrivateMessageAsync(pm);
+        foreach (var pm in await _customerService.GetAllPrivateMessagesAsync(0, customer.Id, 0, null, null, null, null))
+            await _customerService.DeletePrivateMessageAsync(pm);
 
         //private messages (received)
-        foreach (var pm in await _forumService.GetAllPrivateMessagesAsync(0, 0, customer.Id, null, null, null, null))
-            await _forumService.DeletePrivateMessageAsync(pm);
+        foreach (var pm in await _customerService.GetAllPrivateMessagesAsync(0, 0, customer.Id, null, null, null, null))
+            await _customerService.DeletePrivateMessageAsync(pm);
 
         //newsletter
         var newsletters = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(customer.Email);
@@ -325,9 +308,7 @@ public partial class GdprService : IGdprService
         await _genericAttributeService.DeleteAttributesAsync(genericAttributes);
 
         //ignore ActivityLog
-        //ignore ForumPost, ForumTopic, ignore ForumPostVote
         //ignore Log
-        //ignore PollVotingRecord
         //ignore ProductReviewHelpfulness
         //ignore RecurringPayment 
         //ignore ReturnRequest

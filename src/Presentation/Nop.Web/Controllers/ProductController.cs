@@ -126,7 +126,7 @@ public partial class ProductController : BasePublicController
     
     #region Product details page
 
-    public virtual async Task<IActionResult> ProductDetails(int productId, int updatecartitemid = 0)
+    public virtual async Task<IActionResult> ProductDetails(int productId, int updatecartitemid = 0, int? customwishlistid = null)
     {
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null || product.Deleted)
@@ -165,7 +165,7 @@ public partial class ProductController : BasePublicController
         {
             var productUrl = await _nopUrlHelper.RouteGenericUrlAsync(product);
             var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), storeId: store.Id);
+            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), storeId: store.Id, customWishlistId: customwishlistid);
             updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
 
             //not found?
@@ -187,9 +187,7 @@ public partial class ProductController : BasePublicController
             //a vendor should have access only to his products
             var currentVendor = await _workContext.GetCurrentVendorAsync();
             if (currentVendor == null || currentVendor.Id == product.VendorId)
-            {
                 DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = AreaNames.ADMIN }));
-            }
         }
 
         //activity log
@@ -222,11 +220,13 @@ public partial class ProductController : BasePublicController
             errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.Country.Required"));
 
         if (errors.Count > 0)
+        {
             return Json(new
             {
                 Success = false,
                 Errors = errors
             });
+        }
 
         var product = await _productService.GetProductByIdAsync(model.ProductId);
         if (product == null || product.Deleted)
@@ -427,9 +427,7 @@ public partial class ProductController : BasePublicController
             return Challenge();
 
         if (!_catalogSettings.ShowProductReviewsTabOnAccountPage)
-        {
             return RedirectToRoute(NopRouteNames.General.CUSTOMER_INFO);
-        }
 
         var model = await _productModelFactory.PrepareCustomerProductReviewsModelAsync(pageNumber);
 
@@ -462,16 +460,12 @@ public partial class ProductController : BasePublicController
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage && !captchaValid)
-        {
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         //check whether the current customer is guest and ia allowed to email a friend
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToEmailAFriend)
-        {
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Products.EmailAFriend.OnlyRegisteredUsers"));
-        }
 
         if (ModelState.IsValid)
         {
@@ -502,18 +496,22 @@ public partial class ProductController : BasePublicController
     {
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null || product.Deleted || !product.Published)
+        {
             return Json(new
             {
                 success = false,
                 message = "No product found with the specified ID"
             });
+        }
 
         if (!_catalogSettings.CompareProductsEnabled)
+        {
             return Json(new
             {
                 success = false,
                 message = "Product comparison is disabled"
             });
+        }
 
         await _compareProductsService.AddProductToCompareListAsync(productId);
 
@@ -565,9 +563,7 @@ public partial class ProductController : BasePublicController
         var poModels = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, prepareSpecificationAttributes: true))
             .ToList();
         foreach (var poModel in poModels)
-        {
             model.Products.Add(poModel);
-        }
 
         return View(model);
     }

@@ -4,6 +4,7 @@
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Media
 @using Nop.Core.Domain.Tax
+@using Nop.Services.Helpers
 
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
@@ -57,6 +58,7 @@
                 @foreach (var customWishlist in Model.CustomWishlistItems)
                 {
                     <button type="button" class="button-2 custom-wishlist-button" onclick="setLocation('@(Url.RouteUrl(NopRouteNames.General.WISHLIST, new { list = customWishlist.Id }))')">@customWishlist.Name</button>
+                    @await Html.PartialAsync("_RenameWishlistModal", (customWishlist.Id, customWishlist.Name))
                 }
             </div>
 
@@ -192,6 +194,7 @@
                                             {
                                                 var editCartItemUrl = await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
                                                 editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid", item.Id.ToString());
+                                                editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "customwishlistid", Model.ListId?.ToString() ?? "null");
                                                 <div class="edit-item">
                                                     <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                                 </div>
@@ -306,6 +309,9 @@
                             <button type="button" name="deletewishlistbutton" class="button-2 delete-wishlist-button" onclick="deleteCustomWishlist()">
                                 @T("Wishlist.DeleteWishlist")
                             </button>
+                            <button type="button" name="renamewishlistbutton" class="button-2 rename-wishlist-button" onclick="showRenameWishlistModal(@Model.ListId)">
+                                @T("Wishlist.RenameCustomWishlist")
+                            </button>
                         }
                     </div>
                     <input type="hidden" name="listId" value="@Model.ListId"/>
@@ -322,6 +328,7 @@
                 <div class="wishlist-content">
                     <div class="buttons">
                         <button type="button" name="deletewishlistbutton" class="button-2 delete-wishlist-button" onclick="deleteCustomWishlist()">@T("Wishlist.DeleteWishlist")</button>
+                        <button type="button" name="renamewishlistbutton" class="button-2 rename-wishlist-button" onclick="showRenameWishlistModal(@Model.ListId)">@T("Wishlist.RenameCustomWishlist")</button>
                     </div>
                 </div>
             }

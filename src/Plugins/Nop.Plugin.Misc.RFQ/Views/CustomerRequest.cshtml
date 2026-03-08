@@ -85,6 +85,9 @@
                 <h2 class="title">
                     @T("Plugins.Misc.RFQ.Products")
                 </h2>
+                <div class="notifications">
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                </div>
                 <div>
                     <table class="data-table">
                         <thead>
@@ -117,7 +120,7 @@
                                         <span>
                                         @if (Model.CustomerItems[i].Editable)
                                         {
-                                            <input type="number" min="1" asp-for="@Model.CustomerItems[i].Quantity" name="@($"{RfqDefaults.QUANTITY_FORM_KEY}{Model.CustomerItems[i].Id}")" />
+                                            <input type="number" asp-for="@Model.CustomerItems[i].Quantity" name="@($"{RfqDefaults.QUANTITY_FORM_KEY}{Model.CustomerItems[i].Id}")" />
                                         }
                                         else
                                         {

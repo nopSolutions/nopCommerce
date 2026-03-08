@@ -4,7 +4,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
@@ -47,7 +46,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly CustomerSettings _customerSettings;
     protected readonly DateTimeSettings _dateTimeSettings;
     protected readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly GdprSettings _gdprSettings;
     protected readonly IAddressModelFactory _addressModelFactory;
     protected readonly IAttributeParser<CustomerAttribute, CustomerAttributeValue> _customerAttributeParser;
@@ -92,7 +90,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         CustomerSettings customerSettings,
         DateTimeSettings dateTimeSettings,
         ExternalAuthenticationSettings externalAuthenticationSettings,
-        ForumSettings forumSettings,
         GdprSettings gdprSettings,
         IAddressModelFactory addressModelFactory,
         IAttributeParser<CustomerAttribute, CustomerAttributeValue> customerAttributeParser,
@@ -135,7 +132,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _externalAuthenticationModelFactory = externalAuthenticationModelFactory;
         _externalAuthenticationService = externalAuthenticationService;
         _externalAuthenticationSettings = externalAuthenticationSettings;
-        _forumSettings = forumSettings;
         _gdprSettings = gdprSettings;
         _addressModelFactory = addressModelFactory;
         _customerAttributeParser = customerAttributeParser;
@@ -255,7 +251,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 model.NewsLetterSubscriptions.Add(nsModel);
             }
 
-            model.Signature = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute);
             model.Email = customer.Email;
             model.Username = customer.Username;
         }
@@ -295,9 +290,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                     model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
                     foreach (var s in states)
-                    {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
-                    }
                 }
                 else
                 {
@@ -348,7 +341,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
         model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
         model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
-        model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
 
         //external authentication
         var currentCustomer = await _workContext.GetCurrentCustomerAsync();
@@ -498,9 +490,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                     model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
                     foreach (var s in states)
-                    {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
-                    }
                 }
                 else
                 {
@@ -526,9 +516,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         {
             var consents = (await _gdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayDuringRegistration).ToList();
             foreach (var consent in consents)
-            {
                 model.GdprConsents.Add(await PrepareGdprConsentModelAsync(consent, false));
-            }
         }
 
         return model;
@@ -713,16 +701,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             });
         }
 
-        if (_forumSettings.ForumsEnabled && _forumSettings.AllowCustomersToManageSubscriptions)
-        {
-            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
-            {
-                RouteName = NopRouteNames.Standard.CUSTOMER_FORUM_SUBSCRIPTIONS,
-                Title = await _localizationService.GetResourceAsync("Account.ForumSubscriptions"),
-                Tab = (int)CustomerNavigationEnum.ForumSubscriptions,
-                ItemClass = "forum-subscriptions"
-            });
-        }
         if (_catalogSettings.ShowProductReviewsTabOnAccountPage)
         {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
@@ -1067,8 +1045,10 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                         var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedAttributesXml);
                         foreach (var attributeValue in selectedValues)
                         foreach (var item in attributeModel.Values)
+                        {
                             if (attributeValue.Id == item.Id)
                                 item.IsPreSelected = true;
+                        }
                     }
                 }
                     break;

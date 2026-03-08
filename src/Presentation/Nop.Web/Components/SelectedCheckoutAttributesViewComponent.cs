@@ -16,6 +16,6 @@ public partial class SelectedCheckoutAttributesViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var attributes = await _shoppingCartModelFactory.FormatSelectedCheckoutAttributesAsync();
-        return View(null, attributes);
+        return await ViewAsync(null, attributes);
     }
 }

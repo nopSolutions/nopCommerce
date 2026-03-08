@@ -27,7 +27,7 @@ public partial class MetaTagsGeneratorViewComponent : NopViewComponent
 
     #region Methods
 
-    public IViewComponentResult Invoke(MetaTagsGeneratorModel model)
+    public async Task<IViewComponentResult> InvokeAsync(MetaTagsGeneratorModel model)
     {
         if (!_artificialIntelligenceSettings.Enabled)
             return Content(string.Empty);
@@ -39,7 +39,7 @@ public partial class MetaTagsGeneratorViewComponent : NopViewComponent
             return Content(string.Empty);
         }
 
-        return View(model);
+        return await ViewAsync(model);
     }
 
     #endregion

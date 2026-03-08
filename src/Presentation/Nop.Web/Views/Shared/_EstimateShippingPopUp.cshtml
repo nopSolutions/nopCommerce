@@ -23,10 +23,12 @@
         </div>
     </div>
     <div class="estimate-shipping-row-item address-item">
-        <select asp-for="StateProvinceId"
+        <div class="estimate-shipping-row">
+            <select asp-for="StateProvinceId"
                 asp-items="Model.AvailableStates"
                 class="estimate-shipping-address-control"
                 aria-label="@T("Shipping.EstimateShippingPopUp.StateProvince")"></select>
+        </div>
     </div>
     <div class="estimate-shipping-row-item address-item">
         <div class="estimate-shipping-row">

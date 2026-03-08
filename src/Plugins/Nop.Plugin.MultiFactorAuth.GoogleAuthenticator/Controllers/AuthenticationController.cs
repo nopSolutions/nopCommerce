@@ -60,13 +60,9 @@ public class AuthenticationController : BasePluginController
         {
             //try to find config with current customer and update
             if (_googleAuthenticatorService.IsRegisteredCustomer(currentCustomer.Email))
-            {
                 await _googleAuthenticatorService.UpdateGoogleAuthenticatorAccountAsync(currentCustomer.Email, model.SecretKey);
-            }
             else
-            {
                 await _googleAuthenticatorService.AddGoogleAuthenticatorAccountAsync(currentCustomer.Email, model.SecretKey);
-            }
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Token.Successful"));
         }
         else

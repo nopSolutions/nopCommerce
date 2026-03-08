@@ -3,6 +3,7 @@ using FluentAssertions;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Gdpr;
+using Nop.Core.Domain.Logging;
 using Nop.Data;
 using Nop.Web.Models.Install;
 using NUnit.Framework;
@@ -117,7 +118,7 @@ public class NopDataProviderTests : BaseNopTest
         await using var data = await dataProvider.CreateTempDataStorageAsync(tableName,
             productRepository.Table.Select(p => new { p.Name, p.Id, p.Deleted }));
 
-        data.Count().Should().Be(productRepository.GetAll(query => query).Count);
+        data.Count().Should().Be((await productRepository.GetAllAsync(query => query)).Count);
 
         var rez = await dataProvider.QueryAsync<object>($"select * from {tableName}");
 
@@ -384,6 +385,29 @@ public class NopDataProviderTests : BaseNopTest
         {
             IntegratedSecurity = true
         }));
+    }
+
+    [Test]
+    [TestCase(DataProviderType.Unknown)]
+    [TestCase(DataProviderType.SqlServer)]
+    [TestCase(DataProviderType.MySql)]
+    [TestCase(DataProviderType.PostgreSQL)]
+    public async Task CanGetDatabaseSize(DataProviderType type)
+    {
+        if (!SetDataProviderType(type))
+            return;
+
+        var dataProvider = GetService<INopDataProvider>();
+        await dataProvider.InsertEntityAsync(new Log
+        {
+            CreatedOnUtc = DateTime.UtcNow,
+            FullMessage = "Test log entry to ensure non zero database size",
+            LogLevel = LogLevel.Debug,
+            ShortMessage = "Test log entry"
+        });
+
+        var dbSize = await dataProvider.GetDatabaseSizeAsync();
+        dbSize.Should().BeGreaterThan(0);
     }
 
     [Test]

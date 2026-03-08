@@ -13,11 +13,6 @@ public static partial class NopCustomerDefaults
     public static string AdministratorsRoleName => "Administrators";
 
     /// <summary>
-    /// Gets a system name of 'forum moderators' customer role
-    /// </summary>
-    public static string ForumModeratorsRoleName => "ForumModerators";
-
-    /// <summary>
     /// Gets a system name of 'registered' customer role
     /// </summary>
     public static string RegisteredRoleName => "Registered";
@@ -64,16 +59,6 @@ public static partial class NopCustomerDefaults
     /// Gets a name of generic attribute to store the value of 'AvatarPictureId'
     /// </summary>
     public static string AvatarPictureIdAttribute => "AvatarPictureId";
-
-    /// <summary>
-    /// Gets a name of generic attribute to store the value of 'ForumPostCount'
-    /// </summary>
-    public static string ForumPostCountAttribute => "ForumPostCount";
-
-    /// <summary>
-    /// Gets a name of generic attribute to store the value of 'Signature'
-    /// </summary>
-    public static string SignatureAttribute => "Signature";
 
     /// <summary>
     /// Gets a name of generic attribute to store the value of 'PasswordRecoveryToken'
@@ -124,6 +109,11 @@ public static partial class NopCustomerDefaults
     /// Gets a name of generic attribute to store the value of 'SelectedPickupPoint'
     /// </summary>
     public static string SelectedPickupPointAttribute => "SelectedPickupPoint";
+
+    /// <summary>
+    /// Gets the name of generic attribute to store the value of desired delivery date
+    /// </summary>
+    public static string DesiredDeliveryDate => "DesiredDeliveryDate";
 
     /// <summary>
     /// Gets a name of generic attribute to store the value of 'ProcessPaymentRequest'

@@ -19,6 +19,6 @@ public partial class CurrencySelectorViewComponent : NopViewComponent
         if (model.AvailableCurrencies.Count == 1)
             return Content("");
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

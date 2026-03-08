@@ -42,9 +42,17 @@
                                             @Html.Raw(shippingMethod.Description)
                                         </div>
                                     }
+                                    @if (shippingMethod.DesiredDeliveryDate?.Enabled ?? false)
+                                    {
+                                        <input type="hidden" name="ShippingMethods[@(i)].DesiredDeliveryDate.SelectedDate" id="deliverydate_@(i)" value="@shippingMethod.DesiredDeliveryDate?.SelectedDate" />
+                                    }
                                 </li>
                             }
                         </ul>
+                        if (Model.ShippingMethods.FirstOrDefault(m => m.DesiredDeliveryDate?.Enabled ?? false) != null)
+                        {
+                            @await Html.PartialAsync("_DesiredDeliveryDate", Model.ShippingMethods)
+                        }
                         if (Model.NotifyCustomerAboutShippingFromMultipleLocations)
                         {
                             <div class="multiple-locations">

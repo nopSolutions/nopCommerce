@@ -5,9 +5,7 @@ using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Menus;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
@@ -71,18 +69,10 @@ public partial class ModelCacheEventConsumer :
     IConsumer<EntityDeletedEvent<ProductPicture>>,
     //Product review
     IConsumer<EntityDeletedEvent<ProductReview>>,
-    //polls
-    IConsumer<EntityInsertedEvent<Poll>>,
-    IConsumer<EntityUpdatedEvent<Poll>>,
-    IConsumer<EntityDeletedEvent<Poll>>,
     //blog posts
     IConsumer<EntityInsertedEvent<BlogPost>>,
     IConsumer<EntityUpdatedEvent<BlogPost>>,
     IConsumer<EntityDeletedEvent<BlogPost>>,
-    //news items
-    IConsumer<EntityInsertedEvent<NewsItem>>,
-    IConsumer<EntityUpdatedEvent<NewsItem>>,
-    IConsumer<EntityDeletedEvent<NewsItem>>,
     //shopping cart items
     IConsumer<EntityUpdatedEvent<ShoppingCartItem>>,
     //plugins
@@ -159,7 +149,6 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey); //depends on CatalogSettings.ProductsAlsoPurchasedNumber
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.BlogPrefixCacheKey); //depends on BlogSettings.NumberOfTags
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.NewsPrefixCacheKey); //depends on NewsSettings.MainPageNewsCount
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey); //depends on distinct sitemap settings
         await _staticCacheManager.RemoveByPrefixAsync(WidgetModelDefaults.WidgetPrefixCacheKey); //depends on WidgetSettings and certain settings of widgets
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.StoreLogoPathPrefixCacheKey); //depends on StoreInformationSettings.LogoPictureId
@@ -477,28 +466,6 @@ public partial class ModelCacheEventConsumer :
 
     #endregion
 
-    #region Polls
-
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task HandleEventAsync(EntityInsertedEvent<Poll> eventMessage)
-    {
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.PollsPrefixCacheKey);
-    }
-
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Poll> eventMessage)
-    {
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.PollsPrefixCacheKey);
-    }
-
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task HandleEventAsync(EntityDeletedEvent<Poll> eventMessage)
-    {
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.PollsPrefixCacheKey);
-    }
-
-    #endregion
-
     #region Blog posts
 
     /// <returns>A task that represents the asynchronous operation</returns>
@@ -519,31 +486,6 @@ public partial class ModelCacheEventConsumer :
     public virtual async Task HandleEventAsync(EntityDeletedEvent<BlogPost> eventMessage)
     {
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.BlogPrefixCacheKey);
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
-    }
-
-    #endregion
-
-    #region News items
-
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task HandleEventAsync(EntityInsertedEvent<NewsItem> eventMessage)
-    {
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.NewsPrefixCacheKey);
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
-    }
-
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task HandleEventAsync(EntityUpdatedEvent<NewsItem> eventMessage)
-    {
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.NewsPrefixCacheKey);
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
-    }
-
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task HandleEventAsync(EntityDeletedEvent<NewsItem> eventMessage)
-    {
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.NewsPrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
     }
 

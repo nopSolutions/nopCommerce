@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using Humanizer;
-using Humanizer.Localisation;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Nop.Web.Framework.Extensions;
 
@@ -22,28 +19,5 @@ public static class CommonExtensions
 
         //we ignore items with "0" value? Usually it's something like "Select All", "etc
         return items.Count(x => !ignoreZeroValue || !x.Value.ToString().Equals("0")) < 2;
-    }
-
-    /// <summary>
-    /// Relative formatting of DateTime (e.g. 2 hours ago, a month ago)
-    /// </summary>
-    /// <param name="source">Source (UTC format)</param>
-    /// <param name="languageCode">Language culture code</param>
-    /// <returns>Formatted date and time string</returns>
-    public static string RelativeFormat(this DateTime source, string languageCode = "en-US")
-    {
-        var ts = new TimeSpan(DateTime.UtcNow.Ticks - source.Ticks);
-        var delta = ts.TotalSeconds;
-
-        CultureInfo culture;
-        try
-        {
-            culture = new CultureInfo(languageCode);
-        }
-        catch (CultureNotFoundException)
-        {
-            culture = new CultureInfo("en-US");
-        }
-        return TimeSpan.FromSeconds(delta).Humanize(precision: 1, culture: culture, maxUnit: TimeUnit.Year);
     }
 }

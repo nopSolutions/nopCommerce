@@ -25,6 +25,6 @@ public partial class ManufacturerNavigationViewComponent : NopViewComponent
         if (!model.Manufacturers.Any())
             return Content("");
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

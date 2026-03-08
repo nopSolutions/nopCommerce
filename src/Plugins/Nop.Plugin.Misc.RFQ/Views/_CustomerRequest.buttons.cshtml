@@ -16,6 +16,10 @@
         @if (Model.DisplaySendRequestButton)
         {
             <button type="submit" name="send" class="button-1">@T("Plugins.Misc.RFQ.SendRequest")</button>
+            @if (Model.DisplayCaptcha)
+            {
+                <nop-captcha action-name="CustomerRequest" />
+            }
             <button type="submit" name="back-to-cart" class="button-1">@T("Plugins.Misc.RFQ.BackToShoppingCart")</button>
         }
     </div>

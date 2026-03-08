@@ -106,7 +106,9 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin, IMiscPlugin
         //settings
         await _settingService.SaveSettingAsync(new RfqSettings
         {
-            Enabled = true
+            Enabled = true,
+            ShowCaptchaOnRequestPage = false,
+            AllowCustomerGenerateQuotePdf = false
         });
 
         if (!_widgetSettings.ActiveWidgetSystemNames.Contains(RfqDefaults.SystemName))
@@ -167,9 +169,9 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin, IMiscPlugin
             ["Plugins.Misc.RFQ.CustomerRequest.Info"] = "Request info",
             ["Plugins.Misc.RFQ.CustomerQuote.Info"] = "Quote info",
             ["Plugins.Misc.RFQ.Fields.Quote.CreatedOn"] = "Created on",
-            ["Plugins.Misc.RFQ.Fields.Quote.CreatedOn.Hint"] = "The date/time that the quote was created.",
+            ["Plugins.Misc.RFQ.Fields.Quote.CreatedOn.Hint"] = "The date/time (in the current customer time zone) that the quote was created.",
             ["Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn"] = "Created on",
-            ["Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn.Hint"] = "The date/time that the request a quote was created.",
+            ["Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn.Hint"] = "The date/time (in the current customer time zone) that the request a quote was created.",
             ["Plugins.Misc.RFQ.Fields.Quote.Status"] = "Status",
             ["Plugins.Misc.RFQ.Fields.Quote.Status.Hint"] = "The status of the quote",
             ["Plugins.Misc.RFQ.Fields.RequestQuote.Status"] = "Status",
@@ -258,7 +260,16 @@ public class RfqPlugin : BasePlugin, IWidgetPlugin, IMiscPlugin
             [$"Admin.ContentManagement.MessageTemplates.Description.{RfqDefaults.CUSTOMER_SENT_NEW_REQUEST_QUOTE}"] = "This message template is used to notify a store owner that the new request a quote sent",
             [$"Admin.ContentManagement.MessageTemplates.Description.{RfqDefaults.ADMIN_SENT_NEW_QUOTE}"] = "This message template is used to notify a customer that the new quote sent",
             ["Security.Permission.Misc.RFQ.AccessRFQ.Admin.AccessRFQ"] = "Admin area. Access to the customer’s Request and Price Offer functionality",
-            ["Security.Permission.Misc.RFQ.AccessRFQ.PublicStore.AccessRFQ"] = "Public store. Access to the customer’s Request and Price Offer functionality"
+            ["Security.Permission.Misc.RFQ.AccessRFQ.PublicStore.AccessRFQ"] = "Public store. Access to the customer’s Request and Price Offer functionality",
+            ["Plugins.Misc.RFQ.ShowCaptchaOnRequestPage"] = "Show CAPTCHA on request page",
+            ["Plugins.Misc.RFQ.ShowCaptchaOnRequestPage.Hint"] = "Check to show CAPTCHA on request page, when send the new request a quote.",
+            ["Plugins.Misc.RFQ.CaptchaDisabled.Notification"] = "In order to use this functionality, you have to enable the following setting: <a href='{0}' target='_blank'>General settings > CAPTCHA > CAPTCHA enabled</a>.",
+            ["Plugins.Misc.RFQ.CustomerRequest.RequestedQty.MustGreaterThanZero"] = "Requested qty of \"{0}\" product must be greater than zero.",
+            ["Plugins.Misc.RFQ.CustomerRequest.RequestedUnitPrice.MustBeEqualOrGreaterThanZero"] = "Requested unit price of \"{0}\" product be equal or greater than zero.",
+            ["Plugins.Misc.RFQ.CreatePdf"] = "Get a PDF quote",
+            ["Plugins.Misc.RFQ.PdfFileName"] = "quote_{0}",
+            ["Plugins.Misc.RFQ.AllowCustomerGenerateQuotePdf"] = "Quote PDF is allowed for the customer",
+            ["Plugins.Misc.RFQ.AllowCustomerGenerateQuotePdf.Hint"] = "Check to allow the generation of the quote PDF for the customer"
         });
 
         await base.InstallAsync();

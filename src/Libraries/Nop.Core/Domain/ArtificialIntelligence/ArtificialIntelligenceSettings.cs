@@ -76,4 +76,9 @@ public partial class ArtificialIntelligenceSettings : ISettings
     /// Gets or sets a query format string to generate meta title with AI
     /// </summary>
     public string MetaTitleQuery { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to log requests
+    /// </summary>
+    public bool LogRequests { get; set; }
 }

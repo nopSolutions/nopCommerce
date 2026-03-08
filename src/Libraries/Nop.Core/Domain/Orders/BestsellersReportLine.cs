@@ -22,6 +22,11 @@ public partial class BestsellersReportLine
     public decimal TotalAmount { get; set; }
 
     /// <summary>
+    /// Gets or sets the total amount string
+    /// </summary>
+    public string TotalAmountStr { get; set; }
+
+    /// <summary>
     /// Gets or sets the total quantity
     /// </summary>
     public int TotalQuantity { get; set; }

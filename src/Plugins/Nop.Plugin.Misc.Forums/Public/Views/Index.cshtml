@@ -1,0 +1,29 @@
+﻿@model BoardsIndexModel
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("Plugins.Misc.Forums.PageTitle.Default").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-forums-main-page");
+}
+
+<div class="page forums-main-page">
+    @await Html.PartialAsync("~/Plugins/Misc.Forums/Public/Views/_ForumHeader.cshtml")
+
+    <div class="forums-welcome-block">
+        <div class="forums-title">
+            <h1>@T("Plugins.Misc.Forums.Forums")</h1>
+        </div>
+        <div class="forums-description">
+            <p>@T("Plugins.Misc.Forums.WelcomeMesage")</p>
+        </div>
+    </div>
+
+    @foreach (var forumGroup in Model.ForumGroups)
+    {
+        await Html.RenderPartialAsync("~/Plugins/Misc.Forums/Public/Views/_ForumGroup.cshtml", forumGroup);
+    }
+    @await Component.InvokeAsync(typeof(ForumActiveDiscussionsSmallViewComponent))
+</div>

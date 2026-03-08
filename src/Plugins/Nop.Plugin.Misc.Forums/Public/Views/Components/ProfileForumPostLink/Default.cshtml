@@ -1,0 +1,6 @@
+﻿@using Nop.Web.Models.Profile
+@model ProfileInfoModel
+<link href="~/Plugins/Misc.Forums/Content/styles.css" rel="stylesheet">
+<div>
+    @Html.RouteLink(T("Plugins.Misc.Forums.Profile.Posts").Text, ForumDefaults.Routes.Public.FORUM_PROFILE_POSTS, new { id = Model.CustomerProfileId }, new { @class = "profile-info-posts-button" })
+</div>

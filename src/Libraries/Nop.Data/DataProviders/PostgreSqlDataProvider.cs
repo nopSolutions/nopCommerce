@@ -155,9 +155,7 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
                 throw new Exception("Unable to connect to the new database. Please try one more time");
 
             if (!DatabaseExists())
-            {
                 Thread.Sleep(1000);
-            }
             else
             {
                 builder.Database = databaseName;
@@ -344,6 +342,21 @@ public partial class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
 
         foreach (var table in tables)
             await currentConnection.ExecuteAsync($"VACUUM FULL \"{table}\";");
+    }
+
+    /// <summary>
+    /// Gets the database size in Kb
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the database size
+    /// </returns>
+    public virtual async Task<long> GetDatabaseSizeAsync()
+    {
+        using var currentConnection = CreateDataConnection();
+        var result = await currentConnection.QueryToListAsync<long>($"SELECT pg_database_size('{GetConnectionStringBuilder().Database}') / 1024 as sizebytes");
+
+        return result.FirstOrDefault();
     }
 
     /// <summary>

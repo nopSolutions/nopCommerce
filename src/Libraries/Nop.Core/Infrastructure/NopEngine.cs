@@ -197,6 +197,7 @@ public partial class NopEngine : IEngine
     {
         Exception innerException = null;
         foreach (var constructor in type.GetConstructors())
+        {
             try
             {
                 //try to resolve constructor parameters
@@ -213,6 +214,7 @@ public partial class NopEngine : IEngine
             {
                 innerException = ex;
             }
+        }
 
         throw new NopException("No constructor was found that had all the dependencies satisfied.", innerException);
     }

@@ -26,7 +26,6 @@ using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.ExportImport;
 using Nop.Services.FilterLevels;
-using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Html;
@@ -34,15 +33,13 @@ using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
-using Nop.Services.Media.RoxyFileman;
+using Nop.Services.Media.ElFinder;
 using Nop.Services.Menus;
 using Nop.Services.Messages;
-using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Plugins.Marketplace;
-using Nop.Services.Polls;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -219,12 +216,9 @@ public partial class NopStartup : INopStartup
         services.AddScoped<ITaxService, TaxService>();
         services.AddScoped<ILogger, DefaultLogger>();
         services.AddScoped<ICustomerActivityService, CustomerActivityService>();
-        services.AddScoped<IForumService, ForumService>();
         services.AddScoped<IGdprService, GdprService>();
-        services.AddScoped<IPollService, PollService>();
         services.AddScoped<IBlogService, BlogService>();
         services.AddScoped<ITopicService, TopicService>();
-        services.AddScoped<INewsService, NewsService>();
         services.AddScoped<IDateTimeHelper, DateTimeHelper>();
         services.AddScoped<INopHtmlHelper, NopHtmlHelper>();
         services.AddScoped<IScheduleTaskService, ScheduleTaskService>();
@@ -232,7 +226,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IImportManager, ImportManager>();
         services.AddScoped<IPdfService, PdfService>();
         services.AddScoped<IUploadService, UploadService>();
-        services.AddScoped<IThemeProvider, ThemeProvider>();
+        services.AddSingleton<IThemeProvider, ThemeProvider>();
         services.AddScoped<IThemeContext, ThemeContext>();
         services.AddScoped<IExternalAuthenticationService, ExternalAuthenticationService>();
         services.AddSingleton<IRoutePublisher, RoutePublisher>();
@@ -245,6 +239,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<INopUrlHelper, NopUrlHelper>();
         services.AddScoped<IWidgetModelFactory, WidgetModelFactory>();
         services.AddScoped<IMenuService, MenuService>();
+        services.AddScoped<ISyncCodeHelper, SyncCodeHelper>();
 
         //attribute services
         services.AddScoped(typeof(IAttributeService<,>), typeof(AttributeService<,>));
@@ -279,7 +274,7 @@ public partial class NopStartup : INopStartup
             services.AddScoped(setting, serviceProvider =>
             {
                 var storeId = DataSettingsManager.IsDatabaseInstalled()
-                    ? serviceProvider.GetRequiredService<IStoreContext>().GetCurrentStore()?.Id ?? 0
+                    ? serviceProvider.GetRequiredService<IStoreContext>().GetCurrentStoreAsync().Result?.Id ?? 0
                     : 0;
 
                 return serviceProvider.GetRequiredService<ISettingService>().LoadSettingAsync(setting, storeId).Result;
@@ -292,9 +287,8 @@ public partial class NopStartup : INopStartup
         //picture service
         services.AddScoped<IPictureService, PictureService>();
 
-        //roxy file manager
-        services.AddScoped<IRoxyFilemanService, RoxyFilemanService>();
-        services.AddScoped<IRoxyFilemanFileProvider, RoxyFilemanFileProvider>();
+        //elFinder file manager
+        services.AddSingleton<IElFinderService, ElFinderService>();
 
         //installation service
         services.AddScoped<IInstallationService, InstallationService>();

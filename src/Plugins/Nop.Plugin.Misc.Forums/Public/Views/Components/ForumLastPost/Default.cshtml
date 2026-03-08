@@ -1,0 +1,31 @@
+﻿@model LastPostModel
+@if (Model.Id > 0)
+{
+    <div class="date">
+        @Model.PostCreatedOnStr
+    </div>
+    if (Model.ShowTopic)
+    {
+        <div class="origin">
+            <label>@T("Plugins.Misc.Forums.In"):</label>
+            @Html.RouteLink(Model.ForumTopicSubject, ForumDefaults.Routes.Public.TOPIC_SLUG, new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })
+        </div>
+    }
+    <div class="author">
+        <label>@T("Plugins.Misc.Forums.By"):</label>
+        @if (Model.AllowViewingProfiles)
+        {
+            @Html.RouteLink(Model.CustomerName, NopRouteNames.Standard.CUSTOMER_PROFILE, new { Id = Model.CustomerId })
+        }
+        else
+        {
+            <span>@Model.CustomerName</span>
+        }
+    </div>
+}
+else
+{
+    <div class="no-post">
+        @T("Plugins.Misc.Forums.NoPosts")
+    </div>
+}

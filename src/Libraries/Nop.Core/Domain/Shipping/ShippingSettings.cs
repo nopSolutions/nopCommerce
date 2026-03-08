@@ -121,6 +121,16 @@ public partial class ShippingSettings : ISettings
     public bool BypassShippingMethodSelectionIfOnlyOne { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether customers can choose delivery date
+    /// </summary>
+    public bool AllowCustomerToChooseDeliveryDate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the number of days available for delivery date selection
+    /// </summary>
+    public int DeliveryDateRangeDays { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether dimensions are calculated based on cube root of volume
     /// </summary>
     public bool UseCubeRootMethod { get; set; }

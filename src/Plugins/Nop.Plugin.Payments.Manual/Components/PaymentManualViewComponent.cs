@@ -30,9 +30,7 @@ public class PaymentManualViewComponent : NopViewComponent
 
         //months
         for (var i = 1; i <= 12; i++)
-        {
             model.ExpireMonths.Add(new SelectListItem { Text = i.ToString("D2"), Value = i.ToString(), });
-        }
 
         //set postback values (we cannot access "Form" with "GET" requests)
         if (!Request.IsGetRequest())
@@ -53,6 +51,6 @@ public class PaymentManualViewComponent : NopViewComponent
                 selectedYear.Selected = true;
         }
 
-        return View("~/Plugins/Payments.Manual/Views/PaymentInfo.cshtml", model);
+        return await ViewAsync("~/Plugins/Payments.Manual/Views/PaymentInfo.cshtml", model);
     }
 }

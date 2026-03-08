@@ -117,9 +117,7 @@ public partial class MeasureController : BaseAdminController
             ?? throw new ArgumentException("No weight found with the specified id", nameof(id));
 
         if (weight.Id == _measureSettings.BaseWeightId)
-        {
             return ErrorJson(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Measures.Weights.CantDeletePrimary"));
-        }
 
         await _measureService.DeleteMeasureWeightAsync(weight);
 
@@ -203,9 +201,7 @@ public partial class MeasureController : BaseAdminController
             ?? throw new ArgumentException("No dimension found with the specified id", nameof(id));
 
         if (dimension.Id == _measureSettings.BaseDimensionId)
-        {
             return ErrorJson(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Measures.Dimensions.CantDeletePrimary"));
-        }
 
         await _measureService.DeleteMeasureDimensionAsync(dimension);
 

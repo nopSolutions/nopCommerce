@@ -27,4 +27,11 @@ public partial interface IArtificialIntelligenceHttpClientHelper
     /// <param name="responseText">Response text to parse</param>
     /// <returns>Generated text from artificial intelligence host</returns>
     string ParseResponse(string responseText);
+
+    /// <summary>
+    /// Gets tokens usage information
+    /// </summary>
+    /// <param name="responseText">Text of response from AI service to get token usage information</param>
+    /// <returns>Tokens usage information</returns>
+    string GetTokensInfo(string responseText);
 }

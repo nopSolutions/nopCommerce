@@ -228,6 +228,7 @@ scrollX: true,
 preDrawCallback: function (data) {
     data.nTableWrapper.querySelectorAll('colgroup').forEach((e) => e.remove());
 },
+autoWidth: false,
 info: @Model.Info.ToString().ToLowerInvariant(),
 paging: @Model.Paging.ToString().ToLowerInvariant(),
 pagingType: '@Model.PagingType',

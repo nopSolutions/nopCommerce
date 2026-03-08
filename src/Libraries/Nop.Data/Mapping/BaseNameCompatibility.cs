@@ -2,8 +2,6 @@
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
-using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
@@ -32,14 +30,7 @@ public partial class BaseNameCompatibility : INameCompatibility
         { typeof(ProductManufacturer), "Product_Manufacturer_Mapping" },
         { typeof(ProductPicture), "Product_Picture_Mapping" },
         { typeof(ProductSpecificationAttribute), "Product_SpecificationAttribute_Mapping" },
-        { typeof(ForumGroup), "Forums_Group" },
-        { typeof(Forum), "Forums_Forum" },
-        { typeof(ForumPost), "Forums_Post" },
-        { typeof(ForumPostVote), "Forums_PostVote" },
-        { typeof(ForumSubscription), "Forums_Subscription" },
-        { typeof(ForumTopic), "Forums_Topic" },
-        { typeof(PrivateMessage), "Forums_PrivateMessage" },
-        { typeof(NewsItem), "News" }
+        { typeof(PrivateMessage), "Forums_PrivateMessage" }
     };
 
     public Dictionary<(Type, string), string> ColumnName => new()

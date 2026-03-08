@@ -16,6 +16,6 @@ public partial class SocialButtonsViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var model = await _commonModelFactory.PrepareSocialModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

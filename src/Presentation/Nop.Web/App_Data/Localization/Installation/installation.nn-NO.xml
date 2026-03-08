@@ -12,6 +12,15 @@
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Skriv inn admin passord</Value>
   </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Tegnsett</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Collation er nødvendig</Value>
+  </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>'{0}' kontoen har ikke endringstillatelse i mappe '{1}'. Konfigurer disse tillatelsene.</Value>
   </LocaleResource>
@@ -133,7 +142,7 @@
     <Value>Butikkinformasjon</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Abonner på nyhetsbrev fra nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce installasjon</Value>

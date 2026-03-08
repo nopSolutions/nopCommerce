@@ -314,4 +314,17 @@ public class DeepSeekHttpClientHelperTests
         //assert
         content.Should().Contain("\"messages\":[");
     }
+
+    [Test]
+    public void CanGetTokensInfo()
+    {
+        var responseText = @"{""id"":""0ceecc18-1b18-4cb8-8697-6f48dc1e7bd0"",""object"":""chat.completion"",""created"":1761591960,""model"":""deepseek-chat"",""choices"":[{""index"":0,""message"":{""role"":""assistant"",""content"":""Of course. Here is a product description for the Apple MacBook Pro, crafted with an expert tone and incorporating the specified keywords.\n\n***\n\n### Engineered for the Uncompromising Professional\n\nThe Apple MacBook Pro is not merely an upgrade; it is a recalibration of the professional workflow. It is engineered for those for whom time is the ultimate currency and performance is non-negotiable. This machine dismantles bottlenecks as a core function, delivering a level of responsiveness that redefines productivity.\n\n**Faster Flash: The End of the Wait State**\n\nAt the heart of its blistering performance lies an advanced, **faster flash** storage architecture. We are discussing sequential read speeds that eclipse most desktop SSDs, effectively eliminating load times for multi-gigabyte projects, vast libraries, and complex datasets. This is not just about quick boot-ups; it's about instantaneous application launches, seamless 8K video scrubbing, and near-instantaneous project file access. When your storage subsystem operates at this velocity, your creative and analytical processes flow without interruption.\n\n**High-Load CPU: Sustained Performance Under Duress**\n\nWhere conventional laptops falter, the MacBook Pro excels. Its **high-load CPU** is engineered for sustained performance, not just short bursts. Whether you are compiling millions of lines of code, rendering intricate 3D models, running multiple virtual machines, or processing terabytes of scientific data, the thermal architecture ensures the processor maintains peak clock speeds under maximum load. This is computational integrity you can rely on—the assurance that when the deadline looms and the project complexity peaks, your machine will not throttle. It is the definitive tool for rendering, simulation, and development cycles that demand unwavering computational power.\n\n**The Synergy of Power**\n\nThe true mastery of the MacBook Pro is found in the seamless synergy between its **faster flash** and **high-load CPU**. The processor is fed data at an unprecedented rate, ensuring it is never starved for information, while its robust thermal management allows it to process that data without compromise. This creates a feedback loop of pure efficiency, enabling you to execute complex, multi-layered tasks with a fluidity that was previously the domain of high-end workstations.\n\nThis is the platform for those who push boundaries. Choose the tool that matches your ambition.""},""logprobs"":null,""finish_reason"":""stop""}],""usage"":{""prompt_tokens"":46,""completion_tokens"":466,""total_tokens"":512,""prompt_tokens_details"":{""cached_tokens"":0},""prompt_cache_hit_tokens"":0,""prompt_cache_miss_tokens"":46},""system_fingerprint"":""fp_ffc7281d48_prod0820_fp8_kvcache""}";
+        
+        //arrange & act
+        var tokensInfo = _helper.GetTokensInfo(responseText);
+
+        //assert
+        tokensInfo.Should().NotBeNull();
+        tokensInfo.Should().Be($"Prompt tokens: 46{Environment.NewLine}Completion tokens: 466{Environment.NewLine}Total tokens: 512");
+    }
 }

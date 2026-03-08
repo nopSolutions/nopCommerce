@@ -70,8 +70,10 @@ public partial class InstallationService
     protected virtual async Task InsertProductTagMappingAsync(Product product, string[] tags)
     {
         if (!_tags.Any())
+        {
             _tags = Table<ProductTag>().AsEnumerable().GroupBy(p => p.Name, p => p)
                 .ToDictionary(p => p.Key, p => p.FirstOrDefault());
+        }
 
         var newProductTags = await tags.Distinct().Where(tag => !_tags.ContainsKey(tag))
             .Select(item => new ProductTag { Name = item }).ToListAsync();
@@ -270,32 +272,38 @@ public partial class InstallationService
             await _dataProvider.InsertEntityAsync(product);
 
             if (!string.IsNullOrEmpty(sample.CategoryName))
+            {
                 await _dataProvider.InsertEntityAsync(new ProductCategory
                 {
                     ProductId = product.Id,
                     CategoryId = await getCategoryId(sample.CategoryName),
                     DisplayOrder = 1
                 });
+            }
 
             if (!string.IsNullOrEmpty(sample.ManufacturerName))
+            {
                 await _dataProvider.InsertEntityAsync(new ProductManufacturer
                 {
                     ProductId = product.Id,
                     ManufacturerId = await getManufacturerId(sample.ManufacturerName),
                     DisplayOrder = 1
                 });
+            }
 
             if (sample.ProductPictures.Any())
             {
                 var productPictures = new List<ProductPicture>();
 
                 foreach (var pictureName in sample.ProductPictures)
+                {
                     productPictures.Add(new()
                     {
                         ProductId = product.Id,
                         PictureId = await InsertPictureAsync(pictureName, product.Name),
                         DisplayOrder = 1
                     });
+                }
 
                 await _dataProvider.BulkInsertEntitiesAsync(productPictures);
             }
@@ -348,12 +356,14 @@ public partial class InstallationService
                 await _dataProvider.BulkInsertEntitiesAsync(productAttributeValues);
 
                 if (productAttributeValues.Any(p => p.ImageSquaresPictureId != 0))
+                {
                     await _dataProvider.BulkInsertEntitiesAsync(productAttributeValues.Where(p => p.ImageSquaresPictureId != 0).Select(v =>
                         new ProductAttributeValuePicture
                         {
                             PictureId = v.ImageSquaresPictureId,
                             ProductAttributeValueId = v.Id
                         }));
+                }
             }
 
             if (sample.ProductTags.Any())
@@ -364,6 +374,7 @@ public partial class InstallationService
                 var productSpecificationAttributes = new List<ProductSpecificationAttribute>();
 
                 foreach (var specificationAttribute in sample.ProductSpecificationAttribute)
+                {
                     productSpecificationAttributes.Add(new ProductSpecificationAttribute
                     {
                         ProductId = product.Id,
@@ -372,6 +383,7 @@ public partial class InstallationService
                         DisplayOrder = specificationAttribute.DisplayOrder,
                         SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync(specificationAttribute.SpecAttributeName, specificationAttribute.SpecAttributeOptionName)
                     });
+                }
 
                 await _dataProvider.BulkInsertEntitiesAsync(productSpecificationAttributes);
             }
@@ -380,12 +392,14 @@ public partial class InstallationService
                 await insertProduct(sampleGroupedProduct, product.Id);
 
             if (sample.TierPrices.Any())
+            {
                 await _dataProvider.BulkInsertEntitiesAsync(sample.TierPrices.Select(tp => new TierPrice
                 {
                     Quantity = tp.Quantity,
                     Price = tp.Price,
                     ProductId = product.Id
                 }));
+            }
         }
 
         foreach (var sample in jsonData.Products)
@@ -396,15 +410,18 @@ public partial class InstallationService
 
         //related products
         if (jsonData.RelatedProducts.Any())
+        {
             await _dataProvider.BulkInsertEntitiesAsync(await jsonData.RelatedProducts.SelectAwait(async rp =>
                 new RelatedProduct
                 {
                     ProductId1 = await getProductId(rp.FirstProductSku),
                     ProductId2 = await getProductId(rp.SecondProductSku)
                 }).ToListAsync());
+        }
 
         //reviews
         using (var random = new SecureRandomNumberGenerator())
+        {
             foreach (var product in allProducts)
             {
                 if (product.ProductType != ProductType.SimpleProduct)
@@ -435,11 +452,13 @@ public partial class InstallationService
                 product.ApprovedRatingSum = rating;
                 product.ApprovedTotalReviews = 1;
             }
+        }
 
         await _dataProvider.UpdateEntitiesAsync(allProducts);
 
         //stock quantity history
         foreach (var product in allProducts.Where(product => product.StockQuantity > 0))
+        {
             await _dataProvider.InsertEntityAsync(new StockQuantityHistory
             {
                 ProductId = product.Id,
@@ -449,6 +468,7 @@ public partial class InstallationService
                 Message = "The stock quantity has been edited",
                 CreatedOnUtc = DateTime.UtcNow
             });
+        }
     }
 
     #endregion

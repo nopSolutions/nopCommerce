@@ -217,24 +217,9 @@ public static partial class NopLinksDefaults
         public static string MessageTemplates => "https://docs.nopcommerce.com/running-your-store/content-management/message-templates.html";
 
         /// <summary>
-        /// Gets a URL of the news docs page
-        /// </summary>
-        public static string News => "https://docs.nopcommerce.com/running-your-store/content-management/news.html";
-
-        /// <summary>
         /// Gets a URL of the blog docs page
         /// </summary>
         public static string Blog => "https://docs.nopcommerce.com/running-your-store/content-management/blog.html";
-
-        /// <summary>
-        /// Gets a URL of the polls docs page
-        /// </summary>
-        public static string Polls => "https://docs.nopcommerce.com/running-your-store/content-management/polls.html";
-
-        /// <summary>
-        /// Gets a URL of the forums docs page
-        /// </summary>
-        public static string Forums => "https://docs.nopcommerce.com/running-your-store/content-management/forums.html";
 
         /// <summary>
         /// Gets a URL of the email accounts docs page

@@ -201,7 +201,7 @@ public partial class MenuModelFactory : IMenuModelFactory
         }
 
         var title = await _localizationService.GetLocalizedAsync(topic, m => m.Title);
-        var url = await _nopUrlHelper.RouteTopicUrlAsync(topic.SystemName);
+        var url = await _nopUrlHelper.RouteGenericUrlAsync(topic);
 
         return (title, url);
     }
@@ -368,9 +368,7 @@ public partial class MenuModelFactory : IMenuModelFactory
             await getItemTree(rootItemModel);
 
             if (!rootItemModel.ChildrenItems.Any() && rootItemModel.Template != MenuItemTemplate.Simple)
-            {
                 rootItemModel.ChildrenItems = await PrepareSubMenuItemsAsync(rootItemModel, rootItemModel.MaximumNumberEntities, rootItemModel.Template == MenuItemTemplate.Grid);
-            }
 
             result.Add(rootItemModel);
         }

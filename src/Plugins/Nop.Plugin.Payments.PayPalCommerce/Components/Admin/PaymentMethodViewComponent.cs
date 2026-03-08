@@ -46,7 +46,7 @@ public class PaymentMethodViewComponent : NopViewComponent
 
         var (active, _) = await _serviceManager.IsActiveAsync(_settings);
 
-        return View("~/Plugins/Payments.PayPalCommerce/Views/Admin/_PaymentMethod.cshtml", active);
+        return await ViewAsync("~/Plugins/Payments.PayPalCommerce/Views/Admin/_PaymentMethod.cshtml", active);
     }
 
     #endregion

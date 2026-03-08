@@ -14,17 +14,6 @@ public class CustomerServiceTests : ServiceTest
     public async Task SetUp()
     {
         _customerService = GetService<ICustomerService>();
-        var moderator = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.ForumModeratorsRoleName);
-        moderator.Active = false;
-        await _customerService.UpdateCustomerRoleAsync(moderator);
-    }
-
-    [TearDown]
-    public async Task TearDown()
-    {
-        var moderator = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.ForumModeratorsRoleName);
-        moderator.Active = true;
-        await _customerService.UpdateCustomerRoleAsync(moderator);
     }
 
     [Test]
@@ -36,12 +25,6 @@ public class CustomerServiceTests : ServiceTest
         isInCustomerRole.Should().BeTrue();
         isInCustomerRole = await _customerService.IsInCustomerRoleAsync(customer, NopCustomerDefaults.AdministratorsRoleName);
         isInCustomerRole.Should().BeTrue();
-
-        isInCustomerRole = await _customerService.IsInCustomerRoleAsync(customer, NopCustomerDefaults.ForumModeratorsRoleName, false);
-        isInCustomerRole.Should().BeTrue();
-        isInCustomerRole = await _customerService.IsInCustomerRoleAsync(customer, NopCustomerDefaults.ForumModeratorsRoleName);
-        isInCustomerRole.Should().BeFalse();
-
         isInCustomerRole = await _customerService.IsInCustomerRoleAsync(customer, NopCustomerDefaults.GuestsRoleName, false);
         isInCustomerRole.Should().BeFalse();
         isInCustomerRole = await _customerService.IsInCustomerRoleAsync(customer, NopCustomerDefaults.GuestsRoleName);
@@ -54,14 +37,6 @@ public class CustomerServiceTests : ServiceTest
         var customer = await _customerService.GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail);
         var isAdmin = await _customerService.IsAdminAsync(customer);
         isAdmin.Should().BeTrue();
-    }
-
-    [Test]
-    public async Task CanCheckWhetherCustomerIsForumModerator()
-    {
-        var customer = await _customerService.GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail);
-        var isForumModerator = await _customerService.IsForumModeratorAsync(customer, false);
-        isForumModerator.Should().BeTrue();
     }
 
     [Test]

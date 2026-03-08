@@ -1,9 +1,7 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Http;
 using Nop.Services.Customers;
-using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Infrastructure;
@@ -20,35 +18,32 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
     #region Fields
 
     protected readonly CustomerSettings _customerSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly ICustomerService _customerService;
     protected readonly IDateTimeHelper _dateTimeHelper;
-    protected readonly IForumService _forumService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IStoreContext _storeContext;
     protected readonly IWorkContext _workContext;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
 
     #endregion
 
     #region Ctor
 
     public PrivateMessagesModelFactory(CustomerSettings customerSettings,
-        ForumSettings forumSettings,
         ICustomerService customerService,
         IDateTimeHelper dateTimeHelper,
-        IForumService forumService,
         ILocalizationService localizationService,
         IStoreContext storeContext,
-        IWorkContext workContext)
+        IWorkContext workContext,
+        PrivateMessageSettings privateMessageSettings)
     {
         _customerSettings = customerSettings;
-        _forumSettings = forumSettings;
         _customerService = customerService;
         _dateTimeHelper = dateTimeHelper;
-        _forumService = forumService;
         _localizationService = localizationService;
         _storeContext = storeContext;
         _workContext = workContext;
+        _privateMessageSettings = privateMessageSettings;
     }
 
     #endregion
@@ -74,16 +69,12 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
         {
             case "inbox":
                 if (page.HasValue)
-                {
                     inboxPage = page.Value;
-                }
 
                 break;
             case "sent":
                 if (page.HasValue)
-                {
                     sentItemsPage = page.Value;
-                }
 
                 sentItemsTabSelected = true;
 
@@ -114,16 +105,14 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
     public virtual async Task<PrivateMessageListModel> PrepareInboxModelAsync(int page, string tab)
     {
         if (page > 0)
-        {
             page -= 1;
-        }
 
-        var pageSize = _forumSettings.PrivateMessagesPageSize;
+        var pageSize = _privateMessageSettings.PrivateMessagesPageSize;
 
         var messages = new List<PrivateMessageModel>();
         var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();
-        var list = await _forumService.GetAllPrivateMessagesAsync(store.Id,
+        var list = await _customerService.GetAllPrivateMessagesAsync(store.Id,
             0, customer.Id, null, null, false, string.Empty, page, pageSize);
 
         foreach (var pm in list)
@@ -161,17 +150,16 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
     public virtual async Task<PrivateMessageListModel> PrepareSentModelAsync(int page, string tab)
     {
         if (page > 0)
-        {
             page -= 1;
-        }
 
-        var pageSize = _forumSettings.PrivateMessagesPageSize;
+        var pageSize = _privateMessageSettings.PrivateMessagesPageSize;
 
         var messages = new List<PrivateMessageModel>();
         var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();
-        var list = await _forumService.GetAllPrivateMessagesAsync(store.Id,
+        var list = await _customerService.GetAllPrivateMessagesAsync(store.Id,
             customer.Id, 0, null, false, null, string.Empty, page, pageSize);
+
         foreach (var pm in list)
             messages.Add(await PreparePrivateMessageModelAsync(pm));
 
@@ -254,7 +242,7 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
             CustomerToName = await _customerService.FormatUsernameAsync(toCustomer),
             AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(toCustomer),
             Subject = pm.Subject,
-            Message = _forumService.FormatPrivateMessageText(pm),
+            Message = _customerService.FormatPrivateMessageText(pm),
             CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(pm.CreatedOnUtc, DateTimeKind.Utc),
             IsRead = pm.IsRead,
         };

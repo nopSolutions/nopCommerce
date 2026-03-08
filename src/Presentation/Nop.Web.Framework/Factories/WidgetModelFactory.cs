@@ -3,8 +3,8 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Services.Cms;
 using Nop.Services.Customers;
+using Nop.Services.Themes;
 using Nop.Web.Framework.Models.Cms;
-using Nop.Web.Framework.Themes;
 
 namespace Nop.Web.Framework.Factories;
 
@@ -66,12 +66,14 @@ public partial class WidgetModelFactory : IWidgetModelFactory
         var store = await _storeContext.GetCurrentStoreAsync();
 
         if (!useCache)
+        {
             return (await _widgetPluginManager.LoadActivePluginsAsync(customer, store.Id, widgetZone))
                 .Select(widget => new RenderWidgetModel
                 {
                     WidgetViewComponent = widget.GetWidgetViewComponent(widgetZone),
                     WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone, ["additionalData"] = additionalData }
                 }).ToList();
+        }
 
         var widgetModels = await _shortTermCacheManager.GetAsync(async () =>
             (await _widgetPluginManager.LoadActivePluginsAsync(customer, store.Id, widgetZone))

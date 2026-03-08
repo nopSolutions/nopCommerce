@@ -115,18 +115,10 @@ public partial class DefaultPermissionConfigManager : IPermissionConfigManager
         new ("Admin area. Topics. Create, edit, delete", StandardPermission.ContentManagement.TOPICS_CREATE_EDIT_DELETE, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Message Templates. View", StandardPermission.ContentManagement.MESSAGE_TEMPLATES_VIEW, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Message Templates. Create, edit, delete", StandardPermission.ContentManagement.MESSAGE_TEMPLATES_CREATE_EDIT_DELETE, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
-        new ("Admin area. News. View", StandardPermission.ContentManagement.NEWS_VIEW, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
-        new ("Admin area. News. Create, edit, delete", StandardPermission.ContentManagement.NEWS_CREATE_EDIT_DELETE, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
-        new ("Admin area. News comments. View", StandardPermission.ContentManagement.NEWS_COMMENTS_VIEW, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
-        new ("Admin area. News comments. Create, edit, delete", StandardPermission.ContentManagement.NEWS_COMMENTS_CREATE_EDIT_DELETE, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Blog. View", StandardPermission.ContentManagement.BLOG_VIEW, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Blog. Create, edit, delete", StandardPermission.ContentManagement.BLOG_CREATE_EDIT_DELETE, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Blog comments. View", StandardPermission.ContentManagement.BLOG_COMMENTS_VIEW, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Blog comments. Create, edit, delete", StandardPermission.ContentManagement.BLOG_COMMENTS_CREATE_EDIT_DELETE, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
-        new ("Admin area. Polls. View", StandardPermission.ContentManagement.POLLS_VIEW, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
-        new ("Admin area. Polls. Create, edit, delete", StandardPermission.ContentManagement.POLLS_CREATE_EDIT_DELETE, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
-        new ("Admin area. Forums. View", StandardPermission.ContentManagement.FORUMS_VIEW, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
-        new ("Admin area. Forums. Create, edit, delete", StandardPermission.ContentManagement.FORUMS_CREATE_EDIT_DELETE, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Menus. View", StandardPermission.ContentManagement.MENU_VIEW, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Menus. Create, edit, delete", StandardPermission.ContentManagement.MENU_CREATE_EDIT_DELETE, nameof(StandardPermission.ContentManagement), NopCustomerDefaults.AdministratorsRoleName),
 
@@ -164,10 +156,10 @@ public partial class DefaultPermissionConfigManager : IPermissionConfigManager
         
         #region Public store
         
-        new ("Public store. Display Prices", StandardPermission.PublicStore.DISPLAY_PRICES, nameof(StandardPermission.PublicStore), NopCustomerDefaults.AdministratorsRoleName, NopCustomerDefaults.RegisteredRoleName, NopCustomerDefaults.GuestsRoleName, NopCustomerDefaults.ForumModeratorsRoleName),
-        new ("Public store. Enable shopping cart", StandardPermission.PublicStore.ENABLE_SHOPPING_CART, nameof(StandardPermission.PublicStore), NopCustomerDefaults.AdministratorsRoleName, NopCustomerDefaults.RegisteredRoleName, NopCustomerDefaults.GuestsRoleName, NopCustomerDefaults.ForumModeratorsRoleName),
-        new ("Public store. Enable wishlist", StandardPermission.PublicStore.ENABLE_WISHLIST, nameof(StandardPermission.PublicStore), NopCustomerDefaults.AdministratorsRoleName, NopCustomerDefaults.RegisteredRoleName, NopCustomerDefaults.GuestsRoleName, NopCustomerDefaults.ForumModeratorsRoleName),
-        new ("Public store. Allow navigation", StandardPermission.PublicStore.PUBLIC_STORE_ALLOW_NAVIGATION, nameof(StandardPermission.PublicStore), NopCustomerDefaults.AdministratorsRoleName, NopCustomerDefaults.RegisteredRoleName, NopCustomerDefaults.GuestsRoleName, NopCustomerDefaults.ForumModeratorsRoleName),
+        new ("Public store. Display Prices", StandardPermission.PublicStore.DISPLAY_PRICES, nameof(StandardPermission.PublicStore), NopCustomerDefaults.AdministratorsRoleName, NopCustomerDefaults.RegisteredRoleName, NopCustomerDefaults.GuestsRoleName),
+        new ("Public store. Enable shopping cart", StandardPermission.PublicStore.ENABLE_SHOPPING_CART, nameof(StandardPermission.PublicStore), NopCustomerDefaults.AdministratorsRoleName, NopCustomerDefaults.RegisteredRoleName, NopCustomerDefaults.GuestsRoleName),
+        new ("Public store. Enable wishlist", StandardPermission.PublicStore.ENABLE_WISHLIST, nameof(StandardPermission.PublicStore), NopCustomerDefaults.AdministratorsRoleName, NopCustomerDefaults.RegisteredRoleName, NopCustomerDefaults.GuestsRoleName),
+        new ("Public store. Allow navigation", StandardPermission.PublicStore.PUBLIC_STORE_ALLOW_NAVIGATION, nameof(StandardPermission.PublicStore), NopCustomerDefaults.AdministratorsRoleName, NopCustomerDefaults.RegisteredRoleName, NopCustomerDefaults.GuestsRoleName),
         new ("Public store. Access a closed store", StandardPermission.PublicStore.ACCESS_CLOSED_STORE, nameof(StandardPermission.PublicStore), NopCustomerDefaults.AdministratorsRoleName),
 
         #endregion

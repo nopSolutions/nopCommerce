@@ -120,19 +120,18 @@
 <script>
     $(function() {
         $('#addOrderNote').click(function() {
-            var orderNoteMessage = $("#@Html.IdFor(model => model.AddOrderNoteMessage)").val();
-            var orderNoteDownloadId = 0;
-            if ($('#@Html.IdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
-                orderNoteDownloadId = $("#@Html.IdFor(model => model.AddOrderNoteDownloadId)").val();
-            }
-            var orderNoteDisplayToCustomer =
-                $("#@Html.IdFor(model => model.AddOrderNoteDisplayToCustomer)").is(':checked');
+
+            const orderNoteMessageInput = $("#@Html.IdFor(model => model.AddOrderNoteMessage)");
+            const orderNoteDownloadCheckbox = $("#@Html.IdFor(model => model.AddOrderNoteHasDownload)");
+            const orderNoteDisplayToCustomerCheckbox = $("#@Html.IdFor(model => model.AddOrderNoteDisplayToCustomer)");
+            const orderNoteDownloadIdInput = $("#@Html.IdFor(model => model.AddOrderNoteDownloadId)");
+
             $('#addOrderNote').attr('disabled', true);
 
             var postData = {
-                DisplayToCustomer: orderNoteDisplayToCustomer,
-                message: orderNoteMessage,
-                downloadId: orderNoteDownloadId,
+                DisplayToCustomer: orderNoteDisplayToCustomerCheckbox.is(':checked'),
+                message: orderNoteMessageInput.val(),
+                downloadId: orderNoteDownloadCheckbox.is(':checked') ? orderNoteDownloadIdInput.val() : 0,
                 orderId: '@Model.Id'
             };
             addAntiForgeryToken(postData);
@@ -146,6 +145,18 @@
                     if (data.Result) {
                         //reload grid
                         updateTable('#ordernotes-grid');
+
+                        //clear input value
+                        orderNoteMessageInput.val('');
+                        orderNoteDisplayToCustomerCheckbox.prop('checked', false);
+                        orderNoteDownloadIdInput.val('');
+
+                        const filePondEl = $("#pnlAddOrderNoteDownloadId .filepond--root");
+                        if (filePondEl.length)
+                            FilePond.find(filePondEl[0]).removeFiles()
+
+                        orderNoteDownloadCheckbox.prop('checked', false);
+                        orderNoteDownloadCheckbox.trigger("change")
                     } else {
                         //display errors if returned
                         display_nop_error(data);

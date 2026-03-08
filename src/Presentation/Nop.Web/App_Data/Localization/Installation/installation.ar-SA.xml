@@ -46,7 +46,7 @@
     <Value>الدولة</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>حدد بلدك</Value>
+    <Value>إختر بلدك:</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>قم بإنشاء قاعدة البيانات إذا لم تكن موجودة</Value>

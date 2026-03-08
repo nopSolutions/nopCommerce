@@ -18,10 +18,8 @@ public partial record ManufacturerModel : BaseNopEntityModel, IAclSupportedModel
 
     public ManufacturerModel()
     {
-        if (PageSize < 1)
-        {
+        if (PageSize < 1) 
             PageSize = 5;
-        }
 
         Locales = new List<ManufacturerLocalizedModel>();
         AvailableManufacturerTemplates = new List<SelectListItem>();
@@ -121,6 +119,21 @@ public partial record ManufacturerModel : BaseNopEntityModel, IAclSupportedModel
     public string PrimaryStoreCurrencyCode { get; set; }
 
     public bool PreTranslationAvailable { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PhysicalAddress")]
+    public string PhysicalAddress { get; set; }
+    
+    [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ElectronicAddress")]
+    public string ElectronicAddress { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ResponsiblePerson")]
+    public string ResponsiblePerson { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ResponsiblePersonPhysicalAddress")]
+    public string ResponsiblePersonPhysicalAddress { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ResponsiblePersonElectronicAddress")]
+    public string ResponsiblePersonElectronicAddress { get; set; }
 
     #endregion
 }

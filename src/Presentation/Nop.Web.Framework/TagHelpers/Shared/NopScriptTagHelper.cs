@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Core.Configuration;
+using Nop.Services.Helpers;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.UI;
 using Nop.Web.Framework.WebOptimizer;
@@ -128,6 +129,13 @@ public partial class NopScriptTagHelper : UrlResolutionTagHelper
 
         output.TagMode = TagMode.StartTagAndEndTag;
 
+        //process only text/javascript scripts
+        if (context.AllAttributes.TryGetAttribute("type", out var attribute)
+             && !string.Equals(attribute.Value?.ToString(), MimeTypes.TextJavascript, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
         var woConfig = _appSettings.Get<WebOptimizerConfig>();
 
         if (Location == ResourceLocation.Auto)
@@ -138,11 +146,11 @@ public partial class NopScriptTagHelper : UrlResolutionTagHelper
 
         if (Location == ResourceLocation.None)
         {
-            if (!string.IsNullOrEmpty(Src))
-            {
-                ProcessSrcAttribute(context, output);
-                ProcessAsset(output);
-            }
+            if (string.IsNullOrEmpty(Src))
+                return;
+
+            ProcessSrcAttribute(context, output);
+            ProcessAsset(output);
 
             return;
         }
