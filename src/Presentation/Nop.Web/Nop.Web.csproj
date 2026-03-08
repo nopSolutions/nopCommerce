@@ -63,6 +63,18 @@
     <Content Update="**\*.config;**\*.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Plugins\Payments.Momo\Nop.Web.deps.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Payments.Momo\Nop.Web.runtimeconfig.dev.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Payments.Momo\Nop.Web.runtimeconfig.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Payments.Momo\Nop.Web.staticwebassets.endpoints.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Payments.Momo\Nop.Web.staticwebassets.runtime.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Payments.Momo\plugin.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Payments.Momo\Views\Configure.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Payments.Momo\Views\PaymentInfo.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Payments.Momo\Views\_ViewImports.cshtml" />
+  </ItemGroup>
+
   <!-- This target execute after "Build" target.
     We use it to clean up folder with plugins from unnecessary and obsolete libraries. -->
   <Target Name="NopTarget" AfterTargets="Build">

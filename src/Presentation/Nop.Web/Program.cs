@@ -1,4 +1,4 @@
-﻿using Autofac.Extensions.DependencyInjection;
+using Autofac.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Infrastructure.Extensions;
@@ -9,6 +9,8 @@ public partial class Program
 {
     public static async Task Main(string[] args)
     {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Configuration.AddJsonFile(NopConfigurationDefaults.AppSettingsFilePath, true, true);

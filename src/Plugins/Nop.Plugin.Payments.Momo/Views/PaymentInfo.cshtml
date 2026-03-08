@@ -1,0 +1,1118 @@
+﻿@model Nop.Plugin.Payments.Momo.Models.PaymentInfoModel
+@{
+    Layout = "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style type="text/css">
+        * {
+            box-sizing: border-box;
+        }
+
+        .momo-payment-form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .payment-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+            width: 100%;
+        }
+
+        .payment-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .payment-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #1E90FF 0%, #0047AB 100%);
+            color: white;
+            gap: 15px;
+        }
+
+        .header-icon {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .header-info {
+            flex-grow: 1;
+            min-width: 0;
+            text-align: center;
+        }
+
+        .header-email {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.95;
+            font-weight: 500;
+            word-break: break-word;
+            text-align: center;
+        }
+
+        .header-amount {
+            margin: 8px 0 0 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .amount-value {
+            color: #4ab2f1;
+            font-weight: 700;
+        }
+
+        .payment-card-body {
+            padding: 25px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-section {
+            width: 100%;
+            text-align: center;
+        }
+
+        .form-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .form-title i {
+            color: #1E90FF;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+            text-align: center;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .form-label.required::after {
+            content: ' *';
+            color: #dc3545;
+            font-weight: 700;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 0;
+            justify-content: center;
+        }
+
+        .country-code {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-right: none;
+            padding: 0 12px;
+            font-weight: 600;
+            color: #666;
+            border-radius: 4px 0 0 4px;
+            min-width: 50px;
+            justify-content: center;
+        }
+
+        .form-control {
+            flex: 1;
+            padding: 10px 12px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 0 4px 4px 0;
+            font-family: inherit;
+            max-width: 250px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .form-hint i {
+            color: #1E90FF;
+            font-size: 0.8rem;
+        }
+
+        .invalid-feedback {
+            display: none;
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        .processing-container {
+            text-align: center;
+        }
+
+        .spinner-border {
+            display: inline-block;
+            width: 3rem;
+            height: 3rem;
+            margin-bottom: 15px;
+            border: 4px solid #f0f0f0;
+            border-top-color: #1E90FF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .processing-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 15px 0 10px 0;
+        }
+
+        .processing-message {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .progress-bar-container {
+            height: 6px;
+            background-color: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #1E90FF 0%, #0047AB 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-bar-striped {
+            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+            background-size: 1rem 1rem;
+        }
+
+        .progress-bar-animated {
+            animation: progress-bar-stripes 1s linear infinite;
+        }
+
+        .success-container {
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+
+        .success-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #28a745;
+            margin: 0 0 10px 0;
+        }
+
+        .success-message {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .error-container {
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 3rem;
+            color: #dc3545;
+            margin-bottom: 15px;
+        }
+
+        .error-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #dc3545;
+            margin: 0 0 10px 0;
+        }
+
+        .error-message {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .manual-confirm-container {
+            text-align: center;
+        }
+
+        .manual-confirm-container h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 8px 0;
+        }
+
+        .manual-confirm-container p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .payment-card-footer {
+            padding: 15px 25px 25px 25px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-submit,
+        .btn-retry,
+        .btn-confirm,
+        .btn-continue {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #1E90FF 0%, #0047AB 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 144, 255, 0.4);
+        }
+
+        .btn-submit:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn-retry {
+            background-color: #f8f9fa;
+            color: #dc3545;
+            border: 2px solid #dc3545;
+            width: 100%;
+        }
+
+        .btn-retry:hover:not(:disabled) {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-confirm {
+            background-color: #ffc107;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-confirm:hover:not(:disabled) {
+            background-color: #e0a800;
+        }
+
+        .btn-continue {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-continue:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+        }
+
+        .d-none {
+            display: none !important;
+        }
+
+        .text-primary {
+            color: #667eea;
+        }
+
+        .text-success {
+            color: #28a745;
+        }
+
+        .text-danger {
+            color: #dc3545;
+        }
+
+        .text-warning {
+            color: #ffc107;
+        }
+
+        /* Phone Number Error Message */
+        #phoneNumberError {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 8px;
+            display: none;
+            font-weight: 500;
+            padding: 8px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+        }
+
+        #phoneNumberError.show {
+            display: block !important;
+        }
+
+        /* Input field error state */
+        #PhoneNumber.error {
+            border-color: #dc3545 !important;
+            background-color: #fff5f5;
+        }
+
+        /* Modal Styles */
+        .momo-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .momo-modal-overlay.show {
+            display: flex;
+        }
+
+        .momo-modal-content {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .momo-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            background: linear-gradient(135deg, #1E90FF 0%, #0047AB 100%);
+            color: white;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .momo-modal-header h5 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .momo-modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .momo-modal-close:hover {
+            opacity: 0.8;
+        }
+
+        .momo-modal-body {
+            padding: 25px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .momo-modal-footer {
+            padding: 15px 25px 25px 25px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+    </style>
+</head>
+<body>
+
+<!-- Payment Modal will be created dynamically by JavaScript -->
+@* <div id="paymentModalContainer"></div> *@
+
+<div class="momo-payment-form">
+    <!-- Main Payment Card -->
+    <div class="payment-card">
+        <!-- Card Header with Summary -->
+        <div class="payment-card-header">
+            <div class="header-icon">
+                💳
+            </div>
+            <div class="header-info">
+                <p class="header-email">@Model.CustomerEmail</p>
+                <p class="header-amount">Pay <span class="amount-value">@Model.OrderTotal</span></p>
+            </div>
+        </div>
+
+        <!-- Card Body with Input Section -->
+        <div id="paymentInputSection" class="payment-card-body">
+            <div class="form-section">
+                <h4 class="form-title">
+                    <i class="fas fa-mobile-alt"></i>
+                    Payment via MTN Momo 
+                </h4>
+
+                <div class="form-group">
+                    <label class="form-label required" asp-for="PhoneNumber">MTN Mobile Money Number</label>
+                    <div class="input-wrapper">
+                        <span class="country-code">+233</span>
+                        <input asp-for="PhoneNumber" 
+                               class="form-control" 
+                               placeholder="0244 010 0000"
+                               autocomplete="tel" />
+                        <input type="hidden" name="PaymentCompleted" value="false" />
+                    </div>
+                    <small class="form-hint">
+                        <i class="fas fa-info-circle"></i>
+                        Enter your number.
+                    </small>
+                    <div class="invalid-feedback" id="phoneNumberError"></div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+@* *@
+@* <script> *@
+@*     (function() { *@
+@*         /* Create character code to avoid Razor conflicts */ *@
+@*         var at = String.fromCharCode(64); *@
+@*         var styleElement = document.createElement('style'); *@
+@*         styleElement.textContent = [ *@
+@*             "/* Keyframe Animations */", *@
+@*             at + "keyframes spin { to { transform: rotate(360deg); } }", *@
+@*             at + "keyframes progress-bar-stripes { 0% { background-position: 0; } 100% { background-position: 1rem 0; } }", *@
+@*             "/* Tablet Styles - max 768px */", *@
+@*             at + "media (max-width: 768px) {", *@
+@*             ".momo-payment-form { padding: 12px; }", *@
+@*             ".payment-card { border-radius: 6px; }", *@
+@*             ".payment-card-header { padding: 15px; gap: 12px; }", *@
+@*             ".header-icon { width: 50px; height: 50px; font-size: 24px; }", *@
+@*             ".header-email { font-size: 0.85rem; }", *@
+@*             ".header-amount { font-size: 1.2rem; }", *@
+@*             ".payment-card-body { padding: 20px; min-height: 180px; }", *@
+@*             ".payment-card-footer { padding: 12px 20px 20px 20px; }", *@
+@*             ".btn-submit, .btn-retry, .btn-confirm, .btn-continue { padding: 10px 16px; font-size: 0.95rem; min-width: 120px; }", *@
+@*             "}", *@
+@*             "/* Mobile Styles - max 480px */", *@
+@*             at + "media (max-width: 480px) {", *@
+@*             ".momo-payment-form { padding: 10px; }", *@
+@*             ".payment-card-header { flex-direction: column; text-align: center; padding: 12px; gap: 10px; }", *@
+@*             ".header-icon { width: 45px; height: 45px; font-size: 22px; }", *@
+@*             ".header-email { font-size: 0.8rem; }", *@
+@*             ".header-amount { font-size: 1.1rem; }", *@
+@*             ".payment-card-body { padding: 15px; min-height: 160px; }", *@
+@*             ".payment-card-footer { padding: 10px 15px 15px 15px; gap: 8px; }", *@
+@*             ".btn-submit, .btn-retry, .btn-confirm, .btn-continue { padding: 10px 12px; font-size: 0.9rem; min-width: 100%; flex-basis: 100%; }", *@
+@*             ".form-label { font-size: 0.9rem; }", *@
+@*             ".country-code { min-width: 45px; padding: 0 8px; font-size: 0.9rem; }", *@
+@*             ".form-control { font-size: 0.95rem; }", *@
+@*             ".form-title { font-size: 1rem; margin-bottom: 15px; }", *@
+@*             "}" *@
+@*         ].join('\n'); *@
+@*         document.head.appendChild(styleElement); *@
+@*     })(); *@
+@* *@
+@*     $(document).ready(function () { *@
+@*         // Create modal HTML dynamically and append to body *@
+@*         const modalHTML = ` *@
+@*             <div id="paymentModal" class="momo-modal-overlay"> *@
+@*                 <div class="momo-modal-content"> *@
+@*                     <div class="momo-modal-header"> *@
+@*                         <h5>Complete Payment</h5> *@
+@*                         <button type="button" class="momo-modal-close" id="closePaymentModal"> *@
+@*                             <i class="fas fa-times"></i> *@
+@*                         </button> *@
+@*                     </div> *@
+@*                     <div class="momo-modal-body"> *@
+@*                         <!-- Payment Processing Section --> *@
+@*                         <div id="modalPaymentProcessingSection" class="processing-container"> *@
+@*                             <div class="spinner-border text-primary" role="status"></div> *@
+@*                             <h5 class="processing-title">Processing Payment</h5> *@
+@*                             <p class="processing-message" id="modalProcessingMessage"> *@
+@*                                 Please check your phone for the MTN MoMo prompt to complete the transaction. *@
+@*                             </p> *@
+@*                             <div class="progress-bar-container"> *@
+@*                                 <div id="modalPaymentProgress" class="progress-bar progress-bar-striped progress-bar-animated" *@
+@*                                     role="progressbar" style="width: 0%"> *@
+@*                                 </div> *@
+@*                             </div> *@
+@*                         </div> *@
+@* *@
+@*                         <!-- Payment Success Section (Hidden by default) --> *@
+@*                         <div id="modalPaymentSuccessSection" class="success-container d-none"> *@
+@*                             <div class="success-icon"> *@
+@*                                 <i class="fas fa-check-circle"></i> *@
+@*                             </div> *@
+@*                             <h4 class="success-title">Payment Successful!</h4> *@
+@*                             <p class="success-message">Your payment has been processed successfully.</p> *@
+@*                         </div> *@
+@* *@
+@*                         <!-- Payment Error Section (Hidden by default) --> *@
+@*                         <div id="modalPaymentErrorSection" class="error-container d-none"> *@
+@*                             <div class="error-icon"> *@
+@*                                 <i class="fas fa-exclamation-circle"></i> *@
+@*                             </div> *@
+@*                             <h4 class="error-title">Payment Failed</h4> *@
+@*                             <p class="error-message" id="modalErrorMessage"></p> *@
+@*                         </div> *@
+@* *@
+@*                         <!-- Manual Confirmation Section (Hidden by default) --> *@
+@*                         <div id="modalManualConfirmSection" class="manual-confirm-container d-none"> *@
+@*                             <h5>Have you completed the payment?</h5> *@
+@*                             <p>We couldn't verify your payment automatically. Please confirm if you have completed the payment on your phone.</p> *@
+@*                         </div> *@
+@*                     </div> *@
+@*                     <div class="momo-modal-footer"> *@
+@*                         <button type="button" id="modalRetryPayment" class="btn-retry d-none"> *@
+@*                             <i class="fas fa-redo"></i> *@
+@*                             Try Again *@
+@*                         </button> *@
+@*                         <button type="button" id="modalCheckPaymentStatus" class="btn-confirm d-none"> *@
+@*                             <i class="fas fa-sync-alt"></i> *@
+@*                             Confirm Payment *@
+@*                         </button> *@
+@*                         <button type="button" id="modalConfirmSuccess" class="btn-continue d-none"> *@
+@*                             <i class="fas fa-arrow-right"></i> *@
+@*                             Continue *@
+@*                         </button> *@
+@*                     </div> *@
+@*                 </div> *@
+@*             </div> *@
+@*         `; *@
+@*          *@
+@*         // Append modal to body *@
+@*         $('body').append(modalHTML); *@
+@*         console.log('Modal HTML injected into body'); *@
+@*          *@
+@*         const momoPayment = { *@
+@*             referenceId: null, *@
+@*             statusCheckInterval: null, *@
+@*             checkCount: 0, *@
+@*             maxChecks: 12, // Will check for 1 minute (5s intervals) *@
+@*             storedPhoneNumber: null, *@
+@*             originalConfirmOrderSave: null, // Store original function *@
+@* *@
+@*             // Validate Ghana phone number format *@
+@*             validatePhoneNumber: function(phoneNumber) { *@
+@*                 if (!phoneNumber || phoneNumber.trim() === '') { *@
+@*                     return { *@
+@*                         valid: false, *@
+@*                         message: 'Please enter your phone number' *@
+@*                     }; *@
+@*                 } *@
+@* *@
+@*                 // Remove spaces and dashes *@
+@*                 const cleaned = phoneNumber.replace(/[\s\-]/g, ''); *@
+@* *@
+@*                 // Ghana phone numbers: *@
+@*                 // - Should be 10 digits *@
+@*                 // - Can start with 0 (domestic) or 233 (international) *@
+@*                 // - Valid prefixes: 020, 024, 025, 026, 027, 028, 050, 051, 055, 056, 057 *@
+@*                  *@
+@*                 let digitsOnly = cleaned; *@
+@*                  *@
+@*                 // If starts with 233, remove it and add 0 *@
+@*                 if (cleaned.startsWith('233')) { *@
+@*                     digitsOnly = '0' + cleaned.substring(3); *@
+@*                 } *@
+@* *@
+@*                 // Check if 10 digits *@
+@*                 if (digitsOnly.length !== 10) { *@
+@*                     return { *@
+@*                         valid: false, *@
+@*                         message: 'Phone number must be 10 digits' *@
+@*                     }; *@
+@*                 } *@
+@* *@
+@*                 // Check if starts with 0 *@
+@*                 if (!digitsOnly.startsWith('0')) { *@
+@*                     return { *@
+@*                         valid: false, *@
+@*                         message: 'Phone number must start with 0' *@
+@*                     }; *@
+@*                 } *@
+@* *@
+@*                 // Check if contains only digits *@
+@*                 if (!/^\d+$/.test(digitsOnly)) { *@
+@*                     return { *@
+@*                         valid: false, *@
+@*                         message: 'Phone number must contain only digits' *@
+@*                     }; *@
+@*                 } *@
+@* *@
+@*                 // Check valid network prefixes for Ghana *@
+@*                 const validPrefixes = ['020', '024', '025', '026', '027', '028', '050', '051', '055', '056', '057']; *@
+@*                 const prefix = digitsOnly.substring(0, 3); *@
+@*                 if (!validPrefixes.includes(prefix)) { *@
+@*                     return { *@
+@*                         valid: false, *@
+@*                         message: 'Invalid phone number prefix. Valid prefixes: 020, 024, 025, 026, 027, 028, 050, 051, 055, 056, 057' *@
+@*                     }; *@
+@*                 } *@
+@* *@
+@*                 return { *@
+@*                     valid: true, *@
+@*                     message: 'Valid phone number', *@
+@*                     formatted: digitsOnly *@
+@*                 }; *@
+@*             }, *@
+@* *@
+@*             showModalSection: function (sectionId) { *@
+@*                 // Hide all modal body sections *@
+@*                 const sections = [ *@
+@*                     '#modalPaymentProcessingSection', *@
+@*                     '#modalPaymentSuccessSection', *@
+@*                     '#modalPaymentErrorSection', *@
+@*                     '#modalManualConfirmSection' *@
+@*                 ]; *@
+@*                 sections.forEach(section => $(section).addClass('d-none')); *@
+@* *@
+@*                 // Show requested section *@
+@*                 $(sectionId).removeClass('d-none'); *@
+@* *@
+@*                 // Update button visibility based on section *@
+@*                 this.updateModalButtonVisibility(sectionId); *@
+@*             }, *@
+@* *@
+@*             updateModalButtonVisibility: function (sectionId) { *@
+@*                 // Hide all modal buttons *@
+@*                 $('#modalRetryPayment, #modalCheckPaymentStatus, #modalConfirmSuccess').addClass('d-none'); *@
+@* *@
+@*                 // Show appropriate button based on section *@
+@*                 switch(sectionId) { *@
+@*                     case '#modalPaymentProcessingSection': *@
+@*                         // No buttons during processing *@
+@*                         break; *@
+@*                     case '#modalPaymentSuccessSection': *@
+@*                         $('#modalConfirmSuccess').removeClass('d-none'); *@
+@*                         break; *@
+@*                     case '#modalPaymentErrorSection': *@
+@*                         $('#modalRetryPayment').removeClass('d-none'); *@
+@*                         break; *@
+@*                     case '#modalManualConfirmSection': *@
+@*                         $('#modalCheckPaymentStatus').removeClass('d-none'); *@
+@*                         break; *@
+@*                 } *@
+@*             }, *@
+@* *@
+@*             updateModalProgress: function (percentage) { *@
+@*                 $('#modalPaymentProgress') *@
+@*                     .css('width', `${percentage}%`) *@
+@*                     .attr('aria-valuenow', percentage); *@
+@*             }, *@
+@* *@
+@*             showModalError: function (message) { *@
+@*                 $('#modalErrorMessage').text(message); *@
+@*                 this.showModalSection('#modalPaymentErrorSection'); *@
+@*                 this.stopStatusCheck(); *@
+@*             }, *@
+@* *@
+@*             openPaymentModal: function () { *@
+@*                 console.log('openPaymentModal called'); *@
+@*                  *@
+@*                 const modalElement = $('#paymentModal'); *@
+@*                 console.log('Modal element exists:', modalElement.length > 0); *@
+@*                  *@
+@*                 if (modalElement.length === 0) { *@
+@*                     console.error('MODAL ELEMENT NOT FOUND!'); *@
+@*                     return; *@
+@*                 } *@
+@*                  *@
+@*                 // Modal is now at body level, just show it *@
+@*                 modalElement.addClass('show'); *@
+@*                 console.log('Modal show class added'); *@
+@*                  *@
+@*                 // Small delay to ensure rendering *@
+@*                 setTimeout(() => { *@
+@*                     const computedDisplay = window.getComputedStyle(modalElement[0]).display; *@
+@*                     console.log('Modal computed display style:', computedDisplay); *@
+@*                      *@
+@*                     this.startPayment(); *@
+@*                 }, 100); *@
+@*             }, *@
+@* *@
+@*             closePaymentModal: function () { *@
+@*                 $('#paymentModal').removeClass('show').css('display', 'none'); *@
+@*                 this.stopStatusCheck(); *@
+@*                 this.reset(); *@
+@*             }, *@
+@* *@
+@*             startPayment: async function () { *@
+@*                 const phoneNumber = $('#PhoneNumber').val().trim(); *@
+@*                  *@
+@*                 if (!phoneNumber) { *@
+@*                     $('#phoneNumberError').text('Please enter your phone number').show(); *@
+@*                     this.closePaymentModal(); *@
+@*                     return; *@
+@*                 } *@
+@* *@
+@*                 this.storedPhoneNumber = phoneNumber; *@
+@*                 this.showModalSection('#modalPaymentProcessingSection'); *@
+@*                 this.updateModalProgress(10); *@
+@* *@
+@*                 try { *@
+@*                     const response = await fetch('/Admin/PaymentMomo/InitiatePayment', { *@
+@*                         method: 'POST', *@
+@*                         headers: { *@
+@*                             'Content-Type': 'application/json', *@
+@*                         }, *@
+@*                         body: JSON.stringify({ phoneNumber }) *@
+@*                     }).then(r => r.json()); *@
+@* *@
+@*                     if (response.success) { *@
+@*                         this.referenceId = response.referenceId; *@
+@*                         this.startStatusCheck(); *@
+@*                         this.updateModalProgress(25); *@
+@*                     } else { *@
+@*                         this.showModalError(response.message || 'Failed to initiate payment'); *@
+@*                     } *@
+@*                 } catch (error) { *@
+@*                     this.showModalError('Failed to connect to payment service'); *@
+@*                     console.error('Payment initiation error:', error); *@
+@*                 } *@
+@*             }, *@
+@* *@
+@*             startStatusCheck: function () { *@
+@*                 this.checkCount = 0; *@
+@*                 this.checkPaymentStatus(); *@
+@*                 this.statusCheckInterval = setInterval(() => this.checkPaymentStatus(), 5000); *@
+@* *@
+@*                 // Show manual confirmation after 30 seconds *@
+@*                 setTimeout(() => { *@
+@*                     if (!$('#modalPaymentSuccessSection').is(':visible')) { *@
+@*                         this.showModalSection('#modalManualConfirmSection'); *@
+@*                     } *@
+@*                 }, 30000); *@
+@*             }, *@
+@* *@
+@*             stopStatusCheck: function () { *@
+@*                 if (this.statusCheckInterval) { *@
+@*                     clearInterval(this.statusCheckInterval); *@
+@*                     this.statusCheckInterval = null; *@
+@*                 } *@
+@*             }, *@
+@* *@
+@*             checkPaymentStatus: async function () { *@
+@*                 if (this.checkCount >= this.maxChecks) { *@
+@*                     this.stopStatusCheck(); *@
+@*                     this.showModalSection('#modalManualConfirmSection'); *@
+@*                     return; *@
+@*                 } *@
+@* *@
+@*                 this.checkCount++; *@
+@*                 this.updateModalProgress(25 + (this.checkCount / this.maxChecks) * 75); *@
+@* *@
+@*                 try { *@
+@*                     const response = await fetch(`/Admin/PaymentMomo/CheckStatus?referenceId=${this.referenceId}`) *@
+@*                         .then(r => r.json()); *@
+@* *@
+@*                     if (response.success) { *@
+@*                         this.stopStatusCheck(); *@
+@*                         this.showModalSection('#modalPaymentSuccessSection'); *@
+@*                         $('input[name="PaymentCompleted"]').val('true'); *@
+@*                     } else if (response.status === 'FAILED') { *@
+@*                         this.showModalError(response.message || 'Payment failed'); *@
+@*                     } *@
+@*                 } catch (error) { *@
+@*                     console.error('Status check error:', error); *@
+@*                 } *@
+@*             }, *@
+@* *@
+@*             reset: function () { *@
+@*                 this.stopStatusCheck(); *@
+@*                 this.showModalSection('#modalPaymentProcessingSection'); *@
+@*                 this.updateModalProgress(0); *@
+@*                 this.referenceId = null; *@
+@*                 this.checkCount = 0; *@
+@*             } *@
+@*         }; *@
+@* *@
+@* *@
+@*         // Event Handlers - Intercept ConfirmOrder.save *@
+@*         // Check periodically for ConfirmOrder object *@
+@*         var setupInterval = setInterval(function() { *@
+@*             if (window.ConfirmOrder && window.ConfirmOrder.save && !window.momoConfirmOrderSaveWrapped) { *@
+@*                 console.log('Wrapping ConfirmOrder.save()'); *@
+@*                  *@
+@*                 // Save original *@
+@*                 const originalSave = window.ConfirmOrder.save; *@
+@*                  *@
+@*                 // Track if payment modal is open to prevent double interception *@
+@*                 let paymentModalOpen = false; *@
+@*                  *@
+@*                 // Replace with wrapper *@
+@*                 window.ConfirmOrder.save = function() { *@
+@*                     const phoneNumber = $('#PhoneNumber').val().trim(); *@
+@*                     const paymentCompleted = $('input[name="PaymentCompleted"]').val(); *@
+@*                      *@
+@*                     console.log('ConfirmOrder.save called, phone:', phoneNumber, 'paymentCompleted:', paymentCompleted); *@
+@*                      *@
+@*                     // If payment is already completed, just call original *@
+@*                     if (paymentCompleted === 'true') { *@
+@*                         console.log('Payment already completed, calling original ConfirmOrder.save'); *@
+@*                         originalSave.call(window.ConfirmOrder); *@
+@*                         return; *@
+@*                     } *@
+@*                      *@
+@*                     // If no phone number, just call original (user selected different payment method) *@
+@*                     if (!phoneNumber) { *@
+@*                         console.log('No phone number, calling original ConfirmOrder.save'); *@
+@*                         originalSave.call(window.ConfirmOrder); *@
+@*                         return; *@
+@*                     } *@
+@*                      *@
+@*                     // Validate phone number format *@
+@*                     const phoneValidation = momoPayment.validatePhoneNumber(phoneNumber); *@
+@*                     if (!phoneValidation.valid) { *@
+@*                         console.log('Phone validation failed:', phoneValidation.message); *@
+@*                          *@
+@*                         // Show error message prominently *@
+@*                         const errorElement = $('#phoneNumberError'); *@
+@*                         errorElement.text(phoneValidation.message).addClass('show'); *@
+@*                          *@
+@*                         // Add error styling to input field *@
+@*                         $('#PhoneNumber').addClass('error'); *@
+@*                          *@
+@*                         console.log('Validation error displayed, preventing form submission'); *@
+@*                         return; // Don't proceed, show error *@
+@*                     } *@
+@*                      *@
+@*                     console.log('Phone validation passed'); *@
+@*                     // Clear error state *@
+@*                     $('#phoneNumberError').removeClass('show').hide(); *@
+@*                     $('#PhoneNumber').removeClass('error'); *@
+@*                      *@
+@*                     // Prevent multiple interceptions while payment modal is open *@
+@*                     if (paymentModalOpen) { *@
+@*                         console.log('Payment modal already open, skipping'); *@
+@*                         return; *@
+@*                     } *@
+@*                      *@
+@*                     // Check if TOS is agreed *@
+@*                     const tosCheckbox = $('#termsofservice'); *@
+@*                     const tosMustBeAccepted = tosCheckbox.length > 0; *@
+@*                     const tosIsChecked = tosCheckbox.is(':checked'); *@
+@*                      *@
+@*                     console.log('TOS checkbox exists:', tosMustBeAccepted, 'TOS checked:', tosIsChecked); *@
+@*                      *@
+@*                     // If TOS must be accepted but isn't, let original handle it (shows dialog) *@
+@*                     if (tosMustBeAccepted && !tosIsChecked) { *@
+@*                         console.log('TOS not checked, letting original function show TOS dialog'); *@
+@*                         originalSave.call(window.ConfirmOrder); *@
+@*                         return; *@
+@*                     } *@
+@*                      *@
+@*                     // All validations passed, open payment modal *@
+@*                     console.log('All validations passed, opening payment modal'); *@
+@*                     paymentModalOpen = true; *@
+@*                     momoPayment.openPaymentModal(); *@
+@*                 }; *@
+@*                  *@
+@*                 window.momoConfirmOrderSaveWrapped = true; *@
+@*                 clearInterval(setupInterval); *@
+@*                 console.log('ConfirmOrder.save wrapper installed'); *@
+@*             } *@
+@*         }, 100); *@
+@* *@
+@*         $('#closePaymentModal').click(() => { *@
+@*             momoPayment.closePaymentModal(); *@
+@*             // Reset the flag so user can try again *@
+@*             window.momoConfirmOrderSaveWrapped = false; *@
+@*         }); *@
+@* *@
+@*         $('#modalRetryPayment').click(() => momoPayment.reset()); *@
+@* *@
+@*         $('#modalCheckPaymentStatus').click(() => momoPayment.checkPaymentStatus()); *@
+@* *@
+@*         $('#modalConfirmSuccess').click(() => { *@
+@*             console.log('Modal confirm success clicked'); *@
+@*             momoPayment.closePaymentModal(); *@
+@*              *@
+@*             // Set flag *@
+@*             $('input[name="PaymentCompleted"]').val('true'); *@
+@*             console.log('PaymentCompleted set to true, calling ConfirmOrder.save'); *@
+@*              *@
+@*             // Now call ConfirmOrder.save again - this time payment is complete so it will proceed *@
+@*             if (window.ConfirmOrder && window.ConfirmOrder.save) { *@
+@*                 window.ConfirmOrder.save(); *@
+@*             } *@
+@*         }); *@
+@* *@
+@*         // Close modal if user clicks outside *@
+@*         $('#paymentModal').click(function(e) { *@
+@*             if ($(e.target).is(this)) { *@
+@*                 // Don't allow closing during processing *@
+@*                 if (!$('#modalPaymentProcessingSection').is(':visible')) { *@
+@*                     momoPayment.closePaymentModal(); *@
+@*                 } *@
+@*             } *@
+@*         }); *@
+@* *@
+@* *@
+@*         // Validate phone number early - prevent navigation to next step if invalid *@
+@*         function validatePhoneBeforeNavigation() { *@
+@*             const phoneNumber = $('#PhoneNumber').val().trim(); *@
+@*              *@
+@*             // Only validate if phone number field exists and has content *@
+@*             if (!phoneNumber) { *@
+@*                 // Don't show error if field is empty (user might have selected different payment method) *@
+@*                 return true; *@
+@*             } *@
+@*              *@
+@*             // Validate using momoPayment validation function *@
+@*             const phoneValidation = momoPayment.validatePhoneNumber(phoneNumber); *@
+@*             if (!phoneValidation.valid) { *@
+@*                 console.log('Phone validation failed:', phoneValidation.message); *@
+@*                  *@
+@*                 // Show error message *@
+@*                 const errorElement = $('#phoneNumberError'); *@
+@*                 errorElement.text(phoneValidation.message).addClass('show'); *@
+@*                  *@
+@*                 // Add error styling to input field *@
+@*                 $('#PhoneNumber').addClass('error'); *@
+@*                  *@
+@*                 return false; // Validation failed *@
+@*             } *@
+@*              *@
+@*             // Validation passed *@
+@*             console.log('Phone validation passed'); *@
+@*             $('#phoneNumberError').removeClass('show').hide(); *@
+@*             $('#PhoneNumber').removeClass('error'); *@
+@*             return true; *@
+@*         } *@
+@* *@
+@*         // Phone number input - enforce digits only and validate in real-time *@
+@*         $('#PhoneNumber').on('input', function () { *@
+@*             // Remove any non-digit characters *@
+@*             let value = $(this).val(); *@
+@*             let digitsOnly = value.replace(/\D/g, ''); // \D matches any non-digit *@
+@*              *@
+@*             // Update the input only if it changed *@
+@*             if (value !== digitsOnly) { *@
+@*                 $(this).val(digitsOnly); *@
+@*             } *@
+@*              *@
+@*             // Real-time validation as user types *@
+@*             if (digitsOnly.length > 0) { *@
+@*                 const phoneValidation = momoPayment.validatePhoneNumber(digitsOnly); *@
+@*                  *@
+@*                 if (!phoneValidation.valid) { *@
+@*                     // Show error *@
+@*                     $('#phoneNumberError').text(phoneValidation.message).addClass('show'); *@
+@*                     $('#PhoneNumber').addClass('error'); *@
+@*                 } else { *@
+@*                     // Clear error *@
+@*                     $('#phoneNumberError').removeClass('show').hide(); *@
+@*                     $('#PhoneNumber').removeClass('error'); *@
+@*                 } *@
+@*             } else { *@
+@*                 // Empty field - clear error *@
+@*                 $('#phoneNumberError').removeClass('show').hide(); *@
+@*                 $('#PhoneNumber').removeClass('error'); *@
+@*             } *@
+@*         }); *@
+@* *@
+@*         // Also prevent non-numeric paste *@
+@*         $('#PhoneNumber').on('paste', function(e) { *@
+@*             e.preventDefault(); *@
+@*              *@
+@*             // Get pasted text from clipboard *@
+@*             const pastedText = (e.originalEvent || e).clipboardData.getData('text'); *@
+@*             const digitsOnly = pastedText.replace(/\D/g, ''); *@
+@*              *@
+@*             // Set only the digits *@
+@*             $(this).val(digitsOnly); *@
+@*              *@
+@*             // Trigger input event to maintain consistency *@
+@*             $(this).trigger('input'); *@
+@*         }); *@
+@*     }); *@
+@* </script> *@
+
+</body>
+</html>
+

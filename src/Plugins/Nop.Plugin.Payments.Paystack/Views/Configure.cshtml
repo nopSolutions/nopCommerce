@@ -1,0 +1,92 @@
+@using Nop.Web.Areas.Admin.Components
+@model Nop.Plugin.Payments.Paystack.Models.ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+
+<form asp-controller="PaymentPaystack" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <p>@T("Plugins.Payments.Paystack.Instructions")</p>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="SecretKey_OverrideForStore" asp-input="SecretKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="SecretKey" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="SecretKey" asp-template="Password" />
+                        <span asp-validation-for="SecretKey"></span>
+                        <small class="form-text text-muted">@T("Plugins.Payments.Paystack.Fields.SecretKey.Hint")</small>
+                        <small class="form-text text-muted">Leave blank to keep the current value.</small>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PublicKey_OverrideForStore" asp-input="PublicKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PublicKey" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PublicKey" />
+                        <span asp-validation-for="PublicKey"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="CallbackUrl_OverrideForStore" asp-input="CallbackUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CallbackUrl" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CallbackUrl" />
+                        <span asp-validation-for="CallbackUrl"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="WebhookSecret_OverrideForStore" asp-input="WebhookSecret" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="WebhookSecret" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="WebhookSecret" asp-template="Password" />
+                        <span asp-validation-for="WebhookSecret"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="AdditionalFee_OverrideForStore" asp-input="AdditionalFee" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AdditionalFee" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AdditionalFee" />
+                        <span asp-validation-for="AdditionalFee"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="AdditionalFeePercentage_OverrideForStore" asp-input="AdditionalFeePercentage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AdditionalFeePercentage" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AdditionalFeePercentage" />
+                        <span asp-validation-for="AdditionalFeePercentage"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
