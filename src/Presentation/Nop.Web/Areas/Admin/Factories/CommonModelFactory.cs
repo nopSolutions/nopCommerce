@@ -16,6 +16,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Authentication.External;
@@ -73,6 +74,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IExchangeRatePluginManager _exchangeRatePluginManager;
+    protected readonly IHttpClientFactory _httpClientFactory;
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
@@ -125,6 +127,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         IDateTimeHelper dateTimeHelper,
         IEventPublisher eventPublisher,
         IExchangeRatePluginManager exchangeRatePluginManager,
+        IHttpClientFactory httpClientFactory,
         IHttpContextAccessor httpContextAccessor,
         ILanguageService languageService,
         ILocalizationService localizationService,
@@ -174,6 +177,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _dataProvider = dataProvider;
         _dateTimeHelper = dateTimeHelper;
         _exchangeRatePluginManager = exchangeRatePluginManager;
+        _httpClientFactory = httpClientFactory;
         _httpContextAccessor = httpContextAccessor;
         _languageService = languageService;
         _localizationService = localizationService;
@@ -851,6 +855,46 @@ public partial class CommonModelFactory : ICommonModelFactory
         }
 
         model.CurrentStaticCacheManager = currentStaticCacheManagerName;
+
+        var latestReleaseInfo = await _staticCacheManager.GetAsync(NopCommonDefaults.LatestReleaseInfoCacheKey, async () =>
+        {
+            try
+            {
+                var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
+                client.BaseAddress = new Uri(NopCommonDefaults.LatestReleaseInfoUrl);
+                client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CURRENT_VERSION}");
+                client.Timeout = TimeSpan.FromSeconds(NopCommonDefaults.GitHubRequestTimeout);
+
+                var response = await client.GetAsync(string.Empty);
+
+                return response.IsSuccessStatusCode
+                    ? JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(),
+                        new { Name = $"release-{NopVersion.FULL_VERSION}" })
+                    : null;
+            }
+            catch
+            {
+                //ignore
+            }
+
+            return null;
+        });
+
+        if (latestReleaseInfo != null && (!latestReleaseInfo.Name?.Contains(NopVersion.FULL_VERSION) ?? false))
+        {
+            var nopLatestVersion = latestReleaseInfo.Name.Replace("release-", string.Empty);
+
+            if (int.TryParse(nopLatestVersion.Replace(".", string.Empty),
+                    out var latestReleaseVersion) && (int.TryParse(NopVersion.FULL_VERSION.Replace(".", string.Empty),
+                    out var currentVersion) && currentVersion < latestReleaseVersion))
+            {
+                model.NopLatestVersion =
+                    string.Format(
+                        await _localizationService.GetResourceAsync("Admin.System.SystemInfo.NopLatestVersion.Text"),
+                        nopLatestVersion, NopLinksDefaults.OfficialSite.DownloadPage,
+                        NopLinksDefaults.OfficialSite.ReleaseNotesPage);
+            }
+        }
 
         return model;
     }

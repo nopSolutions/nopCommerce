@@ -16174,6 +16174,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.LoadedAssemblies.Hint">
     <Value>A list of loaded assemblies.</Value>
+  </LocaleResource>    
+  <LocaleResource Name="Admin.System.SystemInfo.NopLatestVersion">
+    <Value>Latest nopCommerce version</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.NopLatestVersion.Hint">
+    <Value>The latest nopCommerce version, available for download.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.NopLatestVersion.Text">
+    <Value><![CDATA[<a href='{1}' target='_blank'>{0}</a> (see the <a href='{2}' target='_blank'>release-notes</a>)]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.NopVersion">
     <Value>nopCommerce version</Value>

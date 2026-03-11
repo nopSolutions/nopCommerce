@@ -462,6 +462,11 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Orders.Fields.DesiredDeliveryDate"] = "Desired delivery date",
             ["Admin.Orders.Fields.DesiredDeliveryDate.Hint"] = "The delivery date selected by the customer during checkout.",
             ["Order.Shipping.DesiredDeliveryDate"] = "Desired delivery date",
+
+            //#8073
+            ["Admin.System.SystemInfo.NopLatestVersion"] = "Latest nopCommerce version",
+            ["Admin.System.SystemInfo.NopLatestVersion.Hint"] = "The latest nopCommerce version, available for download.",
+            ["Admin.System.SystemInfo.NopLatestVersion.Text"] = "<a href='{1}' target='_blank'>{0}</a> (see the <a href='{2}' target='_blank'>release-notes</a>)",
         });
 
         #endregion

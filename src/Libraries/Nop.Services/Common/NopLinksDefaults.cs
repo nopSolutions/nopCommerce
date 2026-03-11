@@ -16,6 +16,16 @@ public static partial class NopLinksDefaults
         public static string Main => "https://www.nopcommerce.com/";
 
         /// <summary>
+        /// Gets the download page
+        /// </summary>
+        public static string DownloadPage => "https://www.nopcommerce.com/download-nopcommerce";
+
+        /// <summary>
+        /// Gets the release-notes page
+        /// </summary>
+        public static string ReleaseNotesPage => "https://www.nopcommerce.com/release-notes";
+
+        /// <summary>
         /// Gets the boards page
         /// </summary>
         public static string Boards => "https://www.nopcommerce.com/boards/";
