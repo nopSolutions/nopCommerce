@@ -404,7 +404,7 @@ public class LocalizationMigration : MigrationBase
 
             "Profile.LatestPosts",
             "Profile.LatestPosts.NoPosts",
-            "Profile.PersonalInfo",
+            "Profile.PersonalInfo",            
         });
 
         #endregion
@@ -419,6 +419,11 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Forums.ShowAlertForPM.Hint"] = "Admin.Configuration.Settings.CustomerUser.ShowAlertForPM.Hint",
             ["Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages"] = "Admin.Configuration.Settings.CustomerUser.NotifyAboutPrivateMessages",
             ["Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages.Hint"] = "Admin.Configuration.Settings.CustomerUser.NotifyAboutPrivateMessages.Hint",
+
+            //#8097
+            ["Admin.Configuration.Settings.GeneralCommon.TwitterLink"] = "Admin.Configuration.Settings.GeneralCommon.XLink",
+            ["Admin.Configuration.Settings.GeneralCommon.TwitterLink.Hint"] = "Admin.Configuration.Settings.GeneralCommon.XLink.Hint",
+            ["Footer.FollowUs.Twitter"] = "Footer.FollowUs.X",
         });
 
         #endregion
@@ -462,6 +467,11 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Orders.Fields.DesiredDeliveryDate"] = "Desired delivery date",
             ["Admin.Orders.Fields.DesiredDeliveryDate.Hint"] = "The delivery date selected by the customer during checkout.",
             ["Order.Shipping.DesiredDeliveryDate"] = "Desired delivery date",
+
+            //#8097
+            ["Admin.Configuration.Settings.GeneralCommon.XLink"] = "X page URL",
+            ["Admin.Configuration.Settings.GeneralCommon.XLink.Hint"] = "Specify your X page URL. Leave empty if you have no such page.",
+            ["Footer.FollowUs.X"] = "X",
         });
 
         #endregion
