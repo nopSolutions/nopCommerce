@@ -40,7 +40,9 @@ public static class PaystackDefaults
     /// </summary>
     public const string PAYSTACK_CALLBACK_ENDPOINT = "/paystack/callback";
 
-    public const string DEFAULT_CURRENCY_VALUE = "NGN";
+    public const string DEFAULT_CURRENCY_CODE = "NGN";
     
     public const string CANCEL_PAYMENT = "Plugin.Payments.Paystack.CancelPayment";
+    
+    public const string POPUP_URL = "paystack/show-popup";
 }

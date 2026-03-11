@@ -4,7 +4,7 @@ namespace Nop.Plugin.Payments.Paystack.Helpers;
 
 public static class PaystackModelHelpers
 {
-    public static PaystackTransactionModel CreateTransactionModel(string reference, string customerEmail, decimal amount, string currency, int orderId, string authorizationUrl = null)
+    public static PaystackTransactionModel CreateTransactionModel(string reference, string customerEmail, decimal amount, string currency, int orderId)
     {
         return new PaystackTransactionModel
         {
@@ -15,7 +15,6 @@ public static class PaystackModelHelpers
             CreatedAt = DateTime.Now,
             Status = "pending",
             OrderId = orderId,
-            AuthorizationUrl = authorizationUrl
         };
     }
 }

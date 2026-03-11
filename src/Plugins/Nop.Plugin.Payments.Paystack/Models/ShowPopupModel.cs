@@ -21,21 +21,6 @@ public class ShowPopupModel
     public int OrderId { get; set; }
 
     /// <summary>
-    /// Paystack public key
-    /// </summary>
-    public string PublicKey { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Customer email
-    /// </summary>
-    public string Email { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Payment amount in kobo
-    /// </summary>
-    public int Amount { get; set; }
-
-    /// <summary>
     /// Callback URL
     /// </summary>
     public string CallbackUrl { get; set; } = string.Empty;

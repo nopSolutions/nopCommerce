@@ -57,43 +57,31 @@
 
 @Html.Raw(@"
 <script src=""https://js.paystack.co/v2/inline.js""></script>
-<script>
-console.log('Initializing Paystack popup');
+    <script>
+    const paystackConfig = {
+        accessCode: '" + Model.AccessCode + @"',
+        orderId: '" + Model.OrderId + @"',
+        callbackUrl: '" + Model.CallbackUrl + @"'
+    };
 
-const paystackConfig = {
-    accessCode: '" + Model.AccessCode + @"',
-    reference: '" + Model.Reference + @"',
-    email: '" + Model.Email + @"',
-    amount: " + Model.Amount.ToString(System.Globalization.CultureInfo.InvariantCulture) + @",
-    publicKey: '" + Model.PublicKey + @"',
-    orderId: '" + Model.OrderId + @"',
-    callbackUrl: '" + Model.CallbackUrl + @"'
-};
+    function startPaystack() {
+        var handler = new PaystackPop();
+        handler.resumeTransaction(paystackConfig.accessCode, {
+            onSuccess: function(transaction) {
+                window.location.href = paystackConfig.callbackUrl + '?reference=' + transaction.reference;
+            },
+            onCancel: function() {
+                window.location.href = '/paystack/cancel-payment?orderId=" + Model.OrderId + @"';
+            },
+            onError: function(error) {
+                alert('Payment error: ' + (error.message || 'Unknown error'));
+                setTimeout(function() {
+                    window.location.href = '/paystack/cancel-payment?orderId=" + Model.OrderId + @"';
+                }, 3000);
+            }
+        });
+    }
 
-function startPaystack() {
-    console.log(`${paystackConfig}`);
-    var handler = new PaystackPop();
-    handler.resumeTransaction(paystackConfig.accessCode, {
-        onSuccess: function(transaction) {
-            console.log('Payment successful:', transaction);
-            window.location.href = paystackConfig.callbackUrl + '?reference=' + transaction.reference;
-        },
-                    onCancel: function() {
-                        console.log('Payment cancelled');
-                        window.location.href = '/paystack/cancel-payment?orderId=" + Model.OrderId + @"';
-                    },
-                    onError: function(error) {
-                        console.error('Payment error:', error);
-                        alert('Payment error: ' + (error.message || 'Unknown error'));
-                        // Redirect to cancel payment after showing error
-                        setTimeout(function() {
-                            window.location.href = '/paystack/cancel-payment?orderId=" + Model.OrderId + @"';
-                        }, 3000);
-                    }
-    });
-}
-
-// Trigger popup immediately
-startPaystack();
+    startPaystack();
 </script>
 ")

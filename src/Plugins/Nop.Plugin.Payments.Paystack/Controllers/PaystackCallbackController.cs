@@ -55,13 +55,11 @@ public class PaystackCallbackController : Controller
         if (order == null)
             return RedirectToRoute("Homepage");
 
-        // Check if already paid
         if (order.PaymentStatus == PaymentStatus.Paid)
         {
             return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
         }
 
-        // Verify transaction with Paystack
         var verify = await _paymentClient.VerifyTransactionAsync(refToUse);
         
         if (verify?.Status != true || verify.Data == null)
@@ -74,14 +72,12 @@ public class PaystackCallbackController : Controller
         var data = verify.Data;
         await _transactionService.UpdateTransactionStatusAsync(refToUse, data.Status, data.GatewayResponse);
 
-        // Mark order as paid if successful
         if (string.Equals(data.Status, "success", StringComparison.OrdinalIgnoreCase) && 
             _orderProcessingService.CanMarkOrderAsPaid(order))
         {
             await _orderProcessingService.MarkOrderAsPaidAsync(order);
         }
 
-        Response.Cookies.Delete("PaystackPopup");
         return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
     }
 

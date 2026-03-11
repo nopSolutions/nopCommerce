@@ -55,9 +55,6 @@ public class PaystackController : BasePluginController
             AccessCode = accessCode,
             Reference = reference,
             OrderId = orderId,
-            PublicKey = settings.PublicKey,
-            Email = transaction.CustomerEmail,
-            Amount = (int)(transaction.Amount * 100), // Convert to kobo
             CallbackUrl = Url.Action("Callback", "PaystackCallback", null, Request.Scheme)
         };
 
@@ -68,7 +65,7 @@ public class PaystackController : BasePluginController
     /// Cancel payment and cancel the order
     /// </summary>
     [HttpGet]
-    public async Task<IActionResult> CancelPayment(int orderId)
+    public async Task<IActionResult> CancelPaymentAsync(int orderId)
     {
         if (orderId <= 0)
             return RedirectToRoute("Homepage");
@@ -77,22 +74,24 @@ public class PaystackController : BasePluginController
         if (order == null)
             return RedirectToRoute("Homepage");
 
-        if (order.OrderStatus == OrderStatus.Pending)
+        if (order.OrderStatus != OrderStatus.Pending)
         {
-            order.OrderStatus = OrderStatus.Cancelled;
-            order.PaymentStatus = PaymentStatus.Voided;
-            
-            await _orderService.UpdateOrderAsync(order);
-            
-            await _orderService.InsertOrderNoteAsync(new OrderNote
-            {
-                OrderId = order.Id,
-                Note = "Payment cancelled by user at Paystack popup",
-                DisplayToCustomer = true,
-                CreatedOnUtc = DateTime.UtcNow
-            });
+            return RedirectToRoute("OrderDetails", new { orderId });
         }
+        
+        order.OrderStatus = OrderStatus.Cancelled;
+        order.PaymentStatus = PaymentStatus.Voided;
+            
+        await _orderService.UpdateOrderAsync(order);
+            
+        await _orderService.InsertOrderNoteAsync(new OrderNote
+        {
+            OrderId = order.Id,
+            Note = "Payment cancelled by user at Paystack popup",
+            DisplayToCustomer = true,
+            CreatedOnUtc = DateTime.UtcNow
+        });
 
-        return RedirectToRoute("OrderDetails", new { orderId = orderId });
+        return RedirectToRoute("OrderDetails", new { orderId });
     }
 }

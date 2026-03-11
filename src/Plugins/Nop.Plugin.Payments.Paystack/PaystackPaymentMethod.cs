@@ -65,7 +65,7 @@ public class PaystackPaymentMethod : BasePlugin, IPaymentMethod
             string.Equals(paymentValue?.Value, "true", StringComparison.OrdinalIgnoreCase))
             return Task.FromResult(new ProcessPaymentResult { NewPaymentStatus = PaymentStatus.Paid });
 
-        return Task.FromResult(new ProcessPaymentResult { NewPaymentStatus = PaymentStatus.Pending });
+        return Task.FromResult(new ProcessPaymentResult());
     }
 
     public async Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
@@ -93,32 +93,13 @@ public class PaystackPaymentMethod : BasePlugin, IPaymentMethod
             reference, 
             email, 
             orderTotal, 
-            order.CustomerCurrencyCode ?? PaystackDefaults.DEFAULT_CURRENCY_VALUE, 
-            order.Id, 
-            initializeTransactionResponse.Data.AuthorizationUrl
+            order.CustomerCurrencyCode ?? PaystackDefaults.DEFAULT_CURRENCY_CODE, 
+            order.Id
         );
 
         // Redirect to popup page - this interrupts the normal checkout flow
-        var popupUrl = $"{_webHelper.GetStoreLocation()}paystack/show-popup?accessCode={initializeTransactionResponse.Data.AccessCode}&reference={reference}&orderId={order.Id}";
+        var popupUrl = $"{_webHelper.GetStoreLocation()}{PaystackDefaults.POPUP_URL}?accessCode={initializeTransactionResponse.Data.AccessCode}&reference={reference}&orderId={order.Id}";
         _httpContextAccessor.HttpContext?.Response.Redirect(popupUrl);
-    }
-
-    /// <summary>
-    /// Check if payment was completed via popup
-    /// </summary>
-    private async Task<bool> IsPopupPaymentCompletedAsync(PostProcessPaymentRequest postProcessPaymentRequest)
-    {
-        // Check if the order was already processed via popup success endpoint
-        var order = postProcessPaymentRequest.Order;
-        if (order?.PaymentStatus != PaymentStatus.Paid) return false;
-        // Check if there's a recent transaction that was processed via popup
-        var transactions = await _transactionService.GetTransactionsByOrderIdAsync(order.Id);
-        var recentTransaction = transactions?.FirstOrDefault(t => 
-            string.Equals(t.Status, "success", StringComparison.OrdinalIgnoreCase) &&
-            (DateTime.UtcNow - t.CreatedAt).TotalMinutes < 5);
-            
-        return recentTransaction != null;
-
     }
 
     public Task<bool> HidePaymentMethodAsync(IList<ShoppingCartItem> cart)

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Nop.Services.Plugins;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Payments.Paystack.Infrastructure;
