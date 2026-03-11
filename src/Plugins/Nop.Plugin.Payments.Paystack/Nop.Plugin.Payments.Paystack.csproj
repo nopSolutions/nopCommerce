@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -11,31 +11,40 @@
     <RepositoryType>Git</RepositoryType>
     <OutputPath>$(SolutionDir)\Presentation\Nop.Web\Plugins\Payments.Paystack</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
-    <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project.
+    <!--Set this parameter to true to get the dlls copied from NuGet cache to the output of your project.
     You need to set this parameter to true if your plugin has a nuget package 
-    to ensure that the dlls copied from the NuGet cache to the output of your project-->
+    to ensure that the dlls copied from NuGet cache to the output of your project-->
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-    <ItemGroup>
-      <Folder Include="Content\" />
-    </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="Views\Configure.cshtml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Include="Views\PaymentInfo.cshtml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Include="Views\_ViewImports.cshtml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Include="plugin.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Scripts\**" />
+    <EmbeddedResource Remove="Scripts\**" />
+    <None Remove="Scripts\**" />
+  </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Views\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\PaymentInfo.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_ViewImports.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Complete.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\ShowPopup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj" />
     <ClearPluginAssemblies Include="$(SolutionDir)\Build\ClearPluginAssemblies.proj" />

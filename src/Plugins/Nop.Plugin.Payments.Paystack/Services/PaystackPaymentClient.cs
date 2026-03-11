@@ -19,7 +19,7 @@ public class PaystackPaymentClient
     {
         _settings = settings;
         _logger = logger;
-        httpClient.BaseAddress = new Uri(PaystackDefaults.BaseAddress);
+        httpClient.BaseAddress = new Uri(PaystackDefaults.BASE_ADDRESS);
         httpClient.Timeout = TimeSpan.FromSeconds(30);
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _settings.SecretKey);
         _httpClient = httpClient;
@@ -34,42 +34,44 @@ public class PaystackPaymentClient
     /// <param name="callbackUrl">Override callback URL (optional)</param>
     /// <param name="metadata">Custom metadata (optional)</param>
     /// <returns>Initialize response with authorization_url and reference, or null on failure</returns>
-    public Task<InitializeTransactionResponse?> InitializeTransactionAsync(
+    public Task<InitializeTransactionResponse> InitializeTransactionAsync(
         string email,
         decimal amount,
-        string? reference = null,
-        string? callbackUrl = null,
-        object? metadata = null)
-        => InitializeTransactionAsync(_settings, email, amount, reference, callbackUrl, metadata);
+        string reference = null,
+        string callbackUrl = null,
+        object metadata = null)
+    {
+        return InitializeTransactionAsync(_settings, email, amount, callbackUrl ,reference, metadata);
+    }
 
     /// <summary>
     /// Initialize a transaction using the given settings (e.g. for a specific store from the processor).
     /// </summary>
-    public async Task<InitializeTransactionResponse?> InitializeTransactionAsync(
+    private async Task<InitializeTransactionResponse> InitializeTransactionAsync(
         PaystackPaymentSettings settings,
         string email,
         decimal amount,
-        string? reference = null,
-        string? callbackUrl = null,
-        object? metadata = null)
+        string callbackUrl,
+        string reference = null,
+        object metadata = null)
     {
         if (string.IsNullOrWhiteSpace(settings?.SecretKey))
             return null;
 
-        var amountInSubunit = (int)Math.Round(amount * 100);
+        var amountInSubUnit = (int)Math.Round(amount * 100);
         var payload = new
         {
             email,
-            amount = amountInSubunit,
+            amount = amountInSubUnit,
             reference = reference ?? Guid.NewGuid().ToString("N"),
-            callback_url = callbackUrl ?? settings.CallbackUrl,
+            callback_url = callbackUrl,
             metadata
         };
 
         var json = JsonConvert.SerializeObject(payload);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, PaystackDefaults.InitializeTransactionEndpoint);
+        using var request = new HttpRequestMessage(HttpMethod.Post, PaystackDefaults.INITIALIZE_TRANSACTION_ENDPOINT);
         var secretKey = (settings.SecretKey ?? "").Trim();
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", secretKey);
         request.Content = content;
@@ -95,34 +97,16 @@ public class PaystackPaymentClient
     }
 
     /// <summary>
-    /// Verify a transaction by reference (uses default settings from ctor).
+    /// Verify a transaction using the given settings (e.g. for callback from a specific store).
     /// </summary>
     public async Task<VerifyTransactionResponse?> VerifyTransactionAsync(string reference)
     {
-        if (string.IsNullOrWhiteSpace(reference))
+        if (string.IsNullOrWhiteSpace(_settings?.SecretKey) || string.IsNullOrWhiteSpace(reference))
             return null;
 
-        var url = $"{PaystackDefaults.VerifyTransactionEndpoint}/{reference}";
-        var response = await _httpClient.GetAsync(url);
-
-        if (!response.IsSuccessStatusCode)
-            return null;
-
-        var responseBody = await response.Content.ReadAsStringAsync();
-        return JsonConvert.DeserializeObject<VerifyTransactionResponse>(responseBody);
-    }
-
-    /// <summary>
-    /// Verify a transaction using the given settings (e.g. for callback from a specific store).
-    /// </summary>
-    public async Task<VerifyTransactionResponse?> VerifyTransactionAsync(PaystackPaymentSettings settings, string reference)
-    {
-        if (string.IsNullOrWhiteSpace(settings?.SecretKey) || string.IsNullOrWhiteSpace(reference))
-            return null;
-
-        var url = $"{PaystackDefaults.VerifyTransactionEndpoint}/{reference}";
+        var url = $"{PaystackDefaults.VERIFY_TRANSACTION_ENDPOINT}/{reference}";
         using var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", settings.SecretKey);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settings.SecretKey);
 
         var response = await _httpClient.SendAsync(request);
 

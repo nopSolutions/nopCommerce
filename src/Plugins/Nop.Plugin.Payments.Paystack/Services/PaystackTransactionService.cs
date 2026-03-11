@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Nop.Data;
+using Nop.Plugin.Payments.Paystack.Helpers;
 using Nop.Plugin.Payments.Paystack.Models;
 
 namespace Nop.Plugin.Payments.Paystack.Services;
@@ -26,18 +27,9 @@ public class PaystackTransactionService : IPaystackTransactionService
     }
 
     /// <inheritdoc />
-    public virtual async Task<PaystackTransactionModel> CreateTransactionAsync(string reference, string customerEmail, decimal amount, string currency, int orderId)
+    public virtual async Task<PaystackTransactionModel> InsertTransactionAsync(string reference, string customerEmail, decimal amount, string currency, int orderId, string authorizationUrl)
     {
-        var transaction = new PaystackTransactionModel
-        {
-            Reference = reference,
-            CustomerEmail = customerEmail,
-            Amount = amount,
-            Currency = currency,
-            CreatedAt = DateTime.Now,
-            Status = "pending",
-            OrderId = orderId
-        };
+        var transaction = PaystackModelHelpers.CreateTransactionModel(reference, customerEmail, amount, currency, orderId, authorizationUrl);
 
         await _transactionRepository.InsertAsync(transaction);
         return transaction;
@@ -111,5 +103,29 @@ public class PaystackTransactionService : IPaystackTransactionService
         var hash = hmacz.ComputeHash(Encoding.UTF8.GetBytes(payload));
         var computed = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
         return string.Equals(computed, signature, StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<IList<PaystackTransactionModel>> GetTransactionsByOrderIdAsync(int orderId)
+    {
+        var transactions = await _transactionRepository.Table
+            .Where(t => t.OrderId == orderId)
+            .OrderByDescending(t => t.CreatedAt)
+            .ToListAsync();
+
+        return transactions.Select(t => new PaystackTransactionModel
+        {
+            Id = t.Id,
+            Reference = t.Reference,
+            CustomerEmail = t.CustomerEmail,
+            Amount = t.Amount,
+            Currency = t.Currency,
+            OrderId = t.OrderId,
+            Status = t.Status,
+            ErrorMessage = t.ErrorMessage,
+            AuthorizationUrl = t.AuthorizationUrl,
+            CreatedAt = t.CreatedAt,
+            UpdatedAt = t.UpdatedAt
+        }).ToList();
     }
 }

@@ -2,25 +2,26 @@
 @{
     Layout = "";
 }
+
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@T("Checkout.OrderPlaced")</title>
+    <title>Payment Complete</title>
+    <script>
+        // Close popup and redirect parent
+        if (window.opener) {
+            window.opener.location.href = '@Model';
+            window.close();
+        } else {
+            window.location.href = '@Model';
+        }
+    </script>
 </head>
 <body>
-    <p>@T("Checkout.OrderPlaced")</p>
-    <div id="paystack-redirect" data-url="@Model"></div>
-    <script>
-        (function () {
-            var el = document.getElementById('paystack-redirect');
-            var redirectUrl = el ? el.getAttribute('data-url') : '';
-            if (window.opener && redirectUrl) {
-                window.opener.location.href = redirectUrl;
-            }
-            window.close();
-        })();
-    </script>
+    <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+        <h2>Payment Processing Complete</h2>
+        <p>Redirecting you to your order...</p>
+        <p><a href="@Model">Click here if you are not redirected automatically</a></p>
+    </div>
 </body>
 </html>

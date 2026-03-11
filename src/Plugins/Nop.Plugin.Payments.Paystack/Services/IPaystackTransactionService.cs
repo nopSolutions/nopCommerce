@@ -13,7 +13,7 @@ public interface IPaystackTransactionService
     /// <summary>
     /// Creates a new transaction record
     /// </summary>
-    Task<PaystackTransactionModel> CreateTransactionAsync(string reference, string customerEmail, decimal amount, string currency, int orderId);
+    Task<PaystackTransactionModel> InsertTransactionAsync(string reference, string customerEmail, decimal amount, string currency, int orderId, string authorizationUrl);
 
     /// <summary>
     /// Updates a transaction status
@@ -29,6 +29,11 @@ public interface IPaystackTransactionService
     /// Gets a transaction by order ID
     /// </summary>
     Task<PaystackTransactionModel?> GetTransactionByOrderIdAsync(int orderId);
+
+    /// <summary>
+    /// Gets all transactions by order ID
+    /// </summary>
+    Task<IList<PaystackTransactionModel>> GetTransactionsByOrderIdAsync(int orderId);
 
     /// <summary>
     /// Gets transaction history

@@ -18,11 +18,6 @@ public class PaystackPaymentSettings : ISettings
     public string PublicKey { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the callback URL (redirect after payment)
-    /// </summary>
-    public string CallbackUrl { get; set; } = string.Empty;
-
-    /// <summary>
     /// Gets or sets the webhook secret for verifying webhook signatures
     /// </summary>
     public string WebhookSecret { get; set; } = string.Empty;
