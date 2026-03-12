@@ -58,7 +58,7 @@ public class PaystackController : BasePluginController
             CallbackUrl = Url.Action("Callback", "PaystackCallback", null, Request.Scheme)
         };
 
-        return View("~/Plugins/Payments.PayStack/Views/ShowPopup.cshtml", model);
+        return View("~/Plugins/Payments.Paystack/Views/ShowPopup.cshtml", model);
     }
 
     /// <summary>
