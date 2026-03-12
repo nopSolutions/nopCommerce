@@ -90,13 +90,11 @@
                         {
                             new ColumnProperty(nameof(NewsItemModel.Title))
                             {
-                                Title = T("Plugins.Misc.News.NewsItems.Fields.Title").Text,
-                                Width = "300"
+                                Title = T("Plugins.Misc.News.NewsItems.Fields.Title").Text
                             },
                             new ColumnProperty(nameof(NewsItemModel.LanguageName))
                             {
-                                Title = T("Plugins.Misc.News.NewsItems.Fields.Language").Text,
-                                Width = "100"
+                                Title = T("Plugins.Misc.News.NewsItems.Fields.Language").Text
                             },
                             new ColumnProperty(nameof(NewsItemModel.Id))
                             {
@@ -108,13 +106,13 @@
                             new ColumnProperty(nameof(NewsItemModel.StartDateUtc))
                             {
                                 Title = T("Plugins.Misc.News.NewsItems.Fields.StartDate").Text,
-                                Width = "100",
+                                Width = "180",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(NewsItemModel.EndDateUtc))
                             {
                                 Title = T("Plugins.Misc.News.NewsItems.Fields.EndDate").Text,
-                                Width = "100",
+                                Width = "180",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(NewsItemModel.Published))
@@ -127,7 +125,7 @@
                             new ColumnProperty(nameof(NewsItemModel.CreatedOn))
                             {
                                 Title = T("Plugins.Misc.News.NewsItems.Fields.CreatedOn").Text,
-                                Width = "100",
+                                Width = "180",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(NewsItemModel.Id))

@@ -121,13 +121,11 @@
                             new ColumnProperty(nameof(ActivityLogModel.CustomerEmail))
                             {
                                 Title = T("Admin.Customers.ActivityLog.Fields.CustomerEmail").Text,
-                                Width = "100",
                                 Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(ActivityLogModel.CustomerId)))
                             },
                             new ColumnProperty(nameof(ActivityLogModel.IpAddress))
                             {
-                                Title = T("Admin.Customers.ActivityLog.Fields.IpAddress").Text,
-                                Width = "100"
+                                Title = T("Admin.Customers.ActivityLog.Fields.IpAddress").Text
                             },
                             new ColumnProperty(nameof(ActivityLogModel.Comment))
                             {
@@ -136,7 +134,7 @@
                             new ColumnProperty(nameof(ActivityLogModel.CreatedOn))
                             {
                                 Title = T("Admin.Customers.ActivityLog.Fields.CreatedOn").Text,
-                                Width = "200",
+                                Width = "180",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(ActivityLogModel.Id))

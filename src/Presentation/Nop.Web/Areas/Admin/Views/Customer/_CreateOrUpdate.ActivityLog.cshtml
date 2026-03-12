@@ -11,13 +11,11 @@
         {
             new ColumnProperty(nameof(CustomerActivityLogModel.ActivityLogTypeName))
             {
-                Title = T("Admin.Customers.Customers.ActivityLog.ActivityLogType").Text,
-                Width = "300"
+                Title = T("Admin.Customers.Customers.ActivityLog.ActivityLogType").Text
             },
             new ColumnProperty(nameof(CustomerActivityLogModel.IpAddress))
             {
-                Title = T("Admin.Customers.Customers.ActivityLog.IpAddress").Text,
-                Width = "100"
+                Title = T("Admin.Customers.Customers.ActivityLog.IpAddress").Text
             },
             new ColumnProperty(nameof(CustomerActivityLogModel.Comment))
             {
@@ -26,7 +24,7 @@
             new ColumnProperty(nameof(CustomerActivityLogModel.CreatedOn))
             {
                 Title = T("Admin.Customers.Customers.ActivityLog.CreatedOn").Text,
-                Width = "200",
+                Width = "180",
                 Render = new RenderDate()
             }
         }

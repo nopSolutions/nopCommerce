@@ -22,20 +22,18 @@
                 },
                 new ColumnProperty(nameof(PollAnswerModel.NumberOfVotes))
                 {
-                    Title = T("Plugins.Misc.Polls.Answers.Fields.NumberOfVotes").Text,
-                    Width = "100"
+                    Title = T("Plugins.Misc.Polls.Answers.Fields.NumberOfVotes").Text
                 },
                 new ColumnProperty(nameof(PollAnswerModel.DisplayOrder))
                 {
                     Title = T("Plugins.Misc.Polls.Answers.Fields.DisplayOrder").Text,
-                    Width = "100",
                     Editable = true,
                     EditType = EditType.Number
                 },
                 new ColumnProperty(nameof(PollAnswerModel.Id))
                 {
                     Title = T("Admin.Common.Edit").Text,
-                    Width = "200",
+                    Width = "100",
                     ClassName =  NopColumnClassDefaults.Button,
                     Render = new RenderButtonsInlineEdit()
                 },
