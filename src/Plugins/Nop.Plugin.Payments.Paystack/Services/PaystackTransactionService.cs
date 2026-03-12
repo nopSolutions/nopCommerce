@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Nop.Data;
+using Nop.Plugin.Payments.Paystack.Helpers;
 using Nop.Plugin.Payments.Paystack.Models;
 
 namespace Nop.Plugin.Payments.Paystack.Services;
@@ -26,18 +27,9 @@ public class PaystackTransactionService : IPaystackTransactionService
     }
 
     /// <inheritdoc />
-    public virtual async Task<PaystackTransactionModel> CreateTransactionAsync(string reference, string customerEmail, decimal amount, string currency, int orderId)
+    public virtual async Task<PaystackTransactionModel> InsertTransactionAsync(string reference, string customerEmail, decimal amount, string currency, int orderId)
     {
-        var transaction = new PaystackTransactionModel
-        {
-            Reference = reference,
-            CustomerEmail = customerEmail,
-            Amount = amount,
-            Currency = currency,
-            CreatedAt = DateTime.Now,
-            Status = "pending",
-            OrderId = orderId
-        };
+        var transaction = PaystackModelHelpers.CreateTransactionModel(reference, customerEmail, amount, currency, orderId);
 
         await _transactionRepository.InsertAsync(transaction);
         return transaction;

@@ -19,7 +19,7 @@ namespace Nop.Plugin.Payments.Paystack;
 /// <summary>
 /// Paystack payment method plugin
 /// </summary>
-public class PaystackPaymentProcessor : BasePlugin, IPaymentMethod
+public class PaystackPaymentMethod : BasePlugin, IPaymentMethod
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILocalizationService _localizationService;
@@ -33,7 +33,7 @@ public class PaystackPaymentProcessor : BasePlugin, IPaymentMethod
     private readonly ICustomerService _customerService;
     private readonly IWorkContext _workContext;
 
-    public PaystackPaymentProcessor(
+    public PaystackPaymentMethod(
         IHttpContextAccessor httpContextAccessor,
         ILocalizationService localizationService,
         IOrderTotalCalculationService orderTotalCalculationService,
@@ -62,21 +62,16 @@ public class PaystackPaymentProcessor : BasePlugin, IPaymentMethod
     public Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
     {
         if (processPaymentRequest.CustomValues.TryGetValue("PaymentCompleted", out var paymentValue) &&
-            string.Equals(paymentValue?.Value?.ToString(), "true", StringComparison.OrdinalIgnoreCase))
+            string.Equals(paymentValue?.Value, "true", StringComparison.OrdinalIgnoreCase))
             return Task.FromResult(new ProcessPaymentResult { NewPaymentStatus = PaymentStatus.Paid });
 
-        return Task.FromResult(new ProcessPaymentResult { NewPaymentStatus = PaymentStatus.Pending });
+        return Task.FromResult(new ProcessPaymentResult());
     }
 
     public async Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
     {
         var order = postProcessPaymentRequest.Order;
         if (order == null)
-            return;
-
-        var storeId = order.StoreId;
-        var settings = await _settingService.LoadSettingAsync<PaystackPaymentSettings>(storeId);
-        if (string.IsNullOrWhiteSpace(settings.SecretKey))
             return;
 
         var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
@@ -86,19 +81,31 @@ public class PaystackPaymentProcessor : BasePlugin, IPaymentMethod
             return;
 
         var orderTotal = order.OrderTotal;
-        var callbackUrl = _webHelper.GetStoreLocation().TrimEnd('/') + "/paystack/callback";
-        var initResult = await _paymentClient.InitializeTransactionAsync(settings, email, orderTotal, null, callbackUrl);
+        var callbackUrl = $"{_webHelper.GetStoreLocation()}/{PaystackDefaults.PAYSTACK_CALLBACK_ENDPOINT}";
+        var initializeTransactionResponse = await _paymentClient.InitializeTransactionAsync(email, orderTotal, null, callbackUrl);
 
-        if (initResult?.Status != true || initResult.Data == null || string.IsNullOrWhiteSpace(initResult.Data.AuthorizationUrl))
+        if (initializeTransactionResponse?.Status != true || initializeTransactionResponse.Data == null || string.IsNullOrWhiteSpace(initializeTransactionResponse.Data.AccessCode))
             return;
 
-        var reference = initResult.Data.Reference;
-        await _transactionService.CreateTransactionAsync(reference, email, orderTotal, order.CustomerCurrencyCode ?? "NGN", order.Id);
+        var reference = initializeTransactionResponse.Data.Reference;
+        
+        await _transactionService.InsertTransactionAsync(
+            reference, 
+            email, 
+            orderTotal, 
+            order.CustomerCurrencyCode ?? PaystackDefaults.DEFAULT_CURRENCY_CODE, 
+            order.Id
+        );
 
-        _httpContextAccessor.HttpContext?.Response.Redirect(initResult.Data.AuthorizationUrl, false);
+        // Redirect to popup page - this interrupts the normal checkout flow
+        var popupUrl = $"{_webHelper.GetStoreLocation()}{PaystackDefaults.POPUP_URL}?accessCode={initializeTransactionResponse.Data.AccessCode}&reference={reference}&orderId={order.Id}";
+        _httpContextAccessor.HttpContext?.Response.Redirect(popupUrl);
     }
 
-    public Task<bool> HidePaymentMethodAsync(IList<ShoppingCartItem> cart) => Task.FromResult(false);
+    public Task<bool> HidePaymentMethodAsync(IList<ShoppingCartItem> cart)
+    {
+        return Task.FromResult(false);
+    }
 
     public Task<CapturePaymentResult> CaptureAsync(CapturePaymentRequest capturePaymentRequest)
         => Task.FromResult(new CapturePaymentResult { Errors = new[] { "Capture not supported" } });
@@ -143,20 +150,20 @@ public class PaystackPaymentProcessor : BasePlugin, IPaymentMethod
 
     private async Task<string> ResolveEmailFromFormOrCustomerAsync(IFormCollection form)
     {
-        var email = (form["Email"].ToString() ?? "").Trim();
+        var email = form["Email"].ToString();
         if (!string.IsNullOrEmpty(email))
             return email;
-        var billingEmail = (form["BillingNewAddress.Email"].ToString() ?? "").Trim();
+        var billingEmail = form["BillingNewAddress.Email"].ToString();
         if (!string.IsNullOrEmpty(billingEmail))
             return billingEmail;
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (customer == null)
             return "";
-        email = (customer.Email ?? "").Trim();
+        email = customer.Email ?? "";
         if (!string.IsNullOrEmpty(email))
             return email;
         var billingAddress = await _customerService.GetCustomerBillingAddressAsync(customer);
-        return (billingAddress?.Email ?? "").Trim();
+        return billingAddress?.Email ?? "";
     }
 
     public override string GetConfigurationPageUrl()
@@ -170,7 +177,6 @@ public class PaystackPaymentProcessor : BasePlugin, IPaymentMethod
         {
             SecretKey = "",
             PublicKey = "",
-            CallbackUrl = "",
             WebhookSecret = "",
             AdditionalFee = 0,
             AdditionalFeePercentage = false
@@ -223,7 +229,7 @@ public class PaystackPaymentProcessor : BasePlugin, IPaymentMethod
     }
 
     public Task<ProcessPaymentResult> ProcessRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest)
-        => Task.FromResult(new ProcessPaymentResult { Errors = new[] { "Recurring payments not supported" } });
+        => Task.FromResult(new ProcessPaymentResult { Errors = [ "Recurring payments not supported" ] });
 
     public bool SupportCapture => false;
     public bool SupportPartiallyRefund => false;

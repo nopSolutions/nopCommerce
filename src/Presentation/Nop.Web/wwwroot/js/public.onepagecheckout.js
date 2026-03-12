@@ -678,20 +678,11 @@ var PaymentInfo = {
     save: function () {
         if (Checkout.loadWaiting !== false) return;
 
-        var $form = $(this.form);
-        var $emailInput = $form.find('input[name="Email"]');
-        if ($emailInput.length && !$emailInput.val()) {
-            var billingEmail = $('input[name="BillingNewAddress.Email"]').val();
-            if (billingEmail) {
-                $emailInput.val(billingEmail);
-            }
-        }
-
         Checkout.setLoadWaiting('payment-info');
         $.ajax({
             cache: false,
             url: this.saveUrl,
-            data: $form.serialize(),
+            data: $(this.form).serialize(),
             type: "POST",
             success: this.nextStep,
             complete: this.resetLoadWaiting,
@@ -741,10 +732,6 @@ var ConfirmOrder = {
   save: async function () {
     if (Checkout.loadWaiting !== false) return;
 
-    var isRedirectPayment = $('.paystack-payment-info').length > 0;
-    var paymentPopup = isRedirectPayment ? window.open('', 'paystack_payment', 'width=600,height=700,scrollbars=yes,resizable=yes') : null;
-    ConfirmOrder._paymentPopup = paymentPopup;
-
       //terms of service
         var termOfServiceOk = true;
         if ($('#termsofservice').length > 0) {
@@ -756,35 +743,28 @@ var ConfirmOrder = {
                 termOfServiceOk = true;
             }
         }
-        if (!termOfServiceOk) {
-            if (paymentPopup && !paymentPopup.closed) paymentPopup.close();
-            ConfirmOrder._paymentPopup = null;
+        if (termOfServiceOk) {
+            Checkout.setLoadWaiting('confirm-order');
+            var postData = {};
+
+            if (ConfirmOrder.isCaptchaEnabled) {
+                var captchaTok = await ConfirmOrder.getCaptchaToken('OpcConfirmOrder');
+                postData['g-recaptcha-response'] = captchaTok;
+            }
+
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                url: this.saveUrl,
+                data: postData,
+                type: "POST",
+                success: this.nextStep,
+                complete: this.resetLoadWaiting,
+                error: Checkout.ajaxFailure
+            });
+        } else {
             return false;
         }
-        Checkout.setLoadWaiting('confirm-order');
-        var postData = {};
-
-        if (ConfirmOrder.isCaptchaEnabled) {
-            var captchaTok = await ConfirmOrder.getCaptchaToken('OpcConfirmOrder');
-            postData['g-recaptcha-response'] = captchaTok;
-        }
-
-        addAntiForgeryToken(postData);
-        $.ajax({
-            cache: false,
-            url: this.saveUrl,
-            data: postData,
-            type: "POST",
-            success: this.nextStep,
-            complete: this.resetLoadWaiting,
-            error: function (xhr, status, error) {
-                if (ConfirmOrder._paymentPopup && !ConfirmOrder._paymentPopup.closed) {
-                    ConfirmOrder._paymentPopup.close();
-                }
-                ConfirmOrder._paymentPopup = null;
-                Checkout.ajaxFailure(xhr, status, error);
-            }
-        });
     },
 
     getCaptchaToken: async function (action) {
@@ -811,10 +791,6 @@ var ConfirmOrder = {
 
     nextStep: function (response) {
         if (response.error) {
-            if (ConfirmOrder._paymentPopup && !ConfirmOrder._paymentPopup.closed) {
-                ConfirmOrder._paymentPopup.close();
-            }
-            ConfirmOrder._paymentPopup = null;
             if (typeof response.message === 'string') {
                 alert(response.message);
             } else {
@@ -826,36 +802,14 @@ var ConfirmOrder = {
 
         if (response.redirect) {
             ConfirmOrder.isSuccess = true;
-            var popupUrl = response.redirect + (response.redirect.indexOf('?') >= 0 ? '&' : '?') + 'popup=1';
-            var popup = ConfirmOrder._paymentPopup;
-            if (popup && !popup.closed) {
-                popup.location.href = popupUrl;
-                var checkClosed = setInterval(function () {
-                    if (popup.closed) {
-                        clearInterval(checkClosed);
-                        window.location = ConfirmOrder.successUrl;
-                    }
-                }, 500);
-            } else {
-                if (popup && !popup.closed) popup.close();
-                location.href = response.redirect;
-            }
-            ConfirmOrder._paymentPopup = null;
+            location.href = response.redirect;
             return;
         }
         if (response.success) {
             ConfirmOrder.isSuccess = true;
-            if (ConfirmOrder._paymentPopup && !ConfirmOrder._paymentPopup.closed) {
-                ConfirmOrder._paymentPopup.close();
-            }
-            ConfirmOrder._paymentPopup = null;
             window.location = ConfirmOrder.successUrl;
         }
 
-        if (ConfirmOrder._paymentPopup && !ConfirmOrder._paymentPopup.closed) {
-            ConfirmOrder._paymentPopup.close();
-        }
-        ConfirmOrder._paymentPopup = null;
         Checkout.setStepResponse(response);
     }
 };

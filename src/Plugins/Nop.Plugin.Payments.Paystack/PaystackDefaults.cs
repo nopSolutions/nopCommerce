@@ -8,30 +8,41 @@ public static class PaystackDefaults
     /// <summary>
     /// Paystack API base address
     /// </summary>
-    public const string BaseAddress = "https://api.paystack.co";
+    public const string BASE_ADDRESS = "https://api.paystack.co";
 
     /// <summary>
     /// Initialize transaction endpoint
     /// </summary>
-    public const string InitializeTransactionEndpoint = "/transaction/initialize";
+    public const string INITIALIZE_TRANSACTION_ENDPOINT = "/transaction/initialize";
 
     /// <summary>
     /// Verify transaction endpoint (append /{reference})
     /// </summary>
-    public const string VerifyTransactionEndpoint = "/transaction/verify";
+    public const string VERIFY_TRANSACTION_ENDPOINT = "/transaction/verify";
 
     /// <summary>
     /// Route name for customer callback (redirect after payment)
     /// </summary>
-    public const string CallbackRouteName = "Plugin.Payments.Paystack.Callback";
+    public const string CALLBACK_ROUTE_NAME = "Plugin.Payments.Paystack.Callback";
 
     /// <summary>
     /// Route name for webhook (server-to-server)
     /// </summary>
-    public const string WebhookRouteName = "Plugin.Payments.Paystack.Webhook";
+    public const string WEBHOOK_ROUTE_NAME = "Plugin.Payments.Paystack.Webhook";
 
     /// <summary>
     /// Route name for popup complete (redirect opener and close popup)
     /// </summary>
-    public const string CompleteRouteName = "Plugin.Payments.Paystack.Complete";
+    public const string COMPLETE_ROUTE_NAME = "Plugin.Payments.Paystack.Complete";
+
+    /// <summary>
+    /// Call back url for payment processing
+    /// </summary>
+    public const string PAYSTACK_CALLBACK_ENDPOINT = "/paystack/callback";
+
+    public const string DEFAULT_CURRENCY_CODE = "NGN";
+    
+    public const string CANCEL_PAYMENT = "Plugin.Payments.Paystack.CancelPayment";
+    
+    public const string POPUP_URL = "paystack/show-popup";
 }

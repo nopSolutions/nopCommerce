@@ -1,4 +1,3 @@
-@using Nop.Web.Areas.Admin.Components
 @model Nop.Plugin.Payments.Paystack.Models.ConfigurationModel
 
 @{
@@ -7,7 +6,7 @@
 
 @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
 
-<form asp-controller="PaymentPaystack" asp-action="Configure" method="post">
+<form asp-controller="PaystackConfiguration" asp-action="Configure" method="post">
     <div class="cards-group">
         <div class="card card-default">
             <div class="card-body">

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Nop.Plugin.Payments.Paystack.Models;
 
 namespace Nop.Plugin.Payments.Paystack.Services;
@@ -13,7 +10,7 @@ public interface IPaystackTransactionService
     /// <summary>
     /// Creates a new transaction record
     /// </summary>
-    Task<PaystackTransactionModel> CreateTransactionAsync(string reference, string customerEmail, decimal amount, string currency, int orderId);
+    Task<PaystackTransactionModel> InsertTransactionAsync(string reference, string customerEmail, decimal amount, string currency, int orderId);
 
     /// <summary>
     /// Updates a transaction status
