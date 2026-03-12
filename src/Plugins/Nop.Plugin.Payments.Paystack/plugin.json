@@ -1,10 +1,10 @@
 {
   "Group": "Payment methods",
-  "FriendlyName": "armah001",
+  "FriendlyName": "PayStack",
   "SystemName": "Payments.Paystack",
   "Version": "1.00",
   "SupportedVersions": [ "5.00" ],
-  "Author": "nopCommerce",
+  "Author": "armah001",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Payments.Paystack.dll",
   "Description": "Accept payments via Paystack (cards, bank transfer, etc.). Supports redirect and webhook."

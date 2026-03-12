@@ -167,7 +167,7 @@ public class PaystackPaymentMethod : BasePlugin, IPaymentMethod
     }
 
     public override string GetConfigurationPageUrl()
-        => $"{_webHelper.GetStoreLocation()}Admin/PaymentPaystack/Configure";
+        => $"{_webHelper.GetStoreLocation()}Admin/PaystackConfiguration/Configure";
 
     public Type GetPublicViewComponent() => typeof(PaymentPaystackViewComponent);
 

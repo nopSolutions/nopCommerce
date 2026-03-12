@@ -14,8 +14,8 @@ namespace Nop.Plugin.Payments.Paystack.Controllers;
 /// <summary>
 /// Admin configuration controller for Paystack payment plugin
 /// </summary>
+[Area(AreaNames.ADMIN)]
 [AutoValidateAntiforgeryToken]
-[ValidateIpAddress]
 [AuthorizeAdmin]
 public class PaystackConfigurationController : BasePaymentController
 {
