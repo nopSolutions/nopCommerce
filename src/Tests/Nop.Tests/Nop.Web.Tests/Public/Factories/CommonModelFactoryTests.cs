@@ -137,6 +137,10 @@ public class CommonModelFactoryTests : BaseNopTest
         model.XLink.Should().Be(_storeInformationSettings.XLink);
         model.YoutubeLink.Should().Be(_storeInformationSettings.YoutubeLink);
         model.InstagramLink.Should().Be(_storeInformationSettings.InstagramLink);
+        model.TikTokLink.Should().Be(_storeInformationSettings.TikTokLink);
+        model.SnapchatLink.Should().Be(_storeInformationSettings.SnapchatLink);
+        model.PinterestLink.Should().Be(_storeInformationSettings.PinterestLink);
+        model.TumblrLink.Should().Be(_storeInformationSettings.TumblrLink);
         model.WorkingLanguageId.Should().Be(1);
     }
 

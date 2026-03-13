@@ -1164,6 +1164,22 @@ label, label + * {
   background-position: -152px 0;
 }
 
+.follow-us .social .tiktok a {
+  background-position: -190px 0;
+}
+
+.follow-us .social .snapchat a {
+  background-position: -228px 0;
+}
+
+.follow-us .social .pinterest a {
+  background-position: -266px 0;
+}
+
+.follow-us .social .tumblr a {
+  background-position: -304px 0;
+}
+
 .newsletter-email {
   display: inline-block;
   overflow: hidden;
@@ -7690,7 +7706,7 @@ label, label + * {
   /*** FOOTER ***/
 
   .follow-us .social li {
-    margin: 0 10px 0 0;
+    margin: 0 10px 10px 0;
   }
 
   .newsletter-email {

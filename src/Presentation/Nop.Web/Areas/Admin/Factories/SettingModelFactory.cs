@@ -441,6 +441,10 @@ public partial class SettingModelFactory : ISettingModelFactory
             XLink = storeInformationSettings.XLink,
             YoutubeLink = storeInformationSettings.YoutubeLink,
             InstagramLink = storeInformationSettings.InstagramLink,
+            TikTokLink = storeInformationSettings.TikTokLink,
+            SnapchatLink = storeInformationSettings.SnapchatLink,
+            PinterestLink = storeInformationSettings.PinterestLink,
+            TumblrLink = storeInformationSettings.TumblrLink,
             SubjectFieldOnContactUsForm = commonSettings.SubjectFieldOnContactUsForm,
             UseSystemEmailForContactUsForm = commonSettings.UseSystemEmailForContactUsForm,
             PopupForTermsOfServiceLinks = commonSettings.PopupForTermsOfServiceLinks
@@ -462,6 +466,10 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.XLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.XLink, storeId);
         model.YoutubeLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.YoutubeLink, storeId);
         model.InstagramLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.InstagramLink, storeId);
+        model.TikTokLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.TikTokLink, storeId);
+        model.SnapchatLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.SnapchatLink, storeId);
+        model.PinterestLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.PinterestLink, storeId);
+        model.TumblrLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.TumblrLink, storeId);
         model.SubjectFieldOnContactUsForm_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.SubjectFieldOnContactUsForm, storeId);
         model.UseSystemEmailForContactUsForm_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.UseSystemEmailForContactUsForm, storeId);
         model.PopupForTermsOfServiceLinks_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.PopupForTermsOfServiceLinks, storeId);

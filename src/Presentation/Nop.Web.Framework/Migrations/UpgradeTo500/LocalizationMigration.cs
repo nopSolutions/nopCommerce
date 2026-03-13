@@ -472,6 +472,20 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.GeneralCommon.XLink"] = "X page URL",
             ["Admin.Configuration.Settings.GeneralCommon.XLink.Hint"] = "Specify your X page URL. Leave empty if you have no such page.",
             ["Footer.FollowUs.X"] = "X",
+
+            //#8136
+            ["Footer.FollowUs.TikTok"] = "TikTok",
+            ["Footer.FollowUs.Snapchat"] = "Snapchat",
+            ["Footer.FollowUs.Pinterest"] = "Pinterest",
+            ["Footer.FollowUs.Tumblr"] = "Tumblr",
+            ["Admin.Configuration.Settings.GeneralCommon.TikTokLink"] = "TikTok URL",
+            ["Admin.Configuration.Settings.GeneralCommon.TikTokLink.Hint"] = "Specify your TikTok page URL. Leave empty if you have no such page.",
+            ["Admin.Configuration.Settings.GeneralCommon.SnapchatLink"] = "Snapchat URL",
+            ["Admin.Configuration.Settings.GeneralCommon.SnapchatLink.Hint"] = "Specify your Snapchat page URL. Leave empty if you have no such page.",
+            ["Admin.Configuration.Settings.GeneralCommon.PinterestLink"] = "Pinterest URL",
+            ["Admin.Configuration.Settings.GeneralCommon.PinterestLink.Hint"] = "Specify your Pinterest page URL. Leave empty if you have no such page.",
+            ["Admin.Configuration.Settings.GeneralCommon.TumblrLink"] = "Tumblr URL",
+            ["Admin.Configuration.Settings.GeneralCommon.TumblrLink.Hint"] = "Specify your Tumblr page URL. Leave empty if you have no such page.",
         });
 
         #endregion

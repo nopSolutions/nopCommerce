@@ -198,7 +198,11 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                         "%Twitter.URL%",
                         "%X.URL%",
                         "%YouTube.URL%",
-                        "%Instagram.URL%"
+                        "%Instagram.URL%",
+                        "%TikTok.URL%",
+                        "%Snapchat.URL%",
+                        "%Pinterest.URL%",
+                        "%Tumblr.URL%"
                     }
                 },
 
@@ -982,6 +986,10 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("X.URL", _storeInformationSettings.XLink));
         tokens.Add(new Token("YouTube.URL", _storeInformationSettings.YoutubeLink));
         tokens.Add(new Token("Instagram.URL", _storeInformationSettings.InstagramLink));
+        tokens.Add(new Token("TikTok.URL", _storeInformationSettings.TikTokLink));
+        tokens.Add(new Token("Snapchat.URL", _storeInformationSettings.SnapchatLink));
+        tokens.Add(new Token("Pinterest.URL", _storeInformationSettings.PinterestLink));
+        tokens.Add(new Token("Tumblr.URL", _storeInformationSettings.TumblrLink));
 
         //event notification
         await _eventPublisher.EntityTokensAddedAsync(store, tokens);
