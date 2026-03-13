@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Buffers;
 using Microsoft.Extensions.Primitives;
-using Nop.Core;
 using Nop.Core.Events;
 using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Models;
@@ -233,13 +233,9 @@ public abstract partial class BaseController : Controller
 
         const string dataKey = "nop.selected-card-name";
         if (persistForTheNextRequest)
-        {
             TempData[dataKey] = cardName;
-        }
         else
-        {
             ViewData[dataKey] = cardName;
-        }
     }
 
     /// <summary>
@@ -259,8 +255,10 @@ public abstract partial class BaseController : Controller
         var form = await Request.ReadFormAsync();
 
         foreach (var item in form)
+        {
             if (item.Key.StartsWith("selected-tab-name-", StringComparison.InvariantCultureIgnoreCase))
                 SaveSelectedTabName(null, item.Value, item.Key["selected-tab-name-".Length..], persistForTheNextRequest);
+        }
     }
 
     /// <summary>

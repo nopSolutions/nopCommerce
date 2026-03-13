@@ -38,4 +38,6 @@ public record RequestQuoteModel : BaseNopEntityModel
         StatusType != RequestQuoteStatus.Canceled &&
         StatusType != RequestQuoteStatus.QuoteIsCreated &&
         StatusType != RequestQuoteStatus.Submitted;
+
+    public bool DisplayCaptcha { get; set; }
 }

@@ -122,20 +122,18 @@
                                     new(nameof(RequestQuoteModel.CreatedOnUtc))
                                     {
                                         Title = T("Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn").Text,
-                                        Width = "200",
+                                        Width = "180",
                                         Render = new RenderDate()
                                     },
                                     new(nameof(RequestQuoteModel.Status))
                                     {
                                         Title = T("Plugins.Misc.RFQ.Fields.RequestQuote.Status").Text,
-                                        Encode = false,
-                                        Width = "200",
+                                        Encode = false
                                     },
                                     new(nameof(RequestQuoteModel.CustomerEmail))
                                     {
                                         Title = T("Plugins.Misc.RFQ.Fields.CustomerEmail").Text,
-                                        Encode = true,
-                                        Width = "200",
+                                        Encode = true
                                     },
                                     new(nameof(RequestQuoteModel.CustomerNotes))
                                     {

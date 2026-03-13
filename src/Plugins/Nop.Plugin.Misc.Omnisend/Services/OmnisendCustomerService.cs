@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Plugin.Misc.Omnisend.DTO;
 using Nop.Plugin.Misc.Omnisend.DTO.Events;
 using Nop.Services.Common;
+using Nop.Services.Helpers;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Misc.Omnisend.Services;
@@ -136,8 +136,10 @@ public class OmnisendCustomerService
             OmnisendDefaults.StoredCustomerShoppingCartIdAttribute);
 
         if (string.IsNullOrEmpty(cartId))
+        {
             await _genericAttributeService.SaveAttributeAsync(customer,
                 OmnisendDefaults.StoredCustomerShoppingCartIdAttribute, await GetCartIdAsync(customer));
+        }
     }
 
     /// <summary>

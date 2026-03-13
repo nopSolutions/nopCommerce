@@ -98,18 +98,10 @@ public partial class StandardPermission
         public const string TOPICS_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.TopicsCreateEditDelete";
         public const string MESSAGE_TEMPLATES_VIEW = $"{nameof(ContentManagement)}.MessageTemplatesView";
         public const string MESSAGE_TEMPLATES_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.MessageTemplatesCreateEditDelete";
-        public const string NEWS_VIEW = $"{nameof(ContentManagement)}.NewsView";
-        public const string NEWS_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.NewsCreateEditDelete";
-        public const string NEWS_COMMENTS_VIEW = $"{nameof(ContentManagement)}.NewsCommentsView";
-        public const string NEWS_COMMENTS_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.NewsCommentsCreateEditDelete";
         public const string BLOG_VIEW = $"{nameof(ContentManagement)}.BlogView";
         public const string BLOG_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.BlogCreateEditDelete";
         public const string BLOG_COMMENTS_VIEW = $"{nameof(ContentManagement)}.BlogCommentsView";
         public const string BLOG_COMMENTS_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.BlogCommentsCreateEditDelete";
-        public const string POLLS_VIEW = $"{nameof(ContentManagement)}.PollsView";
-        public const string POLLS_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.PollsCreateEditDelete";
-        public const string FORUMS_VIEW = $"{nameof(ContentManagement)}.ForumsView";
-        public const string FORUMS_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.ForumsCreateEditDelete";
         public const string MENU_VIEW = $"{nameof(ContentManagement)}.MenusView";
         public const string MENU_CREATE_EDIT_DELETE = $"{nameof(ContentManagement)}.MenusCreateEditDelete";
     }

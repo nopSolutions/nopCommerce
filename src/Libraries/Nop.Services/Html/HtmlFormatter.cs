@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Globalization;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace Nop.Services.Html;
@@ -10,43 +11,110 @@ public partial class HtmlFormatter : IHtmlFormatter
 {
     #region Fields
 
-    protected readonly IBBCodeHelper _bbCodeHelper;
+    protected const string LINK = "<a href=\"{0}{1}\" rel=\"nofollow\">{2}</a>";
+    protected const int MAX_LENGTH = 50;
 
-    #endregion
-
-    #region Ctor
-
-    public HtmlFormatter(IBBCodeHelper bbCodeHelper)
-    {
-        _bbCodeHelper = bbCodeHelper;
-    }
+    /// <summary>
+    /// The regular expression used to parse links.
+    /// </summary>
+    protected static readonly Regex _regex = new("((http://|https://|www\\.)([A-Z0-9.\\-]{1,})\\.[0-9A-Z?;~&\\(\\)#,=\\-_\\./\\+]{2,})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     #endregion
 
     #region Utilities
 
     /// <summary>
-    /// Ensure only allowed HTML tags
+    /// Shortens any absolute URL to a specified maximum length
+    /// </summary>
+    protected static string ShortenUrl(string url, int max)
+    {
+        if (url.Length <= max)
+            return url;
+
+        // Remove the protocol
+        var startIndex = url.IndexOf("://", StringComparison.InvariantCultureIgnoreCase);
+        if (startIndex > -1)
+            url = url[(startIndex + 3)..];
+
+        if (url.Length <= max)
+            return url;
+
+        // Compress folder structure
+        var firstIndex = url.IndexOf("/", StringComparison.InvariantCultureIgnoreCase) + 1;
+        var lastIndex = url.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase);
+        if (firstIndex < lastIndex)
+        {
+            url = url.Remove(firstIndex, lastIndex - firstIndex);
+            url = url.Insert(firstIndex, "...");
+        }
+
+        if (url.Length <= max)
+            return url;
+
+        // Remove URL parameters
+        var queryIndex = url.IndexOf("?", StringComparison.InvariantCultureIgnoreCase);
+        if (queryIndex > -1)
+            url = url[0..queryIndex];
+
+        if (url.Length <= max)
+            return url;
+
+        // Remove URL fragment
+        var fragmentIndex = url.IndexOf("#", StringComparison.InvariantCultureIgnoreCase);
+        if (fragmentIndex > -1)
+            url = url[0..fragmentIndex];
+
+        if (url.Length <= max)
+            return url;
+
+        // Compress page
+        firstIndex = url.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase) + 1;
+        lastIndex = url.LastIndexOf(".", StringComparison.InvariantCultureIgnoreCase);
+
+        if (lastIndex - firstIndex <= 10)
+            return url;
+
+        var page = url[firstIndex..lastIndex];
+        var length = url.Length - max + 3;
+        if (page.Length > length)
+            url = url.Replace(page, "..." + page[length..]);
+
+        return url;
+    }
+
+    /// <summary>
+    /// Resolve links in the text
     /// </summary>
     /// <param name="text">Text</param>
-    /// <returns>Sanitized text with all invalid tags removed</returns>
-    protected static string EnsureOnlyAllowedHtml(string text)
+    /// <returns>Formatted text</returns>
+    protected virtual string ResolveLinks(string text)
     {
         if (string.IsNullOrEmpty(text))
             return string.Empty;
 
-        const string allowedTags = "br,hr,b,i,u,a,div,ol,ul,li,blockquote,img,span,p,em,strong,font,pre,h1,h2,h3,h4,h5,h6,address,cite";
-
-        var m = Regex.Matches(text, "<.*?>", RegexOptions.IgnoreCase);
-            
-        for (var i = m.Count - 1; i >= 0; i--)
+        var info = CultureInfo.InvariantCulture;
+        foreach (Match match in _regex.Matches(text))
         {
-            var tag = text[(m[i].Index + 1)..(m[i].Index + m[i].Length)].Trim().ToLower();
-
-            if (!IsValidTag(tag, allowedTags))
-                text = text.Remove(m[i].Index, m[i].Length);
+            text = text.Replace(match.Value,
+                !match.Value.Contains("://")
+                    ? string.Format(info, LINK, "http://", match.Value, ShortenUrl(match.Value, MAX_LENGTH))
+                    : string.Format(info, LINK, string.Empty, match.Value, ShortenUrl(match.Value, MAX_LENGTH)));
         }
 
+        return text;
+    }
+
+    /// <summary>
+    /// Replace anchor text (remove a tag from the following URL <a href="http://example.com">Name</a> and output only the string "Name")
+    /// </summary>
+    /// <param name="text">Text</param>
+    /// <returns>Text</returns>
+    protected virtual string ReplaceAnchorTags(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        text = Regex.Replace(text, @"<a\b[^>]+>([^<]*(?:(?!</a)<[^<]*)*)</a>", "$1", RegexOptions.IgnoreCase);
         return text;
     }
 
@@ -88,46 +156,59 @@ public partial class HtmlFormatter : IHtmlFormatter
     #region Methods
 
     /// <summary>
+    /// Ensure only allowed HTML tags
+    /// </summary>
+    /// <param name="text">Text</param>
+    /// <returns>Sanitized text with all invalid tags removed</returns>
+    public virtual string EnsureOnlyAllowedHtml(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        const string allowedTags = "br,hr,b,i,u,a,div,ol,ul,li,blockquote,img,span,p,em,strong,font,pre,h1,h2,h3,h4,h5,h6,address,cite";
+
+        var m = Regex.Matches(text, "<.*?>", RegexOptions.IgnoreCase);
+
+        for (var i = m.Count - 1; i >= 0; i--)
+        {
+            var tag = text[(m[i].Index + 1)..(m[i].Index + m[i].Length)].Trim().ToLower();
+
+            if (!IsValidTag(tag, allowedTags))
+                text = text.Remove(m[i].Index, m[i].Length);
+        }
+
+        return text;
+    }
+
+    /// <summary>
     /// Formats the text
     /// </summary>
     /// <param name="text">Text</param>
     /// <param name="stripTags">A value indicating whether to strip tags</param>
     /// <param name="convertPlainTextToHtml">A value indicating whether HTML is allowed</param>
     /// <param name="allowHtml">A value indicating whether HTML is allowed</param>
-    /// <param name="allowBBCode">A value indicating whether BBCode is allowed</param>
     /// <param name="resolveLinks">A value indicating whether to resolve links</param>
     /// <param name="addNoFollowTag">A value indicating whether to add "noFollow" tag</param>
     /// <returns>Formatted text</returns>
     public virtual string FormatText(string text, bool stripTags,
         bool convertPlainTextToHtml, bool allowHtml,
-        bool allowBBCode, bool resolveLinks, bool addNoFollowTag)
+        bool resolveLinks, bool addNoFollowTag)
     {
         if (string.IsNullOrEmpty(text))
             return string.Empty;
 
         try
         {
-            if (stripTags)
-            {
+            if (stripTags) 
                 text = StripTags(text);
-            }
 
             text = allowHtml ? EnsureOnlyAllowedHtml(text) : WebUtility.HtmlEncode(text);
 
-            if (convertPlainTextToHtml)
-            {
+            if (convertPlainTextToHtml) 
                 text = ConvertPlainTextToHtml(text);
-            }
-
-            if (allowBBCode)
-            {
-                text = _bbCodeHelper.FormatText(text, true, true, true, true, true, true, true);
-            }
-
-            if (resolveLinks)
-            {
-                text = ResolveLinksHelper.FormatText(text);
-            }
+            
+            if (resolveLinks) 
+                text = ResolveLinks(text);
 
             if (addNoFollowTag)
             {
@@ -156,20 +237,6 @@ public partial class HtmlFormatter : IHtmlFormatter
         text = Regex.Replace(text, "(<[^>]*>)([^<]*)", "$2");
         text = Regex.Replace(text, "(&#x?[0-9]{2,4};|&quot;|&amp;|&nbsp;|&lt;|&gt;|&euro;|&copy;|&reg;|&permil;|&Dagger;|&dagger;|&lsaquo;|&rsaquo;|&bdquo;|&rdquo;|&ldquo;|&sbquo;|&rsquo;|&lsquo;|&mdash;|&ndash;|&rlm;|&lrm;|&zwj;|&zwnj;|&thinsp;|&emsp;|&ensp;|&tilde;|&circ;|&Yuml;|&scaron;|&Scaron;)", "@");
 
-        return text;
-    }
-
-    /// <summary>
-    /// Replace anchor text (remove a tag from the following URL <a href="http://example.com">Name</a> and output only the string "Name")
-    /// </summary>
-    /// <param name="text">Text</param>
-    /// <returns>Text</returns>
-    public virtual string ReplaceAnchorTags(string text)
-    {
-        if (string.IsNullOrEmpty(text))
-            return string.Empty;
-
-        text = Regex.Replace(text, @"<a\b[^>]+>([^<]*(?:(?!</a)<[^<]*)*)</a>", "$1", RegexOptions.IgnoreCase);
         return text;
     }
 

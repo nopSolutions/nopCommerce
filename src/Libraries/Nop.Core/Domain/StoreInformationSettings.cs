@@ -44,9 +44,9 @@ public partial class StoreInformationSettings : ISettings
     public string FacebookLink { get; set; }
 
     /// <summary>
-    /// Gets or sets a value of Twitter page URL of the site
+    /// Gets or sets a value of X page URL of the site
     /// </summary>
-    public string TwitterLink { get; set; }
+    public string XLink { get; set; }
 
     /// <summary>
     /// Gets or sets a value of YouTube channel URL of the site

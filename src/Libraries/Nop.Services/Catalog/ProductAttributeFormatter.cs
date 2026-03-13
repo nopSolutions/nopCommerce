@@ -6,6 +6,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -133,7 +134,7 @@ public partial class ProductAttributeFormatter : IProductAttributeFormatter
                                 attributeName = WebUtility.HtmlEncode(attributeName);
 
                             //we never encode multiline textbox input
-                            formattedAttribute = $"{attributeName}: {_htmlFormatter.FormatText(value, false, true, false, false, false, false)}";
+                            formattedAttribute = $"{attributeName}: {_htmlFormatter.FormatText(value, false, true, false, false, false)}";
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                         {
@@ -269,10 +270,8 @@ public partial class ProductAttributeFormatter : IProductAttributeFormatter
             giftCardFor = WebUtility.HtmlEncode(giftCardFor);
         }
 
-        if (!string.IsNullOrEmpty(result.ToString()))
-        {
+        if (!string.IsNullOrEmpty(result.ToString())) 
             result.Append(separator);
-        }
 
         result.Append(giftCardFrom);
         result.Append(separator);

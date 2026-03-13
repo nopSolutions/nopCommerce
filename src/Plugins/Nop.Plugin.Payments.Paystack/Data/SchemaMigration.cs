@@ -11,6 +11,6 @@ public class SchemaMigration : AutoReversingMigration
     /// <inheritdoc />
     public override void Up()
     {
-        Create.TableFor<PaystackTransactionModel>();
+        this.CreateTableIfNotExists<PaystackTransactionModel>();
     }
 }

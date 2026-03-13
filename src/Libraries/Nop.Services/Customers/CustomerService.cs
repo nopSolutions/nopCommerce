@@ -5,16 +5,14 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Common;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Customers;
@@ -29,6 +27,7 @@ public partial class CustomerService : ICustomerService
     protected readonly CustomerSettings _customerSettings;
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IGenericAttributeService _genericAttributeService;
+    protected readonly IHtmlFormatter _htmlFormatter;
     protected readonly INopDataProvider _dataProvider;
     protected readonly IRepository<Address> _customerAddressRepository;
     protected readonly IRepository<BlogComment> _blogCommentRepository;
@@ -37,14 +36,11 @@ public partial class CustomerService : ICustomerService
     protected readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
     protected readonly IRepository<CustomerPassword> _customerPasswordRepository;
     protected readonly IRepository<CustomerRole> _customerRoleRepository;
-    protected readonly IRepository<ForumPost> _forumPostRepository;
-    protected readonly IRepository<ForumTopic> _forumTopicRepository;
     protected readonly IRepository<GenericAttribute> _gaRepository;
-    protected readonly IRepository<NewsComment> _newsCommentRepository;
     protected readonly IRepository<Order> _orderRepository;
+    protected readonly IRepository<PrivateMessage> _privateMessageRepository;
     protected readonly IRepository<ProductReview> _productReviewRepository;
     protected readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
-    protected readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
     protected readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
     protected readonly IShortTermCacheManager _shortTermCacheManager;
     protected readonly IStaticCacheManager _staticCacheManager;
@@ -59,6 +55,7 @@ public partial class CustomerService : ICustomerService
     public CustomerService(CustomerSettings customerSettings,
         IEventPublisher eventPublisher,
         IGenericAttributeService genericAttributeService,
+        IHtmlFormatter htmlFormatter,
         INopDataProvider dataProvider,
         IRepository<Address> customerAddressRepository,
         IRepository<BlogComment> blogCommentRepository,
@@ -67,14 +64,11 @@ public partial class CustomerService : ICustomerService
         IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
         IRepository<CustomerPassword> customerPasswordRepository,
         IRepository<CustomerRole> customerRoleRepository,
-        IRepository<ForumPost> forumPostRepository,
-        IRepository<ForumTopic> forumTopicRepository,
         IRepository<GenericAttribute> gaRepository,
-        IRepository<NewsComment> newsCommentRepository,
         IRepository<Order> orderRepository,
+        IRepository<PrivateMessage> privateMessageRepository,
         IRepository<ProductReview> productReviewRepository,
         IRepository<ProductReviewHelpfulness> productReviewHelpfulnessRepository,
-        IRepository<PollVotingRecord> pollVotingRecordRepository,
         IRepository<ShoppingCartItem> shoppingCartRepository,
         IShortTermCacheManager shortTermCacheManager,
         IStaticCacheManager staticCacheManager,
@@ -85,6 +79,7 @@ public partial class CustomerService : ICustomerService
         _customerSettings = customerSettings;
         _eventPublisher = eventPublisher;
         _genericAttributeService = genericAttributeService;
+        _htmlFormatter = htmlFormatter;
         _dataProvider = dataProvider;
         _customerAddressRepository = customerAddressRepository;
         _blogCommentRepository = blogCommentRepository;
@@ -93,14 +88,11 @@ public partial class CustomerService : ICustomerService
         _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
         _customerPasswordRepository = customerPasswordRepository;
         _customerRoleRepository = customerRoleRepository;
-        _forumPostRepository = forumPostRepository;
-        _forumTopicRepository = forumTopicRepository;
         _gaRepository = gaRepository;
-        _newsCommentRepository = newsCommentRepository;
         _orderRepository = orderRepository;
+        _privateMessageRepository = privateMessageRepository;
         _productReviewRepository = productReviewRepository;
         _productReviewHelpfulnessRepository = productReviewHelpfulnessRepository;
-        _pollVotingRecordRepository = pollVotingRecordRepository;
         _shoppingCartRepository = shoppingCartRepository;
         _shortTermCacheManager = shortTermCacheManager;
         _staticCacheManager = staticCacheManager;
@@ -212,18 +204,18 @@ public partial class CustomerService : ICustomerService
                 query = query.Where(c => c.ZipPostalCode.Contains(zipPostalCode));
 
             if (dayOfBirth > 0 && monthOfBirth > 0)
+            {
                 query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Day == dayOfBirth &&
-                                         c.DateOfBirth.Value.Month == monthOfBirth);
+                    c.DateOfBirth.Value.Month == monthOfBirth);
+            }
             else if (dayOfBirth > 0)
                 query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Day == dayOfBirth);
             else if (monthOfBirth > 0)
                 query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Month == monthOfBirth);
 
             //search by IpAddress
-            if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
-            {
+            if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress)) 
                 query = query.Where(w => w.LastIpAddress == ipAddress);
-            }
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
@@ -306,10 +298,12 @@ public partial class CustomerService : ICustomerService
 
         //filter customers by billing country
         if (countryId > 0)
+        {
             customers = from c in customers
                 join a in _customerAddressRepository.Table on c.BillingAddressId equals a.Id
                 where a.CountryId == countryId
                 select c;
+        }
 
         var customersWithCarts = from c in customers
             join item in items on c.Id equals item.CustomerId
@@ -658,6 +652,7 @@ public partial class CustomerService : ICustomerService
             await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, storeId);
             await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.OfferedShippingOptionsAttribute, null, storeId);
             await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, storeId);
+            await _genericAttributeService.SaveAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DesiredDeliveryDate, null, storeId);
         }
 
         //clear selected payment method
@@ -691,15 +686,10 @@ public partial class CustomerService : ICustomerService
             from sCart in _shoppingCartRepository.Table.Where(sci => sci.CustomerId == guest.Id).DefaultIfEmpty()
             from order in _orderRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             from blogComment in _blogCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from newsComment in _newsCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             from productReview in _productReviewRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             from productReviewHelpfulness in _productReviewHelpfulnessRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from pollVotingRecord in _pollVotingRecordRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from forumTopic in _forumTopicRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from forumPost in _forumPostRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             where (!onlyWithoutShoppingCart || sCart == null) &&
-                  order == null && blogComment == null && newsComment == null && productReview == null && productReviewHelpfulness == null &&
-                  pollVotingRecord == null && forumTopic == null && forumPost == null &&
+                  order == null && blogComment == null && productReview == null && productReviewHelpfulness == null &&
                   !guest.IsSystemAccount &&
                   (createdFromUtc == null || guest.CreatedOnUtc > createdFromUtc) &&
                   (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
@@ -804,6 +794,23 @@ public partial class CustomerService : ICustomerService
         }
 
         return fullName;
+    }
+
+    /// <summary>
+    /// Formats the private message text
+    /// </summary>
+    /// <param name="pm">Private message</param>
+    /// <returns>Formatted text</returns>
+    public virtual string FormatPrivateMessageText(PrivateMessage pm)
+    {
+        var text = pm.Text;
+
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        text = _htmlFormatter.FormatText(text, false, true, false, false, false);
+
+        return text;
     }
 
     /// <summary>
@@ -978,8 +985,10 @@ public partial class CustomerService : ICustomerService
 
         //save again except removed one
         foreach (var existingCouponCode in existingCouponCodes)
+        {
             if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                 await ApplyDiscountCouponCodeAsync(customer, existingCouponCode);
+        }
     }
 
     /// <summary>
@@ -1110,8 +1119,10 @@ public partial class CustomerService : ICustomerService
 
         //save again except removed one
         foreach (var existingCouponCode in existingCouponCodes)
+        {
             if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                 await ApplyGiftCardCouponCodeAsync(customer, existingCouponCode);
+        }
     }
 
     /// <summary>
@@ -1325,20 +1336,6 @@ public partial class CustomerService : ICustomerService
     public virtual async Task<bool> IsAdminAsync(Customer customer, bool onlyActiveCustomerRoles = true)
     {
         return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.AdministratorsRoleName, onlyActiveCustomerRoles);
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether customer is a forum moderator
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the result
-    /// </returns>
-    public virtual async Task<bool> IsForumModeratorAsync(Customer customer, bool onlyActiveCustomerRoles = true)
-    {
-        return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.ForumModeratorsRoleName, onlyActiveCustomerRoles);
     }
 
     /// <summary>
@@ -1672,6 +1669,106 @@ public partial class CustomerService : ICustomerService
         ArgumentNullException.ThrowIfNull(customer);
 
         return await GetCustomerAddressAsync(customer.Id, customer.ShippingAddressId ?? 0);
+    }
+
+    #endregion
+
+    #region Private messages
+
+    /// <summary>
+    /// Deletes a private message
+    /// </summary>
+    /// <param name="privateMessage">Private message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeletePrivateMessageAsync(PrivateMessage privateMessage)
+    {
+        await _privateMessageRepository.DeleteAsync(privateMessage);
+    }
+
+    /// <summary>
+    /// Gets a private message
+    /// </summary>
+    /// <param name="privateMessageId">The private message identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the private message
+    /// </returns>
+    public virtual async Task<PrivateMessage> GetPrivateMessageByIdAsync(int privateMessageId)
+    {
+        return await _privateMessageRepository.GetByIdAsync(privateMessageId, cache => default, useShortTermCache: true);
+    }
+
+    /// <summary>
+    /// Gets private messages
+    /// </summary>
+    /// <param name="storeId">The store identifier; pass 0 to load all messages</param>
+    /// <param name="fromCustomerId">The customer identifier who sent the message</param>
+    /// <param name="toCustomerId">The customer identifier who should receive the message</param>
+    /// <param name="isRead">A value indicating whether loaded messages are read. false - to load not read messages only, 1 to load read messages only, null to load all messages</param>
+    /// <param name="isDeletedByAuthor">A value indicating whether loaded messages are deleted by author. false - messages are not deleted by author, null to load all messages</param>
+    /// <param name="isDeletedByRecipient">A value indicating whether loaded messages are deleted by recipient. false - messages are not deleted by recipient, null to load all messages</param>
+    /// <param name="keywords">Keywords</param>
+    /// <param name="pageIndex">Page index</param>
+    /// <param name="pageSize">Page size</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the private messages
+    /// </returns>
+    public virtual async Task<IPagedList<PrivateMessage>> GetAllPrivateMessagesAsync(int storeId, int fromCustomerId,
+        int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
+        string keywords, int pageIndex = 0, int pageSize = int.MaxValue)
+    {
+        var privateMessages = await _privateMessageRepository.GetAllPagedAsync(query =>
+        {
+            if (storeId > 0)
+                query = query.Where(pm => storeId == pm.StoreId);
+            if (fromCustomerId > 0)
+                query = query.Where(pm => fromCustomerId == pm.FromCustomerId);
+            if (toCustomerId > 0)
+                query = query.Where(pm => toCustomerId == pm.ToCustomerId);
+            if (isRead.HasValue)
+                query = query.Where(pm => isRead.Value == pm.IsRead);
+            if (isDeletedByAuthor.HasValue)
+                query = query.Where(pm => isDeletedByAuthor.Value == pm.IsDeletedByAuthor);
+            if (isDeletedByRecipient.HasValue)
+                query = query.Where(pm => isDeletedByRecipient.Value == pm.IsDeletedByRecipient);
+            if (!string.IsNullOrEmpty(keywords))
+            {
+                query = query.Where(pm => pm.Subject.Contains(keywords));
+                query = query.Where(pm => pm.Text.Contains(keywords));
+            }
+
+            query = query.OrderByDescending(pm => pm.CreatedOnUtc);
+
+            return query;
+        }, pageIndex, pageSize);
+
+        return privateMessages;
+    }
+
+    /// <summary>
+    /// Inserts a private message
+    /// </summary>
+    /// <param name="privateMessage">Private message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertPrivateMessageAsync(PrivateMessage privateMessage)
+    {
+        await _privateMessageRepository.InsertAsync(privateMessage);
+    }
+
+    /// <summary>
+    /// Updates the private message
+    /// </summary>
+    /// <param name="privateMessage">Private message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task UpdatePrivateMessageAsync(PrivateMessage privateMessage)
+    {
+        ArgumentNullException.ThrowIfNull(privateMessage);
+
+        if (privateMessage.IsDeletedByAuthor && privateMessage.IsDeletedByRecipient)
+            await _privateMessageRepository.DeleteAsync(privateMessage);
+        else
+            await _privateMessageRepository.UpdateAsync(privateMessage);
     }
 
     #endregion

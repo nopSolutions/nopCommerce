@@ -57,5 +57,8 @@ public partial record ArtificialIntelligenceSettingsModel : BaseNopModel, ISetti
     [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaTitleQuery")]
     public string MetaTitleQuery { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.LogRequests")]
+    public bool LogRequests { get; set; }
+
     #endregion
 }

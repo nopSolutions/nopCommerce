@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Nop.Core;
+﻿using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.Momo.Components;
@@ -7,6 +7,7 @@ using Nop.Plugin.Payments.Momo.Models;
 using Nop.Plugin.Payments.Momo.Services;
 using Nop.Plugin.Payments.Momo.Validators;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -156,7 +157,7 @@ public class MomoPaymentProcessor : BasePlugin, IPaymentMethod
             return false;
 
         // Check if contains only digits
-        if (!System.Text.RegularExpressions.Regex.IsMatch(cleaned, @"^\d+$"))
+        if (!Regex.IsMatch(cleaned, @"^\d+$"))
             return false;
 
         // Check valid network prefixes for Ghana

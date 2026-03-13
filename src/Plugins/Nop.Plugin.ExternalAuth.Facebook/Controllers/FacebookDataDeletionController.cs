@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Plugin.ExternalAuth.Facebook.Models;
 using Nop.Services.Authentication.External;
+using Nop.Services.Helpers;
 using Nop.Services.Logging;
 
 namespace Nop.Plugin.ExternalAuth.Facebook.Controllers;

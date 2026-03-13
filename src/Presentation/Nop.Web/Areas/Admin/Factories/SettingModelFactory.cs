@@ -9,11 +9,9 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.FilterLevels;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
@@ -206,6 +204,31 @@ public partial class SettingModelFactory : ISettingModelFactory
     }
 
     /// <summary>
+    /// Prepare GPSR settings model
+    /// </summary>
+    /// <param name="model">GPSR search model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the GPSR settings model
+    /// </returns>
+    protected virtual async Task<GpsrSettingsModel> PrepareGpsrSettingsModelAsync(GpsrSettingsModel model)
+    {
+        //load settings for a chosen store scope
+        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        var gpsrSettings = await _settingService.LoadSettingAsync<GpsrSettings>(storeId);
+
+        //fill in model values from the entity
+        model ??= new GpsrSettingsModel();
+        model.Enabled = gpsrSettings.Enabled;
+
+        //fill in overridden values
+        if (storeId > 0)
+            model.Enabled_OverrideForStore = await _settingService.SettingExistsAsync(gpsrSettings, x => x.Enabled, storeId);
+
+        return model;
+    }
+
+    /// <summary>
     /// Prepare artificial intelligence settings model
     /// </summary>
     /// <param name="model">Artificial intelligence search model</param>
@@ -232,6 +255,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.MetaKeywordsQuery = artificialIntelligenceSettings.MetaKeywordsQuery;
         model.AllowMetaDescriptionGeneration = artificialIntelligenceSettings.AllowMetaDescriptionGeneration;
         model.MetaDescriptionQuery = artificialIntelligenceSettings.MetaDescriptionQuery;
+        model.LogRequests = artificialIntelligenceSettings.LogRequests;
 
         //prepare available translation services
         var availableProviderType = await ArtificialIntelligenceProviderType.Gemini.ToSelectListAsync(false);
@@ -261,14 +285,14 @@ public partial class SettingModelFactory : ISettingModelFactory
     /// <summary>
     /// Prepare address settings model
     /// </summary>
+    /// <param name="storeId">Store identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the address settings model
     /// </returns>
-    protected virtual async Task<AddressSettingsModel> PrepareAddressSettingsModelAsync()
+    protected virtual async Task<AddressSettingsModel> PrepareAddressSettingsModelAsync(int storeId)
     {
-        //load settings for a chosen store scope
-        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        //load settings
         var addressSettings = await _settingService.LoadSettingAsync<AddressSettings>(storeId);
 
         //fill in model values from the entity
@@ -280,14 +304,14 @@ public partial class SettingModelFactory : ISettingModelFactory
     /// <summary>
     /// Prepare customer settings model
     /// </summary>
+    /// <param name="storeId">Store identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the customer settings model
     /// </returns>
-    protected virtual async Task<CustomerSettingsModel> PrepareCustomerSettingsModelAsync()
+    protected virtual async Task<CustomerSettingsModel> PrepareCustomerSettingsModelAsync(int storeId)
     {
-        //load settings for a chosen store scope
-        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        //load settings
         var customerSettings = await _settingService.LoadSettingAsync<CustomerSettings>(storeId);
 
         //fill in model values from the entity
@@ -297,36 +321,61 @@ public partial class SettingModelFactory : ISettingModelFactory
     }
 
     /// <summary>
+    /// Prepare private messages model
+    /// </summary>
+    /// <param name="storeId">Store identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the private messages settings model
+    /// </returns>
+    protected virtual async Task<PrivateMessageSettingsModel> PreparePrivateMessageModelAsync(int storeId)
+    {
+        //load settings
+        var privateMessageSettings = await _settingService.LoadSettingAsync<PrivateMessageSettings>(storeId);
+
+        //fill in model values from the entity
+        var model = privateMessageSettings.ToSettingsModel<PrivateMessageSettingsModel>();
+
+        if (storeId > 0)
+        {
+            model.AllowPrivateMessages_OverrideForStore = await _settingService.SettingExistsAsync(privateMessageSettings, x => x.AllowPrivateMessages, storeId);
+            model.ShowAlertForPM_OverrideForStore = await _settingService.SettingExistsAsync(privateMessageSettings, x => x.ShowAlertForPM, storeId);
+            model.NotifyAboutPrivateMessages_OverrideForStore = await _settingService.SettingExistsAsync(privateMessageSettings, x => x.NotifyAboutPrivateMessages, storeId);
+        }
+
+        return model;
+    }
+
+    /// <summary>
     /// Prepare multi-factor authentication settings model
     /// </summary>
+    /// <param name="storeId">Store identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the multiFactorAuthenticationSettingsModel
     /// </returns>
-    protected virtual async Task<MultiFactorAuthenticationSettingsModel> PrepareMultiFactorAuthenticationSettingsModelAsync()
+    protected virtual async Task<MultiFactorAuthenticationSettingsModel> PrepareMultiFactorAuthenticationSettingsModelAsync(int storeId)
     {
-        //load settings for a chosen store scope
-        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        //load settings
         var multiFactorAuthenticationSettings = await _settingService.LoadSettingAsync<MultiFactorAuthenticationSettings>(storeId);
 
         //fill in model values from the entity
         var model = multiFactorAuthenticationSettings.ToSettingsModel<MultiFactorAuthenticationSettingsModel>();
 
         return model;
-
     }
 
     /// <summary>
     /// Prepare date time settings model
     /// </summary>
+    /// <param name="storeId">Store identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the date time settings model
     /// </returns>
-    protected virtual async Task<DateTimeSettingsModel> PrepareDateTimeSettingsModelAsync()
+    protected virtual async Task<DateTimeSettingsModel> PrepareDateTimeSettingsModelAsync(int storeId)
     {
-        //load settings for a chosen store scope
-        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        //load settings
         var dateTimeSettings = await _settingService.LoadSettingAsync<DateTimeSettings>(storeId);
 
         //fill in model values from the entity
@@ -347,14 +396,14 @@ public partial class SettingModelFactory : ISettingModelFactory
     /// <summary>
     /// Prepare external authentication settings model
     /// </summary>
+    /// <param name="storeId">Store identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the external authentication settings model
     /// </returns>
-    protected virtual async Task<ExternalAuthenticationSettingsModel> PrepareExternalAuthenticationSettingsModelAsync()
+    protected virtual async Task<ExternalAuthenticationSettingsModel> PrepareExternalAuthenticationSettingsModelAsync(int storeId)
     {
-        //load settings for a chosen store scope
-        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        //load settings
         var externalAuthenticationSettings = await _settingService.LoadSettingAsync<ExternalAuthenticationSettings>(storeId);
 
         //fill in model values from the entity
@@ -389,7 +438,7 @@ public partial class SettingModelFactory : ISettingModelFactory
             LogoPictureId = storeInformationSettings.LogoPictureId,
             DisplayEuCookieLawWarning = storeInformationSettings.DisplayEuCookieLawWarning,
             FacebookLink = storeInformationSettings.FacebookLink,
-            TwitterLink = storeInformationSettings.TwitterLink,
+            XLink = storeInformationSettings.XLink,
             YoutubeLink = storeInformationSettings.YoutubeLink,
             InstagramLink = storeInformationSettings.InstagramLink,
             SubjectFieldOnContactUsForm = commonSettings.SubjectFieldOnContactUsForm,
@@ -410,7 +459,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.LogoPictureId_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.LogoPictureId, storeId);
         model.DisplayEuCookieLawWarning_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeId);
         model.FacebookLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.FacebookLink, storeId);
-        model.TwitterLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.TwitterLink, storeId);
+        model.XLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.XLink, storeId);
         model.YoutubeLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.YoutubeLink, storeId);
         model.InstagramLink_OverrideForStore = await _settingService.SettingExistsAsync(storeInformationSettings, x => x.InstagramLink, storeId);
         model.SubjectFieldOnContactUsForm_OverrideForStore = await _settingService.SettingExistsAsync(commonSettings, x => x.SubjectFieldOnContactUsForm, storeId);
@@ -443,7 +492,6 @@ public partial class SettingModelFactory : ISettingModelFactory
             SitemapIncludeProducts = sitemapSettings.SitemapIncludeProducts,
             SitemapIncludeProductTags = sitemapSettings.SitemapIncludeProductTags,
             SitemapIncludeBlogPosts = sitemapSettings.SitemapIncludeBlogPosts,
-            SitemapIncludeNews = sitemapSettings.SitemapIncludeNews,
             SitemapIncludeTopics = sitemapSettings.SitemapIncludeTopics
         };
 
@@ -458,7 +506,6 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.SitemapIncludeProducts_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeProducts, storeId);
         model.SitemapIncludeProductTags_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeProductTags, storeId);
         model.SitemapIncludeBlogPosts_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeBlogPosts, storeId);
-        model.SitemapIncludeNews_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeNews, storeId);
         model.SitemapIncludeTopics_OverrideForStore = await _settingService.SettingExistsAsync(sitemapSettings, x => x.SitemapIncludeTopics, storeId);
 
         return model;
@@ -598,12 +645,10 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.ShowOnEmailWishlistToFriendPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnEmailWishlistToFriendPage, storeId);
         model.ShowOnEmailProductToFriendPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnEmailProductToFriendPage, storeId);
         model.ShowOnBlogCommentPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnBlogCommentPage, storeId);
-        model.ShowOnNewsCommentPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnNewsCommentPage, storeId);
         model.ShowOnNewsLetterPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnNewsletterPage, storeId);
         model.ShowOnProductReviewPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnProductReviewPage, storeId);
         model.ShowOnApplyVendorPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnApplyVendorPage, storeId);
         model.ShowOnForgotPasswordPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnForgotPasswordPage, storeId);
-        model.ShowOnForum_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnForum, storeId);
         model.ShowOnCheckoutPageForGuests_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnCheckoutPageForGuests, storeId);
         model.ReCaptchaPublicKey_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ReCaptchaPublicKey, storeId);
         model.ReCaptchaPrivateKey_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ReCaptchaPrivateKey, storeId);
@@ -732,9 +777,7 @@ public partial class SettingModelFactory : ISettingModelFactory
 
         //fill in overridden values
         if (storeId > 0)
-        {
             model.UseRichEditorInMessageTemplates_OverrideForStore = await _settingService.SettingExistsAsync(adminAreaSettings, x => x.UseRichEditorInMessageTemplates, storeId);
-        }
 
         return model;
     }
@@ -816,11 +859,13 @@ public partial class SettingModelFactory : ISettingModelFactory
         };
 
         if (!model.AvailableLanguages.Any())
+        {
             (model.AvailableLanguages as List<SelectListItem>)?.AddRange((await _languageService.GetAllLanguagesAsync(storeId: storeId)).Select(p => new SelectListItem
             {
                 Value = p.Id.ToString(),
                 Text = p.Name
             }));
+        }
 
         model.AdditionsInstruction = additionsInstruction;
 
@@ -869,10 +914,10 @@ public partial class SettingModelFactory : ISettingModelFactory
         //Since we decided to use the naming of the DB connections section as in the .net core - "ConnectionStrings",
         //we are forced to adjust our internal model naming to this convention in this check.
         model.EnvironmentVariables.AddRange(from property in model.GetType().GetProperties()
-            where property.Name != nameof(AppSettingsModel.EnvironmentVariables)
-            from pp in property.PropertyType.GetProperties()
-            where Environment.GetEnvironmentVariables().Contains($"{property.Name.Replace("Model", "").Replace("DataConfig", "ConnectionStrings")}__{pp.Name}")
-            select $"{property.Name}_{pp.Name}");
+                                            where property.Name != nameof(AppSettingsModel.EnvironmentVariables)
+                                            from pp in property.PropertyType.GetProperties()
+                                            where Environment.GetEnvironmentVariables().Contains($"{property.Name.Replace("Model", "").Replace("DataConfig", "ConnectionStrings")}__{pp.Name}")
+                                            select $"{property.Name}_{pp.Name}");
         return model;
     }
 
@@ -954,94 +999,6 @@ public partial class SettingModelFactory : ISettingModelFactory
     }
 
     /// <summary>
-    /// Prepare forum settings model
-    /// </summary>
-    /// <param name="model">Forum settings model</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the forum settings model
-    /// </returns>
-    public virtual async Task<ForumSettingsModel> PrepareForumSettingsModelAsync(ForumSettingsModel model = null)
-    {
-        //load settings for a chosen store scope
-        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-        var forumSettings = await _settingService.LoadSettingAsync<ForumSettings>(storeId);
-
-        //fill in model values from the entity
-        model ??= forumSettings.ToSettingsModel<ForumSettingsModel>();
-
-        //fill in additional values (not existing in the entity)
-        model.ActiveStoreScopeConfiguration = storeId;
-        model.ForumEditorValues = await forumSettings.ForumEditor.ToSelectListAsync();
-
-        if (storeId <= 0)
-            return model;
-
-        //fill in overridden values
-        model.ForumsEnabled_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ForumsEnabled, storeId);
-        model.RelativeDateTimeFormattingEnabled_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.RelativeDateTimeFormattingEnabled, storeId);
-        model.ShowCustomersPostCount_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ShowCustomersPostCount, storeId);
-        model.AllowGuestsToCreatePosts_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowGuestsToCreatePosts, storeId);
-        model.AllowGuestsToCreateTopics_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowGuestsToCreateTopics, storeId);
-        model.AllowCustomersToEditPosts_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowCustomersToEditPosts, storeId);
-        model.AllowCustomersToDeletePosts_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowCustomersToDeletePosts, storeId);
-        model.AllowPostVoting_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowPostVoting, storeId);
-        model.MaxVotesPerDay_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.MaxVotesPerDay, storeId);
-        model.AllowCustomersToManageSubscriptions_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowCustomersToManageSubscriptions, storeId);
-        model.TopicsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.TopicsPageSize, storeId);
-        model.PostsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.PostsPageSize, storeId);
-        model.ForumEditor_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ForumEditor, storeId);
-        model.SignaturesEnabled_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.SignaturesEnabled, storeId);
-        model.AllowPrivateMessages_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.AllowPrivateMessages, storeId);
-        model.ShowAlertForPM_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ShowAlertForPM, storeId);
-        model.NotifyAboutPrivateMessages_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.NotifyAboutPrivateMessages, storeId);
-        model.ActiveDiscussionsFeedEnabled_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ActiveDiscussionsFeedEnabled, storeId);
-        model.ActiveDiscussionsFeedCount_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ActiveDiscussionsFeedCount, storeId);
-        model.ForumFeedsEnabled_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ForumFeedsEnabled, storeId);
-        model.ForumFeedCount_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ForumFeedCount, storeId);
-        model.SearchResultsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.SearchResultsPageSize, storeId);
-        model.ActiveDiscussionsPageSize_OverrideForStore = await _settingService.SettingExistsAsync(forumSettings, x => x.ActiveDiscussionsPageSize, storeId);
-
-        return model;
-    }
-
-    /// <summary>
-    /// Prepare news settings model
-    /// </summary>
-    /// <param name="model">News settings model</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the news settings model
-    /// </returns>
-    public virtual async Task<NewsSettingsModel> PrepareNewsSettingsModelAsync(NewsSettingsModel model = null)
-    {
-        //load settings for a chosen store scope
-        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-        var newsSettings = await _settingService.LoadSettingAsync<NewsSettings>(storeId);
-
-        //fill in model values from the entity
-        model ??= newsSettings.ToSettingsModel<NewsSettingsModel>();
-
-        //fill in additional values (not existing in the entity)
-        model.ActiveStoreScopeConfiguration = storeId;
-
-        if (storeId <= 0)
-            return model;
-
-        //fill in overridden values
-        model.Enabled_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.Enabled, storeId);
-        model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeId);
-        model.NotifyAboutNewNewsComments_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NotifyAboutNewNewsComments, storeId);
-        model.ShowNewsOnMainPage_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.ShowNewsOnMainPage, storeId);
-        model.MainPageNewsCount_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.MainPageNewsCount, storeId);
-        model.NewsArchivePageSize_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NewsArchivePageSize, storeId);
-        model.ShowHeaderRssUrl_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.ShowHeaderRssUrl, storeId);
-        model.NewsCommentsMustBeApproved_OverrideForStore = await _settingService.SettingExistsAsync(newsSettings, x => x.NewsCommentsMustBeApproved, storeId);
-
-        return model;
-    }
-
-    /// <summary>
     /// Prepare shipping settings model
     /// </summary>
     /// <param name="model">Shipping settings model</param>
@@ -1083,6 +1040,8 @@ public partial class SettingModelFactory : ISettingModelFactory
             model.DisplayShipmentEventsToStoreOwner_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.DisplayShipmentEventsToStoreOwner, storeId);
             model.HideShippingTotal_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.HideShippingTotal, storeId);
             model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.BypassShippingMethodSelectionIfOnlyOne, storeId);
+            model.AllowCustomerToChooseDeliveryDate_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.AllowCustomerToChooseDeliveryDate, storeId);
+            model.DeliveryDateRangeDays_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.DeliveryDateRangeDays, storeId);
             model.ConsiderAssociatedProductsDimensions_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.ConsiderAssociatedProductsDimensions, storeId);
             model.ShippingOriginAddress_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.ShippingOriginAddressId, storeId);
             model.ShippingSorting_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.ShippingSorting, storeId);
@@ -1306,6 +1265,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         await _reviewTypeModelFactory.PrepareReviewTypeSearchModelAsync(model.ReviewTypeSearchModel);
 
         await PrepareArtificialIntelligenceSettingsModelAsync(model.ArtificialIntelligenceSettingsModel);
+        await PrepareGpsrSettingsModelAsync(model.GpsrSettingsModel);
 
         return model;
     }
@@ -1648,31 +1608,35 @@ public partial class SettingModelFactory : ISettingModelFactory
     /// </returns>
     public virtual async Task<CustomerUserSettingsModel> PrepareCustomerUserSettingsModelAsync(CustomerUserSettingsModel model = null)
     {
+        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+
         model ??= new CustomerUserSettingsModel
         {
-            ActiveStoreScopeConfiguration = await _storeContext.GetActiveStoreScopeConfigurationAsync()
+            ActiveStoreScopeConfiguration = storeId
         };
 
         //prepare customer settings model
-        model.CustomerSettings = await PrepareCustomerSettingsModelAsync();
+        model.CustomerSettings = await PrepareCustomerSettingsModelAsync(storeId);
 
         //prepare CustomerSettings list availableCountries
         await _baseAdminModelFactory.PrepareCountriesAsync(model.CustomerSettings.AvailableCountries);
 
         //prepare multi-factor authentication settings model
-        model.MultiFactorAuthenticationSettings = await PrepareMultiFactorAuthenticationSettingsModelAsync();
+        model.MultiFactorAuthenticationSettings = await PrepareMultiFactorAuthenticationSettingsModelAsync(storeId);
 
         //prepare address settings model
-        model.AddressSettings = await PrepareAddressSettingsModelAsync();
+        model.AddressSettings = await PrepareAddressSettingsModelAsync(storeId);
 
         //prepare AddressSettings list availableCountries
         await _baseAdminModelFactory.PrepareCountriesAsync(model.AddressSettings.AvailableCountries);
 
         //prepare date time settings model
-        model.DateTimeSettings = await PrepareDateTimeSettingsModelAsync();
+        model.DateTimeSettings = await PrepareDateTimeSettingsModelAsync(storeId);
 
         //prepare external authentication settings model
-        model.ExternalAuthenticationSettings = await PrepareExternalAuthenticationSettingsModelAsync();
+        model.ExternalAuthenticationSettings = await PrepareExternalAuthenticationSettingsModelAsync(storeId);
+
+        model.PrivateMessageSettings = await PreparePrivateMessageModelAsync(storeId);
 
         //prepare nested search models
         await _customerAttributeModelFactory.PrepareCustomerAttributeSearchModelAsync(model.CustomerAttributeSearchModel);

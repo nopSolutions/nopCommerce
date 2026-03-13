@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Themes;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI.Paging;
-using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Extensions;
@@ -41,7 +41,9 @@ public static class HtmlExtensions
             *  yyyy    yy              2009        Year(four digit)             *
             */
 
-        var currentFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
+        var currentFormat = CultureInfo.CurrentCulture.TextInfo.IsRightToLeft ?
+            CultureInfo.InvariantCulture.DateTimeFormat.ShortDatePattern :
+            CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
 
         // Convert the date
         currentFormat = currentFormat.Replace("dddd", "DD");
@@ -49,21 +51,13 @@ public static class HtmlExtensions
 
         // Convert month
         if (currentFormat.Contains("MMMM"))
-        {
             currentFormat = currentFormat.Replace("MMMM", "MM");
-        }
         else if (currentFormat.Contains("MMM"))
-        {
             currentFormat = currentFormat.Replace("MMM", "M");
-        }
         else if (currentFormat.Contains("MM"))
-        {
             currentFormat = currentFormat.Replace("MM", "mm");
-        }
         else
-        {
             currentFormat = currentFormat.Replace("M", "m");
-        }
 
         // Convert year
         currentFormat = currentFormat.Contains("yyyy") ?
@@ -265,71 +259,6 @@ public static class HtmlExtensions
     public static Pager Pager(this IHtmlHelper helper, IPageableModel model)
     {
         return new Pager(model, helper.ViewContext);
-    }
-
-    /// <summary>
-    /// Prepare a special small pager for forum topics
-    /// </summary>
-    /// <typeparam name="TModel">Model type</typeparam>
-    /// <param name="html">HTML helper</param>
-    /// <param name="model">Model</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the pager
-    /// </returns>
-    public static async Task<IHtmlContent> ForumTopicSmallPagerAsync<TModel>(this IHtmlHelper<TModel> html, ForumTopicRowModel model)
-    {
-        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-
-        var forumTopicId = model.Id;
-        var forumTopicSlug = model.SeName;
-        var totalPages = model.TotalPostPages;
-
-        if (totalPages > 0)
-        {
-            var links = new StringBuilder();
-
-            if (totalPages <= 4)
-            {
-                for (var x = 1; x <= totalPages; x++)
-                {
-                    var link = html.RouteLink(x.ToString(),
-                        NopRouteNames.Standard.TOPIC_SLUG_PAGED,
-                        new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug },
-                        new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), x.ToString()) });
-                    links.Append(await link.RenderHtmlContentAsync());
-                    if (x < totalPages)
-                        links.Append(", ");
-                }
-            }
-            else
-            {
-                var link1 = html.RouteLink("1",
-                    NopRouteNames.Standard.TOPIC_SLUG_PAGED,
-                    new { id = forumTopicId, pageNumber = 1, slug = forumTopicSlug },
-                    new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), 1) });
-                links.Append(await link1.RenderHtmlContentAsync());
-
-                links.Append(" ... ");
-
-                for (var x = totalPages - 2; x <= totalPages; x++)
-                {
-                    var link2 = html.RouteLink(x.ToString(),
-                        NopRouteNames.Standard.TOPIC_SLUG_PAGED,
-                        new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug },
-                        new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), x.ToString()) });
-                    links.Append(await link2.RenderHtmlContentAsync());
-
-                    if (x < totalPages)
-                        links.Append(", ");
-                }
-            }
-
-            // Inserts the topic page links into the localized string ([Go to page: {0}])
-            return new HtmlString(string.Format(await localizationService.GetResourceAsync("Forum.Topics.GotoPostPager"), links));
-        }
-
-        return new HtmlString(string.Empty);
     }
 
     /// <summary>

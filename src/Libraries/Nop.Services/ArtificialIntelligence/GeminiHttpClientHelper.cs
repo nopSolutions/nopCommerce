@@ -63,5 +63,29 @@ public partial class GeminiHttpClientHelper : IArtificialIntelligenceHttpClientH
         return result?[0].text ?? string.Empty;
     }
 
+    /// <summary>
+    /// Gets tokens usage information
+    /// </summary>
+    /// <param name="responseText">Text of response from AI service to get token usage information</param>
+    /// <returns>Tokens usage information</returns>
+    public virtual string GetTokensInfo(string responseText)
+    {
+        var response = JsonConvert.DeserializeAnonymousType(responseText,
+            new
+            {
+                usageMetadata = new
+                {
+                    promptTokenCount = 0,
+                    candidatesTokenCount = 0,
+                    thoughtsTokenCount = 0,
+                    totalTokenCount = 0
+                }
+            });
+
+        var result = $"Prompt tokens: {response.usageMetadata.promptTokenCount}{Environment.NewLine}Candidate tokens: {response.usageMetadata.candidatesTokenCount}{Environment.NewLine}Thought tokens: {response.usageMetadata.thoughtsTokenCount}{Environment.NewLine}Total tokens: {response.usageMetadata.totalTokenCount}";
+
+        return result;
+    }
+
     #endregion
 }

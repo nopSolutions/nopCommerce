@@ -12,10 +12,7 @@ public class FilterLevelMigration : ForwardOnlyMigration
     /// </summary>
     public override void Up()
     {
-        if (!Schema.Table(nameof(FilterLevelValue)).Exists())
-            Create.TableFor<FilterLevelValue>();
-
-        if (!Schema.Table(nameof(FilterLevelValueProductMapping)).Exists())
-            Create.TableFor<FilterLevelValueProductMapping>();
+        this.CreateTableIfNotExists<FilterLevelValue>();
+        this.CreateTableIfNotExists<FilterLevelValueProductMapping>();
     }
 }

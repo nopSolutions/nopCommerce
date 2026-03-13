@@ -55,7 +55,7 @@
     <Value>Mintaadat létrehozása</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Adja meg az egyéni egyeztetést</Value>
+    <Value>Adja meg az egyéni karakterkészletet</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Adatbázis</Value>

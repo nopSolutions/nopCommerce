@@ -160,8 +160,8 @@ public partial class ProductReviewModelFactory : IProductReviewModelFactory
                     ? customer.Email
                     : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
 
-                productReviewModel.ReviewText = _htmlFormatter.FormatText(productReview.ReviewText, false, true, false, false, false, false);
-                productReviewModel.ReplyText = _htmlFormatter.FormatText(productReview.ReplyText, false, true, false, false, false, false);
+                productReviewModel.ReviewText = _htmlFormatter.FormatText(productReview.ReviewText, false, true, false, false, false);
+                productReviewModel.ReplyText = _htmlFormatter.FormatText(productReview.ReplyText, false, true, false, false, false);
 
                 return productReviewModel;
             });

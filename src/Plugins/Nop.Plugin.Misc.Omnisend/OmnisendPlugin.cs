@@ -18,6 +18,7 @@ public class OmnisendPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
 {
     #region Fields
 
+    private readonly IReadOnlyList<string> _widgetZones;
     private readonly ILocalizationService _localizationService;
     private readonly INopUrlHelper _nopUrlHelper;
     private readonly ISettingService _settingService;
@@ -32,6 +33,8 @@ public class OmnisendPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
         ISettingService settingService,
         WidgetSettings widgetSettings)
     {
+        _widgetZones = new List<string> { PublicWidgetZones.BodyStartHtmlTagAfter, PublicWidgetZones.ProductDetailsBottom };
+
         _localizationService = localizationService;
         _nopUrlHelper = nopUrlHelper;
         _settingService = settingService;
@@ -60,9 +63,7 @@ public class OmnisendPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
         if (widgetZone is null)
             throw new ArgumentNullException(nameof(widgetZone));
 
-        var zones = GetWidgetZonesAsync().Result;
-
-        return zones.Any(widgetZone.Equals) ? typeof(WidgetsOmnisendViewComponent) : null;
+        return _widgetZones.Any(widgetZone.Equals) ? typeof(WidgetsOmnisendViewComponent) : null;
     }
 
     /// <summary>
@@ -74,7 +75,7 @@ public class OmnisendPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
     /// </returns>
     public Task<IList<string>> GetWidgetZonesAsync()
     {
-        return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.BodyStartHtmlTagAfter, PublicWidgetZones.ProductDetailsBottom });
+        return Task.FromResult<IList<string>>(new List<string>(_widgetZones));
     }
 
     /// <summary>

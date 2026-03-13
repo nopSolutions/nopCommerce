@@ -10,6 +10,7 @@ using Nop.Core.Events;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Logging;
 using Nop.Services.Tax.Events;
 
@@ -176,7 +177,7 @@ public partial class TaxService : ITaxService
             if (_taxSettings.AutomaticallyDetectCountry)
             {
                 var ipAddress = _webHelper.GetCurrentIpAddress();
-                var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
+                var countryIsoCode = await _geoLookupService.LookupCountryIsoCodeAsync(ipAddress);
                 var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(countryIsoCode);
 
                 if (country != null)
@@ -273,8 +274,10 @@ public partial class TaxService : ITaxService
             taxRate = taxRateResult.TaxRate;
         }
         else if (_taxSettings.LogErrors)
+        {
             foreach (var error in taxRateResult.Errors)
                 await _logger.ErrorAsync($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
+        }
 
         return (taxRate, isTaxable);
     }
@@ -483,9 +486,7 @@ public partial class TaxService : ITaxService
                 //we should calculate price WITH tax
                 //do it only when price is taxable
                 if (isTaxable)
-                {
                     price = CalculatePrice(price, taxRate, true);
-                }
             }
         }
 
@@ -566,9 +567,7 @@ public partial class TaxService : ITaxService
         var taxRate = decimal.Zero;
 
         if (!_taxSettings.ShippingIsTaxable)
-        {
             return (price, taxRate);
-        }
 
         var taxClassId = _taxSettings.ShippingTaxClassId;
         var priceIncludesTax = _taxSettings.ShippingPriceIncludesTax;
@@ -611,9 +610,7 @@ public partial class TaxService : ITaxService
         var taxRate = decimal.Zero;
 
         if (!_taxSettings.PaymentMethodAdditionalFeeIsTaxable)
-        {
             return (price, taxRate);
-        }
 
         var taxClassId = _taxSettings.PaymentMethodAdditionalFeeTaxClassId;
         var priceIncludesTax = _taxSettings.PaymentMethodAdditionalFeeIncludesTax;
@@ -756,9 +753,7 @@ public partial class TaxService : ITaxService
         if (taxTotalResult != null && !taxTotalResult.Success && _taxSettings.LogErrors)
         {
             foreach (var error in taxTotalResult.Errors)
-            {
                 await _logger.ErrorAsync($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
-            }
         }
 
         return taxTotalResult;

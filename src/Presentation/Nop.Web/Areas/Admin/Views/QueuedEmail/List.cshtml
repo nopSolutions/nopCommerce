@@ -161,8 +161,7 @@
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.Id))
                                 {
-                                    Title = T("Admin.System.QueuedEmails.Fields.Id").Text,
-                                    Width = "50",
+                                    Title = T("Admin.System.QueuedEmails.Fields.Id").Text
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.Subject))
                                 {
@@ -170,41 +169,38 @@
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.From))
                                 {
-                                    Title = T("Admin.System.QueuedEmails.Fields.From").Text,
-                                    Width = "100",
+                                    Title = T("Admin.System.QueuedEmails.Fields.From").Text
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.To))
                                 {
-                                    Title = T("Admin.System.QueuedEmails.Fields.To").Text,
-                                    Width = "100",
+                                    Title = T("Admin.System.QueuedEmails.Fields.To").Text
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.CreatedOn))
                                 {
                                     Title = T("Admin.System.QueuedEmails.Fields.CreatedOn").Text,
-                                    Width = "150",
+                                    Width = "180",
                                     Render = new RenderDate()
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.DontSendBeforeDate))
                                 {
                                     Title = T("Admin.System.QueuedEmails.Fields.DontSendBeforeDate").Text,
-                                    Width = "150",
+                                    Width = "180",
                                     Render = new RenderDate()
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.SentOn))
                                 {
                                     Title = T("Admin.System.QueuedEmails.Fields.SentOn").Text,
-                                    Width = "150",
+                                    Width = "180",
                                     Render = new RenderDate()
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.PriorityName))
                                 {
-                                    Title = T("Admin.System.QueuedEmails.Fields.Priority").Text,
-                                    Width = "120",
+                                    Title = T("Admin.System.QueuedEmails.Fields.Priority").Text
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.Id))
                                 {
                                     Title = T("Admin.Common.Edit").Text,
-                                    Width = "50",
+                                    Width = "100",
                                     ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonEdit(new DataUrl("~/Admin/QueuedEmail/Edit"))
                                 }

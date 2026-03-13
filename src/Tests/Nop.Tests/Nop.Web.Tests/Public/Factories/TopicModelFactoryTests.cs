@@ -15,7 +15,7 @@ public class TopicModelFactoryTests : BaseNopTest
     public TopicModelFactoryTests()
     {
         _topicModelFactory = GetService<ITopicModelFactory>();
-        _testTopic = GetService<IRepository<Topic>>().GetById(1);
+        _testTopic = GetService<IRepository<Topic>>().GetByIdAsync(1).Result;
     }
 
     [Test]

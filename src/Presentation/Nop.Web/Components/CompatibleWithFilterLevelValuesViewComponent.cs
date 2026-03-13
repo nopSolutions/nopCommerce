@@ -31,7 +31,7 @@ public partial class CompatibleWithFilterLevelValuesViewComponent : NopViewCompo
 
             var model = _filterLevelValueModelFactory.PrepareFilterLevelValueOverviewModel(filterLevelValues);
 
-            return View(model);
+            return await ViewAsync(model);
         }
 
         return Content(string.Empty);

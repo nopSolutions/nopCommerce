@@ -4,13 +4,9 @@
 	{
 		<li class="facebook"><a href="@Model.FacebookLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Facebook")</a></li>
 	}
-	@if (!string.IsNullOrEmpty(Model.TwitterLink))
+	@if (!string.IsNullOrEmpty(Model.XLink))
 	{
-		<li class="twitter"><a href="@Model.TwitterLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Twitter")</a></li>
-	}
-	@if (Model.NewsEnabled)
-	{
-        <li class="rss"><a href="@Url.RouteUrl(NopRouteNames.Standard.NEWS_RSS, new { languageId = Model.WorkingLanguageId })">@T("Footer.FollowUs.RSS")</a></li>
+		<li class="x"><a href="@Model.XLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.X")</a></li>
 	}
 	@if (!string.IsNullOrEmpty(Model.YoutubeLink))
 	{

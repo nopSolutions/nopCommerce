@@ -30,6 +30,7 @@ public partial class Program
         if (useAutofac)
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
         else
+        {
             builder.Host.UseDefaultServiceProvider(options =>
             {
                 //we don't validate the scopes, since at the app start and the initial configuration we need 
@@ -37,6 +38,7 @@ public partial class Program
                 options.ValidateScopes = false;
                 options.ValidateOnBuild = true;
             });
+        }
 
         //add services to the application and configure service provider
         builder.Services.ConfigureApplicationServices(builder);

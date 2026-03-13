@@ -486,9 +486,7 @@ public partial class ShippingService : IShippingService
 
                         //create separate requests for all product quantity
                         for (var i = 0; i < sci.Quantity; i++)
-                        {
                             separateRequests.Add(request);
-                        }
                     }
                     else
                     {

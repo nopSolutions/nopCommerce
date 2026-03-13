@@ -318,8 +318,7 @@
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.AvatarUrl))
                                     {
                                         Title = T("Admin.Customers.Customers.Fields.Avatar").Text,
-                                        Width = "140",
-                                        Render = new RenderPicture()
+                                        Render = new RenderPicture("", 140)
                                     });
                                 }
                                 if (Model.UsernamesEnabled)

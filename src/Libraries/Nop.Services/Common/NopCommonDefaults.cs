@@ -228,4 +228,9 @@ public static partial class NopCommonDefaults
     /// ~/App_Data/Pdf/Vazirmatn.ttf
     /// </summary>
     public static string PdfRtlFontName => "Vazirmatn";
+
+    /// <summary>
+    /// Gets a relative project path to the font directory
+    /// </summary>
+    public static string PdfFontDirectoryPath => "~/App_Data/Pdf/";
 }

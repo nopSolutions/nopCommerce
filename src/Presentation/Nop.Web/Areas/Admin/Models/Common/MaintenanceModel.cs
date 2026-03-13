@@ -33,6 +33,8 @@ public partial record MaintenanceModel : BaseNopModel
 
     public bool BackupSupported { get; set; }
 
+    public string DatabaseSize { get; set; }
+
     #region Nested classes
 
     public partial record DeleteGuestsModel : BaseNopModel

@@ -1,9 +1,7 @@
 ﻿using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
@@ -138,14 +136,6 @@ public partial interface IMessageTokenProvider
     Task AddBlogCommentTokensAsync(IList<Token> tokens, BlogComment blogComment);
 
     /// <summary>
-    /// Add news comment tokens
-    /// </summary>
-    /// <param name="tokens">List of already added tokens</param>
-    /// <param name="newsComment">News comment</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task AddNewsCommentTokensAsync(IList<Token> tokens, NewsComment newsComment);
-
-    /// <summary>
     /// Add product tokens
     /// </summary>
     /// <param name="tokens">List of already added tokens</param>
@@ -162,33 +152,6 @@ public partial interface IMessageTokenProvider
     /// <param name="languageId">Language identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task AddAttributeCombinationTokensAsync(IList<Token> tokens, ProductAttributeCombination combination, int languageId);
-
-    /// <summary>
-    /// Add forum tokens
-    /// </summary>
-    /// <param name="tokens">List of already added tokens</param>
-    /// <param name="forum">Forum</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task AddForumTokensAsync(IList<Token> tokens, Forum forum);
-
-    /// <summary>
-    /// Add forum topic tokens
-    /// </summary>
-    /// <param name="tokens">List of already added tokens</param>
-    /// <param name="forumTopic">Forum topic</param>
-    /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
-    /// <param name="appendedPostIdentifierAnchor">Forum post identifier</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task AddForumTopicTokensAsync(IList<Token> tokens, ForumTopic forumTopic,
-        int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null);
-
-    /// <summary>
-    /// Add forum post tokens
-    /// </summary>
-    /// <param name="tokens">List of already added tokens</param>
-    /// <param name="forumPost">Forum post</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task AddForumPostTokensAsync(IList<Token> tokens, ForumPost forumPost);
 
     /// <summary>
     /// Add private message tokens
@@ -218,12 +181,13 @@ public partial interface IMessageTokenProvider
     /// <summary>
     /// Get collection of allowed (supported) message tokens
     /// </summary>
+    /// <param name="messageTemplate">Message template</param>
     /// <param name="tokenGroups">Collection of token groups; pass null to get all available tokens</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the collection of allowed message tokens
     /// </returns>
-    Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IList<string> tokenGroups = null);
+    Task<IEnumerable<string>> GetListOfAllowedTokensAsync(MessageTemplate messageTemplate = null, IList<string> tokenGroups = null);
 
     /// <summary>
     /// Get token groups of message template

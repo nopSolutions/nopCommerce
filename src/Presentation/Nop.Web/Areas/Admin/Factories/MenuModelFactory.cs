@@ -209,9 +209,7 @@ public partial class MenuModelFactory : IMenuModelFactory
             .Where(item => item.ParentId != item.Id && item.Id != menuItemModel.Id);
 
         foreach (var item in availableParents)
-        {
             menuItemsToAdd.Add(new SelectListItem { Value = item.Id.ToString(), Text = await GetMenuItemBreadcrumbAsync(item, items) });
-        }
 
         int childrenLevels(IEnumerable<MenuItem> elements, int parentId, HashSet<int> visited = null)
         {

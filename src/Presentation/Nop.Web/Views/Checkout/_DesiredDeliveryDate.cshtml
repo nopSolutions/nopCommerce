@@ -1,0 +1,68 @@
+﻿@model IList<CheckoutShippingMethodModel.ShippingMethodModel>
+
+<div class="delivery-date-selector">
+    <label for="desired-delivery-date">@T("Checkout.SelectDesiredDeliveryDate")</label>
+    <select id="desired-delivery-date" name="desired-delivery-date"></select>
+</div>
+<script asp-location="Footer">
+    $(function() {
+        var deliveryDateSelector = $('.delivery-date-selector');
+        var deliveryDateSelect = $('#desired-delivery-date');
+        var radioButtons = $('input[name="shippingoption"]');
+        var shippingMethods = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
+
+        function updateDeliveryDates(selectedValue) {
+            // Clear current options except first
+            deliveryDateSelect.find('option').remove();
+            deliveryDateSelect.val('');
+
+            // Find the selected method and add its dates
+            var method = shippingMethods.find(function(m) {
+                return (m.Name + '___' + m.ShippingRateComputationMethodSystemName) === selectedValue;
+            });
+
+            if (method && method.DesiredDeliveryDate && method.DesiredDeliveryDate.Enabled && method.DesiredDeliveryDate.AvailableDates && method.DesiredDeliveryDate.AvailableDates.length > 0) {
+                deliveryDateSelector.show();
+                var selectedDate = method.DesiredDeliveryDate.SelectedDate;
+                method.DesiredDeliveryDate.AvailableDates.forEach(function(dateOption) {
+                    deliveryDateSelect.append(
+                        $('<option>').val(dateOption.Value).text(dateOption.Text)
+                    );
+                });
+                if (selectedDate) {
+                    deliveryDateSelect.val(selectedDate);
+                }
+            }
+            else{
+                deliveryDateSelector.hide();
+            }
+        }
+
+        // Update delivery dates and hidden input when shipping method or date changes
+        radioButtons.on('change', function() {
+            var selectedValue = $(this).val();
+            var index = radioButtons.filter(':checked').index(this);
+            updateDeliveryDates(selectedValue);
+        });
+
+        // Save selected date to hidden input when date changes
+        deliveryDateSelect.on('change', function() {
+            var selectedDate = $(this).val();
+            var selectedRadio = radioButtons.filter(':checked');
+            if (selectedRadio.length > 0) {
+                // Find the index of selected shipping method
+                var methodIndex = radioButtons.index(selectedRadio[0]);
+                var hiddenInput = $('#deliverydate_' + methodIndex);
+                if (hiddenInput.length > 0) {
+                    hiddenInput.val(selectedDate);
+                }
+            }
+        });
+
+        // Trigger on page load to initialize with selected method's dates
+        var checkedButton = radioButtons.filter(':checked');
+        if (checkedButton.length > 0) {
+            updateDeliveryDates(checkedButton.val());
+        }
+    });
+</script>

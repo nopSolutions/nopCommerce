@@ -136,25 +136,22 @@
                                     new ColumnProperty(nameof(BlogCommentModel.StoreName))
                                     {
                                         Title = T("Admin.ContentManagement.Blog.Comments.Fields.StoreName").Text,
-                                        Width = "100",
                                         Visible = (await storeService.GetAllStoresAsync()).Count > 1
                                     },
                                     new ColumnProperty(nameof(BlogCommentModel.CustomerInfo))
                                     {
                                         Title = T("Admin.ContentManagement.Blog.Comments.Fields.Customer").Text,
-                                        Width = "100",
                                         Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(BlogCommentModel.CustomerId)))
                                     },
                                     new ColumnProperty(nameof(BlogCommentModel.Comment))
                                     {
                                         Title = T("Admin.ContentManagement.Blog.Comments.Fields.Comment").Text,
-                                        Width = "300",
                                         Encode = false
                                     },
                                     new ColumnProperty(nameof(BlogCommentModel.IsApproved))
                                     {
                                         Title = T("Admin.ContentManagement.Blog.Comments.Fields.IsApproved").Text,
-                                        Width = "80",
+                                        Width = "50",
                                         ClassName = NopColumnClassDefaults.CenterAll,
                                         Render = new RenderBoolean(),
                                         Editable = true,
@@ -163,7 +160,7 @@
                                     new ColumnProperty(nameof(BlogCommentModel.CreatedOn))
                                     {
                                         Title = T("Admin.ContentManagement.Blog.Comments.Fields.CreatedOn").Text,
-                                        Width = "150",
+                                        Width = "180",
                                         ClassName =  NopColumnClassDefaults.Button,
                                         Render = new RenderDate()
                                     },

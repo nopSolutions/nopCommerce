@@ -7,11 +7,9 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
@@ -19,7 +17,7 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Forums;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
@@ -44,10 +42,8 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly CommonSettings _commonSettings;
     protected readonly CurrencySettings _currencySettings;
     protected readonly CustomerSettings _customerSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
-    protected readonly IForumService _forumService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILanguageService _languageService;
@@ -66,7 +62,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly LocalizationSettings _localizationSettings;
     protected readonly MediaSettings _mediaSettings;
     protected readonly MessagesSettings _messagesSettings;
-    protected readonly NewsSettings _newsSettings;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
     protected readonly RobotsTxtSettings _robotsTxtSettings;
     protected readonly SitemapXmlSettings _sitemapXmlSettings;
     protected readonly StoreInformationSettings _storeInformationSettings;
@@ -80,10 +76,8 @@ public partial class CommonModelFactory : ICommonModelFactory
         CommonSettings commonSettings,
         CurrencySettings currencySettings,
         CustomerSettings customerSettings,
-        ForumSettings forumSettings,
         ICurrencyService currencyService,
         ICustomerService customerService,
-        IForumService forumService,
         IGenericAttributeService genericAttributeService,
         IHttpContextAccessor httpContextAccessor,
         ILanguageService languageService,
@@ -102,7 +96,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         LocalizationSettings localizationSettings,
         MediaSettings mediaSettings,
         MessagesSettings messagesSettings,
-        NewsSettings newsSettings,
+        PrivateMessageSettings privateMessageSettings,
         RobotsTxtSettings robotsTxtSettings,
         SitemapXmlSettings sitemapXmlSettings,
         StoreInformationSettings storeInformationSettings)
@@ -112,10 +106,8 @@ public partial class CommonModelFactory : ICommonModelFactory
         _commonSettings = commonSettings;
         _currencySettings = currencySettings;
         _customerSettings = customerSettings;
-        _forumSettings = forumSettings;
         _currencyService = currencyService;
         _customerService = customerService;
-        _forumService = forumService;
         _genericAttributeService = genericAttributeService;
         _httpContextAccessor = httpContextAccessor;
         _languageService = languageService;
@@ -133,8 +125,8 @@ public partial class CommonModelFactory : ICommonModelFactory
         _workContext = workContext;
         _mediaSettings = mediaSettings;
         _messagesSettings = messagesSettings;
+        _privateMessageSettings = privateMessageSettings;
         _localizationSettings = localizationSettings;
-        _newsSettings = newsSettings;
         _robotsTxtSettings = robotsTxtSettings;
         _sitemapXmlSettings = sitemapXmlSettings;
         _storeInformationSettings = storeInformationSettings;
@@ -168,16 +160,14 @@ public partial class CommonModelFactory : ICommonModelFactory
     {
         var result = 0;
         var customer = await _workContext.GetCurrentCustomerAsync();
-        if (_forumSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer))
+        if (_privateMessageSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer))
         {
             var store = await _storeContext.GetCurrentStoreAsync();
-            var privateMessages = await _forumService.GetAllPrivateMessagesAsync(store.Id,
+            var privateMessages = await _customerService.GetAllPrivateMessagesAsync(store.Id,
                 0, customer.Id, false, null, false, string.Empty, 0, 1);
 
             if (privateMessages.TotalCount > 0)
-            {
                 result = privateMessages.TotalCount;
-            }
         }
 
         return result;
@@ -332,7 +322,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             unreadMessage = string.Format(await _localizationService.GetResourceAsync("PrivateMessages.TotalUnread"), unreadMessageCount);
 
             //notifications here
-            if (_forumSettings.ShowAlertForPM &&
+            if (_privateMessageSettings.ShowAlertForPM &&
                 !await _genericAttributeService.GetAttributeAsync<bool>(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, store.Id))
             {
                 await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, true, store.Id);
@@ -348,17 +338,18 @@ public partial class CommonModelFactory : ICommonModelFactory
             ShoppingCartEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART),
             UsePopupNotifications = _messagesSettings.UsePopupNotifications,
             WishlistEnabled = await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_WISHLIST),
-            AllowPrivateMessages = await _customerService.IsRegisteredAsync(customer) && _forumSettings.AllowPrivateMessages,
+            AllowPrivateMessages = await _customerService.IsRegisteredAsync(customer) && _privateMessageSettings.AllowPrivateMessages,
             UnreadPrivateMessages = unreadMessage,
             AlertMessage = alertMessage,
         };
+        
         //performance optimization (use "HasShoppingCartItems" property)
         if (customer.HasShoppingCartItems)
         {
             model.ShoppingCartItems = (await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id))
                 .Sum(item => item.Quantity);
 
-            model.WishlistItems = (await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id))
+            model.WishlistItems = (await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id, customWishlistId: 0))
                 .Sum(item => item.Quantity);
         }
 
@@ -399,11 +390,10 @@ public partial class CommonModelFactory : ICommonModelFactory
         var model = new SocialModel
         {
             FacebookLink = _storeInformationSettings.FacebookLink,
-            TwitterLink = _storeInformationSettings.TwitterLink,
+            XLink = _storeInformationSettings.XLink,
             YoutubeLink = _storeInformationSettings.YoutubeLink,
             InstagramLink = _storeInformationSettings.InstagramLink,
             WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id,
-            NewsEnabled = _newsSettings.Enabled,
         };
 
         return model;
@@ -573,14 +563,18 @@ public partial class CommonModelFactory : ICommonModelFactory
                 var store = await _storeContext.GetCurrentStoreAsync();
                 //URLs are localizable. Append SEO code
                 foreach (var language in await _languageService.GetAllLanguagesAsync(storeId: store.Id))
+                {
                     if (_robotsTxtSettings.DisallowLanguages.Contains(language.Id))
                     {
                         sb.AppendLine($"Disallow: /{language.UniqueSeoCode}$");
                         sb.AppendLine($"Disallow: /{language.UniqueSeoCode}/");
                     }
                     else
+                    {
                         foreach (var path in _robotsTxtSettings.LocalizableDisallowPaths)
                             sb.AppendLine($"Disallow: /{language.UniqueSeoCode}{path}");
+                    }
+                }
             }
 
             foreach (var additionsRule in _robotsTxtSettings.AdditionsRules)

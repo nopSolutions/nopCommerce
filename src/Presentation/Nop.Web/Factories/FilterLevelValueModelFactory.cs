@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.FilterLevels;
-using Nop.Services.Catalog;
 using Nop.Services.FilterLevels;
 using Nop.Services.Localization;
 using Nop.Web.Models.Catalog;

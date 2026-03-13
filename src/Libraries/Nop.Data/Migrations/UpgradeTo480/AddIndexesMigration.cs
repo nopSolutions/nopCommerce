@@ -21,10 +21,12 @@ public class AddIndexesMigration : ForwardOnlyMigration
     public override void Up()
     {
         if (!Schema.Table(nameof(Customer)).Index("IX_Customer_Deleted").Exists())
+        {
             Create.Index("IX_Customer_Deleted")
                 .OnTable(nameof(Customer))
                 .OnColumn(nameof(Customer.Deleted)).Ascending()
                 .WithOptions().NonClustered();
+        }
 
         //#7377
         if (!Schema.Table(nameof(Order)).Index("AK_Order_OrderGuid").Exists() &&
@@ -50,9 +52,11 @@ public class AddIndexesMigration : ForwardOnlyMigration
 
         //#7296
         if (!Schema.Table(nameof(Topic)).Index("IX_Topic_SystemName").Exists())
+        {
             Create.Index("IX_Topic_SystemName")
                 .OnTable(nameof(Topic))
                 .OnColumn(nameof(Topic.SystemName)).Ascending()
                 .WithOptions().NonClustered();
+        }
     }
 }

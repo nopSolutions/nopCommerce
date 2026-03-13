@@ -325,6 +325,7 @@ public partial class AttributeParser<TAttribute, TAttributeValue> : IAttributePa
             var nodeList1 = xmlDoc.SelectNodes(@$"//Attributes/{_attributeName}");
 
             if (nodeList1 != null)
+            {
                 foreach (XmlNode node1 in nodeList1)
                 {
                     if (node1.Attributes?["ID"] == null)
@@ -340,6 +341,7 @@ public partial class AttributeParser<TAttribute, TAttributeValue> : IAttributePa
                     attributeElement = (XmlElement)node1;
                     break;
                 }
+            }
 
             //create new one if not found
             if (attributeElement == null)
@@ -519,8 +521,11 @@ public partial class AttributeParser<TAttribute, TAttributeValue> : IAttributePa
         {
             var found = false;
             foreach (var t2 in selectedValues)
+            {
                 if (t1 == t2)
                     found = true;
+            }
+
             if (!found)
                 allFound = false;
         }

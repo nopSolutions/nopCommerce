@@ -193,8 +193,7 @@
                             {
                                 new ColumnProperty(nameof(PluginModel.Group))
                                 {
-                                    Title = T("Admin.Configuration.Plugins.Fields.Group").Text,
-                                    Width = "150"
+                                    Title = T("Admin.Configuration.Plugins.Fields.Group").Text
                                 },
                                 new ColumnProperty(nameof(PluginModel.LogoUrl))
                                 {
@@ -205,7 +204,6 @@
                                 new ColumnProperty(nameof(PluginModel.Description))
                                 {
                                     Title = T("Admin.Configuration.Plugins.Info").Text,
-                                    Width = "400",
                                     Render = new RenderCustom("renderColumnDescription")
                                 },
                                 new ColumnProperty(nameof(PluginModel.FriendlyName))

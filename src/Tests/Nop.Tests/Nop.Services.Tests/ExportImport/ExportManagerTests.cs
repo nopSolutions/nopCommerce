@@ -244,7 +244,7 @@ public class ExportManagerTests : ServiceTest
             "CaptureTransactionId", "CaptureTransactionResult", "SubscriptionTransactionId", "PaidDateUtc",
             "Deleted", "PickupAddress", "RedeemedRewardPointsEntryId", "DiscountUsageHistory", "GiftCardUsageHistory",
             "OrderNotes", "OrderItems", "Shipments", "OrderStatus", "PaymentStatus", "ShippingStatus",
-            "CustomerTaxDisplayType", "CustomOrderNumber"
+            "CustomerTaxDisplayType", "CustomOrderNumber", "DesiredDeliveryDateUtc"
         });
 
         //fields tested individually
