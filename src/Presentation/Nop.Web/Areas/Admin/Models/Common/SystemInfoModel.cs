@@ -20,6 +20,9 @@ public partial record SystemInfoModel : BaseNopModel
     [NopResourceDisplayName("Admin.System.SystemInfo.NopVersion")]
     public string NopVersion { get; set; }
 
+    [NopResourceDisplayName("Admin.System.SystemInfo.NopLatestVersion")]
+    public string NopLatestVersion { get; set; }
+
     [NopResourceDisplayName("Admin.System.SystemInfo.OperatingSystem")]
     public string OperatingSystem { get; set; }
 

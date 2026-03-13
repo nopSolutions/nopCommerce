@@ -472,6 +472,11 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.GeneralCommon.XLink"] = "X page URL",
             ["Admin.Configuration.Settings.GeneralCommon.XLink.Hint"] = "Specify your X page URL. Leave empty if you have no such page.",
             ["Footer.FollowUs.X"] = "X",
+
+            //#8073
+            ["Admin.System.SystemInfo.NopLatestVersion"] = "Latest nopCommerce version",
+            ["Admin.System.SystemInfo.NopLatestVersion.Hint"] = "The latest nopCommerce version, available for download.",
+            ["Admin.System.SystemInfo.NopLatestVersion.Text"] = "<a href='{1}' target='_blank'>{0}</a> (see the <a href='{2}' target='_blank'>release-notes</a>)",
         });
 
         #endregion

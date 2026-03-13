@@ -54,6 +54,17 @@
                                 <div class="form-text-row">@Model.NopVersion</div>
                             </div>
                         </div>
+                        @if (!string.IsNullOrEmpty(Model.NopLatestVersion))
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="NopLatestVersion" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">@Html.Raw(Model.NopLatestVersion)</div>
+                                </div>
+                            </div>
+                        }
                         <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="OperatingSystem" />
