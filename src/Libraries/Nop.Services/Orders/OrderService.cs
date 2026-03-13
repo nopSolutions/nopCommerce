@@ -823,7 +823,7 @@ public partial class OrderService : IOrderService
         if (string.IsNullOrEmpty(text))
             return string.Empty;
 
-        text = _htmlFormatter.FormatText(text, false, true, false, false, false, false);
+        text = _htmlFormatter.FormatText(text, false, true, false, false, false);
 
         return text;
     }

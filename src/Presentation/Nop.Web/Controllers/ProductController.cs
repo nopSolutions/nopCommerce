@@ -473,7 +473,7 @@ public partial class ProductController : BasePublicController
             await _workflowMessageService.SendProductEmailAFriendMessageAsync(customer,
                 (await _workContext.GetWorkingLanguageAsync()).Id, product,
                 model.YourEmailAddress, model.FriendEmail,
-                _htmlFormatter.FormatText(model.PersonalMessage, false, true, false, false, false, false));
+                _htmlFormatter.FormatText(model.PersonalMessage, false, true, false, false, false));
 
             model = await _productModelFactory.PrepareProductEmailAFriendModelAsync(model, product, true);
             model.SuccessfullySent = true;

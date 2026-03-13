@@ -64,7 +64,8 @@ public class AutoMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.PostMaxLength, options => options.Ignore())
             .ForMember(settings => settings.StrippedTopicMaxLength, options => options.Ignore())
             .ForMember(settings => settings.TopicSubjectMaxLength, options => options.Ignore())
-            .ForMember(settings => settings.TopicMetaDescriptionLength, options => options.Ignore());
+            .ForMember(settings => settings.TopicMetaDescriptionLength, options => options.Ignore())
+            .ForMember(settings => settings.BbcodeEditorOpenLinksInNewWindow, options => options.Ignore());
     }
 
     #endregion

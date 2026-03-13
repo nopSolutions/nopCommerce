@@ -101,7 +101,8 @@ public class ForumInstallService
                 ForumFeedCount = 10,
                 ForumSearchTermMinimumLength = 3,
                 TopicMetaDescriptionLength = 160,
-                ShowCaptcha = false
+                ShowCaptcha = false,
+                BbcodeEditorOpenLinksInNewWindow = false
             });
         }
         else
@@ -307,7 +308,7 @@ public class ForumInstallService
             ["Plugins.Misc.Forums.Votes.OwnPost"] = "You cannot vote for your own post",
             ["Plugins.Misc.Forums.WatchForum"] = "Watch Forum",
             ["Plugins.Misc.Forums.WatchTopic"] = "Watch Topic",
-            ["Plugins.Misc.Forums.WelcomeMesage"] = "<p>Put your welcome message here. You can edit this in the admin site.</p>",
+            ["Plugins.Misc.Forums.WelcomeMessage"] = "<p>Put your welcome message here. You can edit this in the admin site.</p>",
 
             ["Plugins.Misc.Forums"] = "Forums",
             ["Plugins.Misc.Forums.Forum"] = "Forum",
@@ -391,7 +392,7 @@ public class ForumInstallService
     /// Add activity log types
     /// </summary>
     /// <returns>A task that represents the asynchronous operation</returns>
-    private async Task InserActivityLogTypesAsync()
+    private async Task InsertActivityLogTypesAsync()
     {
         var types = new List<string>
         {
@@ -477,14 +478,14 @@ public class ForumInstallService
         ArgumentException.ThrowIfNullOrEmpty(oldSystemName);
         ArgumentException.ThrowIfNullOrEmpty(newSystemName);
 
-        if (_permissionRepository.Table.FirstOrDefault(pr => pr.SystemName == oldSystemName) is PermissionRecord oldRec)
+        if (_permissionRepository.Table.FirstOrDefault(pr => pr.SystemName == oldSystemName) is { } oldRec)
         {
             var roleIds = _permissionMappingRepository.Table
                 .Where(pm => pm.PermissionRecordId == oldRec.Id)
                 .Select(pm => pm.CustomerRoleId)
                 .ToArray();
 
-            if (roleIds.Any() && _permissionRepository.Table.FirstOrDefault(pr => pr.SystemName == newSystemName) is PermissionRecord newRec)
+            if (roleIds.Any() && _permissionRepository.Table.FirstOrDefault(pr => pr.SystemName == newSystemName) is { } newRec)
             {
                 foreach (var roleId in roleIds)
                 {
@@ -567,7 +568,7 @@ public class ForumInstallService
 
         await InsertMessageTemplateAsync();
 
-        await InserActivityLogTypesAsync();
+        await InsertActivityLogTypesAsync();
 
         await PreparePermissionMappingsAsync();
     }

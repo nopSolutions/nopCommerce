@@ -386,9 +386,7 @@ public partial class BaseNopTest
         services.AddTransient<IUploadService, UploadService>();
         services.AddSingleton<IThemeProvider, ThemeProvider>();
         services.AddTransient<IExternalAuthenticationService, ExternalAuthenticationService>();
-        services.AddScoped<IBBCodeHelper, BBCodeHelper>();
         services.AddScoped<IHtmlFormatter, HtmlFormatter>();
-
         services.AddScoped<INopAssetHelper, NopAssetHelper>();
         services.AddScoped<ISyncCodeHelper, SyncCodeHelper>();
 
