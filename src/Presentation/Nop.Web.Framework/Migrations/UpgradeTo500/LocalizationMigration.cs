@@ -477,6 +477,20 @@ public class LocalizationMigration : MigrationBase
             ["Admin.System.SystemInfo.NopLatestVersion"] = "Latest nopCommerce version",
             ["Admin.System.SystemInfo.NopLatestVersion.Hint"] = "The latest nopCommerce version, available for download.",
             ["Admin.System.SystemInfo.NopLatestVersion.Text"] = "<a href='{1}' target='_blank'>{0}</a> (see the <a href='{2}' target='_blank'>release-notes</a>)",
+
+            //#8136
+            ["Footer.FollowUs.TikTok"] = "TikTok",
+            ["Footer.FollowUs.Snapchat"] = "Snapchat",
+            ["Footer.FollowUs.Pinterest"] = "Pinterest",
+            ["Footer.FollowUs.Tumblr"] = "Tumblr",
+            ["Admin.Configuration.Settings.GeneralCommon.TikTokLink"] = "TikTok URL",
+            ["Admin.Configuration.Settings.GeneralCommon.TikTokLink.Hint"] = "Specify your TikTok page URL. Leave empty if you have no such page.",
+            ["Admin.Configuration.Settings.GeneralCommon.SnapchatLink"] = "Snapchat URL",
+            ["Admin.Configuration.Settings.GeneralCommon.SnapchatLink.Hint"] = "Specify your Snapchat page URL. Leave empty if you have no such page.",
+            ["Admin.Configuration.Settings.GeneralCommon.PinterestLink"] = "Pinterest URL",
+            ["Admin.Configuration.Settings.GeneralCommon.PinterestLink.Hint"] = "Specify your Pinterest page URL. Leave empty if you have no such page.",
+            ["Admin.Configuration.Settings.GeneralCommon.TumblrLink"] = "Tumblr URL",
+            ["Admin.Configuration.Settings.GeneralCommon.TumblrLink.Hint"] = "Specify your Tumblr page URL. Leave empty if you have no such page.",
         });
 
         #endregion

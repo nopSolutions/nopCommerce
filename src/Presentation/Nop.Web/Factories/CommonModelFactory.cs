@@ -393,6 +393,10 @@ public partial class CommonModelFactory : ICommonModelFactory
             XLink = _storeInformationSettings.XLink,
             YoutubeLink = _storeInformationSettings.YoutubeLink,
             InstagramLink = _storeInformationSettings.InstagramLink,
+            TikTokLink = _storeInformationSettings.TikTokLink,
+            SnapchatLink = _storeInformationSettings.SnapchatLink,
+            PinterestLink = _storeInformationSettings.PinterestLink,
+            TumblrLink = _storeInformationSettings.TumblrLink,
             WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id,
         };
 

@@ -7971,6 +7971,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfLogo.Hint">
     <Value>Image file that will be displayed in PDF order invoices. A small image is recommended.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PinterestLink">
+    <Value>Pinterest URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PinterestLink.Hint">
+    <Value>Specify your Pinterest page URL. Leave empty if you have no such page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PopupForTermsOfServiceLinks">
     <Value>Popup windows for "terms of service"</Value>
   </LocaleResource>
@@ -8091,6 +8097,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapPageSize.Hint">
     <Value>A number of items displayed on one sitemap page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SnapchatLink">
+    <Value>Snapchat URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SnapchatLink.Hint">
+    <Value>Specify your Snapchat page URL. Leave empty if you have no such page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosed">
     <Value>Store closed</Value>
   </LocaleResource>
@@ -8102,6 +8114,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SubjectFieldOnContactUsForm.Hint">
     <Value>Check to allow a customer to type a subject on the contact us page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TikTokLink">
+    <Value>TikTok URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TikTokLink.Hint">
+    <Value>Specify your TikTok page URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TranslateFromLanguage">
     <Value>Translate from the language</Value>
@@ -8118,7 +8136,13 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TranslationService.Hint">
     <Value>Choose the translation service which will be used for pre-translate functionality.</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TumblrLink">
+    <Value>Tumblr URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TumblrLink.Hint">
+    <Value>Specify your Tumblr page URL. Leave empty if you have no such page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterMetaTags">
     <Value>Twitter META tags</Value>
   </LocaleResource>
@@ -17963,8 +17987,20 @@
   <LocaleResource Name="Footer.FollowUs.Instagram">
     <Value>Instagram</Value>
   </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.Pinterest">
+    <Value>Pinterest</Value>
+  </LocaleResource>
   <LocaleResource Name="Footer.FollowUs.RSS">
     <Value>RSS</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.Snapchat">
+    <Value>Snapchat</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.TikTok">
+    <Value>TikTok</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.Tumblr">
+    <Value>Tumblr</Value>
   </LocaleResource>
   <LocaleResource Name="Footer.FollowUs.X">
     <Value>X</Value>

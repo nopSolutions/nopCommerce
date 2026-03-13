@@ -62,6 +62,12 @@ public class SettingMigration : MigrationBase
             }
             this.DeleteSettingsByNames(["storeinformationsettings.twitterlink"]);
         });
+
+        //#8136
+        this.SetSettingIfNotExists<StoreInformationSettings, string>(settings => settings.TikTokLink, string.Empty);
+        this.SetSettingIfNotExists<StoreInformationSettings, string>(settings => settings.SnapchatLink, string.Empty);
+        this.SetSettingIfNotExists<StoreInformationSettings, string>(settings => settings.PinterestLink, string.Empty);
+        this.SetSettingIfNotExists<StoreInformationSettings, string>(settings => settings.TumblrLink, string.Empty);
     }
 
     public override void Down()
