@@ -390,7 +390,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         var model = new SocialModel
         {
             FacebookLink = _storeInformationSettings.FacebookLink,
-            TwitterLink = _storeInformationSettings.TwitterLink,
+            XLink = _storeInformationSettings.XLink,
             YoutubeLink = _storeInformationSettings.YoutubeLink,
             InstagramLink = _storeInformationSettings.InstagramLink,
             WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id,

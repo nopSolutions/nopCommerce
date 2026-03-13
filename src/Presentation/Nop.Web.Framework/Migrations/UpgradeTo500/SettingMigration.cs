@@ -1,5 +1,8 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain;
 using Nop.Core.Domain.ArtificialIntelligence;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
@@ -39,9 +42,26 @@ public class SettingMigration : MigrationBase
         this.SetSettingIfNotExists<PrivateMessageSettings, int>(settings => settings.PrivateMessagesPageSize,
             this.GetSettingByKey($"ForumSettings.{nameof(PrivateMessageSettings.PrivateMessagesPageSize)}", 10));
 
+        this.DeleteSettingsByNames([$"{nameof(CommonSettings)}.BbcodeEditorOpenLinksInNewWindow"]);
+
         //#7386
         this.SetSettingIfNotExists<ShippingSettings, bool>(settings => settings.AllowCustomerToChooseDeliveryDate, true);
         this.SetSettingIfNotExists<ShippingSettings, int>(settings => settings.DeliveryDateRangeDays, 7);
+
+        //#8097
+        this.SetSettingIfNotExists<StoreInformationSettings, string>(settings => settings.XLink, setting =>
+        {
+            var twitterLink = this.GetSettingByKey<string>("storeinformationsettings.twitterlink");
+            if (!string.IsNullOrEmpty(twitterLink))
+            {
+                setting.XLink = twitterLink;
+            }
+            else
+            {
+                setting.XLink = "https://x.com/nopCommerce";
+            }
+            this.DeleteSettingsByNames(["storeinformationsettings.twitterlink"]);
+        });
     }
 
     public override void Down()

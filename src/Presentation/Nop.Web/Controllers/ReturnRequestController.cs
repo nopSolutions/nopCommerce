@@ -177,7 +177,7 @@ public partial class ReturnRequestController : BasePublicController
         if (count > 0)
             model.Result = await _localizationService.GetResourceAsync("ReturnRequests.Submitted");
         else
-            model.Result = await _localizationService.GetResourceAsync("ReturnRequests.NoItemsSubmitted");
+            ModelState.AddModelError("", await _localizationService.GetResourceAsync("ReturnRequests.NoItemsSubmitted"));
 
         return View(model);
     }

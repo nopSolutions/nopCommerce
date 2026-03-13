@@ -25,7 +25,6 @@
                             new ColumnProperty(nameof(RelatedProductModel.DisplayOrder))
                             {
                                 Title = T("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder").Text,
-                                Width = "150",
                                 ClassName = NopColumnClassDefaults.CenterAll,
                                 Editable = true,
                                 EditType = EditType.Number
@@ -33,14 +32,14 @@
                             new ColumnProperty(nameof(RelatedProductModel.ProductId2))
                             {
                                 Title = T("Admin.Common.View").Text,
-                                Width = "150",
+                                Width = "100",
                                 ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/", nameof(RelatedProductModel.Product2Name)))
                             },
                             new ColumnProperty(nameof(RelatedProductModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
-                                Width = "200",
+                                Width = "100",
                                 ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonsInlineEdit()
                             },

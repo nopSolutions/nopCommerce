@@ -27,7 +27,7 @@
             }
             else
             {
-                <div class="menu__item" role="menuitem">
+                <div class="menu__item @menuItem.CssClass" role="menuitem">
                     @await Html.PartialAsync("_MenuItem.cshtml", menuItem)
                 </div>
             }

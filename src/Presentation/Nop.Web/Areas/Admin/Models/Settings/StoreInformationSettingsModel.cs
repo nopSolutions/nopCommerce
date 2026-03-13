@@ -48,9 +48,9 @@ public partial record StoreInformationSettingsModel : BaseNopModel, ISettingsMod
     public string FacebookLink { get; set; }
     public bool FacebookLink_OverrideForStore { get; set; }
 
-    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.TwitterLink")]
-    public string TwitterLink { get; set; }
-    public bool TwitterLink_OverrideForStore { get; set; }
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.XLink")]
+    public string XLink { get; set; }
+    public bool XLink_OverrideForStore { get; set; }
 
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.YoutubeLink")]
     public string YoutubeLink { get; set; }

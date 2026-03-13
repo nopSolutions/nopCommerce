@@ -116,21 +116,7 @@
     </div>
 
     <div class="topic-posts">
-        @if (Model.ForumEditor == EditorType.MarkdownEditor)
-        {
-        <script asp-location="Footer" src="~/Plugins/Misc.Forums/Content/js/marked.umd.js"></script>
-            <script asp-location="Footer">
-                document.addEventListener('DOMContentLoaded', function() {
-                    @foreach (var post in @Model.ForumPostModels)
-                    {
-                        <Text>
-                            document.querySelector('[data-post-content="@post.Id"]').innerHTML = marked.parse(@Html.Raw(Json.Serialize(post.FormattedText)), { gfm: true, breaks: true });
-                        </Text>
-                    }                    
-                });
-            </script>            
-        }
-        @foreach (var post in @Model.ForumPostModels)
+        @foreach (var post in Model.ForumPostModels)
         {
             await Html.RenderPartialAsync("~/Plugins/Misc.Forums/Public/Views/_ForumPost.cshtml", post);
         }

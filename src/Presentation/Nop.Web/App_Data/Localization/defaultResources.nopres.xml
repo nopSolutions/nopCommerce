@@ -8118,13 +8118,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TranslationService.Hint">
     <Value>Choose the translation service which will be used for pre-translate functionality.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterLink">
-    <Value>Twitter page URL</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterLink.Hint">
-    <Value>Specify your Twitter page URL. Leave empty if you have no such page.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterMetaTags">
     <Value>Twitter META tags</Value>
   </LocaleResource>
@@ -8154,6 +8148,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.WwwRequirement.Hint">
     <Value>Choose your store WWW prefix requirement. For example, http://yourStore.com/ could be automatically redirected to http://www.yourStore.com/.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.XLink">
+    <Value>X page URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.XLink.Hint">
+    <Value>Specify your X page URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.YoutubeLink">
     <Value>YouTube channel URL</Value>
@@ -17957,8 +17957,8 @@
   <LocaleResource Name="Footer.FollowUs.RSS">
     <Value>RSS</Value>
   </LocaleResource>
-  <LocaleResource Name="Footer.FollowUs.Twitter">
-    <Value>Twitter</Value>
+  <LocaleResource Name="Footer.FollowUs.X">
+    <Value>X</Value>
   </LocaleResource>
   <LocaleResource Name="Footer.FollowUs.Youtube">
     <Value>YouTube</Value>

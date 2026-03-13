@@ -18,7 +18,6 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
-using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Web.Framework.Mvc.Routing;
@@ -35,11 +34,11 @@ public class ForumModelFactory
 {
     #region Fields
 
+    private readonly BBCodeHelper _bbCodeHelper;
     private readonly CaptchaSettings _captchaSettings;
     private readonly CustomerSettings _customerSettings;
     private readonly ForumService _forumService;
     private readonly ForumSettings _forumSettings;
-    private readonly IBBCodeHelper _bbCodeHelper;
     private readonly ICountryService _countryService;
     private readonly ICustomerService _customerService;
     private readonly IDateTimeHelper _dateTimeHelper;
@@ -57,11 +56,11 @@ public class ForumModelFactory
 
     #region Ctor
 
-    public ForumModelFactory(CaptchaSettings captchaSettings,
+    public ForumModelFactory(BBCodeHelper bbCodeHelper, 
+        CaptchaSettings captchaSettings,
         CustomerSettings customerSettings,
         ForumService forumService,
         ForumSettings forumSettings,
-        IBBCodeHelper bbCodeHelper,
         ICountryService countryService,
         ICustomerService customerService,
         IDateTimeHelper dateTimeHelper,
@@ -75,11 +74,11 @@ public class ForumModelFactory
         MediaSettings mediaSettings,
         SeoSettings seoSettings)
     {
+        _bbCodeHelper = bbCodeHelper;
         _captchaSettings = captchaSettings;
         _customerSettings = customerSettings;
         _forumService = forumService;
         _forumSettings = forumSettings;
-        _bbCodeHelper = bbCodeHelper;
         _countryService = countryService;
         _customerService = customerService;
         _dateTimeHelper = dateTimeHelper;

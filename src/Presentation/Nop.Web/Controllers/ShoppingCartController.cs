@@ -1782,7 +1782,7 @@ public partial class ShoppingCartController : BasePublicController
                 (await _workContext.GetWorkingLanguageAsync()).Id,
                 model.YourEmailAddress,
                 model.FriendEmail,
-                _htmlFormatter.FormatText(model.PersonalMessage, false, true, false, false, false, false),
+                _htmlFormatter.FormatText(model.PersonalMessage, false, true, false, false, false),
                 wishlistUrl);
 
             model.SuccessfullySent = true;

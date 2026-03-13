@@ -43,25 +43,23 @@
                                 },
                                 new ColumnProperty(nameof(ForumGroupModel.Name))
                                 {
-                                    Title = T("Plugins.Misc.Forums.ForumGroup.Fields.Name").Text,
-                                    Width = "300"
+                                    Title = T("Plugins.Misc.Forums.ForumGroup.Fields.Name").Text
                                 },
                                 new ColumnProperty(nameof(ForumGroupModel.DisplayOrder))
                                 {
                                     Title = T("Plugins.Misc.Forums.ForumGroup.Fields.DisplayOrder").Text,
-                                    Width = "100",
                                     ClassName =  NopColumnClassDefaults.CenterAll
                                 },
                                 new ColumnProperty(nameof(ForumGroupModel.CreatedOn))
                                 {
                                     Title = T("Plugins.Misc.Forums.ForumGroup.Fields.CreatedOn").Text,
-                                    Width = "200",
+                                    Width = "180",
                                     Render = new RenderDate()
                                 },
                                 new ColumnProperty(nameof(ForumGroupModel.Id))
                                 {
                                     Title = T("Admin.Common.Edit").Text,
-                                    Width = "50",
+                                    Width = "100",
                                     ClassName = NopColumnClassDefaults.Button,
                                     Render = new RenderButtonEdit(new DataUrl("~/Admin/Forum/EditForumGroup"))
                                 }
@@ -81,25 +79,23 @@
                                 {
                                     new ColumnProperty(nameof(ForumModel.Name))
                                     {
-                                        Title = T("Plugins.Misc.Forums.Forum.Fields.Name").Text,
-                                        Width = "300"
+                                        Title = T("Plugins.Misc.Forums.Forum.Fields.Name").Text
                                     },
                                     new ColumnProperty(nameof(ForumModel.DisplayOrder))
                                     {
                                         Title = T("Plugins.Misc.Forums.Forum.Fields.DisplayOrder").Text,
-                                        Width = "150",
                                         ClassName =  NopColumnClassDefaults.CenterAll
                                     },
                                     new ColumnProperty(nameof(ForumModel.CreatedOn))
                                     {
                                         Title = T("Plugins.Misc.Forums.Forum.Fields.CreatedOn").Text,
-                                        Width = "150",
+                                        Width = "180",
                                         Render = new RenderDate()
                                     },
                                     new ColumnProperty(nameof(ForumModel.Id))
                                     {
                                         Title = T("Admin.Common.Edit").Text,
-                                        Width = "50",
+                                        Width = "100",
                                         ClassName = NopColumnClassDefaults.Button,
                                         Render = new RenderButtonEdit(new DataUrl("~/Admin/Forum/EditForum"))
                                     }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Services.Helpers;
 
-namespace Nop.Web.Framework.TagHelpers.Public;
+namespace Nop.Plugin.Misc.Forums.TagHelpers;
 
 /// <summary>
 /// "nop-bb-code-editor" tag helper
@@ -52,10 +52,10 @@ public partial class NopBBCodeEditorTagHelper : TagHelper
 
         var storeLocation = _webHelper.GetStoreLocation();
 
-        var bbEditorWebRoot = $"{storeLocation}js/";
+        var bbEditorWebRoot = $"{storeLocation}Plugins/Misc.Forums/Content/js/";
 
         var script1 = new TagBuilder("script");
-        script1.Attributes.Add("src", $"{storeLocation}js/bbeditor/ed.js");
+        script1.Attributes.Add("src", $"{bbEditorWebRoot}bbeditor/ed.js");
 
         var script2 = new TagBuilder("script");
         script2.Attributes.Add("language", "javascript");

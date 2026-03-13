@@ -87,13 +87,11 @@
                                 },
                                 new ColumnProperty(nameof(PollModel.LanguageName))
                                 {
-                                    Title = T("Plugins.Misc.Polls.Fields.Language").Text,
-                                    Width = "100"
+                                    Title = T("Plugins.Misc.Polls.Fields.Language").Text
                                 },
                                 new ColumnProperty(nameof(PollModel.DisplayOrder))
                                 {
                                     Title = T("Plugins.Misc.Polls.Fields.DisplayOrder").Text,
-                                    Width = "100",
                                     ClassName =  NopColumnClassDefaults.CenterAll
                                 },
                                 new ColumnProperty(nameof(PollModel.Published))
@@ -120,13 +118,13 @@
                                 new ColumnProperty(nameof(PollModel.StartDateUtc))
                                 {
                                     Title = T("Plugins.Misc.Polls.Fields.StartDate").Text,
-                                    Width = "150",
+                                    Width = "180",
                                     Render = new RenderDate()
                                 },
                                 new ColumnProperty(nameof(PollModel.EndDateUtc))
                                 {
                                     Title = T("Plugins.Misc.Polls.Fields.EndDate").Text,
-                                    Width = "150",
+                                    Width = "180",
                                     Render = new RenderDate()
                                 },
                                 new ColumnProperty(nameof(PollModel.Id))

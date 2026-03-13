@@ -196,6 +196,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                         "%Store.CompanyVat%",
                         "%Facebook.URL%",
                         "%Twitter.URL%",
+                        "%X.URL%",
                         "%YouTube.URL%",
                         "%Instagram.URL%"
                     }
@@ -977,7 +978,8 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Store.CompanyVat", store.CompanyVat));
 
         tokens.Add(new Token("Facebook.URL", _storeInformationSettings.FacebookLink));
-        tokens.Add(new Token("Twitter.URL", _storeInformationSettings.TwitterLink));
+        tokens.Add(new Token("Twitter.URL", _storeInformationSettings.XLink));
+        tokens.Add(new Token("X.URL", _storeInformationSettings.XLink));
         tokens.Add(new Token("YouTube.URL", _storeInformationSettings.YoutubeLink));
         tokens.Add(new Token("Instagram.URL", _storeInformationSettings.InstagramLink));
 
@@ -1191,8 +1193,8 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("ReturnRequest.Product.Name", await _localizationService.GetLocalizedAsync(product, x => x.Name, languageId)));
         tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
         tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
-        tokens.Add(new Token("ReturnRequest.CustomerComment", _htmlFormatter.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
-        tokens.Add(new Token("ReturnRequest.StaffNotes", _htmlFormatter.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
+        tokens.Add(new Token("ReturnRequest.CustomerComment", _htmlFormatter.FormatText(returnRequest.CustomerComments, false, true, false, false, false), true));
+        tokens.Add(new Token("ReturnRequest.StaffNotes", _htmlFormatter.FormatText(returnRequest.StaffNotes, false, true, false, false, false), true));
         tokens.Add(new Token("ReturnRequest.Status", await _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus, languageId)));
 
         //event notification
@@ -1218,7 +1220,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("GiftCard.CouponCode", giftCard.GiftCardCouponCode));
 
         var giftCardMessage = !string.IsNullOrWhiteSpace(giftCard.Message) ?
-            _htmlFormatter.FormatText(giftCard.Message, false, true, false, false, false, false) : string.Empty;
+            _htmlFormatter.FormatText(giftCard.Message, false, true, false, false, false) : string.Empty;
 
         tokens.Add(new Token("GiftCard.Message", giftCardMessage, true));
 

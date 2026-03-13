@@ -20,7 +20,7 @@
     "chart.js": "4.5.0",
     "cldr-data": ">=36.0.1",
     "cldrjs": "^0.5.5",
-    "datatables.net": "2.3.4",
+    "datatables.net": "2.1.8",
     "datatables.net-bs4": "3.2.2",
     "datatables.net-buttons": "3.2.5",
     "datatables.net-buttons-bs4": "3.2.5",

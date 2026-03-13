@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Nop.Core.Domain.Messages;
 
 namespace Nop.Plugin.Misc.Omnisend.DTO;
 
@@ -11,11 +10,11 @@ public class ContactInfoDto : BaseContactInfoDto
 
     public class Identifier
     {
-        public Identifier(NewsLetterSubscription subscription, string inactiveStatus, bool sendWelcomeMessage = false)
+        public Identifier(string email, bool isSubscriptionActive, DateTime createdOnUtc, string inactiveStatus, bool sendWelcomeMessage = false)
         {
-            Id = subscription.Email;
+            Id = email;
             SendWelcomeMessage = sendWelcomeMessage;
-            Channels = new(subscription, inactiveStatus);
+            Channels = new(isSubscriptionActive, createdOnUtc, inactiveStatus);
         }
 
         public Identifier()
@@ -31,9 +30,9 @@ public class ContactInfoDto : BaseContactInfoDto
 
         public class EmailChannel
         {
-            public EmailChannel(NewsLetterSubscription subscription, string inactiveStatus)
+            public EmailChannel(bool isSubscriptionActive, DateTime createdOnUtc, string inactiveStatus)
             {
-                Email = new Channel(subscription, inactiveStatus);
+                Email = new Channel(isSubscriptionActive, createdOnUtc, inactiveStatus);
             }
 
             public EmailChannel()
@@ -46,10 +45,10 @@ public class ContactInfoDto : BaseContactInfoDto
 
             public class Channel
             {
-                public Channel(NewsLetterSubscription subscription, string inactiveStatus)
+                public Channel(bool isSubscriptionActive, DateTime createdOnUtc,  string inactiveStatus)
                 {
-                    Status = subscription.Active ? "subscribed" : inactiveStatus;
-                    StatusDate = subscription.CreatedOnUtc.ToDtoString();
+                    Status = isSubscriptionActive ? "subscribed" : inactiveStatus;
+                    StatusDate = createdOnUtc.ToDtoString();
                 }
 
                 public Channel()

@@ -134,7 +134,7 @@ public class CommonModelFactoryTests : BaseNopTest
         var model = await _commonModelFactory.PrepareSocialModelAsync();
 
         model.FacebookLink.Should().Be(_storeInformationSettings.FacebookLink);
-        model.TwitterLink.Should().Be(_storeInformationSettings.TwitterLink);
+        model.XLink.Should().Be(_storeInformationSettings.XLink);
         model.YoutubeLink.Should().Be(_storeInformationSettings.YoutubeLink);
         model.InstagramLink.Should().Be(_storeInformationSettings.InstagramLink);
         model.WorkingLanguageId.Should().Be(1);
