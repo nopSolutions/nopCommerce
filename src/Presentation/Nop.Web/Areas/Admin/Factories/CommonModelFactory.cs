@@ -769,6 +769,44 @@ public partial class CommonModelFactory : ICommonModelFactory
         }
     }
 
+    /// <summary>
+    /// Retrieves the latest available nopCommerce version identifier from the remote release information source
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the string containing the latest nopCommerce version identifier if available; otherwise, null.
+    /// </returns>
+    protected virtual async Task<string> GetNopLatestVersionAsync()
+    {
+        var latestReleaseInfo = await _staticCacheManager.GetAsync(NopCommonDefaults.LatestReleaseInfoCacheKey,
+            async () =>
+            {
+                try
+                {
+                    var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
+                    client.BaseAddress = new Uri(NopCommonDefaults.LatestReleaseInfoUrl);
+                    client.DefaultRequestHeaders.Add(HeaderNames.UserAgent,
+                        $"nopCommerce-{NopVersion.CURRENT_VERSION}");
+                    client.Timeout = TimeSpan.FromSeconds(NopCommonDefaults.GitHubRequestTimeout);
+
+                    var response = await client.GetAsync(string.Empty);
+
+                    return response.IsSuccessStatusCode
+                        ? JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(),
+                            new { Name = $"release-{NopVersion.FULL_VERSION}" })
+                        : null;
+                }
+                catch
+                {
+                    //ignore
+                }
+
+                return null;
+            });
+
+        return string.IsNullOrEmpty(latestReleaseInfo.Name) ? null : latestReleaseInfo.Name.Replace("release-", string.Empty);
+    }
+
     #endregion
 
     #region Methods
@@ -856,37 +894,13 @@ public partial class CommonModelFactory : ICommonModelFactory
 
         model.CurrentStaticCacheManager = currentStaticCacheManagerName;
 
-        var latestReleaseInfo = await _staticCacheManager.GetAsync(NopCommonDefaults.LatestReleaseInfoCacheKey, async () =>
+        var nopLatestVersion = await GetNopLatestVersionAsync();
+
+        if (!string.IsNullOrEmpty(nopLatestVersion) && !nopLatestVersion.Equals(NopVersion.FULL_VERSION))
         {
-            try
-            {
-                var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
-                client.BaseAddress = new Uri(NopCommonDefaults.LatestReleaseInfoUrl);
-                client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CURRENT_VERSION}");
-                client.Timeout = TimeSpan.FromSeconds(NopCommonDefaults.GitHubRequestTimeout);
-
-                var response = await client.GetAsync(string.Empty);
-
-                return response.IsSuccessStatusCode
-                    ? JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(),
-                        new { Name = $"release-{NopVersion.FULL_VERSION}" })
-                    : null;
-            }
-            catch
-            {
-                //ignore
-            }
-
-            return null;
-        });
-
-        if (latestReleaseInfo != null && (!latestReleaseInfo.Name?.Contains(NopVersion.FULL_VERSION) ?? false))
-        {
-            var nopLatestVersion = latestReleaseInfo.Name.Replace("release-", string.Empty);
-
             if (int.TryParse(nopLatestVersion.Replace(".", string.Empty),
-                    out var latestReleaseVersion) && (int.TryParse(NopVersion.FULL_VERSION.Replace(".", string.Empty),
-                    out var currentVersion) && currentVersion < latestReleaseVersion))
+                    out var latestReleaseVersion) && int.TryParse(NopVersion.FULL_VERSION.Replace(".", string.Empty),
+                    out var currentVersion) && currentVersion < latestReleaseVersion)
             {
                 model.NopLatestVersion =
                     string.Format(

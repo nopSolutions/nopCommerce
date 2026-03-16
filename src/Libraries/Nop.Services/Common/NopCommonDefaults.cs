@@ -104,7 +104,7 @@ public static partial class NopCommonDefaults
     #region nopCommerce GitHub
 
     /// <summary>
-    /// Gets the URL for retrieve information about latest nopCommerce release
+    /// Gets the URL to get information about the latest nopCommerce release
     /// </summary>
     public static string LatestReleaseInfoUrl => "https://api.github.com/repos/nopSolutions/nopCommerce/releases/latest";
 
