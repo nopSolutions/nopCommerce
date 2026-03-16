@@ -120,7 +120,7 @@ public class ForumService
             {
                 TextFormatType.BBCode => _bbCodeHelper.FormatText(text),
                 TextFormatType.Markdown => Markdown.ToHtml(CSharpFormat.FormatTextSimple(text)),
-                _ => null
+                _ => text
             };
         }
         catch (Exception exc)
