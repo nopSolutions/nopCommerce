@@ -529,7 +529,8 @@ public class OmnisendService
         var subscriptions = (subscriber == null ? _newsLetterSubscriptionRepository.Table : _newsLetterSubscriptionRepository.Table.Where(nlsr => nlsr.Id.Equals(subscriber.Id)))
             .Where(subscription => subscription.StoreId == storeId)
             .OrderBy(subscription => subscription.Id)
-            .DistinctBy(x => x.Email)
+            .Select(subscription => new{ subscription.Email, subscription.Active, subscription.CreatedOnUtc })
+            .Distinct()
             .Skip(pageIndex * pageSize)
             .Take(pageSize);
 
@@ -567,7 +568,7 @@ public class OmnisendService
 
         var subscribers = (await contactsWithState.ToListAsync()).Select(item =>
         {
-            var dto = new CreateContactRequest(item.subscription, inactiveStatus, sendWelcomeMessage)
+            var dto = new CreateContactRequest(item.subscription.Email, item.subscription.Active, item.subscription.CreatedOnUtc, inactiveStatus, sendWelcomeMessage)
             {
                 FirstName = item.FirstName,
                 LastName = item.LastName,

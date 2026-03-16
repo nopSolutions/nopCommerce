@@ -169,25 +169,23 @@ public static class FilePermissionHelper
     private static bool CheckPermissionsInUnix(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
     {
         //MacOSX file permission check differs slightly from linux
-        var arguments = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-            ? $"-c \"stat -f '%A %u %g' '{path}'\""
-            : $"-c \"stat -c '%a %u %g' '{path}'\"";
+        IList<string> arguments = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+            ? ["-f", "%A %u %g", path]
+            : ["-c", "%a %u %g", path ];
 
         try
         {
-            //create bash command like
-            //sh -c "stat -c '%a %u %g' <file>"
+            //create bash command like: stat -c %a %u %g <file>
             var process = new Process
             {
-                StartInfo = new ProcessStartInfo
+                StartInfo = new ProcessStartInfo("stat", arguments)
                 {
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
-                    UseShellExecute = false,
-                    FileName = "sh",
-                    Arguments = arguments
+                    UseShellExecute = false
                 }
             };
+
             process.Start();
             process.WaitForExit();
 

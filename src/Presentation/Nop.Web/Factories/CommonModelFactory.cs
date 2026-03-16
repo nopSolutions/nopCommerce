@@ -352,13 +352,14 @@ public partial class CommonModelFactory : ICommonModelFactory
             UnreadPrivateMessages = unreadMessage,
             AlertMessage = alertMessage,
         };
+        
         //performance optimization (use "HasShoppingCartItems" property)
         if (customer.HasShoppingCartItems)
         {
             model.ShoppingCartItems = (await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id))
                 .Sum(item => item.Quantity);
 
-            model.WishlistItems = (await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id))
+            model.WishlistItems = (await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.Wishlist, store.Id, customWishlistId: 0))
                 .Sum(item => item.Quantity);
         }
 

@@ -514,7 +514,7 @@ public partial class LocalizationService : ILocalizationService
             lsNamesList[localeStringResource.ResourceName.ToLowerInvariant()] = localeStringResource;
         }
 
-        var lrsToUpdateList = new List<LocaleStringResource>();
+        var lrsToUpdateList = new Dictionary<string, LocaleStringResource>();
         var lrsToInsertList = new Dictionary<string, LocaleStringResource>();
 
         foreach (var (name, value) in LoadLocaleResourcesFromStream(xmlStreamReader))
@@ -524,9 +524,8 @@ public partial class LocalizationService : ILocalizationService
                 if (!updateExistingResources)
                     continue;
 
-                var lsr = localString;
-                lsr.ResourceValue = value;
-                lrsToUpdateList.Add(lsr);
+                localString.ResourceValue = value;
+                lrsToUpdateList[name] = localString;
             }
             else
             {
@@ -535,7 +534,7 @@ public partial class LocalizationService : ILocalizationService
             }
         }
 
-        await _lsrRepository.UpdateAsync(lrsToUpdateList, false);
+        await _lsrRepository.UpdateAsync(lrsToUpdateList.Values.ToList(), false);
         await _lsrRepository.InsertAsync(lrsToInsertList.Values.ToList(), false);
 
         //clear cache
