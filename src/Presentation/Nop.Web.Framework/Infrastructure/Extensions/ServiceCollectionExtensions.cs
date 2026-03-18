@@ -329,7 +329,7 @@ public static class ServiceCollectionExtensions
         //set some options
         mvcBuilder.AddMvcOptions(options =>
         {
-            options.ModelBinderProviders.Insert(1, new NopModelBinderProvider());
+            options.ModelBinderProviders.Insert(0, new NopModelBinderProvider());
             //add custom display metadata provider 
             options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider());
 
