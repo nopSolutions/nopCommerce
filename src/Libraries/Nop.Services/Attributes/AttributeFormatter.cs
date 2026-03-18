@@ -88,7 +88,7 @@ public partial class
                             attributeName = WebUtility.HtmlEncode(attributeName);
 
                         formattedAttribute =
-                            $"{attributeName}: {_htmlFormatter.FormatText(valueStr, false, true, false, false, false)}";
+                            $"{attributeName}: {_htmlFormatter.FormatText(valueStr)}";
                         //we never encode multiline textbox input
                     }
                     else if (attribute.AttributeControlType == AttributeControlType.FileUpload)

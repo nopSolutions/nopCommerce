@@ -105,7 +105,7 @@ public partial class CheckoutAttributeFormatter : ICheckoutAttributeFormatter
                         //encode (if required)
                         if (htmlEncode)
                             attributeName = WebUtility.HtmlEncode(attributeName);
-                        formattedAttribute = $"{attributeName}: {_htmlFormatter.FormatText(valueStr, false, true, false, false, false)}";
+                        formattedAttribute = $"{attributeName}: {_htmlFormatter.FormatText(valueStr)}";
                         //we never encode multiline textbox input
                     }
                     else if (attribute.AttributeControlType == AttributeControlType.FileUpload)

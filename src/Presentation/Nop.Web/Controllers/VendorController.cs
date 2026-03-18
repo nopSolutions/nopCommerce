@@ -248,7 +248,7 @@ public partial class VendorController : BasePublicController
 
         if (ModelState.IsValid)
         {
-            var description = _htmlFormatter.FormatText(model.Description, false, false, true, false, false);
+            var description = _htmlFormatter.FormatText(model.Description);
             //disabled by default
             var vendor = new Vendor
             {
@@ -348,7 +348,7 @@ public partial class VendorController : BasePublicController
 
         if (ModelState.IsValid)
         {
-            var description = _htmlFormatter.FormatText(model.Description, false, false, true, false, false);
+            var description = _htmlFormatter.FormatText(model.Description);
 
             vendor.Name = model.Name;
             vendor.Email = model.Email;

@@ -808,7 +808,7 @@ public partial class CustomerService : ICustomerService
         if (string.IsNullOrEmpty(text))
             return string.Empty;
 
-        text = _htmlFormatter.FormatText(text, false, true, false, false, false);
+        text = _htmlFormatter.FormatText(text);
 
         return text;
     }

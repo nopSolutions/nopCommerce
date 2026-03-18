@@ -107,8 +107,8 @@ public class TaxTransactionLogController : BaseAdminController
             Id = logItem.Id,
             StatusCode = logItem.StatusCode,
             Url = logItem.Url,
-            RequestMessage = _htmlFormatter.FormatText(logItem.RequestMessage, false, true, false, false, false),
-            ResponseMessage = _htmlFormatter.FormatText(logItem.ResponseMessage, false, true, false, false, false),
+            RequestMessage = _htmlFormatter.FormatText(logItem.RequestMessage),
+            ResponseMessage = _htmlFormatter.FormatText(logItem.ResponseMessage),
             CustomerId = logItem.CustomerId,
             CustomerEmail = (await _customerService.GetCustomerByIdAsync(logItem.CustomerId))?.Email,
             CreatedDate = await _dateTimeHelper.ConvertToUserTimeAsync(logItem.CreatedDateUtc, DateTimeKind.Utc)

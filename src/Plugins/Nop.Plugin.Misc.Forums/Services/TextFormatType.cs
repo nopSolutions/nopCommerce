@@ -6,7 +6,6 @@
 public enum TextFormatType
 {
     PlainText,
-    HTML,
     BBCode,
     Markdown
 }

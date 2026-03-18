@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Net;
+﻿using System.Net;
 using System.Text.RegularExpressions;
 
 namespace Nop.Services.Html;
@@ -9,101 +8,8 @@ namespace Nop.Services.Html;
 /// </summary>
 public partial class HtmlFormatter : IHtmlFormatter
 {
-    #region Fields
-
-    protected const string LINK = "<a href=\"{0}{1}\" rel=\"nofollow\">{2}</a>";
-    protected const int MAX_LENGTH = 50;
-
-    /// <summary>
-    /// The regular expression used to parse links.
-    /// </summary>
-    protected static readonly Regex _regex = new("((http://|https://|www\\.)([A-Z0-9.\\-]{1,})\\.[0-9A-Z?;~&\\(\\)#,=\\-_\\./\\+]{2,})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-    #endregion
-
     #region Utilities
-
-    /// <summary>
-    /// Shortens any absolute URL to a specified maximum length
-    /// </summary>
-    protected static string ShortenUrl(string url, int max)
-    {
-        if (url.Length <= max)
-            return url;
-
-        // Remove the protocol
-        var startIndex = url.IndexOf("://", StringComparison.InvariantCultureIgnoreCase);
-        if (startIndex > -1)
-            url = url[(startIndex + 3)..];
-
-        if (url.Length <= max)
-            return url;
-
-        // Compress folder structure
-        var firstIndex = url.IndexOf("/", StringComparison.InvariantCultureIgnoreCase) + 1;
-        var lastIndex = url.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase);
-        if (firstIndex < lastIndex)
-        {
-            url = url.Remove(firstIndex, lastIndex - firstIndex);
-            url = url.Insert(firstIndex, "...");
-        }
-
-        if (url.Length <= max)
-            return url;
-
-        // Remove URL parameters
-        var queryIndex = url.IndexOf("?", StringComparison.InvariantCultureIgnoreCase);
-        if (queryIndex > -1)
-            url = url[0..queryIndex];
-
-        if (url.Length <= max)
-            return url;
-
-        // Remove URL fragment
-        var fragmentIndex = url.IndexOf("#", StringComparison.InvariantCultureIgnoreCase);
-        if (fragmentIndex > -1)
-            url = url[0..fragmentIndex];
-
-        if (url.Length <= max)
-            return url;
-
-        // Compress page
-        firstIndex = url.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase) + 1;
-        lastIndex = url.LastIndexOf(".", StringComparison.InvariantCultureIgnoreCase);
-
-        if (lastIndex - firstIndex <= 10)
-            return url;
-
-        var page = url[firstIndex..lastIndex];
-        var length = url.Length - max + 3;
-        if (page.Length > length)
-            url = url.Replace(page, "..." + page[length..]);
-
-        return url;
-    }
-
-    /// <summary>
-    /// Resolve links in the text
-    /// </summary>
-    /// <param name="text">Text</param>
-    /// <returns>Formatted text</returns>
-    protected virtual string ResolveLinks(string text)
-    {
-        if (string.IsNullOrEmpty(text))
-            return string.Empty;
-
-        var info = CultureInfo.InvariantCulture;
-        foreach (Match match in _regex.Matches(text))
-        {
-            text = text.Replace(match.Value,
-                !match.Value.Contains("://")
-                    ? string.Format(info, LINK, "http://", match.Value, ShortenUrl(match.Value, MAX_LENGTH))
-                    : string.Format(info, LINK, string.Empty, match.Value, ShortenUrl(match.Value, MAX_LENGTH)));
-        }
-
-        return text;
-    }
-
+    
     /// <summary>
     /// Replace anchor text (remove a tag from the following URL <a href="http://example.com">Name</a> and output only the string "Name")
     /// </summary>
@@ -119,36 +25,22 @@ public partial class HtmlFormatter : IHtmlFormatter
     }
 
     /// <summary>
-    /// Indicates whether the HTML tag is valid
+    /// Converts plain text to HTML
     /// </summary>
-    /// <param name="tag">HTML tag to check</param>
-    /// <param name="tags">List of valid tags</param>
-    /// <returns>True - if the tag if valid, false otherwise</returns>
-    protected static bool IsValidTag(string tag, string tags)
+    /// <param name="text">Text</param>
+    /// <returns>Formatted text</returns>
+    protected virtual string ConvertPlainTextToHtml(string text)
     {
-        var allowedTags = tags.Split(',');
-        if (tag.Contains("javascript", StringComparison.InvariantCultureIgnoreCase))
-            return false;
-        if (tag.Contains("vbscript", StringComparison.InvariantCultureIgnoreCase))
-            return false;
-        if (tag.Contains("onclick", StringComparison.InvariantCultureIgnoreCase))
-            return false;
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
 
-        var endChars = new[] { ' ', '>', '/', '\t' };
+        text = text.Replace("\r\n", "<br />");
+        text = text.Replace("\r", "<br />");
+        text = text.Replace("\n", "<br />");
+        text = text.Replace("\t", "&nbsp;&nbsp;");
+        text = text.Replace("  ", "&nbsp;&nbsp;");
 
-        var pos = tag.IndexOfAny(endChars, 1);
-        if (pos > 0)
-            tag = tag[0..pos];
-        if (tag[0] == '/')
-            tag = tag[1..^0];
-
-        foreach (var aTag in allowedTags)
-        {
-            if (tag == aTag)
-                return true;
-        }
-
-        return false;
+        return text;
     }
 
     #endregion
@@ -156,64 +48,18 @@ public partial class HtmlFormatter : IHtmlFormatter
     #region Methods
 
     /// <summary>
-    /// Ensure only allowed HTML tags
-    /// </summary>
-    /// <param name="text">Text</param>
-    /// <returns>Sanitized text with all invalid tags removed</returns>
-    public virtual string EnsureOnlyAllowedHtml(string text)
-    {
-        if (string.IsNullOrEmpty(text))
-            return string.Empty;
-
-        const string allowedTags = "br,hr,b,i,u,a,div,ol,ul,li,blockquote,img,span,p,em,strong,font,pre,h1,h2,h3,h4,h5,h6,address,cite";
-
-        var m = Regex.Matches(text, "<.*?>", RegexOptions.IgnoreCase);
-
-        for (var i = m.Count - 1; i >= 0; i--)
-        {
-            var tag = text[(m[i].Index + 1)..(m[i].Index + m[i].Length)].Trim().ToLower();
-
-            if (!IsValidTag(tag, allowedTags))
-                text = text.Remove(m[i].Index, m[i].Length);
-        }
-
-        return text;
-    }
-
-    /// <summary>
     /// Formats the text
     /// </summary>
     /// <param name="text">Text</param>
-    /// <param name="stripTags">A value indicating whether to strip tags</param>
-    /// <param name="convertPlainTextToHtml">A value indicating whether HTML is allowed</param>
-    /// <param name="allowHtml">A value indicating whether HTML is allowed</param>
-    /// <param name="resolveLinks">A value indicating whether to resolve links</param>
-    /// <param name="addNoFollowTag">A value indicating whether to add "noFollow" tag</param>
     /// <returns>Formatted text</returns>
-    public virtual string FormatText(string text, bool stripTags,
-        bool convertPlainTextToHtml, bool allowHtml,
-        bool resolveLinks, bool addNoFollowTag)
+    public virtual string FormatText(string text)
     {
         if (string.IsNullOrEmpty(text))
             return string.Empty;
 
         try
         {
-            if (stripTags) 
-                text = StripTags(text);
-
-            text = allowHtml ? EnsureOnlyAllowedHtml(text) : WebUtility.HtmlEncode(text);
-
-            if (convertPlainTextToHtml) 
-                text = ConvertPlainTextToHtml(text);
-            
-            if (resolveLinks) 
-                text = ResolveLinks(text);
-
-            if (addNoFollowTag)
-            {
-                //add noFollow tag. not implemented
-            }
+            text = ConvertPlainTextToHtml(WebUtility.HtmlEncode(text));
         }
         catch (Exception exc)
         {
@@ -236,25 +82,6 @@ public partial class HtmlFormatter : IHtmlFormatter
         text = Regex.Replace(text, @"(>)(\r|\n)*(<)", "><");
         text = Regex.Replace(text, "(<[^>]*>)([^<]*)", "$2");
         text = Regex.Replace(text, "(&#x?[0-9]{2,4};|&quot;|&amp;|&nbsp;|&lt;|&gt;|&euro;|&copy;|&reg;|&permil;|&Dagger;|&dagger;|&lsaquo;|&rsaquo;|&bdquo;|&rdquo;|&ldquo;|&sbquo;|&rsquo;|&lsquo;|&mdash;|&ndash;|&rlm;|&lrm;|&zwj;|&zwnj;|&thinsp;|&emsp;|&ensp;|&tilde;|&circ;|&Yuml;|&scaron;|&Scaron;)", "@");
-
-        return text;
-    }
-
-    /// <summary>
-    /// Converts plain text to HTML
-    /// </summary>
-    /// <param name="text">Text</param>
-    /// <returns>Formatted text</returns>
-    public virtual string ConvertPlainTextToHtml(string text)
-    {
-        if (string.IsNullOrEmpty(text))
-            return string.Empty;
-
-        text = text.Replace("\r\n", "<br />");
-        text = text.Replace("\r", "<br />");
-        text = text.Replace("\n", "<br />");
-        text = text.Replace("\t", "&nbsp;&nbsp;");
-        text = text.Replace("  ", "&nbsp;&nbsp;");
 
         return text;
     }
