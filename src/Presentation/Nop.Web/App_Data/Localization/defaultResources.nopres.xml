@@ -4821,6 +4821,18 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Data">
     <Value>Data configuration</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.BulkCopyWithCheckConstraints">
+    <Value>Check constraints during bulk copy operations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.BulkCopyWithCheckConstraints.Hint">
+    <Value>Check to validate data inserted by bulk copy operations against the check constraints defined in the target table. Uncheck to improve performance, but be aware that it can result in data that does not meet the table's integrity requirements.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.CloseDataContextAfterUse">
+    <Value>Close dataContext after use</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Data.CloseDataContextAfterUse.Hint">
+    <Value>Check to automatically dispose the data context after each operation, which helps prevent resource leaks. Uncheck if you need to keep the data context open for multiple sequential operations.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Data.ConnectionString">
     <Value>Connection string</Value>
   </LocaleResource>
