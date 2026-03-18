@@ -1032,10 +1032,16 @@ public partial class ProductController : BaseAdminController
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create()
     {
-        //validate maximum number of products per vendor
+        // Basic validation: prevent null context 
         var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor == null)
+        {
+            _notificationService.ErrorNotification("Current vendor not found.");
+            return RedirectToAction("List");
+        }
+
+        //validate maximum number of products per vendor
         if (_vendorSettings.MaximumProductNumber > 0 &&
-            currentVendor != null &&
             await _productService.GetNumberOfProductsByVendorIdAsync(currentVendor.Id) >= _vendorSettings.MaximumProductNumber)
         {
             _notificationService.ErrorNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ExceededMaximumNumber"),
