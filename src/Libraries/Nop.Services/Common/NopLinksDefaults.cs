@@ -16,6 +16,16 @@ public static partial class NopLinksDefaults
         public static string Main => "https://www.nopcommerce.com/";
 
         /// <summary>
+        /// Gets the download page
+        /// </summary>
+        public static string DownloadPage => "https://www.nopcommerce.com/download-nopcommerce";
+
+        /// <summary>
+        /// Gets the release-notes page
+        /// </summary>
+        public static string ReleaseNotesPage => "https://www.nopcommerce.com/release-notes";
+
+        /// <summary>
         /// Gets the boards page
         /// </summary>
         public static string Boards => "https://www.nopcommerce.com/boards/";
@@ -220,16 +230,6 @@ public static partial class NopLinksDefaults
         /// Gets a URL of the blog docs page
         /// </summary>
         public static string Blog => "https://docs.nopcommerce.com/running-your-store/content-management/blog.html";
-
-        /// <summary>
-        /// Gets a URL of the polls docs page
-        /// </summary>
-        public static string Polls => "https://docs.nopcommerce.com/running-your-store/content-management/polls.html";
-
-        /// <summary>
-        /// Gets a URL of the forums docs page
-        /// </summary>
-        public static string Forums => "https://docs.nopcommerce.com/running-your-store/content-management/forums.html";
 
         /// <summary>
         /// Gets a URL of the email accounts docs page

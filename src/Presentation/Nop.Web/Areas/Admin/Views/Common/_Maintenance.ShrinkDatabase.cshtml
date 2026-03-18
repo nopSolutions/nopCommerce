@@ -6,6 +6,12 @@
                 <p>
                     @T("Admin.System.Maintenance.ShrinkDatabase.Text")
                 </p>
+                <p>
+                    <ul>
+                        <input type="hidden" asp-for="DatabaseSize" />
+                        <li>@Html.Raw(Model.DatabaseSize)</li>
+                    </ul>
+                </p>
             </div>
             <div>
                 <button type="submit" name="shrink-database" class="btn btn-default">

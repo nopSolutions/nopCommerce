@@ -4,7 +4,7 @@ using Nop.Services.Security;
 namespace Nop.Plugin.Misc.News.Services;
 
 /// <summary>
-/// News permission congiguration manager
+/// News permission configuration manager
 /// </summary>
 public class NewsPermissionConfigManager : IPermissionConfigManager
 {

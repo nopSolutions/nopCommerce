@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Core.Configuration;
+using Nop.Services.Helpers;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.UI;
 using Nop.Web.Framework.WebOptimizer;
@@ -145,11 +146,11 @@ public partial class NopScriptTagHelper : UrlResolutionTagHelper
 
         if (Location == ResourceLocation.None)
         {
-            if (!string.IsNullOrEmpty(Src))
-            {
-                ProcessSrcAttribute(context, output);
-                ProcessAsset(output);
-            }
+            if (string.IsNullOrEmpty(Src))
+                return;
+
+            ProcessSrcAttribute(context, output);
+            ProcessAsset(output);
 
             return;
         }

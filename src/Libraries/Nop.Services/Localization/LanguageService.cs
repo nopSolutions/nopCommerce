@@ -52,6 +52,7 @@ public partial class LanguageService : ILanguageService
 
         //update default admin area language (if required)
         if (_localizationSettings.DefaultAdminLanguageId == language.Id)
+        {
             foreach (var activeLanguage in await GetAllLanguagesAsync())
             {
                 if (activeLanguage.Id == language.Id)
@@ -61,6 +62,7 @@ public partial class LanguageService : ILanguageService
                 await _settingService.SaveSettingAsync(_localizationSettings);
                 break;
             }
+        }
 
         await _languageRepository.DeleteAsync(language);
     }

@@ -30,6 +30,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
@@ -1525,9 +1526,7 @@ public class PayPalCommerceServiceManager
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
             if (!paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) ||
                 !string.Equals(orderIdValue.Value, orderId, StringComparison.InvariantCultureIgnoreCase))
-            {
                 throw new NopException("Failed to get PayPal order info");
-            }
 
             var placementKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Placement");
             if (!paymentRequest.CustomValues.TryGetValue(placementKey, out var placementValue) ||
@@ -1831,16 +1830,12 @@ public class PayPalCommerceServiceManager
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
             if (!paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) ||
                 (!string.IsNullOrEmpty(orderId) && !string.Equals(orderIdValue.Value, orderId, StringComparison.InvariantCultureIgnoreCase)))
-            {
                 throw new NopException("Failed to get PayPal order info");
-            }
 
             var placementKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Placement");
             if (!paymentRequest.CustomValues.TryGetValue(placementKey, out var placementValue) ||
                 !Enum.TryParse<ButtonPlacement>(placementValue.Value, out var placement))
-            {
                 throw new NopException("Failed to get PayPal order info");
-            }
 
             //changing shipping address or option on the payment method page is not available
             if (placement == ButtonPlacement.PaymentMethod)
@@ -1951,9 +1946,7 @@ public class PayPalCommerceServiceManager
             var orderIdKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Id");
             if (!paymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderIdValue) ||
                 (!string.IsNullOrEmpty(orderId) && !string.Equals(orderIdValue.Value, orderId, StringComparison.InvariantCultureIgnoreCase)))
-            {
                 throw new NopException("Failed to get PayPal order info");
-            }
 
             var placementKey = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalCommerce.Order.Placement");
             if (!paymentRequest.CustomValues.TryGetValue(placementKey, out var placementValue) ||
@@ -1976,7 +1969,9 @@ public class PayPalCommerceServiceManager
                         throw new NopException($"The authentication system isn't available, please retry later");
                 }
                 else
+                {
                     throw new NopException($"Order is in '{order.Status}' status");
+                }
             }
 
             if (order.PurchaseUnits.FirstOrDefault() is not PurchaseUnit unit ||

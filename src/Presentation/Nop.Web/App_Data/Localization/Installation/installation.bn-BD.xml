@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="বাংলা (বাংলাদেশ)" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>অ্যাডমিন ইমেইল</Value>
+    <Value>অ্যাডমিন ইউজার ইমেইল</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
     <Value>অ্যাডমিন ইমেইল লিখুন</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>অ্যাডমিন পাসওয়ার্ড</Value>
+    <Value>অ্যাডমিন ইউজার পাসওয়ার্ড</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>অ্যাডমিন পাসওয়ার্ড লিখুন</Value>
@@ -70,13 +70,13 @@
     <Value>ডাটাবেসের নাম</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>ডাটাবেসটি নেই অথবা এটিতে সংযোগ স্থাপন করতে আপনার অনুমতি নেই</Value>
+    <Value>ডাটাবেসটি নেই অথবা আপনার এতে সংযোগ স্থাপন করার অনুমতি নেই</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
     <Value>ডেটা সরবরাহকারী নির্বাচন করুন</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
-    <Value>nopCommerce কিভাবে ব্যাবহার করতে হয় তা জানতে ভিজিট করুন</Value>
+    <Value>nopCommerce কিভাবে ব্যবহার করতে হয় তা জানতে ভিজিট করুন</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
     <Value>nopCommerce.com ডকুমেন্টেশন বিভাগ</Value>
@@ -136,7 +136,7 @@
     <Value>SQL ব্যবহারকারীর নাম</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>ইউজারনেম প্রদান আবশ্যক।</Value>
+    <Value>SQL সার্ভার ব্যবহারকারীর নাম আবশ্যক</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>স্টোরের তথ্য</Value>

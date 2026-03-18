@@ -177,10 +177,8 @@ public abstract class PdfDocument<TItem>
         if (!string.IsNullOrEmpty(address?.ShippingMethod))
             addressTable.AddCell(BuildTextCell<AddressItem>(address => address.ShippingMethod, address?.ShippingMethod));
 
-        foreach (var value in address.CustomValues)
-        {
+        foreach (var value in address.CustomValues) 
             addressTable.AddCell(BuildPdfPCell($"{value.Name}: {value.Value}"));
-        }
 
         return addressTable;
     }
@@ -297,7 +295,7 @@ public abstract class PdfDocument<TItem>
         var expression = (MemberExpression)propertyExpression.Body;
         var propertyInfo = (PropertyInfo)expression.Member;
 
-        var label = propertyInfo.GetCustomAttributes<DisplayNameAttribute>(true).FirstOrDefault() is DisplayNameAttribute attr
+        var label = propertyInfo.GetCustomAttributes<DisplayNameAttribute>(true).FirstOrDefault() is { } attr
             ? GetResourceAsync(attr.DisplayName, language?.Id ?? 0).Result
             : string.Empty;
 

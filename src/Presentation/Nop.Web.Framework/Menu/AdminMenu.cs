@@ -411,22 +411,6 @@ public partial class AdminMenu : IAdminMenu
                             Url = GetMenuItemUrl("Blog", "BlogComments"),
                             IconClass = "far fa-dot-circle"
                         },
-                        new()
-                        {
-                            SystemName = "Polls",
-                            Title = await _localizationService.GetResourceAsync("Admin.ContentManagement.Polls"),
-                            PermissionNames = new List<string> { StandardPermission.ContentManagement.POLLS_VIEW },
-                            Url = GetMenuItemUrl("Poll", "List"),
-                            IconClass = "far fa-dot-circle"
-                        },
-                        new()
-                        {
-                            SystemName = "Manage forums",
-                            Title = await _localizationService.GetResourceAsync("Admin.ContentManagement.Forums"),
-                            PermissionNames = new List<string> { StandardPermission.ContentManagement.FORUMS_VIEW },
-                            Url = GetMenuItemUrl("Forum", "List"),
-                            IconClass = "far fa-dot-circle"
-                        }
                     }
                 },
                 //configuration
@@ -527,13 +511,6 @@ public partial class AdminMenu : IAdminMenu
                                     SystemName = "Blog settings",
                                     Title = await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Blog"),
                                     Url = GetMenuItemUrl("Setting", "Blog"),
-                                    IconClass = "far fa-circle"
-                                },
-                                new()
-                                {
-                                    SystemName = "Forums settings",
-                                    Title = await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Forums"),
-                                    Url = GetMenuItemUrl("Setting", "Forum"),
                                     IconClass = "far fa-circle"
                                 },
                                 new()

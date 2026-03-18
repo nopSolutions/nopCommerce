@@ -31,6 +31,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Configuration;
@@ -52,7 +53,6 @@ using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.ExportImport;
 using Nop.Services.FilterLevels;
-using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Html;
@@ -65,7 +65,6 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
-using Nop.Services.Polls;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -82,12 +81,15 @@ using Nop.Tests.Nop.Web.Tests.Public.Factories;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Infrastructure.Extensions;
 using Nop.Web.Framework.Mvc.Routing;
+using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
 using Nop.Web.Framework.WebOptimizer;
 using Nop.Web.Infrastructure.Installation;
 using SkiaSharp;
+using static Nop.Tests.Nop.Web.Tests.Admin.Factories.CommonModelFactoryTests;
 using IAuthenticationService = Nop.Services.Authentication.IAuthenticationService;
 using Task = System.Threading.Tasks.Task;
 
@@ -167,6 +169,7 @@ public partial class BaseNopTest
             new TypeConverterAttribute(typeof(GenericListTypeConverter<string>)));
 
         var services = new ServiceCollection();
+        services.AddSingleton<IServiceCollection>(services);
 
         var rootPath =
             new DirectoryInfo(
@@ -188,7 +191,20 @@ public partial class BaseNopTest
         services.AddTransient<INopFileProvider, NopFileProvider>();
         CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment.Object);
 
-        services.AddHttpClient();
+        //default client
+        services.AddHttpClient(NopHttpDefaults.DefaultHttpClient).WithProxy();
+
+        //client to request current store
+        services.AddHttpClient<StoreHttpClient>();
+
+        //client to request nopCommerce official site
+        services.AddHttpClient<NopHttpClient>().WithProxy();
+
+        //client to request reCAPTCHA service
+        services.AddHttpClient<CaptchaHttpClient>().WithProxy();
+
+        //client to request artificial intelligence service
+        services.AddHttpClient<ArtificialIntelligenceHttpClient>().WithProxy();
 
         var memoryCache = new MemoryCache(new MemoryCacheOptions());
         var typeFinder = new WebAppTypeFinder();
@@ -377,9 +393,7 @@ public partial class BaseNopTest
         services.AddTransient<ITaxService, TaxService>();
         services.AddTransient<ILogger, DefaultLogger>();
         services.AddTransient<ICustomerActivityService, CustomerActivityService>();
-        services.AddTransient<IForumService, ForumService>();
         services.AddTransient<IGdprService, GdprService>();
-        services.AddTransient<IPollService, PollService>();
         services.AddTransient<IBlogService, BlogService>();
         services.AddTransient<ITopicService, TopicService>();
         services.AddTransient<IDateTimeHelper, DateTimeHelper>();
@@ -390,9 +404,7 @@ public partial class BaseNopTest
         services.AddTransient<IUploadService, UploadService>();
         services.AddSingleton<IThemeProvider, ThemeProvider>();
         services.AddTransient<IExternalAuthenticationService, ExternalAuthenticationService>();
-        services.AddScoped<IBBCodeHelper, BBCodeHelper>();
         services.AddScoped<IHtmlFormatter, HtmlFormatter>();
-
         services.AddScoped<INopAssetHelper, NopAssetHelper>();
         services.AddScoped<ISyncCodeHelper, SyncCodeHelper>();
 
@@ -436,9 +448,7 @@ public partial class BaseNopTest
         {
             var interfaces = consumer.FindInterfaces((type, criteria) => type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition()), typeof(IConsumer<>));
             foreach (var findInterface in interfaces)
-            {
                 services.AddTransient(findInterface, consumer);
-            }
         }
 
         services.AddSingleton<IInstallationService, InstallationService>();
@@ -489,7 +499,7 @@ public partial class BaseNopTest
         services.AddTransient<ICampaignModelFactory, CampaignModelFactory>();
         services.AddTransient<ICategoryModelFactory, CategoryModelFactory>();
         services.AddTransient<ICheckoutAttributeModelFactory, CheckoutAttributeModelFactory>();
-        services.AddTransient<ICommonModelFactory, CommonModelFactory>();
+        services.AddTransient<ICommonModelFactory, TestCommonModelFactory>();
         services.AddTransient<ICountryModelFactory, CountryModelFactory>();
         services.AddTransient<ICurrencyModelFactory, CurrencyModelFactory>();
         services.AddTransient<ICustomerAttributeModelFactory, CustomerAttributeModelFactory>();
@@ -497,9 +507,7 @@ public partial class BaseNopTest
         services.AddTransient<ICustomerRoleModelFactory, CustomerRoleModelFactory>();
         services.AddTransient<IDiscountModelFactory, DiscountModelFactory>();
         services.AddTransient<IEmailAccountModelFactory, EmailAccountModelFactory>();
-        services
-            .AddTransient<IExternalAuthenticationMethodModelFactory, ExternalAuthenticationMethodModelFactory>();
-        services.AddTransient<IForumModelFactory, ForumModelFactory>();
+        services.AddTransient<IExternalAuthenticationMethodModelFactory, ExternalAuthenticationMethodModelFactory>();
         services.AddTransient<IGiftCardModelFactory, GiftCardModelFactory>();
         services.AddTransient<IHomeModelFactory, HomeModelFactory>();
         services.AddTransient<ILanguageModelFactory, LanguageModelFactory>();
@@ -510,7 +518,6 @@ public partial class BaseNopTest
         services.AddTransient<IOrderModelFactory, OrderModelFactory>();
         services.AddTransient<IPaymentModelFactory, PaymentModelFactory>();
         services.AddTransient<IPluginModelFactory, PluginModelFactory>();
-        services.AddTransient<IPollModelFactory, PollModelFactory>();
         services.AddTransient<IProductModelFactory, ProductModelFactory>();
         services.AddTransient<ProductModelFactoryTests.ProductModelFactoryForTest>();
         services.AddTransient<IProductAttributeModelFactory, ProductAttributeModelFactory>();
@@ -542,14 +549,10 @@ public partial class BaseNopTest
         services.AddTransient<Web.Factories.ICommonModelFactory, Web.Factories.CommonModelFactory>();
         services.AddTransient<Web.Factories.ICountryModelFactory, Web.Factories.CountryModelFactory>();
         services.AddTransient<Web.Factories.ICustomerModelFactory, Web.Factories.CustomerModelFactory>();
-        services.AddTransient<Web.Factories.IForumModelFactory, Web.Factories.ForumModelFactory>();
-        services
-            .AddTransient<Web.Factories.IExternalAuthenticationModelFactory,
-                Web.Factories.ExternalAuthenticationModelFactory>();
+        services.AddTransient<Web.Factories.IExternalAuthenticationModelFactory, Web.Factories.ExternalAuthenticationModelFactory>();
         services.AddTransient<Web.Factories.IJsonLdModelFactory, Web.Factories.JsonLdModelFactory>();
         services.AddTransient<Web.Factories.INewsLetterModelFactory, Web.Factories.NewsLetterModelFactory>();
         services.AddTransient<Web.Factories.IOrderModelFactory, Web.Factories.OrderModelFactory>();
-        services.AddTransient<Web.Factories.IPollModelFactory, Web.Factories.PollModelFactory>();
         services
             .AddTransient<Web.Factories.IPrivateMessagesModelFactory, Web.Factories.PrivateMessagesModelFactory>();
         services.AddTransient<Web.Factories.IProductModelFactory, Web.Factories.ProductModelFactory>();

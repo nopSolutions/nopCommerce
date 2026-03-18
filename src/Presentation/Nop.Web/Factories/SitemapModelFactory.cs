@@ -6,7 +6,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Events;
@@ -15,6 +14,7 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
@@ -32,7 +32,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
     #region Fields
 
     protected readonly BlogSettings _blogSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly IBlogService _blogService;
     protected readonly ICategoryService _categoryService;
     protected readonly ICustomerService _customerService;
@@ -60,7 +59,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
     #region Ctor
 
     public SitemapModelFactory(BlogSettings blogSettings,
-        ForumSettings forumSettings,
         IBlogService blogService,
         ICategoryService categoryService,
         ICustomerService customerService,
@@ -84,7 +82,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         SitemapXmlSettings sitemapXmlSettings)
     {
         _blogSettings = blogSettings;
-        _forumSettings = forumSettings;
         _blogService = blogService;
         _categoryService = categoryService;
         _customerService = customerService;
@@ -150,10 +147,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         //blog
         if (_blogSettings.Enabled)
             sitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync(NopRouteNames.General.BLOG));
-
-        //forum
-        if (_forumSettings.ForumsEnabled)
-            sitemapUrls.Add(await PrepareLocalizedSitemapUrlAsync(NopRouteNames.General.BOARDS));
 
         //categories
         if (_sitemapXmlSettings.SitemapXmlIncludeCategories)
@@ -371,9 +364,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
             //write all alternate url if exists
             foreach (var alternate in sitemapUrl.AlternateLocations
                          .Where(p => !p.Equals(sitemapUrl.Location, StringComparison.InvariantCultureIgnoreCase)))
-            {
                 await WriteSitemapUrlAsync(writer, new SitemapUrlModel(alternate, sitemapUrl));
-            }
         }
 
         await writer.WriteEndElementAsync();
@@ -563,17 +554,6 @@ public partial class SitemapModelFactory : ISitemapModelFactory
                 });
             }
 
-            //forums
-            if (_forumSettings.ForumsEnabled)
-            {
-                model.Items.Add(new SitemapModel.SitemapItemModel
-                {
-                    GroupTitle = commonGroupTitle,
-                    Name = await _localizationService.GetResourceAsync("Forum.Forums"),
-                    Url = _nopUrlHelper.RouteUrl(NopRouteNames.General.BOARDS)
-                });
-            }
-
             //contact us
             model.Items.Add(new SitemapModel.SitemapItemModel
             {
@@ -704,9 +684,7 @@ public partial class SitemapModelFactory : ISitemapModelFactory
         var fullPath = _nopFileProvider.GetAbsolutePath(NopSeoDefaults.SitemapXmlDirectory, fileName);
 
         if (_nopFileProvider.FileExists(fullPath) && _nopFileProvider.GetLastWriteTimeUtc(fullPath) > DateTime.UtcNow.AddHours(-_sitemapXmlSettings.RebuildSitemapXmlAfterHours))
-        {
             return new SitemapXmlModel { SitemapXmlPath = fullPath };
-        }
 
         //execute task with lock
         if (!await _locker.PerformActionWithLockAsync(

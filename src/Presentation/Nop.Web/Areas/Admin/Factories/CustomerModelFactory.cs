@@ -4,7 +4,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
@@ -43,7 +42,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly CustomerSettings _customerSettings;
     protected readonly DateTimeSettings _dateTimeSettings;
     protected readonly GdprSettings _gdprSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly IAddressModelFactory _addressModelFactory;
     protected readonly IAddressService _addressService;
     protected readonly IAffiliateService _affiliateService;
@@ -76,6 +74,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly ITaxService _taxService;
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
     protected readonly RewardPointsSettings _rewardPointsSettings;
     protected readonly TaxSettings _taxSettings;
 
@@ -87,7 +86,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         CustomerSettings customerSettings,
         DateTimeSettings dateTimeSettings,
         GdprSettings gdprSettings,
-        ForumSettings forumSettings,
         IAddressModelFactory addressModelFactory,
         IAddressService addressService,
         IAffiliateService affiliateService,
@@ -120,6 +118,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         ITaxService taxService,
         IWorkContext workContext,
         MediaSettings mediaSettings,
+        PrivateMessageSettings privateMessageSettings,
         RewardPointsSettings rewardPointsSettings,
         TaxSettings taxSettings)
     {
@@ -127,7 +126,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _customerSettings = customerSettings;
         _dateTimeSettings = dateTimeSettings;
         _gdprSettings = gdprSettings;
-        _forumSettings = forumSettings;
         _addressModelFactory = addressModelFactory;
         _addressService = addressService;
         _affiliateService = affiliateService;
@@ -160,6 +158,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _taxService = taxService;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
+        _privateMessageSettings = privateMessageSettings;
         _rewardPointsSettings = rewardPointsSettings;
         _taxSettings = taxSettings;
     }
@@ -274,8 +273,10 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                             var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedCustomerAttributes);
                             foreach (var attributeValue in selectedValues)
                             foreach (var item in attributeModel.Values)
+                            {
                                 if (attributeValue.Id == item.Id)
                                     item.IsPreSelected = true;
+                            }
                         }
                     }
                         break;
@@ -652,7 +653,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             model.Id = customer.Id;
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.AllowSendingOfPrivateMessage = await _customerService.IsRegisteredAsync(customer) &&
-                                                 _forumSettings.AllowPrivateMessages;
+                                                 _privateMessageSettings.AllowPrivateMessages;
             model.AllowSendingOfWelcomeMessage = await _customerService.IsRegisteredAsync(customer) &&
                                                  _customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval;
             model.AllowReSendingOfActivationMessage = await _customerService.IsRegisteredAsync(customer) && !customer.Active &&

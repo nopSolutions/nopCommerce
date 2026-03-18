@@ -165,10 +165,7 @@ public partial class ProductAttributeParser : IProductAttributeParser
                 senderEmail = form[formKey];
                 continue;
             }
-            if (formKey.Equals($"giftcard_{product.Id}.Message", StringComparison.InvariantCultureIgnoreCase))
-            {
-                giftCardMessage = form[formKey];
-            }
+            if (formKey.Equals($"giftcard_{product.Id}.Message", StringComparison.InvariantCultureIgnoreCase)) giftCardMessage = form[formKey];
         }
 
         attributesXml = AddGiftCardAttribute(attributesXml, recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
@@ -298,8 +295,10 @@ public partial class ProductAttributeParser : IProductAttributeParser
                     _ = Guid.TryParse(form[controlId], out var downloadGuid);
                     var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
                     if (download != null)
+                    {
                         attributesXml = AddProductAttribute(attributesXml,
                             attribute, download.DownloadGuid.ToString());
+                    }
                 }
                     break;
                 default:
@@ -310,10 +309,8 @@ public partial class ProductAttributeParser : IProductAttributeParser
         foreach (var attribute in productAttributes)
         {
             var conditionMet = await IsConditionMetAsync(attribute, attributesXml);
-            if (conditionMet.HasValue && !conditionMet.Value)
-            {
+            if (conditionMet.HasValue && !conditionMet.Value) 
                 attributesXml = RemoveProductAttribute(attributesXml, attribute);
-            }
         }
         return attributesXml;
     }
@@ -752,8 +749,11 @@ public partial class ProductAttributeParser : IProductAttributeParser
         {
             var found = false;
             foreach (var t2 in selectedValues)
+            {
                 if (t1 == t2)
                     found = true;
+            }
+
             if (!found)
                 allFound = false;
         }
@@ -903,6 +903,7 @@ public partial class ProductAttributeParser : IProductAttributeParser
 
         var customerEnteredPriceConverted = decimal.Zero;
         if (product.CustomerEntersPrice)
+        {
             foreach (var formKey in form.Keys)
             {
                 if (formKey.Equals($"addtocart_{product.Id}.CustomerEnteredPrice", StringComparison.InvariantCultureIgnoreCase))
@@ -912,6 +913,7 @@ public partial class ProductAttributeParser : IProductAttributeParser
                     break;
                 }
             }
+        }
 
         return customerEnteredPriceConverted;
     }
@@ -929,11 +931,13 @@ public partial class ProductAttributeParser : IProductAttributeParser
 
         var quantity = 1;
         foreach (var formKey in form.Keys)
+        {
             if (formKey.Equals($"addtocart_{product.Id}.EnteredQuantity", StringComparison.InvariantCultureIgnoreCase))
             {
                 _ = int.TryParse(form[formKey], out quantity);
                 break;
             }
+        }
 
         return quantity;
     }

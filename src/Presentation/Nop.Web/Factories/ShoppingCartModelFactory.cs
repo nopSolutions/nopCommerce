@@ -262,11 +262,15 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
                             await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceAdjustmentBase,
                                 await _workContext.GetWorkingCurrencyAsync());
                         if (priceAdjustmentBase > decimal.Zero)
+                        {
                             attributeValueModel.PriceAdjustment =
                                 "+" + await _priceFormatter.FormatPriceAsync(priceAdjustment);
+                        }
                         else if (priceAdjustmentBase < decimal.Zero)
+                        {
                             attributeValueModel.PriceAdjustment =
                                 "-" + await _priceFormatter.FormatPriceAsync(-priceAdjustment);
+                        }
                     }
                 }
             }
@@ -294,8 +298,10 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
                             _checkoutAttributeParser.ParseAttributeValues(selectedCheckoutAttributes);
                         foreach (var attributeValue in await selectedValues.SelectMany(x => x.values).ToListAsync())
                         foreach (var item in attributeModel.Values)
+                        {
                             if (attributeValue.Id == item.Id)
                                 item.IsPreSelected = true;
+                        }
                     }
                 }
 
@@ -421,8 +427,10 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
 
         //recurring info
         if (product.IsRecurring)
+        {
             cartItemModel.RecurringInfo = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.RecurringPeriod"),
                 product.RecurringCycleLength, await _localizationService.GetLocalizedEnumAsync(product.RecurringCyclePeriod));
+        }
 
         //rental info
         if (product.IsRental)
@@ -561,8 +569,10 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
 
         //recurring info
         if (product.IsRecurring)
+        {
             cartItemModel.RecurringInfo = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.RecurringPeriod"),
                 product.RecurringCycleLength, await _localizationService.GetLocalizedEnumAsync(product.RecurringCyclePeriod));
+        }
 
         //rental info
         if (product.IsRental)
@@ -736,6 +746,12 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
                 NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
             if (shippingOption != null)
                 model.ShippingMethod = shippingOption.Name;
+
+            //selected delivery date
+            var desiredDeliveryDate = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer,
+                NopCustomerDefaults.DesiredDeliveryDate, store.Id);
+            if (desiredDeliveryDate.HasValue)
+                model.DesiredDeliveryDate = (await _dateTimeHelper.ConvertToUserTimeAsync(desiredDeliveryDate.Value, DateTimeKind.Utc)).ToString("D");
         }
 
         //payment info
@@ -795,12 +811,14 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
 
             var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             foreach (var c in await _countryService.GetAllCountriesForShippingAsync(currentLanguage.Id))
+            {
                 model.AvailableCountries.Add(new SelectListItem
                 {
                     Text = await _localizationService.GetLocalizedAsync(c, x => x.Name),
                     Value = c.Id.ToString(),
                     Selected = c.Id == defaultEstimateCountryId
                 });
+            }
 
             //states
             var defaultEstimateStateId = (setEstimateShippingDefaultAddress && shippingAddress != null)
@@ -951,9 +969,7 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
 
         //order review data
         if (prepareAndDisplayOrderReviewData)
-        {
             model.OrderReviewData = await PrepareOrderReviewDataModelAsync(cart);
-        }
 
         return model;
     }

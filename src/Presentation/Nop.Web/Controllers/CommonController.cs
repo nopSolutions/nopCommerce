@@ -14,10 +14,10 @@ using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
+using Nop.Services.Themes;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Themes;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Sitemap;
 
@@ -195,16 +195,14 @@ public partial class CommonController : BasePublicController
     {
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
-        {
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         model = await _commonModelFactory.PrepareContactUsModelAsync(model, true);
 
         if (ModelState.IsValid)
         {
             var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-            var body = _htmlFormatter.FormatText(model.Enquiry, false, true, false, false, false, false);
+            var body = _htmlFormatter.FormatText(model.Enquiry, false, true, false, false, false);
 
             await _workflowMessageService.SendContactUsMessageAsync((await _workContext.GetWorkingLanguageAsync()).Id,
                 model.Email, model.FullName, subject, body);
@@ -251,16 +249,14 @@ public partial class CommonController : BasePublicController
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
-        {
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         model = await _commonModelFactory.PrepareContactVendorModelAsync(model, vendor, true);
 
         if (ModelState.IsValid)
         {
             var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-            var body = _htmlFormatter.FormatText(model.Enquiry, false, true, false, false, false, false);
+            var body = _htmlFormatter.FormatText(model.Enquiry, false, true, false, false, false);
 
             await _workflowMessageService.SendContactVendorMessageAsync(vendor, (await _workContext.GetWorkingLanguageAsync()).Id,
                 model.Email, model.FullName, subject, body);

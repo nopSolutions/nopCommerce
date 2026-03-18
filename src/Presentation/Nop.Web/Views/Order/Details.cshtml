@@ -237,6 +237,17 @@
                                     @Model.ShippingMethod
                                 </span>
                             </li>
+                            @if (!Model.PrintMode && !string.IsNullOrEmpty(Model.DesiredDeliveryDate))
+                            {
+                                <li class="desired-delivery-date">
+                                    <span class="label">
+                                        @T("Order.Shipping.DesiredDeliveryDate"):
+                                    </span>
+                                    <span class="value">
+                                        @Model.DesiredDeliveryDate
+                                    </span>
+                                </li>
+                            }
                             @if (!Model.PrintMode)
                             {
                                 <li class="shipping-status">

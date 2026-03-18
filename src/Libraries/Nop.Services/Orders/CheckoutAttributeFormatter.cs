@@ -7,6 +7,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Attributes;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -104,7 +105,7 @@ public partial class CheckoutAttributeFormatter : ICheckoutAttributeFormatter
                         //encode (if required)
                         if (htmlEncode)
                             attributeName = WebUtility.HtmlEncode(attributeName);
-                        formattedAttribute = $"{attributeName}: {_htmlFormatter.FormatText(valueStr, false, true, false, false, false, false)}";
+                        formattedAttribute = $"{attributeName}: {_htmlFormatter.FormatText(valueStr, false, true, false, false, false)}";
                         //we never encode multiline textbox input
                     }
                     else if (attribute.AttributeControlType == AttributeControlType.FileUpload)

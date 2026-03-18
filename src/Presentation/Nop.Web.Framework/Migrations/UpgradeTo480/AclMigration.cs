@@ -85,6 +85,7 @@ public class AclMigration : Migration
                     continue;
 
                 foreach (var role in roles)
+                {
                     try
                     {
                         _dataProvider.InsertEntity(
@@ -98,6 +99,7 @@ public class AclMigration : Migration
                     {
                         //ignore
                     }
+                }
             }
 
             _dataProvider.DeleteEntity(record);
@@ -124,11 +126,9 @@ public class AclMigration : Migration
         insertMappings("ManageCampaigns", StandardPermission.Promotions.CAMPAIGNS_CREATE_EDIT, StandardPermission.Promotions.CAMPAIGNS_DELETE, StandardPermission.Promotions.CAMPAIGNS_SEND_EMAILS, StandardPermission.Promotions.CAMPAIGNS_VIEW);
         insertMappings("ManageDiscounts", StandardPermission.Promotions.DISCOUNTS_CREATE_EDIT_DELETE, StandardPermission.Promotions.DISCOUNTS_VIEW);
         insertMappings("ManageNewsletterSubscribers", StandardPermission.Promotions.SUBSCRIBERS_CREATE_EDIT_DELETE, StandardPermission.Promotions.SUBSCRIBERS_IMPORT_EXPORT, StandardPermission.Promotions.SUBSCRIBERS_VIEW);
-        insertMappings("ManagePolls", StandardPermission.ContentManagement.POLLS_CREATE_EDIT_DELETE, StandardPermission.ContentManagement.POLLS_VIEW);
         insertMappings("ManageBlog", StandardPermission.ContentManagement.BLOG_COMMENTS_CREATE_EDIT_DELETE, StandardPermission.ContentManagement.BLOG_COMMENTS_VIEW, StandardPermission.ContentManagement.BLOG_CREATE_EDIT_DELETE, StandardPermission.ContentManagement.BLOG_VIEW);
         insertMappings("ManageWidgets", StandardPermission.Configuration.MANAGE_WIDGETS);
         insertMappings("ManageTopics", StandardPermission.ContentManagement.TOPICS_CREATE_EDIT_DELETE, StandardPermission.ContentManagement.TOPICS_VIEW);
-        insertMappings("ManageForums", StandardPermission.ContentManagement.FORUMS_CREATE_EDIT_DELETE, StandardPermission.ContentManagement.FORUMS_VIEW);
         insertMappings("ManageMessageTemplates", StandardPermission.ContentManagement.MESSAGE_TEMPLATES_CREATE_EDIT_DELETE, StandardPermission.ContentManagement.MESSAGE_TEMPLATES_VIEW);
         insertMappings("ManageCountries", StandardPermission.Configuration.MANAGE_COUNTRIES);
         insertMappings("ManageLanguages", StandardPermission.Configuration.MANAGE_LANGUAGES);

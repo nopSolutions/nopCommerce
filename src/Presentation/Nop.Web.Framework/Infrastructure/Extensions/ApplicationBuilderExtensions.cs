@@ -28,9 +28,9 @@ using Nop.Services.Helpers;
 using Nop.Services.Installation;
 using Nop.Services.Logging;
 using Nop.Services.Media;
-using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Themes;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.WebOptimizer;
@@ -353,16 +353,6 @@ public static class ApplicationBuilderExtensions
             ContentTypeProvider = provider
         });
 
-        if (DataSettingsManager.IsDatabaseInstalled())
-        {
-            application.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = EngineContext.Current.Resolve<IRoxyFilemanFileProvider>(),
-                RequestPath = new PathString(NopRoxyFilemanDefaults.DefaultRootDirectory),
-                OnPrepareResponse = staticFileResponse
-            });
-        }
-
         if (appSettings.Get<CommonConfig>().ServeUnknownFileTypes)
         {
             application.UseStaticFiles(new StaticFileOptions
@@ -381,6 +371,15 @@ public static class ApplicationBuilderExtensions
     public static void UseKeepAlive(this IApplicationBuilder application)
     {
         application.UseMiddleware<KeepAliveMiddleware>();
+    }
+
+    /// <summary>
+    /// Configure middleware storing the current user theme in the context
+    /// </summary>
+    /// <param name="application">Builder for configuring an application's request pipeline</param>
+    public static void UseThemes(this IApplicationBuilder application)
+    {
+        application.UseMiddleware<ThemesMiddleware>();
     }
 
     /// <summary>
@@ -417,9 +416,7 @@ public static class ApplicationBuilderExtensions
 
         var fontPaths = fileProvider.EnumerateFiles(fileProvider.MapPath(NopCommonDefaults.PdfFontDirectoryPath), "*.ttf") ?? Enumerable.Empty<string>();
         foreach (var fp in fontPaths)
-        {
             FontFactory.Register(fp, fileProvider.GetFileNameWithoutExtension(fp));
-        }
     }
 
     /// <summary>

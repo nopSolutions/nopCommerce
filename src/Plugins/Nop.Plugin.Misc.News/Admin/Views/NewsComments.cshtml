@@ -127,25 +127,21 @@
                             new ColumnProperty(nameof(NewsCommentModel.NewsItemTitle))
                             {
                                 Title = T("Plugins.Misc.News.Comments.Fields.NewsItem").Text,
-                                Width = "200",
                                 Render = new RenderLink(new DataUrl(Url.RouteUrl(NewsDefaults.Routes.Admin.NewsItemEditRouteName), nameof(NewsCommentModel.NewsItemId)))
                             },
                             new ColumnProperty(nameof(NewsCommentModel.StoreName))
                             {
                                 Title = T("Plugins.Misc.News.Comments.Fields.StoreName").Text,
-                                Width = "100",
                                 Visible = (await storeService.GetAllStoresAsync()).Count > 1
                             },
                             new ColumnProperty(nameof(NewsCommentModel.CustomerInfo))
                             {
                                 Title = T("Plugins.Misc.News.Comments.Fields.Customer").Text,
-                                Width = "100",
                                 Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(NewsCommentModel.CustomerId)))
                             },
                             new ColumnProperty(nameof(NewsCommentModel.CommentTitle))
                             {
-                                Title = T("Plugins.Misc.News.Comments.Fields.CommentTitle").Text,
-                                Width = "200"
+                                Title = T("Plugins.Misc.News.Comments.Fields.CommentTitle").Text
                             },
                             new ColumnProperty(nameof(NewsCommentModel.CommentText))
                             {
@@ -164,7 +160,7 @@
                             new ColumnProperty(nameof(NewsCommentModel.CreatedOn))
                             {
                                 Title = T("Plugins.Misc.News.Comments.Fields.CreatedOn").Text,
-                                Width = "120",
+                                Width = "180",
                                 ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderDate()
                             },

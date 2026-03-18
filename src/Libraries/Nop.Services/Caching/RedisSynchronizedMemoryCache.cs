@@ -81,12 +81,15 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
                 return;
 
             if (keys.Any(key => key.Equals(CLEAR_CACHE_EVENT_KEY)))
+            {
                 foreach (var key in _keyManager.Keys.ToList())
                 {
                     _memoryCache.Remove(key);
                     _keyManager.RemoveKey(key);
                 }
+            }
             else
+            {
                 foreach (var key in keys)
                 {
                     if (key.StartsWith(REMOVE_BY_PREFIX_EVENT_KEY))
@@ -102,6 +105,7 @@ public partial class RedisSynchronizedMemoryCache : ISynchronizedMemoryCache
                         _keyManager.RemoveKey(key);
                     }
                 }
+            }
         });
     }
 

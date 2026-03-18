@@ -65,9 +65,9 @@ public class AddRfqComponent : NopViewComponent
 
         //is shopping cart created by quote
         if (await cart.AnyAwaitAsync(async shoppingCartItemModel => (await _rfqService.GetQuoteItemByShoppingCartItemIdAsync(shoppingCartItemModel.Id)) != null))
-            return View("~/Plugins/Misc.RFQ/Views/Components/ClearRfq.cshtml");
+            return await ViewAsync("~/Plugins/Misc.RFQ/Views/Components/ClearRfq.cshtml");
 
-        return View("~/Plugins/Misc.RFQ/Views/Components/AddRfq.cshtml");
+        return await ViewAsync("~/Plugins/Misc.RFQ/Views/Components/AddRfq.cshtml");
     }
 
     #endregion

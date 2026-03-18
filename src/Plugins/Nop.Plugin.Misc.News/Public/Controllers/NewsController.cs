@@ -9,6 +9,7 @@ using Nop.Plugin.Misc.News.Public.Factories;
 using Nop.Plugin.Misc.News.Public.Models;
 using Nop.Plugin.Misc.News.Services;
 using Nop.Services.Customers;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
@@ -157,15 +158,11 @@ public class NewsController : BasePublicController
 
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _newsSettings.ShowCaptchaOnNewsCommentPage && !captchaValid)
-        {
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
-        }
 
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (await _customerService.IsGuestAsync(customer) && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
-        {
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Plugins.Misc.News.Comments.OnlyRegisteredUsersLeaveComments"));
-        }
 
         if (ModelState.IsValid)
         {

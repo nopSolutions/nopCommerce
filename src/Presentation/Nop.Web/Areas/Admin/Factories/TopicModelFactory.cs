@@ -1,6 +1,6 @@
-﻿using Nop.Core;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Topics;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Topics;

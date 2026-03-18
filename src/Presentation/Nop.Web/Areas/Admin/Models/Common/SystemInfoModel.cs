@@ -20,8 +20,14 @@ public partial record SystemInfoModel : BaseNopModel
     [NopResourceDisplayName("Admin.System.SystemInfo.NopVersion")]
     public string NopVersion { get; set; }
 
+    [NopResourceDisplayName("Admin.System.SystemInfo.NopLatestVersion")]
+    public string NopLatestVersion { get; set; }
+
     [NopResourceDisplayName("Admin.System.SystemInfo.OperatingSystem")]
     public string OperatingSystem { get; set; }
+
+    [NopResourceDisplayName("Admin.System.SystemInfo.UsedMemory")]
+    public double UsedMemory { get; set; }
 
     [NopResourceDisplayName("Admin.System.SystemInfo.ServerLocalTime")]
     public DateTime ServerLocalTime { get; set; }

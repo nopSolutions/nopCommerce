@@ -23,6 +23,7 @@ public partial class EventPublisher : IEventPublisher
         var consumers = EngineContext.Current.ResolveAll<IConsumer<TEvent>>().ToList();
 
         foreach (var consumer in consumers)
+        {
             try
             {
                 //try to handle published event
@@ -47,6 +48,7 @@ public partial class EventPublisher : IEventPublisher
                     // ignored
                 }
             }
+        }
     }
 
     #endregion

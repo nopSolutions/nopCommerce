@@ -25,6 +25,7 @@ using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.FilterLevels;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
@@ -411,8 +412,10 @@ public partial class ProductController : BaseAdminController
                     {
                         var selectedAttributeId = int.Parse(ctrlAttributes);
                         if (selectedAttributeId > 0)
+                        {
                             attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                 attribute, selectedAttributeId.ToString());
+                        }
                     }
 
                     break;
@@ -425,8 +428,10 @@ public partial class ProductController : BaseAdminController
                         {
                             var selectedAttributeId = int.Parse(item);
                             if (selectedAttributeId > 0)
+                            {
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
+                            }
                         }
                     }
 
@@ -528,9 +533,7 @@ public partial class ProductController : BaseAdminController
         {
             var conditionMet = await _productAttributeParser.IsConditionMetAsync(attribute, attributesXml);
             if (conditionMet.HasValue && !conditionMet.Value)
-            {
                 attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
-            }
         }
 
         return attributesXml;
@@ -567,21 +570,25 @@ public partial class ProductController : BaseAdminController
             //parse reserved quantity
             var reservedQuantity = 0;
             foreach (var formKey in formData.Keys)
+            {
                 if (formKey.Equals($"warehouse_reserved_{warehouse.Id}", StringComparison.InvariantCultureIgnoreCase))
                 {
                     _ = int.TryParse(formData[formKey], out reservedQuantity);
                     break;
                 }
+            }
 
             //parse "used" field
             var used = false;
             foreach (var formKey in formData.Keys)
+            {
                 if (formKey.Equals($"warehouse_used_{warehouse.Id}", StringComparison.InvariantCultureIgnoreCase))
                 {
                     _ = int.TryParse(formData[formKey], out var tmp);
                     used = tmp == warehouse.Id;
                     break;
                 }
+            }
 
             //quantity change history message
             var message = $"{await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.MultipleWarehouses")} {await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.Edit")}";
@@ -774,8 +781,10 @@ public partial class ProductController : BaseAdminController
 
         //delete pictures
         foreach (var existingCombinationPicture in existingCombinationPictures)
+        {
             if (!model.PictureIds.Contains(existingCombinationPicture.PictureId) || !productPictureIds.Contains(existingCombinationPicture.PictureId))
                 await _productAttributeService.DeleteProductAttributeCombinationPictureAsync(existingCombinationPicture);
+        }
 
         //add pictures
         foreach (var pictureId in model.PictureIds)
@@ -828,46 +837,60 @@ public partial class ProductController : BaseAdminController
         foreach (var item in Request.Form)
         {
             if (getData(item, "product-select-", out var productId))
+            {
                 setData(productId, data =>
                 {
                     data.IsSelected = true;
                 });
+            }
 
             if (getData(item, "name-", out productId))
+            {
                 setData(productId, data =>
                 {
                     data.Name = item.Value;
                 });
+            }
 
             if (getData(item, "sku-", out productId))
+            {
                 setData(productId, data =>
                 {
                     data.Sku = item.Value;
                 });
+            }
 
             if (getData(item, "price-", out productId))
+            {
                 setData(productId, data =>
                 {
                     data.Price = decimal.Parse(item.Value);
                 });
+            }
 
             if (getData(item, "old-price-", out productId))
+            {
                 setData(productId, data =>
                 {
                     data.OldPrice = decimal.Parse(item.Value);
                 });
+            }
 
             if (getData(item, "quantity-", out productId))
+            {
                 setData(productId, data =>
                 {
                     data.Quantity = int.Parse(item.Value);
                 });
+            }
 
             if (getData(item, "published-", out productId))
+            {
                 setData(productId, data =>
                 {
                     data.IsPublished = true;
                 });
+            }
         }
 
         var productIds = rez.Select(p => p.Key).ToArray();
@@ -1192,11 +1215,31 @@ public partial class ProductController : BaseAdminController
             var previousStockQuantity = product.StockQuantity;
             var previousWarehouseId = product.WarehouseId;
             var previousProductType = product.ProductType;
+            var previousRequiredProductIds = product.RequiredProductIds;
 
             //product
             product = model.ToEntity(product);
 
             product.UpdatedOnUtc = DateTime.UtcNow;
+
+            var requireOtherProductsError = string.Empty;
+
+            if (product.RequireOtherProducts && !string.IsNullOrEmpty(product.RequiredProductIds))
+            {
+                var requiredProductIds = _productService.ParseRequiredProductIds(product);
+                
+                foreach (var requiredProduct in await _productService.GetProductsByIdsAsync(requiredProductIds.ToArray()))
+                {
+                    if (product.Id == requiredProduct.Id || await isCyclicallyRequired(requiredProduct)) 
+                        requireOtherProductsError = await _localizationService.GetResourceAsync("Admin.Catalog.Products.RelatedProducts.CyclicallyRelated");
+
+                    break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(requireOtherProductsError))
+                product.RequiredProductIds = previousRequiredProductIds;
+
             await _productService.UpdateProductAsync(product);
 
             //remove associated products
@@ -1307,7 +1350,19 @@ public partial class ProductController : BaseAdminController
             await _customerActivityService.InsertActivityAsync("EditProduct",
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditProduct"), product.Name), product);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Updated"));
+            if (string.IsNullOrEmpty(requireOtherProductsError))
+            {
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Updated"));
+            }
+            else
+            {
+                _notificationService.ErrorNotification(requireOtherProductsError);
+
+                //prepare model
+                model = await _productModelFactory.PrepareProductModelAsync(model, product, true);
+
+                return View(model);
+            }
 
             if (!continueEditing)
                 return RedirectToAction("List");
@@ -1320,6 +1375,24 @@ public partial class ProductController : BaseAdminController
 
         //if we got this far, something failed, redisplay form
         return View(model);
+
+        async Task<bool> isCyclicallyRequired(Product productToCheck)
+        {
+            if (!product.RequireOtherProducts)
+                return false;
+
+            if (string.IsNullOrEmpty(productToCheck.RequiredProductIds))
+                return false;
+
+            var requiredProductIds = _productService.ParseRequiredProductIds(productToCheck);
+
+            if (requiredProductIds.Any(rp => rp == product.Id))
+                return true;
+
+            var products = await _productService.GetProductsByIdsAsync(requiredProductIds);
+
+            return await products.AnyAwaitAsync(async p => await isCyclicallyRequired(p));
+        }
     }
 
     [HttpPost]
@@ -1365,8 +1438,10 @@ public partial class ProductController : BaseAdminController
         var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.DeleteProduct");
 
         foreach (var product in products)
+        {
             await _customerActivityService.InsertActivityAsync("DeleteProduct",
                 string.Format(activityLogFormat, product.Name), product);
+        }
 
         return Json(new { Result = true });
     }
@@ -2145,8 +2220,10 @@ public partial class ProductController : BaseAdminController
             ?? throw new ArgumentException("No product found with the specified id");
 
         if (string.IsNullOrEmpty(model.VideoUrl))
+        {
             ModelState.AddModelError(string.Empty,
                 await _localizationService.GetResourceAsync("Admin.Catalog.Products.Multimedia.Videos.Alert.VideoAdd.EmptyUrl"));
+        }
 
         if (!ModelState.IsValid)
             return ErrorJson(ModelState.SerializeErrors());
@@ -2311,9 +2388,7 @@ public partial class ProductController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null && product.VendorId != currentVendor.Id)
-        {
             return RedirectToAction("List");
-        }
 
         //we allow filtering only for "Option" attribute type
         if (model.AttributeTypeId != (int)SpecificationAttributeType.Option)
@@ -2362,8 +2437,10 @@ public partial class ProductController : BaseAdminController
         }
 
         if (continueEditing)
+        {
             return RedirectToAction("ProductSpecAttributeAddOrEdit",
                 new { productId = psa.ProductId, specificationId = psa.Id });
+        }
 
         //select an appropriate card
         SaveSelectedCardName("product-specification-attributes");
@@ -2667,9 +2744,7 @@ public partial class ProductController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null)
-        {
             model.SearchVendorId = currentVendor.Id;
-        }
 
         var categoryIds = new List<int> { model.SearchCategoryId };
         //include subcategories
@@ -2722,9 +2797,7 @@ public partial class ProductController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null)
-        {
             model.SearchVendorId = currentVendor.Id;
-        }
 
         var categoryIds = new List<int> { model.SearchCategoryId };
         //include subcategories
@@ -2780,9 +2853,7 @@ public partial class ProductController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null)
-        {
             products = products.Where(p => p.VendorId == currentVendor.Id).ToList();
-        }
 
         try
         {
@@ -2804,9 +2875,7 @@ public partial class ProductController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null)
-        {
             model.SearchVendorId = currentVendor.Id;
-        }
 
         var categoryIds = new List<int> { model.SearchCategoryId };
         //include subcategories
@@ -2863,9 +2932,7 @@ public partial class ProductController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null)
-        {
             products = products.Where(p => p.VendorId == currentVendor.Id).ToList();
-        }
 
         try
         {
@@ -2891,9 +2958,7 @@ public partial class ProductController : BaseAdminController
         try
         {
             if (importexcelfile != null && importexcelfile.Length > 0)
-            {
                 await _importManager.ImportProductsFromXlsxAsync(importexcelfile.OpenReadStream());
-            }
             else
             {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
@@ -3413,9 +3478,7 @@ public partial class ProductController : BaseAdminController
 
         //ensure a picture is uploaded
         if (productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares && model.ImageSquaresPictureId == 0)
-        {
             ModelState.AddModelError(string.Empty, "Image is required");
-        }
 
         if (ModelState.IsValid)
         {
@@ -3509,9 +3572,7 @@ public partial class ProductController : BaseAdminController
 
         //ensure a picture is uploaded
         if (productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares && model.ImageSquaresPictureId == 0)
-        {
             ModelState.AddModelError(string.Empty, "Image is required");
-        }
 
         if (ModelState.IsValid)
         {
@@ -3639,15 +3700,11 @@ public partial class ProductController : BaseAdminController
 
         //gift card
         if (associatedProduct.IsGiftCard)
-        {
             return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.GiftCard") });
-        }
 
         //downloadable product
         if (associatedProduct.IsDownload)
-        {
             return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Downloadable") });
-        }
 
         return Json(new { Result = string.Empty });
     }
@@ -3821,9 +3878,7 @@ public partial class ProductController : BaseAdminController
                 .Where(v => allowedAttributeIds.Any(id => id == v.Id))
                 .ToList();
             foreach (var pavModel in pavModels)
-            {
                 pavModel.Checked = "checked";
-            }
 
             model.Warnings.Add(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.SelectRequiredAttributes"), string.Join(", ", requiredAttributeNames)));
 

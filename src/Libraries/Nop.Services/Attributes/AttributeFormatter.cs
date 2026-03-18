@@ -88,7 +88,7 @@ public partial class
                             attributeName = WebUtility.HtmlEncode(attributeName);
 
                         formattedAttribute =
-                            $"{attributeName}: {_htmlFormatter.FormatText(valueStr, false, true, false, false, false, false)}";
+                            $"{attributeName}: {_htmlFormatter.FormatText(valueStr, false, true, false, false, false)}";
                         //we never encode multiline textbox input
                     }
                     else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
@@ -114,8 +114,10 @@ public partial class
                         var attributeValue = await _attributeService.GetAttributeValueByIdAsync(attributeValueId);
 
                         if (attributeValue != null)
+                        {
                             formattedAttribute =
                                 $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, currentLanguage.Id)}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
+                        }
 
                         //encode (if required)
                         if (htmlEncode)

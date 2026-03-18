@@ -16,6 +16,6 @@ public partial class SearchBoxViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var model = await _catalogModelFactory.PrepareSearchBoxModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

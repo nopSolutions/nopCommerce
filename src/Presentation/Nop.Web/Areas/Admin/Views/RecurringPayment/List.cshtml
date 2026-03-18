@@ -44,45 +44,38 @@
                                     new ColumnProperty(nameof(RecurringPaymentModel.CustomerId))
                                     {
                                         Title = T("Admin.RecurringPayments.Fields.Customer").Text,
-                                        Width = "200",
                                         Render = new RenderCustom("renderColumnCustomerInfo")
                                     },
                                     new ColumnProperty(nameof(RecurringPaymentModel.CycleLength))
                                     {
-                                        Title = T("Admin.RecurringPayments.Fields.CycleLength").Text,
-                                        Width = "100"
+                                        Title = T("Admin.RecurringPayments.Fields.CycleLength").Text
                                     },
                                     new ColumnProperty(nameof(RecurringPaymentModel.CyclePeriodStr))
                                     {
-                                        Title = T("Admin.RecurringPayments.Fields.CyclePeriod").Text,
-                                        Width = "100"
+                                        Title = T("Admin.RecurringPayments.Fields.CyclePeriod").Text
                                     },
                                     new ColumnProperty(nameof(RecurringPaymentModel.IsActive))
                                     {
                                         Title = T("Admin.RecurringPayments.Fields.IsActive").Text,
-                                        Width = "200",
+                                        Width = "100",
                                         ClassName = NopColumnClassDefaults.CenterAll,
                                         Render = new RenderBoolean()
                                     },
                                     new ColumnProperty(nameof(RecurringPaymentModel.StartDate))
                                     {
-                                        Title = T("Admin.RecurringPayments.Fields.StartDate").Text,
-                                        Width = "200"
+                                        Title = T("Admin.RecurringPayments.Fields.StartDate").Text
                                     },
                                     new ColumnProperty(nameof(RecurringPaymentModel.NextPaymentDate))
                                     {
-                                        Title = T("Admin.RecurringPayments.Fields.NextPaymentDate").Text,
-                                        Width = "200"
+                                        Title = T("Admin.RecurringPayments.Fields.NextPaymentDate").Text
                                     },
                                     new ColumnProperty(nameof(RecurringPaymentModel.TotalCycles))
                                     {
-                                        Title = T("Admin.RecurringPayments.Fields.TotalCycles").Text,
-                                        Width = "100"
+                                        Title = T("Admin.RecurringPayments.Fields.TotalCycles").Text
                                     },
                                     new ColumnProperty(nameof(RecurringPaymentModel.CyclesRemaining))
                                     {
-                                        Title = T("Admin.RecurringPayments.Fields.CyclesRemaining").Text,
-                                        Width = "100"
+                                        Title = T("Admin.RecurringPayments.Fields.CyclesRemaining").Text
                                     },
                                     new ColumnProperty(nameof(RecurringPaymentModel.Id))
                                     {

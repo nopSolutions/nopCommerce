@@ -101,6 +101,15 @@ public static partial class NopCommonDefaults
 
     #endregion
 
+    #region nopCommerce GitHub
+
+    /// <summary>
+    /// Gets the URL to get information about the latest nopCommerce release
+    /// </summary>
+    public static string LatestReleaseInfoUrl => "https://api.github.com/repos/nopSolutions/nopCommerce/releases/latest";
+
+    #endregion
+
     #region nopCommerce official site
 
     /// <summary>
@@ -203,6 +212,28 @@ public static partial class NopCommonDefaults
     #endregion
 
     #region Caching defaults
+
+    #region nopCommerce GitHub
+
+    /// <summary>
+    /// Gets a key for caching
+    /// </summary>
+    public static CacheKey LatestReleaseInfoCacheKey => new("Nop.latestreleaseinfo")
+    {
+        CacheTime = LatestReleaseInfoCacheTime
+    };
+
+    /// <summary>
+    /// Gets a cache time in seconds for LatestReleaseInfo data
+    /// </summary>
+    public static int LatestReleaseInfoCacheTime => 43200; // 12 hours
+
+    /// <summary>
+    /// Gets a period (in seconds) before the request times out
+    /// </summary>
+    public static int GitHubRequestTimeout => 5;
+
+    #endregion
 
     #region Generic attributes
 

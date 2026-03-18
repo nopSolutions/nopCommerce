@@ -1,5 +1,10 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain;
 using Nop.Core.Domain.ArtificialIntelligence;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Shipping;
 using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Web.Framework.Extensions;
@@ -17,6 +22,46 @@ public class SettingMigration : MigrationBase
         
         //#7898
         this.SetSettingIfNotExists<ArtificialIntelligenceSettings, bool>(settings => settings.LogRequests, false);
+
+        //#7336
+        this.SetSettingIfNotExists<PrivateMessageSettings, bool>(settings => settings.AllowPrivateMessages, 
+            this.GetSettingByKey($"ForumSettings.{nameof(PrivateMessageSettings.AllowPrivateMessages)}", false));
+
+        this.SetSettingIfNotExists<PrivateMessageSettings, bool>(settings => settings.NotifyAboutPrivateMessages,
+            this.GetSettingByKey($"ForumSettings.{nameof(PrivateMessageSettings.NotifyAboutPrivateMessages)}", false));
+
+        this.SetSettingIfNotExists<PrivateMessageSettings, bool>(settings => settings.ShowAlertForPM,
+            this.GetSettingByKey($"ForumSettings.{nameof(PrivateMessageSettings.ShowAlertForPM)}", false));
+
+        this.SetSettingIfNotExists<PrivateMessageSettings, int>(settings => settings.PMSubjectMaxLength,
+            this.GetSettingByKey($"ForumSettings.{nameof(PrivateMessageSettings.PMSubjectMaxLength)}", 450));
+
+        this.SetSettingIfNotExists<PrivateMessageSettings, int>(settings => settings.PMTextMaxLength,
+            this.GetSettingByKey($"ForumSettings.{nameof(PrivateMessageSettings.PMTextMaxLength)}", 4000));
+
+        this.SetSettingIfNotExists<PrivateMessageSettings, int>(settings => settings.PrivateMessagesPageSize,
+            this.GetSettingByKey($"ForumSettings.{nameof(PrivateMessageSettings.PrivateMessagesPageSize)}", 10));
+
+        this.DeleteSettingsByNames([$"{nameof(CommonSettings)}.BbcodeEditorOpenLinksInNewWindow"]);
+
+        //#7386
+        this.SetSettingIfNotExists<ShippingSettings, bool>(settings => settings.AllowCustomerToChooseDeliveryDate, true);
+        this.SetSettingIfNotExists<ShippingSettings, int>(settings => settings.DeliveryDateRangeDays, 7);
+
+        //#8097
+        this.SetSettingIfNotExists<StoreInformationSettings, string>(settings => settings.XLink, setting =>
+        {
+            var twitterLink = this.GetSettingByKey<string>("storeinformationsettings.twitterlink");
+            if (!string.IsNullOrEmpty(twitterLink))
+            {
+                setting.XLink = twitterLink;
+            }
+            else
+            {
+                setting.XLink = "https://x.com/nopCommerce";
+            }
+            this.DeleteSettingsByNames(["storeinformationsettings.twitterlink"]);
+        });
     }
 
     public override void Down()

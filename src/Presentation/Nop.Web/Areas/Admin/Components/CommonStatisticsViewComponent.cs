@@ -58,7 +58,7 @@ public partial class CommonStatisticsViewComponent : NopViewComponent
         //prepare model
         var model = await _commonModelFactory.PrepareCommonStatisticsModelAsync();
 
-        return View(model);
+        return await ViewAsync(model);
     }
 
     #endregion

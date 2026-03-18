@@ -280,6 +280,9 @@ public partial class CommonController : BaseAdminController
             await _notificationService.ErrorNotificationAsync(exc);
         }
 
+        //prepare model
+        model = await _commonModelFactory.PrepareMaintenanceModelAsync(model);
+
         return View(model);
     }
 
@@ -297,6 +300,9 @@ public partial class CommonController : BaseAdminController
         {
             await _notificationService.ErrorNotificationAsync(exc);
         }
+
+        //prepare model
+        model = await _commonModelFactory.PrepareMaintenanceModelAsync(model);
 
         return View(model);
     }

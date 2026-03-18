@@ -6,7 +6,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
@@ -70,10 +69,6 @@ public partial class ModelCacheEventConsumer :
     IConsumer<EntityDeletedEvent<ProductPicture>>,
     //Product review
     IConsumer<EntityDeletedEvent<ProductReview>>,
-    //polls
-    IConsumer<EntityInsertedEvent<Poll>>,
-    IConsumer<EntityUpdatedEvent<Poll>>,
-    IConsumer<EntityDeletedEvent<Poll>>,
     //blog posts
     IConsumer<EntityInsertedEvent<BlogPost>>,
     IConsumer<EntityUpdatedEvent<BlogPost>>,
@@ -467,28 +462,6 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.OrderPicturePrefixCacheKey);
-    }
-
-    #endregion
-
-    #region Polls
-
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task HandleEventAsync(EntityInsertedEvent<Poll> eventMessage)
-    {
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.PollsPrefixCacheKey);
-    }
-
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Poll> eventMessage)
-    {
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.PollsPrefixCacheKey);
-    }
-
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task HandleEventAsync(EntityDeletedEvent<Poll> eventMessage)
-    {
-        await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.PollsPrefixCacheKey);
     }
 
     #endregion

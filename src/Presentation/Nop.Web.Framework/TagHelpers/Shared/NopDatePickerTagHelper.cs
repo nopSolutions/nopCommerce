@@ -106,8 +106,10 @@ public partial class NopDatePickerTagHelper : TagHelper
         days.AppendFormat("<option value='{0}'>{1}</option>", "0", await _localizationService.GetResourceAsync("Common.Day"));
 
         for (var i = 1; i <= 31; i++)
+        {
             days.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                 (SelectedDate.HasValue && currentCalendar.GetDayOfMonth(SelectedDate.Value) == i) ? " selected=\"selected\"" : null);
+        }
 
         months.AppendFormat("<option value='{0}'>{1}</option>", "0", await _localizationService.GetResourceAsync("Common.Month"));
 
@@ -127,14 +129,18 @@ public partial class NopDatePickerTagHelper : TagHelper
         if (EndYear > BeginYear)
         {
             for (var i = currentCalendar.GetYear(BeginYear.Value); i <= currentCalendar.GetYear(EndYear.Value); i++)
+            {
                 years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                     (SelectedDate.HasValue && currentCalendar.GetYear(SelectedDate.Value) == i) ? " selected=\"selected\"" : null);
+            }
         }
         else
         {
             for (var i = currentCalendar.GetYear(BeginYear.Value); i >= currentCalendar.GetYear(EndYear.Value); i--)
+            {
                 years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                     (SelectedDate.HasValue && currentCalendar.GetYear(SelectedDate.Value) == i) ? " selected=\"selected\"" : null);
+            }
         }
 
         daysList.InnerHtml.AppendHtml(days.ToString());

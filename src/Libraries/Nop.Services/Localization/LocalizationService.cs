@@ -84,6 +84,7 @@ public partial class LocalizationService : ILocalizationService
         var result = new HashSet<(string name, string value)>();
 
         using (var xmlReader = XmlReader.Create(xmlStreamReader))
+        {
             while (xmlReader.ReadToFollowing("Language"))
             {
                 if (xmlReader.NodeType != XmlNodeType.Element)
@@ -91,15 +92,18 @@ public partial class LocalizationService : ILocalizationService
 
                 using var languageReader = xmlReader.ReadSubtree();
                 while (languageReader.ReadToFollowing("LocaleResource"))
+                {
                     if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.GetAttribute("Name") is string name)
                     {
                         using var lrReader = languageReader.ReadSubtree();
                         if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element)
                             result.Add((name.ToLowerInvariant(), lrReader.ReadString()));
                     }
+                }
 
                 break;
             }
+        }
 
         return result;
     }
@@ -327,10 +331,8 @@ public partial class LocalizationService : ILocalizationService
         {
             //load all records (we know they are cached)
             var resources = await GetAllResourceValuesAsync(languageId, !resourceKey.StartsWith(NopLocalizationDefaults.AdminLocaleStringResourcesPrefix, StringComparison.InvariantCultureIgnoreCase));
-            if (resources.TryGetValue(resourceKey, out var keyValuePair))
-            {
+            if (resources.TryGetValue(resourceKey, out var keyValuePair)) 
                 result = keyValuePair.Value;
-            }
         }
         else
         {
@@ -356,9 +358,7 @@ public partial class LocalizationService : ILocalizationService
             await _logger.WarningAsync($"Resource string ({resourceKey}) is not found. Language ID = {languageId}");
 
         if (!string.IsNullOrEmpty(defaultValue))
-        {
             result = defaultValue;
-        }
         else
         {
             if (!returnEmptyIfNotFound)
@@ -431,10 +431,8 @@ public partial class LocalizationService : ILocalizationService
             .OrderBy(lsr => lsr.Id)
             .ToListAsync();
 
-        foreach (var localeStringResource in locales)
-        {
+        foreach (var localeStringResource in locales) 
             lsNamesList[localeStringResource.ResourceName.ToLowerInvariant()] = localeStringResource;
-        }
 
         var lrsToUpdateList = new Dictionary<string, LocaleStringResource>();
         var lrsToInsertList = new Dictionary<string, LocaleStringResource>();

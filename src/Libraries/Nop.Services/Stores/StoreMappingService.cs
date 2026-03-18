@@ -234,9 +234,11 @@ public partial class StoreMappingService : IStoreMappingService
             return true;
 
         foreach (var storeIdWithAccess in await GetStoresIdsWithAccessAsync(entity))
+        {
             if (storeId == storeIdWithAccess)
                 //yes, we have such permission
                 return true;
+        }
 
         //no permission found
         return false;

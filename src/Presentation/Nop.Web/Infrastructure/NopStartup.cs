@@ -47,7 +47,6 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IEmailAccountModelFactory, EmailAccountModelFactory>();
         services.AddScoped<IExternalAuthenticationMethodModelFactory, ExternalAuthenticationMethodModelFactory>();
         services.AddScoped<IFilterLevelValueModelFactory, FilterLevelValueModelFactory>();
-        services.AddScoped<IForumModelFactory, ForumModelFactory>();
         services.AddScoped<IGiftCardModelFactory, GiftCardModelFactory>();
         services.AddScoped<IHomeModelFactory, HomeModelFactory>();
         services.AddScoped<ILanguageModelFactory, LanguageModelFactory>();
@@ -61,7 +60,6 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IOrderModelFactory, OrderModelFactory>();
         services.AddScoped<IPaymentModelFactory, PaymentModelFactory>();
         services.AddScoped<IPluginModelFactory, PluginModelFactory>();
-        services.AddScoped<IPollModelFactory, PollModelFactory>();
         services.AddScoped<IProductModelFactory, ProductModelFactory>();
         services.AddScoped<IProductAttributeModelFactory, ProductAttributeModelFactory>();
         services.AddScoped<IProductReviewModelFactory, ProductReviewModelFactory>();
@@ -94,13 +92,11 @@ public partial class NopStartup : INopStartup
         services.AddScoped<Factories.ICommonModelFactory, Factories.CommonModelFactory>();
         services.AddScoped<Factories.ICountryModelFactory, Factories.CountryModelFactory>();
         services.AddScoped<Factories.ICustomerModelFactory, Factories.CustomerModelFactory>();
-        services.AddScoped<Factories.IForumModelFactory, Factories.ForumModelFactory>();
         services.AddScoped<Factories.IFilterLevelValueModelFactory, Factories.FilterLevelValueModelFactory>();
         services.AddScoped<Factories.IExternalAuthenticationModelFactory, Factories.ExternalAuthenticationModelFactory>();
         services.AddScoped<Factories.IJsonLdModelFactory, Factories.JsonLdModelFactory>();
         services.AddScoped<Factories.INewsLetterModelFactory, Factories.NewsLetterModelFactory>();
         services.AddScoped<Factories.IOrderModelFactory, Factories.OrderModelFactory>();
-        services.AddScoped<Factories.IPollModelFactory, Factories.PollModelFactory>();
         services.AddScoped<Factories.IPrivateMessagesModelFactory, Factories.PrivateMessagesModelFactory>();
         services.AddScoped<Factories.IProductModelFactory, Factories.ProductModelFactory>();
         services.AddScoped<Factories.IProfileModelFactory, Factories.ProfileModelFactory>();

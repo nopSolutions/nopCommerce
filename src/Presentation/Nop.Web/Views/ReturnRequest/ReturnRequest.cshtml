@@ -23,7 +23,7 @@
         }
         else
         {
-            <form asp-route="@NopRouteNames.Standard.RETURN_REQUEST" method="post">
+            <form asp-route="@NopRouteNames.Standard.RETURN_REQUEST" method="post">                
                 <section class="section">
                     <h2 class="title">
                         @T("ReturnRequests.SelectProduct(s)")
@@ -77,8 +77,8 @@
                             </tbody>
                         </table>
                     </div>
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
                 </section>
-
                 <section class="fieldset">
                     <h2 class="title">
                         @T("ReturnRequests.WhyReturning")

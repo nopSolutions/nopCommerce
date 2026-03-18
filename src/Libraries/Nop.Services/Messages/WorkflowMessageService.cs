@@ -4,7 +4,6 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
@@ -1825,101 +1824,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
 
     #endregion
 
-    #region Forum Notifications
-
-    /// <summary>
-    /// Sends a forum subscription message to a customer
-    /// </summary>
-    /// <param name="customer">Customer instance</param>
-    /// <param name="forumTopic">Forum Topic</param>
-    /// <param name="forum">Forum</param>
-    /// <param name="languageId">Message language identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the queued email identifier
-    /// </returns>
-    public virtual async Task<IList<int>> SendNewForumTopicMessageAsync(Customer customer, ForumTopic forumTopic, Forum forum, int languageId)
-    {
-        ArgumentNullException.ThrowIfNull(customer);
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-
-        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEW_FORUM_TOPIC_MESSAGE, store.Id);
-        if (!messageTemplates.Any())
-            return new List<int>();
-
-        //tokens
-        var commonTokens = new List<Token>();
-        await _messageTokenProvider.AddForumTopicTokensAsync(commonTokens, forumTopic);
-        await _messageTokenProvider.AddForumTokensAsync(commonTokens, forum);
-        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-
-        return await messageTemplates.SelectAwait(async messageTemplate =>
-        {
-            //email account
-            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
-
-            var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
-
-            //event notification
-            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
-
-            var toEmail = customer.Email;
-            var toName = await _customerService.GetCustomerFullNameAsync(customer);
-
-            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-        }).ToListAsync();
-    }
-
-    /// <summary>
-    /// Sends a forum subscription message to a customer
-    /// </summary>
-    /// <param name="customer">Customer instance</param>
-    /// <param name="forumPost">Forum post</param>
-    /// <param name="forumTopic">Forum Topic</param>
-    /// <param name="forum">Forum</param>
-    /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
-    /// <param name="languageId">Message language identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the queued email identifier
-    /// </returns>
-    public virtual async Task<IList<int>> SendNewForumPostMessageAsync(Customer customer, ForumPost forumPost, ForumTopic forumTopic,
-        Forum forum, int friendlyForumTopicPageIndex, int languageId)
-    {
-        ArgumentNullException.ThrowIfNull(customer);
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-
-        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEW_FORUM_POST_MESSAGE, store.Id);
-        if (!messageTemplates.Any())
-            return new List<int>();
-
-        //tokens
-        var commonTokens = new List<Token>();
-        await _messageTokenProvider.AddForumPostTokensAsync(commonTokens, forumPost);
-        await _messageTokenProvider.AddForumTopicTokensAsync(commonTokens, forumTopic, friendlyForumTopicPageIndex, forumPost.Id);
-        await _messageTokenProvider.AddForumTokensAsync(commonTokens, forum);
-        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-
-        return await messageTemplates.SelectAwait(async messageTemplate =>
-        {
-            //email account
-            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
-
-            var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
-
-            //event notification
-            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
-
-            var toEmail = customer.Email;
-            var toName = await _customerService.GetCustomerFullNameAsync(customer);
-
-            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-        }).ToListAsync();
-    }
+    #region Messages
 
     /// <summary>
     /// Sends a private message notification

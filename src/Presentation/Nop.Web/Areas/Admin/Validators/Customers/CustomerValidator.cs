@@ -124,8 +124,10 @@ public partial class CustomerValidator : BaseNopValidator<CustomerModel>
         var allCustomerRoles = await customerService.GetAllCustomerRolesAsync(true);
         var newCustomerRoles = new List<CustomerRole>();
         foreach (var customerRole in allCustomerRoles)
+        {
             if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 newCustomerRoles.Add(customerRole);
+        }
 
         var isInRegisteredRole = newCustomerRoles.FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.RegisteredRoleName) != null;
         return isInRegisteredRole;

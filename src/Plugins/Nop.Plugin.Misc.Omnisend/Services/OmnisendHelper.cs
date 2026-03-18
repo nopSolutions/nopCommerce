@@ -1,9 +1,9 @@
-﻿using Nop.Core;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Plugin.Misc.Omnisend.DTO;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Media;
 using Nop.Web.Framework.Mvc.Routing;
 

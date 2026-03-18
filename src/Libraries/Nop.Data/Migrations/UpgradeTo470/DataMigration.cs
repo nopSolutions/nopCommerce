@@ -31,6 +31,7 @@ public class DataMigration : Migration
         if (!activityLogTypeTable.Any(alt =>
                 string.Compare(alt.SystemKeyword, "ImportCustomers", StringComparison.InvariantCultureIgnoreCase) ==
                 0))
+        {
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
@@ -39,14 +40,17 @@ public class DataMigration : Migration
                     Name = "Customers were imported"
                 }
             );
+        }
 
         //6660 new activity log type for update plugin
         if (!activityLogTypeTable.Any(alt =>
                 string.Compare(alt.SystemKeyword, "UpdatePlugin", StringComparison.InvariantCultureIgnoreCase) ==
                 0))
+        {
             _dataProvider.InsertEntity(
                 new ActivityLogType { SystemKeyword = "UpdatePlugin", Enabled = true, Name = "Update a plugin" }
             );
+        }
 
         //1934
         int pageIndex;
@@ -69,7 +73,7 @@ public class DataMigration : Migration
 
             while (true)
             {
-                var combinations = combinationQuery.ToPagedListAsync(pageIndex, pageSize).Result;
+                var combinations = combinationQuery.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
                 if (!combinations.Any())
                     break;
@@ -112,7 +116,7 @@ public class DataMigration : Migration
 
             while (true)
             {
-                var values = valueQuery.ToPagedListAsync(pageIndex, pageSize).Result;
+                var values = valueQuery.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
                 if (!values.Any())
                     break;
@@ -140,10 +144,8 @@ public class DataMigration : Migration
         }
 
         // new permission
-        if (_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "AccessProfiling", StringComparison.InvariantCultureIgnoreCase) == 0))
-        {
+        if (_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "AccessProfiling", StringComparison.InvariantCultureIgnoreCase) == 0)) 
             _dataProvider.BulkDeleteEntitiesAsync<PermissionRecord>(pr => pr.SystemName == "AccessProfiling");
-        }
 
         //#6890
         //remove column

@@ -261,9 +261,7 @@ public partial class ProductService : IProductService
             else
             {
                 if (combination.AllowOutOfStockOrders)
-                {
                     stockMessage = await _localizationService.GetResourceAsync("Products.Availability.InStock");
-                }
                 else
                 {
                     var productAvailabilityRange = await
@@ -286,6 +284,7 @@ public partial class ProductService : IProductService
                 var selectedIds = allIds.Intersect(exIds).ToList();
 
                 if (selectedIds.Count != allIds.Count)
+                {
                     if (_catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.AlwaysDisplay)
                         return await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
                     else
@@ -301,6 +300,7 @@ public partial class ProductService : IProductService
                         if (flag)
                             return await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
                     }
+                }
 
                 var productAvailabilityRange = await
                     _dateRangeService.GetProductAvailabilityRangeByIdAsync(product.ProductAvailabilityRangeId);
@@ -310,9 +310,7 @@ public partial class ProductService : IProductService
                         await _localizationService.GetLocalizedAsync(productAvailabilityRange, range => range.Name));
             }
             else
-            {
                 stockMessage = await _localizationService.GetResourceAsync("Products.Availability.InStock");
-            }
         }
 
         return stockMessage;
@@ -1188,10 +1186,8 @@ public partial class ProductService : IProductService
                 (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc.Value > DateTime.UtcNow));
         }
         //vendor filtering
-        if (vendorId > 0)
-        {
+        if (vendorId > 0) 
             query = query.Where(p => p.VendorId == vendorId);
-        }
 
         //apply store mapping constraints
         if (!showHidden && storeId > 0)
@@ -1370,8 +1366,10 @@ public partial class ProductService : IProductService
         foreach (var idStr in product.RequiredProductIds
                      .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                      .Select(x => x.Trim()))
+        {
             if (int.TryParse(idStr, out var id))
                 ids.Add(id);
+        }
 
         return ids.ToArray();
     }
@@ -1792,10 +1790,8 @@ public partial class ProductService : IProductService
 
             //associated product (bundle)
             var associatedProduct = await GetProductByIdAsync(attributeValue.AssociatedProductId);
-            if (associatedProduct != null)
-            {
+            if (associatedProduct != null) 
                 await AdjustInventoryAsync(associatedProduct, quantityToChange * attributeValue.Quantity, message);
-            }
         }
     }
 
@@ -2250,10 +2246,12 @@ public partial class ProductService : IProductService
         var products = _productRepository.Table;
 
         if (discountId.HasValue)
+        {
             products = from product in products
                 join dpm in _discountProductMappingRepository.Table on product.Id equals dpm.EntityId
                 where dpm.DiscountId == discountId.Value
                 select product;
+        }
 
         if (!showHidden)
             products = products.Where(product => !product.Deleted);

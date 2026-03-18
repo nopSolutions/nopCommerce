@@ -16,6 +16,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Authentication.External;
@@ -49,6 +50,7 @@ using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security;
+using ILogger = Nop.Services.Logging.ILogger;
 
 namespace Nop.Web.Areas.Admin.Factories;
 
@@ -72,9 +74,11 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IExchangeRatePluginManager _exchangeRatePluginManager;
+    protected readonly IHttpClientFactory _httpClientFactory;
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
+    protected readonly ILogger _logger;
     protected readonly IMaintenanceService _maintenanceService;
     protected readonly IManufacturerService _manufacturerService;
     protected readonly IMeasureService _measureService;
@@ -123,9 +127,11 @@ public partial class CommonModelFactory : ICommonModelFactory
         IDateTimeHelper dateTimeHelper,
         IEventPublisher eventPublisher,
         IExchangeRatePluginManager exchangeRatePluginManager,
+        IHttpClientFactory httpClientFactory,
         IHttpContextAccessor httpContextAccessor,
         ILanguageService languageService,
         ILocalizationService localizationService,
+        ILogger logger,
         IMaintenanceService maintenanceService,
         IManufacturerService manufacturerService,
         IMeasureService measureService,
@@ -171,9 +177,11 @@ public partial class CommonModelFactory : ICommonModelFactory
         _dataProvider = dataProvider;
         _dateTimeHelper = dateTimeHelper;
         _exchangeRatePluginManager = exchangeRatePluginManager;
+        _httpClientFactory = httpClientFactory;
         _httpContextAccessor = httpContextAccessor;
         _languageService = languageService;
         _localizationService = localizationService;
+        _logger = logger;
         _maintenanceService = maintenanceService;
         _manufacturerService = manufacturerService;
         _measureService = measureService;
@@ -761,6 +769,44 @@ public partial class CommonModelFactory : ICommonModelFactory
         }
     }
 
+    /// <summary>
+    /// Retrieves the latest available nopCommerce version identifier from the remote release information source
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the string containing the latest nopCommerce version identifier if available; otherwise, null.
+    /// </returns>
+    protected virtual async Task<string> GetNopLatestVersionAsync()
+    {
+        var latestReleaseInfo = await _staticCacheManager.GetAsync(NopCommonDefaults.LatestReleaseInfoCacheKey,
+            async () =>
+            {
+                try
+                {
+                    var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
+                    client.BaseAddress = new Uri(NopCommonDefaults.LatestReleaseInfoUrl);
+                    client.DefaultRequestHeaders.Add(HeaderNames.UserAgent,
+                        $"nopCommerce-{NopVersion.CURRENT_VERSION}");
+                    client.Timeout = TimeSpan.FromSeconds(NopCommonDefaults.GitHubRequestTimeout);
+
+                    var response = await client.GetAsync(string.Empty);
+
+                    return response.IsSuccessStatusCode
+                        ? JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(),
+                            new { Name = $"release-{NopVersion.FULL_VERSION}" })
+                        : null;
+                }
+                catch
+                {
+                    //ignore
+                }
+
+                return null;
+            });
+
+        return string.IsNullOrEmpty(latestReleaseInfo.Name) ? null : latestReleaseInfo.Name.Replace("release-", string.Empty);
+    }
+
     #endregion
 
     #region Methods
@@ -782,6 +828,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         model.ServerLocalTime = DateTime.Now;
         model.UtcTime = DateTime.UtcNow;
         model.CurrentUserTime = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
+        model.UsedMemory = Math.Round((GC.GetTotalMemory(false) / 1024.0f / 1024.0f), 2);
         model.HttpHost = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
 
         //ensure no exception is thrown
@@ -800,11 +847,13 @@ public partial class CommonModelFactory : ICommonModelFactory
         foreach (var header in _httpContextAccessor.HttpContext.Request.Headers)
         {
             if (header.Key != HeaderNames.Cookie)
+            {
                 model.Headers.Add(new SystemInfoModel.HeaderModel
                 {
                     Name = header.Key,
                     Value = header.Value
                 });
+            }
         }
 
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -838,10 +887,28 @@ public partial class CommonModelFactory : ICommonModelFactory
         var currentStaticCacheManagerName = _staticCacheManager.GetType().Name;
 
         if (_appSettings.Get<DistributedCacheConfig>().Enabled)
+        {
             currentStaticCacheManagerName +=
                 $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.Get<DistributedCacheConfig>().DistributedCacheType)})";
+        }
 
         model.CurrentStaticCacheManager = currentStaticCacheManagerName;
+
+        var nopLatestVersion = await GetNopLatestVersionAsync();
+
+        if (!string.IsNullOrEmpty(nopLatestVersion) && !nopLatestVersion.Equals(NopVersion.FULL_VERSION))
+        {
+            if (int.TryParse(nopLatestVersion.Replace(".", string.Empty),
+                    out var latestReleaseVersion) && int.TryParse(NopVersion.FULL_VERSION.Replace(".", string.Empty),
+                    out var currentVersion) && currentVersion < latestReleaseVersion)
+            {
+                model.NopLatestVersion =
+                    string.Format(
+                        await _localizationService.GetResourceAsync("Admin.System.SystemInfo.NopLatestVersion.Text"),
+                        nopLatestVersion, NopLinksDefaults.OfficialSite.DownloadPage,
+                        NopLinksDefaults.OfficialSite.ReleaseNotesPage);
+            }
+        }
 
         return model;
     }
@@ -977,6 +1044,19 @@ public partial class CommonModelFactory : ICommonModelFactory
         model.DeleteAlreadySentQueuedEmails.EndDate = DateTime.UtcNow.AddDays(-7);
 
         model.BackupSupported = _dataProvider.BackupSupported;
+
+        try
+        {
+            model.DatabaseSize =
+                string.Format(
+                    await _localizationService.GetResourceAsync("Admin.System.Maintenance.ShrinkDatabase.DatabaseSize"),
+                    Math.Round(await _dataProvider.GetDatabaseSizeAsync() / 1024.0M, 2));
+        }
+        catch (Exception e)
+        {
+            model.DatabaseSize = e.Message;
+            await _logger.ErrorAsync(e.Message, e);
+        }
 
         //prepare nested search model
         PrepareBackupFileSearchModel(model.BackupFileSearchModel);

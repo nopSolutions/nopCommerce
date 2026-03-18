@@ -97,15 +97,6 @@ public static partial class AdminWidgetZones
     public static string FilterLevelValueDetailsButtons => "admin_filter_level_value_details_buttons";
     public static string FilterLevelValueDetailsBlock => "admin_filter_level_value_details_block";
     public static string FilterLevelValueListButtons => "admin_filter_level_value_list_buttons";
-    public static string ForumDetailsBottom => "admin_forum_details_bottom";
-    public static string ForumDetailsButtons => "admin_forum_details_buttons";
-    public static string ForumDetailsTop => "admin_forum_details_top";
-    public static string ForumGroupDetailsBottom => "admin_forum_group_details_bottom";
-    public static string ForumGroupDetailsButtons => "admin_forum_group_details_buttons";
-    public static string ForumGroupDetailsTop => "admin_forum_group_details_top";
-    public static string ForumListButtons => "admin_forum_list_buttons";
-    public static string ForumSettingsButtons => "admin_forum_settings_buttons";
-    public static string ForumSettingsDetailsBlock => "admin_forum_settings_details_block";
     public static string GdprSettingsButtons => "admin_gdpr_settings_buttons";
     public static string GdprSettingsDetailsBlock => "admin_gdpr_common_settings_details_block";
     public static string GdprConsentDetailsBottom => "admin_gdpr_consent_details_bottom";
@@ -182,9 +173,6 @@ public static partial class AdminWidgetZones
     public static string PluginDetailsButtons => "admin_plugin_details_buttons";
     public static string PluginDetailsTop => "admin_plugin_details_top";
     public static string PluginListButtons => "admin_plugin_list_buttons";
-    public static string PollDetailsBlock => "admin_poll_details_block";
-    public static string PollDetailsButtons => "admin_poll_details_buttons";
-    public static string PollListButtons => "admin_poll_list_buttons";
     public static string ProductAttributeCombinationDetailsBottom => "admin_product_attribute_combination_details_bottom";
     public static string ProductAttributeCombinationDetailsButtons => "admin_product_attribute_combination_details_buttons";
     public static string ProductAttributeCombinationDetailsTop => "admin_product_attribute_combination_details_top";

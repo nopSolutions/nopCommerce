@@ -10,7 +10,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.FilterLevels;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
@@ -345,71 +344,6 @@ public partial class SettingController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
-    public virtual async Task<IActionResult> Forum()
-    {
-        //prepare model
-        var model = await _settingModelFactory.PrepareForumSettingsModelAsync();
-
-        return View(model);
-    }
-
-    [HttpPost]
-    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
-    public virtual async Task<IActionResult> Forum(ForumSettingsModel model)
-    {
-        if (ModelState.IsValid)
-        {
-            //load settings for a chosen store scope
-            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var forumSettings = await _settingService.LoadSettingAsync<ForumSettings>(storeScope);
-            forumSettings = model.ToSettings(forumSettings);
-
-            //we do not clear cache after each setting update.
-            //this behavior can increase performance because cached settings will not be cleared 
-            //and loaded from database after each update
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ForumsEnabled, model.ForumsEnabled_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.RelativeDateTimeFormattingEnabled, model.RelativeDateTimeFormattingEnabled_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ShowCustomersPostCount, model.ShowCustomersPostCount_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.AllowGuestsToCreatePosts, model.AllowGuestsToCreatePosts_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.AllowGuestsToCreateTopics, model.AllowGuestsToCreateTopics_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.AllowCustomersToEditPosts, model.AllowCustomersToEditPosts_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.AllowCustomersToDeletePosts, model.AllowCustomersToDeletePosts_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.AllowPostVoting, model.AllowPostVoting_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.MaxVotesPerDay, model.MaxVotesPerDay_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.AllowCustomersToManageSubscriptions, model.AllowCustomersToManageSubscriptions_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.TopicsPageSize, model.TopicsPageSize_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.PostsPageSize, model.PostsPageSize_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ForumEditor, model.ForumEditor_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.SignaturesEnabled, model.SignaturesEnabled_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.AllowPrivateMessages, model.AllowPrivateMessages_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ShowAlertForPM, model.ShowAlertForPM_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.NotifyAboutPrivateMessages, model.NotifyAboutPrivateMessages_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ActiveDiscussionsFeedEnabled, model.ActiveDiscussionsFeedEnabled_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ActiveDiscussionsFeedCount, model.ActiveDiscussionsFeedCount_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ForumFeedsEnabled, model.ForumFeedsEnabled_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ForumFeedCount, model.ForumFeedCount_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.SearchResultsPageSize, model.SearchResultsPageSize_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(forumSettings, x => x.ActiveDiscussionsPageSize, model.ActiveDiscussionsPageSize_OverrideForStore, storeScope, false);
-
-            //now clear settings cache
-            await _settingService.ClearCacheAsync();
-
-            //activity log
-            await _customerActivityService.InsertActivityAsync("EditSettings", await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
-
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Updated"));
-
-            return RedirectToAction("Forum");
-        }
-
-        //prepare model
-        model = await _settingModelFactory.PrepareForumSettingsModelAsync(model);
-
-        //if we got this far, something failed, redisplay form
-        return View(model);
-    }
-
-    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
     public virtual async Task<IActionResult> Shipping()
     {
         //prepare model
@@ -449,6 +383,8 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.DisplayShipmentEventsToStoreOwner, model.DisplayShipmentEventsToStoreOwner_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.HideShippingTotal, model.HideShippingTotal_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.BypassShippingMethodSelectionIfOnlyOne, model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.AllowCustomerToChooseDeliveryDate, model.AllowCustomerToChooseDeliveryDate_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.DeliveryDateRangeDays, model.DeliveryDateRangeDays_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.ConsiderAssociatedProductsDimensions, model.ConsiderAssociatedProductsDimensions_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(shippingSettings, x => x.ShippingSorting, model.ShippingSorting_OverrideForStore, storeScope, false);
 
@@ -732,6 +668,10 @@ public partial class SettingController : BaseAdminController
             artificialIntelligenceSettings.LogRequests = model.ArtificialIntelligenceSettingsModel.LogRequests;
 
             await _settingService.SaveSettingAsync(artificialIntelligenceSettings);
+
+            var gpsrSettings = await _settingService.LoadSettingAsync<GpsrSettings>(storeScope);
+            gpsrSettings.Enabled = model.GpsrSettingsModel.Enabled;
+            await _settingService.SaveSettingOverridablePerStoreAsync(gpsrSettings, x => x.Enabled, model.GpsrSettingsModel.Enabled_OverrideForStore, storeScope, false);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();
@@ -1278,7 +1218,23 @@ public partial class SettingController : BaseAdminController
             var externalAuthenticationSettings = await _settingService.LoadSettingAsync<ExternalAuthenticationSettings>(storeScope);
             var multiFactorAuthenticationSettings = await _settingService.LoadSettingAsync<MultiFactorAuthenticationSettings>(storeScope);
 
+            var privateMessageSettings = await _settingService.LoadSettingAsync<PrivateMessageSettings>(storeScope);
+            privateMessageSettings = model.PrivateMessageSettings.ToSettings(privateMessageSettings);
+
+            //we do not clear cache after each setting update.
+            //this behavior can increase performance because cached settings will not be cleared 
+            //and loaded from database after each update
+            await _settingService.SaveSettingOverridablePerStoreAsync(privateMessageSettings, x => x.AllowPrivateMessages, model.PrivateMessageSettings.AllowPrivateMessages_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(privateMessageSettings, x => x.ShowAlertForPM, model.PrivateMessageSettings.ShowAlertForPM_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(privateMessageSettings, x => x.NotifyAboutPrivateMessages, model.PrivateMessageSettings.NotifyAboutPrivateMessages_OverrideForStore, storeScope, false);
+
+            //now clear settings cache
+            await _settingService.ClearCacheAsync();
+
             customerSettings = model.CustomerSettings.ToSettings(customerSettings);
+
+            //now clear settings cache
+            await _settingService.ClearCacheAsync();
 
             if (customerSettings.UsernameValidationEnabled && customerSettings.UsernameValidationUseRegex)
             {
@@ -1317,6 +1273,9 @@ public partial class SettingController : BaseAdminController
             }
 
             await _settingService.SaveSettingAsync(customerSettings);
+
+            privateMessageSettings = model.PrivateMessageSettings.ToSettings(privateMessageSettings);
+            await _settingService.SaveSettingAsync(privateMessageSettings);
 
             addressSettings = model.AddressSettings.ToSettings(addressSettings);
             await _settingService.SaveSettingAsync(addressSettings);
@@ -1531,7 +1490,7 @@ public partial class SettingController : BaseAdminController
             storeInformationSettings.DisplayEuCookieLawWarning = model.StoreInformationSettings.DisplayEuCookieLawWarning;
             //social pages
             storeInformationSettings.FacebookLink = model.StoreInformationSettings.FacebookLink;
-            storeInformationSettings.TwitterLink = model.StoreInformationSettings.TwitterLink;
+            storeInformationSettings.XLink = model.StoreInformationSettings.XLink;
             storeInformationSettings.YoutubeLink = model.StoreInformationSettings.YoutubeLink;
             storeInformationSettings.InstagramLink = model.StoreInformationSettings.InstagramLink;
             //contact us
@@ -1566,7 +1525,7 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(storeInformationSettings, x => x.LogoPictureId, model.StoreInformationSettings.LogoPictureId_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(storeInformationSettings, x => x.DisplayEuCookieLawWarning, model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(storeInformationSettings, x => x.FacebookLink, model.StoreInformationSettings.FacebookLink_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(storeInformationSettings, x => x.TwitterLink, model.StoreInformationSettings.TwitterLink_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(storeInformationSettings, x => x.XLink, model.StoreInformationSettings.XLink_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(storeInformationSettings, x => x.YoutubeLink, model.StoreInformationSettings.YoutubeLink_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(storeInformationSettings, x => x.InstagramLink, model.StoreInformationSettings.InstagramLink_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(commonSettings, x => x.SubjectFieldOnContactUsForm, model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore, storeScope, false);
@@ -1624,9 +1583,14 @@ public partial class SettingController : BaseAdminController
                 securitySettings.AdminAreaAllowedIpAddresses = new List<string>();
             securitySettings.AdminAreaAllowedIpAddresses.Clear();
             if (!string.IsNullOrEmpty(model.SecuritySettings.AdminAreaAllowedIpAddresses))
+            {
                 foreach (var s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(_separator, StringSplitOptions.RemoveEmptyEntries))
+                {
                     if (!string.IsNullOrWhiteSpace(s))
                         securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
+                }
+            }
+
             securitySettings.HoneypotEnabled = model.SecuritySettings.HoneypotEnabled;
             await _settingService.SaveSettingAsync(securitySettings);
 
@@ -1663,7 +1627,6 @@ public partial class SettingController : BaseAdminController
             captchaSettings.ShowOnProductReviewPage = model.CaptchaSettings.ShowOnProductReviewPage;
             captchaSettings.ShowOnForgotPasswordPage = model.CaptchaSettings.ShowOnForgotPasswordPage;
             captchaSettings.ShowOnApplyVendorPage = model.CaptchaSettings.ShowOnApplyVendorPage;
-            captchaSettings.ShowOnForum = model.CaptchaSettings.ShowOnForum;
             captchaSettings.ShowOnCheckoutPageForGuests = model.CaptchaSettings.ShowOnCheckoutPageForGuests;
             captchaSettings.ShowOnCheckGiftCardBalance = model.CaptchaSettings.ShowOnCheckGiftCardBalance;
             captchaSettings.ReCaptchaPublicKey = model.CaptchaSettings.ReCaptchaPublicKey;
@@ -1685,7 +1648,6 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnProductReviewPage, model.CaptchaSettings.ShowOnProductReviewPage_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnApplyVendorPage, model.CaptchaSettings.ShowOnApplyVendorPage_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnForgotPasswordPage, model.CaptchaSettings.ShowOnForgotPasswordPage_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnForum, model.CaptchaSettings.ShowOnForum_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnCheckoutPageForGuests, model.CaptchaSettings.ShowOnCheckoutPageForGuests_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnCheckGiftCardBalance, model.CaptchaSettings.ShowOnCheckGiftCardBalance_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ReCaptchaPublicKey, model.CaptchaSettings.ReCaptchaPublicKey_OverrideForStore, storeScope, false);
@@ -1727,9 +1689,7 @@ public partial class SettingController : BaseAdminController
             var localizationSettings = await _settingService.LoadSettingAsync<LocalizationSettings>(storeScope);
             localizationSettings.UseImagesForLanguageSelection = model.LocalizationSettings.UseImagesForLanguageSelection;
             if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled != model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-            {
                 localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
-            }
 
             localizationSettings.AutomaticallyDetectLanguage = model.LocalizationSettings.AutomaticallyDetectLanguage;
             localizationSettings.LoadAllLocaleRecordsOnStartup = model.LocalizationSettings.LoadAllLocaleRecordsOnStartup;
@@ -1916,9 +1876,7 @@ public partial class SettingController : BaseAdminController
             //delete old favicon icon if exist
             var oldFaviconIconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.OldFaviconIconName, storeScope));
             if (_fileProvider.FileExists(oldFaviconIconPath))
-            {
                 _fileProvider.DeleteFile(oldFaviconIconPath);
-            }
 
             //activity log
             await _customerActivityService.InsertActivityAsync("UploadIcons", string.Format(await _localizationService.GetResourceAsync("ActivityLog.UploadNewIcons"), storeScope));

@@ -106,48 +106,60 @@ public partial class ShipmentService : IShipmentService
                 query = query.Where(s => s.TrackingNumber.Contains(trackingNumber));
 
             if (shippingCountryId > 0)
+            {
                 query = from s in query
                     join o in _orderRepository.Table on s.OrderId equals o.Id
                     where _addressRepository.Table.Any(a =>
                         a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
                         a.CountryId == shippingCountryId)
                     select s;
+            }
 
             if (shippingStateId > 0)
+            {
                 query = from s in query
                     join o in _orderRepository.Table on s.OrderId equals o.Id
                     where _addressRepository.Table.Any(a =>
                         a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
                         a.StateProvinceId == shippingStateId)
                     select s;
+            }
 
             if (!string.IsNullOrWhiteSpace(shippingCounty))
+            {
                 query = from s in query
                     join o in _orderRepository.Table on s.OrderId equals o.Id
                     where _addressRepository.Table.Any(a =>
                         a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
                         a.County.Contains(shippingCounty))
                     select s;
+            }
 
             if (!string.IsNullOrWhiteSpace(shippingCity))
+            {
                 query = from s in query
                     join o in _orderRepository.Table on s.OrderId equals o.Id
                     where _addressRepository.Table.Any(a =>
                         a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
                         a.City.Contains(shippingCity))
                     select s;
+            }
 
             if (loadNotShipped)
+            {
                 query = from s in query
                     join o in _orderRepository.Table on s.OrderId equals o.Id
                     where !s.ShippedDateUtc.HasValue && !o.PickupInStore
                     select s;
+            }
 
             if (loadNotReadyForPickup)
+            {
                 query = from s in query
                     join o in _orderRepository.Table on s.OrderId equals o.Id
                     where !s.ReadyForPickupDateUtc.HasValue && o.PickupInStore
                     select s;
+            }
 
             if (loadNotDelivered)
                 query = query.Where(s => !s.DeliveryDateUtc.HasValue);

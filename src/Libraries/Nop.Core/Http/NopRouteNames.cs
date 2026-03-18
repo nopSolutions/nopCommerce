@@ -66,11 +66,6 @@ public static partial class NopRouteNames
         public const string BLOG = "Blog";
 
         /// <summary>
-        /// Gets the forums route name
-        /// </summary>
-        public const string BOARDS = "Boards";
-
-        /// <summary>
         /// Gets the product tags route name
         /// </summary>
         public const string PRODUCT_TAGS = "ProductTagsAll";
@@ -332,11 +327,6 @@ public static partial class NopRouteNames
         public const string EMAIL_REVALIDATION = "EmailRevalidation";
 
         /// <summary>
-        /// Gets the customer forum subscriptions route name
-        /// </summary>
-        public const string CUSTOMER_FORUM_SUBSCRIPTIONS = "CustomerForumSubscriptions";
-
-        /// <summary>
         /// Gets the customer address edit route name
         /// </summary>
         public const string CUSTOMER_ADDRESS_EDIT = "CustomerAddressEdit";
@@ -452,97 +442,6 @@ public static partial class NopRouteNames
         public const string NEW_PRODUCTS_RSS = "NewProductsRSS";
 
         /// <summary>
-        /// Gets the active discussions route name
-        /// </summary>
-        //forums
-        public const string ACTIVE_DISCUSSIONS = "ActiveDiscussions";
-
-        /// <summary>
-        /// Gets the active discussions paged route name
-        /// </summary>
-        public const string ACTIVE_DISCUSSIONS_PAGED = "ActiveDiscussionsPaged";
-
-        /// <summary>
-        /// Gets the forums RSS (file result) route name
-        /// </summary>
-        public const string ACTIVE_DISCUSSIONS_RSS = "ActiveDiscussionsRSS";
-
-        /// <summary>
-        /// Gets the post edit route name
-        /// </summary>
-        public const string POST_EDIT = "PostEdit";
-
-        /// <summary>
-        /// Gets the post delete route name
-        /// </summary>
-        public const string POST_DELETE = "PostDelete";
-
-        /// <summary>
-        /// Gets the post create route name
-        /// </summary>
-        public const string POST_CREATE = "PostCreate";
-
-        /// <summary>
-        /// Gets the post create quote route name
-        /// </summary>
-        public const string POST_CREATE_QUOTE = "PostCreateQuote";
-
-        /// <summary>
-        /// Gets the topic edit route name
-        /// </summary>
-        public const string TOPIC_EDIT = "TopicEdit";
-
-        /// <summary>
-        /// Gets the topic delete route name
-        /// </summary>
-        public const string TOPIC_DELETE = "TopicDelete";
-
-        /// <summary>
-        /// Gets the topic create route name
-        /// </summary>
-        public const string TOPIC_CREATE = "TopicCreate";
-
-        /// <summary>
-        /// Gets the topic move route name
-        /// </summary>
-        public const string TOPIC_MOVE = "TopicMove";
-
-        /// <summary>
-        /// Gets the topic slug route name
-        /// </summary>
-        public const string TOPIC_SLUG = "TopicSlug";
-
-        /// <summary>
-        /// Gets the topic slug paged route name
-        /// </summary>
-        public const string TOPIC_SLUG_PAGED = "TopicSlugPaged";
-
-        /// <summary>
-        /// Gets the forums RSS (file result) route name
-        /// </summary>
-        public const string FORUM_RSS = "ForumRSS";
-
-        /// <summary>
-        /// Gets the forum slug route name
-        /// </summary>
-        public const string FORUM_SLUG = "ForumSlug";
-
-        /// <summary>
-        /// Gets the forum slug paged route name
-        /// </summary>
-        public const string FORUM_SLUG_PAGED = "ForumSlugPaged";
-
-        /// <summary>
-        /// Gets the forum group slug route name
-        /// </summary>
-        public const string FORUM_GROUP_SLUG = "ForumGroupSlug";
-
-        /// <summary>
-        /// Gets the forum search route name
-        /// </summary>
-        public const string BOARDS_SEARCH = "Search";
-
-        /// <summary>
         /// Gets the private messages route name
         /// </summary>
         public const string PRIVATE_MESSAGES = "PrivateMessages";
@@ -654,6 +553,11 @@ public static partial class NopRouteNames
         public const string ADD_WISHLIST = "AddWishlist";
 
         /// <summary>
+        /// Gets the rename custom wishlist route name
+        /// </summary>
+        public const string RENAME_WISHLIST = "RenameWishlist";
+
+        /// <summary>
         /// Gets the back in stock subscribe send route name
         /// </summary>
         public const string BACK_IN_STOCK_SUBSCRIBE_SEND = "BackInStockSubscribeSend";
@@ -734,11 +638,6 @@ public static partial class NopRouteNames
         public const string TOPIC_POPUP = "TopicPopup";
 
         /// <summary>
-        /// Gets the poll vote route name
-        /// </summary>
-        public const string POLL_VOTE = "PollVote";
-
-        /// <summary>
         /// Gets the state list by country ID route name
         /// </summary>
         public const string GET_STATES_BY_COUNTRY_ID = "GetStatesByCountryId";
@@ -817,21 +716,6 @@ public static partial class NopRouteNames
         /// Gets the restart application route name
         /// </summary>
         public const string INSTALLATION_RESTART_APPLICATION = "InstallationRestartApplication";
-
-        /// <summary>
-        /// Gets the post vote route name
-        /// </summary>
-        public const string POST_VOTE = "PostVote";
-
-        /// <summary>
-        /// Gets the topic watch route name
-        /// </summary>
-        public const string TOPIC_WATCH = "TopicWatch";
-
-        /// <summary>
-        /// Gets the forum watch route name
-        /// </summary>
-        public const string FORUM_WATCH = "ForumWatch";
 
         /// <summary>
         /// Gets the return request with "upload file" support route name

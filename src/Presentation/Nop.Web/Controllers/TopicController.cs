@@ -106,23 +106,19 @@ public partial class TopicController : BasePublicController
             return Json(authResult with { Error = "Topic is not found" });
         }
 
-        if (topic.IsPasswordProtected)
-        {
-            if (topic.Password != null && topic.Password.Equals(password))
-            {
-                return Json(authResult with { 
-                    Authenticated = true, 
-                    Title = await _localizationService.GetLocalizedAsync(topic, x => x.Title),
-                    Body = await _localizationService.GetLocalizedAsync(topic, x => x.Body)
-                });
-            }
-            else
-            {
-                return Json(authResult with { Error = await _localizationService.GetResourceAsync("Topic.WrongPassword") });
-            }
-        }
+        if (!topic.IsPasswordProtected)
+            return Json(authResult);
 
-        return Json(authResult);
+        if (topic.Password != null && topic.Password.Equals(password))
+        {
+            return Json(authResult with { 
+                Authenticated = true, 
+                Title = await _localizationService.GetLocalizedAsync(topic, x => x.Title),
+                Body = await _localizationService.GetLocalizedAsync(topic, x => x.Body)
+            });
+        }
+        
+        return Json(authResult with { Error = await _localizationService.GetResourceAsync("Topic.WrongPassword") });
     }
 
     #endregion

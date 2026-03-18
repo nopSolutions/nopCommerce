@@ -4,7 +4,7 @@
     {
         <div class="avatar">
             <img src="@(Model.AvatarUrl)" class="avatar-img" alt="Avatar" />
-        </div>         
+        </div>
     }
     <div class="profile-stats">
         <h2 class="title">
@@ -18,13 +18,6 @@
                     <label>@T("Profile.Country"):</label>
                     <span>@Model.Location</span>
                 </li>
-            }
-            @if (Model.TotalPostsEnabled)
-            {
-                <li>
-                    <label>@T("Profile.TotalPosts"):</label>
-                    <span>@Model.TotalPosts</span>
-                </li>          
             }
             @if (Model.JoinDateEnabled)
             {        
@@ -46,7 +39,7 @@
     @if (Model.PMEnabled)
     {
         <div class="send-pm">
-            @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, NopRouteNames.Standard.SEND_PM, new { toCustomerId = Model.CustomerProfileId }, new { @class = "pm-button" })
+            @Html.RouteLink(T("PrivateMessages.PM").Text, NopRouteNames.Standard.SEND_PM, new { toCustomerId = Model.CustomerProfileId }, new { @class = "pm-button" })
         </div>
     }
 </div>

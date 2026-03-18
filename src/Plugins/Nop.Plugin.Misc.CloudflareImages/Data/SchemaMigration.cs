@@ -5,7 +5,7 @@ using Nop.Data.Migrations;
 namespace Nop.Plugin.Misc.CloudflareImages.Data;
 
 [NopMigration("2025-04-25 08:00:00", "Misc.CloudflareImages base schema", MigrationProcessType.Installation)]
-public class SchemaMigration : AutoReversingMigration
+public class SchemaMigration : Migration
 {
     #region Methods
 
@@ -15,6 +15,14 @@ public class SchemaMigration : AutoReversingMigration
     public override void Up()
     {
         this.CreateTableIfNotExists<Domain.CloudflareImages>();
+    }
+
+    /// <summary>
+    /// Collects the DOWN migration expressions
+    /// </summary>
+    public override void Down()
+    {
+        this.DeleteTableIfExists<Domain.CloudflareImages>();
     }
 
     #endregion

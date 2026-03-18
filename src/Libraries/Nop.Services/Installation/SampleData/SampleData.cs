@@ -41,11 +41,6 @@ public partial class SampleData
     public SampleProducts Products { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the list of forum groups
-    /// </summary>
-    public List<SampleForumGroup> ForumGroups { get; set; } = new();
-
-    /// <summary>
     /// Gets or sets the list of discounts
     /// </summary>
     public List<SampleDiscount> Discounts { get; set; } = new();
@@ -54,11 +49,6 @@ public partial class SampleData
     /// Gets or sets the list of blog posts
     /// </summary>
     public List<SampleBlogPost> BlogPosts { get; set; } = new();
-
-    /// <summary>
-    /// Gets or sets the list of polls
-    /// </summary>
-    public List<SamplePoll> Polls { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the list of warehouses

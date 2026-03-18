@@ -1,0 +1,68 @@
+@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Local plugins");
+}
+
+<form asp-controller="Forum" asp-action="Configure" method="post">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
+                <div asp-validation-summary="All"></div>
+
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <nop-cards id="forumsettings-cards">
+                            <nop-card asp-name="forumsettings-common" 
+                                    asp-icon="fas fa-info" 
+                                    asp-title="@T("Plugins.Misc.Forums.Configuration.BlockTitle.Common")" 
+                                    asp-hide-block-attribute-name="@ForumDefaults.HideCommonBlockAttributeName" 
+                                    asp-hide="@Model.HideCommonBlock" 
+                                    asp-advanced="false">
+                                @await Html.PartialAsync("~/Plugins/Misc.Forums/Admin/Views/_Configure.Common.cshtml", Model)
+                            </nop-card>
+                            <nop-card asp-name="forumsettings-permissions" 
+                                    asp-icon="fas fa-shield-halved" 
+                                    asp-title="@T("Plugins.Misc.Forums.Configuration.BlockTitle.Permissions")" 
+                                    asp-hide-block-attribute-name="@ForumDefaults.HidePermissionsBlockAttributeName" 
+                                    asp-hide="@Model.HidePermissionsBlock" 
+                                    asp-advanced="false">
+                                @await Html.PartialAsync("~/Plugins/Misc.Forums/Admin/Views/_Configure.Permissions.cshtml", Model)
+                            </nop-card>
+                            <nop-card asp-name="forumsettings-page-sizes" 
+                                    asp-icon="fas fa-file" 
+                                    asp-title="@T("Plugins.Misc.Forums.Configuration.BlockTitle.PageSizes")" 
+                                    asp-hide-block-attribute-name="@ForumDefaults.HidePageSizesBlockAttributeName" 
+                                    asp-hide="@Model.HidePageSizesBlock" 
+                                    asp-advanced="true">
+                                @await Html.PartialAsync("~/Plugins/Misc.Forums/Admin/Views/_Configure.PageSizes.cshtml", Model)
+                            </nop-card>
+                            <nop-card 
+                                    asp-name="forumsettings-feeds" 
+                                    asp-icon="fas fa-rss" 
+                                    asp-title="@T("Plugins.Misc.Forums.Configuration.BlockTitle.Feeds")" 
+                                    asp-hide-block-attribute-name="@ForumDefaults.HideFeedsBlockAttributeName" 
+                                    asp-hide="@Model.HideFeedsBlock" 
+                                    asp-advanced="true">
+                                @await Html.PartialAsync("~/Plugins/Misc.Forums/Admin/Views/_Configure.Feeds.cshtml", Model)
+                            </nop-card>
+                        </nop-cards>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <button type="submit" name="save" class="btn btn-primary">
+                                    <i class="far fa-floppy-disk"></i>
+                                    @T("Admin.Common.Save")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

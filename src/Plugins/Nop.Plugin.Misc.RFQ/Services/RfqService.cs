@@ -172,7 +172,7 @@ public class RfqService
         if (string.IsNullOrEmpty(note))
             return;
 
-        note = DateTime.UtcNow.ToString(RfqDefaults.DateTimeStringFormat) + $": {note}";
+        note = DateTime.UtcNow.ToString(RfqDefaults.DateTimeStringFormat) + $"(UTC): {note}";
 
         if (!string.IsNullOrEmpty(noteItem.AdminNotes))
             note += "\r\n";

@@ -55,6 +55,6 @@ public partial class RecentlyViewedProductsBlockViewComponent : NopViewComponent
             preparePictureModel,
             productThumbPictureSize));
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

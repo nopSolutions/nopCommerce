@@ -192,7 +192,7 @@ public partial class SyncCodeHelper : ISyncCodeHelper
         var cacheKey = getCacheKey(_staticCacheManager)
             ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.AllCacheKey);
 
-        return _staticCacheManager.Get(cacheKey, getAll);
+        return _staticCacheManager.GetAsync(cacheKey, getAll).Result;
 
         IList<TEntity> getAll()
         {
@@ -218,7 +218,7 @@ public partial class SyncCodeHelper : ISyncCodeHelper
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId,
             showHidden);
 
-        var languages = _staticCacheManager.Get(key, () =>
+        var languages = _staticCacheManager.GetAsync(key, () =>
         {
             var allLanguages = GetAllEntities<Language>(query =>
             {
@@ -238,7 +238,7 @@ public partial class SyncCodeHelper : ISyncCodeHelper
             }
 
             return allLanguages;
-        });
+        }).Result;
 
         return languages;
 
@@ -273,7 +273,7 @@ public partial class SyncCodeHelper : ISyncCodeHelper
 
                 var query = GetAllEntities<StoreMapping>(query => query.Where(sm => sm.EntityId == entityId && sm.EntityName == entityName));
 
-                return _staticCacheManager.Get(cacheKey, () => query.Select(sm => sm.StoreId).ToArray());
+                return _staticCacheManager.GetAsync(cacheKey, () => query.Select(sm => sm.StoreId).ToArray()).Result;
             }
         }
     }

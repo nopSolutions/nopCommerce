@@ -1,6 +1,7 @@
 ﻿@using Nop.Core
+@using Nop.Services.Helpers
 @model CustomerInfoModel
-@inject Nop.Core.IWebHelper webHelper
+@inject IWebHelper webHelper
 @{
     Layout = "_ColumnsTwo";
 
@@ -350,28 +351,18 @@
                 </section>
             }
             
-            @if (Model.AllowCustomersToSetTimeZone || Model.SignatureEnabled)
+            @if (Model.AllowCustomersToSetTimeZone)
             {
                 <section class="fieldset">
                     <h2 class="title">
                         @T("Account.Preferences")
                     </h2>
                     <div class="form-fields">
-                        @if (Model.AllowCustomersToSetTimeZone)
-                        {
-                            <div class="inputs">
-                                <label asp-for="TimeZoneId" asp-postfix=":"></label>
-                                <select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones"></select>
-                                <span asp-validation-for="TimeZoneId"></span>
-                            </div>
-                        }
-                        @if (Model.SignatureEnabled)
-                        {
-                            <div class="inputs">
-                                <label asp-for="Signature" asp-postfix=":"></label>
-                                <textarea asp-for="Signature" class="account-signature-text"></textarea>
-                            </div>
-                        }
+                        <div class="inputs">
+                            <label asp-for="TimeZoneId" asp-postfix=":"></label>
+                            <select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones"></select>
+                            <span asp-validation-for="TimeZoneId"></span>
+                        </div>
                     </div>
                 </section>
             }

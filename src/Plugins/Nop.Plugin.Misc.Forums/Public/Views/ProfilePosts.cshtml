@@ -1,0 +1,60 @@
+﻿@model ProfilePostsModel
+
+@{
+    Layout = "_ColumnsOne";
+
+    //page class
+    NopHtml.AppendPageCssClassParts("html-profile-forum-posts-page");
+
+    NopHtml.AddTitleParts(T("Plugins.Misc.Forums.Profile.Posts.By", Model.CustomerName).Text);
+}
+
+<div class="page profile-forum-posts-page">
+    <div class="page-title">
+        <h1>@T("Plugins.Misc.Forums.Profile.Posts.By", "") @Html.RouteLink(Model.CustomerName, NopRouteNames.Standard.CUSTOMER_PROFILE, new { Id = Model.CustomerId })</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.Posts.Count > 0)
+        {
+            var pager = await Html.PagerAsync(Model.PagerModel);
+
+            @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+            {
+                <div class="pager">
+                    @pager
+                </div>
+            }
+            <div class="latest-posts">
+
+                @foreach (var item in Model.Posts)
+                {
+                    <div class="topic">
+                        <div class="topic-title">
+                            <label>@T("Profile.Topic"):</label>
+                            @Html.RouteLink(item.ForumTopicTitle, ForumDefaults.Routes.Public.TOPIC_SLUG, new { id = item.ForumTopicId, slug = item.ForumTopicSlug })
+                        </div>
+                        <div class="topic-body">
+                            <p>@Html.Raw(item.ForumPostText)</p>
+                        </div>
+                        <div class="topic-data">
+                            <label>@T("Profile.PostedOn"):</label>
+                            <span>@item.Posted</span>
+                        </div>
+                    </div>
+                }
+            </div>
+            @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+            {
+                <div class="pager">
+                    @pager
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Plugins.Misc.Forums.Profile.LatestPosts.NoPosts")
+            </div>
+        }
+    </div>
+</div>

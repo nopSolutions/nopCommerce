@@ -62,9 +62,7 @@ public partial class NopEditorTagHelper : TagHelper
         if (htmlAttributesDictionary?.Count > 0)
         {
             foreach (var (key, value) in htmlAttributesDictionary)
-            {
                 htmlAttributes.Add(key, value);
-            }
         }
 
         //required asterisk
