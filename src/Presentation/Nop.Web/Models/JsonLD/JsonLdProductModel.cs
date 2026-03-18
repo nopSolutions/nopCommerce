@@ -21,13 +21,16 @@ public partial record JsonLdProductModel : JsonLdModel
     public static string Context => "https://schema.org";
 
     [JsonProperty("@type")]
-    public static string Type => "Product";
+    public string Type => HasVariant is { Count: > 0 } ? "ProductGroup" : "Product";
 
     [JsonProperty("name")]
     public string Name { get; set; }
 
     [JsonProperty("sku")]
     public string Sku { get; set; }
+
+    [JsonProperty("productGroupID")]
+    public string GroupId { get; set; }
 
     [JsonProperty("gtin")]
     public string Gtin { get; set; }
