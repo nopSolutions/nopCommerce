@@ -3865,11 +3865,20 @@ public partial class ProductController : BaseAdminController
         var allowedAttributeIds = form.Keys.Where(key => key.Contains("attribute_value_"))
             .Select(key => int.TryParse(form[key], out var id) ? id : 0).Where(id => id > 0).ToList();
 
-        var requiredAttributeNames = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
-            .Where(pam => pam.IsRequired)
-            .Where(pam => !pam.IsNonCombinable())
-            .WhereAwait(async pam => !(await _productAttributeService.GetProductAttributeValuesAsync(pam.Id)).Any(v => allowedAttributeIds.Any(id => id == v.Id)))
-            .Select(async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name).ToListAsync();
+        var mappings = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
+        var requiredMappings = mappings.Where(pam => pam.IsRequired && !pam.IsNonCombinable()).ToList();
+
+        var requiredAttributeNames = new List<string>();
+        foreach (var pam in requiredMappings)
+        {
+            var values = await _productAttributeService.GetProductAttributeValuesAsync(pam.Id);
+            if (!values.Any(v => allowedAttributeIds.Contains(v.Id)))
+            {
+                var attribute = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
+                if (attribute != null)
+                    requiredAttributeNames.Add(attribute.Name);
+            }
+        }
 
         if (requiredAttributeNames.Any())
         {
