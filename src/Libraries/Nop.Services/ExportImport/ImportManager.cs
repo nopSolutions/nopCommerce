@@ -2789,9 +2789,9 @@ public partial class ImportManager : IImportManager
         var count = 0;
         using (var reader = new StreamReader(stream))
         {
-            while (!reader.EndOfStream)
+            string line;
+            while ((line = await reader.ReadLineAsync()) != null)
             {
-                var line = await reader.ReadLineAsync();
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
 
@@ -2874,9 +2874,9 @@ public partial class ImportManager : IImportManager
         var count = 0;
         using (var reader = new StreamReader(stream))
         {
-            while (!reader.EndOfStream)
+            string line;
+            while ((line = await reader.ReadLineAsync()) != null)
             {
-                var line = await reader.ReadLineAsync();
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
                 var tmp = line.Split(',');
