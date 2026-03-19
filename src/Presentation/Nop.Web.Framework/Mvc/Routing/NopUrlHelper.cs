@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
@@ -32,6 +31,7 @@ public partial class NopUrlHelper : INopUrlHelper
     protected readonly ITopicService _topicService;
     protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IUrlRecordService _urlRecordService;
+    protected readonly LinkGenerator _linkGenerator;
 
     #endregion
 
@@ -45,7 +45,8 @@ public partial class NopUrlHelper : INopUrlHelper
         IStoreContext storeContext,
         ITopicService topicService,
         IUrlHelperFactory urlHelperFactory,
-        IUrlRecordService urlRecordService)
+        IUrlRecordService urlRecordService,
+        LinkGenerator linkGenerator)
     {
         _catalogSettings = catalogSettings;
         _categoryService = categoryService;
@@ -56,6 +57,7 @@ public partial class NopUrlHelper : INopUrlHelper
         _topicService = topicService;
         _urlHelperFactory = urlHelperFactory;
         _urlRecordService = urlRecordService;
+        _linkGenerator = linkGenerator;
     }
 
     #endregion
@@ -208,11 +210,14 @@ public partial class NopUrlHelper : INopUrlHelper
     /// </returns>
     public virtual string RouteUrl(string routeName, object values = null, string protocol = null, string host = null, string fragment = null)
     {
-        var urlHelper = UrlHelperExtensions.GetUrlHelper();
-        if (urlHelper is null)
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext is null)
             return string.Empty;
 
-        return urlHelper.RouteUrl(routeName, values, protocol, host, fragment);
+        // Convert host string to HostString? as required by LinkGenerator overload
+        HostString? hostString = string.IsNullOrEmpty(host) ? null : new HostString(host);
+        
+        return _linkGenerator.GetUriByRouteValues(httpContext, routeName, values, protocol, hostString, fragment) ?? string.Empty;
     }
 
     #endregion

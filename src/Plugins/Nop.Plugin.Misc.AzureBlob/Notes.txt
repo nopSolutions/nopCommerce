@@ -1,4 +1,4 @@
-﻿Important points when developing plugins
+Important points when developing plugins
 
 
 - All views (cshtml files) and web.config file should have "Build action" set to "Content" and "Copy to output directory" set to "Copy if newer"

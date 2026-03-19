@@ -2,7 +2,7 @@
   "Group": "Discount requirements",
   "FriendlyName": "Must be assigned to customer role",
   "SystemName": "DiscountRequirement.MustBeAssignedToCustomerRole",
-  "Version": "5.00.2",
+  "Version": "5.00.3",
   "SupportedVersions": [ "5.00" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,

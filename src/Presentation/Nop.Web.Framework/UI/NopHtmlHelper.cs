@@ -5,6 +5,7 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.WebOptimizer;
@@ -107,11 +109,20 @@ public partial class NopHtmlHelper : INopHtmlHelper
     /// <returns>URL; check result</returns>
     protected virtual (string Url, bool IsLocal) GetSrcUrl(string src)
     {
-        var urlHelper = UrlHelperExtensions.GetUrlHelper();
+        var httpContext = _httpContextAccessor?.HttpContext;
+        if (httpContext == null)
+            return (src, false);
+
+        var routeData = httpContext.GetRouteData();
+        var endpoint = httpContext.GetEndpoint();
+        var actionDescriptor = endpoint?.Metadata.GetMetadata<ActionDescriptor>();
+
+        var actionContext = new ActionContext(httpContext, routeData, actionDescriptor);
+        var urlHelper = _urlHelperFactory.GetUrlHelper(actionContext);
 
         var isLocal = urlHelper.IsLocalUrl(src);
         var url = isLocal
-            ? urlHelper.Content(src).RemoveApplicationPathFromRawUrl(_httpContextAccessor.HttpContext.Request.PathBase)
+            ? urlHelper.Content(src).RemoveApplicationPathFromRawUrl(httpContext.Request.PathBase)
             : src;
 
         return (url, isLocal);

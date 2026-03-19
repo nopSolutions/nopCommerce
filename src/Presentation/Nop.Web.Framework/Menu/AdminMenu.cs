@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
@@ -8,7 +10,6 @@ using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Framework.Events;
-using UrlHelperExtensions = Nop.Web.Framework.Mvc.Routing.UrlHelperExtensions;
 
 namespace Nop.Web.Framework.Menu;
 
@@ -24,6 +25,7 @@ public partial class AdminMenu : IAdminMenu
 
     protected readonly FilterLevelSettings _filterLevelSettings;
     protected readonly IEventPublisher _eventPublisher;
+    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILocalizationService _localizationService;
     protected readonly IPermissionService _permissionService;
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -41,6 +43,7 @@ public partial class AdminMenu : IAdminMenu
     /// </summary>
     public AdminMenu(FilterLevelSettings filterLevelSettings,
         IEventPublisher eventPublisher,
+        IHttpContextAccessor httpContextAccessor,
         ILocalizationService localizationService,
         IPermissionService permissionService,
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -51,6 +54,7 @@ public partial class AdminMenu : IAdminMenu
     {
         _filterLevelSettings = filterLevelSettings;
         _eventPublisher = eventPublisher;
+        _httpContextAccessor = httpContextAccessor;
         _localizationService = localizationService;
         _permissionService = permissionService;
         _adminMenuPluginManager = adminMenuPluginManager;
@@ -990,6 +994,27 @@ public partial class AdminMenu : IAdminMenu
     }
 
     /// <summary>
+    /// Gets the URL helper
+    /// </summary>
+    /// <returns>URL helper, or null if HTTP context is not available</returns>
+    protected virtual IUrlHelper GetUrlHelper()
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext == null)
+            return null;
+
+        var routeData = httpContext.GetRouteData();
+        var endpoint = httpContext.GetEndpoint();
+        var actionDescriptor = endpoint?.Metadata.GetMetadata<ActionDescriptor>();
+
+        if (actionDescriptor == null)
+            return null;
+
+        var actionContext = new ActionContext(httpContext, routeData, actionDescriptor);
+        return _urlHelperFactory.GetUrlHelper(actionContext);
+    }
+
+    /// <summary>
     /// Loads admin menu
     /// </summary>
     /// <param name="showHidden">A value indicating whether to show hidden records (Visible == false)</param>
@@ -1092,18 +1117,21 @@ public partial class AdminMenu : IAdminMenu
 
         _rootItem = await LoadMenuAsync(showHidden);
 
-        var urlHelper = UrlHelperExtensions.GetUrlHelper() ?? throw new ArgumentNullException(nameof(UrlHelperExtensions));
+        var urlHelper = GetUrlHelper();
 
-        void transformUrl(AdminMenuItem node)
+        if (urlHelper != null)
         {
-            if (node.Url?.StartsWith("~/", StringComparison.Ordinal) ?? false)
-                node.Url = urlHelper.Content(node.Url);
+            void transformUrl(AdminMenuItem node)
+            {
+                if (node.Url?.StartsWith("~/", StringComparison.Ordinal) ?? false)
+                    node.Url = urlHelper.Content(node.Url);
 
-            foreach (var childNode in node.ChildNodes)
-                transformUrl(childNode);
+                foreach (var childNode in node.ChildNodes)
+                    transformUrl(childNode);
+            }
+
+            transformUrl(_rootItem);
         }
-
-        transformUrl(_rootItem);
 
         return _rootItem;
     }
@@ -1119,7 +1147,10 @@ public partial class AdminMenu : IAdminMenu
         if (string.IsNullOrEmpty(controllerName) || string.IsNullOrEmpty(actionName))
             return null;
 
-        var urlHelper = UrlHelperExtensions.GetUrlHelper() ?? throw new ArgumentNullException(nameof(UrlHelperExtensions));
+        var urlHelper = GetUrlHelper();
+
+        if (urlHelper == null)
+            return null;
 
         return urlHelper.Action(actionName, controllerName, new RouteValueDictionary { { "area", AreaNames.ADMIN } }, null, null);
     }

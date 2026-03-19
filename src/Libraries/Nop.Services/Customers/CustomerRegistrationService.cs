@@ -6,6 +6,7 @@ using Nop.Core.Http;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Common;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;

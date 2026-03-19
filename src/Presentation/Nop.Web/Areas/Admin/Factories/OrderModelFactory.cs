@@ -1,6 +1,4 @@
 ﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
@@ -38,7 +36,6 @@ using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Models.Extensions;
-using UrlHelperExtensions = Nop.Web.Framework.Mvc.Routing.UrlHelperExtensions;
 
 namespace Nop.Web.Areas.Admin.Factories;
 
@@ -86,6 +83,7 @@ public partial class OrderModelFactory : IOrderModelFactory
     protected readonly IVendorService _vendorService;
     protected readonly IWarehouseService _warehouseService;
     protected readonly IWorkContext _workContext;
+    protected readonly LinkGenerator _linkGenerator;
     protected readonly MeasureSettings _measureSettings;
     protected readonly NopHttpClient _nopHttpClient;
     protected readonly OrderSettings _orderSettings;
@@ -135,6 +133,7 @@ public partial class OrderModelFactory : IOrderModelFactory
         IVendorService vendorService,
         IWarehouseService warehouseService,
         IWorkContext workContext,
+        LinkGenerator linkGenerator,
         MeasureSettings measureSettings,
         NopHttpClient nopHttpClient,
         OrderSettings orderSettings,
@@ -179,6 +178,7 @@ public partial class OrderModelFactory : IOrderModelFactory
         _vendorService = vendorService;
         _warehouseService = warehouseService;
         _workContext = workContext;
+        _linkGenerator = linkGenerator;
         _measureSettings = measureSettings;
         _nopHttpClient = nopHttpClient;
         _orderSettings = orderSettings;
@@ -1838,9 +1838,6 @@ public partial class OrderModelFactory : IOrderModelFactory
     {
         var orderIncompleteReportModels = new List<OrderIncompleteReportModel>();
 
-        //get URL helper
-        var urlHelper = UrlHelperExtensions.GetUrlHelper();
-
         //not paid
         var orderStatuses = Enum.GetValues(typeof(OrderStatus)).Cast<int>().Where(os => os != (int)OrderStatus.Cancelled).ToList();
         var paymentStatuses = new List<int> { (int)PaymentStatus.Pending };
@@ -1850,7 +1847,7 @@ public partial class OrderModelFactory : IOrderModelFactory
             Item = await _localizationService.GetResourceAsync("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
             Count = psPending.CountOrders,
             Total = await _priceFormatter.FormatPriceAsync(psPending.SumOrders, true, false),
-            ViewLink = urlHelper.Action("List", "Order", new
+            ViewLink = _linkGenerator.GetPathByAction("List", "Order", new
             {
                 orderStatuses = string.Join(",", orderStatuses),
                 paymentStatuses = string.Join(",", paymentStatuses)
@@ -1865,7 +1862,7 @@ public partial class OrderModelFactory : IOrderModelFactory
             Item = await _localizationService.GetResourceAsync("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
             Count = ssPending.CountOrders,
             Total = await _priceFormatter.FormatPriceAsync(ssPending.SumOrders, true, false),
-            ViewLink = urlHelper.Action("List", "Order", new
+            ViewLink = _linkGenerator.GetPathByAction("List", "Order", new
             {
                 orderStatuses = string.Join(",", orderStatuses),
                 shippingStatuses = string.Join(",", shippingStatuses)
@@ -1880,7 +1877,7 @@ public partial class OrderModelFactory : IOrderModelFactory
             Item = await _localizationService.GetResourceAsync("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
             Count = osPending.CountOrders,
             Total = await _priceFormatter.FormatPriceAsync(osPending.SumOrders, true, false),
-            ViewLink = urlHelper.Action("List", "Order", new { orderStatuses = string.Join(",", orderStatuses) })
+            ViewLink = _linkGenerator.GetPathByAction("List", "Order", new { orderStatuses = string.Join(",", orderStatuses) })
         });
 
         var pagedList = new PagedList<OrderIncompleteReportModel>(orderIncompleteReportModels, 0, int.MaxValue);
