@@ -152,11 +152,11 @@ public partial class DataSettingsManager
     /// Gets the command execution timeout.
     /// </summary>
     /// <value>
-    /// Number of seconds. Negative value on property set : throws <see cref="InvalidOperationException"/> exception. 0 timeout value corresponds to infinite timeout.
+    /// Number of seconds. Negative timeout value means that a default timeout will be used. 0 timeout value corresponds to infinite timeout.
     /// </value>
     public static int GetSqlCommandTimeout()
     {
-        return LoadSettings()?.SQLCommandTimeout ?? 0;
+        return LoadSettings()?.SQLCommandTimeout ?? -1;
     }
 
     /// <summary>

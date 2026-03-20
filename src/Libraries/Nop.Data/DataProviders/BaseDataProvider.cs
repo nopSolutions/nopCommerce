@@ -46,10 +46,13 @@ public abstract partial class BaseDataProvider
             new DataOptions()
             .UseConnection(dataProvider, CreateDbConnection())
             .UseMappingSchema(NopMappingSchema.GetMappingSchema(ConfigurationName, LinqToDbDataProvider))
-            )
-        {
-            CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
-        };
+            );
+
+        var sqlCommandTimeout = DataSettingsManager.GetSqlCommandTimeout();
+        if (sqlCommandTimeout == -1)
+            dataConnection.ResetCommandTimeout();
+        else
+            dataConnection.CommandTimeout = sqlCommandTimeout;
 
         return dataConnection;
     }
@@ -191,11 +194,15 @@ public abstract partial class BaseDataProvider
             .UseConnectionString(LinqToDbDataProvider, DataSettings.ConnectionString)
             .UseMappingSchema(NopMappingSchema.GetMappingSchema(ConfigurationName, LinqToDbDataProvider));
 
-        return new DataContext(options)
-        {
-            CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
-        }
-        .GetTable<TEntity>();
+        var dataContext = new DataContext(options);
+        var sqlCommandTimeout = DataSettingsManager.GetSqlCommandTimeout();
+
+        if (sqlCommandTimeout == -1)
+            dataContext.ResetCommandTimeout();
+        else
+            dataContext.CommandTimeout = sqlCommandTimeout;
+
+        return dataContext.GetTable<TEntity>();
     }
 
     /// <summary>
