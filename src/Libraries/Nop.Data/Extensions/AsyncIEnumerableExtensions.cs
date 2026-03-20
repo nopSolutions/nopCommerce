@@ -230,28 +230,4 @@ public static class AsyncIEnumerableExtensions
     {
         return source.ToAsyncEnumerable().GroupBy((x, _) => keySelector(x));
     }
-
-    /// <summary>
-    /// Computes the sum of a sequence of System.Decimal values that are obtained by
-    /// invoking a transform function on each element of the source sequence and awaiting
-    /// the result
-    /// </summary>
-    /// <typeparam name="TSource">The type of elements in the source sequence</typeparam>
-    /// <param name="source">A sequence of values that are used to calculate a sum</param>
-    /// <param name="selector">An asynchronous transform function to apply to each element</param>
-    /// <returns>A Task containing the sum of the values in the source sequence</returns>
-    public static async ValueTask<decimal> SumAwaitAsync<TSource>(this IEnumerable<TSource> source,
-        Func<TSource, ValueTask<decimal>> selector)
-    {
-        var sum = 0m;
-
-        await foreach (var item in source.ToAsyncEnumerable().WithCancellation(CancellationToken.None).ConfigureAwait(false))
-        {
-            var value = await selector(item).ConfigureAwait(false);
-
-            sum += value;
-        }
-
-        return sum;
-    }
 }
