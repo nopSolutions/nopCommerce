@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Text.Encodings.Web;
-using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Events;
 using Nop.Services.Customers;
@@ -150,7 +149,6 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
         var product = new JsonLdProductModel
         {
             Name = model.Name,
-            Sku = model.Sku,
             Gtin = model.Gtin,
             Mpn = model.ManufacturerPartNumber,
             Description = model.ShortDescription,
@@ -196,6 +194,11 @@ public partial class JsonLdModelFactory : IJsonLdModelFactory
             var parentUrl = !associatedProduct.VisibleIndividually ? productUrl : null;
             product.HasVariant.Add(await PrepareJsonLdProductAsync(associatedProduct, parentUrl));
         }
+
+        if (product.HasVariant.Any())
+            product.GroupId = model.Sku;
+        else
+            product.Sku = model.Sku;
 
         await _eventPublisher.PublishAsync(new JsonLdCreatedEvent<JsonLdProductModel>(product));
 
