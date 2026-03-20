@@ -331,8 +331,6 @@ public static class ServiceCollectionExtensions
         mvcBuilder.AddMvcOptions(options =>
         {
             options.ModelBinderProviders.Insert(0, new NopModelBinderProvider());
-            //add custom display metadata provider 
-            options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider());
 
             //in .NET model binding for a non-nullable property may fail with an error message "The value '' is invalid"
             //here we set the locale name as the message, we'll replace it with the actual one later when not-null validation failed
