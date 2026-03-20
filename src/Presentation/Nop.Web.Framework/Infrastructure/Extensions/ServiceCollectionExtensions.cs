@@ -1,6 +1,5 @@
 ﻿using System.Threading.RateLimiting;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
 using Nop.Core.Configuration;
@@ -22,6 +22,7 @@ using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
+using Nop.Web.Framework.ClientsideFluentValidation;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.ModelBinding.Binders;
 using Nop.Web.Framework.Mvc.Routing;
@@ -339,7 +340,8 @@ public static class ServiceCollectionExtensions
         });
 
         //add fluent validation
-        services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+        services.TryAddSingleton(ValidatorOptions.Global);
+        mvcBuilder.AddViewOptions(options => options.ClientModelValidatorProviders.Add(new NopClientModelValidatorProvider()));
 
         //register all available validators from Nop assemblies
         var assemblies = mvcBuilder.PartManager.ApplicationParts
