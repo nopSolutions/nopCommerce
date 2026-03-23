@@ -1,7 +1,8 @@
-﻿using System.Threading.RateLimiting;
+using System.Threading.RateLimiting;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
 using Nop.Core.Configuration;
@@ -304,7 +306,11 @@ public static class ServiceCollectionExtensions
         //add basic MVC feature
         var mvcBuilder = services.AddControllersWithViews();
 
-        mvcBuilder.AddRazorRuntimeCompilation();
+        var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
+        if (webHostEnvironment.IsDevelopment())
+        {
+            mvcBuilder.AddRazorRuntimeCompilation();
+        }
 
         var appSettings = Singleton<AppSettings>.Instance;
         if (appSettings.Get<CommonConfig>().UseSessionStateTempDataProvider)
