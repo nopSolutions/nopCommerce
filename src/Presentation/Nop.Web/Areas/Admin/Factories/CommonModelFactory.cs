@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -98,7 +97,6 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly ITaxPluginManager _taxPluginManager;
     protected readonly IThumbService _thumbService;
     protected readonly ITopicService _topicService;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWidgetPluginManager _widgetPluginManager;
@@ -151,7 +149,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         ITaxPluginManager taxPluginManager,
         IThumbService thumbService,
         ITopicService topicService,
-        IUrlHelperFactory urlHelperFactory,
         IUrlRecordService urlRecordService,
         IWebHelper webHelper,
         IWidgetPluginManager widgetPluginManager,
@@ -200,7 +197,6 @@ public partial class CommonModelFactory : ICommonModelFactory
         _taxPluginManager = taxPluginManager;
         _thumbService = thumbService;
         _topicService = topicService;
-        _urlHelperFactory = urlHelperFactory;
         _urlRecordService = urlRecordService;
         _webHelper = webHelper;
         _widgetPluginManager = widgetPluginManager;
@@ -758,7 +754,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             {
                 Level = SystemWarningLevel.Warning,
                 DontEncode = true,
-                Text = $"{await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{_linkGenerator.GetPathByAction("UninstallAndDeleteUnusedPlugins", "Plugin", new { names = notEnabledSystemNames.ToArray() })}\">{await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
+                Text = $"{await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{_linkGenerator.GetPathByAction(_httpContextAccessor.HttpContext, "UninstallAndDeleteUnusedPlugins", "Plugin", new { names = notEnabledSystemNames.ToArray() })}\">{await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
             });
         }
     }
@@ -1174,25 +1170,26 @@ public partial class CommonModelFactory : ICommonModelFactory
                 //details URL
                 var detailsUrl = string.Empty;
                 var entityName = urlRecord.EntityName?.ToLowerInvariant() ?? string.Empty;
+                var httpContext = _httpContextAccessor.HttpContext;
                 switch (entityName)
                 {
                     case "blogpost":
-                        detailsUrl = _linkGenerator.GetPathByAction("BlogPostEdit", "Blog", new { id = urlRecord.EntityId });
+                        detailsUrl = _linkGenerator.GetPathByAction(httpContext, "BlogPostEdit", "Blog", new { id = urlRecord.EntityId });
                         break;
                     case "category":
-                        detailsUrl = _linkGenerator.GetPathByAction("Edit", "Category", new { id = urlRecord.EntityId });
+                        detailsUrl = _linkGenerator.GetPathByAction(httpContext, "Edit", "Category", new { id = urlRecord.EntityId });
                         break;
                     case "manufacturer":
-                        detailsUrl = _linkGenerator.GetPathByAction("Edit", "Manufacturer", new { id = urlRecord.EntityId });
+                        detailsUrl = _linkGenerator.GetPathByAction(httpContext, "Edit", "Manufacturer", new { id = urlRecord.EntityId });
                         break;
                     case "product":
-                        detailsUrl = _linkGenerator.GetPathByAction("Edit", "Product", new { id = urlRecord.EntityId });
+                        detailsUrl = _linkGenerator.GetPathByAction(httpContext, "Edit", "Product", new { id = urlRecord.EntityId });
                         break;
                     case "topic":
-                        detailsUrl = _linkGenerator.GetPathByAction("Edit", "Topic", new { id = urlRecord.EntityId });
+                        detailsUrl = _linkGenerator.GetPathByAction(httpContext, "Edit", "Topic", new { id = urlRecord.EntityId });
                         break;
                     case "vendor":
-                        detailsUrl = _linkGenerator.GetPathByAction("Edit", "Vendor", new { id = urlRecord.EntityId });
+                        detailsUrl = _linkGenerator.GetPathByAction(httpContext, "Edit", "Vendor", new { id = urlRecord.EntityId });
                         break;
                 }
 

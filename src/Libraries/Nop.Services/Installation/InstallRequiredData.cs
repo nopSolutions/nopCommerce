@@ -214,7 +214,7 @@ public partial class InstallationService
 
         var parsedResources = loadLocaleResourcesFromStream();
         
-        if (parsedResources.Count == 0)
+        if (!parsedResources.Any())
             return;
 
         var lsNamesList = new Dictionary<string, LocaleStringResource>();
@@ -249,10 +249,10 @@ public partial class InstallationService
             }
         }
 
-        if (lrsToUpdateList.Count > 0)
+        if (lrsToUpdateList.Any())
             await _dataProvider.UpdateEntitiesAsync(lrsToUpdateList);
 
-        if (lrsToInsertList.Count > 0)
+        if (lrsToInsertList.Any())
             await _dataProvider.BulkInsertEntitiesAsync(lrsToInsertList.Values);
     }
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
@@ -29,7 +28,6 @@ public partial class NopUrlHelper : INopUrlHelper
     protected readonly IManufacturerService _manufacturerService;
     protected readonly IStoreContext _storeContext;
     protected readonly ITopicService _topicService;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly LinkGenerator _linkGenerator;
 
@@ -44,7 +42,6 @@ public partial class NopUrlHelper : INopUrlHelper
         IManufacturerService manufacturerService,
         IStoreContext storeContext,
         ITopicService topicService,
-        IUrlHelperFactory urlHelperFactory,
         IUrlRecordService urlRecordService,
         LinkGenerator linkGenerator)
     {
@@ -55,7 +52,6 @@ public partial class NopUrlHelper : INopUrlHelper
         _manufacturerService = manufacturerService;
         _storeContext = storeContext;
         _topicService = topicService;
-        _urlHelperFactory = urlHelperFactory;
         _urlRecordService = urlRecordService;
         _linkGenerator = linkGenerator;
     }
@@ -216,7 +212,7 @@ public partial class NopUrlHelper : INopUrlHelper
 
         // Convert host string to HostString? as required by LinkGenerator overload
         HostString? hostString = string.IsNullOrEmpty(host) ? null : new HostString(host);
-        
+
         return _linkGenerator.GetUriByRouteValues(httpContext, routeName, values, protocol, hostString, fragment) ?? string.Empty;
     }
 

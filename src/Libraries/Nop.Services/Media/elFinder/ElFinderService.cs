@@ -1,5 +1,6 @@
 ﻿using elFinder.NetCore;
 using elFinder.NetCore.Drivers.FileSystem;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
@@ -14,6 +15,7 @@ public partial class ElFinderService : IElFinderService
 {
     #region Fields
 
+    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly INopFileProvider _nopFileProvider;
     protected readonly IWebHelper _webHelper;
     protected readonly LinkGenerator _linkGenerator;
@@ -25,11 +27,13 @@ public partial class ElFinderService : IElFinderService
 
     #region Ctor
 
-    public ElFinderService(INopFileProvider nopFileProvider,
+    public ElFinderService(IHttpContextAccessor httpContextAccessor,
+        INopFileProvider nopFileProvider,
         IWebHelper webHelper,
         LinkGenerator linkGenerator,
         MediaSettings mediaSettings)
     {
+        _httpContextAccessor = httpContextAccessor;
         _nopFileProvider = nopFileProvider;
         _webHelper = webHelper;
         _linkGenerator = linkGenerator;
@@ -57,7 +61,7 @@ public partial class ElFinderService : IElFinderService
         // Create root directory if it doesn't exist
         _nopFileProvider.CreateDirectory(rootPath);
 
-        var thumbUrl = $"{_linkGenerator.GetPathByAction("Thumb", "ElFinder", new { area = "Admin" })}/";
+        var thumbUrl = $"{_linkGenerator.GetPathByAction(_httpContextAccessor.HttpContext, "Thumb", "ElFinder", new { area = "Admin" })}/";
 
         var driver = new FileSystemDriver();
 

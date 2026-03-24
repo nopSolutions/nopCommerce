@@ -103,8 +103,7 @@ public partial class NopScriptTagHelper : UrlResolutionTagHelper
         if (string.IsNullOrEmpty(Src))
             return;
 
-        var urlHelper = UrlHelperFactory.GetUrlHelper(ViewContext);
-        if (!urlHelper.IsLocalUrl(Src))
+        if (!_webHelper.CheckIsLocalUrl(Src))
         {
             output.Attributes.SetAttribute(SRC_ATTRIBUTE_NAME, Src);
             return;

@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain.FilterLevels;
@@ -31,8 +28,8 @@ public partial class AdminMenu : IAdminMenu
 #pragma warning disable CS0618 // Type or member is obsolete
     protected readonly IPluginManager<IAdminMenuPlugin> _adminMenuPluginManager;
 #pragma warning restore CS0618 // Type or member is obsolete
-    protected readonly IUrlHelperFactory _urlHelperFactory;
     protected readonly IWorkContext _workContext;
+    protected readonly LinkGenerator _linkGenerator;
 
     #endregion
 
@@ -49,8 +46,8 @@ public partial class AdminMenu : IAdminMenu
 #pragma warning disable CS0618 // Type or member is obsolete
         IPluginManager<IAdminMenuPlugin> adminMenuPluginManager,
 #pragma warning restore CS0618 // Type or member is obsolete
-        IUrlHelperFactory urlHelperFactory,
-        IWorkContext workContext)
+        IWorkContext workContext,
+        LinkGenerator linkGenerator)
     {
         _filterLevelSettings = filterLevelSettings;
         _eventPublisher = eventPublisher;
@@ -58,8 +55,8 @@ public partial class AdminMenu : IAdminMenu
         _localizationService = localizationService;
         _permissionService = permissionService;
         _adminMenuPluginManager = adminMenuPluginManager;
-        _urlHelperFactory = urlHelperFactory;
         _workContext = workContext;
+        _linkGenerator = linkGenerator;
     }
 
     #endregion
@@ -994,27 +991,6 @@ public partial class AdminMenu : IAdminMenu
     }
 
     /// <summary>
-    /// Gets the URL helper
-    /// </summary>
-    /// <returns>URL helper, or null if HTTP context is not available</returns>
-    protected virtual IUrlHelper GetUrlHelper()
-    {
-        var httpContext = _httpContextAccessor.HttpContext;
-        if (httpContext == null)
-            return null;
-
-        var routeData = httpContext.GetRouteData();
-        var endpoint = httpContext.GetEndpoint();
-        var actionDescriptor = endpoint?.Metadata.GetMetadata<ActionDescriptor>();
-
-        if (actionDescriptor == null)
-            return null;
-
-        var actionContext = new ActionContext(httpContext, routeData, actionDescriptor);
-        return _urlHelperFactory.GetUrlHelper(actionContext);
-    }
-
-    /// <summary>
     /// Loads admin menu
     /// </summary>
     /// <param name="showHidden">A value indicating whether to show hidden records (Visible == false)</param>
@@ -1117,21 +1093,19 @@ public partial class AdminMenu : IAdminMenu
 
         _rootItem = await LoadMenuAsync(showHidden);
 
-        var urlHelper = GetUrlHelper();
-
-        if (urlHelper != null)
+        void transformUrl(AdminMenuItem node)
         {
-            void transformUrl(AdminMenuItem node)
+            if (node.Url?.StartsWith("~/", StringComparison.Ordinal) ?? false)
             {
-                if (node.Url?.StartsWith("~/", StringComparison.Ordinal) ?? false)
-                    node.Url = urlHelper.Content(node.Url);
-
-                foreach (var childNode in node.ChildNodes)
-                    transformUrl(childNode);
+                var pathBase = _httpContextAccessor.HttpContext?.Request.PathBase.Value ?? "";
+                node.Url = pathBase + node.Url[1..];
             }
 
-            transformUrl(_rootItem);
+            foreach (var childNode in node.ChildNodes)
+                transformUrl(childNode);
         }
+
+        transformUrl(_rootItem);
 
         return _rootItem;
     }
@@ -1147,12 +1121,11 @@ public partial class AdminMenu : IAdminMenu
         if (string.IsNullOrEmpty(controllerName) || string.IsNullOrEmpty(actionName))
             return null;
 
-        var urlHelper = GetUrlHelper();
-
-        if (urlHelper == null)
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext == null)
             return null;
 
-        return urlHelper.Action(actionName, controllerName, new RouteValueDictionary { { "area", AreaNames.ADMIN } }, null, null);
+        return _linkGenerator.GetPathByAction(httpContext, actionName, controllerName, new RouteValueDictionary { { "area", AreaNames.ADMIN } });
     }
 
     #endregion

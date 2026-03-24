@@ -432,7 +432,7 @@ public partial class LocalizationService : ILocalizationService
             parsedResources = new List<(string, string)>();
         }
 
-        if (parsedResources.Count == 0)
+        if (!parsedResources.Any())
             return;
 
         var lsNamesList = new Dictionary<string, LocaleStringResource>();
@@ -464,10 +464,10 @@ public partial class LocalizationService : ILocalizationService
             }
         }
 
-        if (lrsToUpdateList.Count > 0)
+        if (lrsToUpdateList.Any())
             await _lsrRepository.UpdateAsync(lrsToUpdateList.Values.ToList(), false);
 
-        if (lrsToInsertList.Count > 0)
+        if (lrsToInsertList.Any())
             await _lsrRepository.InsertAsync(lrsToInsertList.Values.ToList(), false);
 
         //clear cache

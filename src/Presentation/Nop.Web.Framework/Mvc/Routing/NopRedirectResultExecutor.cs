@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Nop.Core.Domain.Security;
 using Nop.Core.Http;
@@ -16,9 +17,9 @@ public partial class NopRedirectResultExecutor : RedirectResultExecutor
 {
     #region Fields
 
-    protected readonly IUrlHelperFactory _urlHelperFactory;
-    protected readonly SecuritySettings _securitySettings;
     protected readonly IWebHelper _webHelper;
+    protected readonly LinkGenerator _linkGenerator;
+    protected readonly SecuritySettings _securitySettings;
 
     #endregion
 
@@ -26,12 +27,13 @@ public partial class NopRedirectResultExecutor : RedirectResultExecutor
 
     public NopRedirectResultExecutor(ILoggerFactory loggerFactory,
         IUrlHelperFactory urlHelperFactory,
-        SecuritySettings securitySettings,
-        IWebHelper webHelper) : base(loggerFactory, urlHelperFactory)
+        IWebHelper webHelper,
+        LinkGenerator linkGenerator,
+        SecuritySettings securitySettings) : base(loggerFactory, urlHelperFactory)
     {
-        _urlHelperFactory = urlHelperFactory;
-        _securitySettings = securitySettings;
         _webHelper = webHelper;
+        _linkGenerator = linkGenerator;
+        _securitySettings = securitySettings;
     }
 
     #endregion
@@ -53,8 +55,7 @@ public partial class NopRedirectResultExecutor : RedirectResultExecutor
             //passed redirect URL may contain non-ASCII characters, that are not allowed now (see https://github.com/aspnet/KestrelHttpServer/issues/1144)
             //so we force to encode this URL before processing
             var url = WebUtility.UrlDecode(result.Url);
-            var urlHelper = result.UrlHelper ?? _urlHelperFactory.GetUrlHelper(context);
-            var isLocalUrl = urlHelper.IsLocalUrl(url);
+            var isLocalUrl = _webHelper.CheckIsLocalUrl(url);
 
             var uriStr = url;
             if (isLocalUrl)
@@ -65,10 +66,10 @@ public partial class NopRedirectResultExecutor : RedirectResultExecutor
             var uri = new Uri(uriStr, UriKind.Absolute);
 
             //Allowlist redirect URI schemes to http and https
-            if ((uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps) && urlHelper.IsLocalUrl(uri.AbsolutePath))
+            if ((uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps) && _webHelper.CheckIsLocalUrl(uri.AbsolutePath))
                 result.Url = isLocalUrl ? uri.PathAndQuery : $"{uri.GetLeftPart(UriPartial.Query)}{uri.Fragment}";
             else
-                result.Url = urlHelper.RouteUrl(NopRouteNames.General.HOMEPAGE);
+                result.Url = _linkGenerator.GetPathByRouteValues(context.HttpContext, NopRouteNames.General.HOMEPAGE);
         }
 
         await base.ExecuteAsync(context, result);
