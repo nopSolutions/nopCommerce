@@ -53,9 +53,21 @@
             <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"
                     data-trigger="state-select">
             </select>
+            <nop-required id="state-province-req" />
             <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
             <span asp-validation-for="StateProvinceId"></span>
         </div>
+
+        <script asp-location="Footer">
+            $(function(){
+                var stateProvinceInput = $('#@Html.IdFor(model => model.StateProvinceId)');
+                stateProvinceInput.on('change', function() {
+                    $('#state-province-req').toggle($('option', stateProvinceInput).length > 1);
+                });
+
+                stateProvinceInput.trigger('change');
+            });
+        </script>
     }
     @if (Model.CountyEnabled)
     {

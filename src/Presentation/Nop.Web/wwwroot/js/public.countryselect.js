@@ -38,6 +38,7 @@
               var stateId = (typeof Billing !== "undefined") ? Billing.selectedStateId : (typeof CheckoutBilling !== "undefined") ? CheckoutBilling.selectedStateId : 0;
               $('#' + stateProvince[0].id + ' option[value=' + stateId + ']').prop('selected', true);
 
+              stateProvince.trigger('change');
               loading.hide();
             }
         });
