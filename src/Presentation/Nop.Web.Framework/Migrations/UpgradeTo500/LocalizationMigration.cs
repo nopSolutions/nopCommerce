@@ -404,7 +404,13 @@ public class LocalizationMigration : MigrationBase
 
             "Profile.LatestPosts",
             "Profile.LatestPosts.NoPosts",
-            "Profile.PersonalInfo",            
+            "Profile.PersonalInfo",
+
+            //#8131
+            "Account.Login.WrongCredentials.CustomerNotExist",
+            "Account.Login.WrongCredentials.NotRegistered",
+            "Account.PasswordRecovery.EmailHasBeenSent",
+            "Account.PasswordRecovery.EmailNotFound"
         });
 
         #endregion
@@ -477,6 +483,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.System.SystemInfo.NopLatestVersion"] = "Latest nopCommerce version",
             ["Admin.System.SystemInfo.NopLatestVersion.Hint"] = "The latest nopCommerce version, available for download.",
             ["Admin.System.SystemInfo.NopLatestVersion.Text"] = "<a href='{1}' target='_blank'>{0}</a> (see the <a href='{2}' target='_blank'>release-notes</a>)",
+
+            //#8131
+            ["Account.PasswordRecovery.SendEmailMessage"] = "If there is an account associated with {0}, you will receive an email with a link to reset your password.",
         });
 
         #endregion
