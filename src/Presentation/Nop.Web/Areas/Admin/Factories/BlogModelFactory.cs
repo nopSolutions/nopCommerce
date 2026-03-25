@@ -283,7 +283,7 @@ public partial class BlogModelFactory : IBlogModelFactory
                 }
                 //fill in additional values (not existing in the entity)
                 commentModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc);
-                commentModel.Comment = _htmlFormatter.FormatText(blogComment.CommentText, false, true, false, false, false);
+                commentModel.Comment = _htmlFormatter.FormatText(blogComment.CommentText);
                 commentModel.StoreName = storeNames.TryGetValue(blogComment.StoreId, out var value) ? value : "Deleted";
 
                 return commentModel;

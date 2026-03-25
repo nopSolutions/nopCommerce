@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Markdig;
+﻿using Markdig;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
@@ -111,10 +110,7 @@ public class ForumService
 
         try
         {
-            text = textFormatType == TextFormatType.HTML ? _htmlFormatter.EnsureOnlyAllowedHtml(text) : WebUtility.HtmlEncode(text);
-
-            if (textFormatType != TextFormatType.HTML)
-                text = _htmlFormatter.ConvertPlainTextToHtml(text);
+            text = _htmlFormatter.FormatText(text);
 
             text = textFormatType switch
             {
@@ -1369,7 +1365,7 @@ public class ForumService
         if (string.IsNullOrEmpty(text))
             return string.Empty;
 
-        text = _htmlFormatter.FormatText(text, false, true, false, false, false);
+        text = _htmlFormatter.FormatText(text);
         return text;
     }
 

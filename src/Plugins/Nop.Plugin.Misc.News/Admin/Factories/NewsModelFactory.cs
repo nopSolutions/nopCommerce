@@ -323,7 +323,7 @@ public class NewsModelFactory
                         : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
                 }
 
-                commentModel.CommentText = _htmlFormatter.FormatText(newsComment.CommentText, false, true, false, false, false);
+                commentModel.CommentText = _htmlFormatter.FormatText(newsComment.CommentText);
                 commentModel.StoreName = storeNames.TryGetValue(newsComment.StoreId, out var value) ? value : "Deleted";
 
                 return commentModel;

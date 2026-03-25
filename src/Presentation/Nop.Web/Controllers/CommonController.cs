@@ -202,7 +202,7 @@ public partial class CommonController : BasePublicController
         if (ModelState.IsValid)
         {
             var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-            var body = _htmlFormatter.FormatText(model.Enquiry, false, true, false, false, false);
+            var body = _htmlFormatter.FormatText(model.Enquiry);
 
             await _workflowMessageService.SendContactUsMessageAsync((await _workContext.GetWorkingLanguageAsync()).Id,
                 model.Email, model.FullName, subject, body);
@@ -256,7 +256,7 @@ public partial class CommonController : BasePublicController
         if (ModelState.IsValid)
         {
             var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-            var body = _htmlFormatter.FormatText(model.Enquiry, false, true, false, false, false);
+            var body = _htmlFormatter.FormatText(model.Enquiry);
 
             await _workflowMessageService.SendContactVendorMessageAsync(vendor, (await _workContext.GetWorkingLanguageAsync()).Id,
                 model.Email, model.FullName, subject, body);
