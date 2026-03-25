@@ -470,20 +470,10 @@ public partial class CustomerController : BasePublicController
                     return RedirectToRoute(NopRouteNames.Standard.MULTIFACTOR_VERIFICATION);
                 }
                 case CustomerLoginResults.CustomerNotExist:
-                    ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.CustomerNotExist"));
-                    break;
                 case CustomerLoginResults.Deleted:
-                    ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.Deleted"));
-                    break;
                 case CustomerLoginResults.NotActive:
-                    ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.NotActive"));
-                    break;
                 case CustomerLoginResults.NotRegistered:
-                    ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.NotRegistered"));
-                    break;
                 case CustomerLoginResults.LockedOut:
-                    ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.LockedOut"));
-                    break;
                 case CustomerLoginResults.WrongPassword:
                 default:
                     ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials"));
@@ -643,13 +633,9 @@ public partial class CustomerController : BasePublicController
                 //send email
                 await _workflowMessageService.SendCustomerPasswordRecoveryMessageAsync(customer,
                     (await _workContext.GetWorkingLanguageAsync()).Id);
+            }
 
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailHasBeenSent"));
-            }
-            else
-            {
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailNotFound"));
-            }
+            _notificationService.SuccessNotification(string.Format(await _localizationService.GetResourceAsync("Account.PasswordRecovery.SendEmailMessage"), model.Email), true);
         }
 
         model = await _customerModelFactory.PreparePasswordRecoveryModelAsync(model);

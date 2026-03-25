@@ -531,21 +531,6 @@
   <LocaleResource Name="Account.Login.WrongCredentials">
     <Value>The credentials provided are incorrect</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.Login.WrongCredentials.CustomerNotExist">
-    <Value>No customer account found</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.Login.WrongCredentials.Deleted">
-    <Value>Customer is deleted</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.Login.WrongCredentials.LockedOut">
-    <Value>Customer is locked out</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.Login.WrongCredentials.NotActive">
-    <Value>Account is not active</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.Login.WrongCredentials.NotRegistered">
-    <Value>Account is not registered</Value>
-  </LocaleResource>
   <LocaleResource Name="Account.Logout">
     <Value>Log out</Value>
   </LocaleResource>
@@ -594,12 +579,6 @@
   <LocaleResource Name="Account.PasswordRecovery.Email.Required">
     <Value>Enter your email</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.PasswordRecovery.EmailHasBeenSent">
-    <Value>Email with instructions has been sent to you.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.PasswordRecovery.EmailNotFound">
-    <Value>Email not found.</Value>
-  </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery.LinkExpired">
     <Value>Your password recovery link is expired</Value>
   </LocaleResource>
@@ -617,6 +596,9 @@
   </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery.RecoverButton">
     <Value>Recover</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.PasswordRecovery.SendEmailMessage">
+    <Value>If there is an account associated with {0}, you will receive an email with a link to reset your password.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery.Tooltip">
     <Value>Please enter your email address below. You will receive a link to reset your password.</Value>
