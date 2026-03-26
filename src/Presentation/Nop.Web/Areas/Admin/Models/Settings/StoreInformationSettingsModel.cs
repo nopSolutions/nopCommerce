@@ -60,6 +60,10 @@ public partial record StoreInformationSettingsModel : BaseNopModel, ISettingsMod
     public string InstagramLink { get; set; }
     public bool InstagramLink_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.TiktokLink")]
+    public string TiktokLink { get; set; }
+    public bool TiktokLink_OverrideForStore { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SubjectFieldOnContactUsForm")]
     public bool SubjectFieldOnContactUsForm { get; set; }
     public bool SubjectFieldOnContactUsForm_OverrideForStore { get; set; }

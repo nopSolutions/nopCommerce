@@ -16,4 +16,8 @@
 	{
 		<li class="instagram"><a href="@Model.InstagramLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Instagram")</a></li>
 	}
+    @if (!string.IsNullOrEmpty(Model.TiktokLink))
+	{
+		<li class="tiktiok"><a href="@Model.TiktokLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.TikTok")</a></li>
+	}
 </ul>

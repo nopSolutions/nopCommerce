@@ -57,4 +57,10 @@ public partial class StoreInformationSettings : ISettings
     /// Gets or sets a value of Instagram account URL of the site
     /// </summary>
     public string InstagramLink { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value of Instagram account URL of the site
+    /// </summary>
+    public string TiktokLink { get; set; }
+
 }
