@@ -1174,23 +1174,23 @@ label, label + * {
 }
 
 .follow-us .social .tiktok a {
-  background-position: -190px 0; /* Update this position when sprite is updated */
+  background-position: -190px 0; 
 }
 
 .follow-us .social .snapchat a {
-  background-position: -228px 0; /* Update this position when sprite is updated */
+  background-position: -228px 0; 
 }
 
 .follow-us .social .pinterest a {
-  background-position: -266px 0; /* Update this position when sprite is updated */
+  background-position: -266px 0; 
 }
 
 .follow-us .social .tumblr a {
-  background-position: -304px 0; /* Update this position when sprite is updated */
+  background-position: -304px 0; 
 }
 
 .follow-us .social .discord a {
-  background-position: -342px 0; /* Update this position when sprite is updated */
+  background-position: -342px 0;
 }
 
 .newsletter-email {
