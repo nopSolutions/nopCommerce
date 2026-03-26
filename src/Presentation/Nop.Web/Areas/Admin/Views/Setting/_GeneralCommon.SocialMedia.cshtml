@@ -51,4 +51,34 @@
             <span asp-validation-for="StoreInformationSettings.TiktokLink"></span>
         </div>
     </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="StoreInformationSettings.SnapchatLink_OverrideForStore" asp-input="StoreInformationSettings.SnapchatLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="StoreInformationSettings.SnapchatLink" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="StoreInformationSettings.SnapchatLink" />
+            <span asp-validation-for="StoreInformationSettings.SnapchatLink"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="StoreInformationSettings.PinterestLink_OverrideForStore" asp-input="StoreInformationSettings.PinterestLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="StoreInformationSettings.PinterestLink" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="StoreInformationSettings.PinterestLink" />
+            <span asp-validation-for="StoreInformationSettings.PinterestLink"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="StoreInformationSettings.TumblrLink_OverrideForStore" asp-input="StoreInformationSettings.TumblrLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="StoreInformationSettings.TumblrLink" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="StoreInformationSettings.TumblrLink" />
+            <span asp-validation-for="StoreInformationSettings.TumblrLink"></span>
+        </div>
+    </div>
 </div>

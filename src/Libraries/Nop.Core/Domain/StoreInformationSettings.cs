@@ -59,8 +59,20 @@ public partial class StoreInformationSettings : ISettings
     public string InstagramLink { get; set; }
 
     /// <summary>
-    /// Gets or sets a value of Instagram account URL of the site
+    /// Gets or sets a value of Tiktok account URL of the site
     /// </summary>
     public string TiktokLink { get; set; }
+    /// <summary>
+    /// Gets or sets a value of Snapchat account URL of the site
+    /// </summary>
+    public string SnapchatLink { get; set; }
+    /// <summary>
+    /// Gets or sets a value of Pinterest account URL of the site
+    /// </summary>
+    public string PinterestLink { get; set; }
+    /// <summary>
+    /// Gets or sets a value of Tumblr account URL of the site
+    /// </summary>
+    public string TumblrLink { get; set; }
 
 }

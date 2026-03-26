@@ -10,4 +10,8 @@ public partial record SocialModel : BaseNopModel
     public string InstagramLink { get; set; }
     public int WorkingLanguageId { get; set; }
     public string TiktokLink { get; set; }
+    public string SnapchatLink { get; set; }
+    public string PinterestLink { get; set; }
+    public string TumblrLink { get; set; }
+
 }

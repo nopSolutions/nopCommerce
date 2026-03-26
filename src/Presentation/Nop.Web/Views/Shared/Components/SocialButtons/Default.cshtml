@@ -18,6 +18,18 @@
 	}
     @if (!string.IsNullOrEmpty(Model.TiktokLink))
 	{
-		<li class="tiktiok"><a href="@Model.TiktokLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.TikTok")</a></li>
+        <li class="tiktok"><a href="@Model.TiktokLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.TikTok")</a></li>
 	}
+    @if (!string.IsNullOrEmpty(Model.SnapchatLink))
+    {
+        <li class="snapchat"><a href="@Model.SnapchatLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Snapchat")</a></li>
+    }
+    @if (!string.IsNullOrEmpty(Model.PinterestLink))
+    {
+        <li class="pinterest"><a href="@Model.PinterestLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Pinterest")</a></li>
+    }
+    @if (!string.IsNullOrEmpty(Model.TumblrLink))
+    {
+        <li class="tumblr"><a href="@Model.TumblrLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Tumblr")</a></li>
+    }
 </ul>

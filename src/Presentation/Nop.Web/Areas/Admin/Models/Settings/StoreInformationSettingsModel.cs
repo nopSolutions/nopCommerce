@@ -64,6 +64,18 @@ public partial record StoreInformationSettingsModel : BaseNopModel, ISettingsMod
     public string TiktokLink { get; set; }
     public bool TiktokLink_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SnapchatLink")]
+    public string SnapchatLink { get; set; }
+    public bool SnapchatLink_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PinterestLink")]
+    public string PinterestLink { get; set; }
+    public bool PinterestLink_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.TumblrLink")]
+    public string TumblrLink { get; set; }
+    public bool TumblrLink_OverrideForStore { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SubjectFieldOnContactUsForm")]
     public bool SubjectFieldOnContactUsForm { get; set; }
     public bool SubjectFieldOnContactUsForm_OverrideForStore { get; set; }
