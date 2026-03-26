@@ -17972,6 +17972,21 @@
   <LocaleResource Name="Footer.FollowUs.Youtube">
     <Value>YouTube</Value>
   </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.TikTok">
+    <Value>TikTok</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.Snapchat">
+    <Value>Snapchat</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.Pinterest">
+    <Value>Pinterest</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.Tumblr">
+    <Value>Tumblr</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.Discord">
+    <Value>Discord</Value>
+  </LocaleResource>
   <LocaleResource Name="Footer.TaxShipping.ExclTax">
     <Value><![CDATA[All prices are entered excluding tax. Excluding <a href="{0}">shipping</a>]]></Value>
   </LocaleResource>
