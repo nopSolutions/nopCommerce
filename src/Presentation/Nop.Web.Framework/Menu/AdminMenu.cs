@@ -1125,7 +1125,7 @@ public partial class AdminMenu : IAdminMenu
         if (httpContext == null)
             return null;
 
-        return _linkGenerator.GetPathByAction(httpContext, actionName, controllerName, new RouteValueDictionary { { "area", AreaNames.ADMIN } });
+        return _linkGenerator.GetPathByAction(httpContext, actionName, controllerName, new { area = AreaNames.ADMIN });
     }
 
     #endregion

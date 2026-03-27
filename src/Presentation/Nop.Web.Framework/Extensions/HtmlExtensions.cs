@@ -4,7 +4,6 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
@@ -58,7 +57,6 @@ public static class HtmlExtensions
 
         var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
         var languageService = EngineContext.Current.Resolve<ILanguageService>();
-        var urlHelper = EngineContext.Current.Resolve<IUrlHelperFactory>().GetUrlHelper(helper.ViewContext);
 
         var tabStrip = new StringBuilder();
         var cssClassWithSpace = !string.IsNullOrEmpty(cssClass) ? $" {cssClass}" : null;
@@ -91,12 +89,12 @@ public static class HtmlExtensions
         foreach (var locale in helper.ViewData.Model.Locales)
         {
             //languages
-            var language = await languageService.GetLanguageByIdAsync(locale.LanguageId) 
-                           ?? throw new Exception("Language cannot be loaded");
+            var language = await languageService.GetLanguageByIdAsync(locale.LanguageId)
+                ?? throw new Exception("Language cannot be loaded");
 
             var localizedTabName = $"{name}-{language.Id}-tab";
             tabStrip.AppendLine(string.Format("<li class=\"nav-item\">"));
-            var iconUrl = urlHelper.Content("~/images/flags/" + language.FlagImageFileName);
+            var iconUrl = helper.ViewContext.HttpContext.Request.PathBase + "/images/flags/" + language.FlagImageFileName;
             var active = localizedTabName == tabNameToSelect ? "active" : null;
             tabStrip.AppendLine($"<a class=\"nav-link {active}\" data-tab-name=\"{localizedTabName}\" href=\"#{localizedTabName}\" data-toggle=\"pill\" role=\"tab\" aria-selected=\"false\"><img alt='' src='{iconUrl}'>{WebUtility.HtmlEncode(language.Name)}</a>");
 
@@ -115,8 +113,8 @@ public static class HtmlExtensions
         for (var i = 0; i < helper.ViewData.Model.Locales.Count; i++)
         {
             //languages
-            var language = await languageService.GetLanguageByIdAsync(helper.ViewData.Model.Locales[i].LanguageId) 
-                           ?? throw new Exception("Language cannot be loaded");
+            var language = await languageService.GetLanguageByIdAsync(helper.ViewData.Model.Locales[i].LanguageId)
+                ?? throw new Exception("Language cannot be loaded");
 
             var localizedTabName = $"{name}-{language.Id}-tab";
             tabStrip.AppendLine(string.Format("<div class=\"tab-pane fade{0}\" id=\"{1}\" role=\"tabpanel\">", localizedTabName == tabNameToSelect ? " show active" : null, localizedTabName));

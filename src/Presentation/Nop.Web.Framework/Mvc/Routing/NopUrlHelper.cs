@@ -201,19 +201,29 @@ public partial class NopUrlHelper : INopUrlHelper
     /// <param name="protocol">The protocol for the URL, such as "http" or "https"</param>
     /// <param name="host">The host name for the URL</param>
     /// <param name="fragment">The fragment for the URL</param>
-    /// <returns>
-    /// The generated URL
-    /// </returns>
+    /// <returns>The generated URL</returns>
     public virtual string RouteUrl(string routeName, object values = null, string protocol = null, string host = null, string fragment = null)
     {
         var httpContext = _httpContextAccessor.HttpContext;
         if (httpContext is null)
             return string.Empty;
 
-        // Convert host string to HostString? as required by LinkGenerator overload
-        HostString? hostString = string.IsNullOrEmpty(host) ? null : new HostString(host);
+        if (!string.IsNullOrEmpty(protocol) || !string.IsNullOrEmpty(host))
+        {
+            //return URI with an absolute path
+            return _linkGenerator.GetUriByRouteValues(httpContext,
+                routeName: routeName,
+                values: values,
+                scheme: protocol,
+                host: new HostString(host),
+                fragment: new FragmentString(fragment)) ?? string.Empty;
+        }
 
-        return _linkGenerator.GetUriByRouteValues(httpContext, routeName, values, protocol, hostString, fragment) ?? string.Empty;
+        //or return path
+        return _linkGenerator.GetPathByRouteValues(httpContext,
+            routeName: routeName,
+            values: values,
+            fragment: new FragmentString(fragment)) ?? string.Empty;
     }
 
     #endregion

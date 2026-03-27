@@ -277,7 +277,7 @@ public partial class ShoppingCartService : IShoppingCartService
             //prepare warning message
             var url = _linkGenerator.GetPathByName(
                 httpContext: httpContext,
-                endpointName: nameof(Product),
+                endpointName: "ProductDetails",
                 values: new { SeName = await _urlRecordService.GetSeNameAsync(requiredProduct.Product) }
             );
             var requiredProductName = WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(requiredProduct.Product, x => x.Name));
@@ -698,8 +698,8 @@ public partial class ShoppingCartService : IShoppingCartService
     public virtual async Task<int> DeleteExpiredShoppingCartItemsAsync(DateTime olderThanUtc)
     {
         var query = from sci in _sciRepository.Table
-            where sci.UpdatedOnUtc < olderThanUtc
-            select sci;
+                    where sci.UpdatedOnUtc < olderThanUtc
+                    select sci;
 
         var cartItems = await query.ToListAsync();
 
