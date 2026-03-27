@@ -51,7 +51,7 @@ public partial class NopDbStartup : INopStartup
                     .ScanIn(mAssemblies).For.Migrations()
                     .SetCommandTimeout());
 
-        services.AddScoped<IMySqlTypeMap>(_ => new NopMySql5TypeMap());
+        services.AddScoped<IMySqlTypeMap>(_ => new NopMySql8TypeMap());
         services.AddTransient(p => new Lazy<IVersionLoader>(p.GetRequiredService<IVersionLoader>()));
 
         //data layer
