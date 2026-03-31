@@ -404,7 +404,13 @@ public class LocalizationMigration : MigrationBase
 
             "Profile.LatestPosts",
             "Profile.LatestPosts.NoPosts",
-            "Profile.PersonalInfo",            
+            "Profile.PersonalInfo",
+
+            //#8131
+            "Account.Login.WrongCredentials.CustomerNotExist",
+            "Account.Login.WrongCredentials.NotRegistered",
+            "Account.PasswordRecovery.EmailHasBeenSent",
+            "Account.PasswordRecovery.EmailNotFound"
         });
 
         #endregion
@@ -491,6 +497,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.GeneralCommon.PinterestLink.Hint"] = "Specify your Pinterest page URL. Leave empty if you have no such page.",
             ["Admin.Configuration.Settings.GeneralCommon.TumblrLink"] = "Tumblr URL",
             ["Admin.Configuration.Settings.GeneralCommon.TumblrLink.Hint"] = "Specify your Tumblr page URL. Leave empty if you have no such page.",
+
+            //#8131
+            ["Account.PasswordRecovery.SendEmailMessage"] = "If there is an account associated with {0}, you will receive an email with a link to reset your password.",
         });
 
         #endregion
