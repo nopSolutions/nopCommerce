@@ -4,6 +4,7 @@ using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -68,6 +69,12 @@ public class SettingMigration : MigrationBase
         this.SetSettingIfNotExists<StoreInformationSettings, string>(settings => settings.SnapchatLink, string.Empty);
         this.SetSettingIfNotExists<StoreInformationSettings, string>(settings => settings.PinterestLink, string.Empty);
         this.SetSettingIfNotExists<StoreInformationSettings, string>(settings => settings.TumblrLink, string.Empty);
+
+        //#8120
+        this.SetSettingIfNotExists<OrderSettings, bool>(settings => settings.AutoCancelUnpaidOrdersEnabled, false);
+        this.SetSettingIfNotExists<OrderSettings, int>(settings => settings.AutoCancelUnpaidOrdersDelay, 600);
+        this.SetSettingIfNotExists<OrderSettings, List<string>>(settings => settings.AutoCancelIgnoredPaymentMethods, []);
+        this.SetSettingIfNotExists<OrderSettings, bool>(settings => settings.PutAutoCanceledOrderToShoppingCart, false);
     }
 
     public override void Down()

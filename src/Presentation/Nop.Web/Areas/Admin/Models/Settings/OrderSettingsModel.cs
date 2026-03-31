@@ -1,4 +1,5 @@
-﻿using Nop.Web.Areas.Admin.Models.Orders;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -15,6 +16,8 @@ public partial record OrderSettingsModel : BaseNopModel, ISettingsModel
     {
         ReturnRequestReasonSearchModel = new ReturnRequestReasonSearchModel();
         ReturnRequestActionSearchModel = new ReturnRequestActionSearchModel();
+        AutoCancelIgnoredPaymentMethods = new List<string>();
+        AvailablePaymentMethods = new List<SelectListItem>();
     }
 
     #endregion
@@ -151,6 +154,23 @@ public partial record OrderSettingsModel : BaseNopModel, ISettingsModel
     [NopResourceDisplayName("Admin.Configuration.Settings.Order.AllowCustomersCancelOrders")]
     public bool AllowCustomersCancelOrders { get; set; }
     public bool AllowCustomersCancelOrders_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersEnabled")]
+    public bool AutoCancelUnpaidOrdersEnabled { get; set; }
+    public bool AutoCancelUnpaidOrdersEnabled_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersDelay")]
+    public int AutoCancelUnpaidOrdersDelay { get; set; }
+    public bool AutoCancelUnpaidOrdersDelay_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.AutoCancelIgnoredPaymentMethods")]
+    public IList<string> AutoCancelIgnoredPaymentMethods { get; set; }
+    public bool AutoCancelIgnoredPaymentMethods_OverrideForStore { get; set; }
+    public IList<SelectListItem> AvailablePaymentMethods { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.PutAutoCanceledOrderToShoppingCart")]
+    public bool PutAutoCanceledOrderToShoppingCart { get; set; }
+    public bool PutAutoCanceledOrderToShoppingCart_OverrideForStore { get; set; }
 
     public ReturnRequestReasonSearchModel ReturnRequestReasonSearchModel { get; set; }
 

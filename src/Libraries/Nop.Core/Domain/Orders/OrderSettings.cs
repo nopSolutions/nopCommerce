@@ -202,4 +202,24 @@ public partial class OrderSettings : ISettings
     /// Gets or sets a value indicating whether to allow customers to cancel orders
     /// </summary>
     public bool AllowCustomersCancelOrders { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether unpaid orders should be canceled automatically
+    /// </summary>
+    public bool AutoCancelUnpaidOrdersEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating the period of time after order placement, after which unpaid orders should be canceled (in minutes)
+    /// </summary>
+    public int AutoCancelUnpaidOrdersDelay { get; set; }
+
+    /// <summary>
+    /// Gets or sets the list of payment method system names for which automatic cancellation of unpaid orders is disabled
+    /// </summary>
+    public List<string> AutoCancelIgnoredPaymentMethods { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether an auto-canceled order should be added to the shopping cart
+    /// </summary>
+    public bool PutAutoCanceledOrderToShoppingCart { get; set; }
 }

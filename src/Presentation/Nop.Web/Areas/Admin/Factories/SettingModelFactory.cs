@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.util;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
@@ -30,6 +31,7 @@ using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Payments;
 using Nop.Services.Stores;
 using Nop.Services.Themes;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -65,6 +67,7 @@ public partial class SettingModelFactory : ISettingModelFactory
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
+    protected readonly IPaymentPluginManager _paymentPluginManager;
     protected readonly IPictureService _pictureService;
     protected readonly IReturnRequestModelFactory _returnRequestModelFactory;
     protected readonly IReviewTypeModelFactory _reviewTypeModelFactory;
@@ -96,6 +99,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         IGenericAttributeService genericAttributeService,
         ILanguageService languageService,
         ILocalizationService localizationService,
+        IPaymentPluginManager paymentPluginManager,
         IPictureService pictureService,
         IReturnRequestModelFactory returnRequestModelFactory,
         ISettingService settingService,
@@ -123,6 +127,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         _genericAttributeService = genericAttributeService;
         _languageService = languageService;
         _localizationService = localizationService;
+        _paymentPluginManager = paymentPluginManager;
         _pictureService = pictureService;
         _returnRequestModelFactory = returnRequestModelFactory;
         _settingService = settingService;
@@ -1470,6 +1475,11 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
         model.OrderIdent = await _dataProvider.GetTableIdentAsync<Order>();
 
+        var paymentMethods = await _paymentPluginManager.LoadAllPluginsAsync(storeId: storeId);
+
+        if(paymentMethods?.Any() == true)
+            model.AvailablePaymentMethods.AddRange(paymentMethods.Select(pm => new SelectListItem(pm.PluginDescriptor.FriendlyName, pm.PluginDescriptor.SystemName)));
+
         //fill in overridden values
         if (storeId > 0)
         {
@@ -1501,6 +1511,10 @@ public partial class SettingModelFactory : ISettingModelFactory
             model.AllowCustomersCancelOrders_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.AllowCustomersCancelOrders, storeId);
             model.ShowProductThumbnailInOrderDetailsPage_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.ShowProductThumbnailInOrderDetailsPage, storeId);
             model.DeleteGiftCardUsageHistory_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.DeleteGiftCardUsageHistory, storeId);
+            model.AutoCancelUnpaidOrdersEnabled_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.AutoCancelUnpaidOrdersEnabled, storeId);
+            model.AutoCancelUnpaidOrdersDelay_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.AutoCancelUnpaidOrdersDelay, storeId);
+            model.AutoCancelIgnoredPaymentMethods_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.AutoCancelIgnoredPaymentMethods, storeId);
+            model.PutAutoCanceledOrderToShoppingCart_OverrideForStore = await _settingService.SettingExistsAsync(orderSettings, x => x.PutAutoCanceledOrderToShoppingCart   , storeId);
         }
 
         //prepare nested search models

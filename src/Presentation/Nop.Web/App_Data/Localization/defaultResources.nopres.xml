@@ -8407,6 +8407,24 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderProcessingEmail.Hint">
     <Value>Check to attach PDF invoice to the "order processing" email sent to a customer.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelIgnoredPaymentMethods">
+    <Value>Excluded payment methods</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelIgnoredPaymentMethods.Hint">
+    <Value>Select payment methods excluded from automatic cancellation of unpaid orders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersDelay">
+    <Value>Auto-cancel delay</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersDelay.Hint">
+    <Value>Enter the delay (in minutes) after order placement before unpaid orders are canceled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersEnabled">
+    <Value>Enable auto-canceling of unpaid orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersEnabled.Hint">
+    <Value>Check this option to enable automatic cancellation of unpaid orders.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder">
     <Value>Auto update order totals</Value>
   </LocaleResource>
@@ -8550,6 +8568,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.OrderIdent.Hint">
     <Value>Set the order ID counter. This is useful if you want your orders to start at a certain number. This only affects orders created going forward. The value must be greater than the current maximum order ID.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.PutAutoCanceledOrderToShoppingCart">
+    <Value>Put order back as shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.PutAutoCanceledOrderToShoppingCart.Hint">
+    <Value>Check this option to add auto-canceled orders back to the shopping cart.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions">
     <Value>Return request actions</Value>

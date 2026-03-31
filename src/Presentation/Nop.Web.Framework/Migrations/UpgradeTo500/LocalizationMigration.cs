@@ -508,6 +508,16 @@ public class LocalizationMigration : MigrationBase
 			//#8117
 			["Admin.Configuration.AppSettings.Data.CloseDataContextAfterUse"] = "Close dataContext after use",
             ["Admin.Configuration.AppSettings.Data.CloseDataContextAfterUse.Hint"] = "Check to automatically dispose the data context after each operation, which helps prevent resource leaks. Uncheck if you need to keep the data context open for multiple sequential operations.",
+
+            //#8120
+            ["Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersEnabled"] = "Enable auto-canceling of unpaid orders",
+            ["Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersEnabled.Hint"] = "Check this option to enable automatic cancellation of unpaid orders.",
+            ["Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersDelay"] = "Auto-cancel delay",
+            ["Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersDelay.Hint"] = "Enter the delay (in minutes) after order placement before unpaid orders are canceled.",
+            ["Admin.Configuration.Settings.Order.AutoCancelIgnoredPaymentMethods"] = "Excluded payment methods",
+            ["Admin.Configuration.Settings.Order.AutoCancelIgnoredPaymentMethods.Hint"] = "Select payment methods excluded from automatic cancellation of unpaid orders.",
+            ["Admin.Configuration.Settings.Order.PutAutoCanceledOrderToShoppingCart"] = "Put order back as shopping cart",
+            ["Admin.Configuration.Settings.Order.PutAutoCanceledOrderToShoppingCart.Hint"] = "Check this option to add auto-canceled orders back to the shopping cart.",
         });
 
         #endregion

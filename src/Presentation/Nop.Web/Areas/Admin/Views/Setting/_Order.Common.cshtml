@@ -98,4 +98,46 @@
             <span asp-validation-for="ShowProductThumbnailInOrderDetailsPage"></span>
         </div>
     </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AutoCancelUnpaidOrdersEnabled_OverrideForStore" asp-input="AutoCancelUnpaidOrdersEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AutoCancelUnpaidOrdersEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AutoCancelUnpaidOrdersEnabled" />
+            <span asp-validation-for="AutoCancelUnpaidOrdersEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="AutoCancelUnpaidOrdersEnabled">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="AutoCancelUnpaidOrdersDelay_OverrideForStore" asp-input="AutoCancelUnpaidOrdersEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="AutoCancelUnpaidOrdersDelay" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AutoCancelUnpaidOrdersDelay" />
+                <span asp-validation-for="AutoCancelUnpaidOrdersDelay"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="AutoCancelIgnoredPaymentMethods_OverrideForStore" asp-input="AutoCancelIgnoredPaymentMethods" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="AutoCancelIgnoredPaymentMethods" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="AutoCancelIgnoredPaymentMethods" asp-items="Model.AvailablePaymentMethods" asp-multiple="true" />
+                <span asp-validation-for="AutoCancelIgnoredPaymentMethods"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="PutAutoCanceledOrderToShoppingCart_OverrideForStore" asp-input="PutAutoCanceledOrderToShoppingCart" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="PutAutoCanceledOrderToShoppingCart" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="PutAutoCanceledOrderToShoppingCart" />
+                <span asp-validation-for="PutAutoCanceledOrderToShoppingCart"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
 </div>
