@@ -182,36 +182,6 @@ public partial class InstallationService
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task ImportResourcesFromXmlAsync(Language language, StreamReader xmlStreamReader, bool updateExistingResources = true)
     {
-        HashSet<(string name, string value)> loadLocaleResourcesFromStream()
-        {
-            var result = new HashSet<(string name, string value)>();
-
-            try
-            {
-                using var xmlReader = XmlReader.Create(xmlStreamReader);
-                while (xmlReader.ReadToFollowing("Language"))
-                {
-                    if (xmlReader.NodeType != XmlNodeType.Element)
-                        continue;
-
-                    using var languageReader = xmlReader.ReadSubtree();
-                    while (languageReader.ReadToFollowing("LocaleResource"))
-                    {
-                        if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.GetAttribute("Name") is { } name)
-                        {
-                            using var lrReader = languageReader.ReadSubtree();
-                            if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element)
-                                result.Add((name.ToLowerInvariant(), lrReader.ReadString()));
-                        }
-                    }
-
-                    break;
-                }
-            } catch (XmlException) { }
-
-            return result;
-        }
-
         var parsedResources = loadLocaleResourcesFromStream();
         
         if (!parsedResources.Any())
@@ -228,7 +198,7 @@ public partial class InstallationService
         var lrsToUpdateList = new List<LocaleStringResource>();
         var lrsToInsertList = new Dictionary<string, LocaleStringResource>();
 
-        foreach (var (name, value) in loadLocaleResourcesFromStream())
+        foreach (var (name, value) in parsedResources)
         {
             if (lsNamesList.TryGetValue(name, out var localString))
             {
@@ -254,6 +224,42 @@ public partial class InstallationService
 
         if (lrsToInsertList.Any())
             await _dataProvider.BulkInsertEntitiesAsync(lrsToInsertList.Values);
+
+        return;
+
+        HashSet<(string name, string value)> loadLocaleResourcesFromStream()
+        {
+            var result = new HashSet<(string name, string value)>();
+
+            try
+            {
+                using var xmlReader = XmlReader.Create(xmlStreamReader);
+                while (xmlReader.ReadToFollowing("Language"))
+                {
+                    if (xmlReader.NodeType != XmlNodeType.Element)
+                        continue;
+
+                    using var languageReader = xmlReader.ReadSubtree();
+                    while (languageReader.ReadToFollowing("LocaleResource"))
+                    {
+                        if (xmlReader.NodeType != XmlNodeType.Element || xmlReader.GetAttribute("Name") is not { } name)
+                            continue;
+
+                        using var lrReader = languageReader.ReadSubtree();
+                        if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element)
+                            result.Add((name.ToLowerInvariant(), lrReader.ReadString()));
+                    }
+
+                    break;
+                }
+            }
+            catch (XmlException)
+            {
+                //ignore
+            }
+
+            return result;
+        }
     }
 
     /// <summary>
