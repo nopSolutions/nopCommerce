@@ -1,4 +1,6 @@
-﻿using Nop.Core;
+﻿using System.Linq.Expressions;
+using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
@@ -68,52 +70,87 @@ public class ForumInstallService
     private async Task InsertSettingsAsync()
     {
         var forumSettings = await _settingService.LoadSettingAsync<ForumSettings>();
+        var defaultSettings = new ForumSettings
+        {
+            ForumsEnabled = true,
+            RelativeDateTimeFormattingEnabled = true,
+            AllowCustomersToDeletePosts = false,
+            AllowCustomersToEditPosts = false,
+            AllowCustomersToManageSubscriptions = false,
+            AllowGuestsToCreatePosts = false,
+            AllowGuestsToCreateTopics = false,
+            AllowPostVoting = true,
+            MaxVotesPerDay = 30,
+            TopicSubjectMaxLength = 450,
+            PostMaxLength = 4000,
+            StrippedTopicMaxLength = 45,
+            TopicsPageSize = 10,
+            PostsPageSize = 10,
+            SearchResultsPageSize = 10,
+            ActiveDiscussionsPageSize = 50,
+            LatestCustomerPostsPageSize = 10,
+            ShowCustomersPostCount = true,
+            ForumEditor = EditorType.MarkdownEditor,
+            SignaturesEnabled = true,
+            ForumSubscriptionsPageSize = 10,
+            HomepageActiveDiscussionsTopicCount = 5,
+            ActiveDiscussionsFeedEnabled = false,
+            ActiveDiscussionsFeedCount = 25,
+            ForumFeedsEnabled = false,
+            ForumFeedCount = 10,
+            ForumSearchTermMinimumLength = 3,
+            TopicMetaDescriptionLength = 160,
+            ShowCaptcha = false,
+            BbcodeEditorOpenLinksInNewWindow = false
+        };
 
-        if (!await _settingService.SettingExistsAsync(forumSettings, s => s.ForumsEnabled))
+        await saveSetting(s => s.ForumsEnabled);
+        await saveSetting(s => s.RelativeDateTimeFormattingEnabled);
+        await saveSetting(s => s.AllowCustomersToDeletePosts);
+        await saveSetting(s => s.AllowCustomersToEditPosts);
+        await saveSetting(s => s.AllowCustomersToManageSubscriptions);
+        await saveSetting(s => s.AllowGuestsToCreatePosts);
+        await saveSetting(s => s.AllowGuestsToCreateTopics);
+        await saveSetting(s => s.AllowPostVoting);
+        await saveSetting(s => s.MaxVotesPerDay);
+        await saveSetting(s => s.TopicSubjectMaxLength);
+        await saveSetting(s => s.PostMaxLength);
+        await saveSetting(s => s.StrippedTopicMaxLength);
+        await saveSetting(s => s.TopicsPageSize);
+        await saveSetting(s => s.PostsPageSize);
+        await saveSetting(s => s.SearchResultsPageSize);
+        await saveSetting(s => s.ActiveDiscussionsPageSize);
+        await saveSetting(s => s.LatestCustomerPostsPageSize);
+        await saveSetting(s => s.ShowCustomersPostCount);
+        await saveSetting(s => s.ForumEditor);
+        await saveSetting(s => s.SignaturesEnabled);
+        await saveSetting(s => s.ForumSubscriptionsPageSize);
+        await saveSetting(s => s.HomepageActiveDiscussionsTopicCount);
+        await saveSetting(s => s.ActiveDiscussionsFeedEnabled);
+        await saveSetting(s => s.ActiveDiscussionsFeedCount);
+        await saveSetting(s => s.ForumFeedsEnabled);
+        await saveSetting(s => s.ForumFeedCount);
+        await saveSetting(s => s.ForumSearchTermMinimumLength);
+        await saveSetting(s => s.TopicMetaDescriptionLength);
+        await saveSetting(s => s.ShowCaptcha);
+        await saveSetting(s => s.BbcodeEditorOpenLinksInNewWindow);
+
+        var showCaptchaOnForums = await _settingService.GetSettingAsync($"{nameof(CaptchaSettings)}.ShowOnForum");
+        if (showCaptchaOnForums is not null)
         {
-            await _settingService.SaveSettingAsync(new ForumSettings
-            {
-                ForumsEnabled = true,
-                RelativeDateTimeFormattingEnabled = true,
-                AllowCustomersToDeletePosts = false,
-                AllowCustomersToEditPosts = false,
-                AllowCustomersToManageSubscriptions = false,
-                AllowGuestsToCreatePosts = false,
-                AllowGuestsToCreateTopics = false,
-                AllowPostVoting = true,
-                MaxVotesPerDay = 30,
-                TopicSubjectMaxLength = 450,
-                PostMaxLength = 4000,
-                StrippedTopicMaxLength = 45,
-                TopicsPageSize = 10,
-                PostsPageSize = 10,
-                SearchResultsPageSize = 10,
-                ActiveDiscussionsPageSize = 50,
-                LatestCustomerPostsPageSize = 10,
-                ShowCustomersPostCount = true,
-                ForumEditor = EditorType.MarkdownEditor,
-                SignaturesEnabled = true,
-                ForumSubscriptionsPageSize = 10,
-                HomepageActiveDiscussionsTopicCount = 5,
-                ActiveDiscussionsFeedEnabled = false,
-                ActiveDiscussionsFeedCount = 25,
-                ForumFeedsEnabled = false,
-                ForumFeedCount = 10,
-                ForumSearchTermMinimumLength = 3,
-                TopicMetaDescriptionLength = 160,
-                ShowCaptcha = false,
-                BbcodeEditorOpenLinksInNewWindow = false
-            });
+            forumSettings.ShowCaptcha = CommonHelper.To<bool>(showCaptchaOnForums.Value);
+            await _settingService.SaveSettingAsync(forumSettings, settings => settings.ShowCaptcha, clearCache: false);
+            await _settingService.DeleteSettingAsync(showCaptchaOnForums);
         }
-        else
+
+        await _settingService.ClearCacheAsync();
+
+        return;
+
+        async Task saveSetting<TPropType>(Expression<Func<ForumSettings, TPropType>> keySelector)
         {
-            var showCaptchaOnForums = await _settingService.GetSettingAsync($"{nameof(CaptchaSettings)}.ShowOnForum");
-            if (showCaptchaOnForums is not null)
-            {
-                forumSettings.ShowCaptcha = CommonHelper.To<bool>(showCaptchaOnForums.Value);
-                await _settingService.SaveSettingAsync(forumSettings, settings => settings.ShowCaptcha, clearCache: false);
-                await _settingService.DeleteSettingAsync(showCaptchaOnForums);
-            }
+            if (!await _settingService.SettingExistsAsync(forumSettings, keySelector))
+                await _settingService.SaveSettingAsync(defaultSettings, keySelector, clearCache: false);
         }
     }
 
