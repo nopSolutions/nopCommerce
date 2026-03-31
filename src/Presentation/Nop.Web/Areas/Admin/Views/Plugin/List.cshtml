@@ -372,5 +372,12 @@
         </div>
     </div>
 </div>
-
+<nop-action-confirmation asp-button-id="delete-unused-plugins" />
+<script>
+    $(function() {
+        $("#delete-unused-plugins-action-confirmation-submit-button").on("click", function () {
+            window.location.href = $("#delete-unused-plugins").prop("href");
+        });
+    });
+</script>
 
