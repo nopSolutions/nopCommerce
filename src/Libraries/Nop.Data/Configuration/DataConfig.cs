@@ -42,6 +42,22 @@ public partial class DataConfig : IConfig, IConnectionStringAccessor
     public string CharacterSet { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets a value indicating whether the data context is automatically disposed after use.
+    /// </summary>
+    /// <remarks>When set to <see langword="true"/>, the data context will be closed and resources released
+    /// after each operation, which helps prevent resource leaks. Set to <see langword="false"/> if you need to keep the
+    /// data context open for multiple sequential operations.</remarks>
+    public bool CloseDataContextAfterUse { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether check constraints are enforced during bulk copy operations.
+    /// </summary>
+    /// <remarks>When set to <see langword="true"/>, data inserted by bulk copy operations is validated
+    /// against the check constraints defined in the target table. Setting this property to <see langword="false"/> may
+    /// improve performance, but can result in data that does not meet the table's integrity requirements.</remarks>
+    public bool BulkCopyWithCheckConstraints { get; set; } = true;
+
+    /// <summary>
     /// Gets a section name to load configuration
     /// </summary>
     [JsonIgnore]

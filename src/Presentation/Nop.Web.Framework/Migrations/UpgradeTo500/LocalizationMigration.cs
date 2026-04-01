@@ -500,6 +500,14 @@ public class LocalizationMigration : MigrationBase
 
             //#8131
             ["Account.PasswordRecovery.SendEmailMessage"] = "If there is an account associated with {0}, you will receive an email with a link to reset your password.",
+
+            //#8128
+            ["Admin.Configuration.AppSettings.Data.BulkCopyWithCheckConstraints"] = "Check constraints during bulk copy operations",
+            ["Admin.Configuration.AppSettings.Data.BulkCopyWithCheckConstraints.Hint"] = "Check to validate data inserted by bulk copy operations against the check constraints defined in the target table. Uncheck to improve performance, but be aware that it can result in data that does not meet the table's integrity requirements.",
+
+			//#8117
+			["Admin.Configuration.AppSettings.Data.CloseDataContextAfterUse"] = "Close dataContext after use",
+            ["Admin.Configuration.AppSettings.Data.CloseDataContextAfterUse.Hint"] = "Check to automatically dispose the data context after each operation, which helps prevent resource leaks. Uncheck if you need to keep the data context open for multiple sequential operations.",
         });
 
         #endregion

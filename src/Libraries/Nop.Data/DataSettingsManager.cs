@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using LinqToDB.Data;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Configuration;
@@ -170,6 +171,40 @@ public partial class DataSettingsManager
             return false;
 
         return settings.DataProvider == DataProviderType.SqlServer && settings.WithNoLock;
+    }
+
+    /// <summary>
+    /// Gets the bulk copy options configured according to the current data settings.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="BulkCopyOptions"/> instance containing the options for bulk copy operations. If no settings are
+    /// available, default options are returned.
+    /// </returns>
+    public static BulkCopyOptions GetBulkCopyOptions()
+    {
+        var settings = LoadSettings();
+
+        if (settings is null)
+            return new BulkCopyOptions();
+
+        var options = new BulkCopyOptions
+        {
+            CheckConstraints = settings.BulkCopyWithCheckConstraints,
+            KeepIdentity = true
+        };
+
+        return options;
+    }
+
+    /// <summary>
+    /// Determines whether the data context should be closed after use based on the current application settings.
+    /// </summary>
+    /// <returns>true if the settings indicate that the data context should be closed after use; otherwise, false.</returns>
+    public static bool GetCloseDataContextAfterUse()
+    {
+        var settings = LoadSettings();
+
+        return settings is null || settings.CloseDataContextAfterUse;
     }
 
     #endregion

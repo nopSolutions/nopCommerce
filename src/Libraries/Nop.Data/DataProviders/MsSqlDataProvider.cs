@@ -34,7 +34,7 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
         ArgumentException.ThrowIfNullOrEmpty(connectionString);
 
-        return new SqlConnection(connectionString);
+        return new SqlConnection(connectionString){};
     }
 
     #endregion
