@@ -217,6 +217,15 @@ public static partial class NopCommonDefaults
 
     #endregion
 
+    /// <summary>
+    /// Gets a key for product search terms
+    /// </summary>
+    /// <remarks>
+    /// {0} : customer id
+    /// {1} : store id
+    /// </remarks>
+    public static CacheKey SearchTermsCacheKey => new("Nop.searchterms.{0}-{1}");
+
     #endregion
 
     /// <summary>

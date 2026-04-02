@@ -415,13 +415,9 @@ public partial class CatalogController : BasePublicController
         if (!_catalogSettings.ShowSearchTermHistory)
             return Content("");
 
-        //products
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+        var terms = await _productModelFactory.PrepareSearchTermHistoryItemsAsync();
 
-        var terms = await _searchTermService.GetSearchTermsAsync(string.Empty, currentCustomer.Id, store.Id);
-
-        return Json(terms.Select(t => new { label = t.Keyword, IsKeyword = true }));
+        return Json(terms.Select(t => new { label = t, IsKeyword = true }));
     }
 
     [HttpPost]
@@ -434,7 +430,7 @@ public partial class CatalogController : BasePublicController
         var store = await _storeContext.GetCurrentStoreAsync();
         var currentCustomer = await _workContext.GetCurrentCustomerAsync();
 
-        await _searchTermService.DeleteSearchTermsByAsyncKeyword(term, currentCustomer.Id, store.Id);
+        await _searchTermService.DeleteSearchTermsByAsyncKeywordAsync(term, currentCustomer.Id, store.Id);
 
         return Json(new { Result = true });
     }

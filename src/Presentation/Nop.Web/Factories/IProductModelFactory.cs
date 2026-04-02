@@ -100,4 +100,13 @@ public partial interface IProductModelFactory
     /// The task result contains the product specification model
     /// </returns>
     Task<ProductSpecificationModel> PrepareProductSpecificationModelAsync(Product product);
+
+    /// <summary>
+    /// Prepare search term history items
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains search term history items
+    /// </returns>
+    Task<IEnumerable<string>> PrepareSearchTermHistoryItemsAsync();
 }

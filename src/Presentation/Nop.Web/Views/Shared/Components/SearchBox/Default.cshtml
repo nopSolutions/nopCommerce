@@ -123,21 +123,30 @@
                         $(this).autocomplete('search', $(this).val());
                     })
                     .data("ui-autocomplete")._renderItem = function(ul, item) {
-                        var t = item.label;
-                        showLinkToResultSearch = item.showlinktoresultsearch;
                         //html encode
-                        t = htmlEncode(t);
-                        imageWidth = '@(Model.AutoCompleteSearchThumbPictureSize)';
+                        var t = htmlEncode(item.label);
+                        showLinkToResultSearch = item.showlinktoresultsearch;
 
                         var li = $("<li class='search-box-item'></li>");
 
                         li.data("item.autocomplete", item);
 
-                        var link = $("<a class='search-box-link'>@(Model.ShowProductImagesInSearchAutoComplete? Html.Raw("<img src='\" + item.productpictureurl + \"' width='\" + imageWidth + \"'>") : null)<span>" + t + "</span></a>");
+                        var link = $("<a class='search-box-link'></a>");
 
-                        if (item.IsKeyword)
+                        if (item.IsKeyword) {
                             link.prop("href", "@Url.RouteUrl(NopRouteNames.General.SEARCH)?q=" + t)
+                        }
+                        else {
+                        @if(Model.ShowProductImagesInSearchAutoComplete)
+                        {
+                            <text>
+                            link.append('<img src="' + item.productpictureurl + '" width="@Model.AutoCompleteSearchThumbPictureSize">');
+                            </text>
+                        }
+                        }
                         
+                        link.append('<span>' + t + '</span>');
+
                         li.append(link);
                         
                         if (item.IsKeyword) {

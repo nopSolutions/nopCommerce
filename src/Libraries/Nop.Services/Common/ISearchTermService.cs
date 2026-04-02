@@ -17,7 +17,7 @@ public partial interface ISearchTermService
     /// <returns>
     /// A task that represents the asynchronous operation
     /// </returns>
-    Task DeleteSearchTermsByAsyncKeyword(string keyword, int customerId, int storeId);
+    Task DeleteSearchTermsByAsyncKeywordAsync(string keyword, int customerId, int storeId);
 
     /// <summary>
     /// Gets a search term record by keyword
@@ -25,13 +25,20 @@ public partial interface ISearchTermService
     /// <param name="keyword">Search term keyword</param>
     /// <param name="customerId">Customer identifier; pass 0 to load all records</param>
     /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+    /// <param name="showHidden">A value indicating whether to show hidden records</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the search terms
     /// </returns>
-    Task<IPagedList<SearchTerm>> GetSearchTermsAsync(string keyword, int customerId = 0, int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
+    Task<IPagedList<SearchTerm>> GetSearchTermsAsync(
+        string keyword,
+        int customerId = 0,
+        int storeId = 0,
+        bool showHidden = false,
+        int pageIndex = 0,
+        int pageSize = int.MaxValue);
 
     /// <summary>
     /// Gets a search term statistics

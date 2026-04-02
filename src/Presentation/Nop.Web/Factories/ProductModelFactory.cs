@@ -69,6 +69,7 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly IProductTagService _productTagService;
     protected readonly IProductTemplateService _productTemplateService;
     protected readonly IReviewTypeService _reviewTypeService;
+    protected readonly ISearchTermService _searchTermService;
     protected readonly IShoppingCartService _shoppingCartService;
     protected readonly ISpecificationAttributeService _specificationAttributeService;
     protected readonly IStaticCacheManager _staticCacheManager;
@@ -118,6 +119,7 @@ public partial class ProductModelFactory : IProductModelFactory
         IProductTagService productTagService,
         IProductTemplateService productTemplateService,
         IReviewTypeService reviewTypeService,
+        ISearchTermService searchTermService,
         IShoppingCartService shoppingCartService,
         ISpecificationAttributeService specificationAttributeService,
         IStaticCacheManager staticCacheManager,
@@ -162,6 +164,7 @@ public partial class ProductModelFactory : IProductModelFactory
         _productTagService = productTagService;
         _productTemplateService = productTemplateService;
         _reviewTypeService = reviewTypeService;
+        _searchTermService = searchTermService;
         _shoppingCartService = shoppingCartService;
         _specificationAttributeService = specificationAttributeService;
         _staticCacheManager = staticCacheManager;
@@ -1030,20 +1033,20 @@ public partial class ProductModelFactory : IProductModelFactory
                             var selectedValues = await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml);
                             foreach (var attributeValue in selectedValues)
                                 foreach (var item in attributeModel.Values)
-                            {
-                                if (attributeValue.Id == item.Id)
                                 {
-                                    item.IsPreSelected = true;
+                                    if (attributeValue.Id == item.Id)
+                                    {
+                                        item.IsPreSelected = true;
 
-                                    //set customer entered quantity
-                                    if (attributeValue.CustomerEntersQty)
-                                        item.Quantity = attributeValue.Quantity;
+                                        //set customer entered quantity
+                                        if (attributeValue.CustomerEntersQty)
+                                            item.Quantity = attributeValue.Quantity;
+                                    }
                                 }
-                            }
                         }
                     }
 
-                        break;
+                    break;
                     case AttributeControlType.ReadonlyCheckboxes:
                     {
                         //values are already pre-set
@@ -1061,7 +1064,7 @@ public partial class ProductModelFactory : IProductModelFactory
                         }
                     }
 
-                        break;
+                    break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                     {
@@ -1073,7 +1076,7 @@ public partial class ProductModelFactory : IProductModelFactory
                         }
                     }
 
-                        break;
+                    break;
                     case AttributeControlType.Datepicker:
                     {
                         //keep in mind my that the code below works only in the current culture
@@ -1090,7 +1093,7 @@ public partial class ProductModelFactory : IProductModelFactory
                         }
                     }
 
-                        break;
+                    break;
                     case AttributeControlType.FileUpload:
                     {
                         if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
@@ -1103,7 +1106,7 @@ public partial class ProductModelFactory : IProductModelFactory
                         }
                     }
 
-                        break;
+                    break;
                     default:
                         break;
                 }
@@ -1954,6 +1957,32 @@ public partial class ProductModelFactory : IProductModelFactory
         }
 
         return model;
+    }
+
+    /// <summary>
+    /// Prepare search term history items
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains search term history items
+    /// </returns>
+    public virtual async Task<IEnumerable<string>> PrepareSearchTermHistoryItemsAsync()
+    {
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+
+        var cacheKey = _staticCacheManager
+            .PrepareKeyForDefaultCache(NopCommonDefaults.SearchTermsCacheKey, currentCustomer, store);
+
+        var terms = await _staticCacheManager.GetAsync(cacheKey, async () =>
+        {
+            var numberOfItems = _catalogSettings.NumberOfSearchTermHistoryItems > 0 ?
+                _catalogSettings.NumberOfSearchTermHistoryItems : int.MaxValue;
+
+            return await _searchTermService.GetSearchTermsAsync(string.Empty, currentCustomer.Id, store.Id, pageSize: numberOfItems);
+        });
+
+        return terms.Select(x => x.Keyword);
     }
 
     #endregion

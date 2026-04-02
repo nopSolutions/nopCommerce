@@ -35,12 +35,15 @@ public partial class SearchTermService : ISearchTermService
     /// <returns>
     /// A task that represents the asynchronous operation
     /// </returns>
-    public virtual async Task DeleteSearchTermsByAsyncKeyword(string keyword, int customerId, int storeId)
+    public virtual async Task DeleteSearchTermsByAsyncKeywordAsync(string keyword, int customerId, int storeId)
     {
         if (string.IsNullOrEmpty(keyword))
             return;
 
-        await _searchTermRepository.DeleteAsync(t => t.CustomerId == customerId && t.StoreId == storeId && t.Keyword == keyword);
+        var searchTerms = await GetSearchTermsAsync(keyword, customerId, storeId);
+
+        foreach (var term in searchTerms)
+            await _searchTermRepository.DeleteAsync(term);
     }
 
     /// <summary>
@@ -49,15 +52,25 @@ public partial class SearchTermService : ISearchTermService
     /// <param name="keyword">Search term keyword</param>
     /// <param name="customerId">Customer identifier; pass 0 to load all records</param>
     /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+    /// <param name="showHidden">A value indicating whether to show hidden records</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the search terms
     /// </returns>
-    public virtual async Task<IPagedList<SearchTerm>> GetSearchTermsAsync(string keyword, int customerId = 0, int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
+    public virtual async Task<IPagedList<SearchTerm>> GetSearchTermsAsync(
+        string keyword, 
+        int customerId = 0, 
+        int storeId = 0,
+        bool showHidden = false,
+        int pageIndex = 0, 
+        int pageSize = int.MaxValue)
     {
         var searchTerms = _searchTermRepository.Table;
+
+        if (!showHidden)
+            searchTerms = searchTerms.Where(st => !st.Deleted);
 
         if (storeId > 0)
             searchTerms = searchTerms.Where(st => st.StoreId == storeId);
