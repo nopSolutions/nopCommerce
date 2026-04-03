@@ -220,7 +220,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             var dateOfBirth = customer.DateOfBirth;
             if (dateOfBirth.HasValue)
             {
-                var currentCalendar = CultureInfo.CurrentCulture.Calendar;
+                var currentCalendar = CultureInfo.CurrentCulture.DateTimeFormat.Calendar;
 
                 model.DateOfBirthDay = currentCalendar.GetDayOfMonth(dateOfBirth.Value);
                 model.DateOfBirthMonth = currentCalendar.GetMonth(dateOfBirth.Value);

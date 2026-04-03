@@ -437,7 +437,7 @@ public static class ApplicationBuilderExtensions
             var cultures = syncCodeHelper
                 .GetAllLanguages()
                 .OrderBy(language => language.DisplayOrder)
-                .Select(language => new CultureInfo(language.LanguageCulture))
+                .Select(language => new CultureInfo(language.LanguageCulture) { DateTimeFormat = { Calendar = new GregorianCalendar() } })
                 .ToList();
             options.SupportedCultures = cultures;
             options.SupportedUICultures = cultures;
