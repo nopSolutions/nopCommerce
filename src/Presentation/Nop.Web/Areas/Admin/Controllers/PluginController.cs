@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
@@ -410,145 +411,59 @@ public partial class PluginController : BaseAdminController
             if (!pluginDescriptor.Installed)
                 return View(model);
 
-            bool pluginIsActive;
-            switch (pluginInstance)
+            var interfaces = pluginInstance.GetType().GetInterfaces()
+                .Where(pluginInterface => pluginInterface != typeof(IPlugin)).ToList();
+
+            foreach (var pluginInterface in interfaces)
             {
-                case IPaymentMethod paymentMethod:
-                    pluginIsActive = _paymentPluginManager.IsPluginActive(paymentMethod);
-                    if (pluginIsActive && !model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _paymentSettings.ActivePaymentMethodSystemNames.Remove(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_paymentSettings);
-                        break;
-                    }
+                if (pluginInterface == typeof(IPaymentMethod))
+                {
+                    var pluginIsActive = _paymentPluginManager.IsPluginActive(pluginInstance as IPaymentMethod);
+                    await changeSetting(pluginIsActive, _paymentSettings, _paymentSettings.ActivePaymentMethodSystemNames);
+                }
 
-                    if (!pluginIsActive && model.IsEnabled)
-                    {
-                        //mark as enabled
-                        _paymentSettings.ActivePaymentMethodSystemNames.Add(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_paymentSettings);
-                    }
+                if (pluginInterface == typeof(IShippingRateComputationMethod))
+                {
+                    var pluginIsActive = _shippingPluginManager.IsPluginActive(pluginInstance as IShippingRateComputationMethod);
+                    await changeSetting(pluginIsActive, _shippingSettings, _shippingSettings.ActiveShippingRateComputationMethodSystemNames);
+                }
 
-                    break;
-                case IShippingRateComputationMethod shippingRateComputationMethod:
-                    pluginIsActive = _shippingPluginManager.IsPluginActive(shippingRateComputationMethod);
-                    if (pluginIsActive && !model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Remove(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_shippingSettings);
-                        break;
-                    }
+                if (pluginInterface == typeof(IPickupPointProvider))
+                {
+                    var pluginIsActive = _pickupPluginManager.IsPluginActive(pluginInstance as IPickupPointProvider);
+                    await changeSetting(pluginIsActive, _shippingSettings, _shippingSettings.ActivePickupPointProviderSystemNames);
+                }
 
-                    if (!pluginIsActive && model.IsEnabled)
-                    {
-                        //mark as enabled
-                        _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_shippingSettings);
-                    }
-
-                    break;
-                case IPickupPointProvider pickupPointProvider:
-                    pluginIsActive = _pickupPluginManager.IsPluginActive(pickupPointProvider);
-                    if (pluginIsActive && !model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _shippingSettings.ActivePickupPointProviderSystemNames.Remove(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_shippingSettings);
-                        break;
-                    }
-
-                    if (!pluginIsActive && model.IsEnabled)
-                    {
-                        //mark as enabled
-                        _shippingSettings.ActivePickupPointProviderSystemNames.Add(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_shippingSettings);
-                    }
-
-                    break;
-                case ITaxProvider taxProvider:
-                    if (!model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _taxSettings.ActiveTaxProviderSystemName = string.Empty;
-                        await _settingService.SaveSettingAsync(_taxSettings);
-                        break;
-                    }
-
-                    //mark as enabled
-                    _taxSettings.ActiveTaxProviderSystemName = model.SystemName;
+                if (pluginInterface == typeof(ITaxProvider))
+                {
+                    _taxSettings.ActiveTaxProviderSystemName = !model.IsEnabled ? string.Empty : model.SystemName;
                     await _settingService.SaveSettingAsync(_taxSettings);
-                    break;
-                case IExternalAuthenticationMethod externalAuthenticationMethod:
-                    pluginIsActive = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
-                    if (pluginIsActive && !model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_externalAuthenticationSettings);
-                        break;
-                    }
+                }
 
-                    if (!pluginIsActive && model.IsEnabled)
-                    {
-                        //mark as enabled
-                        _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_externalAuthenticationSettings);
-                    }
+                if (pluginInterface == typeof(IExternalAuthenticationMethod))
+                {
+                    var pluginIsActive = _authenticationPluginManager.IsPluginActive(pluginInstance as IExternalAuthenticationMethod);
+                    await changeSetting(pluginIsActive, _externalAuthenticationSettings, _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames);
+                }
 
-                    break;
-                case IMultiFactorAuthenticationMethod multiFactorAuthenticationMethod:
-                    pluginIsActive = _multiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
-                    if (pluginIsActive && !model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_multiFactorAuthenticationSettings);
-                        break;
-                    }
+                if (pluginInterface == typeof(IMultiFactorAuthenticationMethod))
+                {
+                    var pluginIsActive = _multiFactorAuthenticationPluginManager.IsPluginActive(pluginInstance as IMultiFactorAuthenticationMethod);
+                    await changeSetting(pluginIsActive, _multiFactorAuthenticationSettings, _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames);
+                }
 
-                    if (!pluginIsActive && model.IsEnabled)
-                    {
-                        //mark as enabled
-                        _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_multiFactorAuthenticationSettings);
-                    }
+                if (pluginInterface == typeof(ISearchProvider))
+                {
+                    _catalogSettings.ActiveSearchProviderSystemName = !model.IsEnabled ? string.Empty : model.SystemName;
 
-                    break;
-
-                case ISearchProvider _:
-                    if (!model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _catalogSettings.ActiveSearchProviderSystemName = string.Empty;
-                        await _settingService.SaveSettingAsync(_catalogSettings);
-                        break;
-                    }
-
-                    //mark as enabled
-                    _catalogSettings.ActiveSearchProviderSystemName = model.SystemName;
                     await _settingService.SaveSettingAsync(_catalogSettings);
-                    break;
+                }
 
-                case IWidgetPlugin widgetPlugin:
-                    pluginIsActive = _widgetPluginManager.IsPluginActive(widgetPlugin);
-                    if (pluginIsActive && !model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _widgetSettings.ActiveWidgetSystemNames.Remove(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_widgetSettings);
-                        break;
-                    }
-
-                    if (!pluginIsActive && model.IsEnabled)
-                    {
-                        //mark as enabled
-                        _widgetSettings.ActiveWidgetSystemNames.Add(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_widgetSettings);
-                    }
-
-                    break;
+                if (pluginInterface == typeof(IWidgetPlugin))
+                {
+                    var pluginIsActive = _widgetPluginManager.IsPluginActive(pluginInstance as IWidgetPlugin);
+                    await changeSetting(pluginIsActive, _widgetSettings, _widgetSettings.ActiveWidgetSystemNames);
+                }
             }
 
             //activity log
@@ -566,6 +481,23 @@ public partial class PluginController : BaseAdminController
 
         //if we got this far, something failed, redisplay form
         return View(model);
+
+        async Task changeSetting<TSettings>(bool pluginIsActive, TSettings settings, IList<string> activePluginList) where TSettings : ISettings, new()
+        {
+            switch (pluginIsActive)
+            {
+                case true when !model.IsEnabled:
+                    //mark as disabled
+                    activePluginList.Remove(pluginDescriptor.SystemName);
+                    await _settingService.SaveSettingAsync(settings);
+                    break;
+                case false when model.IsEnabled:
+                    //mark as enabled
+                    activePluginList.Add(pluginDescriptor.SystemName);
+                    await _settingService.SaveSettingAsync(settings);
+                    break;
+            }
+        }
     }
 
     [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]

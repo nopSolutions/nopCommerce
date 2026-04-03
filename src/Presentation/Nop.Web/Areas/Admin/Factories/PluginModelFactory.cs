@@ -102,49 +102,37 @@ public partial class PluginModelFactory : IPluginModelFactory
         //prepare configuration URL
         model.ConfigurationUrl = plugin.GetConfigurationPageUrl();
 
-        //prepare enabled/disabled (only for some plugin types)
-        model.CanChangeEnabled = true;
-        switch (plugin)
+        var interfaces = plugin.GetType().GetInterfaces()
+            .Where(pluginInterface => pluginInterface != typeof(IPlugin)).ToList();
+
+        model.CanChangeEnabled = interfaces.Any() && (interfaces.Count != 1 || interfaces[0] != typeof(IMiscPlugin));
+        model.IsEnabled = true;
+
+        foreach (var pluginInterface in interfaces)
         {
-            case IMiscPlugin:
-                model.CanChangeEnabled = false;
-                break;
+            if (pluginInterface == typeof(IPaymentMethod))
+                model.IsEnabled = model.IsEnabled && _paymentPluginManager.IsPluginActive(plugin as IPaymentMethod);
 
-            case IPaymentMethod paymentMethod:
-                model.IsEnabled = _paymentPluginManager.IsPluginActive(paymentMethod);
-                break;
+            if (pluginInterface == typeof(IShippingRateComputationMethod))
+                model.IsEnabled = model.IsEnabled && _shippingPluginManager.IsPluginActive(plugin as IShippingRateComputationMethod);
 
-            case IShippingRateComputationMethod shippingRateComputationMethod:
-                model.IsEnabled = _shippingPluginManager.IsPluginActive(shippingRateComputationMethod);
-                break;
+            if (pluginInterface == typeof(IPickupPointProvider))
+                model.IsEnabled = model.IsEnabled && _pickupPluginManager.IsPluginActive(plugin as IPickupPointProvider);
 
-            case IPickupPointProvider pickupPointProvider:
-                model.IsEnabled = _pickupPluginManager.IsPluginActive(pickupPointProvider);
-                break;
+            if(pluginInterface == typeof(ITaxProvider))
+                model.IsEnabled = model.IsEnabled && _taxPluginManager.IsPluginActive(plugin as ITaxProvider);
 
-            case ITaxProvider taxProvider:
-                model.IsEnabled = _taxPluginManager.IsPluginActive(taxProvider);
-                break;
+            if (pluginInterface == typeof(IExternalAuthenticationMethod))
+                model.IsEnabled = model.IsEnabled && _authenticationPluginManager.IsPluginActive(plugin as IExternalAuthenticationMethod);
 
-            case IExternalAuthenticationMethod externalAuthenticationMethod:
-                model.IsEnabled = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
-                break;
+            if (pluginInterface == typeof(IMultiFactorAuthenticationMethod))
+                model.IsEnabled = model.IsEnabled && _multiFactorAuthenticationPluginManager.IsPluginActive(plugin as IMultiFactorAuthenticationMethod);
 
-            case IMultiFactorAuthenticationMethod multiFactorAuthenticationMethod:
-                model.IsEnabled = _multiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
-                break;
+            if (pluginInterface == typeof(ISearchProvider))
+                model.IsEnabled = model.IsEnabled && _searchPluginManager.IsPluginActive(plugin as ISearchProvider);
 
-            case ISearchProvider searchProvider:
-                model.IsEnabled = _searchPluginManager.IsPluginActive(searchProvider);
-                break;
-
-            case IWidgetPlugin widgetPlugin:
-                model.IsEnabled = _widgetPluginManager.IsPluginActive(widgetPlugin);
-                break;
-
-            default:
-                model.CanChangeEnabled = false;
-                break;
+            if (pluginInterface == typeof(IWidgetPlugin))
+                model.IsEnabled = model.IsEnabled && _widgetPluginManager.IsPluginActive(plugin as IWidgetPlugin);
         }
     }
 
