@@ -17,7 +17,7 @@ namespace Nop.Plugin.Misc.RFQ;
 /// <summary>
 /// Represents the "Request a quote" and "Quotes" plugin
 /// </summary>
-public class RfqPlugin : BasePlugin, IWidgetPlugin, IMiscPlugin
+public class RfqPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
 {
     #region Fields
 
