@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+using System.Data.Common;
 using System.Linq.Expressions;
 using System.Reflection;
 using FluentMigrator;
@@ -17,6 +17,18 @@ namespace Nop.Data.DataProviders;
 public abstract partial class BaseDataProvider
 {
     #region Utilities
+
+    private static BulkCopyOptions CreateBulkCopyOptions(DataConfig settings)
+    {
+        if (settings is null)
+            return new BulkCopyOptions();
+
+        return new BulkCopyOptions
+        {
+            CheckConstraints = settings.BulkCopyWithCheckConstraints,
+            KeepIdentity = true
+        };
+    }
 
     /// <summary>
     /// Gets a connection to the database for a current data provider
@@ -48,7 +60,7 @@ public abstract partial class BaseDataProvider
             .UseMappingSchema(NopMappingSchema.GetMappingSchema(ConfigurationName, LinqToDbDataProvider))
             );
 
-        var sqlCommandTimeout = DataSettingsManager.GetSqlCommandTimeout();
+        var sqlCommandTimeout = DataSettings.SQLCommandTimeout ?? -1;
         if (sqlCommandTimeout == -1)
             dataConnection.ResetCommandTimeout();
         else
@@ -194,10 +206,10 @@ public abstract partial class BaseDataProvider
 
         var dataContext = new DataContext(options)
         {
-            CloseAfterUse = DataSettingsManager.GetCloseDataContextAfterUse()
+            CloseAfterUse = DataSettings.CloseDataContextAfterUse
         };
 
-        var sqlCommandTimeout = DataSettingsManager.GetSqlCommandTimeout();
+        var sqlCommandTimeout = DataSettings.SQLCommandTimeout ?? -1;
 
         if (sqlCommandTimeout == -1)
             dataContext.ResetCommandTimeout();
@@ -400,7 +412,7 @@ public abstract partial class BaseDataProvider
     public virtual async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
     {
         using var dataContext = CreateDataConnection(LinqToDbDataProvider);
-        await dataContext.BulkCopyAsync(DataSettingsManager.GetBulkCopyOptions(), entities.RetrieveIdentity(dataContext, useSequenceName: false));
+        await dataContext.BulkCopyAsync(CreateBulkCopyOptions(DataSettings), entities.RetrieveIdentity(dataContext, useSequenceName: false));
     }
 
     /// <summary>
@@ -411,7 +423,7 @@ public abstract partial class BaseDataProvider
     public virtual void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
     {
         using var dataContext = CreateDataConnection(LinqToDbDataProvider);
-        dataContext.BulkCopy(DataSettingsManager.GetBulkCopyOptions(), entities.RetrieveIdentity(dataContext, useSequenceName: false));
+        dataContext.BulkCopy(CreateBulkCopyOptions(DataSettings), entities.RetrieveIdentity(dataContext, useSequenceName: false));
     }
 
     /// <summary>

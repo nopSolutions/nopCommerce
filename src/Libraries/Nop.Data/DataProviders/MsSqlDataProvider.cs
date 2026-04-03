@@ -1,10 +1,11 @@
-﻿using System.Data.Common;
+using System.Data.Common;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.SqlServer;
 using Microsoft.Data.SqlClient;
 using Nop.Core;
+using Nop.Data;
 using Nop.Data.Mapping;
 
 namespace Nop.Data.DataProviders;
@@ -145,7 +146,9 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
         var table = (ITable<TEntity>)base.GetTable<TEntity>();
 
-        return DataSettingsManager.UseNoLock() ? table.With("NOLOCK") : table;
+        return DataSettings.DataProvider == DataProviderType.SqlServer && DataSettings.WithNoLock
+            ? table.With("NOLOCK")
+            : table;
     }
 
     /// <summary>
