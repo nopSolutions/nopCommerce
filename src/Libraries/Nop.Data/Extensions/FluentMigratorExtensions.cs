@@ -5,6 +5,7 @@ using System.Reflection;
 using FluentMigrator;
 using FluentMigrator.Builders.Alter.Table;
 using FluentMigrator.Builders.Create.Table;
+using FluentMigrator.Infrastructure;
 using FluentMigrator.Infrastructure.Extensions;
 using FluentMigrator.Model;
 using FluentMigrator.Runner;
@@ -13,6 +14,8 @@ using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Data.Mapping;
 using Nop.Data.Mapping.Builders;
+using static LinqToDB.Internal.Reflection.Methods.LinqToDB;
+using static Npgsql.Replication.PgOutput.Messages.RelationMessage;
 
 namespace Nop.Data.Extensions;
 
@@ -115,26 +118,6 @@ public static class FluentMigratorExtensions
     }
 
     /// <summary>
-    /// Specifies a foreign key
-    /// </summary>
-    /// <param name="column">The foreign key column</param>
-    /// <param name="primaryTableName">The primary table name</param>
-    /// <param name="primaryColumnName">The primary tables column name</param>
-    /// <param name="onDelete">Behavior for DELETEs</param>
-    /// <typeparam name="TPrimary"></typeparam>
-    /// <returns>Alter/add a column with an optional foreign key</returns>
-    public static IAlterTableColumnOptionOrAddColumnOrAlterColumnOrForeignKeyCascadeSyntax ForeignKey<TPrimary>(this IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax column, string primaryTableName = null, string primaryColumnName = null, Rule onDelete = Rule.Cascade) where TPrimary : BaseEntity
-    {
-        if (string.IsNullOrEmpty(primaryTableName))
-            primaryTableName = NameCompatibilityManager.GetTableName(typeof(TPrimary));
-
-        if (string.IsNullOrEmpty(primaryColumnName))
-            primaryColumnName = nameof(BaseEntity.Id);
-
-        return column.Indexed().ForeignKey(primaryTableName, primaryColumnName).OnDelete(onDelete);
-    }
-
-    /// <summary>
     /// Creates a database table for the specified entity type
     /// if the table does not already exist.
     /// </summary>
@@ -183,6 +166,49 @@ public static class FluentMigratorExtensions
         var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), propertyMemberExpression.Member.Name);
 
         return migration.Schema.Table(tableName).Column(columnName).Exists() ? migration.Alter.Table(tableName).AlterColumn(columnName) : migration.Alter.Table(tableName).AddColumn(columnName);
+    }
+
+    /// <summary>
+    /// Adds a new column or alters an existing column in the database table
+    /// mapped to the specified entity, depending on whether the column
+    /// already exists.
+    /// </summary>
+    /// <typeparam name="TEntity">
+    /// The entity type mapped to the database table.
+    /// </typeparam>
+    /// <param name="migration">
+    /// The migration context used to inspect the schema and apply changes.
+    /// </param>
+    /// <param name="selector">
+    /// An expression selecting the entity property that maps to the target column.
+    /// </param>
+    /// <returns>
+    /// A fluent syntax interface allowing further ALTER TABLE operations
+    /// on the added or altered column.
+    /// </returns>
+    public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddOrAlterForeignKeyColumnFor<TEntity, TPrimary>(this MigrationBase migration, Expression<Func<TEntity, object>> selector, Rule onDelete = Rule.Cascade) where TEntity : BaseEntity
+    {
+        var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
+        var propertyMemberExpression = selector.Body as MemberExpression
+            ?? (selector.Body as UnaryExpression)?.Operand as MemberExpression
+            ?? throw new ArgumentException("Selector must be a property expression.", nameof(selector));
+        var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), propertyMemberExpression.Member.Name);
+
+        IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax rez;
+
+        if (migration.Schema.Table(tableName).Column(columnName).Exists())
+        {
+            rez = migration.Alter.Table(tableName).AlterColumn(columnName).AsInt32();
+        }
+        else
+        {
+            var primaryTableName = NameCompatibilityManager.GetTableName(typeof(TPrimary));
+            var primaryColumnName = nameof(BaseEntity.Id);
+
+            rez = migration.Alter.Table(tableName).AddColumn(columnName).AsInt32().Indexed().ForeignKey(primaryTableName, primaryColumnName).OnDelete(onDelete);
+        }
+
+        return rez;
     }
 
     /// <summary>
