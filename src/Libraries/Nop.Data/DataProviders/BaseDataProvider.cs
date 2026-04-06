@@ -18,14 +18,15 @@ public abstract partial class BaseDataProvider
 {
     #region Utilities
 
-    private static BulkCopyOptions CreateBulkCopyOptions(DataConfig settings)
+    /// <summary>
+    /// Creates options used for bulk insert operations
+    /// </summary>
+    /// <returns>Bulk copy options derived from current data configuration</returns>
+    protected virtual BulkCopyOptions CreateBulkCopyOptions()
     {
-        if (settings is null)
-            return new BulkCopyOptions();
-
         return new BulkCopyOptions
         {
-            CheckConstraints = settings.BulkCopyWithCheckConstraints,
+            CheckConstraints = DataSettings.BulkCopyWithCheckConstraints,
             KeepIdentity = true
         };
     }
@@ -412,7 +413,7 @@ public abstract partial class BaseDataProvider
     public virtual async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
     {
         using var dataContext = CreateDataConnection(LinqToDbDataProvider);
-        await dataContext.BulkCopyAsync(CreateBulkCopyOptions(DataSettings), entities.RetrieveIdentity(dataContext, useSequenceName: false));
+        await dataContext.BulkCopyAsync(CreateBulkCopyOptions(), entities.RetrieveIdentity(dataContext, useSequenceName: false));
     }
 
     /// <summary>
@@ -423,7 +424,7 @@ public abstract partial class BaseDataProvider
     public virtual void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
     {
         using var dataContext = CreateDataConnection(LinqToDbDataProvider);
-        dataContext.BulkCopy(CreateBulkCopyOptions(DataSettings), entities.RetrieveIdentity(dataContext, useSequenceName: false));
+        dataContext.BulkCopy(CreateBulkCopyOptions(), entities.RetrieveIdentity(dataContext, useSequenceName: false));
     }
 
     /// <summary>
