@@ -1,0 +1,13 @@
+﻿@*localization service for installation service
+    we do not use standard nopCommerce localization because database is not installed yet
+    locale resources for installation process are stored into \App_Data\Localization\Installation directory*@
+@inject IInstallationLocalizationService ILS
+
+@removeTagHelper *, Nop.Web.Framework
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Nop.Data
+@using Nop.Services.Common
+@using static Nop.Services.Common.NopLinksDefaults
+@using Nop.Web.Models.Install
+@using Nop.Web.Infrastructure.Installation

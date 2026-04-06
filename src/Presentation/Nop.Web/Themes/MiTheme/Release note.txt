@@ -1,0 +1,8 @@
+Release Date: June 13, 2024
+nopAccelerate Noble Themes version: 1.1.0
+
+Added Feature
+
+Support for nopCommerce 1.10 added
+
+==========================================

@@ -1,0 +1,11 @@
+﻿@model EditForumPostModel
+@{   
+    Layout = "_ColumnsOne";
+
+    NopHtml.AddTitleParts(T("Forum.PageTitle.PostEdit").Text);
+}
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsPostEditBefore, additionalData = Model })
+<form asp-route="PostEdit" method="post">
+    @await Html.PartialAsync("_CreateUpdatePost", Model)
+</form>
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.BoardsPostEditAfter, additionalData = Model })

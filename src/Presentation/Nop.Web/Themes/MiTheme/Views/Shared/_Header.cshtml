@@ -1,0 +1,139 @@
+﻿<script>
+    $(function () {
+
+        function isMobile() {
+            const userAgent = navigator.userAgent;
+            const mobileKeywords = ['Mobile', 'Android', 'iPhone', 'iPad', 'Windows Phone'];
+            return mobileKeywords.some(keyword => userAgent.includes(keyword));
+        }
+
+
+    @* 监听 如果屏幕有距离顶部大于0 则添加固定header样式 *@
+    @* $('.header-lower')的高度根据滚动条的高度动态变化逐渐缓慢变小 直到固定到50px *@
+            let lastScrollTop = 0;
+        let isSmallScreen = false;
+
+        function updateHeader(scrollTop) {
+            const headerHeight = 50;
+            let newHeaderHeight = headerHeight;
+            let scale = 1;
+
+            if (scrollTop > 0) {
+                newHeaderHeight = Math.max(headerHeight - scrollTop, 50);
+                scale = Math.min(newHeaderHeight / headerHeight, 0.7);
+            } else {
+                newHeaderHeight = 80;
+                scale = 1;
+            }
+
+            if (!isSmallScreen) {
+                $('.header-lower').height(newHeaderHeight);
+                $('.header-logo').css({ transform: `scale(${scale})` });
+                $('#small-search-box-form').css({ height: `${newHeaderHeight - 20}px` });
+                $('.header-lower').css({ boxShadow: scrollTop > 0 ? '0 0 10px #999' : 'none' });
+            }
+        }
+
+        $(window).scroll(function () {
+            if (($(window).scrollTop() + $(window).height()) >= $(document).height()) {
+                // 已经滚动到底部，保持当前状态不变
+                return;
+            }
+
+            lastScrollTop = $(this).scrollTop();
+            updateHeader(lastScrollTop);
+        });
+
+    @* 点击body #bar-notification关闭 *@
+            $('body').click(function () {
+                $('#bar-notification').html('')
+            });
+
+        $('.listbox li').mousemove(function () {
+            $(this).css({
+                'background-color': 'var(--theme-bg-color)',
+                color: '#fff'
+            });
+
+    @* 父元素是ul祖元素是li *@
+            if ($(this).parent().parent().hasClass('active')) {
+                console.log('active')
+                console.log($(this).parent().parent())
+                $(this).parent().parent().find('a').css({
+                    'background-color': '#fff',
+                    color: '#000'
+                });
+            }
+        })
+
+        $('.listbox li').mouseleave(function () {
+            $(this).css({
+                'background-color': '#fff',
+                color: '#000'
+            });
+        })
+    })
+</script>
+<a class="skip" href="#main">@T("Header.SkipNavigation.Text")</a>
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderBefore })
+<div class="header-upper">
+    <div class="container h-full">
+        <div class="row flex flex-wrap justify-between items-center h-full">
+            <div class="col-md-3 h-full">
+                <div class="header-selectors-wrapper h-full">
+                    @await Component.InvokeAsync(typeof(TaxTypeSelectorViewComponent))
+                    @await Component.InvokeAsync(typeof(CurrencySelectorViewComponent))
+                    @await Component.InvokeAsync(typeof(LanguageSelectorViewComponent))
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new
+                        {
+                            widgetZone =
+                             PublicWidgetZones.HeaderSelectors
+                        })
+                </div>
+            </div>
+            <div class="col-md-9 header-upper-right pull-right h-full">
+                <div class="header-links-wrapper flex justify-end h-full">
+                    @await Component.InvokeAsync(typeof(HeaderLinksViewComponent))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderMiddle })
+<div class="header-lower">
+    <div class="container h-full">
+        <div class="row flex justify-between items-center w-full h-full">
+            <div class="col-xs-12 col-sm-3 col-md-3">
+                <div class="header-logo">
+                    @await Component.InvokeAsync(typeof(LogoViewComponent))
+                </div>
+            </div>
+            <div class="pc-header">
+                @await Component.InvokeAsync(typeof(TopMenuViewComponent))
+            </div>
+            @await Component.InvokeAsync(typeof(SearchBoxViewComponent))
+
+            <button type="button" class="m-header" aria-controls="mobile-menu" aria-expanded="true"
+                data-target="#mobile-menu" data-toggle="collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobile-menu" class="collapse navbar-collapse" aria-expanded="false">
+        <ul class="nav navbar-nav">
+            <li class="home-wrapper"><a href="/"><i class="fa fa-home fa-fw"></i></a></li>
+            @await Component.InvokeAsync(typeof(TopMenuViewComponent))
+        </ul>
+    </div>
+</div>
+@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderAfter })
+<script>
+    $(document).ready(function () {
+        $('.m-header').on('click', function () {
+            $('#mobile-menu').slideToggle('slow');
+        });
+    });
+</script>

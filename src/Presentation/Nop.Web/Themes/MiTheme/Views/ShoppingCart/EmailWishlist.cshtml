@@ -1,0 +1,75 @@
+﻿@model WishlistEmailAFriendModel
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.WishlistEmailAFriend").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-email-a-friend-page");
+}
+<div class="page email-a-friend-page">
+    <div class="page-title panel-heading">
+        <h1>@T("Wishlist.EmailAFriend.Title")</h1>
+    </div>
+    <div class="page-body panel-body from-panel">
+        @if (Model.SuccessfullySent)
+        {
+            <div class="alert alert-success">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            <form asp-route="EmailWishlist" method="post">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <div class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label asp-for="FriendEmail" class = "col-sm-4 col-md-4 control-label" asp-postfix=":"></label>
+                        <div class="col-sm-5 col-md-5">
+                            <input asp-for="FriendEmail" class="friend-email form-control" placeholder="@T("Wishlist.EmailAFriend.FriendEmail.Hint")" />
+                        </div>
+                        <div class="col-sm-3 col-md-3">
+                            <span asp-validation-for="FriendEmail"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="YourEmailAddress" class = "col-sm-4 col-md-4 control-label" asp-postfix=":"></label>
+                        <div class="col-sm-5 col-md-5">
+                            <input asp-for="YourEmailAddress" class="your-email form-control" placeholder="@T("Wishlist.EmailAFriend.YourEmailAddress.Hint")" />
+                        </div>
+                        <div class="col-sm-3 col-md-3">
+                            <span asp-validation-for="YourEmailAddress"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PersonalMessage" class = "col-sm-4 col-md-4 control-label" asp-postfix=":"></label>
+                        <div class="col-sm-5 col-md-5">
+                            <textarea asp-for="PersonalMessage" class="personal-message form-control" placeholder="@T("Wishlist.EmailAFriend.PersonalMessage.Hint")"></textarea>                            
+                        </div>
+                        <div class="col-sm-3 col-md-3">
+                            <span asp-validation-for="PersonalMessage"></span>
+                        </div>
+                    </div>
+
+                    @if (Model.DisplayCaptcha)
+                    {
+                    <div class="form-group">
+                        <div class="captcha-box col-sm-offset-4 col-md-offset-4 col-md-9">
+                            <nop-captcha />
+                        </div>
+                    </div>
+                    }
+                    <div class="form-group">
+                        <div>
+                            <div class="col-sm-offset-4 col-md-offset-4 col-md-8">
+                                <button type="submit" name="send-email" class="btn btn-primary send-email-a-friend-button">@T("Wishlist.EmailAFriend.Button")</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        }
+    </div>
+</div>

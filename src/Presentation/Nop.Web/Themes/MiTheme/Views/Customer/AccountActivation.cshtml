@@ -1,0 +1,23 @@
+﻿@model AccountActivationModel
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.AccountActivation").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-activation-page");
+}
+<div class="page account-activation-page">
+    <div class="page-title">
+        <h1>@T("Account.AccountActivation")</h1>
+    </div>
+    <div class="page-body">
+        <strong>
+            @Model.Result
+        </strong>
+        <div class="buttons">
+            <a href="@Model.ReturnUrl" class="btn btn-primary">@T("Common.Continue")</a>
+        </div>
+    </div>
+</div>
