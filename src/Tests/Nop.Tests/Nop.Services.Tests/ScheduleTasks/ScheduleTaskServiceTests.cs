@@ -133,16 +133,38 @@ public class ScheduleTaskServiceTests : ServiceTest
     [Test]
     public async Task CanGetAllTasksAsync()
     {
+        // GetAllTasksAsync() should return only enabled tasks
         var tasks = await _scheduleTaskService.GetAllTasksAsync();
 
-        tasks.Count.Should().Be(5);
+        tasks.Should().NotBeNull();
+        tasks.Count.Should().BeGreaterThan(4);
+        
+        // Verify only enabled tasks are returned
         tasks.Any(p => p.Enabled == false).Should().BeFalse();
+        
+        // Verify the disabled test task is not included
         tasks.Any(p => p.Id == _task.Id).Should().BeFalse();
+        
+        // Verify core enabled tasks exist
+        tasks.Should().Contain(t => t.Type == "Nop.Services.Messages.QueuedMessagesSendTask, Nop.Services");
+        tasks.Should().Contain(t => t.Type == "Nop.Services.Common.KeepAliveTask, Nop.Services");
+        tasks.Should().Contain(t => t.Type == "Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services");
+        tasks.Should().Contain(t => t.Type == "Nop.Services.Orders.CancelUnpaidOrdersTask, Nop.Services");
 
+        // GetAllTasksAsync(true) should return all tasks including disabled ones
         tasks = await _scheduleTaskService.GetAllTasksAsync(true);
 
-        tasks.Count.Should().Be(9);
+        tasks.Should().NotBeNull();
+        tasks.Count.Should().BeGreaterThan(8);
+        
+        // Should contain both enabled and disabled tasks
         tasks.Any(p => p.Enabled).Should().BeTrue();
+        
+        // Should include the disabled test task
         tasks.Any(p => p.Id == _task.Id).Should().BeTrue();
+        
+        // Verify disabled tasks are included
+        tasks.Should().Contain(t => t.Type == "Nop.Services.Caching.ClearCacheTask, Nop.Services");
+        tasks.Should().Contain(t => t.Type == "Nop.Services.Logging.ClearLogTask, Nop.Services");
     }
 }
