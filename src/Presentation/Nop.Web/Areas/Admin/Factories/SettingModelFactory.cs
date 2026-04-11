@@ -30,6 +30,7 @@ using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Payments;
 using Nop.Services.Stores;
 using Nop.Services.Themes;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -65,6 +66,7 @@ public partial class SettingModelFactory : ISettingModelFactory
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
+    protected readonly IPaymentPluginManager _paymentPluginManager;
     protected readonly IPictureService _pictureService;
     protected readonly IReturnRequestModelFactory _returnRequestModelFactory;
     protected readonly IReviewTypeModelFactory _reviewTypeModelFactory;
@@ -96,6 +98,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         IGenericAttributeService genericAttributeService,
         ILanguageService languageService,
         ILocalizationService localizationService,
+        IPaymentPluginManager paymentPluginManager,
         IPictureService pictureService,
         IReturnRequestModelFactory returnRequestModelFactory,
         ISettingService settingService,
@@ -123,6 +126,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         _genericAttributeService = genericAttributeService;
         _languageService = languageService;
         _localizationService = localizationService;
+        _paymentPluginManager = paymentPluginManager;
         _pictureService = pictureService;
         _returnRequestModelFactory = returnRequestModelFactory;
         _settingService = settingService;
@@ -1471,6 +1475,28 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.ActiveStoreScopeConfiguration = storeId;
         model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
         model.OrderIdent = await _dataProvider.GetTableIdentAsync<Order>();
+
+        //load available payment methods
+        var paymentMethods = await _paymentPluginManager
+            .LoadAllPluginsAsync(customer: await _workContext.GetCurrentCustomerAsync());
+
+        model.AvailablePaymentMethods = paymentMethods
+            .Select(pm => new SelectListItem
+            {
+                Value = pm.PluginDescriptor.SystemName,
+                Text = pm.PluginDescriptor.FriendlyName
+            })
+            .OrderBy(x => x.Text)
+            .ToList();
+
+        //preselect saved values
+        if (!string.IsNullOrWhiteSpace(orderSettings.IgnorePaymentMethods))
+        {
+            model.SelectedPaymentMethods = orderSettings.IgnorePaymentMethods
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .ToList();
+        }
 
         //fill in overridden values
         if (storeId > 0)

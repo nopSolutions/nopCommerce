@@ -90,6 +90,48 @@
     </div>
     <div class="form-group row">
         <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AutoCancelUnpaidOrdersEnabled_OverrideForStore" asp-input="AutoCancelUnpaidOrdersEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AutoCancelUnpaidOrdersEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AutoCancelUnpaidOrdersEnabled" />
+            <span asp-validation-for="AutoCancelUnpaidOrdersEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AutoCancelUnpaidOrdersDelay_OverrideForStore" asp-input="AutoCancelUnpaidOrdersDelay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AutoCancelUnpaidOrdersDelay" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AutoCancelUnpaidOrdersDelay" />
+            <span asp-validation-for="AutoCancelUnpaidOrdersDelay"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="IgnorePaymentMethods_OverrideForStore" asp-input="SelectedPaymentMethods" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="IgnorePaymentMethods" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="SelectedPaymentMethods"
+                        asp-items="Model.AvailablePaymentMethods"
+                        asp-multiple="true" />
+            <span asp-validation-for="SelectedPaymentMethods"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="RestoreCartAfterCancellation_OverrideForStore" asp-input="RestoreCartAfterCancellation" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="RestoreCartAfterCancellation" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="RestoreCartAfterCancellation" />
+            <span asp-validation-for="RestoreCartAfterCancellation"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ShowProductThumbnailInOrderDetailsPage_OverrideForStore" asp-input="ShowProductThumbnailInOrderDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ShowProductThumbnailInOrderDetailsPage" />
         </div>

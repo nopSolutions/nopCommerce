@@ -3359,6 +3359,15 @@ public partial class InstallationService
                     Type = "Nop.Services.Gdpr.DeleteInactiveCustomersTask, Nop.Services",
                     Enabled = false,
                     StopOnError = false
+                },
+                new() {
+                    Name = "Cancel unpaid orders",
+                    //60 minutes
+                    Seconds = 3600,
+                    Type = "Nop.Services.Orders.CancelUnpaidOrdersTask, Nop.Services",
+                    Enabled = true,
+                    LastEnabledUtc = lastEnabledUtc,
+                    StopOnError = false
                 }
             };
 

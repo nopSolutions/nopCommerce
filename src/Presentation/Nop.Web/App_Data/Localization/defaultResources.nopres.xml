@@ -8425,6 +8425,30 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder.Hint">
     <Value>Check to automatically update order totals on editing an order in admin area. IMPORANT: currently this functionality is in BETA testing status.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersEnabled">
+    <Value>Enable auto-cancel unpaid orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersEnabled.Hint">
+    <Value>Check to enable automatic cancellation of unpaid orders after a specified delay.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersDelay">
+    <Value>Auto-cancel delay (minutes)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelUnpaidOrdersDelay.Hint">
+    <Value>Specify the delay in minutes after which unpaid orders should be automatically cancelled. Default is 600 minutes (10 hours).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.IgnorePaymentMethods">
+    <Value>Ignore payment methods</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.IgnorePaymentMethods.Hint">
+    <Value>Select payment methods to exclude from auto-cancellation. Orders using these payment methods will not be automatically cancelled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.RestoreCartAfterCancellation">
+    <Value>Restore cart after cancellation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.RestoreCartAfterCancellation.Hint">
+    <Value>Check to automatically restore shopping cart items when an order is cancelled by the auto-cancel task.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.BlockTitle.Checkout">
     <Value>Checkout</Value>
   </LocaleResource>
