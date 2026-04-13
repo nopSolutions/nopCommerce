@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using FluentAssertions;
+using AwesomeAssertions;
 using Nop.Web.Framework.Validators;
 using NUnit.Framework;
 

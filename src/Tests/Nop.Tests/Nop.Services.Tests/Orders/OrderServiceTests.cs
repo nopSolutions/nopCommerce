@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Services.Orders;

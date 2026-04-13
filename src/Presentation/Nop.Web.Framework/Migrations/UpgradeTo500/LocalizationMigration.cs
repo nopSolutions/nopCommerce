@@ -508,6 +508,18 @@ public class LocalizationMigration : MigrationBase
 			//#8117
 			["Admin.Configuration.AppSettings.Data.CloseDataContextAfterUse"] = "Close dataContext after use",
             ["Admin.Configuration.AppSettings.Data.CloseDataContextAfterUse.Hint"] = "Check to automatically dispose the data context after each operation, which helps prevent resource leaks. Uncheck if you need to keep the data context open for multiple sequential operations.",
+
+            //#8069
+            ["Admin.Configuration.Settings.Catalog.ShowSearchTermHistory"] = "Show the term history",
+            ["Admin.Configuration.Settings.Catalog.ShowSearchTermHistory.Hint"] = "Show the search term history in the autocomplete list of the search box.",
+            ["Admin.Configuration.Settings.Catalog.NumberOfSearchTermHistoryItems"] = "Max number of term history items",
+            ["Admin.Configuration.Settings.Catalog.NumberOfSearchTermHistoryItems.Hint"] = "The maximum number of search term history items to display.",
+            ["Admin.System.Maintenance.ClearSearchHistory"] = "Clear search history",
+            ["Admin.System.Maintenance.ClearSearchHistory.Button"] = "Clear",
+            ["Admin.System.Maintenance.ClearSearchHistory.Progress"] = "Clearing...",
+            ["Admin.System.Maintenance.ClearSearchHistory.Text"] = "Delete search history data from the database.",
+            ["Admin.System.Maintenance.ClearSearchHistory.Complete"] = "Clearing search history data completed",
+            ["Admin.System.Maintenance.ClearSearchHistory.TotalDeleted"] = "{0} items were deleted",
         });
 
         #endregion

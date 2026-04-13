@@ -1,5 +1,5 @@
 ﻿using System.Xml;
-using FluentAssertions;
+using AwesomeAssertions;
 using Nop.Core.Domain.Attributes;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -335,6 +335,6 @@ public class AttributeParserTests : BaseNopTest
         (attribute as BaseAttribute).Should().NotBeNull();
 
         var values = await _parser.GetAttributeWarningsAsync(_attributesXml);
-        ((int)values.Count).Should().BeGreaterOrEqualTo(1);
+        ((int)values.Count).Should().BeGreaterThanOrEqualTo(1);
     }
 }

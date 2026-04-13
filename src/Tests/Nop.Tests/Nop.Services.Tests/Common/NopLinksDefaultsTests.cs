@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 using static Nop.Services.Common.NopLinksDefaults;
 

@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using FluentAssertions;
+using AwesomeAssertions;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Gdpr;

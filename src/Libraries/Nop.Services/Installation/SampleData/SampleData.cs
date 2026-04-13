@@ -78,5 +78,5 @@ public partial class SampleData
     /// <summary>
     /// Gets or sets the list of search terms
     /// </summary>
-    public List<SampleSearchTerm> SearchTerms { get; set; } = new();
+    public List<string> SearchTerms { get; set; } = new();
 }

@@ -1,5 +1,4 @@
-﻿using System.Text;
-using LinqToDB.Data;
+using System.Text;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Configuration;
@@ -147,64 +146,6 @@ public partial class DataSettingsManager
         _databaseIsInstalled ??= !string.IsNullOrEmpty(LoadSettings()?.ConnectionString);
 
         return _databaseIsInstalled.Value;
-    }
-
-    /// <summary>
-    /// Gets the command execution timeout.
-    /// </summary>
-    /// <value>
-    /// Number of seconds. Negative timeout value means that a default timeout will be used. 0 timeout value corresponds to infinite timeout.
-    /// </value>
-    public static int GetSqlCommandTimeout()
-    {
-        return LoadSettings()?.SQLCommandTimeout ?? -1;
-    }
-
-    /// <summary>
-    /// Gets a value that indicates whether to add NoLock hint to SELECT statements (applies only to SQL Server, otherwise returns false)
-    /// </summary>
-    public static bool UseNoLock()
-    {
-        var settings = LoadSettings();
-
-        if (settings is null)
-            return false;
-
-        return settings.DataProvider == DataProviderType.SqlServer && settings.WithNoLock;
-    }
-
-    /// <summary>
-    /// Gets the bulk copy options configured according to the current data settings.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="BulkCopyOptions"/> instance containing the options for bulk copy operations. If no settings are
-    /// available, default options are returned.
-    /// </returns>
-    public static BulkCopyOptions GetBulkCopyOptions()
-    {
-        var settings = LoadSettings();
-
-        if (settings is null)
-            return new BulkCopyOptions();
-
-        var options = new BulkCopyOptions
-        {
-            CheckConstraints = settings.BulkCopyWithCheckConstraints,
-            KeepIdentity = true
-        };
-
-        return options;
-    }
-
-    /// <summary>
-    /// Determines whether the data context should be closed after use based on the current application settings.
-    /// </summary>
-    /// <returns>true if the settings indicate that the data context should be closed after use; otherwise, false.</returns>
-    public static bool GetCloseDataContextAfterUse()
-    {
-        var settings = LoadSettings();
-
-        return settings is null || settings.CloseDataContextAfterUse;
     }
 
     #endregion

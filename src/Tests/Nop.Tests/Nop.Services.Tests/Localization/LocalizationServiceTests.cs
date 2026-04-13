@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Events;
 using Nop.Data;

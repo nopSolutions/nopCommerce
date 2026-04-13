@@ -1,10 +1,10 @@
-﻿using FluentAssertions;
+﻿using System.Net;
+using AwesomeAssertions;
 using Nop.Core;
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Services.ArtificialIntelligence;
-using NUnit.Framework;
-using System.Net;
 using Nop.Services.Logging;
+using NUnit.Framework;
 
 namespace Nop.Tests.Nop.Services.Tests.ArtificialIntelligence;
 

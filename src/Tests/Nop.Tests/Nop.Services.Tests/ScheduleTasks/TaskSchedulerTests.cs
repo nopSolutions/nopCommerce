@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Data;
 using Nop.Services.ScheduleTasks;

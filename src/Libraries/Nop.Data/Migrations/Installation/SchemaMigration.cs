@@ -42,7 +42,6 @@ public class SchemaMigration : ForwardOnlyMigration
         this.CreateTableIfNotExists<AddressAttribute>();
         this.CreateTableIfNotExists<AddressAttributeValue>();
         this.CreateTableIfNotExists<GenericAttribute>();
-        this.CreateTableIfNotExists<SearchTerm>();
         this.CreateTableIfNotExists<Country>();
         this.CreateTableIfNotExists<Currency>();
         this.CreateTableIfNotExists<MeasureDimension>();
@@ -58,6 +57,7 @@ public class SchemaMigration : ForwardOnlyMigration
         this.CreateTableIfNotExists<CustomerAddressMapping>();
         this.CreateTableIfNotExists<CustomerRole>();
         this.CreateTableIfNotExists<CustomerCustomerRoleMapping>();
+        this.CreateTableIfNotExists<SearchTerm>();
         this.CreateTableIfNotExists<ExternalAuthenticationRecord>();
         this.CreateTableIfNotExists<CheckoutAttribute>();
         this.CreateTableIfNotExists<CheckoutAttributeValue>();

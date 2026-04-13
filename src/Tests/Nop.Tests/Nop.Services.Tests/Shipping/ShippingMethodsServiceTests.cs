@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Shipping;
 using NUnit.Framework;

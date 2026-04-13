@@ -308,7 +308,11 @@ public partial interface INopDataProvider
     /// Truncates database table
     /// </summary>
     /// <param name="resetIdentity">Performs reset identity column</param>
-    Task TruncateAsync<TEntity>(bool resetIdentity = false) where TEntity : BaseEntity;
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the number of records, affected by command execution.
+    /// </returns>
+    Task<int> TruncateAsync<TEntity>(bool resetIdentity = false) where TEntity : BaseEntity;
 
     /// <summary>
     /// Gets the name of the database collation

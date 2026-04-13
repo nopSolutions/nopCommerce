@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.ArtificialIntelligence;

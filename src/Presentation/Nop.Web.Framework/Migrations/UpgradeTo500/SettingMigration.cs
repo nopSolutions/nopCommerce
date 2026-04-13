@@ -68,6 +68,10 @@ public class SettingMigration : MigrationBase
         this.SetSettingIfNotExists<StoreInformationSettings, string>(settings => settings.SnapchatLink, string.Empty);
         this.SetSettingIfNotExists<StoreInformationSettings, string>(settings => settings.PinterestLink, string.Empty);
         this.SetSettingIfNotExists<StoreInformationSettings, string>(settings => settings.TumblrLink, string.Empty);
+
+        //#8069
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.ShowSearchTermHistory, true);
+        this.SetSettingIfNotExists<CatalogSettings, int>(settings => settings.NumberOfSearchTermHistoryItems, 10);
     }
 
     public override void Down()

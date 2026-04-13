@@ -1,4 +1,6 @@
 ﻿using Nop.Core;
+using Nop.Core.Caching;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Data;
 
@@ -11,15 +13,19 @@ public partial class SearchTermService : ISearchTermService
 {
     #region Fields
 
+    protected readonly CatalogSettings _catalogSettings;
     protected readonly IRepository<SearchTerm> _searchTermRepository;
+    protected readonly IStaticCacheManager _staticCacheManager;
 
     #endregion
 
     #region Ctor
 
-    public SearchTermService(IRepository<SearchTerm> searchTermRepository)
+    public SearchTermService(CatalogSettings catalogSettings, IRepository<SearchTerm> searchTermRepository, IStaticCacheManager staticCacheManager)
     {
+        _catalogSettings = catalogSettings;
         _searchTermRepository = searchTermRepository;
+        _staticCacheManager = staticCacheManager;
     }
 
     #endregion
@@ -27,26 +33,68 @@ public partial class SearchTermService : ISearchTermService
     #region Methods
 
     /// <summary>
-    /// Gets a search term record by keyword
+    /// Deletes a search term records by keyword
     /// </summary>
     /// <param name="keyword">Search term keyword</param>
+    /// <param name="customerId">Customer identifier</param>
     /// <param name="storeId">Store identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the search term
     /// </returns>
-    public virtual async Task<SearchTerm> GetSearchTermByKeywordAsync(string keyword, int storeId)
+    public virtual async Task DeleteSearchTermsByKeywordAsync(string keyword, int customerId, int storeId)
     {
         if (string.IsNullOrEmpty(keyword))
-            return null;
+            return;
 
-        var query = from st in _searchTermRepository.Table
-            where st.Keyword == keyword && st.StoreId == storeId
-            orderby st.Id
-            select st;
-        var searchTerm = await query.FirstOrDefaultAsync();
+        var searchTerms = await GetSearchTermsAsync(keyword, customerId, storeId);
 
-        return searchTerm;
+        foreach (var term in searchTerms)
+            await _searchTermRepository.DeleteAsync(term);
+    }
+
+    /// <summary>
+    /// Gets a search term record by keyword
+    /// </summary>
+    /// <param name="keyword">Search term keyword</param>
+    /// <param name="customerId">Customer identifier; pass 0 to load all records</param>
+    /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+    /// <param name="showHidden">A value indicating whether to show hidden records</param>
+    /// <param name="pageIndex">Page index</param>
+    /// <param name="pageSize">Page size</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the search terms
+    /// </returns>
+    public virtual async Task<IPagedList<SearchTerm>> GetSearchTermsAsync(
+        string keyword, 
+        int customerId = 0, 
+        int storeId = 0,
+        bool showHidden = false,
+        int pageIndex = 0, 
+        int pageSize = int.MaxValue)
+    {
+        var searchTerms = _searchTermRepository.Table;
+
+        if (!showHidden)
+            searchTerms = searchTerms.Where(st => !st.Deleted);
+
+        if (storeId > 0)
+            searchTerms = searchTerms.Where(st => st.StoreId == storeId);
+
+        if (customerId > 0)
+            searchTerms = searchTerms.Where(st => st.CustomerId == customerId);
+
+        if (!string.IsNullOrEmpty(keyword))
+            searchTerms = searchTerms.Where(st => st.Keyword == keyword);
+
+        var query = from t in searchTerms
+                    group t by t.Keyword into groupedResult
+                    select new { Id = groupedResult.Max(x => x.Id) };
+
+        return await (from t in searchTerms
+                      join ut in query on t.Id equals ut.Id
+                      orderby t.CreatedOnUtc descending
+                      select t).ToPagedListAsync(pageIndex, pageSize);
     }
 
     /// <summary>
@@ -61,12 +109,12 @@ public partial class SearchTermService : ISearchTermService
     public virtual async Task<IPagedList<SearchTermReportLine>> GetStatsAsync(int pageIndex = 0, int pageSize = int.MaxValue)
     {
         var query = (from st in _searchTermRepository.Table
-                group st by st.Keyword into groupedResult
-                select new
-                {
-                    Keyword = groupedResult.Key,
-                    Count = groupedResult.Sum(o => o.Count)
-                })
+                     group st by st.Keyword into groupedResult
+                     select new
+                     {
+                         Keyword = groupedResult.Key,
+                         Count = groupedResult.Count()
+                     })
             .OrderByDescending(m => m.Count)
             .Select(r => new SearchTermReportLine
             {
@@ -87,6 +135,33 @@ public partial class SearchTermService : ISearchTermService
     public virtual async Task InsertSearchTermAsync(SearchTerm searchTerm)
     {
         await _searchTermRepository.InsertAsync(searchTerm);
+    }
+
+    /// <summary>
+    /// Search term history items for current customer
+    /// </summary>
+    /// <param name="customerId">Customer identifier</param>
+    /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains search term history items
+    /// </returns>
+    public virtual async Task<IEnumerable<string>> SearchTermHistoryItemsAsync(int customerId, int storeId = 0)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(customerId);
+
+        var cacheKey = _staticCacheManager
+            .PrepareKeyForDefaultCache(NopCommonDefaults.SearchTermsCacheKey, customerId, storeId);
+
+        var terms = await _staticCacheManager.GetAsync(cacheKey, async () =>
+        {
+            var numberOfItems = _catalogSettings.NumberOfSearchTermHistoryItems > 0 ?
+                _catalogSettings.NumberOfSearchTermHistoryItems : int.MaxValue;
+
+            return await GetSearchTermsAsync(string.Empty, customerId, storeId, pageSize: numberOfItems);
+        });
+
+        return terms.Select(x => x.Keyword);
     }
 
     /// <summary>

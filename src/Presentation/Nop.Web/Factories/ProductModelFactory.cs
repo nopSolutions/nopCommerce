@@ -1032,21 +1032,23 @@ public partial class ProductModelFactory : IProductModelFactory
                             //select new values
                             var selectedValues = await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml);
                             foreach (var attributeValue in selectedValues)
-                                foreach (var item in attributeModel.Values)
                             {
-                                if (attributeValue.Id == item.Id)
+                                foreach (var item in attributeModel.Values)
                                 {
-                                    item.IsPreSelected = true;
+                                    if (attributeValue.Id == item.Id)
+                                    {
+                                        item.IsPreSelected = true;
 
-                                    //set customer entered quantity
-                                    if (attributeValue.CustomerEntersQty)
-                                        item.Quantity = attributeValue.Quantity;
+                                        //set customer entered quantity
+                                        if (attributeValue.CustomerEntersQty)
+                                            item.Quantity = attributeValue.Quantity;
+                                    }
                                 }
                             }
                         }
                     }
 
-                        break;
+                    break;
                     case AttributeControlType.ReadonlyCheckboxes:
                     {
                         //values are already pre-set
@@ -1064,7 +1066,7 @@ public partial class ProductModelFactory : IProductModelFactory
                         }
                     }
 
-                        break;
+                    break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                     {
@@ -1076,7 +1078,7 @@ public partial class ProductModelFactory : IProductModelFactory
                         }
                     }
 
-                        break;
+                    break;
                     case AttributeControlType.Datepicker:
                     {
                         //keep in mind my that the code below works only in the current culture
@@ -1093,7 +1095,7 @@ public partial class ProductModelFactory : IProductModelFactory
                         }
                     }
 
-                        break;
+                    break;
                     case AttributeControlType.FileUpload:
                     {
                         if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
@@ -1106,7 +1108,7 @@ public partial class ProductModelFactory : IProductModelFactory
                         }
                     }
 
-                        break;
+                    break;
                     default:
                         break;
                 }

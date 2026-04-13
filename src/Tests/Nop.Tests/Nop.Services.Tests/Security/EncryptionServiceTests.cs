@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Domain.Security;
 using Nop.Services.Configuration;
 using Nop.Services.Security;

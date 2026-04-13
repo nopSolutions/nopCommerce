@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Domain.Topics;
 using Nop.Data;
 using Nop.Web.Factories;

@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core;
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Services.ArtificialIntelligence;

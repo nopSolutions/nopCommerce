@@ -15,6 +15,7 @@ public partial record MaintenanceModel : BaseNopModel
         DeleteAlreadySentQueuedEmails = new();
         DeleteMinificationFiles = new();
         DeleteThumbsFiles = new();
+        ClearSearchHistory = new();
     }
 
     public DeleteGuestsModel DeleteGuests { get; set; }
@@ -30,6 +31,8 @@ public partial record MaintenanceModel : BaseNopModel
     public DeleteMinificationFilesModel DeleteMinificationFiles { get; set; }
 
     public DeleteThumbFilesModel DeleteThumbsFiles { get; set; }
+
+    public ClearSearchHistoryModel ClearSearchHistory {  get; set; }
 
     public bool BackupSupported { get; set; }
 
@@ -100,6 +103,11 @@ public partial record MaintenanceModel : BaseNopModel
         public string FilesCountText { get; set; }
         
         public string FilesSizeText { get; set; }
+    }
+
+    public partial record ClearSearchHistoryModel : BaseNopModel
+    {
+        public int? NumberOfDeletedItems { get; set; }
     }
 
     #endregion
