@@ -60,56 +60,13 @@ Step 6 produces two outputs: a component view of what was designed, and the ADRs
 
 ---
 
-## ADR-001: RabbitMQ as Message Broker
+## Decisions Recorded
 
-**Status:** Accepted
+This iteration produced three architectural decisions. The decisions are authored here (during ADD step 6) but live as standalone documents under `07-adrs/` so the consolidated ADR set can be read end-to-end by a reviewer.
 
-**Context:**  
-nopCommerce must notify OpenBoxes and ERPNext when an order is placed. A direct HTTP call from the checkout thread creates a hard dependency on those systems being available and fast. QAS-1 and QAS-3 explicitly forbid this.
-
-**Decision:**  
-Use RabbitMQ as the message broker for all cross-context event delivery. All bounded contexts communicate via RabbitMQ exchanges and queues, not via direct HTTP calls in the synchronous request path.
-
-**Consequences:**
-- Checkout is decoupled from downstream system availability
-- Messages are durable — an OpenBoxes outage does not lose orders
-- Adds RabbitMQ as a required infrastructure component
-- Bridge services are needed for systems that do not natively consume AMQP
-
----
-
-## ADR-002: Plugin Architecture as Integration Boundary
-
-**Status:** Accepted
-
-**Context:**  
-nopCommerce core must not be modified. The integration logic must be addable and removable without touching the commerce engine.
-
-**Decision:**  
-All integration code lives inside nopCommerce plugins. Plugins use `IConsumer<T>` to react to domain events and `INopStartup` to register their services. The core has no reference to any plugin.
-
-**Consequences:**
-- Integration can be enabled or disabled from the admin panel
-- Each bounded context gets its own plugin, keeping concerns separated
-- Plugin boundaries enforce the rule that the commerce core does not know about external systems
-
----
-
-## ADR-003: Durable Queues with Persistent Delivery and Manual Acknowledgement
-
-**Status:** Accepted
-
-**Context:**  
-QAS-1 requires zero message loss during an OpenBoxes outage of up to 30 minutes. QAS-4 requires that all missed events self-heal after recovery with no operator action.
-
-**Decision:**  
-All queues are declared durable. All messages are published with delivery mode 2 (persistent). All consumers use manual acknowledgement — a message is acknowledged only after the downstream action succeeds.
-
-**Consequences:**
-- Messages survive a RabbitMQ broker restart
-- Messages survive a consumer outage of any duration (bounded only by disk)
-- Consumer logic must be idempotent — redelivered messages must not create duplicates
-- `OrderGuid` is the idempotency key for all order-related messages
+- [ADR-001 — RabbitMQ as Message Broker](../07-adrs/ADR-001-rabbitmq-as-broker.md)
+- [ADR-002 — Plugin Architecture as Integration Boundary](../07-adrs/ADR-002-plugin-as-integration-boundary.md)
+- [ADR-003 — Durable Queues with Persistent Delivery and Manual Acknowledgement](../07-adrs/ADR-003-durable-queues-and-manual-ack.md)
 
 ---
 
