@@ -9,4 +9,5 @@ public abstract partial class BaseEntity
     /// Gets or sets the entity identifier
     /// </summary>
     public int Id { get; set; }
+
 }
