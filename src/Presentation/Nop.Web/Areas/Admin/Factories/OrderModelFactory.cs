@@ -553,7 +553,6 @@ public partial class OrderModelFactory : IOrderModelFactory
     protected virtual async Task PrepareOrderModelPaymentInfoAsync(OrderModel model, Order order)
     {
         ArgumentNullException.ThrowIfNull(model);
-
         ArgumentNullException.ThrowIfNull(order);
 
         var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
@@ -569,29 +568,84 @@ public partial class OrderModelFactory : IOrderModelFactory
 
         if (order.AllowStoringCreditCardNumber)
         {
-            //card type
-            model.CardType = _encryptionService.DecryptText(order.CardType);
-            //cardholder name
-            model.CardName = _encryptionService.DecryptText(order.CardName);
-            //card number
-            model.CardNumber = _encryptionService.DecryptText(order.CardNumber);
-            //cvv
-            model.CardCvv2 = _encryptionService.DecryptText(order.CardCvv2);
-            //expiry date
-            var cardExpirationMonthDecrypted = _encryptionService.DecryptText(order.CardExpirationMonth);
-            if (!string.IsNullOrEmpty(cardExpirationMonthDecrypted) && cardExpirationMonthDecrypted != "0")
-                model.CardExpirationMonth = cardExpirationMonthDecrypted;
-            var cardExpirationYearDecrypted = _encryptionService.DecryptText(order.CardExpirationYear);
-            if (!string.IsNullOrEmpty(cardExpirationYearDecrypted) && cardExpirationYearDecrypted != "0")
-                model.CardExpirationYear = cardExpirationYearDecrypted;
+            try
+            {
+                //card type
+                model.CardType = _encryptionService.DecryptText(order.CardType);
+            }
+            catch (System.Security.Cryptography.CryptographicException ex)
+            {
+                model.CardType = string.Empty;
+                // Optionally log: _logger.Error("Failed to decrypt CardType", ex);
+            }
+
+            try
+            {
+                //cardholder name
+                model.CardName = _encryptionService.DecryptText(order.CardName);
+            }
+            catch (System.Security.Cryptography.CryptographicException ex)
+            {
+                model.CardName = string.Empty;
+            }
+
+            try
+            {
+                //card number
+                model.CardNumber = _encryptionService.DecryptText(order.CardNumber);
+            }
+            catch (System.Security.Cryptography.CryptographicException ex)
+            {
+                model.CardNumber = string.Empty;
+            }
+
+            try
+            {
+                //cvv
+                model.CardCvv2 = _encryptionService.DecryptText(order.CardCvv2);
+            }
+            catch (System.Security.Cryptography.CryptographicException ex)
+            {
+                model.CardCvv2 = string.Empty;
+            }
+
+            try
+            {
+                //expiry date
+                var cardExpirationMonthDecrypted = _encryptionService.DecryptText(order.CardExpirationMonth);
+                if (!string.IsNullOrEmpty(cardExpirationMonthDecrypted) && cardExpirationMonthDecrypted != "0")
+                    model.CardExpirationMonth = cardExpirationMonthDecrypted;
+            }
+            catch (System.Security.Cryptography.CryptographicException ex)
+            {
+                model.CardExpirationMonth = string.Empty;
+            }
+
+            try
+            {
+                var cardExpirationYearDecrypted = _encryptionService.DecryptText(order.CardExpirationYear);
+                if (!string.IsNullOrEmpty(cardExpirationYearDecrypted) && cardExpirationYearDecrypted != "0")
+                    model.CardExpirationYear = cardExpirationYearDecrypted;
+            }
+            catch (System.Security.Cryptography.CryptographicException ex)
+            {
+                model.CardExpirationYear = string.Empty;
+            }
 
             model.AllowStoringCreditCardNumber = true;
         }
         else
         {
-            var maskedCreditCardNumberDecrypted = _encryptionService.DecryptText(order.MaskedCreditCardNumber);
-            if (!string.IsNullOrEmpty(maskedCreditCardNumberDecrypted))
-                model.CardNumber = maskedCreditCardNumberDecrypted;
+            try
+            {
+                var maskedCreditCardNumberDecrypted = _encryptionService.DecryptText(order.MaskedCreditCardNumber);
+                if (!string.IsNullOrEmpty(maskedCreditCardNumberDecrypted))
+                    model.CardNumber = maskedCreditCardNumberDecrypted;
+            }
+            catch (System.Security.Cryptography.CryptographicException ex)
+            {
+                model.CardNumber = string.Empty;
+            }
         }
 
         //payment transaction info
