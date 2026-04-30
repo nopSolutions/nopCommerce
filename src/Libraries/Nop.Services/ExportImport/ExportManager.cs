@@ -1928,7 +1928,8 @@ public partial class ExportManager : IExportManager
         var ignore = await _workContext.GetCurrentVendorAsync() != null;
 
         //lambda expressions for choosing correct order address
-        async Task<Address> orderAddress(Order o) => await _addressService.GetAddressByIdAsync((o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) ?? 0);
+        async Task<Address> orderAddress(Order o) =>
+            await _addressService.GetAddressByIdAsync(o.ShippingAddressId ?? 0);
         async Task<Address> orderBillingAddress(Order o) => await _addressService.GetAddressByIdAsync(o.BillingAddressId);
 
         //property array
