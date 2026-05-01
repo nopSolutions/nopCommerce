@@ -28,7 +28,7 @@ Iteration 1 satisfied QAS-1 *under the explicit assumption that RabbitMQ is up*.
 
 ### Explicitly Not a Driver: QAS-3
 
-QAS-3 (checkout completes when ERPNext is slow) is **already satisfied** by Iteration 1. ERPNext is one of many possible RabbitMQ consumers; binding `verdemart.orders.erpnext` to the existing exchange is mechanical and requires no architectural change. The publish path does not know that ERPNext exists. This driver is recorded here as resolved, not as a target for this iteration.
+QAS-3 (checkout completes when surrounding systems are slow) is **already satisfied** by Iteration 1. Surrounding systems are consumers of RabbitMQ events; the publish path does not know who is listening. No surrounding system is ever on the synchronous checkout thread. This driver is recorded here as resolved, not as a target for this iteration.
 
 ---
 

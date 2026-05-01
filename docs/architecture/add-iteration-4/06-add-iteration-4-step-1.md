@@ -2,7 +2,7 @@
 
 ## Iteration Goal
 
-Establish nopCommerce as **visible to the customer for cross-channel fulfillment progress** by closing the last unaddressed quality attribute scenario in the set: QAS-5. This iteration builds the carrier integration end to end: both the outbound booking call that establishes the carrier's tracking identifier on a `Shipment`, and the inbound webhook path that turns carrier status updates into customer-visible state changes within ten seconds of receipt.
+Establish nopCommerce as **visible to the customer for cross-channel fulfillment progress** by addressing the carrier half of QAS-5. This iteration builds the carrier integration end to end: both the outbound booking call that establishes the carrier's tracking identifier on a `Shipment`, and the inbound webhook path that turns carrier status updates into customer-visible state changes within ten seconds of receipt.
 
 The two halves are the same integration, viewed from each direction. The outbound half exists to make the inbound half meaningful: without `ExternalShipmentId` on `Shipment`, an inbound `shipment.status.updated` webhook has nothing to correlate against. Both are produced as one structural change.
 
@@ -17,7 +17,7 @@ This iteration is also the first one that introduces an **inbound** integration 
 Inherited from the Step 7 verdict of Iteration 3: *"Iteration 4 begins with QAS-5 and the carrier integration via WireMock."*
 
 | Field | Value |
-|---|---|
+| --- |---|
 | Quality attribute | Visibility (cross-channel state propagation) |
 | Stimulus | WireMock (carrier) sends a `shipment.status.updated` webhook — status changes to "In Transit" |
 | Source | Carrier system (WireMock) |
@@ -37,7 +37,7 @@ Inherited from the Step 7 verdict of Iteration 3: *"Iteration 4 begins with QAS-
 ### Inherited from Iteration 3 Step 7
 
 | Inherited input | Source |
-|---|---|
+| --- |---|
 | Primary driver: QAS-5 | Iter 3 Step 7 — next-iteration inputs |
 | Surrounding system: WireMock as carrier simulator | `01-scenario.md:26`; `03-bounded-contexts.md` Shipping Context |
 | New mechanism needed: inbound webhook ingestion | `02-current-state.md:84-90` — pressure point #7 |
@@ -51,7 +51,7 @@ Inherited from the Step 7 verdict of Iteration 3: *"Iteration 4 begins with QAS-
 ### Constraints
 
 | Constraint | Source |
-|---|---|
+| --- |---|
 | nopCommerce remains the fixed commerce core | Carried from Iterations 1–3 |
 | Integration code lives inside plugins | ADR-002 |
 | RabbitMQ topology is fixed (`verdemart.orders` exchange) — new exchanges/queues for unrelated flows are allowed | ADR-001, ADR-003 |
@@ -67,7 +67,7 @@ Inherited from the Step 7 verdict of Iteration 3: *"Iteration 4 begins with QAS-
 ### Architectural Concerns
 
 | Concern | Description |
-|---|---|
+| --- |---|
 | CON-17 | Webhook arrival can race the dispatch event. The carrier may emit `shipment.status.updated` before nopCommerce has committed the local dispatch record, leaving the webhook with no correlation target |
 | CON-18 | Carriers retry webhooks on 5xx and on timeout. The handler must be idempotent under repeated delivery of the same event |
 | CON-19 | Out-of-order delivery is real: webhook A ("In Transit") may arrive after webhook B ("Delivered") because of carrier retry windows, NAT timeouts, or transient routing issues. The handler must reach the correct final state regardless |
@@ -82,7 +82,7 @@ Inherited from the Step 7 verdict of Iteration 3: *"Iteration 4 begins with QAS-
 ### Relevant Existing Structures
 
 | Element | Role |
-|---|---|
+| --- |---|
 | `Shipment` entity (`Nop.Core.Domain.Shipping.Shipment`) | Existing entity. Will gain `ExternalShipmentId`, `ExternalCarrierCode`, `ExternalShippingStatus`, `LastStatusOccurredAtUtc` columns |
 | `ShipmentSentEvent` | Existing domain event; the natural trigger point for outbound carrier booking |
 | `ShippingStatus` enum (`Nop.Core.Domain.Shipping`) | Coarse internal status. Step 3 must decide whether to map carrier vocab into it or keep external status orthogonal |

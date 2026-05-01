@@ -59,7 +59,7 @@ Iteration 2 inherits the following from this analysis:
 
 | Inherited input | Origin |
 |---|---|
-| **Primary driver:** QAS-3 (Availability — checkout completes when ERPNext is slow) | Scenario QAS set |
+| **Primary driver:** QAS-3 (Availability — checkout completes when surrounding systems are slow) | Scenario QAS set |
 | **Carried-over driver:** QAS-1 remains partly open via the broker-down hole | Residual risk above |
 | **New constraint:** the publish path must not block on RabbitMQ availability either (closes CON-2) | Promoted from concern to constraint |
 | **Element to refine:** the publish path itself — specifically, where the message lives between `OrderPlacedEvent` firing and arriving on the broker | Identified as the source of the broker-down hole |

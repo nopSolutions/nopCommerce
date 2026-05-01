@@ -72,7 +72,7 @@ The two boxes labelled "INBOUND, NEW" close QAS-5's response measure. The two ou
 ## Responsibilities In Scope for This Iteration
 
 | Responsibility | In scope |
-|---|---|
+| --- |---|
 | Add `ExternalShipmentId`, `ExternalCarrierCode`, `ExternalShippingStatus`, `LastStatusOccurredAtUtc` columns to `Shipment` (CON-21) | Yes |
 | Implement `IConsumer<ShipmentSentEvent>` that writes `carrier.booking.requested` to the Outbox (CON-22) | Yes |
 | Implement `CarrierBookingConsumer` that drains the new Outbox event type and POSTs to WireMock | Yes |
@@ -91,7 +91,7 @@ The two boxes labelled "INBOUND, NEW" close QAS-5's response measure. The two ou
 ## Responsibilities Explicitly Outside This Iteration
 
 | Responsibility | Owner |
-|---|---|
+| --- |---|
 | HMAC payload signing | Production hardening — bearer suffices for QAS-5 (CON-20) |
 | Token rotation infrastructure | Operational secrets management — out of scope |
 | Tracking URL, location, full carrier event history on the order page | UX polish — QAS-5 only requires status text visible (`04-qas.md:81`) |

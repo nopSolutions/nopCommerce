@@ -143,7 +143,7 @@ The cost is one row per webhook (small) and trivial retention (operational task 
 ## Summary: Concepts → Drivers → Rejected Alternatives
 
 | # | Concept | Driver(s) satisfied | Rejected alternative |
-|---|---|---|---|
+| --- |---| --- |---|
 | 1 | Async handoff via internal queue | QAS-5 + CON-24 + CON-18 | Sync in-controller; reuse publisher Outbox |
 | 2 | Dedup by `eventId` + timestamp guard | CON-18 + CON-19 + ADR-003 | Triple-key dedup; arrival-order LWW; trust the broker |
 | 3 | External status as string; enum untouched | CON-21 + QAS-5 | Extend enum; coarsen-only; new plugin enum |

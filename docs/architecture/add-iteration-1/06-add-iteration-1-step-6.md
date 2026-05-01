@@ -55,7 +55,7 @@ Step 6 produces two outputs: a component view of what was designed, and the ADRs
            │ (future iterations)
            ▼
     OpenBoxes bridge service
-    ERPNext bridge service
+    (other surrounding system consumers — future iterations)
 ```
 
 ---
@@ -85,6 +85,6 @@ This iteration produced three architectural decisions. The decisions are authore
 
 ## What Iteration 2 Will Address
 
-QAS-3 — Availability: checkout must complete when ERPNext is slow.
+QAS-3 — Availability: checkout must complete when surrounding systems are slow.
 
 This introduces the **outbox pattern**: instead of publishing directly to RabbitMQ inside `HandleEventAsync`, the consumer writes the message to a database table first. A background worker reads the table and publishes to RabbitMQ. This protects against the case where RabbitMQ itself is temporarily unreachable at publish time.

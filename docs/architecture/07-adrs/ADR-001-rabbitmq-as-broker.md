@@ -8,7 +8,7 @@
 
 ## Context
 
-nopCommerce must notify OpenBoxes and ERPNext when an order is placed. A direct HTTP call from the checkout thread creates a hard dependency on those systems being available and fast. QAS-1 and QAS-3 explicitly forbid this.
+nopCommerce must notify surrounding systems (OpenBoxes, carrier, and others) when an order is placed. A direct HTTP call from the checkout thread creates a hard dependency on those systems being available and fast. QAS-1 and QAS-3 explicitly forbid this.
 
 ## Decision
 

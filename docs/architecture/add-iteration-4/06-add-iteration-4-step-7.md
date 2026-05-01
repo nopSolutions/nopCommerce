@@ -13,7 +13,7 @@ Iteration 4 set out to give the customer cross-channel visibility of fulfillment
 1. **Outbound** — a `ShipmentSentEvent` consumer writes a `carrier.booking.requested` row to the existing Outbox; a new in-process `CarrierBookingConsumer` drains it, calls WireMock, and stores the returned tracking identifier on `Shipment.ExternalShipmentId`.
 2. **Inbound** — a new `/api/carrier/webhook` endpoint authenticates, audits, and hands the payload off to a local queue; an asynchronous `CarrierStatusConsumer` correlates by `ExternalShipmentId`, applies an out-of-order guard, updates state inside one DB transaction, and enqueues a customer notification email.
 
-Four architectural decisions were recorded (ADR-011 through ADR-014); the QAS set defined in `04-qas.md` is now structurally complete.
+Four architectural decisions were recorded (ADR-011 through ADR-014). QAS-5's carrier half is now structurally satisfied; the warehouse visibility half (OpenBoxes state → nopCommerce) is carried to Iteration 5.
 
 ---
 
@@ -22,7 +22,7 @@ Four architectural decisions were recorded (ADR-011 through ADR-014); the QAS se
 QAS-5 has two clauses, both bounded at **10 seconds** from webhook receipt. Each is checked against the design.
 
 | Clause | Result |
-|---|---|
+| --- | --- |
 | Tracking status visible to the customer within 10 s | The controller writes one audit row + one queue publish before returning 200; the consumer commits status update + email enqueue inside one local DB transaction. Observed end-to-end latency is dominated by the local DB transaction — sub-second under any realistic load — well inside the 10 s budget |
 | Email queued within the same window | The status update and `IWorkflowMessageService` enqueue happen inside the same DB transaction; either both succeed or the message is NACKed for retry. No separate email retry path is needed |
 
@@ -33,20 +33,20 @@ Empirical confirmation under load remains pending — listed in "Partially Satis
 ## End-to-End Coverage of the Full QAS Set
 
 | QAS | Quality | Status before Iter 4 | Status after Iter 4 |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | QAS-1 | Reliability | Mechanism-complete (Iter 1+2+3); empirical timing pending spike | Unchanged — empirical timing still pending |
 | QAS-2 | Consistency | Structurally satisfied (Iter 3); empirical load test pending spike | Unchanged — empirical load test still pending |
 | QAS-3 | Availability | Solved (Iter 1) | Unchanged |
 | QAS-4 | Recoverability | Mechanism-complete (Iter 1+2+3); empirical drain pending spike | Unchanged — empirical drain still pending |
-| QAS-5 | Visibility | Not addressed | Structurally satisfied; empirical timing pending the same bundled spike |
+| QAS-5 | Visibility | Not addressed | Carrier half structurally satisfied; warehouse visibility half (OpenBoxes polling) carried to Iteration 5 |
 
-The QAS set defined in `04-qas.md` is now **structurally complete**. The remaining gap is empirical confirmation, owed by the bundled feasibility spike noted at Iter 3 Step 7.
+QAS-5 is partially satisfied. The carrier webhook path closes the tracking-status clause. The warehouse fulfillment-state clause (OpenBoxes `ISSUED` → nopCommerce) requires a polling `IScheduleTask` — deferred to Iteration 5 because OpenBoxes has no outbound webhook capability (confirmed by feasibility spike).
 
 ---
 
 ## What Is Fully Satisfied
 
-- **QAS-5 structurally satisfied** — both halves of the carrier integration land; the customer-visible state changes within the 10 s budget by construction.
+- **QAS-5 carrier half structurally satisfied** — both halves of the carrier integration land; the customer-visible tracking state changes within the 10 s budget by construction. The warehouse visibility half is carried to Iteration 5.
 - **Pressure point #7** from `02-current-state.md` ("no webhook ingestion or outbound integration pattern in the framework") closed with a working pattern: bearer auth + audit table + async handoff via local queue + idempotency by carrier-supplied event id.
 - **CON-17 through CON-24** all addressed: race between webhook arrival and dispatch (CON-17, NACK-with-requeue + DLQ); carrier retries (CON-18, dedup); out-of-order delivery (CON-19, timestamp guard); auth (CON-20, bearer); status-vocabulary preservation (CON-21, parallel `ExternalShippingStatus`); admin UI not blocked (CON-22, Outbox reuse); audit (CON-23, `CarrierWebhookEvent`); 10 s budget (CON-24, async handoff).
 - **ADR-002's plugin boundary** preserved — all new code in the plugin; the four `Shipment` columns are added by the plugin's FluentMigrator migration; `Nop.Core` source is not modified.
@@ -59,7 +59,7 @@ The QAS set defined in `04-qas.md` is now **structurally complete**. The remaini
 ## What Is Partially Satisfied
 
 | Item | What is in place | What is missing |
-|---|---|---|
+| --- | --- | --- |
 | QAS-5 within-10-second response measure | Design (async handoff, single DB transaction) is bounded sub-second | Empirical timing — bundled with the same spike that times QAS-1/2/4 |
 | WireMock contract | `IWireMockClient` interface defined; the booking request/response shape is fixed at Step 5 | Concrete WireMock stub configuration to be authored alongside the demo deployment |
 | Status update visibility on the order page | Render path uses `ExternalShippingStatus` when present; falls back to internal `ShippingStatus` | Admin/customer template review — cosmetic, not architectural |
@@ -69,7 +69,7 @@ The QAS set defined in `04-qas.md` is now **structurally complete**. The remaini
 ## What Is Not Satisfied — Residual Risks
 
 | Residual risk | Why it remains | Where it goes |
-|---|---|---|
+| --- | --- | --- |
 | HMAC payload signing for production | Bearer token is sufficient for the demo; ADR-011 records HMAC as the production-hardening alternative | Production hardening checklist — not a follow-up iteration |
 | Token rotation infrastructure | `InboundBearerToken` is a setting; no rotation tooling | Operational secrets management — out of scope |
 | Tracking URL, location, and full event history on the order page | QAS-5 only requires status text visible | UX polish; the data is captured (audit table + `Location` field on each event) and ready to surface when the design dictates it |
@@ -85,10 +85,9 @@ The QAS set defined in `04-qas.md` is now **structurally complete**. The remaini
 
 ## Inputs Carried Forward
 
-The QAS set is structurally complete, so no further QAS-driven iteration is required. The remaining items are operational rather than architectural:
-
 | Carry-over | Origin |
-|---|---|
+| --- | --- |
+| **Primary driver: QAS-5 warehouse half** — OpenBoxes `ISSUED` state must become visible in nopCommerce; polling `IScheduleTask` required | This iteration — OpenBoxes has no outbound webhook (confirmed spike) |
 | Bundled feasibility spike — empirical timing of QAS-1/2/4/5; OpenBoxes API capability | Iter 3 Step 7 + this iteration |
 | Rejected-order DB pollution cleanup | Iter 3 Step 7 |
 | Outbox row retention policy | Iter 2 Step 7 |
@@ -100,7 +99,7 @@ The QAS set is structurally complete, so no further QAS-driven iteration is requ
 
 ## Iteration Verdict
 
-Iteration 4 closed the QAS set. QAS-5 is structurally satisfied through a single new plugin (`Nop.Plugin.Shipping.CarrierWebhook`) that delivers both halves of the carrier integration end to end: outbound booking via the existing Iter 2 Outbox, and inbound webhook ingestion via async handoff to a local queue with full audit, dedup, and out-of-order protection. Four architectural decisions were recorded:
+Iteration 4 closed the carrier half of QAS-5. The carrier integration is complete end to end: outbound booking via the existing Iter 2 Outbox, and inbound webhook ingestion via async handoff to a local queue with full audit, dedup, and out-of-order protection. Four architectural decisions were recorded:
 
 - [ADR-011 — Webhook Ingestion via Plugin with Async Internal Queue Handoff](../07-adrs/ADR-011-webhook-ingestion-async-handoff.md)
 - [ADR-012 — External Shipment Correlation via `ExternalShipmentId` on `Shipment`](../07-adrs/ADR-012-external-shipment-correlation.md)
@@ -109,6 +108,6 @@ Iteration 4 closed the QAS set. QAS-5 is structurally satisfied through a single
 
 Pressure point #7 from `02-current-state.md` — the absence of any framework-level webhook ingestion pattern — is closed with a concrete realisation. The plugin produced here is a candidate template for future inbound integrations (e.g. payment-status callbacks, supplier ASN feeds), but no generalisation work is performed in this iteration; QAS-5 alone does not justify it.
 
-The four QAS that were already addressed (QAS-1, QAS-2, QAS-3, QAS-4) are unaffected. The bundled feasibility spike from Iter 3 absorbs QAS-5's empirical timing and remains the last item before the live demo.
+QAS-1 through QAS-4 are unaffected. QAS-5's warehouse visibility half is carried to Iteration 5, which will produce ADR-015 and the `OpenBoxesStatusPollerTask`.
 
-The iteration is closed. The QAS set defined in `04-qas.md` is structurally complete.
+The iteration is closed. Iteration 5 begins with the warehouse half of QAS-5 and the OpenBoxes polling task.

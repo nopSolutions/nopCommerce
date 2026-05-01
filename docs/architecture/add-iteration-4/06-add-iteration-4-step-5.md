@@ -192,7 +192,7 @@ Content-Type: application/json
 ### Responses
 
 | Code | When |
-|---|---|
+| --- |---|
 | `200 OK` | Authenticated, parsed, queued for processing. Empty body. |
 | `400 Bad Request` | Body missing required fields or fails JSON parsing. |
 | `401 Unauthorized` | Missing or wrong bearer token. |
@@ -439,7 +439,7 @@ The booking flow's DLQ topology is symmetric (omitted for brevity).
 A new `MessageTemplate` row inserted on plugin install:
 
 | Field | Value |
-|---|---|
+| --- |---|
 | `Name` | `ShipmentStatusUpdated.CustomerNotification` |
 | `Subject` | `Update on your order %Order.OrderNumber%` |
 | `Body` (excerpt) | `Hello %Customer.FullName%, your order is now: %Shipment.ExternalStatus%. %Shipment.ExternalStatusDescription%.` |

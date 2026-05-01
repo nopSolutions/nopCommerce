@@ -20,7 +20,7 @@ This iteration produced four architectural decisions. Their full text lives in `
 ## What This Iteration Produced
 
 | Artefact | Description |
-|---|---|
+| --- |---|
 | nopCommerce plugin | `Nop.Plugin.Shipping.CarrierWebhook` with 13 named components |
 | `Shipment` columns | `ExternalShipmentId`, `ExternalCarrierCode`, `ExternalShippingStatus`, `LastStatusOccurredAtUtc` |
 | New tables | `CarrierWebhookEvent` (audit), `ProcessedCarrierEvent` (dedup) |
@@ -41,4 +41,4 @@ This iteration produced four architectural decisions. Their full text lives in `
 
 ## What Step 7 Will Do
 
-Step 7 verifies the design against QAS-5's response measure end to end (webhook receipt → customer-visible state + queued email within 10 s) and confirms that the QAS set is now structurally complete. It names the residual concerns that fall to operational hardening or a possible future iteration, and closes the iteration.
+Step 7 verifies the design against QAS-5's carrier-half response measure (webhook receipt → customer-visible state + queued email within 10 s), names the warehouse visibility half as carried to Iteration 5, and closes the iteration.

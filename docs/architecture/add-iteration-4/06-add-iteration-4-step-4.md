@@ -9,7 +9,7 @@ Step 4 turns the eight design concepts from Step 3 into concrete named component
 ## Plugin Identity
 
 | Property | Value |
-|---|---|
+| --- |---|
 | Plugin name | `Nop.Plugin.Shipping.CarrierWebhook` |
 | Location | `src/Plugins/Nop.Plugin.Shipping.CarrierWebhook/` |
 | Type | nopCommerce plugin (`IPlugin` via `BasePlugin`) |
@@ -24,7 +24,7 @@ Step 4 turns the eight design concepts from Step 3 into concrete named component
 Four new columns, all nullable so existing rows are unaffected:
 
 | Column | Type | Notes |
-|---|---|---|
+| --- |---| --- |
 | `ExternalShipmentId` | `varchar(128)`, nullable, indexed | Carrier-issued tracking identifier; correlation key for inbound webhooks |
 | `ExternalCarrierCode` | `varchar(32)`, nullable | E.g. `"WIREMOCK"`. Future-proofs multi-carrier even though only one is wired now |
 | `ExternalShippingStatus` | `varchar(64)`, nullable | Carrier vocabulary verbatim, e.g. `"OUT_FOR_DELIVERY"` |
@@ -41,7 +41,7 @@ The schema is added by a FluentMigrator migration inside the plugin. The columns
 Audit log for every webhook receipt:
 
 | Column | Type | Notes |
-|---|---|---|
+| --- |---| --- |
 | `Id` | `int`, PK, identity | inherited via `BaseEntity` |
 | `EventId` | `varchar(64)`, nullable, indexed | Carrier's UUID; null only when the payload could not be parsed |
 | `ReceivedAtUtc` | `datetime(6)`, not null | Server clock at controller entry |
@@ -59,7 +59,7 @@ Index on `(ReceivedAtUtc DESC)` for operator queries; index on `EventId` for cro
 Dedup state for the inbound consumer:
 
 | Column | Type | Notes |
-|---|---|---|
+| --- |---| --- |
 | `EventId` | `varchar(64)`, PK | Carrier's UUID |
 | `ProcessedAtUtc` | `datetime(6)`, not null | When the consumer applied the event |
 | `ShipmentId` | `int`, not null | Convenience for joining; not a strict FK to keep the table append-only |
@@ -71,7 +71,7 @@ Both new tables are created by the same FluentMigrator migration as the `Shipmen
 ## RabbitMQ Topology Additions
 
 | Element | Name | Properties |
-|---|---|---|
+| --- |---| --- |
 | Exchange | `verdemart.carrier.booking` | direct, durable, auto-delete: false |
 | Queue | `verdemart.carrier.booking.requested` | durable, manual ack |
 | Binding | queue ← exchange | routing key: `carrier.booking.requested` |
@@ -239,7 +239,7 @@ The consumer uses **only the existing Iter 2 Outbox primitives** — no new disp
 **Fields:**
 
 | Field | Default | Notes |
-|---|---|---|
+| --- |---| --- |
 | `InboundBearerToken` | env-driven | Token expected on inbound webhooks |
 | `WireMockBaseUrl` | env-driven | E.g. `http://wiremock:8080` |
 | `WireMockTimeoutMs` | `3000` | Per-call timeout for booking |

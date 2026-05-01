@@ -36,19 +36,19 @@ Each scenario is written as: **Stimulus → Source → Environment → Artifact 
 
 ---
 
-## QAS-3 - Availability: Checkout must complete when ERPNext is slow
+## QAS-3 - Availability: Checkout must complete when surrounding systems are slow
 
 | Field | Value |
 |---|---|
 | Quality attribute | Availability |
-| Stimulus | A customer completes checkout while ERPNext is responding slowly (>5 s per request) |
-| Source | ERPNext under load or network degradation |
-| Environment | nopCommerce is processing the order; ERPNext sync is part of the post-placement flow |
+| Stimulus | A customer completes checkout while a surrounding system (warehouse, ERP, or carrier) is responding slowly (>5 s per request) |
+| Source | Any surrounding system under load or network degradation |
+| Environment | nopCommerce is processing the order; surrounding system sync is part of the post-placement flow |
 | Artifact | nopCommerce order placement and the customer-facing confirmation page |
-| Response | The order is confirmed to the customer immediately; ERPNext synchronisation happens asynchronously via RabbitMQ; the customer never waits on ERPNext |
-| Response measure | Checkout response time remains under 3 seconds regardless of ERPNext latency; no checkout failures attributable to ERPNext slowness |
+| Response | The order is confirmed to the customer immediately; surrounding system synchronisation happens asynchronously via RabbitMQ; the customer never waits on any surrounding system |
+| Response measure | Checkout response time remains under 3 seconds regardless of surrounding system latency; no checkout failures attributable to surrounding system slowness |
 
-**Design decision forced:** ERPNext must never be in the synchronous checkout path. The `IConsumer<OrderPlacedEvent>` that notifies ERPNext must publish to RabbitMQ and return immediately. Any blocking HTTP call to ERPNext during checkout is an architectural violation.
+**Design decision forced:** No surrounding system must ever be in the synchronous checkout path. The `IConsumer<OrderPlacedEvent>` that notifies downstream systems must publish to RabbitMQ and return immediately. Any blocking HTTP call to a surrounding system during checkout is an architectural violation.
 
 ---
 
@@ -68,16 +68,19 @@ Each scenario is written as: **Stimulus → Source → Environment → Artifact 
 
 ---
 
-## QAS-5 - Visibility: Carrier tracking update must reach the customer quickly
+## QAS-5 - Visibility: External state changes must reach the customer quickly
 
 | Field | Value |
 |---|---|
 | Quality attribute | Visibility (cross-channel state propagation) |
-| Stimulus | WireMock (carrier) sends a `shipment.status.updated` webhook - status changes to "In Transit" |
-| Source | Carrier system (WireMock) |
-| Environment | Normal operation; shipment has been dispatched from OpenBoxes |
+| Stimulus | A surrounding system changes the state of an order or shipment outside nopCommerce — either OpenBoxes marks a fulfillment order as `ISSUED`, or the carrier sends a `shipment.status.updated` webhook |
+| Source | OpenBoxes (warehouse) or carrier system (WireMock) |
+| Environment | Normal operation; order has been placed and is progressing through the fulfillment lifecycle |
 | Artifact | The order detail page in nopCommerce and the customer notification email |
-| Response | nopCommerce receives and processes the webhook; the tracking status is updated in the order record; a notification email is queued |
-| Response measure | Order tracking status visible to the customer within 10 seconds of the webhook being received; email queued within the same window |
+| Response | nopCommerce detects the external state change and reflects it internally; the order status is updated; a notification email is queued |
+| Response measure | Carrier tracking status visible to the customer within 10 seconds of the webhook being received; OpenBoxes fulfillment state visible in nopCommerce within the polling interval (default 30 seconds); email queued within the same window |
 
-**Design decision forced:** nopCommerce must expose a webhook endpoint that accepts carrier callbacks, verifies the payload, and maps the external shipment status to the internal `ShippingStatus`. The `Shipment` entity needs an `ExternalShipmentId` field to correlate the incoming webhook to the correct order.
+**Design decisions forced:**
+
+- nopCommerce must expose a webhook endpoint that accepts carrier callbacks, verifies the payload, and maps the external shipment status to the internal `ShippingStatus`. The `Shipment` entity needs an `ExternalShipmentId` field to correlate the incoming webhook to the correct order.
+- OpenBoxes provides no outbound webhook capability (confirmed by feasibility spike). nopCommerce must poll the OpenBoxes REST API (`GET /api/generic/shipment`) on a schedule to detect when a fulfillment order reaches `ISSUED`. A dedicated `IScheduleTask` is required to close the warehouse visibility loop without operator intervention.
