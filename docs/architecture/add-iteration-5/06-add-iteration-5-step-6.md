@@ -2,7 +2,7 @@
 
 ## Updated Component View
 
-```
+```text
 [ nopCommerce process ]
 
 ┌─────────────────────────────────────────────────────────────────┐
@@ -15,8 +15,9 @@
 │  │  OpenBoxesStatusPollerTask  (NEW)                         │   │
 │  │   ├── IOpenBoxesClient.GetIssuedFulfillmentOrdersAsync() │   │
 │  │   ├── IOrderService.GetOrderByGuidAsync()                │   │
-│  │   └── IOrderProcessingService (status transition)        │   │
-│  │       + IOutboxRepository (carrier booking trigger)      │   │
+│  │   ├── IShipmentService.InsertShipmentAsync()             │   │
+│  │   ├── IOrderProcessingService (status transition)        │   │
+│  │   └── IOutboxRepository (carrier booking trigger)        │   │
 │  └──────────────────────────────────────────────────────────┘   │
 └──────────────────────────────┬──────────────────────────────────┘
                                │ GET /api/generic/shipment?status=ISSUED
@@ -29,7 +30,7 @@
 
 ## Sequence: Fulfillment State Detected
 
-```
+```text
 OpenBoxesStatusPollerTask
     │ (every 30 s)
     │ GET /api/generic/shipment?status=ISSUED
@@ -39,15 +40,20 @@ OpenBoxes REST API
     ▼
 OpenBoxesStatusPollerTask
     │ GetOrderByGuidAsync(OrderGuid)
-    │ if already Complete → skip
-    │ else → SetOrderStatus(Complete)
-    │      → write outbox row (carrier.booking.requested)
+    │ if Shipment exists + ExternalShipmentId set → skip
+    │ else → BEGIN TRANSACTION
+    │           InsertShipmentAsync (+ ShipmentItem per order item)
+    │             fires ShipmentCreatedEvent
+    │           SetOrderStatus(Complete)
+    │           write outbox row (carrier.booking.requested, ShipmentId in payload)
+    │        COMMIT  (rollback on any failure → next tick retries)
     ▼
 OutboxDispatcherTask (existing — Iter 2)
     │ publishes carrier.booking.requested
     ▼
 CarrierBookingConsumer (existing — Iter 4)
     │ calls WireMock booking endpoint
+    │ writes ExternalShipmentId back to Shipment row
     ▼
 Shipment.ExternalShipmentId populated
     │

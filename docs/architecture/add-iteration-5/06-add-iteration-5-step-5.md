@@ -46,6 +46,7 @@ public class OpenBoxesStatusPollerTask : IScheduleTask
         IOpenBoxesClient openBoxesClient,
         IOrderService orderService,
         IOrderProcessingService orderProcessingService,
+        IShipmentService shipmentService,
         IOutboxRepository outboxRepository,
         AllocationSettings settings,
         ILogger logger);
@@ -55,12 +56,18 @@ public class OpenBoxesStatusPollerTask : IScheduleTask
 ```
 
 **`ExecuteAsync` logic:**
+
 1. Call `GetIssuedFulfillmentOrdersAsync()` — fetch up to `PollerBatchSize` results
 2. For each `OpenBoxesFulfillmentOrder`:
    a. Look up `Order` by `OrderGuid` via `IOrderService.GetOrderByGuidAsync()`
    b. If not found: log warning, skip
-   c. If found and `Order.OrderStatus == OrderStatus.Complete`: skip (idempotent)
-   d. If found and not complete: call `IOrderProcessingService.MarkOrderAsPaidAsync()` or equivalent status transition; write an outbox row with `EventType = "carrier.booking.requested"` to trigger the carrier booking chain
+   c. If found and order already has a `Shipment` with `ExternalShipmentId` set: skip (carrier booking already confirmed — idempotent)
+   d. If found and not yet confirmed: open a DB transaction, then:
+      - Fetch order items via `IOrderService.GetOrderItemsAsync(order.Id)`
+      - Create a `Shipment` record and one `ShipmentItem` per order item via `IShipmentService.InsertShipmentAsync` / `InsertShipmentItemAsync` — fires `ShipmentCreatedEvent` and produces the `ShipmentId` needed by the carrier booking consumer
+      - Call `IOrderProcessingService.SetOrderStatusAsync(OrderStatus.Complete)` to transition the order status
+      - Write an outbox row with `EventType = "carrier.booking.requested"` and `ShipmentId` in the payload
+      - Commit the transaction — all three writes are atomic; on any failure the transaction rolls back and the next tick retries
 3. Catch all exceptions internally; log and continue to next tick
 
 ---
