@@ -1,4 +1,4 @@
-# ADR-007 — Cross-Channel Allocation via Synchronous HTTP and Async Confirmation
+# ADR-006 — Cross-Channel Allocation via Synchronous HTTP and Async Confirmation
 
 | | |
 |---|---|
@@ -8,7 +8,7 @@
 
 ## Context
 
-ADR-006 places the allocation gate inside nopCommerce, operating on the `ProductWarehouseInventory` row. POS, as an external system, must reach the same gate for QAS-2 to hold across channels (CON-15 — web and POS must reach the same allocation gate).
+ADR-005 places the allocation gate inside nopCommerce, operating on the `ProductWarehouseInventory` row. POS, as an external system, must reach the same gate for QAS-2 to hold across channels (CON-15 — web and POS must reach the same allocation gate).
 
 `03-bounded-contexts.md` already declares that POS publishes `pos.sale.completed` over RabbitMQ — described there as "triggers inventory adjustment visible to Commerce and Warehouse". Reusing that event as the allocation step would leave an unbounded window between POS commit and message arrival in nopCommerce, during which the web storefront still shows the unit as available — oversell.
 

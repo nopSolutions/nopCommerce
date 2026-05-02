@@ -1,4 +1,4 @@
-# ADR-006 — Allocation Gate Hosted Inside nopCommerce
+# ADR-005 — Allocation Gate Hosted Inside nopCommerce
 
 | | |
 |---|---|
@@ -18,7 +18,7 @@ Host the allocation gate inside nopCommerce. The gate operates on `ProductWareho
 
 The bounded-contexts model is preserved by reframing the two roles: **OpenBoxes** is authoritative for physical stock truth (what is on the shelf); **nopCommerce** is authoritative for operational allocation arbitration across channels. The two reconcile via the existing `inventory.adjusted` event flow declared in `03-bounded-contexts.md`.
 
-The gate is reached by web checkout via a decorator over `IProductService.AdjustInventoryAsync`, and by POS via a new HTTP endpoint (recorded as ADR-007). A new `ProductReservation` table holds time-bounded reservation rows; the legacy `ProductWarehouseInventory.ReservedQuantity` field is left untouched so the new behaviour is reversible.
+The gate is reached by web checkout via a decorator over `IProductService.AdjustInventoryAsync`, and by POS via a new HTTP endpoint (recorded as ADR-006). A new `ProductReservation` table holds time-bounded reservation rows; the legacy `ProductWarehouseInventory.ReservedQuantity` field is left untouched so the new behaviour is reversible.
 
 ## Rejected Alternatives
 

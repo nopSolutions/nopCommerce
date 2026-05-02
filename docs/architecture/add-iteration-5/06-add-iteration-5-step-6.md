@@ -64,9 +64,9 @@ CarrierStatusConsumer (existing — Iter 4)
 
 ---
 
-## Decision Recorded
+## Design Decision
 
-- [ADR-015 — OpenBoxes Fulfillment State via Scheduled Polling](../07-adrs/ADR-015-openboxes-status-polling.md)
+Polling was chosen over OpenBoxes webhooks for reliability (self-healing, no missed events) and to preserve the unidirectional dependency between OpenBoxes and nopCommerce. See the rationale in Step 3.
 
 ---
 
@@ -78,6 +78,6 @@ CarrierStatusConsumer (existing — Iter 4)
 | `IOpenBoxesClient` extension | New `GetIssuedFulfillmentOrdersAsync` method |
 | `OpenBoxesFulfillmentOrder` DTO | Correlation record from OpenBoxes API |
 | `AllocationSettings` extension | Four new fields for OpenBoxes URL, API key, interval, batch size |
-| ADR-015 | Polling over webhook — deliberate choice for reliability and unidirectional dependency |
+| Polling design decision | Deliberate choice over webhooks — reliability and unidirectional dependency |
 
 Step 7 verifies the design against QAS-5's warehouse visibility clause and closes the iteration.

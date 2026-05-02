@@ -16,7 +16,7 @@ Eight concepts are selected. The first four address the **inbound webhook path**
 
 **Concept:** The webhook controller has three responsibilities only — authenticate, write the raw payload to the audit table, and publish a `carrier.status.received` message to a local RabbitMQ queue (`verdemart.carrier.status`). Then it returns 200. A separate `CarrierStatusConsumer` drains the queue and does the real work: dedup, correlation, status update, email enqueue.
 
-This separates two failure domains: the carrier's view of the integration ("did my POST succeed?") and nopCommerce's internal processing latency. The carrier sees a fast 200 every time the endpoint is reachable; internal retries happen on the queue, where they are deterministic and the DLQ pattern from ADR-009 applies.
+This separates two failure domains: the carrier's view of the integration ("did my POST succeed?") and nopCommerce's internal processing latency. The carrier sees a fast 200 every time the endpoint is reachable; internal retries happen on the queue, where they are deterministic and the DLQ pattern applies.
 
 **Rejected alternatives:**
 
@@ -94,15 +94,15 @@ The admin UI returns as soon as `ShipmentSentEvent` fires; WireMock's latency is
 
 ### 6. Booking Consumer Hosted In-Process Inside nopCommerce
 
-**Driver:** CON-22 — no new deployable required for QAS-5; the brief's "≥1 independently deployable subsystem" requirement is already met by ADR-008.
+**Driver:** CON-22 — no new deployable required for QAS-5; the brief's "≥1 independently deployable subsystem" requirement is already met by ADR-007.
 
 **Concept:** `CarrierBookingConsumer` is a `BackgroundService` registered through `INopStartup` and runs in the same process as the nopCommerce web app. It connects to RabbitMQ on startup, subscribes to the carrier-booking queue, and processes messages with manual ack. Because the booking call writes back into nopCommerce's own database, in-process hosting avoids cross-process coordination on the writeback path.
 
-This is the deliberate counterpart to ADR-008's bridge: the OpenBoxes bridge talks to an external system *and* writes nothing back into nopCommerce, so it lives outside; the carrier booking consumer talks to an external system *and* must update nopCommerce's `Shipment` row, so it lives inside.
+This is the deliberate counterpart to ADR-007's bridge: the OpenBoxes bridge talks to an external system *and* writes nothing back into nopCommerce, so it lives outside; the carrier booking consumer talks to an external system *and* must update nopCommerce's `Shipment` row, so it lives inside.
 
 **Rejected alternative:**
 
-- *Separate deployable service for the carrier booking* — Rejected because it would need a separate path back into nopCommerce to update the `Shipment` row (another HTTP API, another auth surface, another deploy artefact) for no benefit. ADR-008's separation made sense for the OpenBoxes bridge because that bridge has no writeback; the carrier flow does.
+- *Separate deployable service for the carrier booking* — Rejected because it would need a separate path back into nopCommerce to update the `Shipment` row (another HTTP API, another auth surface, another deploy artefact) for no benefit. ADR-007's separation made sense for the OpenBoxes bridge because that bridge has no writeback; the carrier flow does.
 
 ---
 
@@ -153,7 +153,7 @@ The cost is one row per webhook (small) and trivial retention (operational task 
 | 7 | Bearer token auth | CON-20 | HMAC; IP allowlist; no auth |
 | 8 | Audit table for every receipt | CON-23 | Log-only; success-only |
 
-CON-17 (race between webhook arrival and dispatch event committing the local record) is satisfied by the combination of concepts 1 and 2: an unmatched webhook is NACKed with requeue, redelivery limit applies (default 5, same as ADR-009), and only after the limit does it route to the DLQ. By that point either the dispatch event has committed, or operators have a queue-tooling-visible signal that something else is wrong.
+CON-17 (race between webhook arrival and dispatch event committing the local record) is satisfied by the combination of concepts 1 and 2: an unmatched webhook is NACKed with requeue, redelivery limit applies (default 5), and only after the limit does it route to the DLQ. By that point either the dispatch event has committed, or operators have a queue-tooling-visible signal that something else is wrong.
 
 ---
 

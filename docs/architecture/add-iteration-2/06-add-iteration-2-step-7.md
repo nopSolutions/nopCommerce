@@ -72,8 +72,7 @@ Iteration 2 set out to close the broker-down hole left open by Iteration 1 — t
 
 Iteration 2 closed the broker-down hole, removed RabbitMQ from the synchronous checkout path, and made the order commit and publish intent atomic. QAS-1 is now satisfied across all named failure modes, subject to the residual risks above (most notably the unmeasured 60 s recovery clause and the not-yet-implemented consumer idempotency).
 
-Two architectural decisions were recorded:
+One architectural decision was recorded:
 - [ADR-004 — Transactional Outbox for Reliable Publish](../07-adrs/ADR-004-transactional-outbox.md)
-- [ADR-005 — Dispatcher Hosted in IScheduleTask](../07-adrs/ADR-005-dispatcher-via-scheduletask.md)
 
 The iteration is closed. Iteration 3 begins with QAS-2 and the OpenBoxes bridge consumer.

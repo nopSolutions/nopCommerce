@@ -221,7 +221,7 @@ public record CarrierStatusReceivedMessage(
 ```
 
 - `AuditRowId` lets the consumer call `ICarrierWebhookAuditService.AmendOutcomeAsync` for `Duplicate`/`Unmatched` outcomes
-- `Version` follows ADR-010
+- `Version` follows the wire-contract versioning policy established in Iteration 3
 
 ---
 

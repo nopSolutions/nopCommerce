@@ -56,7 +56,7 @@ Inherited from the Step 7 verdict of Iteration 3: *"Iteration 4 begins with QAS-
 | Integration code lives inside plugins | ADR-002 |
 | RabbitMQ topology is fixed (`verdemart.orders` exchange) — new exchanges/queues for unrelated flows are allowed | ADR-001, ADR-003 |
 | Outbox pattern exists and must be reused for outbound coordination, not duplicated | ADR-004 |
-| Consumer-side idempotency is mandatory under at-least-once delivery | ADR-003, ADR-009 |
+| Consumer-side idempotency is mandatory under at-least-once delivery | ADR-003 |
 | `Shipment` is an existing nopCommerce entity in `Nop.Core.Domain.Shipping`; schema additions go through FluentMigrator | `Nop.Data` migration convention |
 | WireMock's request/response shape is configurable but kept stable for the demo | `01-scenario.md` |
 | Customer-visible response time bounded at 10 s end to end | QAS-5 response measure |
@@ -90,7 +90,7 @@ Inherited from the Step 7 verdict of Iteration 3: *"Iteration 4 begins with QAS-
 | `OrderShipped.CustomerNotification` template | Existing template. Step 4 decides whether a new template is needed or this one is parameterised |
 | Outbox table + `OutboxDispatcherTask` (Iter 2) | Reused for outbound carrier booking — a new event type rides the same dispatcher |
 | RabbitMQ topology (`verdemart.orders` exchange) | Independent of this iteration's flows; this iteration adds its own exchange and queues for the inbound webhook path |
-| ADR-009 dedup + DLQ pattern | Reused as the template for inbound webhook idempotency and poison handling |
+| Dedup table + DLQ pattern (Iteration 3 bridge) | Reused as the template for inbound webhook idempotency and poison handling |
 | ADR-002 plugin boundary | The carrier-integration plugin is the canonical example of inbound + outbound symmetry under ADR-002 |
 
 ---
@@ -101,7 +101,7 @@ Inherited from the Step 7 verdict of Iteration 3: *"Iteration 4 begins with QAS-
 - QAS-5 is the primary driver; pressure point #7 is the secondary motivator and produces a reusable pattern as a side effect.
 - The candidate concept inherited from Iter 3 (Outbox reuse for the outbound path) is the obvious starting point but Step 3 evaluates it against alternatives.
 - Three new structural questions surface: how the inbound webhook is authenticated, how the external carrier vocabulary is preserved without coarsening, and how out-of-order webhooks reach the correct final state.
-- The DLQ + idempotency pattern from ADR-009 is reused, not reinvented — same shape, different queue.
-- The brief's "≥1 independently deployable subsystem" requirement was already met by ADR-008 in Iter 3; nothing in Iteration 4 disturbs that, and this iteration deliberately keeps all new code inside a nopCommerce plugin.
+- The DLQ + idempotency pattern from Iteration 3's OpenBoxes bridge is reused, not reinvented — same shape, different queue.
+- The brief's "≥1 independently deployable subsystem" requirement was already met by ADR-007 in Iter 3; nothing in Iteration 4 disturbs that, and this iteration deliberately keeps all new code inside a nopCommerce plugin.
 
 Step 2 selects the element to decompose.

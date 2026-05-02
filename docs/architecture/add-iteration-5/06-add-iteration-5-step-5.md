@@ -113,4 +113,4 @@ public class AllocationSettings : ISettings
 }
 ```
 
-Step 6 sketches the updated component view and records ADR-015.
+Step 6 sketches the updated component view and records the polling design decision.

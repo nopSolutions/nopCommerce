@@ -62,10 +62,9 @@ The two threads share the database but never share thread context. The request t
 
 ## Decisions Recorded
 
-This iteration produced two architectural decisions. Their full text lives in `07-adrs/`:
+This iteration produced one architectural decision. Its full text lives in `07-adrs/`:
 
 - [ADR-004 — Transactional Outbox for Reliable Publish](../07-adrs/ADR-004-transactional-outbox.md)
-- [ADR-005 — Dispatcher Hosted in IScheduleTask](../07-adrs/ADR-005-dispatcher-via-scheduletask.md)
 
 ---
 
@@ -80,7 +79,6 @@ This iteration produced two architectural decisions. Their full text lives in `0
 | `OutboxSettings` | Configurable poll interval, batch size, max attempts |
 | Modified `OrderPlacedConsumer` | Replaces inline publish with outbox write |
 | ADR-004 | Transactional Outbox for Reliable Publish |
-| ADR-005 | Dispatcher Hosted in IScheduleTask |
 
 ---
 

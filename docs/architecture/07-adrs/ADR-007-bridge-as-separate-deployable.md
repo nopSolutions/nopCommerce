@@ -1,4 +1,4 @@
-# ADR-008 — OpenBoxes Bridge as a Separate Deployable Service
+# ADR-007 — OpenBoxes Bridge as a Separate Deployable Service
 
 | | |
 |---|---|
@@ -8,7 +8,7 @@
 
 ## Context
 
-The OpenBoxes bridge consumes `verdemart.orders.openboxes` from RabbitMQ and creates fulfillment orders in OpenBoxes. CON-9 (Iter 3 Step 1) flagged the hosting model as open: a nopCommerce plugin running in the web process (matching ADR-005's logic for the dispatcher), or a separate independently-deployable service.
+The OpenBoxes bridge consumes `verdemart.orders.openboxes` from RabbitMQ and creates fulfillment orders in OpenBoxes. CON-9 (Iter 3 Step 1) flagged the hosting model as open: a nopCommerce plugin running in the web process (as the outbox dispatcher does), or a separate independently-deployable service.
 
 The Group Assignment 02 brief lists "at least one independently deployable subsystem" as a required technical constraint. Until this iteration, the project has no extracted service.
 
@@ -31,5 +31,5 @@ The implementation language is .NET 8 by default for stack consistency with the 
 - A new operational artifact exists: a service to deploy, monitor, and restart. Adds operational cost; mitigated by the standard `BackgroundService` patterns in `Microsoft.Extensions.Hosting`.
 - The bridge can be scaled, restarted, or even reimplemented in a different language without touching nopCommerce.
 - Cross-process debugging is harder than in-process; mitigated by structured logging keyed on `OrderGuid` (the correlation identifier set by ADR-003).
-- The bridge needs a small local store for dedup state (recorded in ADR-009), adding a minor deployment dependency.
+- The bridge needs a small local store for dedup state (a local `processed_orders` table keyed on `OrderGuid`), adding a minor deployment dependency.
 - Manual ack semantics from ADR-003 are honoured by the bridge: messages remain on the queue until OpenBoxes confirms creation, satisfying CON-11.

@@ -13,7 +13,7 @@ Iteration 4 set out to give the customer cross-channel visibility of fulfillment
 1. **Outbound** — a `ShipmentSentEvent` consumer writes a `carrier.booking.requested` row to the existing Outbox; a new in-process `CarrierBookingConsumer` drains it, calls WireMock, and stores the returned tracking identifier on `Shipment.ExternalShipmentId`.
 2. **Inbound** — a new `/api/carrier/webhook` endpoint authenticates, audits, and hands the payload off to a local queue; an asynchronous `CarrierStatusConsumer` correlates by `ExternalShipmentId`, applies an out-of-order guard, updates state inside one DB transaction, and enqueues a customer notification email.
 
-Four architectural decisions were recorded (ADR-011 through ADR-014). QAS-5's carrier half is now structurally satisfied; the warehouse visibility half (OpenBoxes state → nopCommerce) is carried to Iteration 5.
+One architectural decision was recorded (ADR-008). QAS-5's carrier half is now structurally satisfied; the warehouse visibility half (OpenBoxes state → nopCommerce) is carried to Iteration 5.
 
 ---
 
@@ -50,9 +50,9 @@ QAS-5 is partially satisfied. The carrier webhook path closes the tracking-statu
 - **Pressure point #7** from `02-current-state.md` ("no webhook ingestion or outbound integration pattern in the framework") closed with a working pattern: bearer auth + audit table + async handoff via local queue + idempotency by carrier-supplied event id.
 - **CON-17 through CON-24** all addressed: race between webhook arrival and dispatch (CON-17, NACK-with-requeue + DLQ); carrier retries (CON-18, dedup); out-of-order delivery (CON-19, timestamp guard); auth (CON-20, bearer); status-vocabulary preservation (CON-21, parallel `ExternalShippingStatus`); admin UI not blocked (CON-22, Outbox reuse); audit (CON-23, `CarrierWebhookEvent`); 10 s budget (CON-24, async handoff).
 - **ADR-002's plugin boundary** preserved — all new code in the plugin; the four `Shipment` columns are added by the plugin's FluentMigrator migration; `Nop.Core` source is not modified.
-- **ADR-003's idempotent-consumption mandate** extended to a second consumer (`CarrierStatusConsumer`) using the same shape established by ADR-009.
+- **ADR-003's idempotent-consumption mandate** extended to a second consumer (`CarrierStatusConsumer`) using the same dedup-table + DLQ shape established in Iteration 3.
 - **ADR-004's Outbox** reused for the outbound flow — no new dispatcher, no new schedule task, no parallel outbox table.
-- **ADR-010's wire-contract versioning policy** applied uniformly across all four new message types.
+- **The wire-contract versioning policy** (Version field + tolerant readers) applied uniformly across all four new message types.
 
 ---
 
@@ -70,7 +70,7 @@ QAS-5 is partially satisfied. The carrier webhook path closes the tracking-statu
 
 | Residual risk | Why it remains | Where it goes |
 | --- | --- | --- |
-| HMAC payload signing for production | Bearer token is sufficient for the demo; ADR-011 records HMAC as the production-hardening alternative | Production hardening checklist — not a follow-up iteration |
+| HMAC payload signing for production | Bearer token is sufficient for the demo; ADR-008 records HMAC as the production-hardening alternative | Production hardening checklist — not a follow-up iteration |
 | Token rotation infrastructure | `InboundBearerToken` is a setting; no rotation tooling | Operational secrets management — out of scope |
 | Tracking URL, location, and full event history on the order page | QAS-5 only requires status text visible | UX polish; the data is captured (audit table + `Location` field on each event) and ready to surface when the design dictates it |
 | DLQ replay UI/CLI | Two new DLQs (status, booking) join the OpenBoxes one from Iter 3; replay still manual | Operational tooling — same residual as Iter 3 |
@@ -99,15 +99,12 @@ QAS-5 is partially satisfied. The carrier webhook path closes the tracking-statu
 
 ## Iteration Verdict
 
-Iteration 4 closed the carrier half of QAS-5. The carrier integration is complete end to end: outbound booking via the existing Iter 2 Outbox, and inbound webhook ingestion via async handoff to a local queue with full audit, dedup, and out-of-order protection. Four architectural decisions were recorded:
+Iteration 4 closed the carrier half of QAS-5. The carrier integration is complete end to end: outbound booking via the existing Iter 2 Outbox, and inbound webhook ingestion via async handoff to a local queue with full audit, dedup, and out-of-order protection. One architectural decision was recorded:
 
-- [ADR-011 — Webhook Ingestion via Plugin with Async Internal Queue Handoff](../07-adrs/ADR-011-webhook-ingestion-async-handoff.md)
-- [ADR-012 — External Shipment Correlation via `ExternalShipmentId` on `Shipment`](../07-adrs/ADR-012-external-shipment-correlation.md)
-- [ADR-013 — External Status Preserved as String; Internal Enum Untouched](../07-adrs/ADR-013-external-status-preserved-as-string.md)
-- [ADR-014 — Outbound Carrier Booking via Existing Outbox](../07-adrs/ADR-014-outbound-booking-via-outbox.md)
+- [ADR-008 — Webhook Ingestion via Plugin with Async Internal Queue Handoff](../07-adrs/ADR-008-webhook-ingestion-async-handoff.md)
 
 Pressure point #7 from `02-current-state.md` — the absence of any framework-level webhook ingestion pattern — is closed with a concrete realisation. The plugin produced here is a candidate template for future inbound integrations (e.g. payment-status callbacks, supplier ASN feeds), but no generalisation work is performed in this iteration; QAS-5 alone does not justify it.
 
-QAS-1 through QAS-4 are unaffected. QAS-5's warehouse visibility half is carried to Iteration 5, which will produce ADR-015 and the `OpenBoxesStatusPollerTask`.
+QAS-1 through QAS-4 are unaffected. QAS-5's warehouse visibility half is carried to Iteration 5, which will add the `OpenBoxesStatusPollerTask`.
 
 The iteration is closed. Iteration 5 begins with the warehouse half of QAS-5 and the OpenBoxes polling task.

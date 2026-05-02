@@ -82,7 +82,7 @@ Both new tables are created by the same FluentMigrator migration as the `Shipmen
 | Queue | `verdemart.carrier.status.dlq` | durable, no auto-delete |
 | Binding | DLQ ← DLX | routing key: `carrier.status.received` |
 
-The plugin declares all of the above on startup so it owns its own consumption topology — same pattern used by the OpenBoxes bridge (ADR-008's spirit, adapted for in-process). The booking flow does not need a DLQ for QAS-5 — booking failures land in the existing Outbox retry mechanics from Iter 2; if WireMock is permanently misconfigured, the outbox row is the operator-visible signal.
+The plugin declares all of the above on startup so it owns its own consumption topology — same pattern used by the OpenBoxes bridge (ADR-007's spirit, adapted for in-process). The booking flow does not need a DLQ for QAS-5 — booking failures land in the existing Outbox retry mechanics from Iter 2; if WireMock is permanently misconfigured, the outbox row is the operator-visible signal.
 
 ---
 
@@ -299,7 +299,7 @@ A new template (rather than reusing `OrderShipped.CustomerNotification`) is need
 }
 ```
 
-The `version` field follows ADR-010's policy.
+The `version` field follows the wire-contract versioning policy.
 
 ### Inbound webhook payload — `CarrierStatusPayload`
 
@@ -317,7 +317,7 @@ The `version` field follows ADR-010's policy.
 
 ### Internal queue message — `CarrierStatusReceivedMessage`
 
-The same payload re-published verbatim onto `verdemart.carrier.status` plus a `receivedAtUtc` field added by the controller. ADR-010's `version` field applies.
+The same payload re-published verbatim onto `verdemart.carrier.status` plus a `receivedAtUtc` field added by the controller. The wire-contract versioning policy's `version` field applies.
 
 ### WireMock booking request/response
 

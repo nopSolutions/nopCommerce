@@ -8,12 +8,9 @@ Step 6 produces the updated views (component + sequence) for the two new flows �
 
 ## Decisions Recorded
 
-This iteration produced four architectural decisions. Their full text lives in `07-adrs/`:
+This iteration produced one architectural decision. Its full text lives in `07-adrs/`:
 
-- [ADR-011 — Webhook Ingestion via Plugin with Async Internal Queue Handoff](../07-adrs/ADR-011-webhook-ingestion-async-handoff.md)
-- [ADR-012 — External Shipment Correlation via `ExternalShipmentId` on `Shipment`](../07-adrs/ADR-012-external-shipment-correlation.md)
-- [ADR-013 — External Status Preserved as String; Internal Enum Untouched](../07-adrs/ADR-013-external-status-preserved-as-string.md)
-- [ADR-014 — Outbound Carrier Booking via Existing Outbox](../07-adrs/ADR-014-outbound-booking-via-outbox.md)
+- [ADR-008 — Webhook Ingestion via Plugin with Async Internal Queue Handoff](../07-adrs/ADR-008-webhook-ingestion-async-handoff.md)
 
 ---
 
@@ -30,12 +27,9 @@ This iteration produced four architectural decisions. Their full text lives in `
 | Typed HTTP client | `IWireMockClient` for outbound booking |
 | RabbitMQ topology — outbound | exchange `verdemart.carrier.booking` + queue `…requested` |
 | RabbitMQ topology — inbound | exchange `verdemart.carrier.status` + queue `…received` + DLX/DLQ |
-| Wire contracts | `CarrierStatusPayload`, `CarrierStatusReceivedMessage`, `CarrierBookingRequestedMessage`, `BookingRequest`/`BookingResult` (all carry `Version=1` per ADR-010) |
+| Wire contracts | `CarrierStatusPayload`, `CarrierStatusReceivedMessage`, `CarrierBookingRequestedMessage`, `BookingRequest`/`BookingResult` (all carry `Version=1` following the tolerant-reader versioning policy) |
 | Email template | `ShipmentStatusUpdated.CustomerNotification` plus two new tokens |
-| ADR-011 | Webhook ingestion via plugin + async queue handoff |
-| ADR-012 | External shipment correlation via `ExternalShipmentId` |
-| ADR-013 | External status preserved as string; internal enum untouched |
-| ADR-014 | Outbound carrier booking via existing Outbox |
+| ADR-008 | Webhook ingestion via plugin + async queue handoff |
 
 ---
 

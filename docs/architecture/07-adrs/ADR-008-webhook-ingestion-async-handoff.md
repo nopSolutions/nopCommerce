@@ -1,4 +1,4 @@
-# ADR-011 — Webhook Ingestion via Plugin with Async Internal Queue Handoff
+# ADR-008 — Webhook Ingestion via Plugin with Async Internal Queue Handoff
 
 | | |
 |---|---|
@@ -15,7 +15,7 @@ Three operational concerns shape the design:
 - CON-20: an inbound HTTP endpoint exposed to the public internet must authenticate.
 - CON-24: any synchronous external work inside the controller eats the 10 s budget and risks triggering carrier-side retries with opaque timing.
 
-ADR-009 already established the dedup-table + DLQ pattern for at-least-once consumers; the question for this ADR is **where** the work happens once a webhook is received.
+Iteration 3 already established the dedup-table + DLQ pattern for at-least-once consumers (via the OpenBoxes bridge); the question for this ADR is **where** the work happens once a webhook is received.
 
 ## Decision
 
@@ -25,11 +25,11 @@ ADR-009 already established the dedup-table + DLQ pattern for at-least-once cons
 
 **Authentication:** bearer token on the `Authorization` header, value from configuration. Constant-time comparison; mismatches return 401 and are still recorded in the audit table with `Outcome=Rejected, Notes="auth"`.
 
-**Idempotency:** dedup table `ProcessedCarrierEvent` keyed by carrier-supplied `EventId` (UUID in the payload). If the event id is already present, the consumer acks and skips. Defence-in-depth shape mirrors ADR-009.
+**Idempotency:** dedup table `ProcessedCarrierEvent` keyed by carrier-supplied `EventId` (UUID in the payload). If the event id is already present, the consumer acks and skips. Same defence-in-depth shape as the OpenBoxes bridge dedup table.
 
 **Out-of-order guard:** the consumer applies an update only when the payload's `OccurredAtUtc` is strictly greater than `Shipment.LastStatusOccurredAtUtc`. Ordering signal is the carrier's authoritative timestamp; arrival order is irrelevant.
 
-**Poison handling:** the inbound queue carries `x-dead-letter-exchange = verdemart.carrier.status.dlx`. Per-message redelivery counted from RabbitMQ's `x-death` header; once the configured `MaxStatusRedeliveries` is exceeded (default 5), the consumer NACKs without requeue and the broker routes the message to `verdemart.carrier.status.dlq` for operator review. Same pattern as ADR-009.
+**Poison handling:** the inbound queue carries `x-dead-letter-exchange = verdemart.carrier.status.dlx`. Per-message redelivery counted from RabbitMQ's `x-death` header; once the configured `MaxStatusRedeliveries` is exceeded (default 5), the consumer NACKs without requeue and the broker routes the message to `verdemart.carrier.status.dlq` for operator review. Same DLQ pattern as the OpenBoxes bridge.
 
 **Audit:** every receipt is written to `CarrierWebhookEvent` *before* any other work — including malformed payloads (`Outcome=Rejected, Notes="malformed"`) and auth failures. The audit table is queryable ground truth for dispute resolution.
 
@@ -57,5 +57,5 @@ ADR-009 already established the dedup-table + DLQ pattern for at-least-once cons
 - Webhook auth is configuration-driven; rotating the token requires only a settings change and a corresponding update to WireMock's outbound config.
 - The `CarrierWebhookEvent` audit table grows linearly with carrier traffic; retention is an operational concern (recorded as a residual).
 - The 10 s QAS-5 budget is met by construction with substantial margin; empirical timing remains owed by the bundled spike.
-- Two new DLQs join the OpenBoxes one from ADR-009; the operational replay tooling residual broadens but the pattern is uniform across all three.
+- Two new DLQs join the OpenBoxes one from Iteration 3; the operational replay tooling residual broadens but the pattern is uniform across all three.
 - The plugin produced here is a candidate template for future inbound integrations (payment-status callbacks, supplier ASN feeds). No framework generalisation is performed in this iteration; doing so would be premature.

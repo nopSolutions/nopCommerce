@@ -202,13 +202,11 @@ RabbitMQ            BridgeWorker            OrderPlacedMessageConsumer       Ope
 
 ## Decisions Recorded
 
-This iteration produced five architectural decisions. Their full text lives in `07-adrs/`:
+This iteration produced three architectural decisions. Their full text lives in `07-adrs/`:
 
-- [ADR-006 — Allocation Gate Hosted Inside nopCommerce](../07-adrs/ADR-006-allocation-gate-inside-nopcommerce.md)
-- [ADR-007 — Cross-Channel Allocation via Synchronous HTTP and Async Confirmation](../07-adrs/ADR-007-cross-channel-allocation-sync-http.md)
-- [ADR-008 — OpenBoxes Bridge as a Separate Deployable Service](../07-adrs/ADR-008-bridge-as-separate-deployable.md)
-- [ADR-009 — Idempotent Consumer with Bridge-Local Dedup and DLQ](../07-adrs/ADR-009-idempotent-consumer-and-dlq.md)
-- [ADR-010 — Versioned Wire Contract with Tolerant Readers](../07-adrs/ADR-010-wire-contract-versioning.md)
+- [ADR-005 — Allocation Gate Hosted Inside nopCommerce](../07-adrs/ADR-005-allocation-gate-inside-nopcommerce.md)
+- [ADR-006 — Cross-Channel Allocation via Synchronous HTTP and Async Confirmation](../07-adrs/ADR-006-cross-channel-allocation-sync-http.md)
+- [ADR-007 — OpenBoxes Bridge as a Separate Deployable Service](../07-adrs/ADR-007-bridge-as-separate-deployable.md)
 
 ---
 
@@ -225,11 +223,9 @@ This iteration produced five architectural decisions. Their full text lives in `
 | Bridge dedup | local `processed_orders` table keyed by `OrderGuid` |
 | RabbitMQ topology additions | DLX exchange `verdemart.orders.dlx` + queue `verdemart.orders.openboxes.dlq`; existing queue gains `x-dead-letter-exchange` argument |
 | Wire contract update | `OrderPlacedMessage.Version = 1` field with tolerant-reader policy |
-| ADR-006 | Allocation gate inside nopCommerce |
-| ADR-007 | Cross-channel allocation via synchronous HTTP + async confirmation |
-| ADR-008 | Bridge as separate deployable |
-| ADR-009 | Idempotent consumer with dedup table + DLQ |
-| ADR-010 | Wire contract versioning |
+| ADR-005 | Allocation gate inside nopCommerce |
+| ADR-006 | Cross-channel allocation via synchronous HTTP + async confirmation |
+| ADR-007 | Bridge as separate deployable |
 
 ---
 
