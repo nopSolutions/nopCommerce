@@ -1,0 +1,95 @@
+﻿@model HeaderLinksModel
+@using Nop.Core.Domain.Customers
+@using Nop.Services.Helpers
+@inject IWebHelper webHelper
+
+<div class="header-links">
+    <ul>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderLinksBefore, additionalData = Model })
+        @if (Model.IsAuthenticated)
+        {
+            <li><a href="@Url.RouteUrl(NopRouteNames.General.CUSTOMER_INFO)" class="ico-account">@T("Account.MyAccount")@*@Model.CustomerName*@</a></li>
+            <li><a href="@Url.RouteUrl(NopRouteNames.Standard.LOGOUT)" class="ico-logout">@T("Account.Logout")</a></li>
+        }
+        else
+        {
+            var returnUrl = Context.Request.Query.TryGetValue("returnUrl", out var url) && !StringValues.IsNullOrEmpty(url)
+                ? url.ToString()
+                : webHelper.GetRawUrl(Context.Request);
+
+            @if (Model.RegistrationType != UserRegistrationType.Disabled)
+            {
+                <li><a href="@Url.RouteUrl(NopRouteNames.Standard.REGISTER, new { returnUrl })" class="ico-register">@T("Account.Register")</a></li>
+            }
+            <li><a href="@Url.RouteUrl(NopRouteNames.General.LOGIN, new { returnUrl })" class="ico-login">@T("Account.Login")</a></li>
+        }
+        @if (Model.AllowPrivateMessages)
+        {
+            <li>
+                <a href="@Url.RouteUrl(NopRouteNames.Standard.PRIVATE_MESSAGES, new { tab = "" })" class="ico-inbox">
+                    <span class="inbox-label">@T("PrivateMessages.Inbox")</span>
+                    <span class="inbox-unread">@Model.UnreadPrivateMessages</span>
+                </a>
+            </li>
+        }
+        @if (Model.WishlistEnabled)
+        {
+            <li>
+                <a href="@Url.RouteUrl(NopRouteNames.General.WISHLIST)" class="ico-wishlist">
+                    <span class="wishlist-label">@T("Wishlist")</span>
+                    <span class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
+                </a>
+            </li>
+        }
+        @if (Model.ShoppingCartEnabled)
+        {
+            <li id="topcartlink">
+                <a href="@Url.RouteUrl(NopRouteNames.General.CART)" class="ico-cart">
+                    <span class="cart-label">@T(NopRouteNames.General.CART)</span>
+                    <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
+                </a>
+            </li>
+        }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderLinksAfter, additionalData = Model })
+    </ul>
+    @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
+    {
+        //new private message notification
+        <script asp-location="Footer">
+            $(function() {
+                displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
+            });
+        </script>
+    }
+    @if (Model.ShoppingCartEnabled)
+    {
+        <script asp-location="Footer">
+            $(function() {
+                $('.header-upper').on({
+                    focus: function(){
+                        $('#flyout-cart').addClass('active');
+                    },
+                    focusout: function() {
+                        setTimeout(function() {
+                            if (!$('#topcartlink, #flyout-cart').find(':focus').length) {
+                                $('#flyout-cart').removeClass('active');
+                            }
+                        }, 0)
+                    },
+                    mouseenter: function() {
+                        $('#flyout-cart').addClass('active');
+                    },
+                    mouseleave: function() {
+                        $('#flyout-cart').removeClass('active');
+                    }
+                }, '#topcartlink, #flyout-cart');
+
+                var localized_data = {
+                    AjaxCartFailure: "@T("AjaxCart.Failure")"
+                };
+
+                AjaxCart.init(@Model.UsePopupNotifications.ToString().ToLowerInvariant(), '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart', localized_data);
+            });
+        </script>
+    }
+</div>

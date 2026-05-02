@@ -1,0 +1,108 @@
+﻿@model AddCategoryToDiscountSearchModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Admin.Promotions.Discounts.AppliedToCategories.AddNew").Text;
+}
+
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+else
+{
+    <form asp-controller="Discount" asp-action="CategoryAddPopup"
+          asp-route-discountId="@Context.Request.Query["discountId"]"
+          asp-route-btnId="@Context.Request.Query["btnId"]"
+          asp-route-formId="@Context.Request.Query["formId"]">
+        <div class="content-header clearfix">
+            <h1 class="float-left">
+                @T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")
+            </h1>
+            <div class="float-right">
+                &nbsp;
+            </div>
+        </div>
+
+        <section class="content">
+            <div class="container-fluid">
+                    <div class="form-horizontal">
+                        <div class="cards-group">
+                            <div class="card card-default card-search card-popup">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <div class="form-group row">
+                                                <div class="col-sm-4">
+                                                    <nop-label asp-for="SearchCategoryName" />
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <nop-editor asp-for="SearchCategoryName" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-8 offset-sm-4">
+                                                    <button type="button" id="search-categories" class="btn btn-primary btn-search">@T("Admin.Common.Search")</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card card-default">
+                                <div class="card-body">
+                                    @await Html.PartialAsync("Table", new DataTablesModel
+                                    {
+                                        Name = "categories-grid",
+                                        UrlRead = new DataUrl("CategoryAddPopupList", "Discount", null),
+                                        SearchButtonId = "search-categories",
+                                        Length = Model.PageSize,
+                                        LengthMenu = Model.AvailablePageSizes,
+                                        Filters = new List<FilterParameter>
+                                        {
+                                            new FilterParameter(nameof(Model.SearchCategoryName))
+                                        },
+                                        ColumnCollection = new List<ColumnProperty>
+                                        {
+                                            new ColumnProperty(nameof(CategoryModel.Id))
+                                            {
+                                                IsMasterCheckBox = true,
+                                                Render = new RenderCheckBox(nameof(AddCategoryToDiscountModel.SelectedCategoryIds)),
+                                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                                Width = "50"
+                                            },
+                                            new ColumnProperty(nameof(CategoryModel.Breadcrumb))
+                                            {
+                                                Title = T("Admin.Catalog.Categories.Fields.Name").Text
+                                            },
+                                            new ColumnProperty(nameof(CategoryModel.Published))
+                                            {
+                                                Title = T("Admin.Catalog.Categories.Fields.Published").Text,
+                                                Width = "100",
+                                                ClassName = NopColumnClassDefaults.CenterAll,
+                                                Render = new RenderBoolean()
+                                            }
+                                        }
+                                    })
+                                </div>
+                                <div class="card-footer">
+                                    <button type="submit" name="save" class="btn btn-primary">
+                                        <i class="far fa-floppy-disk"></i>
+                                        @T("Admin.Common.Save")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </form>
+}

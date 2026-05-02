@@ -1,0 +1,60 @@
+﻿@model FooterModel
+
+@using Nop.Core
+@using Nop.Core.Domain.Tax
+@using Nop.Core.Domain.Topics
+
+@inject IWorkContext workContext
+
+<footer class="footer">
+    <section class="footer-upper">
+        @await Component.InvokeAsync(typeof(FooterMenuViewComponent))
+        <div class="footer-block follow-us">
+            <div class="social">
+                <h2 class="title">
+                    @T("Footer.FollowUs")
+                </h2>
+                @await Component.InvokeAsync(typeof(SocialButtonsViewComponent))
+            </div>
+            @await Component.InvokeAsync(typeof(NewsLetterBoxViewComponent))
+        </div>
+    </section>
+    <section class="footer-lower">
+        <div class="footer-info">
+            <span class="footer-disclaimer">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
+            @if (Model.DisplayTaxShippingInfoFooter)
+            {
+                var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+                <span class="footer-tax-shipping">
+                    @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", await NopUrl.RouteTopicUrlAsync("shippinginfo"))
+                </span>
+            }
+        </div>
+        @if (!Model.HidePoweredByNopCommerce)
+        {
+            <div class="footer-powered-by">
+                @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
+                    Please find more info at https://www.nopcommerce.com/nopcommerce-copyright-removal-key*@
+                Powered by <a href="@(OfficialSite.Main)" target="_blank" @(Model.IsHomePage ? string.Empty : "rel=nofollow")>nopCommerce</a>
+            </div>
+        }
+        @await Component.InvokeAsync(typeof(StoreThemeSelectorViewComponent))
+    </section>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.Footer, additionalData = Model })
+</footer>
+
+<script asp-location="Footer">
+    $(function() {
+        $('.block .title').on('click', function () {
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+            if (result.width < 1001) {
+                $(this).siblings('.listbox').slideToggle('slow');
+            }
+        });
+    });
+</script>

@@ -1,0 +1,24 @@
+﻿@using Nop.Core.Http.Extensions
+@using Nop.Services.Authentication
+
+@{
+
+    var session = Context.Session;
+
+    var errors = await session.GetAsync<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey);
+
+    if (errors != null)
+        session.Remove(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey);
+}
+
+@if (errors != null && errors.Count > 0)
+{
+    <div class="external-auth-errors">
+        <ul>
+            @foreach (var error in errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}

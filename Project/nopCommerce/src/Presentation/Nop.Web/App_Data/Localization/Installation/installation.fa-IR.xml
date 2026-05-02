@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="فارسی" IsDefault="false" IsRightToLeft="true">
+  <LocaleResource Name="AdminEmail">
+    <Value>ایمیل کاربری مدیر</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>آدرس ایمیل مدیر را وارد کنید</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>رمز عبور کاربری مدیر</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>رمز عبور مدیر را وارد کنید</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>مجموعه کاراکتری</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>جمع‌بندی</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>جمع بندی لازم است</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>به حساب '{0}' مجوز ویرایش پوشه '{1}' داده نشده است. لطفا این مجوزها را پیکربندی کنید.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>به حساب '{0}' مجوز ویرایش فایل '{1}' داده نشده است. لطفا این مجوزها را پیکربندی کنید.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>تایید رمز عبور</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>تایید رمز عبور را وارد کنید</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>اطلاعات اتصال به پایگاه داده</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>اطلاعات اتصال به پایگاه داده الزامی است</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>فرمت اطلاعات اتصال به پایگاه داده صحیح نیست</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>کشور</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>کشور خود را انتخاب کنید...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>ایجاد پایگاه داده در صورت عدم وجود</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>داده‌های نمونه ایجاد شود</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>تنظیمات الفبایی (روش مرتب‌سازی و مقایسه) را مشخص کنید.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>پایگاه داده</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>خطایی در زمان ساخت پایگاه داده رخ داد: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>اطلاعات پایگاه داده</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>نام پایگاه داده</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>پایگاه داده وجود ندارد یا مجوز اتصال به آن را ندارید</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>ارائه‌دهنده داده را انتخاب کنید</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>اگر درمورد چگونگی استفاده از ناپ‌کامرس به اطلاعاتی نیاز دارید، به وب‌سایت مراجعه کنید</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>قسمت documentation در nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>مثال</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>نصب</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>درحال نصب ناپ‌کامرس...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>از احراز هویت یکپارچه ویندوز استفاده شود</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>پایگاه داده MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>رمز عبور با تکرار آن یکسان نیست</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>اطلاعات اتصال به پایگاه داده به صورت کامل وارد شود (پیشرفته)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>راه‌اندازی‌مجدد نصب</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>برای راه‌اندازی‌مجدد فرآیند نصب کلیک کنید (همه مقادیر ذخیره‌شده در cache پاک می‌شوند)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>راه اندازی مجدد...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>نام سرور</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>وارد کردن نام سرور ضروریست.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>تنظیم ناموفق بود: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>رمز عبور SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>رمز عبور SQL الزامی است</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>نام کاربری SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>نام کاربری SQL الزامی است</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>اطلاعات فروشگاه</Value>
+  </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>در خبرنامه nopCommerce مشترک شوید</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>نصب nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>برای تکمیل فرایند نصب توسط این جادوگر، شما باید اطلاعات اتصال به سرور پایگاه داده ("connection string") را داشته باشید. در صورت لزوم، لطفا با ارائه‌دهنده سرویس میزبانی خود تماس بگیرید. اگر قصد نصب بر روی کامپیوتر شخصی یا سرور را دارید، ممکن است به اطلاعات مدیر سیستم خود نیاز داشته باشید.</Value>
+  </LocaleResource>
+</Language>

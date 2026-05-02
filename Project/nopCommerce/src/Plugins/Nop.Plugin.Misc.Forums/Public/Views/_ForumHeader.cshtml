@@ -1,0 +1,10 @@
+﻿@using Nop.Services.Helpers
+
+@inject IDateTimeHelper dateTimeHelper
+
+<div class="forums-header">
+    <div class="current-time">
+        @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.UtcNow)).ToString("F"))
+    </div>
+    @await Html.PartialAsync("~/Plugins/Misc.Forums/Public/Views/_SearchBox.cshtml")
+</div>

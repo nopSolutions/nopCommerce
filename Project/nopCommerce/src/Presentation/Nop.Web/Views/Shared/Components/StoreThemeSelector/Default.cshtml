@@ -1,0 +1,18 @@
+﻿@using Nop.Services.Helpers
+@model StoreThemeSelectorModel
+
+@inject IWebHelper webHelper
+
+@if (Model.AvailableStoreThemes.Count > 1)
+{
+    var returnUrl = webHelper.GetRawUrl(Context.Request);
+    var themes = await Model.AvailableStoreThemes.SelectAwait(async x => new SelectListItem
+    {
+        Text = x.Title,
+        Value = Url.RouteUrl(NopRouteNames.Standard.SET_STORE_THEME, new { themename = x.Name, returnUrl }, webHelper.GetCurrentRequestProtocol()),
+        Selected = x.Name.Equals(Model.CurrentStoreTheme.Name, StringComparison.InvariantCultureIgnoreCase)
+    }).ToListAsync();
+    <div class="theme-selector">
+        <select id="store-theme" name="store-theme" asp-items="@themes" onchange="setLocation(this.value);"></select>
+    </div>
+}

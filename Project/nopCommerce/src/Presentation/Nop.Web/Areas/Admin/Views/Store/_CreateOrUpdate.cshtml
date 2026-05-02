@@ -1,0 +1,34 @@
+﻿@model StoreModel
+
+@{
+    const string hideInfoBlockAttributeName = "StoreDetails.HideInfoBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+    const string hideSeoBlockAttributeName = "StoreDetails.HideSeoBlock";
+    var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSeoBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-12 clearfix">
+                    <div class="float-left">
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "store-advanced-mode" })
+                    </div>
+                </div>
+            </div>
+            
+            <nop-cards id="store-item-cards">
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.StoreDetailsTop, additionalData = Model })
+                <nop-card asp-name="store-item-info" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Stores.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+                <nop-card asp-name="store-item-seo" asp-icon="fas fa-magnifying-glass-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-advanced="true" asp-hide="@hideSeoBlock">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.StoreDetailsBottom, additionalData = Model })
+            </nop-cards>
+        </div>
+    </div>
+</section>

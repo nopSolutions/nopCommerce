@@ -1,0 +1,34 @@
+@model ShippingSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore" asp-input="NotifyCustomerAboutShippingFromMultipleLocations" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NotifyCustomerAboutShippingFromMultipleLocations" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NotifyCustomerAboutShippingFromMultipleLocations" />
+            <span asp-validation-for="NotifyCustomerAboutShippingFromMultipleLocations"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DisplayShipmentEventsToCustomers_OverrideForStore" asp-input="DisplayShipmentEventsToCustomers" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DisplayShipmentEventsToCustomers" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayShipmentEventsToCustomers" />
+            <span asp-validation-for="DisplayShipmentEventsToCustomers"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DisplayShipmentEventsToStoreOwner_OverrideForStore" asp-input="DisplayShipmentEventsToStoreOwner" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DisplayShipmentEventsToStoreOwner" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayShipmentEventsToStoreOwner" />
+            <span asp-validation-for="DisplayShipmentEventsToStoreOwner"></span>
+        </div>
+    </div>
+</div>

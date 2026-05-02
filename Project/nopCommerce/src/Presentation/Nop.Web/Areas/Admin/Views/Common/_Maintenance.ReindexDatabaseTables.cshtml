@@ -1,0 +1,35 @@
+﻿@model MaintenanceModel
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-12">
+            <div>
+                <p>
+                    @T("Admin.System.Maintenance.ReIndexTables.Lable")
+                </p>
+            </div>
+            <div>
+                <button type="button" id="re-index" class="btn btn-default">
+                    <i class="fas fa-gears"></i>
+                    @T("Admin.System.Maintenance.ReIndexTables.ReIndexNow")
+                </button>
+                <script>
+                    $(function() {
+                        $("#re-index-action-confirmation-submit-button").on("click", function () {
+                            $("html, body").animate({ scrollTop: 0 }, 400);
+                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.Maintenance.ReIndexTables.Progress").Text))');
+
+                            const opener = $("#re-index");
+                            opener.prop({
+                                name: "re-index",
+                                type: "submit"
+                            });
+
+                            opener.click();
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<nop-action-confirmation asp-button-id="re-index" />

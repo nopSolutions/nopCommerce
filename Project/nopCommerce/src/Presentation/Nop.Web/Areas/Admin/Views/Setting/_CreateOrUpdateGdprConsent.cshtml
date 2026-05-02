@@ -1,0 +1,143 @@
+@model GdprConsentModel
+
+<div asp-validation-summary="ModelOnly"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.GdprConsentDetailsTop, additionalData = Model })
+                <div class="card card-default">
+                    <div class="card-body">
+                        @(await Html.LocalizedEditorAsync<GdprConsentModel, GdprConsentLocalizedModel>("gdpr-consent-localized",
+                                    @<div>
+                                        <div class="form-group row">
+                                            <div class="col-md-3">
+                                                <nop-label asp-for="@Model.Locales[item].Message" />
+                                            </div>
+                                            <div class="col-md-9">
+                                                <nop-editor asp-for="@Model.Locales[item].Message" asp-required="true" />
+                                                <span asp-validation-for="@Model.Locales[item].Message"></span>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                                    </div>
+      ,
+                                                        @<div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-3">
+                                                                    <nop-label asp-for="Message" />
+                                                                </div>
+                                                                <div class="col-md-9">
+                                                                    <nop-editor asp-for="Message" asp-required="true" />
+                                                                    <span asp-validation-for="Message"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                          ))
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IsRequired" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsRequired" />
+                                <span asp-validation-for="IsRequired"></span>
+                            </div>
+                        </div>
+                        @if (Model.Locales.Count == 1)
+                        {
+                            <nop-nested-setting asp-for="IsRequired" disable-auto-generation="true">
+                                <div id="pnlRequiredMessage">
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="RequiredMessage" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="RequiredMessage" asp-required="true" />
+                                            <span asp-validation-for="RequiredMessage"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </nop-nested-setting>
+                        }
+                        else
+                        {
+                            <div id="pnlRequiredMessage">
+                                @(await Html.LocalizedEditorAsync<GdprConsentModel, GdprConsentLocalizedModel>("gdpr-consent-required-localized",
+                                            @<div>
+                                                <div class="form-group row">
+                                                    <div class="col-md-3">
+                                                        <nop-label asp-for="@Model.Locales[item].RequiredMessage" />
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <nop-editor asp-for="@Model.Locales[item].RequiredMessage" asp-required="true" />
+                                                        <span asp-validation-for="@Model.Locales[item].RequiredMessage"></span>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                                            </div>
+      ,
+                                                                    @<div>
+                                                                        <div class="form-group row">
+                                                                            <div class="col-md-3">
+                                                                                <nop-label asp-for="RequiredMessage" />
+                                                                            </div>
+                                                                            <div class="col-md-9">
+                                                                                <nop-editor asp-for="RequiredMessage" asp-required="true" />
+                                                                                <span asp-validation-for="RequiredMessage"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                              ))
+                            </div>
+                        }
+                        <script>
+                        $(function() {
+                            $("#@Html.IdFor(model => model.IsRequired)").click(toggleIsRequired);
+
+                            toggleIsRequired();
+                        });
+
+                        function toggleIsRequired() {
+                            if ($('#@Html.IdFor(model => model.IsRequired)').is(':checked')) {
+                                $('#pnlRequiredMessage').showElement();
+                            } else {
+                                $('#pnlRequiredMessage').hideElement();
+                            }
+                        }
+                        </script>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DisplayDuringRegistration" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayDuringRegistration" />
+                                <span asp-validation-for="DisplayDuringRegistration"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DisplayOnCustomerInfoPage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayOnCustomerInfoPage" />
+                                <span asp-validation-for="DisplayOnCustomerInfoPage"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DisplayOrder" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayOrder" />
+                                <span asp-validation-for="DisplayOrder"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.GdprConsentDetailsBottom, additionalData = Model })
+            </div>
+        </div>
+    </div>
+</section>

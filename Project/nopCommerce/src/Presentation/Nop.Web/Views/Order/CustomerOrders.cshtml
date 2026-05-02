@@ -1,0 +1,79 @@
+﻿@using Nop.Services
+@model CustomerOrderListModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-order-list-page");
+}
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.Orders })
+}
+<div class="page account-page order-list-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.CustomerOrders")</h1>
+    </div>
+    <div class="page-body">
+        <form asp-route="@NopRouteNames.General.CUSTOMER_ORDERS" method="post">
+            <div class="order-filters">
+                <div class="order-filters__row">
+                    <label class="order-filters__label">@T("Account.CustomerOrders.Period")</label>
+                    <select class="order-filters__input" id="periodSelector" asp-items="@Model.AvailableLimits"></select>
+                </div>
+            </div>
+        </form>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerOrdersTop, additionalData = Model })
+        @if (Model.Orders.Count > 0)
+        {
+            <div class="order-list">
+                @foreach (var order in Model.Orders)
+                {
+                    <div class="section order-item">
+                        <h2 class="title">
+                            @T("Account.CustomerOrders.OrderNumber"): @order.CustomOrderNumber
+                        </h2>
+                        <ul class="info">
+                            <li>@T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span></li>
+                            <li>@T("Account.CustomerOrders.OrderDate"): <span class="order-date">@order.CreatedOn.ToString()</span></li>
+                            <li>@T("Account.CustomerOrders.OrderTotal"): <span class="order-total">@order.OrderTotal</span></li>
+                        </ul>
+                        <div class="buttons">
+                            @if (order.IsReturnRequestAllowed)
+                            {
+                                <button type="button" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.RETURN_REQUEST, new { orderId = order.Id })')">@T("Account.CustomerOrders.ReturnItems")</button>
+                            }
+                            <button type="button" class="button-2 order-details-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = order.Id })')">@T("Account.CustomerOrders.OrderDetails")</button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            var pager = await Html.PagerAsync(Model.PagerModel);
+            if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+            {
+                <div class="pager">
+                    @pager
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Account.CustomerOrders.NoOrders")
+            </div>
+        }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerOrdersBottom, additionalData = Model })
+    </div>
+</div>
+
+<script asp-location="Footer">
+    $(function() {
+        $('#periodSelector').on('change', function() {
+            window.location.href = '@Url.RouteUrl(NopRouteNames.General.CUSTOMER_ORDERS, new { limit = (object)null })/' + $(this).val();
+        });
+    })
+</script>

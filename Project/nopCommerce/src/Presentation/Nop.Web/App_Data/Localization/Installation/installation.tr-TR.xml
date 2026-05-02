@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Türkçe" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Yönetici e-posta adresi</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Yönetici e-posta adresini girin</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Yönetici kullanıcısı şifresi</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Yönetici şifresini girin</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Karakter seti</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Sıralama (collation)</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Sıralama gereklidir</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>'{0}' hesabı, '{1}' klasöründe Değiştirme iznine sahip değil. Lütfen bu izinleri yapılandırın.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>'{0}' hesabı, '{1}' dosyasında Değiştirme iznine sahip değil. Lütfen bu izinleri yapılandırın.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Şifreyi onayla</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Şifreyi onayla</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Bağlantı dizesi (Connection string)</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>SQL bağlantı dizesi gereklidir</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>SQL bağlantı dizesi biçimi yanlış</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Ülke</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Ülkenizi seçin...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Veritabanı mevcut değilse oluştur</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Örnek verileri oluştur</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Özel karşılaştırmayı girin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Veritabanı</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Veritabanı oluşturulurken bir hata oluştu: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Veritabanı bilgisi</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Veritabanı adı</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Veritabanı yok veya bağlanmak için gerekli izinleriniz yok</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Veri sağlayıcı seçin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>nopCommerce'in nasıl kullanılacağı hakkında bilgiye ihtiyacınız varsa, ziyaret edin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>nopCommerce.com'daki belgeler bölümü</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Örnek</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Yükle</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>nopCommerce yükleniyor...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Tümleşik Windows kimlik doğrulamasını kullan</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Şifreler eşleşmiyor</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Ham bağlantı dizesini girin (ileri düzey)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Yüklemeyi yeniden başlat</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Yükleme işlemini yeniden başlatmak için tıklayın (önbelleğe alınmış tüm değerleri temizle)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Yeniden başlatılıyor...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Sunucu Adı</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Sunucu adı gereklidir</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Kurulum başarısız: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL Şifre</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL Şifresi gereklidir</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL Kullanıcı adı</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL Kullanıcı adı gereklidir</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Mağaza bilgisi</Value>
+  </LocaleResource>
+  <LocaleResource Name="SubscribeNewsletters">
+    <Value>nopCommerce bültenine abone olun</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce yüklemesi</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Bu sihirbazı tamamlamak için veritabanı sunucunuz ("bağlantı dizisi") ile ilgili bazı bilgileri bilmeniz gerekir. Gerekirse lütfen ISS'nizle iletişime geçin. Yerel bir makineye veya sunucuya kurulum yapıyorsanız, Sistem Yöneticinizden bilgi almanız gerekebilir.</Value>
+  </LocaleResource>
+</Language>

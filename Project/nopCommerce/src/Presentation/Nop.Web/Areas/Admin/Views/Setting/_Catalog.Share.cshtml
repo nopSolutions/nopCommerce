@@ -1,0 +1,48 @@
+@model CatalogSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowShareButton_OverrideForStore" asp-input="ShowShareButton" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowShareButton" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowShareButton" />
+            <span asp-validation-for="ShowShareButton"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="ShowShareButton">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="PageShareCode_OverrideForStore" asp-input="PageShareCode" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="PageShareCode" />
+            </div>
+            <div class="col-md-9">
+                <nop-textarea asp-for="PageShareCode" />
+                <span asp-validation-for="PageShareCode"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="EmailAFriendEnabled_OverrideForStore" asp-input="EmailAFriendEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="EmailAFriendEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EmailAFriendEnabled" />
+            <span asp-validation-for="EmailAFriendEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="EmailAFriendEnabled">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="AllowAnonymousUsersToEmailAFriend_OverrideForStore" asp-input="AllowAnonymousUsersToEmailAFriend" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="AllowAnonymousUsersToEmailAFriend" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AllowAnonymousUsersToEmailAFriend" />
+                <span asp-validation-for="AllowAnonymousUsersToEmailAFriend"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>

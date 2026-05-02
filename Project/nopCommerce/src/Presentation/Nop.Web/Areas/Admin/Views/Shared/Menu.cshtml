@@ -1,0 +1,13 @@
+﻿@using Nop.Web.Framework.Menu
+
+@inject IAdminMenu siteMap;
+
+<ul class="nav nav-pills nav-sidebar flex-column nav-legacy" data-widget="treeview" role="menu">
+    @{
+        //display menu items
+        foreach (var item in (await siteMap.GetRootNodeAsync()).ChildNodes.Where(n => n.Visible))
+        {
+            @await Html.PartialAsync("_MenuItem", item)
+        }
+    }
+</ul>

@@ -1,0 +1,50 @@
+@model ProductModel
+
+<div class="card-body">
+    <p>
+        @T("Admin.Catalog.Products.ProductAttributes.Hint")
+    </p>
+    @if (Model.Id > 0)
+    {
+        if (Model.ProductAttributesExist)
+        {
+            if (Model.CanCreateCombinations)
+            {
+                <nop-tabs id="productattribute-edit" asp-tab-name-to-select="tab-attributes" asp-render-selected-tab-input="false">
+                    <nop-tab asp-name="tab-attributes" asp-title="@T("Admin.Catalog.Products.ProductAttributes.Attributes")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Info", Model)</nop-tab>
+                    <nop-tab asp-name="tab-attribute-combinations" asp-title="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations")">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Combinations", Model)</nop-tab>
+                </nop-tabs>
+
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DisplayAttributeCombinationImagesOnly" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DisplayAttributeCombinationImagesOnly" />
+                        <span asp-validation-for="DisplayAttributeCombinationImagesOnly"></span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Info", Model)
+            }
+        }
+        else
+        {
+            <div class="card card-default">
+                <div class="card-body">
+                    @T("Admin.Catalog.Products.ProductAttributes.NoAttributesAvailable")
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="card card-default">
+            <div class="card-body">
+                @T("Admin.Catalog.Products.ProductAttributes.SaveBeforeEdit")
+            </div>
+        </div>
+    }    
+</div>

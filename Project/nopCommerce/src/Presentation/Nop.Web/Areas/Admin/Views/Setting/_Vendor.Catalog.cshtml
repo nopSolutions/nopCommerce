@@ -1,0 +1,54 @@
+@model VendorSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowCustomersToContactVendors_OverrideForStore" asp-input="AllowCustomersToContactVendors" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowCustomersToContactVendors" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowCustomersToContactVendors" />
+            <span asp-validation-for="AllowCustomersToContactVendors"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowSearchByVendor_OverrideForStore" asp-input="AllowSearchByVendor" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowSearchByVendor" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowSearchByVendor" />
+            <span asp-validation-for="AllowSearchByVendor"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowVendorOnProductDetailsPage_OverrideForStore" asp-input="ShowVendorOnProductDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowVendorOnProductDetailsPage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowVendorOnProductDetailsPage" />
+            <span asp-validation-for="ShowVendorOnProductDetailsPage"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowVendorOnOrderDetailsPage_OverrideForStore" asp-input="ShowVendorOnOrderDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowVendorOnOrderDetailsPage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowVendorOnOrderDetailsPage" />
+            <span asp-validation-for="ShowVendorOnOrderDetailsPage"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="VendorsBlockItemsToDisplay_OverrideForStore" asp-input="VendorsBlockItemsToDisplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="VendorsBlockItemsToDisplay" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="VendorsBlockItemsToDisplay" />
+            <span asp-validation-for="VendorsBlockItemsToDisplay"></span>
+        </div>
+    </div>
+</div>

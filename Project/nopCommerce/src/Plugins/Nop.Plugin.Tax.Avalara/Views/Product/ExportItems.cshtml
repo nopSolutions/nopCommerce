@@ -1,0 +1,16 @@
+﻿@{
+    var button = await Html.PartialAsync("~/Plugins/Tax.Avalara/Views/Product/_ExportItemsButton.cshtml");
+    var form = await Html.PartialAsync("~/Plugins/Tax.Avalara/Views/Product/_ExportItemsForm.cshtml");
+
+    //we need to replace some specific symbols here
+    var content = await form.RenderHtmlContentAsync();
+    content = content.Replace("</script>", "<\\/script>");
+    form = Html.Raw(content);
+}
+
+<script>
+    $(function() {
+        $('#delete-selected').before(`@button`);
+        $('#export-excel-selected-form').after(`@form`);
+    });
+</script>

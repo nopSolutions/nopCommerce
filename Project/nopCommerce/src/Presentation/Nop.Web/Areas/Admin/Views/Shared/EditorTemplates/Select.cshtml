@@ -1,0 +1,21 @@
+﻿@model int
+
+@{
+    var htmlAttributes = ViewData["htmlAttributes"] as Dictionary<string, object> ?? new();
+
+    htmlAttributes.TryAdd("class", "form-control select2");
+    htmlAttributes.TryAdd("style", "width: 100%;");
+    htmlAttributes.TryAdd("data-dropdown-css-class", "select2-blue");
+}
+
+<div class="select2-blue">
+    @Html.DropDownList("", ViewData["SelectList"] as IEnumerable<SelectListItem>, htmlAttributes)
+</div>
+
+<script>
+    $(function() {
+        $("#@Html.IdForModel()").select2({
+            minimumResultsForSearch: @JavaScriptEncoder.Default.Encode(ViewData["MinimumItemsForSearch"]?.ToString() ?? string.Empty) || Infinity
+        });
+    });
+</script>

@@ -1,0 +1,178 @@
+﻿@model SearchBoxModel
+
+@{
+    const string categoryFormName = "cid";
+    const string termFormName = "q";
+    const string searchBoxId = "small-searchterms";
+}
+
+<form asp-route="@NopRouteNames.General.SEARCH" method="get" id="small-search-box-form">
+    @if (Model.ShowSearchBox)
+    {
+        <input type="text" class="search-box-text" id="@searchBoxId" autocomplete="off" name="@termFormName" placeholder="@T("Search.SearchBox.Tooltip")" aria-label="@T("Search.SearchBox.Text.Label")" />
+        @if(Model.ShowSearchBoxCategories)
+        {
+            <select asp-for="SearchCategoryId" name="@categoryFormName" asp-items="Model.AvailableCategories" class="search-box-category"></select>
+            <script asp-location="Footer">
+                $(function () {
+                    $('#@Html.IdFor(m => m.SearchCategoryId)').on('change', function () {
+                        $('#@searchBoxId').focus();
+                    });
+                });
+            </script>
+        }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.SearchBoxBeforeSearchButton, additionalData = Model })
+        <button type="submit" class="button-1 search-box-button">@T("Search.Button")</button>
+
+        <script asp-location="Footer">
+            $("#small-search-box-form").on("submit", function (event) {
+
+                event.preventDefault();
+
+                @if(Model.SearchTermMinimumLength > 0)
+                {
+                    <text>
+                    if ($("#@searchBoxId").val() == "") {
+                        alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Search.EnterSearchTerms").Text))');
+                        $("#@searchBoxId").focus();
+                        return;
+                    }
+                    </text>
+                }
+
+                var form = document.getElementById('small-search-box-form');
+                var formData = new FormData(form);
+
+                @if(Model.ShowSearchBoxCategories)
+                {
+                    <text>
+                    var selectedCategory = formData.get('@categoryFormName');
+                    if (selectedCategory && selectedCategory != '0') {
+                        formData.append('advs', true);
+                        formData.append('isc', true);
+                    }
+                    </text>
+                }
+
+                window.location.href = `@Url.RouteUrl(NopRouteNames.General.SEARCH)?${new URLSearchParams(formData).toString()}`;
+            });
+        </script>
+
+        @if (Model.AutoCompleteEnabled)
+        {
+            <script asp-location="Footer">
+                $(function() {
+                    var cache = new Map();
+                    var showLinkToResultSearch;
+                    var searchText;
+
+                    $('#@searchBoxId').autocomplete({
+                        delay: 500,
+                        minLength: 0,
+                        source: function (request, response) {
+                            var term = request.term && request.term.trim().toLowerCase();
+                            @if(Model.SearchHistoryEnabled)
+                            {
+                            <text>
+                            if (term.length == 0) {
+                                $.getJSON('@(Url.RouteUrl(NopRouteNames.Ajax.PRODUCT_SEARCH_HISTORY_AUTOCOMPLETE))', function (data, status, xhr) {
+                                  response(data);
+                                });
+                                return;
+                            }
+                            </text>
+                            }
+
+                            if (term.length < @Model.SearchTermMinimumLength) {
+                                response();
+                                return;
+                            }
+
+                            var categoryElement = $('#@Html.IdFor(m => m.SearchCategoryId)');
+                            var categoryId = categoryElement.length == 0 ? 0 : categoryElement.val()
+
+                            var query = { term, categoryId };
+                            var cacheKey = JSON.stringify(query);
+
+                            if (cache.has(cacheKey)) {
+                                response(cache.get(cacheKey));
+                                return;
+                            }
+
+                            $.getJSON('@(Url.RouteUrl(NopRouteNames.Ajax.PRODUCT_SEARCH_AUTOCOMPLETE))', query, function (data, status, xhr) {
+                                cache.set(cacheKey, data);
+                                response(data);
+                            });
+                        },
+                        appendTo: '.search-box',
+                        select: function(event, ui) {
+                            $("#@searchBoxId").val(ui.item.label);
+                            setLocation(ui.item.producturl);
+                            return false;
+                        },
+                        //append link to the end of list
+                        open: function(event, ui) {
+                            //display link to search page
+                            if (showLinkToResultSearch) {
+                                searchText = document.getElementById("@searchBoxId").value;
+                                $(".ui-autocomplete").append("<li class=\"ui-menu-item\" role=\"presentation\"><a href=\"/search?q=" + searchText + "\">@T("Search.SearchBox.SearchPageLink")</a></li>");
+                            }
+                        }
+                    })
+                    .focus(function () {
+                        $(this).autocomplete('search', $(this).val());
+                    })
+                    .data("ui-autocomplete")._renderItem = function(ul, item) {
+                        //html encode
+                        var t = htmlEncode(item.label);
+                        showLinkToResultSearch = item.showlinktoresultsearch;
+
+                        var li = $("<li class='search-box-item'></li>");
+
+                        li.data("item.autocomplete", item);
+
+                        var link = $("<a class='search-box-link'></a>");
+
+                        if (item.IsKeyword) {
+                            link.prop("href", "@Url.RouteUrl(NopRouteNames.General.SEARCH)?q=" + t)
+                        }
+                        else {
+                        @if(Model.ShowProductImagesInSearchAutoComplete)
+                        {
+                            <text>
+                            link.append('<img src="' + item.productpictureurl + '" width="@Model.AutoCompleteSearchThumbPictureSize">');
+                            </text>
+                        }
+                        }
+                        
+                        link.append('<span>' + t + '</span>');
+
+                        li.append(link);
+                        
+                        if (item.IsKeyword) {
+                            var removeBtn = $("<span class='search-box-remove'>x</span>");
+                            removeBtn.on("click", function(e) {
+                                e.preventDefault();
+
+                                var postData = { term: t };
+                                addAntiForgeryToken(postData);
+
+                                $.post("@Url.RouteUrl(NopRouteNames.Ajax.DELETE_PRODUCT_SEARCH_TERMS)", postData, function() {
+                                    $('#@searchBoxId').autocomplete("search", "");
+                                });
+
+                                return false;
+                            });
+
+                            li.append(removeBtn);
+                        }
+
+                        return li.appendTo(ul);
+                    };
+
+                });
+            </script>
+        }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.SearchBox, additionalData = Model })
+    }
+</form>

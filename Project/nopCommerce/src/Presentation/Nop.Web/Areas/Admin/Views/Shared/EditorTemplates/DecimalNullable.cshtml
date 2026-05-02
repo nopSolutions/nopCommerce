@@ -1,0 +1,11 @@
+@model Decimal?
+@{
+    var postfix = "";
+    if (ViewData.ContainsKey("postfix") && ViewData["postfix"] != null)
+    {
+        postfix = ViewData["postfix"].ToString();
+    }
+}
+<div class="input-postfix" data-postfix="@postfix">
+    <input asp-for="@Model" type="number" class="form-control" />
+</div>

@@ -1,0 +1,154 @@
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Media
+@using Nop.Plugin.Misc.RFQ.Domains
+
+@model Nop.Plugin.Misc.RFQ.Models.Customer.RequestQuoteModel
+@inject MediaSettings mediaSettings
+@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
+@inject INopUrlHelper nopUrlHelper
+
+@{
+
+    Layout = "_ColumnsTwo";
+
+    var title = Model.Id == 0 ? T("Plugins.Misc.RFQ.NewRequestQuote").Text : string.Format(T("Plugins.Misc.RFQ.RequestQuoteNumber").Text, Model.Id);
+
+    //title
+    NopHtml.AddTitleParts(title);
+
+    NopHtml.AddCssFileParts(@"~/Plugins/Misc.RFQ/Content/styles.css", null);
+
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-rfq-request-page");
+}
+
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = RfqDefaults.RequestsTabId })
+}
+
+<div class="page account-page request-page">
+
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @title</h1>
+    </div>
+
+    <form asp-controller="RfqCustomer" asp-action="CustomerRequest" method="post">
+        <input asp-for="Id" type="hidden" />
+        <div class="page-body">
+            <section class="fieldset">
+                <h2 class="title">
+                    @T("Plugins.Misc.RFQ.CustomerRequest.Info")
+                </h2>
+                <div class="form-fields">
+                    @if (Model.Id != 0)
+                    {
+                        <div class="inputs">
+                            <label asp-for="CreatedOnUtc" asp-postfix=":"></label>
+                            <label>@Model.CreatedOnUtc</label>
+                        </div>
+                        <div class="inputs">
+                            <label asp-for="Status" asp-postfix=":"></label>
+                            <label>
+                                @Model.Status
+                                @if (Model.QuoteId.HasValue && Model.QuoteStatus == QuoteStatus.Submitted)
+                                {
+                                    <text> (</text>
+
+                                    <a class="rfq-link" href='@Url.RouteUrl(RfqDefaults.CustomerQuoteRouteName, new { quoteId = Model.QuoteId })'>@T("Plugins.Misc.RFQ.CustomerQuote.Info")</a>
+
+                                    <text>)</text>
+                                }
+                            </label>
+                        </div>
+                    }
+                    <div class="inputs">
+                        <label asp-for="CustomerNotes" asp-postfix=":"></label>
+                        @if (Model.DisplaySendRequestButton)
+                        {
+                            <textarea asp-for="CustomerNotes" class="review-text"></textarea>
+                        }
+                        else
+                        {
+                            <label>
+                                <div class="text-body">
+                                    @Html.Raw(htmlFormatter.FormatText(Model.CustomerNotes))
+                                </div>
+                            </label>
+                        }
+                    </div>
+                </div>
+            </section>
+
+            <section class="fieldset">
+                <h2 class="title">
+                    @T("Plugins.Misc.RFQ.Products")
+                </h2>
+                <div class="notifications">
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                </div>
+                <div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th width="@(mediaSettings.CartThumbPictureSize)px">@T("Plugins.Misc.RFQ.Image")</th>
+                                <th>@T("Plugins.Misc.RFQ.Product(s)")</th>
+                                <th>@T("Plugins.Misc.RFQ.OriginalProductPrice")</th>
+                                <th>@T("Plugins.Misc.RFQ.CustomerRequest.RequestedQty")</th>
+                                <th>@T("Plugins.Misc.RFQ.CustomerRequest.RequestedUnitPrice")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model.CustomerItems.Count; i++)
+                            {
+                                <tr>
+                                    <td class="picture"><img src="@Model.CustomerItems[i].PictureUrl" alt="@Model.CustomerItems[i].ProductName" /></td>
+                                    <td class="product">
+                                        <a href="@(await nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = Model.CustomerItems[i].ProductSeName }))">
+                                            @Model.CustomerItems[i].ProductName
+                                        </a>
+                                        <br />
+                                        @Html.Raw(Model.CustomerItems[i].AttributeInfo)
+                                    </td>
+                                    <td>
+                                        <label>@T("Plugins.Misc.RFQ.OriginalProductPrice"):</label>
+                                        <span>@Model.CustomerItems[i].OriginalProductCost</span>
+                                    </td>
+                                    <td>
+                                        <label for="@Html.IdFor(m => m.CustomerItems[i].Quantity)">@T("Plugins.Misc.RFQ.CustomerRequest.RequestedQty"):</label>
+                                        <span>
+                                        @if (Model.CustomerItems[i].Editable)
+                                        {
+                                            <input type="number" asp-for="@Model.CustomerItems[i].Quantity" name="@($"{RfqDefaults.QUANTITY_FORM_KEY}{Model.CustomerItems[i].Id}")" />
+                                        }
+                                        else
+                                        {
+                                            @Model.CustomerItems[i].Quantity
+                                        }
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <label for="@Html.IdFor(m => m.CustomerItems[i].UnitPrice)">@T("Plugins.Misc.RFQ.CustomerRequest.RequestedUnitPrice"):</label>
+                                        <span>
+                                        @if (Model.CustomerItems[i].Editable)
+                                        {
+                                            <input type="number" step=".01" asp-for="@Model.CustomerItems[i].UnitPrice" name="@($"{RfqDefaults.UNIT_PRICE_FORM_KEY}{Model.CustomerItems[i].Id}")" />
+                                        }
+                                        else
+                                        {
+                                            @Model.CustomerItems[i].UnitPriceText
+                                        }
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <br />
+                    @await Html.PartialAsync("_CustomerRequest.buttons.cshtml", Model)
+                </div>
+            </section>
+        </div>
+    </form>
+</div>

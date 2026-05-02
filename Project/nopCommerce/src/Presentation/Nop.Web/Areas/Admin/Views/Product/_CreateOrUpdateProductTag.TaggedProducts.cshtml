@@ -1,0 +1,35 @@
+﻿@model ProductTagModel
+
+<div class="card-body">
+ @if (Model.Id > 0)
+ {
+     @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "tagged-products-grid",
+            UrlRead = new DataUrl("TaggedProducts", "Product", new RouteValueDictionary { [nameof(Model.ProductTagProductSearchModel.ProductTagId)] = Model.ProductTagProductSearchModel.ProductTagId }),
+            Length = Model.ProductTagProductSearchModel.PageSize,
+            LengthMenu = Model.ProductTagProductSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ProductModel.Name))
+                {
+                    Title = T("Admin.Catalog.ProductTags.TaggedProducts.Product").Text
+                },
+                new ColumnProperty(nameof(ProductModel.Published))
+                {
+                    Title = T("Admin.Catalog.ProductTags.TaggedProducts.Published").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(ProductModel.Id))
+                {
+                    Title = T("Admin.Common.View").Text,
+                    Width = "100",
+                    ClassName = $"{NopColumnClassDefaults.CenterAll} {NopColumnClassDefaults.Button}",
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                }
+            }
+        })
+ }
+</div>

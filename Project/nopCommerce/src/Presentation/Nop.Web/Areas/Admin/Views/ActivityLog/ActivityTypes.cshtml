@@ -1,0 +1,64 @@
+﻿@using Newtonsoft.Json
+@model ActivityLogTypeSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Customers.ActivityLogType").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Activity types");
+}
+
+<form asp-controller="ActivityLog" asp-action="SaveTypes" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Customers.ActivityLogType")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ActivityTypesListButtons, additionalData = Model })
+        </div>
+    </div>
+    <section class="content">
+    <div class="container-fluid">
+        <div class="card card-default">
+            <div class="card-body">
+                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ActivityLog", Docs.ActivityLog + Utm.OnAdmin)" />
+
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "activityLogType-grid",
+                    Paging = false,
+                    ServerSide = false,
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(ActivityLogTypeModel.Name))
+                        {
+                            Title = T("Admin.Customers.ActivityLogType.Fields.Name").Text,
+                            AutoWidth = true
+                        },
+                        new ColumnProperty(nameof(ActivityLogTypeModel.Enabled))
+                        {
+                            IsMasterCheckBox = true,
+                            Title = T("Admin.Customers.ActivityLogType.Fields.Enabled").Text,
+                            Width = "100",
+                            ClassName = NopColumnClassDefaults.CenterAll,
+                            Render = new RenderCheckBox("checkbox_activity_types")
+                        }
+                    },
+                    Data = JsonConvert.SerializeObject(Model.ActivityLogTypeListModel.Select(typeModel => new
+                    {
+                        typeModel.Id,
+                        typeModel.Name,
+                        Enabled = typeModel.Enabled
+                    }).ToList())
+                })
+            </div>
+        </div>
+    </div>
+    </section>
+</form>

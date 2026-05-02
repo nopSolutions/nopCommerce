@@ -1,0 +1,59 @@
+﻿@await Html.PartialAsync("_AdminTour");
+
+<script asp-location="Footer">
+    const steps = [{
+        element: '#product-editor-settings',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.SettingsButton.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.SettingsButton.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }}, {
+        element: '#product-details-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Details.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Details.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }}, {
+        element: '#product-price-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Price.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Price.Text", Docs.Currencies + Utm.OnAdminTourDocs).Text)',
+            side: "bottom",
+            align: 'start'
+        }},{
+        element: '#product-tax-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Tax.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Tax.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }},{
+        element: '#product-shipping-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Shipping.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Shipping.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }},{
+        element: '#product-inventory-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Inventory.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Inventory.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }},{
+        element: '#product-multimedia',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Pictures.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Product.Pictures.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }}
+    ];
+
+    AdminTourBuilder
+        .init(localized_data, '', '@Url.Action("List", "EmailAccount", new { showtour = true })', steps)
+        .drive();
+</script>

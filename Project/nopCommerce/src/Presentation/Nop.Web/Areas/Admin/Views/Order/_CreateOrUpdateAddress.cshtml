@@ -1,0 +1,19 @@
+@model OrderAddressModel
+
+<div asp-validation-summary="All"></div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderAddressDetailsTop, additionalData = Model })
+                <div class="card card-default">
+                    <div class="card-body">
+                        <nop-editor asp-for="Address" asp-template="Address" />
+                    </div>
+                </div>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderAddressDetailsBottom, additionalData = Model })
+            </div>
+        </div>
+    </div>
+</section>

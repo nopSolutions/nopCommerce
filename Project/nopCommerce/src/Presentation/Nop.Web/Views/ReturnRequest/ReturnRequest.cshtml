@@ -1,0 +1,186 @@
+﻿@model SubmitReturnRequestModel
+
+@using Nop.Core.Domain.Catalog
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.ReturnItems").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-return-request-page");
+}
+<div class="page return-request-page">
+    <div class="page-title">
+        <h1>@Html.Raw(string.Format(T("ReturnRequests.Title").Text, Url.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = Model.OrderId }), Model.CustomOrderNumber))</h1>
+    </div>
+    <div class="page-body">
+        @if (!string.IsNullOrEmpty(Model.Result))
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            <form asp-route="@NopRouteNames.Standard.RETURN_REQUEST" method="post">                
+                <section class="section">
+                    <h2 class="title">
+                        @T("ReturnRequests.SelectProduct(s)")
+                    </h2>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <colgroup>
+                                <col />
+                                <col width="1" />
+                                <col width="1" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="product">
+                                        @T("ReturnRequests.Products.Name")
+                                    </th>
+                                    <th class="unit-price">
+                                        @T("ReturnRequests.Products.Price")
+                                    </th>
+                                    <th class="quantity">
+                                        @T("ReturnRequests.Products.Quantity")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td class="product">
+                                            <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a>
+                                            @if (!string.IsNullOrEmpty(item.AttributeInfo))
+                                            {
+                                                <div class="attributes">
+                                                    @Html.Raw(item.AttributeInfo)
+                                                </div>
+                                            }
+                                        </td>
+                                        <td class="unit-price">
+                                            @item.UnitPrice
+                                        </td>
+                                        <td class="quantity">
+                                            <select name="quantity@(item.Id)">
+                                                @for (var i = 0; i <= item.Quantity; i++)
+                                                {
+                                                    <option value="@(i)">@(i)</option>
+                                                }
+                                            </select>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                </section>
+                <section class="fieldset">
+                    <h2 class="title">
+                        @T("ReturnRequests.WhyReturning")
+                    </h2>
+                    <div class="form-fields">
+                        <div class="inputs">
+                            @{
+                                var reasonsSelectList = Model.AvailableReturnReasons.Select(x => new SelectListItem
+                                {
+                                    Text = x.Name,
+                                    Value = x.Id.ToString()
+                                }).ToList();
+                            }
+                            <label asp-for="ReturnRequestReasonId" asp-postfix=":"></label>
+                            <select asp-for="ReturnRequestReasonId" asp-items="@reasonsSelectList" class="return-reasons"></select>
+                        </div>
+                        <div class="inputs">
+                            @{
+                                var actionsSelectList = Model.AvailableReturnActions.Select(x => new SelectListItem
+                                {
+                                    Text = x.Name,
+                                    Value = x.Id.ToString()
+                                }).ToList();
+                            }
+                            <label asp-for="ReturnRequestActionId" asp-postfix=":"></label>
+                            <select asp-for="ReturnRequestActionId" asp-items="@actionsSelectList" class="return-actions"></select>
+                        </div>                        
+                        <div class="inputs">
+                            <label asp-for="Comments" asp-postfix=":"></label>
+                            <textarea asp-for="Comments" class="comment"></textarea>
+                            <span asp-validation-for="Comments"></span>
+                        </div>
+                        @if (Model.AllowFiles)
+                        {
+                            //ex. ['jpg', 'txt', 'zip'] or []
+                            var allowedFileExtensionsList = new List<string>();
+                            var allowedFileTypes = string.Empty;
+
+                            if (allowedFileExtensionsList.Any())
+                            {
+                                var fileTypeList = allowedFileExtensionsList
+                                    .Select(x => new FileExtensionContentTypeProvider().TryGetContentType($".{x}", out var contentType) ? $"'{contentType}'" : null)
+                                    .Where(ft => !string.IsNullOrEmpty(ft))
+                                    .ToList();
+
+                                allowedFileTypes = string.Join(", ", fileTypeList);
+                            }
+
+                            var controlId = Html.IdFor(model => model.UploadedFileGuid);
+
+                            @* register CSS and JS *@
+                            <link rel="stylesheet" href="~/lib_npm/filepond/filepond.min.css" />
+                            <script asp-exclude-from-bundle="true" src="~/lib_npm/filepond/filepond.min.js" asp-location="Footer"></script>
+                            <script asp-exclude-from-bundle="true" src="~/lib_npm/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js" asp-location="Footer"></script>
+
+                            <div class="inputs return-request-file">
+                                <input id="@(controlId)" name="@(controlId)" type="hidden"/>
+                                <div id="@(controlId)element" class="filepond"></div>
+                            </div>
+
+                            <script asp-location="Footer">
+                                $(function () {
+                                    // Register the plugin
+                                    FilePond.registerPlugin(FilePondPluginFileValidateType);
+
+                                    // Create a FilePond instance
+                                    FilePond.create(document.querySelector("#@(controlId)element"), {
+                                        credits: false,
+                                        acceptedFileTypes: [@Html.Raw(allowedFileTypes)],
+                                        allowRemove: false,
+                                        allowMultiple: false,
+                                        maxFiles: 1,
+                                        server: {
+                                            process: {
+                                                url:'@(Url.RouteUrl(NopRouteNames.Ajax.UPLOAD_FILE_RETURN_REQUEST))',
+                                                onload: function(response) {
+                                                    const r = JSON.parse(response);
+
+                                                    $("#@(controlId)").val(r.downloadGuid);
+
+                                                    if (r.message) {
+                                                        alert(r.message);
+                                                    }
+                                                }
+                                            },
+                                            revert: (uniqueFileId, load, error) => {
+                                                $("#@(controlId)").val('');
+                                                load();
+                                            },
+                                        },
+                                        labelIdle: '<span class="filepond--label-action">@T("ReturnRequests.UploadedFile")</span>',
+                                        labelFileProcessing: '@T("Common.FileUploader.Processing")',
+                                    });
+                                });
+                            </script>
+                        }
+                    </div>
+                </section>
+                <section class="buttons">
+                    <button type="submit" name="submit-return-request" class="button-1 submit-return-request-button">@T("ReturnRequests.Submit")</button>
+                </section>
+            </form>
+        }
+    </div>
+</div>

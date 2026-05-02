@@ -1,0 +1,129 @@
+﻿@model ActiveDiscussionsModel
+
+<div class="forums-table-section topic-group active-discussions">
+    <div class="forums-table-section-title">
+        @if (Model.ActiveDiscussionsFeedEnabled)
+        {
+            <a href="@Url.RouteUrl(ForumDefaults.Routes.Public.ACTIVE_DISCUSSIONS_RSS)" class="link-rss" title="@T("Plugins.Misc.Forums.ActiveDiscussionsRSSLinkTitle")">@T("Plugins.Misc.Forums.RSS")</a>
+        }
+        <strong>@T("Plugins.Misc.Forums.ActiveDiscussions")</strong>
+    </div>
+    @{
+        var pager = await Html.PagerAsync(new PagerModel(localizationService)
+        {
+            PageSize = Model.TopicPageSize,
+            TotalRecords = Model.TopicTotalRecords,
+            PageIndex = Model.TopicPageIndex,
+            ShowTotalSummary = false,
+            RouteActionName = ForumDefaults.Routes.Public.ACTIVE_DISCUSSIONS_PAGED,
+            UseRouteLinks = true,
+            RouteValues = new ForumModelFactory.ForumActiveDiscussionsRouteValues()
+        });
+    }
+    @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+    {
+        <div class="pager upper">
+            @pager
+        </div>
+    }
+    <div class="forums-table-section-body">
+        @if (Model.ForumTopics.Count > 0)
+        {
+            <div class="table-wrapper">
+                <table class="forum-table">
+                    <colgroup>
+                        <col />
+                        <col width="1" />
+                        <col width="1" />
+                        @if (Model.AllowPostVoting)
+                        {
+                            <col width="1" />
+                        }
+                        <col width="1" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="topic-details">
+                                @T("Plugins.Misc.Forums.TopicTitle")
+                            </th>
+                            <th class="replies">
+                                @T("Plugins.Misc.Forums.Replies")
+                            </th>
+                            <th class="views">
+                                @T("Plugins.Misc.Forums.Views")
+                            </th>
+                            @if (Model.AllowPostVoting)
+                            {
+                                <th class="votes">
+                                    @T("Plugins.Misc.Forums.Votes")
+                                </th>
+                            }
+                            <th class="latest-post">
+                                @T("Plugins.Misc.Forums.LatestPost")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var topic in Model.ForumTopics)
+                        {
+                            <tr>
+                                <td class="topic-details">
+                                    <div class="topic-title">
+                                        @Html.RouteLink(topic.Subject, ForumDefaults.Routes.Public.TOPIC_SLUG, new { id = topic.Id, slug = topic.SeName })
+                                    </div>
+                                    @if (topic.NumPosts > Model.PostsPageSize)
+                                    {
+                                        <div class="topic-pager">
+                                            @await Html.PartialAsync("~/Plugins/Misc.Forums/Public/Views/_ForumPager.cshtml", topic)
+                                        </div>
+                                    }
+                                    <div class="topic-starter">
+                                        @if (topic.CustomerId > 0)
+                                        {
+                                            <label>@T("Plugins.Misc.Forums.Author"):</label>
+                                            if (topic.AllowViewingProfiles)
+                                            {
+                                                @Html.RouteLink(topic.CustomerName, NopRouteNames.Standard.CUSTOMER_PROFILE, new { Id = topic.CustomerId })
+                                            }
+                                            else
+                                            {
+                                                @topic.CustomerName
+                                            }
+                                        }
+                                    </div>
+                                </td>
+                                <td class="replies">
+                                    @topic.NumReplies
+                                </td>
+                                <td class="views">
+                                    @topic.Views
+                                </td>
+                                @if (Model.AllowPostVoting)
+                                {
+                                    <td class="votes">
+                                        @topic.Votes
+                                    </td>
+                                }
+                                <td class="latest-post">
+                                    @await Component.InvokeAsync(typeof(ForumLastPostViewComponent), new { forumPostId = topic.LastPostId, showTopic = false })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+    @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+    {
+        <div class="pager lower">
+            @pager
+        </div>
+    }
+    @if (Model.ViewAllLinkEnabled)
+    {
+        <div class="view-all">
+            @Html.RouteLink(T("Plugins.Misc.Forums.ActiveDiscussions.ViewAll").Text, ForumDefaults.Routes.Public.ACTIVE_DISCUSSIONS, null)
+        </div>
+    }
+</div>

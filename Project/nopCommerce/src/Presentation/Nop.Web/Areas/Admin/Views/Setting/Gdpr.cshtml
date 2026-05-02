@@ -1,0 +1,50 @@
+@model GdprSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Gdpr").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("GDPR settings");
+}
+
+@{
+    const string hideCommonBlockAttributeName = "GdprSettingsPage.HideCommonBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+
+    const string hideConsentsBlockAttributeName = "GdprSettingsPage.HideConsentsBlock";
+    var hideConsentsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideConsentsBlockAttributeName);
+}
+
+
+<form asp-controller="Setting" asp-action="GDPR" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Settings.GDPR")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.GdprSettingsButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
+                <div asp-validation-summary="All"></div>
+
+                <nop-cards id="gdprsettings-cards">
+                    <nop-card asp-name="gdprsettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.Gdpr.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Gdpr.Common", Model)</nop-card>
+                    <nop-card asp-name="gdprsettings-consents" asp-icon="fas fa-thumbs-o-up" asp-title="@T("Admin.Configuration.Settings.Gdpr.BlockTitle.Consents")" asp-hide-block-attribute-name="@hideConsentsBlockAttributeName" asp-hide="@hideConsentsBlock" asp-advanced="true">@await Html.PartialAsync("_Gdpr.Consents", Model)</nop-card>
+
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.GdprSettingsDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+</form>

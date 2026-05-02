@@ -1,0 +1,59 @@
+﻿@inject Nop.Services.Messages.IEmailAccountService emailAccountService
+@{
+    var emailAccountTour = (await emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
+}
+
+@await Html.PartialAsync("_AdminTour");
+
+<script asp-location="Footer">
+    $(function(){
+        let steps = [];
+
+        if ($.fn.dataTable.isDataTable("#email-accounts-grid")) {
+            let emailAccountsDataTable = $("#email-accounts-grid").DataTable();
+
+                emailAccountsDataTable.on('init.dt', function() {
+
+                if (emailAccountsDataTable.rows().count() > 0)
+                {
+                    var emailAccount = emailAccountsDataTable.row(0);
+
+                    steps.push({
+                        element: '#email-accounts-area',
+                        popover: {
+                            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.EmailAccounts1.Title").Text)',
+                            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.EmailAccounts1.Text").Text)',
+                            side: "bottom",
+                            align: 'start'
+                        }},{
+                        element: '#email-accounts-area',
+                        popover: {
+                            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.EmailAccounts2.Title").Text)',
+                            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.EmailAccounts2.Text").Text)',
+                            side: "bottom",
+                            align: 'start'
+                        }},{
+                        element: emailAccount.node().querySelector('.column-default .btn'),
+                        popover: {
+                            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.DefaultEmailAccount.Title").Text)',
+                            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.DefaultEmailAccount.Text").Text)',
+                            side: "left",
+                            align: 'start'
+                        }},{
+                        element: emailAccount.node().querySelector('.column-edit .btn'),
+                        popover: {
+                            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.Edit.Title").Text)',
+                            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.EmailAccountList.Edit.Text").Text)',
+                            side: "left",
+                            align: 'start'
+                        }});
+
+                }
+
+                AdminTourBuilder
+                    .init(localized_data, "", "@Url.Action("Edit", "EmailAccount", new { showtour = true, id = emailAccountTour?.Id ?? 0 })", steps)
+                    .drive();
+            });
+        }
+    });
+</script>

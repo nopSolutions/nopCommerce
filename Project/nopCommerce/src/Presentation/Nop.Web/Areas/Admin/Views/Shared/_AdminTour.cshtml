@@ -1,0 +1,11 @@
+﻿<link rel="stylesheet" href="~/lib_npm/driver.js/driver.min.css" />
+<script src="~/lib_npm/driver.js/driver.js.iife.min.js"></script>
+<script src="~/js/admintour/admin.tour.common.js" asp-location="Footer"></script>
+<script asp-location="Footer">
+    const localized_data = {
+        Back: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Back").Text)',
+        NextStep: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.NextStep").Text)',
+        NextPage: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.NextPage").Text)',
+        Done: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Done").Text)',
+    };
+</script>

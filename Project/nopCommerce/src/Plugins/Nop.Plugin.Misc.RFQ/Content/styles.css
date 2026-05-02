@@ -1,0 +1,140 @@
+﻿.request-list-page .info {
+  margin: 0 0 10px;
+  border-top: 1px solid #e6e6e6;
+  background-color: #f9f9f9;
+  padding: 20px;
+  line-height: 26px;
+  color: #444;
+}
+
+.request-list-page .button-2 {
+  display: inline-block;
+  border: none;
+  font-size: 12px;
+  color: #444;
+  background-color: white;
+  background: url('~/images/details.png') left center no-repeat
+}
+
+.request-list-page .button-2:hover,
+.request-list-page .button-2:focus {
+  color: #4ab2f1;
+}
+
+.request-list-page .section {
+  display: block;
+  width: auto;
+  margin: 0 0 40px;
+  vertical-align: top;
+}
+
+.request-list-page .request-header {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-block-end: 20px;
+}
+
+.request-list-page .request-title {
+  font-size: 20px;
+  color: #444;
+}
+
+.request-options .common-buttons,
+.quote-options .common-buttons {
+  text-align: center;
+}
+
+.request-page .fieldset .title {
+  text-align: left
+}
+
+textarea {
+  resize: vertical;
+  overflow: auto;
+  min-height: 70px;
+  max-height: 250px;
+  width: 97%;
+  margin: 10px;
+}
+
+.rfq-button-2 {
+  cursor: pointer;
+  border: none;
+  background-color: #aaa;
+  padding: 10px 15px;
+  color: #fff;
+  text-transform: uppercase;
+  display: inline-block;
+  margin: 10px 0;
+  font-size: 15px;
+}
+
+.rfq-button-2:hover,
+.rfq-button-2:focus {
+  background-color: #999;
+}
+
+input[type="number"] {
+  height: 36px; /*safari padding fix*/
+  border: 1px solid #ddd;
+  padding: 8px;
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+.request-page .data-table label {
+  display: none;
+}
+
+.request-page .common-buttons button {
+  margin: 5px;
+}
+
+@media (max-width: 1366px) {
+  .request-page .data-table colgroup, .request-page .data-table thead {
+    display: none;
+  }
+
+  .request-page .data-table {
+    text-align: center;
+  }
+
+  .request-page .data-table tbody {
+    display: block;
+    overflow: hidden;
+  }
+
+  .request-page .data-table tr {
+    display: block;
+    float: left;
+    width: 100%;
+    margin: 40px 0 0;
+    border: 1px solid #ddd;
+  }
+
+  .request-page .data-table td {
+    display: block;
+    border: 0;
+    padding: 10px;
+  }
+
+  .request-page .data-table td label, .request-page .data-table td span{
+    display: inline-block;
+    width: calc(50% - 10px);
+    text-align: start;
+  }
+
+  .request-page .data-table td.product {
+    min-width: 0;
+    border-bottom: 1px solid #ddd;
+    padding: 5px 10px 15px;
+    text-align: center;
+  }
+
+  .request-page .data-table label {
+    display: inline-block;
+  }
+}

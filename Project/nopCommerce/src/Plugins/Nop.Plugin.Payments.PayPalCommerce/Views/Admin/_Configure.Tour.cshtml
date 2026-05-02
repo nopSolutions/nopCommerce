@@ -1,0 +1,96 @@
+﻿@await Html.PartialAsync("_AdminTour");
+
+<script asp-location="Footer">
+    const advancedModeCheckBox = document.getElementById('advanced-settings-mode');
+    const credentialsCheckBox = document.getElementById('SetCredentialsManually');
+    const onboardingButton = document.getElementById('onboardingButton');
+
+    const steps = [];
+
+    if (onboardingButton != null) {
+
+        steps.push({
+            element: onboardingButton,
+            popover: {
+                title: '@T("Admin.ConfigurationSteps.PaymentPayPal.Register.Title")',
+                description: '@T("Admin.ConfigurationSteps.PaymentPayPal.Register.Text")',
+                side: "bottom",
+                align: 'start'
+            }}, {
+            element: '#UseSandbox',
+            popover: {
+                title: '@T("Admin.ConfigurationSteps.PaymentPayPal.Sandbox.Title")',
+                description: '@T("Admin.ConfigurationSteps.PaymentPayPal.Sandbox.Text")',
+                side: "bottom",
+                align: 'start'
+            }},{
+            element: '#SetCredentialsManually',
+            popover: {
+                title: '@T("Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Title")',
+                description: '@T("Admin.ConfigurationSteps.PaymentPayPal.ApiCredentials.Text")',
+                side: "bottom",
+                align: 'start',
+                onPopoverRender: (popover, { config, state }) => {
+                    config.onPopoverRender(popover, { config, state });
+
+                    if (advancedModeCheckBox !== null && !advancedModeCheckBox.checked){
+                        advancedModeCheckBox.click();
+                    }
+
+                    if (!credentialsCheckBox.checked) {
+                        credentialsCheckBox.click();
+                    }
+
+                    $('#pnlCredentials').showElement();
+                }
+            }},{
+            element: '#pnlCredentials',
+            popover: {
+                title: '@T("Admin.ConfigurationSteps.PaymentPayPal.Credentials.Title")',
+                description: '@T("Admin.ConfigurationSteps.PaymentPayPal.Credentials.Text")',
+                side: "bottom",
+                align: 'start'
+            }},
+        );
+    }
+    else {
+        steps.push({
+            element: '#pnlOnboarding',
+            popover: {
+                title: '@T("Admin.ConfigurationSteps.PaymentPayPal.Configured.Title")',
+                description: '@T("Admin.ConfigurationSteps.PaymentPayPal.Configured.Text")',
+                side: "bottom",
+                align: 'start'
+            }}
+        );
+
+        var paymentType = document.getElementById('PaymentTypeId');
+        if (paymentType != null) {
+            steps.push({
+                element: paymentType,
+                popover: {
+                    title: '@T("Admin.ConfigurationSteps.PaymentPayPal.PaymentType.Title")',
+                    description: '@T("Admin.ConfigurationSteps.PaymentPayPal.PaymentType.Text")',
+                    side: "bottom",
+                    align: 'start'
+                }}
+            );
+        }
+
+        if (advancedModeCheckBox !== null && advancedModeCheckBox.checked) {
+            steps.push({
+                element: '#prominently-card',
+                popover: {
+                    title: '@T("Admin.ConfigurationSteps.PaymentPayPal.Prominently.Title")',
+                    description: '@T("Admin.ConfigurationSteps.PaymentPayPal.Prominently.Text")',
+                    side: "bottom",
+                    align: 'start'
+                }}
+            );
+        }
+    }
+
+    AdminTourBuilder
+        .init(localized_data, '', '@Url.Action("Providers", "Tax", new { showtour = true })', steps)
+        .drive();
+</script>

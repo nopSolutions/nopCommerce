@@ -1,0 +1,17 @@
+﻿@model CheckoutPaymentInfoModel
+<div class="checkout-data">
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutPaymentInfoTop, additionalData = Model })
+    <div class="section payment-info">
+        <div class="info">
+            @await Component.InvokeAsync(Model.PaymentViewComponent)
+        </div>
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+    </div>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutPaymentInfoBottom, additionalData = Model })
+    @if (Model.DisplayOrderTotals)
+    {
+        <div class="section order-summary">
+            @await Component.InvokeAsync(typeof(OrderSummaryViewComponent))
+        </div>
+    }
+</div>

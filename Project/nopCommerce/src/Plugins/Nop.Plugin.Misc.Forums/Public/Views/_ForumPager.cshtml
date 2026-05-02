@@ -1,0 +1,45 @@
+﻿@model ForumTopicRowModel
+
+@{
+    var forumTopicId = Model.Id;
+    var forumTopicSlug = Model.SeName;
+    var totalPages = Model.TotalPostPages;
+}
+
+@if (totalPages > 0)
+{
+    for (var x = 1; x <= totalPages; x++)
+    {
+        @Html.RouteLink(x.ToString(),
+            ForumDefaults.Routes.Public.TOPIC_SLUG_PAGED,
+            new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug },
+            new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), x.ToString()) })
+
+        if (x < totalPages)
+        {
+            <span>, </span>
+        }
+    }
+}
+else
+{
+    @Html.RouteLink("1",
+        ForumDefaults.Routes.Public.TOPIC_SLUG_PAGED,
+        new { id = forumTopicId, pageNumber = 1, slug = forumTopicSlug },
+        new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), 1) })
+
+    <span> ... </span>
+
+    for (var x = totalPages - 2; x <= totalPages; x++)
+    {
+        @Html.RouteLink(x.ToString(),
+            ForumDefaults.Routes.Public.TOPIC_SLUG_PAGED,
+            new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug },
+            new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), x.ToString()) })
+
+        if (x < totalPages)
+        {
+            <span>, </span>
+        }
+    }
+}

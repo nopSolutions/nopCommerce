@@ -1,0 +1,23 @@
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace Nop.Web.Framework.Extensions;
+
+/// <summary>
+/// Extensions
+/// </summary>
+public static class CommonExtensions
+{
+    /// <summary>
+    /// Returns a value indicating whether real selection is not possible
+    /// </summary>
+    /// <param name="items">Items</param>
+    /// <param name="ignoreZeroValue">A value indicating whether we should ignore items with "0" value</param>
+    /// <returns>A value indicating whether real selection is not possible</returns>
+    public static bool SelectionIsNotPossible(this IList<SelectListItem> items, bool ignoreZeroValue = true)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        //we ignore items with "0" value? Usually it's something like "Select All", "etc
+        return items.Count(x => !ignoreZeroValue || !x.Value.ToString().Equals("0")) < 2;
+    }
+}

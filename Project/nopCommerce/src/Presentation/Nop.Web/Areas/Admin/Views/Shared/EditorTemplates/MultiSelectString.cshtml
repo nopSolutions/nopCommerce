@@ -1,0 +1,35 @@
+﻿@model List<string>
+
+@{
+    var htmlAttributes = ViewData["htmlAttributes"] as Dictionary<string, object> ?? new();
+
+    htmlAttributes.TryAdd("class", "form-control select2");
+    htmlAttributes.TryAdd("style", "width: 100%;");
+    htmlAttributes.TryAdd("data-dropdown-css-class", "select2-blue");
+    htmlAttributes.TryAdd("multiple", "multiple");
+}
+
+<div class="select2-blue">
+    @Html.ListBox("", ViewData["SelectList"] as IEnumerable<SelectListItem>, htmlAttributes)
+</div>
+
+<script>
+    $(function() {
+        $("#@Html.IdForModel()").select2({
+            tags: true,
+            createTag: function(params) {
+                const term = $.trim(params.term);
+
+                if (term === '') {
+                    return null;
+                }
+
+                return {
+                    id: term,
+                    text: term,
+                    newTag: true
+                }
+            }
+        })
+    });
+</script>

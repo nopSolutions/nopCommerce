@@ -1,0 +1,165 @@
+﻿@using Nop.Core.Domain.Directory
+@using Nop.Services
+@model CurrencyModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CurrencyDetailsTop, additionalData = Model })
+                <div class="card card-default">
+                    <div class="card-body">
+                        @(await Html.LocalizedEditorAsync<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
+                            @<div>
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="@Model.Locales[item].Name" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="@Model.Locales[item].Name" />
+                                        <span asp-validation-for="@Model.Locales[item].Name"></span>
+                                    </div>
+                                </div>
+                                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                            </div>
+                            ,
+                            @<div>
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="Name" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="Name" asp-required="true" />
+                                        <span asp-validation-for="Name"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CurrencyCode"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="CurrencyCode" asp-required="true" />
+                                <span asp-validation-for="CurrencyCode"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Rate"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Rate"/>
+                                <span asp-validation-for="Rate"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DisplayLocale"/>
+                            </div>
+                            <div class="col-md-9">
+                                @{
+                                    var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
+                                        .OrderBy(x => x.EnglishName)
+                                        .Select(x => new SelectListItem
+                                        {
+                                            Value = x.IetfLanguageTag,
+                                            Text = $"{x.EnglishName}. {x.IetfLanguageTag}"
+                                        })
+                                        .ToList();
+                                    cultures.Insert(0, new SelectListItem
+                                    {
+                                        Value = "",
+                                        Text = @T("Admin.Configuration.Currencies.Fields.DisplayLocale.Select").Text
+                                    });
+                                }
+                                <nop-select asp-for="DisplayLocale" asp-items="@cultures"/>
+                                <span asp-validation-for="DisplayLocale"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CustomFormatting"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="CustomFormatting"/>
+                                <span asp-validation-for="CustomFormatting"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SelectedStoreIds"/>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true"/>
+                                        <script>
+                                        $(function() {
+                                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
+                                                closeOnSelect: false,
+                                                @if (!Model.AvailableStores.Any())
+                                                {
+                                                <text>
+                                                disabled: true,
+                                                placeholder: 'No stores available',
+                                                </text>
+                                                }
+                                            });
+                                        });
+                                        </script>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @await Component.InvokeAsync(typeof(MultistoreDisabledWarningViewComponent))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="RoundingTypeId"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="RoundingTypeId" asp-items="@(await ((RoundingType) Model.RoundingTypeId).ToSelectListAsync())" />
+                                <span asp-validation-for="RoundingTypeId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Published"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Published"/>
+                                <span asp-validation-for="Published"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DisplayOrder"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayOrder"/>
+                                <span asp-validation-for="DisplayOrder"></span>
+                            </div>
+                        </div>
+                        @if (Model.Id > 0)
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="CreatedOn"/>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">@Model.CreatedOn</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CurrencyDetailsBottom, additionalData = Model })
+            </div>
+        </div>
+    </div>
+</section>

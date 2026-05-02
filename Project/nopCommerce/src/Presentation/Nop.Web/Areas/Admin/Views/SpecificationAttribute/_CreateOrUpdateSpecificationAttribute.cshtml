@@ -1,0 +1,33 @@
+﻿@model SpecificationAttributeModel
+
+@{
+    const string hideInfoBlockAttributeName = "SpecificationAttributePage.HideInfoBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+    const string hideOptionsBlockAttributeName = "SpecificationAttributePage.HideOptionsBlock";
+    var hideOptionsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideOptionsBlockAttributeName, defaultValue: true);
+
+    const string hideUsedByProductsBlockAttributeName = "SpecificationAttributePage.HideUsedByProductsBlock";
+    var hideUsedByProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideUsedByProductsBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+
+            <nop-cards id="specification-attribute-cards">
+                <nop-card asp-name="specification-attribute-info" asp-icon="fas fa-info" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdateSpecificationAttribute.Info", Model)</nop-card>
+                <nop-card asp-name="specification-attribute-options" asp-icon="fas fa-object-group" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options")" asp-hide-block-attribute-name="@hideOptionsBlockAttributeName" asp-hide="@hideOptionsBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdateSpecificationAttribute.Options", Model)</nop-card>
+                @if (Model.Id > 0)
+                {
+                    <nop-card asp-name="specification-attribute-usedbyproducts" asp-icon="fas fa-square-check" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts")" asp-hide-block-attribute-name="@hideUsedByProductsBlockAttributeName" asp-hide="@hideUsedByProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdateSpecificationAttribute.UsedByProducts", Model)</nop-card>
+                }
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsBlock, additionalData = Model })
+            </nop-cards>
+        </div>
+    </div>
+</section>

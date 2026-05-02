@@ -1,0 +1,151 @@
+﻿@model VendorCustomerSearchModel
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Admin.Vendors.PmCustomer.Choose").Text;
+
+    var customerIdInput = Context.Request.Query["customerIdInput"];
+    var customerInfoInput = Context.Request.Query["customerInfoInput"];
+    var btnId = Context.Request.Query["btnId"];
+}
+
+<form asp-controller="Vendor" asp-action="AddCustomerToVendorPopup"
+      asp-route-customerIdInput="@customerIdInput"
+      asp-route-customerInfoInput="@customerInfoInput"
+      asp-route-btnId="@btnId">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Vendors.PmCustomer.Choose")
+        </h1>
+        <div class="float-right">
+            &nbsp;
+        </div>
+    </div>
+
+    @if (ViewBag.RefreshPage == true)
+    {
+        <script>
+            try {
+                window.opener.document.getElementById('@customerIdInput').value = '@(ViewBag.customerId)';
+                window.opener.document.getElementById('@customerInfoInput').innerHTML = '<a asp-controller="Customer" asp-action="Edit" asp-route-id="@(ViewBag.customerId)">@ViewBag.customerInfo</a>';
+                window.opener.document.getElementById('@btnId').click();
+            }
+            catch (e) { }
+            window.close();
+        </script>
+    }
+    else
+    {
+        <input type="hidden" asp-for="AddCustomerToVendorModel.CustomerId" />
+        <div class="content">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default card-search card-popup">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <div class="col-sm-5">
+                                            <nop-label asp-for="SearchEmail" />
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <nop-editor asp-for="SearchEmail" />
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-sm-5">
+                                            <nop-label asp-for="SearchFirstName" />
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <nop-editor asp-for="SearchFirstName" />
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-sm-5">
+                                            <nop-label asp-for="SearchLastName" />
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <nop-editor asp-for="SearchLastName" />
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-sm-5">
+                                            <nop-label asp-for="SearchCompany" />
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <nop-editor asp-for="SearchCompany" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <button type="button" id="search-customers" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "customers-grid",
+                            UrlRead = new DataUrl("AddCustomerToVendorPopupList", "Vendor", null),
+                            SearchButtonId = "search-customers",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchEmail)),
+                                new FilterParameter(nameof(Model.SearchFirstName)),
+                                new FilterParameter(nameof(Model.SearchLastName)),
+                                new FilterParameter(nameof(Model.SearchCompany))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(CustomerModel.Id))
+                                {
+                                    Title = T("Admin.Common.Select").Text,
+                                    Render = new RenderCustom("renderColumnSelectCustomer"),
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Width = "50",
+                                },
+                                new ColumnProperty(nameof(CustomerModel.Email))
+                                {
+                                    Title = T("Admin.Customers.Customers.Fields.Email").Text
+                                },
+                                new ColumnProperty(nameof(CustomerModel.FullName))
+                                {
+                                    Title = T("Admin.Customers.Customers.Fields.FullName").Text
+                                },
+                                new ColumnProperty(nameof(CustomerModel.Company))
+                                {
+                                    Title = T("Admin.Customers.Customers.Fields.Company").Text
+                                }
+                            }
+                        })
+                        <script>
+                            function renderColumnSelectCustomer(data, type, row, meta) {
+                                return '<button type="button" onclick="selectCustomer(' + row.Id + ' )" class="btn btn-default">@T("Admin.Common.Select")</button>';
+                            }
+                            function selectCustomer(customerId) {
+                                $("#@Html.IdFor(model => model.AddCustomerToVendorModel.CustomerId)").val(customerId);
+                                $('#save').click();
+                            }
+                        </script>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" id="save" name="save" class="btn btn-default" style="display: none">
+                            @T("Admin.Common.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</form>

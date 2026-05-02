@@ -1,0 +1,64 @@
+@await Html.PartialAsync("_AdminTour")
+
+<script asp-location="Footer">
+    const steps = [{
+        element: '#onoffswitch-rate',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Switch.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Switch.Text").Text)',
+            side: "right",
+            align: "start"
+        }},{
+        element: '#onoffswitch-rate',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Fixed.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Fixed.Text").Text)',
+            side: "right",
+            align: "start"
+        }},{
+        element: '#onoffswitch-rate',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.ByCountry.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.ByCountry.Text").Text)',
+            side: "right",
+            align: "start"
+        }},{
+        element: '#tax-categories-grid',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Categories.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Categories.Text").Text)',
+            side: "bottom",
+            align: "start"
+        }}
+    ];
+
+    $(function(){
+        if ($.fn.dataTable.isDataTable("#tax-categories-grid")) {
+            let dataTable = $("#tax-categories-grid").DataTable();
+
+            dataTable.on('init.dt', function() {
+                if (dataTable.rows().count() > 0) {
+                    const tourTaxRateNode = dataTable.row(0).node();
+
+                    steps.push({
+                        element: tourTaxRateNode.querySelector(".column-edit .btn-default"),
+                        popover: {
+                            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Edit.Title").Text)',
+                            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.TaxManual.Edit.Text").Text)',
+                            side: "left",
+                            align: "start"
+                        }});
+                }
+
+                AdminTourBuilder
+                    .init(localized_data, "", "@Url.Action("Create", "Product", new { showtour = true })", steps)
+                    .drive();
+            });
+        }
+        else {
+            AdminTourBuilder
+                .init(localized_data, "", "@Url.Action("Create", "Product", new { showtour = true })", steps)
+                .drive();
+        }
+    });
+</script>

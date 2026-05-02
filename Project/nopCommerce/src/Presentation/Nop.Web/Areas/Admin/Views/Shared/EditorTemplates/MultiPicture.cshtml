@@ -1,0 +1,84 @@
+﻿@using Nop.Core.Domain.Media
+@model int
+@inject MediaSettings mediaSettings
+
+@{
+    //other variables
+    var random = CommonHelper.GenerateRandomInteger();
+    var clientId = "picture" + random;
+    var endpoint = ViewData["Endpoint"];
+    var tableSelector = ViewData["TableSelector"];
+
+    var allowedMimeTypes = new List<string> { MimeTypes.ImagePng, MimeTypes.ImageBmp, MimeTypes.ImageGif, MimeTypes.ImageJpeg, MimeTypes.ImagePJpeg, MimeTypes.ImageTiff, MimeTypes.ImageWebp };
+
+    if (mediaSettings.AllowSvgUploads)
+        allowedMimeTypes.Add(MimeTypes.ImageSvg);
+}
+
+<noscript>
+    <p>Please enable JavaScript to use file uploader.</p>
+</noscript>
+<input type="hidden" asp-for="@Model"/>
+
+<div id="@(clientId)element" class="filepond"></div>
+
+@* register CSS and JS *@
+<link rel="stylesheet" href="~/lib_npm/filepond/filepond.min.css" />
+<script asp-exclude-from-bundle="true" src="~/lib_npm/filepond/filepond.min.js" asp-location="Footer"></script>
+<script asp-exclude-from-bundle="true" src="~/lib_npm/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js" asp-location="Footer"></script>
+
+<script>
+    $(function () {
+        // Register the plugin
+        FilePond.registerPlugin(FilePondPluginFileValidateType);
+        const allowedExtensions = @Html.Raw(Json.Serialize(allowedMimeTypes));
+
+        // Create a FilePond instance
+        FilePond.create(document.querySelector('#@(clientId)element'), {
+            credits: false,
+            acceptedFileTypes: allowedExtensions,
+            allowMultiple: true,
+            allowRemove: false,
+            allowRevert: false,
+            server: {
+                process:  (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                    const formData = new FormData();
+                    formData.append(fieldName, file, file.name);
+
+                    const request = new XMLHttpRequest();
+                    request.open('POST', '@endpoint');
+
+                    request.upload.onprogress = (e) => {
+                        progress(e.lengthComputable, e.loaded, e.total);
+                    };
+
+                    request.onload = function () {
+                        const commonError = '@T("Common.Error")';
+
+                        if (request.status < 200 || request.status >= 300) {
+                            error(commonError);
+                            return;
+                        }
+
+                        const r = JSON.parse(request.responseText);
+                        if (!r.success) {
+                            error(r.message || commonError);
+                            return;
+                        }
+
+                        load(request.responseText);
+
+                        if ('@tableSelector') {
+                            updateTable('@tableSelector');
+                        }
+                    };
+
+                    request.send(formData);
+                }
+            },
+            labelIdle: '@T("Common.FileUploader.DropFiles") / <span class="filepond--label-action">@T("Common.FileUploader.Browse")</span>',
+            labelFileProcessing: '@T("Common.FileUploader.Processing").Text',
+            labelFileProcessingError: (err) => err.body
+        });
+    });
+</script>

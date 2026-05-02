@@ -1,0 +1,185 @@
+﻿@model Nop.Plugin.Shipping.FixedByWeightByTotal.Models.ShippingByWeightByTotalModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<script>
+    $(function() {
+        $("#@Html.IdFor(model => model.CountryId)").change(function () {
+            var selectedItem = $(this).val();
+            var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                data: {
+                    "countryId": selectedItem,
+                    "addAsterisk": "true"
+                },
+                success: function (data, textStatus, jqXHR) {
+                    ddlStates.html('');
+                    $.each(data, function (id, option) {
+                        ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                    });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#getStatesByCountryIdAlert").trigger("click");
+                }
+            });
+        });
+    });
+</script>
+
+<div class="cards-group">
+    <div class="card card-default card-popup">
+        <div class="card-body">
+            <div class="form-group row" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="col-sm-3">
+                    <nop-label asp-for="StoreId" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                    <span asp-validation-for="StoreId"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="WarehouseId" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-select asp-for="WarehouseId" asp-items="Model.AvailableWarehouses" />
+                    <span asp-validation-for="WarehouseId"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="CountryId" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-select asp-for="CountryId" asp-items="Model.AvailableCountries" />
+                    <span asp-validation-for="CountryId"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="StateProvinceId" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-select asp-for="StateProvinceId" asp-items="Model.AvailableStates" />
+                    <span asp-validation-for="StateProvinceId"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="Zip" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="Zip" />
+                    <span asp-validation-for="Zip"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="ShippingMethodId" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-select asp-for="ShippingMethodId" asp-items="Model.AvailableShippingMethods" />
+                    <span asp-validation-for="ShippingMethodId"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="WeightFrom" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="WeightFrom" asp-postfix="@Model.BaseWeightIn" />
+                    <span asp-validation-for="WeightFrom"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="WeightTo" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="WeightTo" asp-postfix="@Model.BaseWeightIn" />
+                    <span asp-validation-for="WeightTo"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="OrderSubtotalFrom" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="OrderSubtotalFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="OrderSubtotalFrom"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="OrderSubtotalTo" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="OrderSubtotalTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="OrderSubtotalTo"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="AdditionalFixedCost" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="AdditionalFixedCost" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="AdditionalFixedCost"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="LowerWeightLimit" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="LowerWeightLimit" />
+                    <span asp-validation-for="LowerWeightLimit"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="RatePerWeightUnit" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="RatePerWeightUnit" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="RatePerWeightUnit"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="PercentageRateOfSubtotal" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="PercentageRateOfSubtotal" />
+                    <span asp-validation-for="PercentageRateOfSubtotal"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <nop-label asp-for="TransitDays" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="TransitDays" />
+                    <span asp-validation-for="TransitDays"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<nop-alert asp-alert-id="getStatesByCountryIdAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />

@@ -1,0 +1,44 @@
+@model ReturnRequestReasonModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Order.ReturnRequestReasons.EditDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Order settings");
+}
+
+<form asp-controller="ReturnRequest" asp-action="ReturnRequestReasonEdit" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Settings.Order.ReturnRequestReasons.EditDetails") - @Model.Name
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="ReturnRequestReasonList">@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="returnrequestreason-delete" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ReturnRequestReasonDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestReason", Model)
+            </div>
+        </div>
+    </section>
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="returnrequestreason-delete" asp-action="ReturnRequestReasonDelete"/>

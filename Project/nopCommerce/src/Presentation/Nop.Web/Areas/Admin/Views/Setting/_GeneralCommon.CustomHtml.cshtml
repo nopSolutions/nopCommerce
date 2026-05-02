@@ -1,0 +1,24 @@
+@model GeneralCommonSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="CustomHtmlSettings.HeaderCustomHtml_OverrideForStore" asp-input="CustomHtmlSettings.HeaderCustomHtml" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="CustomHtmlSettings.HeaderCustomHtml" />
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="CustomHtmlSettings.HeaderCustomHtml" />
+            <span asp-validation-for="CustomHtmlSettings.HeaderCustomHtml"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="CustomHtmlSettings.FooterCustomHtml_OverrideForStore" asp-input="CustomHtmlSettings.FooterCustomHtml" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="CustomHtmlSettings.FooterCustomHtml" />
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="CustomHtmlSettings.FooterCustomHtml" />
+            <span asp-validation-for="CustomHtmlSettings.FooterCustomHtml"></span>
+        </div>
+    </div>
+</div>

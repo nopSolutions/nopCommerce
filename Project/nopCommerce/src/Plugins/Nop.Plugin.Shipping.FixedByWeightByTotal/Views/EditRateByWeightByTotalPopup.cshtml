@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "_AdminPopupLayout";
+}
+@model Nop.Plugin.Shipping.FixedByWeightByTotal.Models.ShippingByWeightByTotalModel
+
+<form asp-controller="FixedByWeightByTotal" asp-action="EditRateByWeightByTotalPopup"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Common.Edit")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Html.PartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_CreateOrUpdateRateByWeightByTotal.cshtml", Model)
+        </div>
+    </div>
+</form>

@@ -1,0 +1,24 @@
+﻿@using Newtonsoft.Json
+@using Nop.Services.Messages
+
+<div id="admin-notifications">
+</div>
+
+@{
+    //Get messages from TempData
+    var notes = TempData.ContainsKey(NopMessageDefaults.NotificationListKey)
+        ? JsonConvert.DeserializeObject<IList<NotifyData>>(TempData[NopMessageDefaults.NotificationListKey].ToString())
+        : null;
+    if (notes != null)
+    {
+        foreach (var note in notes)
+        {
+            <text>
+                <script asp-location="Footer">
+                    var message = '@note.Encode' == 'True' ? '@note.Message' : "@Html.Raw(note.Message.Replace('"', '\''))";
+                    displayBarNotification(message, @((int)note.Type), @(note.Timeout));
+                </script>
+            </text>
+        }
+    }
+}

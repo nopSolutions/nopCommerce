@@ -1,0 +1,24 @@
+﻿@model List<MenuModel>
+
+<nav class="footer-navigation">
+    @foreach (var menu in Model)
+    {
+        <div class="footer-menu @menu.CssClass" role="none">
+            <h2 id="footer-menu-@menu.Id" class="footer-menu__title footer-menu__toggle" aria-haspopup="menu" aria-expanded="false">
+                @menu.Name
+            </h2>
+
+            <div class="footer-menu__list" role="menu" aria-labelledby="footer-menu-@menu.Id">
+                @foreach (var menuItem in menu.Items)
+                {
+                    @await Html.PartialAsync("_FooterItem.cshtml", menuItem)
+                }
+            </div>
+        </div>
+    }
+</nav>
+
+<script src="~/js/public.menu.js" asp-location="Footer"></script>
+<script asp-location="Footer">
+    mainMenu.init('.footer-navigation .footer-menu__toggle', 'footer-menu--active');
+</script>

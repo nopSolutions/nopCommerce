@@ -1,0 +1,12 @@
+{
+  "messageId": "e2251e6f-6e06-44f2-9c54-6d41f72d7fb8",
+  "eventType": "pos.stock.changed.v1",
+  "occurredOnUtc": "2026-05-02T12:05:00Z",
+  "source": "store-pos-porto",
+  "sourceVersion": 42,
+  "productId": 15,
+  "sku": "LAPTOP-15",
+  "warehouseId": 2,
+  "quantityOnHand": 3
+}
+

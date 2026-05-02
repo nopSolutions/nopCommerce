@@ -1,0 +1,89 @@
+﻿@model TaxTransactionLogModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewBag.PageTitle = T("Plugins.Tax.Avalara.Log.Hint").Text;
+    NopHtml.SetActiveMenuItemSystemName("Tax providers");
+}
+
+<form asp-controller="TaxTransactionLog" asp-action="View" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Plugins.Tax.Avalara.Log.Hint")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="Configure" asp-controller="Avalara">@T("Plugins.Tax.Avalara.Log.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <span id="log-delete" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div asp-validation-summary="All"></div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="StatusCode" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Html.Raw(Model.StatusCode)</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Url" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Html.Raw(Model.Url)</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="RequestMessage" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row" style="word-break: break-all">@Html.Raw(Model.RequestMessage)</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ResponseMessage" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row" style="word-break: break-all">@Html.Raw(Model.ResponseMessage)</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CustomerId" />
+                            </div>
+                            <div class="col-md-9">
+                                @if (Model.CustomerId.HasValue)
+                                {
+                                    <a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.CustomerId">@(!string.IsNullOrEmpty(Model.CustomerEmail) ? Model.CustomerEmail : T("Admin.Customers.Guest").Text)</a>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CreatedDate" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.CreatedDate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="log-delete" />

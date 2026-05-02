@@ -1,0 +1,70 @@
+﻿@model VendorInfoModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.VendorInfo").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-vendorinfo-page");
+}
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.VendorInfo })
+}
+
+<div class="page account-page vendorinfo-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.VendorInfo")</h1>
+    </div>
+    <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.VendorInfoTop, additionalData = Model })
+        <form asp-route="@NopRouteNames.Standard.CUSTOMER_VENDOR_INFO" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            <section class="fieldset">
+                <div class="form-fields">
+                    <div class="inputs">
+                        <label asp-for="Name" asp-postfix=":"></label>
+                        <input asp-for="Name"/>
+                        <nop-required />
+                        <span asp-validation-for="Name"></span>
+                    </div>
+                    <div class="inputs">
+                        <label asp-for="Email" asp-postfix=":"></label>
+                        <input asp-for="Email"/>
+                        <nop-required />
+                        <span asp-validation-for="Email"></span>
+                    </div>
+                    <div class="inputs">
+                        <label asp-for="Description" asp-postfix=":"></label>
+                        <textarea asp-for="Description"></textarea>
+                        <span asp-validation-for="Description"></span>
+                    </div>
+                    <div class="inputs">
+                        <label asp-for="PictureUrl" asp-postfix=":"></label>
+                        <input name="uploadedFile" type="file" accept="image/*" />
+                        @if (!string.IsNullOrEmpty(Model.PictureUrl))
+                        {
+                            <div class="vendor-picture">
+                                <img src="@(Model.PictureUrl)" alt="picture" />
+                                <button type="submit" name="remove-picture" class="button-2 remove-picture-button">@T("Account.VendorInfo.Picture.Remove")</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
+        @if (Model.VendorAttributes.Count > 0)
+        {
+            <section class="fieldset">
+                <div class="form-fields">
+                    @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
+                </div>
+            </section>
+        }
+            <section class="buttons">
+                <button type="submit" name="save-info-button" class="button-1 save-vendorinfo-button">@T("Common.Save")</button>
+            </section>
+        </form>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.VendorInfoBottom, additionalData = Model })
+    </div>
+</div>

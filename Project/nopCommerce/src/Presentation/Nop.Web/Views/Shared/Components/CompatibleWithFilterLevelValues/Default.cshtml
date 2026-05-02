@@ -1,0 +1,58 @@
+﻿@model FilterLevelValueOverviewModel
+@if (Model.TotalFilterLevelValues > 0)
+{
+    <div class="product-filter-level-values-box">
+        <div class="title">
+            @T("Products.CompatibleWith")
+        </div>
+        <div class="sub-title">
+            @string.Format(T("Products.CompatibleWith.Items").Text, Model.TotalFilterLevelValues)
+        </div>
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        @if (Model.FilterLevel1ValueEnabled)
+                        {
+                            <th width="20%"><span>@T("Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel1")</span></th>
+                        }
+                        @if (Model.FilterLevel2ValueEnabled)
+                        {
+                            <th><span>@T("Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel2")</span></th>
+                        }
+                        @if (Model.FilterLevel3ValueEnabled)
+                        {
+                            <th><span>@T("Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel3")</span></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.TotalFilterLevelValues; i++)
+                    {
+                        var item = Model.FilterLevelValues[i];   
+                        <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                            @if (Model.FilterLevel1ValueEnabled)
+                            {
+                                <td class="filter-level-value">
+                                    @item.FilterLevel1Value
+                                </td>
+                            }
+                            @if (Model.FilterLevel2ValueEnabled)
+                            {
+                                <td class="filter-level-value">
+                                    @item.FilterLevel2Value
+                                </td>
+                            }
+                            @if (Model.FilterLevel3ValueEnabled)
+                            {
+                                <td class="filter-level-value">
+                                    @item.FilterLevel3Value
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

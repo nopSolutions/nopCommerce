@@ -1,0 +1,65 @@
+@model TaxSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Tax").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Tax settings");
+}
+
+@{
+    const string hideCommonBlockAttributeName = "TaxSettingsPage.HideCommonBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+
+    const string hideDefaultTaxAddressBlockAttributeName = "TaxSettingsPage.HideDefaultTaxAddressBlock";
+    var hideDefaultTaxAddressBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDefaultTaxAddressBlockAttributeName);
+
+    const string hideTaxDisplayingBlockAttributeName = "TaxSettingsPage.HideTaxDisplayingBlock";
+    var hideTaxDisplayingBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTaxDisplayingBlockAttributeName);
+
+    const string hideShippingBlockAttributeName = "TaxSettingsPage.HideShippingBlock";
+    var hideShippingBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideShippingBlockAttributeName);
+
+    const string hidePaymentBlockAttributeName = "TaxSettingsPage.HidePaymentBlock";
+    var hidePaymentBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePaymentBlockAttributeName);
+
+    const string hideVATBlockAttributeName = "TaxSettingsPage.HideVATBlock";
+    var hideVATBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideVATBlockAttributeName);
+}
+
+    <form asp-controller="Setting" asp-action="Tax" method="post">
+        <div class="content-header clearfix">
+            <h1 class="float-left">
+                @T("Admin.Configuration.Settings.Tax")
+            </h1>
+            <div class="float-right">
+                <button type="submit" name="save" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TaxSettingsButtons, additionalData = Model })
+            </div>
+        </div>
+
+        <section class="content">
+            <div class="container-fluid">
+                <div class="form-horizontal">
+                    @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                    @await Component.InvokeAsync(typeof(SettingModeViewComponent))
+                    <div asp-validation-summary="All"></div>
+
+                    <nop-cards id="taxsettings-cards">
+                        <nop-card asp-name="taxsettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.Tax.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Tax.Common", Model)</nop-card>
+                        <nop-card asp-name="taxsettings-default-tax-address" asp-icon="far fa-address-book" asp-title="@T("Admin.Configuration.Settings.Tax.DefaultTaxAddress")" asp-hide-block-attribute-name="@hideDefaultTaxAddressBlockAttributeName" asp-hide="@hideDefaultTaxAddressBlock" asp-advanced="false">@await Html.PartialAsync("_Tax.DefaultTaxAddress", Model)</nop-card>
+                        <nop-card asp-name="taxsettings-tax-displaying" asp-icon="fas fa-tv" asp-title="@T("Admin.Configuration.Settings.Tax.BlockTitle.TaxDisplaying")" asp-hide-block-attribute-name="@hideTaxDisplayingBlockAttributeName" asp-hide="@hideTaxDisplayingBlock" asp-advanced="false">@await Html.PartialAsync("_Tax.TaxDisplaying", Model)</nop-card>
+                        <nop-card asp-name="taxsettings-shipping" asp-icon="fas fa-truck" asp-title="@T("Admin.Configuration.Settings.Tax.BlockTitle.Shipping")" asp-hide-block-attribute-name="@hideShippingBlockAttributeName" asp-hide="@hideShippingBlock" asp-advanced="true">@await Html.PartialAsync("_Tax.Shipping", Model)</nop-card>
+                        <nop-card asp-name="taxsettings-payment" asp-icon="far fa-credit-card" asp-title="@T("Admin.Configuration.Settings.Tax.BlockTitle.Payment")" asp-hide-block-attribute-name="@hidePaymentBlockAttributeName" asp-hide="@hidePaymentBlock" asp-advanced="true">@await Html.PartialAsync("_Tax.Payment", Model)</nop-card>
+                        <nop-card asp-name="taxsettings-vat" asp-icon="fas fa-percent" asp-title="@T("Admin.Configuration.Settings.Tax.BlockTitle.VAT")" asp-hide-block-attribute-name="@hideVATBlockAttributeName" asp-hide="@hideVATBlock" asp-advanced="false">@await Html.PartialAsync("_Tax.VAT", Model)</nop-card>
+
+                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TaxSettingsDetailsBlock, additionalData = Model })
+                    </nop-cards>
+                </div>
+            </div>
+        </section>
+</form>

@@ -1,0 +1,15 @@
+﻿@using Nop.Services.Orders;
+
+@model List<CustomValue>
+
+@foreach (var item in Model ?? new())
+{
+    <li class="custom-value">
+        <span class="label">
+            @item.Name:
+        </span>
+        <span class="value">
+            @(item.Value ?? string.Empty)
+        </span>
+    </li>
+}

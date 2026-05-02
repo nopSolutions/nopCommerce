@@ -1,0 +1,52 @@
+@model List<Nop.Plugin.Misc.RFQ.Models.Customer.RequestQuoteModel>
+
+@{
+
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("Plugins.Misc.RFQ.RequestsQuote").Text);
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
+
+    NopHtml.AddCssFileParts(@"~/Plugins/Misc.RFQ/Content/styles.css", null);
+
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-rfq-requests-page");
+}
+
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = RfqDefaults.RequestsTabId })
+}
+
+<div class="page account-page request-list-page">
+
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Plugins.Misc.RFQ.RequestsQuote")</h1>
+    </div>
+    <div class="page-body">
+        @if (!Model.Any())
+        {
+            <div class="no-data">@T("Plugins.Misc.RFQ.CustomerRequests.NoRequests")</div>
+        }
+        else
+        {
+            @foreach (var request in Model)
+            {
+                <div class="section">
+                    <div class="request-header">
+                        <h2 class="request-title">
+                            @string.Format(T("Plugins.Misc.RFQ.RequestQuoteNumber").Text, request.Id)
+                        </h2>
+                        <button type="button" class="button-2" onclick="setLocation('@Url.RouteUrl(RfqDefaults.CreateCustomerRequestRouteName, new { requestId = request.Id })')">@T("Plugins.Misc.RFQ.CustomerRequest.Info")</button>
+                    </div>
+                    <ul class="info">
+                        <li>@T("Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn"): <span>@request.CreatedOnUtc</span></li>
+                        <li>@T("Plugins.Misc.RFQ.Fields.RequestQuote.Status"): <span>@request.Status</span></li>
+                    </ul>
+                </div>
+            }
+        }
+    </div>
+</div>

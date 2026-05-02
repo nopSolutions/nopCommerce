@@ -1,0 +1,352 @@
+@model MenuItemModel
+
+@using Nop.Core.Domain.Menus;
+
+@{
+    var routeData = new { menuItemId = Model.Id, entityIdInput = Html.IdFor(model => model.ProductId), entityInfoBlock = "product-info", btnId = "btnRefreshEntity" };
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-12 clearfix">
+                    <div class="float-left">
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "menu-advanced-mode" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-body">
+                    <input type="hidden" asp-for="MenuId" />
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="MenuItemTypeId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="MenuItemTypeId" asp-items="Model.AvailableMenuItemTypes" />
+                            <span asp-validation-for="MenuItemTypeId"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row menu-item-row row-standard-link row-@((int)MenuItemType.StandardPage)">
+                        <div class="col-md-3">
+                            <nop-label asp-for="RouteName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="RouteName" asp-items="Model.AvailableStandardRoutes" />
+                            <span asp-validation-for="RouteName"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row menu-item-row row-@((int)MenuItemType.Category)">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CategoryId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="CategoryId" asp-items="Model.AvailableCategories" />
+                            <span asp-validation-for="CategoryId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row menu-item-row row-@((int)MenuItemType.Manufacturer)">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ManufacturerId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="ManufacturerId" asp-items="Model.AvailableManufacturers" />
+                            <span asp-validation-for="ManufacturerId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row menu-item-row row-@((int)MenuItemType.Vendor)">
+                        <div class="col-md-3">
+                            <nop-label asp-for="VendorId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
+                            <span asp-validation-for="VendorId"></span>
+                        </div>
+                    </div>
+                    @if (Model.AvailableMenuItemTemplates.Any())
+                    {
+                        <div class="form-group row menu-item-row row-template-select row-@((int)MenuItemType.Category) row-@((int)MenuItemType.Manufacturer) row-@((int)MenuItemType.Vendor)">
+                            <div class="col-md-3">
+                                <nop-label asp-for="TemplateId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="TemplateId" asp-items="Model.AvailableMenuItemTemplates" />
+                                <span asp-validation-for="TemplateId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row menu-item-row row-template-select row-@((int)MenuItemType.Category) row-@((int)MenuItemType.Manufacturer) row-@((int)MenuItemType.Vendor)">
+                            <div class="offset-md-3 col-md-9">
+                                <div class="callout">
+                                    <ul>
+                                        <li>@T("Admin.ContentManagement.Menus.MenuItem.Template.Simple.Description")</li>
+                                        <li>@T("Admin.ContentManagement.Menus.MenuItem.Template.Grid.Description")</li>
+                                        <li>@T("Admin.ContentManagement.Menus.MenuItem.Template.List.Description")</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group row menu-item-row row-@((int)MenuItemType.TopicPage)">
+                        <div class="col-md-3">
+                            <nop-label asp-for="TopicId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="TopicId" asp-items="Model.AvailableTopics" />
+                            <span asp-validation-for="TopicId"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row menu-item-row row-@((int)MenuItemType.Product)">
+                        <div class="col-md-3">
+                            <nop-label class="product-label" asp-for="ProductId" />
+                        </div>
+                        <div class="col-md-9 choose-entity-container">
+                            <div id="product-info" class="entity-info">
+                                <a asp-controller="Product" asp-action="Edit" asp-route-id="@Model.ProductId">@Model.ProductName</a>
+                            </div>
+                            <input type="hidden" asp-for="ProductId" />
+                            <button type="submit" id="btnSelectProduct" onclick="javascript:OpenWindow('@(Html.Raw(Url.Action("MenuItemSelectProductPopup", "Menu", routeData)))', 800, 850, true);return false;" class="btn btn-primary">
+                                @T("Admin.ContentManagement.Menus.MenuItem.Fields.Product.Select")
+                            </button>
+                            <button type="submit" id="product-remove" class="btn btn-danger">
+                                @T("Admin.ContentManagement.Menus.MenuItem.Fields.Product.Remove")
+                            </button>
+                            <input type="submit" id="btnRefreshEntity" style="display: none" />
+                            <span asp-validation-for="ProductId"></span>
+                        </div>
+                    </div>
+
+                    @(await Html.LocalizedEditorAsync<MenuItemModel, MenuItemLocalizedModel>("menu-item-localized",
+                    @<div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="@Model.Locales[item].Title" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="@Model.Locales[item].Title" />
+                            <span asp-validation-for="@Model.Locales[item].Title"></span>
+                        </div>
+                        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                    </div>,
+                    @<div>
+                        <div class="form-group row menu-item-row row-@((int)MenuItemType.Text) row-@((int)MenuItemType.StandardPage) row-@((int)MenuItemType.CustomLink)">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Title" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Title" />
+                                <span asp-validation-for="Title"></span>
+                            </div>
+                        </div>
+                    </div>, cssClass: $"menu-item-row row-{(int)MenuItemType.Text} row-{(int)MenuItemType.StandardPage} row-{(int)MenuItemType.CustomLink}"))
+
+                    <div class="form-group row menu-item-row row-@((int)MenuItemType.CustomLink)">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Url" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Url" />
+                            <span asp-validation-for="Url"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row @(!Model.AvailableMenuItems.Any() ? "d-none" : "")">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ParentId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="ParentId" asp-items="Model.AvailableMenuItems" />
+                            <span asp-validation-for="ParentId"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Published" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Published" />
+                            <span asp-validation-for="Published"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row menu-item-row row-template row-template-subitems">
+                        <div class="col-md-3">
+                            <nop-label asp-for="NumberOfSubItemsPerGridElement" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="NumberOfSubItemsPerGridElement" />
+                            <span asp-validation-for="NumberOfSubItemsPerGridElement"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row menu-item-row row-template row-template-@((int)MenuItemTemplate.Grid)">
+                        <div class="col-md-3">
+                            <nop-label asp-for="NumberOfItemsPerGridRow" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="NumberOfItemsPerGridRow" />
+                            <span asp-validation-for="NumberOfItemsPerGridRow"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row menu-item-row row-template row-template-@((int)MenuItemTemplate.List) row-template-@((int)MenuItemTemplate.Grid)">
+                        <div class="col-md-3">
+                            <nop-label asp-for="MaximumNumberEntities" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="MaximumNumberEntities" />
+                            <span asp-validation-for="MaximumNumberEntities"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DisplayOrder" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DisplayOrder" />
+                            <span asp-validation-for="DisplayOrder"></span>
+                        </div>
+                    </div>
+                    <div class="form-group advanced-setting row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CssClass" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="CssClass" />
+                            <span asp-validation-for="CssClass"></span>
+                        </div>
+                    </div>
+
+                    @await Component.InvokeAsync(typeof(AclCustomerRolesViewComponent), Model)
+
+                    <div class="form-group advanced-setting row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SelectedStoreIds" />
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                                    <script>
+                                        $(function() {
+                                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
+                                                closeOnSelect: false,
+                                                @if (!Model.AvailableStores.Any())
+                                                {
+                                                        <text>
+                                                        disabled: true,
+                                                        placeholder: 'No stores available',
+                                                        </text>
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                                <div class="col-md-8">
+                                    @await Component.InvokeAsync(typeof(MultistoreDisabledWarningViewComponent))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script asp-location="Footer">
+    $(function () {
+        const menuItemTypeElement = $('#@Html.IdFor(model => model.MenuItemTypeId)');
+        const menuItemTemplateElement = $('#@Html.IdFor(model => model.TemplateId)');
+        const productEl = $("#@Html.IdFor(model => model.ProductId)")
+
+        const categoryElement = $('#@Html.IdFor(model => model.CategoryId)');
+        const manufacturerElement = $('#@Html.IdFor(model => model.ManufacturerId)');
+        const vendorElement = $('#@Html.IdFor(model => model.VendorId)');
+
+        menuItemTypeElement.on('change', function () {
+            $('#menuitem-form .menu-item-row').addClass('d-none');
+            $('.row-' + menuItemTypeElement.val()).removeClass('d-none');
+
+            if (isTypeTemplated())
+                menuItemTemplateElement.trigger('change');
+
+            [categoryElement, manufacturerElement, vendorElement].forEach((el) => {
+                if (el.is(':visible'))
+                    el.trigger('change');
+            });
+        });
+
+        [manufacturerElement, vendorElement].map(el => el.on('change', function() {
+            let isAllItems = $(this).val() == '0';
+
+            menuItemTemplateElement.find('option').prop("disabled", false);
+            $('.row-@((int)MenuItemType.Text)').toggleClass('d-none', !isAllItems);
+            $('.row-template-select').toggleClass('d-none', !isAllItems);
+        }));
+
+        categoryElement.on('change', function () {
+            let isAllItems = $(this).val() == '0' ||  $(this).val() == null;
+
+            menuItemTemplateElement
+                .find('option')
+                .filter('[value="@((int)MenuItemTemplate.Simple)"]')
+                .prop("disabled", isAllItems);
+
+            if (isAllItems && (menuItemTemplateElement.val() == '@((int)MenuItemTemplate.Simple)' || menuItemTemplateElement.val() == null))
+                menuItemTemplateElement.val('@((int)MenuItemTemplate.Grid)');
+
+			$('.row-@((int)MenuItemType.Text)').toggleClass('d-none', $(this).val() != '0' && $(this).val() != null);
+
+			if (menuItemTemplateElement.val() == '@((int)MenuItemTemplate.Grid)')
+				$('.row-template-subitems').removeClass('d-none');
+
+        });
+
+        menuItemTemplateElement.on('change', function () {
+            $('#menuitem-form .row-template').addClass('d-none');
+
+            if (!isTypeTemplated())
+                return;
+
+            if ($(this).val() == '@((int)MenuItemTemplate.Simple)')
+                return;
+
+			[manufacturerElement, vendorElement, categoryElement].forEach((el) => {
+				if (el.is(':visible'))
+					el.trigger('change');
+			});
+
+            $('.row-template-' + menuItemTemplateElement.val()).removeClass('d-none');
+        });
+
+        menuItemTypeElement.trigger('change');
+        menuItemTemplateElement.trigger('change');
+
+        $('#product-remove').on('click', function () {
+            $('#product-info').text('');
+            productEl.val('');
+            toggleRemoveButton();
+            return false;
+        });
+
+        $('#btnRefreshEntity').on('click', function () {
+            toggleRemoveButton();
+            return false;
+        });
+
+        function isTypeTemplated()
+        {
+            return ['@((int)MenuItemType.Category)', '@((int)MenuItemType.Manufacturer)', '@((int)MenuItemType.Vendor)'].indexOf(menuItemTypeElement.val()) != -1;
+        }
+
+        function toggleRemoveButton() {
+             $('#product-remove').toggle($('#@Html.IdFor(model => model.ProductId)').val() > 0)
+        }
+    });
+</script>
+

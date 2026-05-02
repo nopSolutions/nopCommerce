@@ -1,0 +1,82 @@
+﻿@model Nop.Plugin.DiscountRules.CustomerRoles.Models.RequirementModel
+@{
+    Layout = "";
+}
+
+    <script>
+    $(function() {
+        $('#savecustomerrolesrequirement@(Model.RequirementId)').click(function () {
+            var customerRoleId = $("#@Html.IdFor(model => model.CustomerRoleId)").val();
+            var discountId = @Model.DiscountId;
+            var requirementId = @Model.RequirementId;
+
+            var postData = {
+                DiscountId: discountId,
+                RequirementId: requirementId,
+                CustomerRoleId: customerRoleId
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("Configure", "DiscountRulesCustomerRoles"))",
+                data: postData,
+                success: function (data, textStatus, jqXHR) {
+
+                    var $alertInfoEl = $("#savecustomerrolesrequirementAlert-info");
+                    let response = jqXHR.responseJSON;
+                    if (response instanceof Object && response.hasOwnProperty('Errors')) {
+                        var errorMessages = '';
+                        $.each(response.Errors, function (i, error) {
+                            errorMessages += error;
+                            if (response.Errors.length - 1 != i)
+                                errorMessages += '</br>';
+                        });
+                        $alertInfoEl.html(errorMessages);
+                        $("#savecustomerrolesrequirementAlert").trigger("click");
+
+                        return;
+                    } 
+
+                    $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
+                    //notify parent if it's a new requirement
+                    @if (Model.RequirementId == 0)
+                    {
+                        <text>$("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);</text>
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    var $alertInfoEl = $("#savecustomerrolesrequirementAlert-info");
+
+                    // display default error
+                    $alertInfoEl.html('@T("Admin.Promotions.Discounts.Requirements.FailedToSave")');
+
+                    $("#savecustomerrolesrequirementAlert").trigger("click");
+                }
+            });
+        });
+    });
+    </script>
+
+<div class="form-group row">
+    <div class="col-md-3 requirement-label-col">
+        <nop-label asp-for="CustomerRoleId" />
+    </div>
+    <div class="col-md-9 requirement-data-col">
+        <div class="requirement-data-input">
+            <nop-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles" />
+        </div>
+        <div class="requirement-data-buttons">
+            <button type="button" id="savecustomerrolesrequirement@(Model.RequirementId)" class="btn btn-primary">@T("Admin.Common.Save")</button>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="offset-md-3 col-md-9 requirement-messages-col">
+        <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display: none;" class="text-green margin-t-5">
+            @T("Admin.Promotions.Discounts.Requirements.Saved")
+        </div>
+    </div>
+</div>
+<nop-alert asp-alert-id="savecustomerrolesrequirementAlert" />

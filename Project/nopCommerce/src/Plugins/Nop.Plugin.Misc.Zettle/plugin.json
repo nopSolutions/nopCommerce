@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "PayPal Zettle (POS)",
+  "SystemName": "Misc.Zettle",
+  "Version": "5.00.5",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.Zettle.dll",
+  "Description": "This plugin allows to sync with PayPal Zettle. PayPal Zettle is a modern point-of-sale (POS) product designed to simplify every workday. Take payments and track every sale, all in one place."
+}

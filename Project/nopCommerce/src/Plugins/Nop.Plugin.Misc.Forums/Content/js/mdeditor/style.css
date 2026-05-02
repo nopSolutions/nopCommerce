@@ -1,0 +1,256 @@
+/* --- Editor Container --- */
+.markdown-editor-container {
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column; /* Arrange elements vertically */
+  overflow: hidden; /* Important for child elements with height: 100% */
+  resize: vertical; /* Enable vertical resizing */
+  min-height: 300px;
+  max-height: 800px;
+}
+
+/* Add a resizer handle */
+.markdown-editor-container::after {
+  content: '';
+  height: 5px;
+  background: #f7f7f7;
+  cursor: ns-resize;
+  border-top: 1px solid #ccc;
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  background-color: #f7f7f7;
+}
+
+/* --- Tabs --- */
+.editor-tabs {
+  display: flex;
+  padding: 10px 10px 0px 10px;
+  border-bottom: none;
+}
+
+.tab-button {
+  padding: 8px 16px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-bottom: none;
+  background-color: transparent;
+  margin-right: 2px;
+  margin-bottom: -1px; /* Allows active tab to overlap the border */
+  border-radius: 4px 4px 0 0; /* Round top corners */
+  font-size: 14px;
+  color: #555;
+}
+
+.tab-button:hover {
+  background-color: #eee;
+  color: #000;
+}
+
+.tab-button.active {
+  background-color: #fff;
+  border-color: #ccc;
+  border-bottom-color: #fff;
+  font-weight: 600;
+  color: #000;
+}
+
+/* --- Toolbar --- */
+.toolbar {
+  display: none; /* Hidden by default */
+  padding: 6px 10px;
+  gap: 5px;
+  margin-left: auto; /* Push to right side */
+  background-color: transparent;
+  border-bottom: none;
+}
+
+.tab-button[data-tab="write"].active ~ .toolbar,
+#write-panel.active ~ .toolbar {
+  display: flex;
+}
+
+.toolbar button {
+  background: none;
+  border: 1px solid transparent;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.toolbar button:hover {
+  background-color: #e0e0e0;
+  border-color: #ccc;
+}
+
+.toolbar button img {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  display: block;
+}
+
+/* --- Content Area and Panels --- */
+.editor-content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  position: relative;
+}
+
+.tab-panel {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+}
+
+.tab-panel.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Write panel specific styles */
+#write-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#write-panel.active {
+  display: flex;
+}
+
+/* Textarea specific styles */
+.forum-post-text {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 15px;
+  box-sizing: border-box;
+  border: none;
+  resize: none;
+  outline: none;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  background-color: #fff;
+}
+
+textarea#markdown-input {
+  display: none; /* Hide this as we're using .forum-post-text */
+}
+
+/* Preview panel specific styles */
+#preview-panel {
+  background: #fff;
+  overflow-y: auto;
+}
+
+.preview-output {
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+
+/* --- Base styles for preview  --- */
+.preview-output h1,
+.preview-output h2,
+.preview-output h3,
+.preview-output h4,
+.preview-output h5,
+.preview-output h6 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.3em;
+  line-height: 1.2;
+}
+
+.preview-output h1 {
+  font-size: 2em;
+}
+
+.preview-output h2 {
+  font-size: 1.5em;
+}
+.preview-output p {
+  margin-bottom: 1em;
+  line-height: 1.6;
+}
+
+.preview-output code {
+  background-color: #f0f0f0;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+.preview-output pre {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-bottom: 1em;
+}
+
+.preview-output pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.9em;
+}
+
+.preview-output blockquote {
+  border-left: 4px solid #ccc;
+  padding: 0.5em 10px;
+  color: #666;
+  margin: 0 0 1em 0;
+}
+
+.preview-output blockquote p {
+  margin-bottom: 0;
+}
+
+.preview-output ul, .preview-output ol {
+  margin-bottom: 1em;
+  padding-left: 2em;
+}
+
+.preview-output li {
+  margin-bottom: 0.3em;
+}
+
+.preview-output table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.preview-output th, .preview-output td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.preview-output th {
+  background-color: #f2f2f2;
+}
+
+.preview-output img {
+  max-width: 100%;
+  height: auto;
+}

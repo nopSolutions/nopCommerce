@@ -1,0 +1,56 @@
+@model ShippingSettingsModel
+
+<div class="card-body">    
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="HideShippingTotal_OverrideForStore" asp-input="HideShippingTotal" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="HideShippingTotal" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="HideShippingTotal" />
+            <span asp-validation-for="HideShippingTotal"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShipToSameAddress_OverrideForStore" asp-input="ShipToSameAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShipToSameAddress" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShipToSameAddress" />
+            <span asp-validation-for="ShipToSameAddress"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="BypassShippingMethodSelectionIfOnlyOne_OverrideForStore" asp-input="BypassShippingMethodSelectionIfOnlyOne" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="BypassShippingMethodSelectionIfOnlyOne" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BypassShippingMethodSelectionIfOnlyOne" />
+            <span asp-validation-for="BypassShippingMethodSelectionIfOnlyOne"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowCustomerToChooseDeliveryDate_OverrideForStore" asp-input="AllowCustomerToChooseDeliveryDate" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowCustomerToChooseDeliveryDate" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowCustomerToChooseDeliveryDate" />
+            <span asp-validation-for="AllowCustomerToChooseDeliveryDate"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="AllowCustomerToChooseDeliveryDate">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="DeliveryDateRangeDays_OverrideForStore" asp-input="DeliveryDateRangeDays" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="DeliveryDateRangeDays" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DeliveryDateRangeDays" />
+                <span asp-validation-for="DeliveryDateRangeDays"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>

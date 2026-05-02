@@ -1,0 +1,5 @@
+﻿@model List<RenderWidgetModel>
+@foreach (var widget in Model)
+{
+    @await Component.InvokeAsync(widget.WidgetViewComponent, widget.WidgetViewComponentArguments);
+}

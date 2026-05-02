@@ -1,0 +1,46 @@
+﻿@model VendorModel
+
+@{
+    const string hideInfoBlockAttributeName = "VendorPage.HideInfoBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+    const string hideDisplayBlockAttributeName = "VendorPage.HideDisplayBlock";
+    var hideDisplayBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDisplayBlockAttributeName, defaultValue: true);
+
+    const string hideSeoBlockAttributeName = "VendorPage.HideSEOBlock";
+    var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSeoBlockAttributeName, defaultValue: true);
+
+    const string hideVendorNotesBlockAttributeName = "VendorPage.HideNotesBlock";
+    var hideVendorNotesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideVendorNotesBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-12 clearfix">
+                    <div class="float-left">
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "vendor-advanced-mode" })
+                    </div>
+                </div>
+            </div>
+
+            <nop-cards id="vendor-cards">
+                <nop-card asp-name="vendor-info" asp-icon="fas fa-info" asp-title="@T("Admin.Vendors.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+                <nop-card asp-name="vendor-display" asp-icon="fas fa-tv" asp-title="@T("Admin.Vendors.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-card>
+                <nop-card asp-name="vendor-seo" asp-icon="fas fa-magnifying-glass-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card>
+
+                @if (Model.Id > 0)
+                {
+                    <nop-card asp-name="vendor-products" asp-icon="fas fa-table-list" asp-title="@T("Admin.Vendors.VendorNotes")" asp-hide-block-attribute-name="@hideVendorNotesBlockAttributeName" asp-hide="@hideVendorNotesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Notes", Model)</nop-card>
+                }
+
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.VendorDetailsBlock, additionalData = Model })
+            </nop-cards>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,135 @@
+﻿@model BlogPostModel
+
+@* resources for product tags input *@
+<link rel="stylesheet" href="~/lib_npm/jquery-tageditor/jquery.tag-editor.css" />
+<script src="~/lib_npm/jquery-tageditor/jquery.caret.min.js"></script>
+<script src="~/lib_npm/jquery-tageditor/jquery.tag-editor.min.js"></script>
+
+<script asp-location="Footer">
+    //tags
+    $(function() {
+        @Html.Raw(Model.InitialBlogTags)
+        $("#@Html.IdFor(model => model.Tags)").tagEditor({
+            autocomplete: {
+                delay: 0,
+                position: { collision: 'flip' },
+                source: initialBlogTags
+            },
+            delimiter: ',',
+            placeholder: '@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.Placeholder")'
+        });
+    });
+</script>
+
+<div class="card-body">
+    <div class="form-group row" @(Model.AvailableLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+        <div class="col-md-3">
+            <nop-label asp-for="LanguageId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="LanguageId" asp-items="Model.AvailableLanguages" />
+            <span asp-validation-for="LanguageId"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Title" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Title" asp-required="true" />
+            <span asp-validation-for="Title"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Body" />
+        </div>
+        <div class="col-md-9">
+            <div class="input-group-append input-group-required">
+                <div class="input-group">
+                    <nop-editor asp-for="Body" asp-template="RichEditor" />
+                </div>
+                <div class="input-group-btn">
+                    <nop-required />
+                </div>
+            </div>
+            <span asp-validation-for="Body"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="BodyOverview" />
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="BodyOverview"></nop-textarea>
+            <span asp-validation-for="BodyOverview"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Tags" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Tags" />
+            <span asp-validation-for="Tags"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="AllowComments" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowComments" />
+            <span asp-validation-for="AllowComments"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IncludeInSitemap" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IncludeInSitemap" />
+            <span asp-validation-for="IncludeInSitemap"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="StartDateUtc" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="StartDateUtc" />
+            <span asp-validation-for="StartDateUtc"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="EndDateUtc" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EndDateUtc" />
+            <span asp-validation-for="EndDateUtc"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="SelectedStoreIds" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+            <script>
+                $(function() {
+                    var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
+                        closeOnSelect: false,
+                        @if (!Model.AvailableStores.Any())
+                        {
+                        <text>
+                        disabled: true,
+                        placeholder: 'No stores available',
+                        </text>
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</div>

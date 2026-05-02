@@ -1,0 +1,8 @@
+﻿@model MenuItemModel
+
+@{
+    var expanded = Model.ChildrenItems.Any() ? $"aria-expanded=false aria-haspopup=menu" : "";
+    var href = !string.IsNullOrEmpty(Model.Url) ? $"href={Model.Url}" : "";
+}
+
+<a @href @expanded role="button" class="menu__link" tabindex="0">@Model.Title</a>

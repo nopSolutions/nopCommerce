@@ -1,0 +1,62 @@
+@model MetaTagsGeneratorModel
+
+@using Nop.Services.Messages
+
+<div class="form-group row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-9">
+        <button id="generate-button-@Model.LanguageId" type="button" style="width:100%" class="btn btn-default">
+            <i class="fa fa-cogs"></i>
+            @T("Admin.ArtificialIntelligence.GenerateMetaTags")
+        </button>
+    </div>
+</div>
+
+
+<script asp-location="Footer">
+    $(function() {
+
+        var origTitle = undefined;
+        var origText = undefined;
+
+        if (origTitle === undefined || origText === undefined) {
+            origTitle = $('#@Model.TitleFieldId').val();
+            origText = $('#@Model.TextFieldId').val();
+        }
+
+        $('#generate-button-@Model.LanguageId').click(function () {
+
+            if(@Model.EntityId == 0 || origTitle != $('#@Model.TitleFieldId').val() || origText != $('#@Model.TextFieldId').val())
+            {
+                alert('@T("Admin.ArtificialIntelligence.GenerateMetaTags.SaveBeforeGenerate")');
+                return;
+            }
+
+            var postData = {
+                LanguageId: @Model.LanguageId,
+                EntityId: @Model.EntityId,
+                EntityType: '@Model.EntityType'
+            };
+
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                type: 'POST',
+                url: '@(Url.Action("GenerateMetaTags","ArtificialIntelligence"))',
+                data: postData,
+                success: function (data, textStatus, jqXHR) { 
+                    if (data.error) {
+                        displayBarNotification(data.error, @((int)NotifyType.Warning));
+                        $('#backTop').click();
+                    }else{
+                        $('#@Model.MetaTitleElementId').val(data.Title);
+                        $('#@Model.MetaKeywordsElementId').val(data.Keywords);
+                        $('#@Model.MetaDescriptionElementId').val(data.Description);
+                    }                   
+                }
+            });
+        });
+    });
+</script>

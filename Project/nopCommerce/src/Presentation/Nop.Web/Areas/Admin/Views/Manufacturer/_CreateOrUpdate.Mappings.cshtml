@@ -1,0 +1,59 @@
+﻿@model ManufacturerModel
+
+<div class="card-body">
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="SelectedDiscountIds" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="SelectedDiscountIds" asp-items="Model.AvailableDiscounts" asp-multiple="true" />
+            <script>
+                $(function() {
+                    var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').select2({
+                        closeOnSelect: false,
+                        @if (!Model.AvailableDiscounts.Any())
+                        {
+                        <text>
+                        disabled: true,
+                        placeholder: '@T("Admin.Catalog.Manufacturers.Fields.Discounts.NoDiscounts")',
+                        </text>
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync(typeof(AclCustomerRolesViewComponent), Model)
+
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="SelectedStoreIds" />
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-4">
+                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                    <script>
+                        $(function() {
+                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
+                                closeOnSelect: false,
+                                @if (!Model.AvailableStores.Any())
+                                {
+                                <text>
+                                disabled: true,
+                                placeholder: 'No stores available',
+                                </text>
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="col-md-8">
+                    @await Component.InvokeAsync(typeof(MultistoreDisabledWarningViewComponent))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

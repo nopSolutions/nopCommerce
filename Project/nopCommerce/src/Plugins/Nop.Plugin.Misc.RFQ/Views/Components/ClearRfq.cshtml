@@ -1,0 +1,11 @@
+@{
+    NopHtml.AddCssFileParts(@"~/Plugins/Misc.RFQ/Content/styles.css", null);
+}
+
+<script asp-location="Footer">
+    $(function () {
+        if ($('#checkout').length > 0) {
+            $('#checkout').after('<div style="margin-top:10px;"><a class="rfq-button-2" href="@Url.RouteUrl(RfqDefaults.ClearCustomerRequestRouteName)">@T("Plugins.Misc.RFQ.ClearRequest")</a></div>');
+        }
+    });
+</script>

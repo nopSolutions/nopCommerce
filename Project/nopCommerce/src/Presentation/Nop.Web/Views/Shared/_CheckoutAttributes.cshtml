@@ -1,0 +1,271 @@
+﻿@model ShoppingCartModel
+@using System.Text
+@using Nop.Core
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Media
+@using Nop.Services.Media
+@inject IDownloadService downloadService
+@inject CatalogSettings catalogSettings
+
+@if (Model.CheckoutAttributes.Count > 0)
+{
+    var attributeChangeScriptsBuilder = new StringBuilder();
+    <div class="checkout-attributes">
+        <dl>
+            @foreach (var attribute in Model.CheckoutAttributes)
+            {
+                var controlId = $"checkout_attribute_{attribute.Id}";
+                var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+                var textPromptId = $"checkout_attribute_{attribute.Id}_textprompt";
+                <dt id="@($"checkout_attribute_label_{attribute.Id}")">
+                    <label id="@textPromptId" class="text-prompt">
+                        @textPrompt
+                    </label>
+                    @if (attribute.IsRequired)
+                    {
+                        <span class="required">*</span>
+                    }
+                </dt>
+                <dd id="@($"checkout_attribute_input_{attribute.Id}")">
+                    @switch (attribute.AttributeControlType)
+                    {
+                        case AttributeControlType.DropdownList:
+                            {
+                        <select name="@(controlId)" id="@(controlId)" aria-labelledby="@textPromptId">
+                            @if (!attribute.IsRequired)
+                            {
+                                <option value="0">---</option>
+                            }
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                    attributeValue.Name :
+                                    T("ShoppingCart.CheckoutAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text; 
+                                <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeName</option>
+                            }
+                        </select>
+                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}').on('change', function(){{checkoutAttributeChange();}});\n", controlId);
+                            }
+                            break;
+                        case AttributeControlType.RadioList:
+                            {
+                        <ul class="option-list">
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                    attributeValue.Name :
+                                    T("ShoppingCart.CheckoutAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text; 
+                                <li>
+                                    <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
+                                </li>
+                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
+                            }
+                        </ul>
+                            }
+                            break;
+                        case AttributeControlType.Checkboxes:
+                        case AttributeControlType.ReadonlyCheckboxes:
+                            {
+                        <ul class="option-list">
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                    attributeValue.Name :
+                                    T("ShoppingCart.CheckoutAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text; 
+                                <li>
+                                    <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
+                                </li>
+                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
+                            }
+                        </ul>
+                            }
+                            break;
+                        case AttributeControlType.TextBox:
+                            {
+                                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@(attribute.DefaultValue)" aria-labelledby="@textPromptId" />
+                            }
+                            break;
+                        case AttributeControlType.MultilineTextbox:
+                            {
+                                <textarea id="@(controlId)" name="@(controlId)" aria-labelledby="@textPromptId">@(attribute.DefaultValue)</textarea>
+                            }
+                            break;
+                        case AttributeControlType.Datepicker:
+                            {
+                                <nop-date-picker 
+                                    asp-day-name="@(controlId + "_day")" 
+                                    asp-month-name="@(controlId + "_month")" 
+                                    asp-year-name="@(controlId + "_year")"
+                                    asp-begin-year="@DateTime.UtcNow"
+                                    asp-end-year="@DateTime.UtcNow.AddYears(catalogSettings.CountDisplayedYearsDatePicker)"
+                                    asp-selected-date="@CommonHelper.ParseDate(attribute.SelectedYear, attribute.SelectedMonth, attribute.SelectedDay)"
+                                />
+                            }
+                            break;
+                        case AttributeControlType.FileUpload:
+                            {
+                                var allowedFileTypes = string.Empty;
+
+                                if (attribute.AllowedFileExtensions.Any())
+                                {
+                                    var fileTypeList = attribute.AllowedFileExtensions
+                                    .Select(x => new FileExtensionContentTypeProvider().TryGetContentType($".{x}", out var contentType) ? $"'{contentType}'" : null)
+                                        .Where(ft => !string.IsNullOrEmpty(ft))
+                                        .ToList();
+
+                                    allowedFileTypes = string.Join(", ", fileTypeList);
+                                }
+
+                                Download download = null;
+                                if (!string.IsNullOrEmpty(attribute.DefaultValue) && Guid.TryParse(attribute.DefaultValue, out var downloadGuid))
+                                {
+                                    download = await downloadService.GetDownloadByGuidAsync(downloadGuid);
+                                }
+
+                                @* register CSS and JS *@
+                                <link rel="stylesheet" href="~/lib_npm/filepond/filepond.min.css" />
+                                <link rel="stylesheet" href="~/lib_npm/filepond-plugin-get-file/filepond-plugin-get-file.min.css" />
+                                <script asp-exclude-from-bundle="true" src="~/lib_npm/filepond/filepond.min.js" asp-location="Footer"></script>
+                                <script asp-exclude-from-bundle="true" src="~/lib_npm/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js" asp-location="Footer"></script>
+                                <script asp-exclude-from-bundle="true" src="~/lib_npm/filepond-plugin-get-file/filepond-plugin-get-file.min.js" asp-location="Footer"></script>
+
+                                <div id="@(controlId)element" class="filepond"></div>
+
+                                <input id="@(controlId)" name="@(controlId)" type="hidden" value="@(download?.DownloadGuid.ToString() ?? "")" />
+                                                      
+                                <script asp-location="Footer">
+                                    $(function () {
+                                        // Register the plugins
+                                        FilePond.registerPlugin(FilePondPluginFileValidateType, FilePondPluginGetFile);
+
+                                        // Create a FilePond instance
+                                        FilePond.create(document.querySelector('#@(controlId)element'), {
+                                            credits: false,
+                                            acceptedFileTypes: [@Html.Raw(allowedFileTypes)],
+                                            allowMultiple: false,
+                                            maxFiles: 1,
+                                            allowDownloadByUrl: true,
+                                            @if (download != null)
+                                            {
+                                                <text>
+                                                    files: [
+                                                        {
+                                                            source: '@Html.Raw($"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}")',
+                                                            options: {
+                                                                type: 'local',
+                                                                metadata: {
+                                                                    url: '@(Url.RouteUrl(NopRouteNames.Standard.DOWNLOAD_GET_FILE_UPLOAD, new { downloadId = download.DownloadGuid }))'
+                                                                }
+                                                            },
+                                                        }
+                                                ],
+                                                </text>
+                                            }
+                                            server: {
+                                                process: {
+                                                url: '@(Url.RouteUrl(NopRouteNames.Ajax.UPLOAD_FILE_CHECKOUT_ATTRIBUTE, new { attributeId = attribute.Id }))',
+                                                    onload: function(response) {
+                                                        $("#@(controlId)").val(JSON.parse(response).downloadGuid);
+                                                    }
+                                                },
+                                                remove: (source, load, error) => {
+                                                    $("#@(controlId)").val('');
+                                                    load();
+                                                },
+                                                revert: (uniqueFileId, load, error) => {
+                                                    $("#@(controlId)").val('');
+                                                    load();
+                                                },
+                                            },
+                                            onprocessfiles: (error) => {
+                                                if (error) {
+                                                    alert(error);
+                                                }
+                                            },
+                                            labelIdle: '@T("Common.FileUploader.DropFiles") / <span class="filepond--label-action">@T("Common.FileUploader.Browse")</span>',
+                                            labelFileProcessing: '@T("Common.FileUploader.Processing")',
+                                        });
+                                    });
+                                </script>
+                            }
+                            break;
+                        case AttributeControlType.ColorSquares:
+                            {
+                                <ul class="option-list attribute-squares color-squares" id="color-squares-@(attribute.Id)">
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                            attributeValue.Name :
+                                            T("ShoppingCart.CheckoutAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text; 
+                                        <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
+                                            <label for="@(controlId)_@(attributeValue.Id)">
+                                                <span class="attribute-square-container" title="@attributeName">
+                                                    <span class="attribute-square" style="background-color:@(attributeValue.ColorSquaresRgb);">&nbsp;</span>
+                                                </span>
+                                                <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                                @*uncomment below to display attribute value name*@
+                                                @*<span class="name">@attributeName</span>*@
+                                            </label>
+                                        </li>
+                                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
+                                    }
+                                </ul>
+                                <script asp-location="Footer">
+                                    $(function() {
+                                        $('.checkout-attributes #color-squares-@(attribute.Id)').on('click', 'input', function (event) {
+                                            $('.checkout-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
+                                            $(this).closest('li').addClass('selected-value');
+                                        });
+                                   });
+                                </script>
+                            }
+                            break;
+                        case AttributeControlType.ImageSquares:
+                            {
+                                //not support attribute type
+                            }
+                            break;
+                    }
+                </dd>
+            }
+        </dl>
+    </div>
+    <script asp-location="Footer">
+        $(function() {
+            checkoutAttributeChange();
+            @Html.Raw(attributeChangeScriptsBuilder.ToString())
+        });
+
+        function checkoutAttributeChange() {
+            $.ajax({
+                cache: false,
+                url: "@Html.Raw(Url.RouteUrl(NopRouteNames.Ajax.CHECKOUT_ATTRIBUTE_CHANGE, new { isEditable = Model.IsEditable }))",
+                data: $('#shopping-cart-form').serialize(),
+                type: "POST",
+                success: function (data, textStatus, jqXHR) {
+                    if (data.ordetotalssectionhtml) {
+                        $('.total-info').replaceWith(data.ordetotalssectionhtml);
+                    }
+                    if (data.selectedcheckoutattributesssectionhtml) {
+                        $('.selected-checkout-attributes').replaceWith(data.selectedcheckoutattributesssectionhtml);
+                    }
+                    if (data.enabledattributeids) {
+                        for (var i = 0; i < data.enabledattributeids.length; i++) {
+                            $('#checkout_attribute_label_' + data.enabledattributeids[i]).show();
+                            $('#checkout_attribute_input_' + data.enabledattributeids[i]).show();
+                        }
+                    }
+                    if (data.disabledattributeids) {
+                        for (var i = 0; i < data.disabledattributeids.length; i++) {
+                            $('#checkout_attribute_label_' + data.disabledattributeids[i]).hide();
+                            $('#checkout_attribute_input_' + data.disabledattributeids[i]).hide();
+                        }
+                    }
+                    $(document).trigger({ type: "checkout_attributes_changed", changedData: data });
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,101 @@
+@model ShippingMethodRestrictionModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.Restrictions").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Shipping providers");
+}
+
+
+<form asp-controller="Shipping" asp-action="Restrictions" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Shipping.Restrictions")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="Providers">@T("Admin.Configuration.Shipping.Providers.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShippingRestrictionListButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default">
+                        <div class="card-body" style="overflow-x: auto;">
+                            <p>@T("Admin.Configuration.Shipping.Restrictions.Description")</p>
+                            @if (!Model.AvailableCountries.Any())
+                            {
+                                <text>No countries defined</text>
+                            }
+                            else if (!Model.AvailableShippingMethods.Any())
+                            {
+                                <text>No shipping methods available</text>
+                            }
+                            else
+                            {
+                                <script>
+                                $(function() {
+                                    @foreach (var sm in Model.AvailableShippingMethods)
+                                    {
+                                        <text>
+                                            prepareTableCheckboxes('#selectall-@(sm.Id)', '.restrict_@(sm.Id)');
+                                        </text>
+                                    }
+                                });
+                                </script>
+
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">
+                                                <strong>@T("Admin.Configuration.Shipping.Restrictions.Country")</strong>
+                                            </th>
+                                            @foreach (var sm in Model.AvailableShippingMethods)
+                                            {
+                                                <th scope="col">                                                    
+                                                    <div class="checkbox">
+														<label>
+															<input type="checkbox" id="selectall-@(sm.Id)" />
+															<strong>@sm.Name</strong>
+														</label>
+													</div>     
+												</th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var c in Model.AvailableCountries)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <span>@c.Name</span>
+                                                </td>
+                                                @foreach (var sm in Model.AvailableShippingMethods)
+                                                {
+                                                    var restricted = Model.Restricted.ContainsKey(c.Id) && Model.Restricted[c.Id][sm.Id];
+                                                    <td>
+                                                        <input class="restrict_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null) />
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

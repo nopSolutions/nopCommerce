@@ -1,0 +1,168 @@
+@model CatalogSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="RemoveRequiredProducts_OverrideForStore" asp-input="RemoveRequiredProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="RemoveRequiredProducts" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="RemoveRequiredProducts" />
+            <span asp-validation-for="RemoveRequiredProducts"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowBestsellersOnHomepage_OverrideForStore" asp-input="ShowBestsellersOnHomepage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowBestsellersOnHomepage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowBestsellersOnHomepage" />
+            <span asp-validation-for="ShowBestsellersOnHomepage"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="ShowBestsellersOnHomepage">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="NumberOfBestsellersOnHomepage_OverrideForStore" asp-input="NumberOfBestsellersOnHomepage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="NumberOfBestsellersOnHomepage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="NumberOfBestsellersOnHomepage" />
+                <span asp-validation-for="NumberOfBestsellersOnHomepage"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductsAlsoPurchasedEnabled_OverrideForStore" asp-input="ProductsAlsoPurchasedEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductsAlsoPurchasedEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductsAlsoPurchasedEnabled" />
+            <span asp-validation-for="ProductsAlsoPurchasedEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="ProductsAlsoPurchasedEnabled">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ProductsAlsoPurchasedNumber_OverrideForStore" asp-input="ProductsAlsoPurchasedNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ProductsAlsoPurchasedNumber" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ProductsAlsoPurchasedNumber" />
+                <span asp-validation-for="ProductsAlsoPurchasedNumber"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="RecentlyViewedProductsEnabled_OverrideForStore" asp-input="RecentlyViewedProductsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="RecentlyViewedProductsEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="RecentlyViewedProductsEnabled" />
+            <span asp-validation-for="RecentlyViewedProductsEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="RecentlyViewedProductsEnabled">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="RecentlyViewedProductsNumber_OverrideForStore" asp-input="RecentlyViewedProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="RecentlyViewedProductsNumber" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="RecentlyViewedProductsNumber" />
+                <span asp-validation-for="RecentlyViewedProductsNumber"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NewProductsEnabled_OverrideForStore" asp-input="NewProductsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NewProductsEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NewProductsEnabled" />
+            <span asp-validation-for="NewProductsEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="NewProductsEnabled" disable-auto-generation="true">
+        <div class="form-group row" id="pnlNewProductsAllowCustomersToSelectPageSize">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="NewProductsAllowCustomersToSelectPageSize_OverrideForStore" asp-input="NewProductsAllowCustomersToSelectPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="NewProductsAllowCustomersToSelectPageSize" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="NewProductsAllowCustomersToSelectPageSize" />
+                <span asp-validation-for="NewProductsAllowCustomersToSelectPageSize"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="NewProductsAllowCustomersToSelectPageSize" disable-auto-generation="true">
+            <div class="form-group row" id="pnlNewProductsPageSizeOptions">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="NewProductsPageSizeOptions_OverrideForStore" asp-input="NewProductsPageSizeOptions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="NewProductsPageSizeOptions" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="NewProductsPageSizeOptions" />
+                    <span asp-validation-for="NewProductsPageSizeOptions"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+    </nop-nested-setting>
+    <nop-nested-setting asp-for="NewProductsEnabled" disable-auto-generation="true">
+        <div class="form-group row" id="pnlNewProductsPageProductsPerPage">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="NewProductsPageSize_OverrideForStore" asp-input="NewProductsPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="NewProductsPageSize" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="NewProductsPageSize" />
+                <span asp-validation-for="NewProductsPageSize"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DisplayDatePreOrderAvailability_OverrideForStore" asp-input="DisplayDatePreOrderAvailability" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DisplayDatePreOrderAvailability" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayDatePreOrderAvailability" />
+            <span asp-validation-for="DisplayDatePreOrderAvailability"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#@Html.IdFor(model => model.NewProductsEnabled)").click(toggleNewProductsEnabled);
+        toggleNewProductsEnabled();
+        $("#@Html.IdFor(model => model.NewProductsAllowCustomersToSelectPageSize)").click(toggleNewProductsPageSize);
+        toggleNewProductsPageSize();
+    });
+
+    function toggleNewProductsEnabled() {
+        if ($('#@Html.IdFor(model => model.NewProductsEnabled)').is(':checked')) {
+            $('#pnlNewProductsAllowCustomersToSelectPageSize').showElement();
+            toggleNewProductsPageSize();
+        } else {
+            $('#pnlNewProductsAllowCustomersToSelectPageSize').hideElement();
+            $('#pnlNewProductsPageSizeOptions').hideElement();
+            $('#pnlNewProductsPageProductsPerPage').hideElement();
+        }
+    }
+
+    function toggleNewProductsPageSize() {
+        if ($('#@Html.IdFor(model => model.NewProductsAllowCustomersToSelectPageSize)').is(':checked')) {
+            $('#pnlNewProductsPageProductsPerPage').hideElement();
+            if ($('#@Html.IdFor(model => model.NewProductsEnabled)').is(':checked'))
+                $('#pnlNewProductsPageSizeOptions').showElement();
+        } else {
+            $('#pnlNewProductsPageSizeOptions').hideElement();
+            if ($('#@Html.IdFor(model => model.NewProductsEnabled)').is(':checked'))
+                $('#pnlNewProductsPageProductsPerPage').showElement();
+        }
+    }
+</script>

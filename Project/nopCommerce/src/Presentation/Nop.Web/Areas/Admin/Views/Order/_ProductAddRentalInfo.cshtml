@@ -1,0 +1,61 @@
+﻿@model AddProductToOrderModel
+
+@if (Model.IsRental)
+{
+    //Actually just a copy (almost) of \Presentation\Nop.Web\Views\Product\_RentalInfo.cshtml
+    <div class="card card-default">
+        <div class="card-body">
+            @{
+                var startDateControlId = $"rental_start_date_{Model.ProductId}";
+                var endDateControlId = $"rental_end_date_{Model.ProductId}";
+                //currenly we support only this format
+                var datePickerFormat = Html.GetJQueryDateFormat();
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <div class="label-wrapper">
+                            <label class="col-form-label">
+                                @T("Products.RentalStartDate")
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-required">
+                            <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="form-control" />
+                            <div class="input-group-btn">
+                                <nop-required />
+                            </div>
+                        </div>
+                        <script>
+                            $(function() {
+                                $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat" });
+                            });
+                        </script>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <div class="label-wrapper">
+                            <label class="col-form-label">
+                                @T("Products.RentalEndDate")
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-required">
+                            <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="form-control" />
+                            <div class="input-group-btn">
+                                <nop-required />
+                            </div>
+                        </div>
+                        <script>
+                            $(function() {
+                                $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat" });
+                            });
+                        </script>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

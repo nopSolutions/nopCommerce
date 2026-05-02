@@ -1,0 +1,313 @@
+﻿@using Nop.Web.Areas.Admin.Models.Customers
+@model Nop.Web.Areas.Admin.Models.Customers.CustomerSearchModel
+
+@{
+    Layout = "_AdminPopupLayout";
+}
+
+@{
+    const string hideSearchBlockAttributeName = "SelectCustomerPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<form asp-controller="RfqAdmin" asp-action="SelectCustomerPopup" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Plugins.Misc.RFQ.AdminRequest.Customer.Select.Title")
+        </h1>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default card-search">
+                        <div class="card-body">
+                            <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                                <div class="search-text">@T("Admin.Common.Search")</div>
+                                <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                                <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                            </div>
+                            <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchEmail" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchEmail" />
+                                            </div>
+                                        </div>
+                                        @if (Model.UsernamesEnabled)
+                                        {
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchUsername" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="SearchUsername" />
+                                                </div>
+                                            </div>
+                                        }
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchFirstName" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchFirstName" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchLastName" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchLastName" />
+                                            </div>
+                                        </div>
+                                        @if (Model.DateOfBirthEnabled)
+                                        {
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchDayOfBirth" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    @{
+                                                        var monthOfBirthValues = new List<SelectListItem>();
+                                                        monthOfBirthValues.Add(new SelectListItem { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Month").Text, Value = "0" });
+                                                        for (var i = 1; i <= 12; i++)
+                                                        {
+                                                            monthOfBirthValues.Add(new SelectListItem { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
+                                                        }
+                                                        var dayOfBirthValues = new List<SelectListItem>();
+                                                        dayOfBirthValues.Add(new SelectListItem { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Day").Text, Value = "0" });
+                                                        for (var i = 1; i <= 31; i++)
+                                                        {
+                                                            dayOfBirthValues.Add(new SelectListItem { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
+                                                        }
+                                                    }
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <nop-select asp-for="SearchMonthOfBirth" asp-items="@monthOfBirthValues" />
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <nop-select asp-for="SearchDayOfBirth" asp-items="@dayOfBirthValues" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchRegistrationDateFrom" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchRegistrationDateFrom" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchRegistrationDateTo" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchRegistrationDateTo" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchLastActivityFrom" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchLastActivityFrom" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchLastActivityTo" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchLastActivityTo" />
+                                            </div>
+                                        </div>
+                                        @if (Model.CompanyEnabled)
+                                        {
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchCompany" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="SearchCompany" />
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (Model.PhoneEnabled)
+                                        {
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchPhone" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="SearchPhone" />
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (Model.ZipPostalCodeEnabled)
+                                        {
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <nop-label asp-for="SearchZipPostalCode" />
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <nop-editor asp-for="SearchZipPostalCode" />
+                                                </div>
+                                            </div>
+                                        }
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchIpAddress" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchIpAddress" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SelectedCustomerRoleIds" />
+                                            </div>
+                                            <div class="col-md-8">                                               
+                                                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />                                                                                                                                              
+                                                <script>
+                                                    $(function() {
+                                                        var rolesIdsInput =
+                                                            $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
+                                                                closeOnSelect: false,
+                                                                @if (!Model.AvailableCustomerRoles.Any())
+                                                                {
+                                                                <text>
+                                                                disabled: true,
+                                                                placeholder: '@T("Admin.Catalog.Products.CustomerRoles.NoCustomerRolesAvailable")',
+                                                                </text>
+                                                                }
+                                                            });
+                                                    });
+                                                </script>
+                                            </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="text-center col-12">
+                                        <button type="button" id="search-customers" class="btn btn-primary btn-search">
+                                            <i class="fas fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Customers", NopLinksDefaults.Docs.Customers + NopLinksDefaults.Utm.OnAdmin)" />
+
+                            @{
+                                var gridModel = new DataTablesModel
+                                {
+                                    Name = "customers-grid",
+                                    UrlRead = new DataUrl("CustomerList", "RfqAdmin", null),
+                                    SearchButtonId = "search-customers",
+                                    Length = Model.PageSize,
+                                    LengthMenu = Model.AvailablePageSizes,
+                                    Filters = new List<FilterParameter>
+                                                        {
+                                    new (nameof(Model.SelectedCustomerRoleIds)),
+                                    new (nameof(Model.SearchEmail)),
+                                    new (nameof(Model.SearchUsername)),
+                                    new (nameof(Model.SearchFirstName)),
+                                    new (nameof(Model.SearchLastName)),
+                                    new (nameof(Model.SearchDayOfBirth)),
+                                    new (nameof(Model.SearchMonthOfBirth)),
+                                    new (nameof(Model.SearchCompany)),
+                                    new (nameof(Model.SearchRegistrationDateFrom)),
+                                    new (nameof(Model.SearchRegistrationDateTo)),
+                                    new (nameof(Model.SearchLastActivityFrom)),
+                                    new (nameof(Model.SearchLastActivityTo)),
+                                    new (nameof(Model.SearchPhone)),
+                                    new (nameof(Model.SearchZipPostalCode)),
+                                    new (nameof(Model.SearchIpAddress)),
+                                    }
+                                };
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Id))
+                                {
+                                    Title = T("Admin.Common.Select").Text,
+                                    Render = new RenderCustom("renderColumnSelectCustomer"),
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Width = "50"
+                                });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Email))
+                                {
+                                    Title = T("Admin.Customers.Customers.Fields.Email").Text
+                                });
+                                if (Model.AvatarEnabled)
+                                {
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.AvatarUrl))
+                                    {
+                                        Title = T("Admin.Customers.Customers.Fields.Avatar").Text,
+                                        Render = new RenderPicture("", 140)
+                                    });
+                                }
+                                if (Model.UsernamesEnabled)
+                                {
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Username))
+                                    {
+                                        Title = T("Admin.Customers.Customers.Fields.Username").Text
+                                    });
+                                }
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.FullName))
+                                {
+                                    Title = T("Admin.Customers.Customers.Fields.FullName").Text
+                                });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.CustomerRoleNames))
+                                {
+                                    Title = T("Admin.Customers.Customers.Fields.CustomerRoles").Text,
+                                    Width = "100"
+                                });
+                                if (Model.CompanyEnabled)
+                                {
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Company))
+                                    {
+                                        Title = T("Admin.Customers.Customers.Fields.Company").Text
+                                    });
+                                }
+                                if (Model.PhoneEnabled)
+                                {
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Phone))
+                                    {
+                                        Title = T("Admin.Customers.Customers.Fields.Phone").Text
+                                    });
+                                }
+                            }
+                            @await Html.PartialAsync("Table", gridModel)
+                            <script>
+                                function renderColumnSelectCustomer(data, type, row, meta) {
+                                    return '<button type="button" onclick="selectCustomer(' + row.Id + ' )" class="btn btn-default">@T("Admin.Common.Select").Text</button>';
+                                }
+                                function selectCustomer(productid) {
+                                    try {                                       
+                                        window.opener.document.getElementById('@(Context.Request.Query["productIdInput"])').value = productid;
+                                        window.opener.document.getElementById('@(Context.Request.Query["btnId"])').click();
+                                    }
+                                    catch (e) { }
+                                    window.close();
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+</form>

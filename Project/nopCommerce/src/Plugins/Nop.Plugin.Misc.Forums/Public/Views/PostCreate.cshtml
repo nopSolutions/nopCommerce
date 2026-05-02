@@ -1,0 +1,11 @@
+﻿@model EditForumPostModel
+
+@{   
+    Layout = "_ColumnsOne";
+
+    NopHtml.AddTitleParts(T("Plugins.Misc.Forums.PageTitle.PostNew").Text);
+}
+
+<form asp-route="@ForumDefaults.Routes.Public.POST_CREATE" method="post">
+    @await Html.PartialAsync("~/Plugins/Misc.Forums/Public/Views/_CreateUpdatePost.cshtml", Model)
+</form>

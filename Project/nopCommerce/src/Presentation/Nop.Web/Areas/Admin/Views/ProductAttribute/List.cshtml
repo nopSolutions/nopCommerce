@@ -1,0 +1,148 @@
+@model ProductAttributeSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.ProductAttributes").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Product attributes");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "ProductAttributeListPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+<form asp-controller="ProductAttribute" asp-action="List" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Catalog.Attributes.ProductAttributes")
+        </h1>
+        <div class="float-right">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-square-plus"></i>
+                @T("Admin.Common.AddNew")
+            </a>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeListButtons, additionalData = Model })
+            <button type="button" id="delete-selected" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.Common.Delete.Selected")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default card-search">
+                        <div class="card-body">
+                            <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                                <div class="search-text">@T("Admin.Common.Search")</div>
+                                <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
+                                <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                            </div>
+
+                            <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchProductAttributeName" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchProductAttributeName" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="text-center col-12">
+                                        <button type="button" id="search-productattributes" class="btn btn-primary btn-search">
+                                            <i class="fas fa-magnifying-glass"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <p>
+                                @T("Admin.Catalog.Attributes.ProductAttributes.Description")
+                                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ProductAttributes", Docs.ProductAttributes + Utm.OnAdmin)" asp-add-wrapper="false" />
+                            </p>
+                            @await Html.PartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "products-grid",
+                                UrlRead = new DataUrl("List", "ProductAttribute", null),
+                                SearchButtonId = "search-productattributes",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
+                                {
+                                    new FilterParameter(nameof(Model.SearchProductAttributeName))
+                                },
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(ProductAttributeModel.Id))
+                                    {
+                                       IsMasterCheckBox = true,
+                                       Render = new RenderCheckBox("checkbox_productattributes"),
+                                       ClassName =  NopColumnClassDefaults.CenterAll,
+                                       Width = "50"
+                                    },
+                                    new ColumnProperty(nameof(ProductAttributeModel.Name))
+                                    {
+                                        Title = T("Admin.Catalog.Attributes.ProductAttributes.Fields.Name").Text
+                                    },
+                                    new ColumnProperty(nameof(ProductAttributeModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "100",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonEdit(new DataUrl("~/Admin/ProductAttribute/Edit"))
+                                    }
+                                }
+                            })
+
+                            <script>
+                                $(function() {
+                                    $('#delete-selected-action-confirmation-submit-button').on('click', function () {
+                                        var postData = {
+                                            selectedIds: selectedIds
+                                        };
+                                        addAntiForgeryToken(postData);
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            url: "@(Url.Action("DeleteSelected", "ProductAttribute"))",
+                                            data: postData,
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                showAlert('deleteSelectedFailed', errorThrown);
+                                            },
+                                            complete: function (jqXHR, textStatus) {
+                                                if (jqXHR.status === 204)
+                                                {
+                                                    showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                    return;
+                                                }
+                                                updateTable('#products-grid');
+                                            }
+                                        });
+                                        $('#delete-selected-action-confirmation').modal('toggle');
+                                        return false;
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<nop-alert asp-alert-id="deleteSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected" />

@@ -1,0 +1,190 @@
+﻿@using Nop.Core.Domain.Catalog
+@using Nop.Services
+@model GiftCardModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="GiftCardTypeId"/>
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="GiftCardTypeId" asp-items="await ((GiftCardType) Model.GiftCardTypeId).ToSelectListAsync()" />
+            <span asp-validation-for="GiftCardTypeId"></span>
+        </div>
+    </div>
+    @if (Model.PurchasedWithOrderId.HasValue)
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="PurchasedWithOrderNumber"/>
+            </div>
+            <div class="col-md-9">
+                <a asp-controller="Order" asp-action="Edit" asp-route-id="@Model.PurchasedWithOrderId.Value">@Model.PurchasedWithOrderNumber - @T("Admin.Common.View")</a>
+            </div>
+        </div>
+    }
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Amount"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Amount" asp-postfix="@Model.PrimaryStoreCurrencyCode"/>
+            <span asp-validation-for="Amount"></span>
+        </div>
+    </div>
+    @if (Model.Id > 0)
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="RemainingAmountStr"/>
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.RemainingAmountStr</div>
+            </div>
+        </div>
+    }
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IsGiftCardActivated"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsGiftCardActivated"/>
+            <span asp-validation-for="IsGiftCardActivated"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="GiftCardCouponCode"/>
+        </div>
+        <div class="col-md-9">
+            <div class="input-group">
+                <nop-editor asp-for="GiftCardCouponCode"/>
+                <span asp-validation-for="GiftCardCouponCode"></span>
+                <div class="input-group-append">
+                    <button type="button" id="generateCouponCode" class="btn btn-info">@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")</button>
+                    <script>
+                        $(function() {
+                            $('#generateCouponCode').click(function() {
+                                var postData = {};
+
+                                addAntiForgeryToken(postData);
+
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("GenerateCouponCode", "GiftCard"))",
+                                    data: postData,
+                                    success: function (data, textStatus, jqXHR) {
+                                        $('#@Html.IdFor(model => model.GiftCardCouponCode)').val(data.CouponCode);
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#generateCouponCodeFailed-info').text(errorThrown);
+                                        $("#generateCouponCodeFailed").trigger("click");                                                
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="RecipientName"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="RecipientName"/>
+            <span asp-validation-for="RecipientName"></span>
+        </div>
+    </div>
+    <div class="form-group row" id="pnlRecipientEmail">
+        <div class="col-md-3">
+            <nop-label asp-for="RecipientEmail"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="RecipientEmail"/>
+            <span asp-validation-for="RecipientEmail"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="SenderName"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SenderName"/>
+            <span asp-validation-for="SenderName"></span>
+        </div>
+    </div>
+    <div class="form-group row" id="pnlSenderEmail">
+        <div class="col-md-3">
+            <nop-label asp-for="SenderEmail"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SenderEmail"/>
+            <span asp-validation-for="SenderEmail"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Message"/>
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="Message"/>
+            <span asp-validation-for="Message"></span>
+        </div>
+    </div>
+    @if (Model.Id > 0)
+    {
+        <div class="form-group row" id="pnlNotifyRecipient">
+            <div class="col-md-3">
+                <nop-label asp-for="IsRecipientNotified"/>
+            </div>
+            <div class="col-md-9">
+                <div class="input-group input-group-short">
+                    <div class="input-group-text">
+                        @T(Model.IsRecipientNotified ? "Admin.Common.Yes" : "Admin.Common.No")
+                    </div>
+                    <div class="input-group-append">
+                        <button type="submit" name="notifyRecipient" class="btn btn-info">
+                            @T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (Model.Id > 0)
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="CreatedOn"/>
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.CreatedOn</div>
+            </div>
+        </div>
+    }
+</div>
+
+<nop-alert asp-alert-id="generateCouponCodeFailed" asp-alert-message="@T("Admin.GiftCards.Fields.GiftCardCouponCode.Alert.FailedGenerate")" />
+
+<script>
+    $(function() {
+        $("#@Html.IdFor(model => model.GiftCardTypeId)").change(toggleGiftCardType);
+        toggleGiftCardType();
+    });
+
+    function toggleGiftCardType() {
+        var selectedGiftCardTypeId = $("#@Html.IdFor(model => model.GiftCardTypeId)").val();
+        if (selectedGiftCardTypeId == @(((int) GiftCardType.Virtual).ToString())) {
+            $('#pnlRecipientEmail').showElement();
+            $('#pnlSenderEmail').showElement();
+            $('#pnlNotifyRecipient').showElement();
+        } else {
+            $('#pnlRecipientEmail').hideElement();
+            $('#pnlSenderEmail').hideElement();
+            $('#pnlNotifyRecipient').hideElement();
+        }
+    }
+</script>

@@ -1,0 +1,96 @@
+﻿@model ProductDetailsModel
+
+<link rel="stylesheet" href="~/lib_npm/magnific-popup/magnific-popup.css" />
+<script asp-exclude-from-bundle="true" src="~/lib_npm/magnific-popup/jquery.magnific-popup.min.js" asp-location="Footer"></script>
+
+<div class="picture-gallery">
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsBeforePictures, additionalData = Model })
+    <div class="picture">
+        @if (Model.DefaultPictureZoomEnabled && Model.PictureModels.Count == 1)
+        {
+            <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
+                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
+            </a>
+            <script asp-location="Footer">
+                $(function() {
+                    $('#main-product-img-lightbox-anchor-@Model.Id').magnificPopup({ type: 'image' });
+                });
+            </script>
+        }
+        else
+        {
+            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
+        }
+    </div>
+    @if (Model.PictureModels.Count > 1 && Model.DefaultPictureZoomEnabled)
+    {
+        <div class="picture-thumbs">
+            @foreach (var picture in Model.PictureModels)
+            {
+                <a class="thumb-item" data-pictureid="@picture.Id" href="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title">
+                    <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                </a>
+            }
+        </div>
+        <script asp-location="Footer">
+            $(function() {
+                $('.picture-thumbs').magnificPopup(
+                    {
+                        type: 'image',
+                        delegate: 'a',
+                        removalDelay: 300,
+                        gallery: {
+                            enabled: true,
+                            navigateByImgClick: true,
+                            preload: [0, 1],
+                            tPrev: '@T("Media.MagnificPopup.Previous")',
+                            tNext: '@T("Media.MagnificPopup.Next")',
+                            tCounter: '@T("Media.MagnificPopup.Counter")'
+                        },
+                        tClose: '@T("Media.MagnificPopup.Close")',
+                        tLoading: '@T("Media.MagnificPopup.Loading")'
+                    });
+            });
+        </script>
+        <script asp-location="Footer">
+            $(function() {
+                $('.thumb-item > img').on('click',
+                    function() {
+                        $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
+                        $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
+                        $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
+                        $('#main-product-img-lightbox-anchor-@Model.Id').attr('href', $(this).attr('data-fullsize'));
+                        $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
+                    });
+            });
+        </script>
+    }
+    else
+    {
+        if (Model.PictureModels.Count > 1)
+        {
+            <div class="picture-thumbs">
+                @foreach (var picture in Model.PictureModels)
+                {
+                    <div class="thumb-item" data-pictureid="@picture.Id">
+                        <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                    </div>
+                }
+            </div>
+            <script asp-location="Footer">
+                $(function() {
+                    $('.thumb-item img').on('click',
+                        function() {
+                            $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
+                            $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
+                            $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
+                            $('#main-product-img-lightbox-anchor-@Model.Id')
+                                .attr('href', $(this).attr('data-fullsize'));
+                            $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
+                        });
+                });
+            </script>
+        }
+    }
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsAfterPictures, additionalData = Model })
+</div>

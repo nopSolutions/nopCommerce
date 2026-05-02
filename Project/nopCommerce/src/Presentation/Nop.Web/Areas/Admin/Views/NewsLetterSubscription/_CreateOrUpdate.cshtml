@@ -1,0 +1,92 @@
+@model NewsLetterSubscriptionModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.NewsLetterSubscriptionTop, additionalData = Model })
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Email" />
+                            </div>
+                            <div class="col-md-9">
+                                @if (Model.Id > 0)
+                                {
+                                    <div class="form-text-row">@Model.Email</div>
+                                    <input asp-for="Email" type="hidden" />
+                                }
+                                else
+                                {
+                                    <nop-editor asp-for="Email" asp-required="true" />
+                                    <span asp-validation-for="Email"></span>
+                                }
+                            </div>
+                        </div>
+                        @if (Model.AvailableNewsLetterSubscriptionTypes?.Any() == true)
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="SelectedNewsLetterSubscriptionTypeId" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="SelectedNewsLetterSubscriptionTypeId" asp-items="Model.AvailableNewsLetterSubscriptionTypes" />
+                                    <span asp-validation-for="SelectedNewsLetterSubscriptionTypeId"></span>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Active" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Active" />
+                                <span asp-validation-for="Active"></span>
+                            </div>
+                        </div>
+                        @if (Model.AvailableNewsLetterSubscriptionStores?.Any() == true)
+                        {
+                            <div class="form-group row" @(Model.AvailableNewsLetterSubscriptionStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="col-md-3">
+                                    <nop-label asp-for="SelectedNewsLetterSubscriptionStoreId" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="SelectedNewsLetterSubscriptionStoreId" asp-items="Model.AvailableNewsLetterSubscriptionStores" />
+                                    <span asp-validation-for="SelectedNewsLetterSubscriptionStoreId"></span>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.AvailableNewsLetterSubscriptionLanguages?.Any() == true)
+                        {
+                            <div class="form-group row" @(Model.AvailableNewsLetterSubscriptionLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="col-md-3">
+                                    <nop-label asp-for="SelectedNewsLetterSubscriptionLanguageId" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="SelectedNewsLetterSubscriptionLanguageId" asp-items="Model.AvailableNewsLetterSubscriptionLanguages" />
+                                    <span asp-validation-for="SelectedNewsLetterSubscriptionLanguageId"></span>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.Id > 0)
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="CreatedOn" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">@Model.CreatedOn</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.NewsLetterSubscriptionBottom, additionalData = Model })
+            </div>
+        </div>
+    </div>
+</section>

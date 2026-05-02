@@ -1,0 +1,15 @@
+@model TaxSettingsModel
+
+<div class="card-body">
+    <div class="card card-default">
+        <div class="card-header">
+            <nop-override-store-checkbox asp-for="DefaultTaxAddress_OverrideForStore" asp-parent-container="pnlDefaultTaxAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            @T("Admin.Configuration.Settings.Tax.DefaultTaxAddress")
+        </div>
+        <div class="card-body">
+            <div id="pnlDefaultTaxAddress">
+                <nop-editor asp-for="DefaultTaxAddress" asp-template="Address" />
+            </div>
+        </div>
+    </div>
+</div>

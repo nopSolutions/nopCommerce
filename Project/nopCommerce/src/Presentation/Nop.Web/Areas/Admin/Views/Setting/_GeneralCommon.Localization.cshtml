@@ -1,0 +1,73 @@
+@model GeneralCommonSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <div class="label-wrapper">
+                <label class="col-form-label">
+                    @T("Admin.Configuration.Settings.GeneralCommon.Localization.Description")
+                </label>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <button type="submit" asp-action="UploadLocalePattern" name="uploadlocalepattern" class="btn btn-primary mt-4">
+                <i class="fas fa-language"></i>
+                @T("Admin.Configuration.Settings.GeneralCommon.Localization.UploadLocalePattern")
+            </button>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="LocalizationSettings.LoadAllLocaleRecordsOnStartup" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="LocalizationSettings.LoadAllLocaleRecordsOnStartup" />
+            <span asp-validation-for="LocalizationSettings.LoadAllLocaleRecordsOnStartup"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="LocalizationSettings.LoadAllLocalizedPropertiesOnStartup" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="LocalizationSettings.LoadAllLocalizedPropertiesOnStartup" />
+            <span asp-validation-for="LocalizationSettings.LoadAllLocalizedPropertiesOnStartup"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="LocalizationSettings.LoadAllUrlRecordsOnStartup" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="LocalizationSettings.LoadAllUrlRecordsOnStartup" />
+            <span asp-validation-for="LocalizationSettings.LoadAllUrlRecordsOnStartup"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="LocalizationSettings.UseImagesForLanguageSelection" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="LocalizationSettings.UseImagesForLanguageSelection" />
+            <span asp-validation-for="LocalizationSettings.UseImagesForLanguageSelection"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled" />
+            <span asp-validation-for="LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="LocalizationSettings.AutomaticallyDetectLanguage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="LocalizationSettings.AutomaticallyDetectLanguage" />
+            <span asp-validation-for="LocalizationSettings.AutomaticallyDetectLanguage"></span>
+        </div>
+    </div>
+</div>

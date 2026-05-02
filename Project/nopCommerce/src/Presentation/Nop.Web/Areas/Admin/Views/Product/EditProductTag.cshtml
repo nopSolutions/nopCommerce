@@ -1,0 +1,66 @@
+@model ProductTagModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.ProductTags.EditTagDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Product tags");
+
+    var customer = await workContext.GetCurrentCustomerAsync();
+
+    const string hideProductTagInfoBlockAttributeName = "ProductTagPage.HideProductTagInfoBlock";
+    var hideProductTagInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductTagInfoBlockAttributeName, defaultValue: true);
+
+    const string hideSeoBlockAttributeName = "ProductTagPage.HideSeoBlock";
+    var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSeoBlockAttributeName, defaultValue: true);
+    
+    const string hideTaggedProductsBlockAttributeName = "ProductTagPage.HideTaggedProductsBlock";
+    var hideTaggedProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTaggedProductsBlockAttributeName, defaultValue: true);
+}
+
+<form asp-controller="Product" asp-action="EditProductTag" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Catalog.ProductTags.EditTagDetails")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="ProductTags">@T("Admin.Catalog.ProductTags.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="producttag-delete" class="btn bg-red">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductTagDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <nop-cards id="producttag-cards">
+                    <nop-card asp-name="producttag-info" asp-icon="fas fa-info" asp-title="@T("Admin.Catalog.ProductTags.Info")" asp-hide-block-attribute-name="@hideProductTagInfoBlockAttributeName" asp-hide="@hideProductTagInfoBlock">
+                        @await Html.PartialAsync("_CreateOrUpdateProductTag", Model)
+                    </nop-card>
+                    <nop-card asp-name="producttag-seo" asp-icon="fas fa-magnifying-glass-plus" asp-title="@T("Admin.Catalog.ProductTags.Seo")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock">
+                        @await Html.PartialAsync("_CreateOrUpdateProductTag.Seo", Model)
+                    </nop-card>
+                    <nop-card asp-name="tagged-products" asp-icon="fas fa-square-check" asp-title="@T("Admin.Catalog.ProductTags.TaggedProducts")" asp-hide-block-attribute-name="@hideTaggedProductsBlockAttributeName" asp-hide="@hideTaggedProductsBlock">
+                        @await Html.PartialAsync("_CreateOrUpdateProductTag.TaggedProducts", Model)
+                    </nop-card>
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="producttag-delete" asp-action="ProductTagDelete" /> 

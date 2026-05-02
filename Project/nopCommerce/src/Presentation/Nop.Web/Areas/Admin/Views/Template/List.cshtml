@@ -1,0 +1,50 @@
+﻿@model TemplatesModel
+
+@inject IEventPublisher eventPublisher
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.System.Templates").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Templates");
+}
+
+@{
+    const string hideCategoryBlockAttributeName = "Templates.HideCategoryBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCategoryBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCategoryBlockAttributeName);
+
+    const string hideManufacturerBlockAttributeName = "Templates.HideManufacturerBlock";
+    var hideManufacturerBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideManufacturerBlockAttributeName);
+
+    const string hideProductBlockAttributeName = "Templates.HideProductBlock";
+    var hideProductBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductBlockAttributeName);
+
+    const string hideTopicBlockAttributeName = "Templates.HideTopicBlock";
+    var hideTopicBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTopicBlockAttributeName);
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="content-header clearfix">
+                    <h3 class="float-left">
+                        @T("Admin.System.Templates")
+                    </h3>
+                </div>
+            </div>
+
+            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Templates", Docs.Templates + Utm.OnAdmin)" />
+
+            <nop-cards id="templates-cards">
+                <nop-card asp-name="templates-category" asp-icon="fas fa-sitemap" asp-title="@T("Admin.System.Templates.Category")" asp-hide-block-attribute-name="@hideCategoryBlockAttributeName" asp-hide="@hideCategoryBlock">@await Html.PartialAsync("_List.Category", Model)</nop-card>
+                <nop-card asp-name="templates-manufacturer" asp-icon="fas fa-industry" asp-title="@T("Admin.System.Templates.Manufacturer")" asp-hide-block-attribute-name="@hideManufacturerBlockAttributeName" asp-hide="@hideManufacturerBlock">@await Html.PartialAsync("_List.Manufacturer", Model)</nop-card>
+                <nop-card asp-name="templates-product" asp-icon="fas fa-cube" asp-title="@T("Admin.System.Templates.Product")" asp-hide-block-attribute-name="@hideProductBlockAttributeName" asp-hide="@hideProductBlock">@await Html.PartialAsync("_List.Product", Model)</nop-card>
+                <nop-card asp-name="templates-topic" asp-icon="fas fa-book" asp-title="@T("Admin.System.Templates.Topic")" asp-hide-block-attribute-name="@hideTopicBlockAttributeName" asp-hide="@hideTopicBlock">@await Html.PartialAsync("_List.Topic", Model)</nop-card>
+
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TemplatesDetailsBlock, additionalData = Model })
+            </nop-cards>
+        </div>
+    </div>
+</section>

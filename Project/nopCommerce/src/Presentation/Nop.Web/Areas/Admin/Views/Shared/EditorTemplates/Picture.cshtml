@@ -1,0 +1,152 @@
+﻿@model int
+@inject IPictureService pictureService
+@inject MediaSettings mediaSettings
+
+@using Nop.Core.Domain.Media
+@using Nop.Services.Media
+
+@{
+    // Identifiers
+    var random = CommonHelper.GenerateRandomInteger();
+    var clientId = $"picture{random}";
+    var elementId = $"{clientId}element";
+    var imageId = $"{clientId}image";
+    
+    // Constants
+    const int pictureSize = 100;
+
+    var allowedMimeTypes = new List<string> { MimeTypes.ImagePng, MimeTypes.ImageBmp, MimeTypes.ImageGif, MimeTypes.ImageJpeg, MimeTypes.ImagePJpeg, MimeTypes.ImageTiff, MimeTypes.ImageWebp };
+    if (mediaSettings.AllowSvgUploads)
+        allowedMimeTypes.Add(MimeTypes.ImageSvg);
+
+    var picture = await pictureService.GetPictureByIdAsync(Model);
+    var files = new List<object>();
+
+    if (picture != null)
+    {
+        var pictureSource = $"{picture.SeoFilename}.{await pictureService.GetFileExtensionFromMimeTypeAsync(picture.MimeType)}";
+        files.Add(new
+        {
+            source = pictureSource,
+            options = new
+            {
+                type = "local",
+                file = new
+                {
+                    name = pictureSource,
+                    size = (await pictureService.GetPictureBinaryByPictureIdAsync(picture.Id))?.BinaryData?.Length,
+                    type = picture.MimeType
+                },
+                metadata = new
+                {
+                    url = await pictureService.GetPictureUrlAsync(Model, showDefaultPicture: false)
+                }
+            },
+        });
+    }
+}
+
+<noscript>
+    <p>Please enable JavaScript to use file uploader.</p>
+</noscript>
+<input type="hidden" asp-for="@Model"/>
+
+<div id="@(elementId)" class="filepond"></div>
+<div class="upload-picture-block">
+    <div class="picture-container">
+        <div class="uploaded-image">
+            <img id="@(imageId)" src="@await pictureService.GetPictureUrlAsync(Model, pictureSize)" width="@(pictureSize)" />
+        </div>
+    </div>
+</div>
+
+@* register CSS and JS *@
+<link rel="stylesheet" href="~/lib_npm/filepond/filepond.min.css"/>
+<link rel="stylesheet" href="~/lib_npm/filepond-plugin-get-file/filepond-plugin-get-file.min.css"/>
+<script asp-exclude-from-bundle="true" src="~/lib_npm/filepond/filepond.min.js" asp-location="Footer"></script>
+<script asp-exclude-from-bundle="true"
+        src="~/lib_npm/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js"
+        asp-location="Footer"></script>
+<script asp-exclude-from-bundle="true" src="~/lib_npm/filepond-plugin-get-file/filepond-plugin-get-file.min.js"
+        asp-location="Footer"></script>
+
+<script asp-location="Footer">
+
+    $(async function () {
+
+        // Register the plugins
+        FilePond.registerPlugin(FilePondPluginFileValidateType, FilePondPluginGetFile);
+        const allowedExtensions = @Html.Raw(Json.Serialize(allowedMimeTypes));
+        
+        const $modelEl = $('#@Html.IdForModel()');
+        const $imageEl = $('#@imageId');
+        const $removeEl = $('#@clientId');
+
+        function resetImageToDefault() {
+            $modelEl.val('0');
+            $imageEl.attr("src", '@await pictureService.GetDefaultPictureUrlAsync(pictureSize)');
+        }
+
+        const serverConfig = {
+            process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+                const formData = new FormData();
+                formData.append(fieldName, file, file.name);
+
+                const request = new XMLHttpRequest();
+                request.open('POST', '@Url.Content("~/Admin/Picture/AsyncUpload")');
+
+                request.upload.onprogress = (e) => {
+                    progress(e.lengthComputable, e.loaded, e.total);
+                };
+
+                request.onload = function () {
+                    const commonError = '@T("Common.Error")';
+                    if (request.status < 200 || request.status >= 300) {
+                        error(commonError);
+                        return;
+                    }
+
+                    const response = JSON.parse(request.responseText);
+
+                    if (response.success) {
+                        load(request.responseText);
+                        $imageEl.attr("src", response.imageUrl);
+                        $modelEl.val(response.pictureId);
+                    } else {
+                        error(response.message || commonError);
+                    }
+                };
+
+                request.send(formData);
+            },
+            remove: (source, load, error) => {
+                resetImageToDefault();
+                load();
+            },
+            revert: (uniqueFileId, load, error) => {
+                resetImageToDefault();
+                load();
+            },
+        };
+
+        // Create a FilePond instance
+        const filePondInstance = FilePond.create(document.querySelector('#@elementId'), {
+            credits: false,
+            allowMultiple: false,
+            maxFiles: 1,
+            allowDownloadByUrl: true,
+            server: serverConfig,
+            labelFileProcessingError: (err) => err.body,
+            acceptedFileTypes: allowedExtensions,
+            files: @Json.Serialize(files),
+            labelIdle: '@T("Common.FileUploader.DropFiles") / <span class="filepond--label-action">@T("Common.FileUploader.Browse")</span>',
+            labelFileProcessing: '@T("Common.FileUploader.Processing")'
+        });
+
+        $removeEl.on('click', function (e) {
+            resetImageToDefault();
+            filePondInstance.removeFiles();
+            $(this).hide();
+        });
+    });
+</script>

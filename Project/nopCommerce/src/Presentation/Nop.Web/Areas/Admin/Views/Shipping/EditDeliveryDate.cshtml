@@ -1,0 +1,37 @@
+@model DeliveryDateModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.DeliveryDates.EditDeliveryDateDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Delivery dates");
+}
+
+<form asp-controller="Shipping" asp-action="EditDeliveryDate" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Shipping.DeliveryDates.EditDeliveryDateDetails") - @Model.Name
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="DatesAndRanges">@T("Admin.Configuration.Shipping.DeliveryDates.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="delivery-date-delete" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.DeliveryDateDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateDeliveryDate", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="delivery-date-delete" asp-action="DeleteDeliveryDate" />

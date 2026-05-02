@@ -1,0 +1,50 @@
+﻿@model SlidePictureModel
+
+<div class="card card-default">
+    <div class="card-header">
+        @T("Plugins.Widgets.Swiper.Slide")
+    </div>
+    <div class="card-body">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="PictureId" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="PictureId" />
+                <span asp-validation-for="PictureId"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="TitleText" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="TitleText" />
+                <span asp-validation-for="TitleText"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="AltText" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AltText" />
+                <span asp-validation-for="AltText"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="LinkUrl" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="LinkUrl" />
+                <span asp-validation-for="LinkUrl"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="offset-md-3 col-md-9">
+                <button type="submit" name="add-slide" class="btn btn-primary">@T("Plugins.Widgets.Swiper.Slide.Add")</button>
+            </div>
+        </div>
+    </div>
+</div>

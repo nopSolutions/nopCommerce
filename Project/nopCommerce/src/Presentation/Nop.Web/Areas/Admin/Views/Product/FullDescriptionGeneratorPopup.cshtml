@@ -1,0 +1,171 @@
+﻿@using Nop.Services
+@using Nop.Core.Domain.ArtificialIntelligence
+@model ArtificialIntelligenceFullDescriptionModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Products.AiGenerateFullDescription").Text;
+    
+    @if (ViewBag.SaveDescription == true)
+    {
+        <script>            
+            $(function()
+            {
+                try {
+                    var el = $(window.opener.document.getElementById('ai-lang-id'));
+                    var selectedLang = $("#@Html.IdFor(m => m.LanguageId)").val();
+                    el.val(selectedLang);
+
+                    el = $(window.opener.document.getElementById('ai-generated-description'));                    
+                    el.val('@Model.GeneratedDescription');
+                    el.click();
+                    window.close();
+                }
+                catch (e) {
+                    alert(e);
+                }                
+            });
+        </script>
+    }
+}
+
+<form asp-controller="Product" asp-action="FullDescriptionGeneratorPopup" id="generatorForm">
+    <input type="hidden" asp-for="SaveButtonClicked" />
+    <input type="hidden" asp-for="LanguageId" />
+    <section class="content">
+        <div class="container-fluid">
+            <div class="content-header clearfix">
+                <h1 class="float-left">
+                    @T("Admin.Catalog.Products.AiGenerateFullDescription")
+                </h1>
+                <div class="float-right">
+                    @if (!string.IsNullOrEmpty(Model.GeneratedDescription))
+                    {
+                        <button id="save_button" type="submit" onclick="set_save()" name="save" class="btn btn-primary">
+                            <i class="far fa-floppy-disk"></i>
+                            @T("Admin.Common.Save")
+                        </button>
+                        <button id="copy_button" type="button" onclick="copy_to_clipboard()" class="btn btn-secondary">
+                            <i class="far fa-floppy-disk"></i>
+                            @T("Admin.Catalog.Products.AiFullDescription.CopyToClipboard")
+                        </button>
+                    }
+                    
+                    <div id="ajaxBusy">
+                        <span>&nbsp;</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <nop-label asp-for="ProductName" />
+                        <nop-editor html-attributes="@(new { placeholder=T("Admin.Catalog.Products.AiFullDescription.ProductName.Placeholder") })" asp-for="ProductName" asp-required="true" />
+                        <span asp-validation-for="ProductName"></span>
+                    </div>
+                    <div class="form-group row">
+                        <nop-label asp-for="TargetLanguageId" />
+                        <nop-select asp-for="TargetLanguageId" asp-items="Model.AvailableLanguages" />
+                        <span asp-validation-for="TargetLanguageId"></span>
+                    </div>
+                    <div class="form-group row">
+                        <nop-label asp-for="Keywords" />
+                        <nop-textarea asp-for="Keywords" html-attributes="@(new { placeholder=T("Admin.Catalog.Products.AiFullDescription.Keywords.Placeholder") })" asp-required="true" />
+                        <span asp-validation-for="Keywords"></span>
+                    </div>
+                    <div class="form-group row">
+                        <nop-label asp-for="ToneOfVoiceId" />
+                        <nop-select asp-for="ToneOfVoiceId" asp-items="@(await ((ToneOfVoiceType)Model.ToneOfVoiceId).ToSelectListAsync())" />
+                        <span asp-validation-for="ToneOfVoiceId"></span>
+                    </div>
+                    <div id="pnlCustomToneOfVoice" class="form-group row">
+                        <nop-label asp-for="CustomToneOfVoice" />
+                        <nop-editor asp-for="CustomToneOfVoice" html-attributes="@(new { placeholder=T("Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice.Placeholder") })" />
+                        <span asp-validation-for="CustomToneOfVoice"></span>
+                    </div>
+                    <div class="form-group row">
+                        <nop-label asp-for="Instructions" />
+                        <nop-editor asp-for="Instructions" html-attributes="@(new { placeholder=T("Admin.Catalog.Products.AiFullDescription.Instructions.Placeholder") })" />
+                        <span asp-validation-for="Instructions"></span>
+                    </div>
+                    <div class="form-group row">
+                        <button type="submit" id="generate-button" class="btn btn-primary">
+                            <i class="fa fa-cogs"></i>
+                            @T("Admin.Catalog.Products.AiFullDescription.Generate")
+                        </button>
+                        <div id="waiting-text"><strong>@T("Common.Wait")</strong></div>
+                    </div>
+                </div>
+                <div class="col-md-5 offset-1">
+                    <div class="form-group row">
+                        <nop-label asp-for="GeneratedDescription" />
+                        <div>
+                            <input type="hidden" asp-for="GeneratedDescription" />
+                            @Html.Raw(Model.GeneratedDescription)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</form>
+
+<script asp-location="Footer">   
+
+    function set_save()
+    {
+        $("#@Html.IdFor(model => model.SaveButtonClicked)").val(true);
+    }
+
+    function copy_to_clipboard()
+    {
+        var copyText = document.getElementById("@Html.IdFor(model => model.GeneratedDescription)");
+        navigator.clipboard.writeText(copyText.value);
+        
+        displayBarNotification('@T("Admin.Catalog.Products.AiFullDescription.Copied")', 'success');
+    }
+
+    $(function() {
+
+        $('#generatorForm').submit(function() {                
+            var form = $("#generatorForm");
+            form.validate();
+            
+            if (form.valid())
+            {
+                $('#save_button').hideElement();
+                $('#ajaxBusy').showElement();
+                $('#generate-button').hideElement();
+                $('#waiting-text').showElement();
+
+                this.submit();
+            }
+
+            return false;
+        });
+
+        $("#@Html.IdFor(model => model.ToneOfVoiceId)").change(function () {
+        var selectedItem = $(this).val();
+            showCustomToneOfVoice(selectedItem);
+        });
+    });
+
+    $(function () {
+        $('#waiting-text').hideElement();
+        showCustomToneOfVoice($("#@Html.IdFor(model => model.ToneOfVoiceId)").val());
+    });
+
+    function showCustomToneOfVoice(selectedItem)
+    {
+        if(selectedItem == "@((int)ToneOfVoiceType.Custom)")
+        {
+            $("#pnlCustomToneOfVoice").showElement();
+        } else {
+            $("#pnlCustomToneOfVoice").hideElement();
+        }
+    }
+</script>

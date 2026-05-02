@@ -1,0 +1,31 @@
+﻿@model CustomerUserSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.AllowViewingProfiles" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.AllowViewingProfiles" />
+            <span asp-validation-for="CustomerSettings.AllowViewingProfiles"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.ShowCustomersLocation" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.ShowCustomersLocation" />
+            <span asp-validation-for="CustomerSettings.ShowCustomersLocation"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerSettings.ShowCustomersJoinDate" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerSettings.ShowCustomersJoinDate" />
+            <span asp-validation-for="CustomerSettings.ShowCustomersJoinDate"></span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+﻿using Microsoft.AspNetCore.Mvc.Razor;
+using Nop.Services.Themes;
+
+namespace Nop.Web.Framework.Themes;
+
+/// <summary>
+/// Specifies the contracts for a view location expander that is used by Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine instances to determine search paths for a view.
+/// </summary>
+public partial class ThemeableViewLocationExpander : IViewLocationExpander
+{
+    /// <summary>
+    /// Invoked by a Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine to determine the
+    /// values that would be consumed by this instance of Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander.
+    /// The calculated values are used to determine if the view location has changed since the last time it was located.
+    /// </summary>
+    /// <param name="context">Context</param>
+    public virtual void PopulateValues(ViewLocationExpanderContext context)
+    {
+        //no need to add the themeable view locations at all as the administration should not be themeable anyway
+        if (context.AreaName?.Equals(AreaNames.ADMIN) ?? false)
+            return;
+
+        if (!context.ActionContext.HttpContext.Items.TryGetValue(NopThemeDefaults.HttpContextThemeCacheKey, out var cachedThemeName))
+            return;
+
+        context.Values[NopThemeDefaults.ThemeKey] = (string)cachedThemeName;
+    }
+
+    /// <summary>
+    /// Invoked by a Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine to determine potential locations for a view.
+    /// </summary>
+    /// <param name="context">Context</param>
+    /// <param name="viewLocations">View locations</param>
+    /// <returns>View locations</returns>
+    public virtual IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)
+    {
+        if (context.Values.TryGetValue(NopThemeDefaults.ThemeKey, out var theme))
+        {
+            viewLocations = new[] {
+                    $"/Themes/{theme}/Views/{{1}}/{{0}}.cshtml",
+                    $"/Themes/{theme}/Views/Shared/{{0}}.cshtml",
+                }
+                .Concat(viewLocations);
+        }
+
+        return viewLocations;
+    }
+}

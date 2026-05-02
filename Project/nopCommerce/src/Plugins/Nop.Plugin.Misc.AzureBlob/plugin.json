@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Azure Blob Storage",
+  "SystemName": "Misc.AzureBlob",
+  "Version": "5.00.3",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.AzureBlob.dll",
+  "Description": "This plugin allow you to use Azure Blob Storage to store pictures (thumbs)"
+}

@@ -1,0 +1,107 @@
+@model PaymentMethodsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Payment.MethodRestrictions").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Payment restrictions");
+}
+
+<form asp-controller="Payment" asp-action="MethodRestrictions" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Payment.MethodRestrictions")
+        </h1>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="form-horizontal">
+                    <div class="cards-group">
+                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PaymentMethodRestrictionsTop, additionalData = Model })
+                        <div class="card card-default">
+                            <div class="card-body">
+                                <div class="row v-center margin-b-5">
+                                    <div class="col-sm-10 col-xs-9">
+                                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.PaymentMethodRestrictions", Docs.PaymentMethodRestrictions + Utm.OnAdmin)" />
+
+                                        @T("Admin.Configuration.Payment.MethodRestrictions.Description")
+                                    </div>
+                                    <div class="col-sm-2 col-xs-3">
+                                        <button type="submit" name="save" class="btn btn-primary float-right">
+                                            <i class="far fa-floppy-disk"></i>
+                                            @T("Admin.Common.Save")
+                                        </button>
+                                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PaymentsListButtons, additionalData = Model })
+                                    </div>
+                                </div>
+
+                                @if (!Model.PaymentMethodRestriction.AvailablePaymentMethods.Any())
+                                {
+                                    <text>No payment methods installed</text>
+                                }
+                                else if (!Model.PaymentMethodRestriction.AvailableCountries.Any())
+                                {
+                                    <text>No countries available</text>
+                                }
+                                else
+                                {
+                                    <script>
+                                $(function() {
+                                    @foreach (var pm in Model.PaymentMethodRestriction.AvailablePaymentMethods)
+                                    {
+                                        var systemNameWithoutDot = pm.SystemName.Replace(".", "");
+                                        <text>
+                                            prepareTableCheckboxes('#selectall-@(systemNameWithoutDot)', '.restrict_@(systemNameWithoutDot)');
+                                        </text>
+                                    }
+                                });
+                                    </script>
+                                    <table class="table table-hover table-bordered table-striped">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="col" style="padding-top: 14px;">
+                                                    <strong>@T("Admin.Configuration.Payment.MethodRestrictions.Country")</strong>
+                                                </th>
+                                                @foreach (var pm in Model.PaymentMethodRestriction.AvailablePaymentMethods)
+                                                {
+                                                    var systemNameWithoutDot = pm.SystemName.Replace(".", "");
+                                                    <th scope="col">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" id="selectall-@(systemNameWithoutDot)" />
+                                                                <strong>@pm.FriendlyName</strong>
+                                                            </label>
+                                                        </div>
+                                                    </th>
+                                                }
+                                            </tr>
+                                            @foreach (var c in Model.PaymentMethodRestriction.AvailableCountries)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <span>@c.Name</span>
+                                                    </td>
+                                                    @foreach (var pm in Model.PaymentMethodRestriction.AvailablePaymentMethods)
+                                                    {
+                                                        var restricted = Model.PaymentMethodRestriction.Restricted.ContainsKey(pm.SystemName) && Model.PaymentMethodRestriction.Restricted[pm.SystemName][c.Id];
+                                                        var systemNameWithoutDot = pm.SystemName.Replace(".", "");
+                                                        <td>
+                                                            <input class="restrict_@(systemNameWithoutDot)" type="checkbox" value="@(c.Id)" name="restrict_@(pm.SystemName)" @(restricted ? " checked=checked" : null) />
+                                                        </td>
+                                                    }
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                        </div>
+                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PaymentMethodRestrictionsBottom, additionalData = Model })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

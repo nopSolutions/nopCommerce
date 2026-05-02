@@ -1,0 +1,23 @@
+﻿@await Html.PartialAsync("_AdminTour");
+
+<script asp-location="Footer">
+    const steps = [{
+        element: '#info-area',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Topic.TitleContent.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Topic.TitleContent.Text").Text)',
+            side: "bottom",
+            align: 'start'
+        }}, {
+        element: '#preview-topic-button',
+        popover: {
+            title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Topic.Preview.Title").Text)',
+            description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.Topic.Preview.Text").Text)',
+            side: "left",
+            align: 'start'
+        }}];
+
+    AdminTourBuilder
+        .init(localized_data, '', null, steps)
+        .drive();
+</script>

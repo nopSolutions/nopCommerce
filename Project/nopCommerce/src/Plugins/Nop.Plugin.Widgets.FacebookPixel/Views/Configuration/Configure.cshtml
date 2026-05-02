@@ -1,0 +1,112 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+    var hideSearchBlock = Model.FacebookPixelSearchModel.HideSearchBlock;
+}
+
+<div class="content">
+    <div class="form-horizontal">
+        <p>
+            The Facebook pixel is a snippet of JavaScript code that allows you to track visitor activity on your website. 
+            It works by loading a small library of functions which you can use whenever a site visitor takes an action (called an <strong>event</strong>) that you want to track (called a <strong>conversion</strong>). 
+            Tracked conversions appear in the <a href="https://www.facebook.com/adsmanager" target="_blank">Facebook Ads Manager</a> and in the <a href="https://business.facebook.com/analytics" target="_blank">Facebook Analytics</a> dashboard, where they can be used to measure the effectiveness of your ads, to define custom audiences for ad targeting, for dynamic ads campaigns, and to analyze that effectiveness of your website's conversion funnels.
+        </p>
+        <div class="cards-group">
+            @if (!Model.HideList && !Model.FacebookPixelSearchModel.HideStoresList)
+            {
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row @(!Model.FacebookPixelSearchModel.HideSearchBlock ? "opened" : "")" data-hideAttribute="@FacebookPixelDefaults.HideSearchBlockAttribute">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        </div>
+
+                        <div class="search-body @(Model.FacebookPixelSearchModel.HideSearchBlock ? "closed" : "")">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row" @(Model.FacebookPixelSearchModel.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="@Model.FacebookPixelSearchModel.StoreId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="@Model.FacebookPixelSearchModel.StoreId" asp-items="@Model.FacebookPixelSearchModel.AvailableStores" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-8 offset-md-4">
+                                            <button type="button" id="search" class="btn btn-primary btn-search">
+                                                <i class="fas fa-magnifying-glass"></i>
+                                                @T("Admin.Common.Search")
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="card card-default">
+                @if (!Model.HideList)
+                {
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "grid",
+                            UrlRead = new DataUrl("List", "FacebookPixel", null),
+                            SearchButtonId = "search",
+                            Length = Model.FacebookPixelSearchModel.PageSize,
+                            LengthMenu = Model.FacebookPixelSearchModel.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(FacebookPixelSearchModel.StoreId), nameof(FacebookPixelSearchModel))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(FacebookPixelModel.PixelId))
+                                {
+                                    Title = T("Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId").Text
+                                },
+                                new ColumnProperty(nameof(FacebookPixelModel.StoreName))
+                                {
+                                    Title = T("Plugins.Widgets.FacebookPixel.Configuration.Fields.Store").Text,
+                                    Width = "200",
+                                    Visible = (await storeService.GetAllStoresAsync()).Count > 1
+                                },
+                                new ColumnProperty(nameof(FacebookPixelModel.PixelScriptEnabled))
+                                {
+                                    Title = T("Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelScriptEnabled").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(FacebookPixelModel.ConversionsApiEnabled))
+                                {
+                                    Title = T("Plugins.Widgets.FacebookPixel.Configuration.Fields.ConversionsApiEnabled").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(FacebookPixelModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    Render = new RenderButtonEdit(new DataUrl("~/Admin/FacebookPixel/Edit/"))
+                                }
+                            }
+                        })
+                    </div>
+                }
+                <div class="card-footer">
+                    <a asp-controller="FacebookPixel" asp-action="Create" class="btn btn-primary">
+                        <i class="fas fa-square-plus"></i>
+                        @T("Admin.Common.AddNew") @T("Plugins.Widgets.FacebookPixel.Configuration")
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

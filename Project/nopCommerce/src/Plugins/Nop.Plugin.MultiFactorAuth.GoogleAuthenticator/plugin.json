@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Multi-factor authentication",
+  "FriendlyName": "Google Authenticator",
+  "SystemName": "MultiFactorAuth.GoogleAuthenticator",
+  "Version": "5.00.5",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.dll",
+  "Description": "Google Authenticator is a software-based authenticator by Google that implements two-step verification services, for authenticating users"
+}

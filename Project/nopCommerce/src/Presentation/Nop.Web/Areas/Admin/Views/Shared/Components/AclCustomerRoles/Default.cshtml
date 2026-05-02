@@ -1,0 +1,31 @@
+@model IAclSupportedModel
+
+<div class="form-group advanced-setting row">
+    <div class="col-md-3">
+        <nop-label asp-for="SelectedCustomerRoleIds" />
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-md-4">
+                <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
+                <script>
+					$(function() {
+						var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
+                            closeOnSelect: false,
+                            @if (!Model.AvailableCustomerRoles.Any())
+                            {
+                                <text>
+                                    disabled: true,
+                                    placeholder: '@T("Admin.Configuration.ACL.NoCustomerRolesAvailable")',
+                                </text>
+                            }
+                        });
+					});
+                </script>
+            </div>
+            <div class="col-md-8">
+                @await Component.InvokeAsync(typeof(AclDisabledWarningViewComponent))
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,195 @@
+﻿@model int
+@inject IDownloadService downloadService
+@using Nop.Services.Media
+
+@{
+    //other variables
+    var randomNumber = CommonHelper.GenerateRandomInteger();
+    var clientId = "download" + randomNumber;
+    var download = await downloadService.GetDownloadByIdAsync(Model);
+    var disableUrl = Convert.ToBoolean(ViewData["nop.DownloadEditor.DisableUrl"] ?? false);
+    var files = new List<object>();
+
+    if (download != null)
+    {
+        var fileName = $"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}";
+        files.Add(
+            new
+            {
+                source = fileName,
+                options = new
+                {
+                    type = "local",
+                    file = new
+                    {
+                        name = fileName,
+                        size = download.DownloadBinary?.Length,
+                        type = download.ContentType
+                    },
+                    metadata = new
+                    {
+                        url = Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = AreaNames.ADMIN })
+                    }
+                }
+            });
+    }
+}
+
+@* register CSS and JS *@
+<link rel="stylesheet" href="~/lib_npm/filepond/filepond.min.css" />
+<link rel="stylesheet" href="~/lib_npm/filepond-plugin-get-file/filepond-plugin-get-file.min.css" />
+<script asp-exclude-from-bundle="true" src="~/lib_npm/filepond/filepond.min.js" asp-location="Footer"></script>
+<script asp-exclude-from-bundle="true" src="~/lib_npm/filepond-plugin-get-file/filepond-plugin-get-file.min.js" asp-location="Footer"></script>
+
+<script>
+    $(function () {
+        $('#cbUseDownloadURL@(randomNumber)').on('click', toggleDownloadRecordType@(randomNumber));
+
+        $('#saveDownloadUrl@(randomNumber)').on('click', function () {
+            var downloadUrl = $("#downloadurl@(randomNumber)").val();
+            $('#saveDownloadUrl@(randomNumber)').attr('disabled', true);
+
+            var postData = {
+                "downloadUrl": downloadUrl
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("SaveDownloadUrl", "Download", new { area = AreaNames.ADMIN }))",
+                data: postData,
+                success: function (data, textStatus, jqXHR) {
+                    if (data.success) {
+                        $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");
+                        $("#@(clientId + "value") input").val(data.downloadId);
+                    }
+                    else {
+                        $('#saveDownloadUrlFailed-info').text(data.message);
+                        $("#saveDownloadUrlFailed").trigger("click");
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#saveDownloadUrlAlert").trigger("click");
+                },
+                complete: function (jqXHR, textStatus) {
+                    $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
+                }
+            });
+        });
+
+        toggleDownloadRecordType@(randomNumber)();
+    });
+
+    function toggleDownloadRecordType@(randomNumber)() {
+        if ($('#cbUseDownloadURL@(randomNumber)').is(':checked')) {
+            $('#pnlDownloadURL@(randomNumber)').showElement();
+            $('#pnlDownloadFile@(randomNumber)').hideElement();
+        } else {
+            $('#pnlDownloadURL@(randomNumber)').hideElement();
+            $('#pnlDownloadFile@(randomNumber)').showElement();
+        }
+    }
+</script>
+
+<div id="@(clientId + "value")">
+    <input type="hidden" asp-for="@Model" />
+</div>
+
+<div class="card card-default">
+    <div class="card-body">
+        @if (!disableUrl)
+        {
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <div class="label-wrapper">
+                        <label class="col-form-label">
+                            @T("Admin.Download.UseDownloadURL")
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <input type="checkbox" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)"
+                           @if (download != null && download.UseDownloadUrl) { <text> checked="checked" </text> } />
+                </div>
+            </div>
+        }
+        <div id="pnlDownloadURL@(randomNumber)">
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <div class="label-wrapper">
+                        <label class="col-form-label">
+                            @T("Admin.Download.DownloadURL")
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="downloadurl@(randomNumber)" id="downloadurl@(randomNumber)"
+                           @if (download != null && !string.IsNullOrEmpty(download.DownloadUrl)) { <text> value="@(download.DownloadUrl)" </text> } />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-8 offset-sm-4">
+                    <button type="button" id="saveDownloadUrl@(randomNumber)" class="btn btn-primary">@T("Admin.Download.SaveDownloadURL")</button>
+                    <div id="pnlDownloadURLResult@(randomNumber)" style="display: none;">@T("Admin.Download.DownloadURLSaved")</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row" id="pnlDownloadFile@(randomNumber)">
+            <div class="col-sm-4">
+                <div class="label-wrapper">
+                    <label class="col-form-label">
+                        @T("Admin.Download.UploadFile")
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div id="@clientId"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<nop-alert asp-alert-id="saveDownloadUrlAlert" asp-alert-message="@T("Admin.Download.SaveDownloadURL.Alert.FailedSave")" />
+<nop-alert asp-alert-id="saveDownloadUrlFailed" />
+
+<script asp-location="Footer"> 
+    $(function () {
+        // Register the plugin
+        FilePond.registerPlugin(FilePondPluginGetFile);
+
+        const $modelEl = $('#@Html.IdForModel()');
+
+        // Create a FilePond instance
+        FilePond.create(document.querySelector('#@clientId'), {
+            credits: false,
+            allowMultiple: false,
+            maxFiles: 1,
+            allowDownloadByUrl: true,
+            server: {
+                process: {
+                    url: '@Url.Action("AsyncUpload", "Download", new { area = AreaNames.ADMIN })',
+                    onload: function (response) {
+                        const r = JSON.parse(response);
+                        $modelEl.val(r.downloadId);
+                    }
+                },
+                remove: (source, load, error) => {
+                    $modelEl.val('');
+                    load();
+                },
+                revert: (uniqueFileId, load, error) => {
+                    $modelEl.val('');
+                    load();
+                },
+            },
+            onprocessfiles: (error) => {
+                if (error) {
+                    alert(error);
+                }
+            },
+            files: @Json.Serialize(files),
+            labelIdle: '@T("Common.FileUploader.DropFiles") / <span class="filepond--label-action">@T("Common.FileUploader.Browse")</span>',
+            labelFileProcessing: '@T("Common.FileUploader.Processing")'
+        });
+    });
+</script>

@@ -1,0 +1,189 @@
+@model TaxCategorySearchModel
+
+@{
+    Layout = "_AdminLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Tax.Categories").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Tax categories");
+}
+
+<form asp-controller="AvalaraTax" asp-action="Categories" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Tax.Categories")
+        </h1>
+        <div class="float-right">
+            <div class="btn-group">
+                <button type="button" class="btn btn-warning">
+                    <i class="fas fa-right-left"></i>
+                    @T("Plugins.Tax.Avalara.TaxCodes")
+                </button>
+                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">&nbsp;</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <button type="submit" name="exportTaxCodes">
+                            <i class="fas fa-right-left"></i>
+                            @T("Plugins.Tax.Avalara.TaxCodes.Export")
+                        </button>
+                    </li>
+                    <li>
+                        <button type="submit" name="importTaxCodes">
+                            <i class="fas fa-right-left"></i>
+                            @T("Plugins.Tax.Avalara.TaxCodes.Import")
+                        </button>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <button type="submit" name="deleteTaxCodes">
+                            <i class="far fa-trash-can"></i>
+                            @T("Plugins.Tax.Avalara.TaxCodes.Delete")
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.TaxCategoryListButtons, additionalData = Model })
+                    <div class="card card-default">
+                        <div class="card-body">
+                            @await Html.PartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "tax-categories-grid",
+                                UrlRead = new DataUrl("Categories", "AvalaraTax", null),
+                                UrlDelete = new DataUrl("CategoryDelete", "AvalaraTax", null),
+                                UrlUpdate = new DataUrl("TaxCategoryUpdate", "AvalaraTax", null),
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(TaxCategoryModel.Name))
+                                    {
+                                        Title = T("Admin.Configuration.Tax.Categories.Fields.Name").Text,
+                                        Width = "300",
+                                        Editable = true,
+                                        EditType = EditType.String
+                                    },
+                                    new ColumnProperty(nameof(TaxCategoryModel.DisplayOrder))
+                                    {
+                                        Title = T("Admin.Configuration.Tax.Categories.Fields.DisplayOrder").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Editable = true,
+                                        EditType = EditType.Number
+                                    },
+                                    new ColumnProperty(nameof(TaxCategoryModel.Type))
+                                    {
+                                        Title = T("Plugins.Tax.Avalara.Fields.TaxCodeType").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.CenterAll
+                                    },
+                                    new ColumnProperty(nameof(TaxCategoryModel.Description))
+                                    {
+                                        Title = T("Plugins.Tax.Avalara.Fields.TaxCodeDescription").Text
+                                    },
+                                    new ColumnProperty(nameof(TaxCategoryModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonsInlineEdit()
+                                    },
+                                    new ColumnProperty(nameof(TaxCategoryModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Delete").Text,
+                                        Width = "100",
+                                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                        ClassName = NopColumnClassDefaults.Button
+                                    }
+                                }
+                            })
+
+                            <div class="card card-default">
+                                <div class="card-header">
+                                    @T("Admin.Common.AddNewRecord")
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="@Model.AddTaxCategory.Name" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="@Model.AddTaxCategory.Name" />
+                                            <span asp-validation-for="@Model.AddTaxCategory.Name"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="@Model.AddTaxCategory.DisplayOrder" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="@Model.AddTaxCategory.DisplayOrder" />
+                                            <span asp-validation-for="@Model.AddTaxCategory.DisplayOrder"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="@Model.AddTaxCategory.TypeId" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-select asp-for="@Model.AddTaxCategory.TypeId" asp-items="@Model.AvailableTypes" />
+                                            <span asp-validation-for="@Model.AddTaxCategory.TypeId"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-9 offset-md-3">
+                                            <button type="button" id="addTaxCategory" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    $(function() {
+                                        $('#addTaxCategory').click(function () {
+                                            $('#addTaxCategory').attr('disabled', true);
+                                            var postData = {
+                                                Name: $('#@Html.IdFor(model => model.AddTaxCategory.Name)').val(),
+                                                DisplayOrder: $('#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)').val(),
+                                                TypeId: $('#@Html.IdFor(model => model.AddTaxCategory.TypeId)').val()
+                                            };
+                                            addAntiForgeryToken(postData);
+
+                                            $.ajax({
+                                                cache: false,
+                                                type: 'POST',
+                                                url: '@Html.Raw(Url.Action("TaxCategoryAdd", "AvalaraTax", null))',
+                                                data: postData,
+                                                success: function (data, textStatus, jqXHR) {
+                                                    if (data.Result) {
+                                                        updateTable('#tax-categories-grid');
+                                                        $('#@Html.IdFor(model => model.AddTaxCategory.Name)').val('');
+                                                        $('#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)').val(0);
+                                                        $('#@Html.IdFor(model => model.AddTaxCategory.TypeId)').val('');
+                                                    } else {
+                                                        display_nop_error(data);
+                                                    }
+                                                },
+                                                complete: function (jqXHR, textStatus) {
+                                                    $('#addTaxCategory').attr('disabled', false);
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

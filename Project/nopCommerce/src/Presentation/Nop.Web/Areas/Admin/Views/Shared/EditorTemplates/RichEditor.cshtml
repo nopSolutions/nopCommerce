@@ -1,0 +1,142 @@
+﻿@model string
+@inject AdminAreaSettings adminAreaSettings
+@inject ISummernoteHelper summernoteHelper
+
+@using Nop.Web.Areas.Admin.Helpers
+@{
+    // Summernote language
+    var language = await summernoteHelper.GetRichEditorLanguageAsync();
+
+    var random = CommonHelper.GenerateRandomInteger();
+
+    var allowElFinder = await permissionService.AuthorizeAsync(StandardPermission.System.HTML_EDITOR_MANAGE_PICTURES);
+
+    //extend editor with additional settings
+    var additionalEditorSettings = adminAreaSettings.RichEditorAdditionalSettings;
+
+    //is java-script supported?
+    var allowJavaScript = adminAreaSettings.RichEditorAllowJavaScript;
+}
+<script src="~/lib_npm/summernote/summernote-bs4.min.js" asp-location="Head"></script>
+<script src="~/lib_npm/elfinder/js/elfinder.min.js" asp-location="Head"></script>
+
+<link href="~/lib_npm/summernote/summernote-bs4.min.css" rel="stylesheet" />
+<link href="~/lib_npm/elfinder/css/elfinder.min.css" rel="stylesheet" />
+<link href="~/lib_npm/elfinder/css/theme.css" rel="stylesheet" />
+
+@if (!string.IsNullOrEmpty(language))
+{
+    <script src="~/lib_npm/summernote/lang/summernote-@(language).min.js" asp-location="Head"></script>
+}
+
+<script asp-location="Head">
+    $(function () {
+        // Summernote
+        function openElFinderDialog(context) {
+            var myCommands = elFinder.prototype._options.commands;
+
+            $('<div/>').dialogelfinder({
+                url: '@Url.Action("Connector", "ElFinder")',
+                lang: '@language',
+                destroyOnClose : true,
+                getFileCallback : function(files, fm) {
+                    $('#@Html.IdForModel()').summernote('editor.insertImage',files.url);
+                },
+                commandsOptions : {
+                    getfile : {
+                        oncomplete : 'close',
+                        folders : false
+                    }
+                },
+                resizable: false,
+                commands: myCommands,
+                uiOptions: {
+                    // toolbar configuration
+                    toolbar: [
+                        ['back', 'forward'],
+                        ['reload'],
+                        ['home', 'up'],
+                        ['mkdir', 'upload'],
+                        ['open', 'download'],
+                        ['undo', 'redo'],
+                        ['info'],
+                        ['quicklook'],
+                        ['copy', 'cut', 'paste'],
+                        ['rm'],
+                        ['duplicate', 'rename', 'edit'],
+                        ['selectall', 'selectnone', 'selectinvert'],
+                        ['view', 'sort'],
+                        ['search']
+                    ]
+                }
+            }).dialogelfinder('instance');
+        }
+
+        //Image button for elFinder
+        var ElFinderImageButton = function (context) {
+            var ui = $.summernote.ui;
+
+            // create button
+            return ui.button({
+                contents: '<i class="fa fa-image"/>',
+                tooltip: 'Insert image',
+                click: function () {
+                    openElFinderDialog(context);
+                }
+            }).render();
+        };
+
+        var initializationOptions@(random) = {
+            @if (allowJavaScript)
+            {
+                <text>
+                    codeviewFilter: false,
+                </text>
+            }
+            toolbar: [
+                ['view', ['undo', 'redo']],
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'elfinder', 'video', 'hr']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ],
+            fontSizes: ['8','9','10','11','12','14','16','18','24','36'],
+            buttons: {
+                @if (allowElFinder)
+                {
+                    <text>
+                        elfinder: ElFinderImageButton,
+                    </text>
+                }
+            },
+            spellCheck: true,
+            maxHeight: 800,
+            callbacks: {
+                onBlurCodeview: function(code) {
+                    // Sync CodeView content when switching back to normal view
+                    $(this).summernote('code', $(this).summernote('code'));
+                }
+            },
+            @if (!string.IsNullOrEmpty(language))
+            {
+                <text>
+                    lang: '@language',
+                </text>
+            }
+        };
+
+    function getAdditionalEditorSettings@(random)(settings) {
+        @Html.Raw(additionalEditorSettings)
+        return settings;
+    }
+
+    $('#@Html.IdForModel()').summernote(getAdditionalEditorSettings@(random)(initializationOptions@(random)));
+    });
+</script>
+
+<textarea class="summernote" asp-for="@Model">@ViewData.TemplateInfo.FormattedModelValue</textarea>
+<nop-alert asp-alert-id="createConfigurationFailed" />

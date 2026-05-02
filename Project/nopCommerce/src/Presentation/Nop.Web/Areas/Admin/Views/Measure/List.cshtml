@@ -1,0 +1,43 @@
+@model MeasureSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.Measures").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Measures");
+    
+    const string hideDimensionsBlockAttributeName = "MeasuresPage.HideDimensionsBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideDimensionsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideDimensionsBlockAttributeName);
+
+    const string hideWeightsBlockAttributeName = "MeasuresPage.HideWeightBlock";
+    var hideWeightsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideWeightsBlockAttributeName);
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Configuration.Shipping.Measures")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MeasureListButtons, additionalData = Model })
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Measures", Docs.Measures + Utm.OnAdmin)" />
+
+            <nop-cards id="category-cards">
+                <nop-card asp-name="measures-dimensions" asp-icon="fas fa-gear" asp-title="@T("Admin.Configuration.Shipping.Measures.Dimensions")" asp-hide-block-attribute-name="@hideDimensionsBlockAttributeName" asp-hide="@hideDimensionsBlock" asp-advanced="false">@await Html.PartialAsync("Dimensions", Model)</nop-card>
+                <nop-card asp-name="measures-weights" asp-icon="fas fa-truck" asp-title="@T("Admin.Configuration.Shipping.Measures.Weights")" asp-hide-block-attribute-name="@hideWeightsBlockAttributeName" asp-hide="@hideWeightsBlock" asp-advanced="false">@await Html.PartialAsync("Weights", Model)</nop-card>
+
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MeasureListBlock, additionalData = Model })
+            </nop-cards>
+        </div>
+    </div>
+</section>
+    <nop-action-confirmation asp-button-id="btnMarkAsPrimaryDimension" asp-additional-confirm="Admin.Configuration.Shipping.Measures.AdditionalConfirm" />
+    <nop-action-confirmation asp-button-id="btnMarkAsPrimaryWeight" asp-additional-confirm="Admin.Configuration.Shipping.Measures.AdditionalConfirm" />
+

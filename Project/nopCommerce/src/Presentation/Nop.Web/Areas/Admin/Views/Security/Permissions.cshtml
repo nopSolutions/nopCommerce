@@ -1,0 +1,125 @@
+@model PermissionConfigurationModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.ACL").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Access control list");
+}
+
+<style type="text/css">
+    table.dataTable.table-hover>tbody>tr:hover>*{box-shadow:inset 0 0 0 9999px rgba(255, 255, 255, 1)}
+
+    table.dataTable.table-striped>tbody>tr.odd>*{box-shadow:inset 0 0 0 9999px rgba(0, 0, 0, 0.05)}
+</style>
+
+<script type="text/javascript">     
+    $(function () {
+        $('#permissions-grid').on( 'init.dt', function () {
+            $('tr').css('bg-color', 'white');
+        } );
+    });
+</script>
+
+<form asp-controller="Security" asp-action="Permissions" method="post" id="permissions-form">
+    <div class="content-header clearfix">
+        <div class="float-right">
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PermissionListButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <p>
+                                @T("Admin.Configuration.ACL.Description")
+                                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Acl", Docs.Acl + Utm.OnAdmin)" asp-add-wrapper="false" />
+                            </p>
+                            @if (!Model.IsPermissionsAvailable)
+                            {
+                                <text>@T("Admin.Configuration.ACL.NoPermissionsDefined")</text>
+                            }
+                            else if (!Model.AreCustomerRolesAvailable)
+                            {
+                                <text>@T("Admin.Configuration.ACL.NoCustomerRolesAvailable")</text>
+                            }
+                            else
+                            {
+                                <div class="scroll-wrapper">
+                                    @await Html.PartialAsync("Table", new DataTablesModel
+                                    {
+                                        Name = "permissions-grid",
+                                        RefreshButton = false,
+                                        UrlRead = new DataUrl("PermissionCategories", "Security", null),
+                                        PrimaryKeyColumn = nameof(PermissionCategoryModel.Name),
+                                        Length = Model.PermissionCategorySearchModel.PageSize,
+                                        ColumnCollection = new List<ColumnProperty>
+                                        {
+                                            new(null)
+                                            {
+                                                Render = new RenderChildCaret(),
+                                                Width = "5",
+                                                Searchable = false,
+                                                ClassName = NopColumnClassDefaults.ChildControl
+                                            },
+                                            new(nameof(PermissionCategoryModel.Name))
+                                            {
+                                                Title = T("Admin.Configuration.ACL.Permission.CategoryName").Text,
+                                                Render = new RenderCustom("renderPermissionCategory")
+                                            }
+                                        },
+                                        ChildTable = new DataTablesModel
+                                        {
+                                            Name = "permission-items-grid",
+                                            UrlRead = new DataUrl("PermissionCategory", "Security", null),
+                                            IsChildTable = true,
+                                            Length = Model.PermissionCategorySearchModel.PageSize,
+                                            LengthMenu = Model.PermissionCategorySearchModel.AvailablePageSizes,
+                                            Filters = new List<FilterParameter>
+                                            {
+                                                new(nameof(PermissionItemSearchModel.PermissionCategoryName), nameof(PermissionCategoryModel.Name), true)
+                                            },
+                                            ColumnCollection = new List<ColumnProperty>
+                                            {
+                                                new(nameof(PermissionItemModel.PermissionName))
+                                                {
+                                                    Title = T("Admin.Configuration.ACL.Permission.PermissionName").Text
+                                                },
+                                                new(nameof(PermissionItemModel.PermissionAppliedFor))
+                                                {
+                                                    Title = T("Admin.Customers.CustomerRoles").Text,
+                                                    Render = new RenderCustom("renderPermissionText")
+                                                },
+                                                new(nameof(PermissionItemModel.Id))
+                                                {
+                                                    Title = T("Admin.Common.Edit").Text,
+                                                    Width = "100",
+                                                    ClassName = NopColumnClassDefaults.Button,
+                                                    Render = new RenderCustom("renderPermissionEdit")
+                                                },
+                                            }
+                                        }
+                                    })
+                                    <script>
+                                        function renderPermissionEdit(data, type, row, meta) {
+                                            return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Security/PermissionEditPopup/")' + data + '\', 800, 300, true); return false;\" class="btn btn-default"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
+                                        }
+                                        function renderPermissionText(data, type, row, meta) {                                            
+                                            return '<span id="permission-applied-for-' + row.Id + '">' + data + '</span>';
+                                        }
+                                        function renderPermissionCategory(data, type, row, meta) {
+                                            return row.Text;
+                                        }                                        
+                                    </script>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

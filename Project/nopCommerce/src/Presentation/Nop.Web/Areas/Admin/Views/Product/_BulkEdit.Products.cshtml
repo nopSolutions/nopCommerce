@@ -1,0 +1,24 @@
+﻿@model List<ProductModel>
+
+@foreach (var product in Model)
+{
+    var id = product.Id;
+
+    <tr class="product-row">
+        <td style="text-align: center; vertical-align:middle"><input class="check-box product-select" id="product-select-@id" name="product-select-@id" type="checkbox" /></td>
+        <td><input class="form-control text-box single-line" id="name-@id" name="name-@id" type="text" value="@product.Name"/></td>
+        <td><input class="form-control text-box single-line" id="sku-@id" name="sku-@id" type="text" value="@product.Sku"/></td>
+        <td>
+            <div class="input-postfix" data-postfix="@product.PrimaryStoreCurrencyCode">
+                <input type="text" class="form-control" id="price-@id" name="price-@id" value="@product.Price"/>
+            </div>
+        </td>
+        <td>
+            <div class="input-postfix" data-postfix="@product.PrimaryStoreCurrencyCode">
+                <input type="text" class="form-control" id="old-price-@id" name="old-price-@id" value="@product.OldPrice"/>
+            </div>
+        </td>
+        <td><input type="number" class="form-control" id="quantity-@id" name="quantity-@id" value="@product.StockQuantity"/></td>
+        <td style ="text-align: center; vertical-align:middle"><input class="check-box" id="published-@id" name="published-@id" type="checkbox" @(product.Published ? "checked = \"checked\"" : string.Empty) /></td>
+    </tr>
+}

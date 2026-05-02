@@ -1,0 +1,25 @@
+﻿@model TaxTypeSelectorModel
+@using Nop.Core.Domain.Tax
+@using Nop.Services.Helpers
+@inject IWebHelper webHelper
+
+@{
+    var returnUrl = webHelper.GetRawUrl(Context.Request);
+
+    var taxTypes = new List<SelectListItem>();
+    taxTypes.Add(new SelectListItem
+    {
+        Text = T("Tax.Inclusive").Text,
+        Value = Url.RouteUrl(NopRouteNames.Standard.CHANGE_TAX_TYPE, new { customertaxtype = ((int)TaxDisplayType.IncludingTax), returnUrl }, webHelper.GetCurrentRequestProtocol()),
+        Selected = Model.CurrentTaxType == TaxDisplayType.IncludingTax
+    });
+    taxTypes.Add(new SelectListItem
+    {
+        Text = T("Tax.Exclusive").Text,
+        Value = Url.RouteUrl(NopRouteNames.Standard.CHANGE_TAX_TYPE, new { customertaxtype = ((int)TaxDisplayType.ExcludingTax), returnUrl }, webHelper.GetCurrentRequestProtocol()),
+        Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
+    });
+}
+<div class="tax-display-type-selector">
+    <select id="customerTaxType" name="customerTaxType" asp-items="@taxTypes" onchange="setLocation(this.value);" aria-label="@T("Tax.Selector.Label")"></select>
+</div>

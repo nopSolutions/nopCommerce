@@ -1,0 +1,44 @@
+@model OrderSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="MinOrderSubtotalAmount_OverrideForStore" asp-input="MinOrderSubtotalAmount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="MinOrderSubtotalAmount" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MinOrderSubtotalAmount" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+            <span asp-validation-for="MinOrderSubtotalAmount"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="MinOrderSubtotalAmountIncludingTax_OverrideForStore" asp-input="MinOrderSubtotalAmountIncludingTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="MinOrderSubtotalAmountIncludingTax" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MinOrderSubtotalAmountIncludingTax" />
+            <span asp-validation-for="MinOrderSubtotalAmountIncludingTax"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="MinOrderTotalAmount_OverrideForStore" asp-input="MinOrderTotalAmount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="MinOrderTotalAmount" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MinOrderTotalAmount" />
+            <span asp-validation-for="MinOrderTotalAmount"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AutoUpdateOrderTotalsOnEditingOrder_OverrideForStore" asp-input="AutoUpdateOrderTotalsOnEditingOrder" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AutoUpdateOrderTotalsOnEditingOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AutoUpdateOrderTotalsOnEditingOrder" />
+            <span asp-validation-for="AutoUpdateOrderTotalsOnEditingOrder"></span>
+        </div>
+    </div>
+</div>

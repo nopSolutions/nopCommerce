@@ -1,0 +1,17 @@
+@model string
+@inject CommonSettings commonSettings
+
+<script>
+    $(function() {
+        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("RestartApplication", "Common")",
+            complete: function () {
+                window.setTimeout(function () {
+                    window.location.replace('@(!string.IsNullOrEmpty(Model) ? Model : Url.Action("Index", "Home", new { area = AreaNames.ADMIN }))');
+                }, @(commonSettings.RestartTimeout ?? NopCommonDefaults.RestartTimeout));
+            }
+        });
+    });
+</script>

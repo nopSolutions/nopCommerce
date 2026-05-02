@@ -1,0 +1,80 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Html.PartialAsync("_AdminTour")
+
+<div @(!Model.AvailableTaxCategories.Any() ? Html.Raw("style=\"display:none\"") : null)>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <button type="button" id="onoffswitch-rate" class="btn btn-primary ml-1">
+                <i class="fa fa-retweet"></i>
+                @if (Model.CountryStateZipEnabled)
+                {
+                    @T("Plugins.Tax.FixedOrByCountryStateZip.TaxByCountryStateZip")
+                }
+                else
+                {
+                    @T("Plugins.Tax.FixedOrByCountryStateZip.Fixed")
+                }
+            </button>
+            <nop-action-confirmation asp-button-id="onoffswitch-rate" asp-additional-confirm="Plugins.Tax.FixedOrByCountryStateZip.SwitchRate" />
+            <div class="onoffswitch" style="display:none">
+                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="advanced-settings-mode" checked="@Model.CountryStateZipEnabled">
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="float-right">
+                <a asp-controller="Tax" asp-action="Categories" class="btn btn-primary" id="manage-tax-categories-button">
+                    @T("Plugins.Tax.FixedOrByCountryStateZip.Tax.Categories.Manage")
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkAdvancedSettingsMode(advanced) {
+            if (advanced) {
+                $("body").addClass("advanced-settings-mode");
+                $("body").removeClass("basic-settings-mode");
+            } else {
+                $("body").removeClass("advanced-settings-mode");
+                $("body").addClass("basic-settings-mode");
+            }
+        }
+        checkAdvancedSettingsMode($("#advanced-settings-mode").is(':checked'));
+        $(document).ready(function () {
+            $('#onoffswitch-rate-action-confirmation-submit-button').on('click', function () {
+                var postData = {
+                    value: !($("#advanced-settings-mode").is(':checked'))
+                };
+                addAntiForgeryToken(postData);
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: "@Url.Action("SaveMode", "FixedOrByCountryStateZip")",
+                    data: postData,
+                    traditional: true,
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $("#saveModeAlert").click();
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        location.reload();
+                    }
+                });
+                ensureDataTablesRendered();
+                $('#onoffswitch-rate-action-confirmation').modal('toggle');
+                return false;
+            });
+        });
+    </script>
+    <nop-alert asp-alert-id="saveModeAlert" asp-alert-message="@T("Admin.Common.Alert.Save.Error")" />
+
+    @await Html.PartialAsync("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_FixedRate.cshtml")
+    @await Html.PartialAsync("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_CountryStateZip.cshtml", Model)
+</div>
+<div @(Model.AvailableTaxCategories.Any() ? Html.Raw("style=\"display:none\"") : null)>
+    <h3>@Html.Raw(Model.TaxCategoriesCanNotLoadedError)</h3>
+</div>

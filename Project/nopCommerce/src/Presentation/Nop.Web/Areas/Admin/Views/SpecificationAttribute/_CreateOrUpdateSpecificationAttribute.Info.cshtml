@@ -1,0 +1,50 @@
+﻿@model SpecificationAttributeModel
+
+<div class="card-body">
+    @(await Html.LocalizedEditorAsync<SpecificationAttributeModel, SpecificationAttributeLocalizedModel>("specificationattribute-localized",
+    @<div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].Name" />
+                <span asp-validation-for="@Model.Locales[item].Name"></span>
+            </div>
+        </div>
+        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+    </div>
+,
+    @<div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Name" asp-required="true" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+    </div>))
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="SpecificationAttributeGroupId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="SpecificationAttributeGroupId" asp-items="Model.AvailableGroups" />
+            <span asp-validation-for="SpecificationAttributeGroupId"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+            <span asp-validation-for="DisplayOrder"></span>
+        </div>
+    </div>
+</div>
+

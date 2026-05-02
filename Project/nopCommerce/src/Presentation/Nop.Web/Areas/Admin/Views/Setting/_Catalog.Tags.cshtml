@@ -1,0 +1,108 @@
+@model CatalogSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NumberOfProductTags_OverrideForStore" asp-input="NumberOfProductTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NumberOfProductTags" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NumberOfProductTags" />
+            <span asp-validation-for="NumberOfProductTags"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore" asp-input="ProductsByTagAllowCustomersToSelectPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductsByTagAllowCustomersToSelectPageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductsByTagAllowCustomersToSelectPageSize" />
+            <span asp-validation-for="ProductsByTagAllowCustomersToSelectPageSize"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="ProductsByTagAllowCustomersToSelectPageSize" disable-auto-generation="true">
+        <div class="form-group row" id="pnlProductsByTagPageSize">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ProductsByTagPageSize_OverrideForStore" asp-input="ProductsByTagPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ProductsByTagPageSize" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ProductsByTagPageSize" />
+                <span asp-validation-for="ProductsByTagPageSize"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="pnlProductsByTagPageSizeOptions">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ProductsByTagPageSizeOptions_OverrideForStore" asp-input="ProductsByTagPageSizeOptions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ProductsByTagPageSizeOptions" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ProductsByTagPageSizeOptions" />
+                <span asp-validation-for="ProductsByTagPageSizeOptions"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductsByTagPriceRangeFiltering_OverrideForStore" asp-input="ProductsByTagPriceRangeFiltering" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductsByTagPriceRangeFiltering" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductsByTagPriceRangeFiltering" />
+            <span asp-validation-for="ProductsByTagPriceRangeFiltering"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="ProductsByTagPriceRangeFiltering">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ProductsByTagManuallyPriceRange_OverrideForStore" asp-input="ProductsByTagManuallyPriceRange" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ProductsByTagManuallyPriceRange" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ProductsByTagManuallyPriceRange" />
+                <span asp-validation-for="ProductsByTagManuallyPriceRange"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="ProductsByTagManuallyPriceRange">
+            <div class="form-group row advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ProductsByTagPriceFrom_OverrideForStore" asp-input="ProductsByTagPriceFrom" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ProductsByTagPriceFrom" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ProductsByTagPriceFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="ProductsByTagPriceFrom"></span>
+                </div>
+            </div>
+            <div class="form-group row advanced-setting">
+                <div class="col-md-3">
+                    <nop-override-store-checkbox asp-for="ProductsByTagPriceTo_OverrideForStore" asp-input="ProductsByTagPriceTo" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ProductsByTagPriceTo" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ProductsByTagPriceTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="ProductsByTagPriceTo"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+    </nop-nested-setting>
+</div>
+
+<script>
+    $(function() {
+        $("#@Html.IdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(toggleProductsByTagPageSize);
+
+        toggleProductsByTagPageSize();
+    });
+
+    function toggleProductsByTagPageSize() {
+        if ($('#@Html.IdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)').is(':checked')) {
+            $('#pnlProductsByTagPageSize').hideElement();
+            $('#pnlProductsByTagPageSizeOptions').showElement();
+        } else {
+            $('#pnlProductsByTagPageSize').showElement();
+            $('#pnlProductsByTagPageSizeOptions').hideElement();
+        }
+    }
+</script>

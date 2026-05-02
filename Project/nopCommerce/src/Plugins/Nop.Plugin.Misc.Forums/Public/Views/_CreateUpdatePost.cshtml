@@ -1,0 +1,71 @@
+﻿@model EditForumPostModel
+
+@{
+    //page class
+    NopHtml.AppendPageCssClassParts("html-forum-edit-page");
+}
+
+@await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumTopicId = Model.ForumTopicId })
+<div class="page forum-edit-page">
+    <div class="page-title">
+        @if (Model.IsEdit)
+        {
+            <h1>@T("Plugins.Misc.Forums.EditPost")</h1>
+        }
+        else
+        {
+            <h1>@T("Plugins.Misc.Forums.NewPost")</h1>
+        }
+    </div>
+    <div class="page-body">
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ForumTopicId" />
+        <section class="fieldset">
+            <div class="form-fields">
+                <div class="inputs">
+                    <label>@T("Plugins.Misc.Forums.ForumName"):</label>
+                    <strong class="forum-subject">@Model.ForumName</strong>
+                </div>
+                <div class="inputs">
+                    <label asp-for="Text">@T("Plugins.Misc.Forums.TopicTitle"):</label>
+                    <strong class="topic-subject">@Model.ForumTopicSubject</strong>
+                </div>
+                @if (Model.ForumEditor == EditorType.MarkdownEditor)
+                {
+                    @await Html.PartialAsync("~/Plugins/Misc.Forums/Public/Views/_MarkdownEditor.cshtml", new ForumPostTextModel { Text = Model.Text })
+                }
+                @if (Model.ForumEditor == EditorType.BBCodeEditor)
+                {
+                    <div class="inputs">
+                        <nop-bb-code-editor asp-for="Text" />
+                        <textarea aria-label="@T("Plugins.Misc.Forums.Post.Text")" asp-for="Text" class="forum-post-text"></textarea>
+                        <span asp-validation-for="Text"></span>
+                    </div>
+                }
+                @if (Model.ForumEditor == EditorType.SimpleTextBox)
+                {
+                    <div class="inputs">
+                        <textarea aria-label="@T("Plugins.Misc.Forums.Post.Text")" asp-for="Text" class="forum-post-text"></textarea>
+                        <span asp-validation-for="Text"></span>
+                    </div>
+                }
+                @if (Model.IsCustomerAllowedToSubscribe)
+                {
+                    <div class="inputs reversed">
+                        <input asp-for="Subscribed" />
+                        <label asp-for="Subscribed">@T("Plugins.Misc.Forums.NotifyWhenSomeonePostsInThisTopic")</label>
+                    </div>
+                }
+                @if (Model.DisplayCaptcha)
+                {
+                    <nop-captcha />
+                }
+            </div>
+        </section>
+        <section class="buttons">
+            <button type="submit" class="button-1 submit-post-button">@T("Plugins.Misc.Forums.Submit")</button>
+            <button type="button" class="button-2 cancel-post-button" onclick="setLocation('@Url.RouteUrl(ForumDefaults.Routes.Public.TOPIC_SLUG, new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })')">@T("Plugins.Misc.Forums.Cancel")</button>
+        </section>
+    </div>
+</div>

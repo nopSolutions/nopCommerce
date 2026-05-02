@@ -1,0 +1,138 @@
+@model LanguageModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Name" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Name" asp-required="true" />
+            <span asp-validation-for="Name"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="LanguageCulture" />
+        </div>
+        <div class="col-md-9">
+            @{
+                var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
+                    .OrderBy(x => x.EnglishName)
+                    .Select(x => new SelectListItem
+                    {
+                        Value = x.IetfLanguageTag,
+                        Text = $"{x.EnglishName}. {x.IetfLanguageTag}"
+                    });
+            }
+            <nop-select asp-for="LanguageCulture" asp-items="@cultures" />
+            <span asp-validation-for="LanguageCulture"></span>
+            <script>
+                $(function() {
+                    $('#@Html.IdFor(model => model.LanguageCulture)').on('input change', function () {
+                        warningValidation('@Url.Action("LanguageCultureWarning")', '@Html.NameFor(model => model.LanguageCulture)', { currentCulture: '@(Model.LanguageCulture)', changedCulture: $(this).val() });
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="UniqueSeoCode" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="UniqueSeoCode" asp-required="true" />
+            <span asp-validation-for="UniqueSeoCode"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="FlagImageFileName" />
+        </div>
+        <div class="col-md-9">
+            <div class="select2-blue">
+                <nop-select asp-for="FlagImageFileName" asp-items="Model.AvailableFlagImages" class="form-control" data-dropdown-css-class="select2-blue"/>
+            </div>
+            <span asp-validation-for="FlagImageFileName"></span>
+            <script>
+                $(function() {
+                    $('#FlagImageFileName').select2({
+                        templateResult: function (data) {
+                            if (data.loading) {
+                                return data.text;
+                            }
+                            return $('<span class="image" style="display:inline-block;margin-right:4px;background-image: url(\'@Url.Content("~/images/flags/")' + data.text + '\'); width: 16px; height: 11px;"></span><span>' + data.id + '</span>');
+                        },
+                        templateSelection: function (data, container) {
+                            return $('<span class="image" style="display:inline-block;margin-right:4px;background-image: url(\'@Url.Content("~/images/flags/")' + data.text + '\'); width: 16px; height: 11px;"></span><span>' + data.text + '</span>');
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Rtl" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Rtl"/>
+            <span asp-validation-for="Rtl"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="DefaultCurrencyId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="DefaultCurrencyId" asp-items="Model.AvailableCurrencies" />
+            <span asp-validation-for="DefaultCurrencyId"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="SelectedStoreIds" />
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-3">
+                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                    <script>
+                        $(function() {
+                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').select2({
+                                closeOnSelect: false,
+                                @if (!Model.AvailableStores.Any())
+                                {
+                                <text>
+                                disabled: true,
+                                placeholder: 'No stores available',
+                                </text>
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="col-md-9">
+                    @await Component.InvokeAsync(typeof(MultistoreDisabledWarningViewComponent))
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Published" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Published" />
+            <span asp-validation-for="Published"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+            <span asp-validation-for="DisplayOrder"></span>
+        </div>
+    </div>
+</div>

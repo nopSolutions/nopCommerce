@@ -1,0 +1,314 @@
+﻿using AwesomeAssertions;
+using Nop.Core;
+using Nop.Core.Domain;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Vendors;
+using Nop.Services.Configuration;
+using Nop.Services.Vendors;
+using Nop.Web.Factories;
+using Nop.Web.Models.Common;
+using NUnit.Framework;
+
+namespace Nop.Tests.Nop.Web.Tests.Public.Factories;
+
+[TestFixture]
+public class CommonModelFactoryTests : BaseNopTest
+{
+    private ICommonModelFactory _commonModelFactory;
+    private LocalizationSettings _localizationSettings;
+    private IWorkContext _workContext;
+    private CustomerSettings _customerSettings;
+    private StoreInformationSettings _storeInformationSettings;
+    private CommonSettings _commonSettings;
+    private PrivateMessageSettings _privateMessageSettings;
+    private Vendor _vendor;
+    private ISettingService _settingsService;
+
+    [OneTimeSetUp]
+    public async Task SetUp()
+    {
+        _settingsService = GetService<ISettingService>();
+        _localizationSettings = GetService<LocalizationSettings>();
+
+        _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = true;
+        await _settingsService.SaveSettingAsync(_localizationSettings);
+
+        _privateMessageSettings = GetService<PrivateMessageSettings>();
+        _privateMessageSettings.AllowPrivateMessages = true;
+        await _settingsService.SaveSettingAsync(_privateMessageSettings);
+
+        _commonModelFactory = GetService<ICommonModelFactory>();
+
+        _workContext = GetService<IWorkContext>();
+        _customerSettings = GetService<CustomerSettings>();
+
+        _storeInformationSettings = GetService<StoreInformationSettings>();
+        _commonSettings = GetService<CommonSettings>();
+
+        _vendor = await GetService<IVendorService>().GetVendorByIdAsync(1);
+    }
+
+    [OneTimeTearDown]
+    public async Task TearDown()
+    {
+        _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = false;
+        await _settingsService.SaveSettingAsync(_localizationSettings);
+        _privateMessageSettings.AllowPrivateMessages = false;
+        await _settingsService.SaveSettingAsync(_privateMessageSettings);
+    }
+
+    [Test]
+    public async Task CanPrepareLogoModel()
+    {
+        var model = await _commonModelFactory.PrepareLogoModelAsync();
+        model.StoreName.Should().NotBeNullOrEmpty();
+        model.StoreName.Should().Be("Your store name");
+        model.LogoPath.Should().NotBeNullOrEmpty();
+        model.LogoPath.Should()
+            .Be($"http://{NopTestsDefaults.HostIpAddress}/Themes/DefaultClean/Content/images/logo.png");
+    }
+
+    [Test]
+    public async Task CanPrepareLanguageSelectorModel()
+    {
+        var model = await _commonModelFactory.PrepareLanguageSelectorModelAsync();
+
+        model.CurrentLanguageId.Should().Be(1);
+        model.UseImages.Should().Be(_localizationSettings.UseImagesForLanguageSelection);
+
+        model.AvailableLanguages.Should().NotBeNullOrEmpty();
+        var lang = model.AvailableLanguages.FirstOrDefault();
+        lang.Should().NotBeNull();
+        lang?.Name.Should().Be("English");
+        lang?.FlagImageFileName.Should().Be("us.png");
+    }
+
+    [Test]
+    public async Task CanPrepareCurrencySelectorModel()
+    {
+        var model = await _commonModelFactory.PrepareCurrencySelectorModelAsync();
+        model.CurrentCurrencyId.Should().Be(1);
+        model.AvailableCurrencies.Should().NotBeNullOrEmpty();
+        model.AvailableCurrencies.Count.Should().Be(1);
+    }
+
+    [Test]
+    public async Task CanPrepareTaxTypeSelectorModel()
+    {
+        var model = await _commonModelFactory.PrepareTaxTypeSelectorModelAsync();
+        model.CurrentTaxType.Should().Be(await _workContext.GetTaxDisplayTypeAsync());
+    }
+
+    [Test]
+    public async Task CanPrepareHeaderLinksModel()
+    {
+        var model = await _commonModelFactory.PrepareHeaderLinksModelAsync();
+
+        model.RegistrationType.Should().Be(_customerSettings.UserRegistrationType);
+        model.IsAuthenticated.Should().BeTrue();
+        model.CustomerName.Should().Be("John");
+        model.ShoppingCartEnabled.Should().BeTrue();
+        model.WishlistEnabled.Should().BeTrue();
+        model.AllowPrivateMessages.Should().Be(_privateMessageSettings.AllowPrivateMessages);
+        model.UnreadPrivateMessages.Should().BeEmpty();
+        model.AlertMessage.Should().BeEmpty();
+        model.ShoppingCartItems.Should().Be(0);
+        model.WishlistItems.Should().Be(0);
+    }
+
+    [Test]
+    public async Task CanPrepareAdminHeaderLinksModel()
+    {
+        var model = await _commonModelFactory.PrepareAdminHeaderLinksModelAsync();
+        model.ImpersonatedCustomerName.Should().Be("John");
+        model.IsCustomerImpersonated.Should().BeFalse();
+        model.DisplayAdminLink.Should().BeTrue();
+        model.EditPageUrl.Should().BeNull();
+    }
+
+    [Test]
+    public async Task CanPrepareSocialModel()
+    {
+        var model = await _commonModelFactory.PrepareSocialModelAsync();
+
+        model.FacebookLink.Should().Be(_storeInformationSettings.FacebookLink);
+        model.XLink.Should().Be(_storeInformationSettings.XLink);
+        model.YoutubeLink.Should().Be(_storeInformationSettings.YoutubeLink);
+        model.InstagramLink.Should().Be(_storeInformationSettings.InstagramLink);
+        model.TikTokLink.Should().Be(_storeInformationSettings.TikTokLink);
+        model.SnapchatLink.Should().Be(_storeInformationSettings.SnapchatLink);
+        model.PinterestLink.Should().Be(_storeInformationSettings.PinterestLink);
+        model.TumblrLink.Should().Be(_storeInformationSettings.TumblrLink);
+        model.WorkingLanguageId.Should().Be(1);
+    }
+
+    [Test]
+    public async Task CanPrepareFooterModel()
+    {
+        var model = await _commonModelFactory.PrepareFooterModelAsync();
+
+        model.StoreName.Should().Be("Your store name");
+        model.HidePoweredByNopCommerce.Should().Be(_storeInformationSettings.HidePoweredByNopCommerce);
+    }
+
+    [Test]
+    public async Task CanPrepareContactUsModel()
+    {
+        var model = new ContactUsModel();
+        model = await _commonModelFactory.PrepareContactUsModelAsync(model, true);
+
+        model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
+        model.DisplayCaptcha.Should().BeFalse();
+        model.Email.Should().BeNullOrEmpty();
+        model.FullName.Should().BeNullOrEmpty();
+
+        model = await _commonModelFactory.PrepareContactUsModelAsync(model, false);
+        model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
+        model.DisplayCaptcha.Should().BeFalse();
+        model.Email.Should().Be(NopTestsDefaults.AdminEmail);
+        model.FullName.Should().Be("John Smith");
+    }
+
+    [Test]
+    public void PrepareContactUsModelShouldRaiseExceptionIfModelIsNull()
+    {
+        Assert.Throws<AggregateException>(() =>
+            _commonModelFactory.PrepareContactUsModelAsync(null, true).Wait());
+
+        Assert.Throws<AggregateException>(() =>
+            _commonModelFactory.PrepareContactUsModelAsync(null, false).Wait());
+    }
+
+    [Test]
+    public async Task CanPrepareContactVendorModel()
+    {
+        var model = new ContactVendorModel();
+        model = await _commonModelFactory.PrepareContactVendorModelAsync(model, _vendor, true);
+        model.Email.Should().BeNullOrEmpty();
+        model.FullName.Should().BeNullOrEmpty();
+
+        model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
+        model.DisplayCaptcha.Should().BeFalse();
+        model.VendorId.Should().Be(_vendor.Id);
+        model.VendorName.Should().Be(_vendor.Name);
+
+        model = await _commonModelFactory.PrepareContactVendorModelAsync(model, _vendor, false);
+
+        model.Email.Should().Be(NopTestsDefaults.AdminEmail);
+        model.FullName.Should().Be("John Smith");
+
+        model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
+        model.DisplayCaptcha.Should().BeFalse();
+        model.VendorId.Should().Be(_vendor.Id);
+        model.VendorName.Should().Be(_vendor.Name);
+    }
+
+    [Test]
+    public void PrepareContactVendorModelShouldRaiseExceptionIfModelOrVendorIsNull()
+    {
+        Assert.Throws<AggregateException>(() =>
+            _commonModelFactory.PrepareContactVendorModelAsync(null, _vendor, true).Wait());
+
+        Assert.Throws<AggregateException>(() =>
+            _commonModelFactory.PrepareContactVendorModelAsync(null, _vendor, false).Wait());
+
+        Assert.Throws<AggregateException>(() =>
+            _commonModelFactory.PrepareContactVendorModelAsync(new ContactVendorModel(), null, true).Wait());
+
+        Assert.Throws<AggregateException>(() =>
+            _commonModelFactory.PrepareContactVendorModelAsync(new ContactVendorModel(), null, false).Wait());
+    }
+
+    [Test]
+    public async Task CanPrepareStoreThemeSelectorModel()
+    {
+        var model = await _commonModelFactory.PrepareStoreThemeSelectorModelAsync();
+        model.CurrentStoreTheme.Should().NotBeNull();
+        model.CurrentStoreTheme.Name.Should().Be("DefaultClean");
+        model.CurrentStoreTheme.Title.Should().Be("Default clean");
+        model.AvailableStoreThemes.Should().NotBeNull();
+        model.AvailableStoreThemes.Count.Should().BeGreaterThan(0);
+    }
+
+    [Test]
+    public async Task CanPrepareFaviconAndAppIconsModel()
+    {
+        var model = await _commonModelFactory.PrepareFaviconAndAppIconsModelAsync();
+        model.HeadCode.Should().Be(_commonSettings.FaviconAndAppIconsHeadCode);
+    }
+
+    [Test]
+    public async Task CanPrepareRobotsTextFile()
+    {
+        var model = await _commonModelFactory.PrepareRobotsTextFileAsync();
+        model.Should().NotBeNullOrEmpty();
+
+        var allRows = new[]
+        {
+            "User-agent: *", "Sitemap: http://127.0.0.1/sitemap.xml", "Host: http://127.0.0.1/", "Disallow: /admin",
+            "Disallow: /bin/", "Disallow: /files/", "Disallow: /files/exportimport/", "Disallow: /install",
+            "Disallow: /*?*returnUrl=", "Disallow: /*?*returnurl=", "Disallow: /*?*ReturnUrl=",
+            "Disallow: /cart/estimateshipping", "Disallow: /cart/selectshippingoption",
+            "Disallow: /customer/addressdelete", "Disallow: /customer/removeexternalassociation",
+            "Disallow: /customer/checkusernameavailability", "Disallow: /catalog/searchtermautocomplete",
+            "Disallow: /addproducttocart/catalog/*", "Disallow: /addproducttocart/details/*",
+            "Disallow: /compareproducts/add/*", "Disallow: /backinstocksubscribe/*",
+            "Disallow: /subscribenewsletter", "Disallow: /t-popup/*", "Disallow: /setproductreviewhelpfulness",
+            "Disallow: /country/getstatesbycountryid/", "Disallow: /eucookielawaccept",
+            "Disallow: /topic/authenticate", "Disallow: /category/products/", "Disallow: /product/combinations",
+            "Disallow: /uploadfileproductattribute/*", "Disallow: /shoppingcart/productdetails_attributechange/*",
+            "Disallow: /uploadfilereturnrequest", "Disallow: /install/restartapplication", 
+            "Disallow: /product/estimateshipping/*", "Disallow: /shoppingcart/checkoutattributechange/*",
+            "Disallow: /addproducttocart/catalog/", "Disallow: /addproducttocart/details/",
+            "Disallow: /backinstocksubscriptions/manage", "Disallow: /cart$", "Disallow: /changecurrency", 
+            "Disallow: /changelanguage", "Disallow: /changetaxtype", "Disallow: /checkout", 
+            "Disallow: /checkout/billingaddress", "Disallow: /checkout/completed", 
+            "Disallow: /checkout/confirm", "Disallow: /checkout/shippingaddress",
+            "Disallow: /checkout/shippingmethod", "Disallow: /checkout/paymentinfo",
+            "Disallow: /checkout/paymentmethod", "Disallow: /clearcomparelist", "Disallow: /compareproducts",
+            "Disallow: /compareproducts/add/*", "Disallow: /customer/avatar", "Disallow: /customer/activation",
+            "Disallow: /customer/addresses", "Disallow: /customer/changepassword",
+            "Disallow: /customer/checkusernameavailability", "Disallow: /customer/downloadableproducts",
+            "Disallow: /customer/info", "Disallow: /customer/productreviews", "Disallow: /deletepm",
+            "Disallow: /emailwishlist", "Disallow: /eucookielawaccept", "Disallow: /inboxupdate",
+            "Disallow: /newsletter/subscriptionactivation", "Disallow: /onepagecheckout",
+            "Disallow: /order/history", "Disallow: /orderdetails", "Disallow: /passwordrecovery/confirm",
+            "Disallow: /privatemessages", "Disallow: /recentlyviewedproducts", "Disallow: /returnrequest",
+            "Disallow: /returnrequest/history", "Disallow: /rewardpoints/history", "Disallow: /search?",
+            "Disallow: /sendpm", "Disallow: /sentupdate", "Disallow: /shoppingcart/*", "Disallow: /storeclosed",
+            "Disallow: /subscribenewsletter", "Disallow: /topic/authenticate", "Disallow: /viewpm",
+            "Disallow: /uploadfilecheckoutattribute", "Disallow: /uploadfileproductattribute",
+            "Disallow: /uploadfilereturnrequest", "Disallow: /wishlist", "Disallow: /en/addproducttocart/catalog/",
+            "Disallow: /en/addproducttocart/details/", "Disallow: /en/backinstocksubscriptions/manage",
+            "Disallow: /en/cart$", "Disallow: /en/changecurrency", "Disallow: /en/changelanguage",
+            "Disallow: /en/changetaxtype", "Disallow: /en/checkout", "Disallow: /en/checkout/billingaddress",
+            "Disallow: /en/checkout/completed", "Disallow: /en/checkout/confirm",
+            "Disallow: /en/checkout/shippingaddress", "Disallow: /en/checkout/shippingmethod",
+            "Disallow: /en/checkout/paymentinfo", "Disallow: /en/checkout/paymentmethod",
+            "Disallow: /en/clearcomparelist", "Disallow: /en/compareproducts",
+            "Disallow: /en/compareproducts/add/*", "Disallow: /en/customer/avatar",
+            "Disallow: /en/customer/activation", "Disallow: /en/customer/addresses",
+            "Disallow: /en/customer/changepassword", "Disallow: /en/customer/checkusernameavailability",
+            "Disallow: /en/customer/downloadableproducts", "Disallow: /en/customer/info",
+            "Disallow: /en/customer/productreviews", "Disallow: /en/deletepm", "Disallow: /en/emailwishlist",
+            "Disallow: /en/eucookielawaccept", "Disallow: /en/inboxupdate",
+            "Disallow: /en/newsletter/subscriptionactivation", "Disallow: /en/onepagecheckout",
+            "Disallow: /en/order/history", "Disallow: /en/orderdetails", "Disallow: /en/passwordrecovery/confirm",
+            "Disallow: /en/privatemessages", "Disallow: /en/recentlyviewedproducts", "Disallow: /en/returnrequest",
+            "Disallow: /en/returnrequest/history", "Disallow: /en/rewardpoints/history", "Disallow: /en/search?",
+            "Disallow: /en/sendpm", "Disallow: /en/sentupdate", "Disallow: /en/shoppingcart/*",
+            "Disallow: /en/storeclosed", "Disallow: /en/subscribenewsletter", "Disallow: /en/topic/authenticate",
+            "Disallow: /en/viewpm", "Disallow: /en/uploadfilecheckoutattribute",
+            "Disallow: /en/uploadfileproductattribute", "Disallow: /en/uploadfilereturnrequest",
+            "Disallow: /en/wishlist",
+        };
+
+        var rowsForTests = model.Trim().Split(Environment.NewLine);
+
+        rowsForTests.Length.Should().BeGreaterThanOrEqualTo(allRows.Length);
+
+        allRows.All(r => rowsForTests.Contains(r)).Should().BeTrue();
+    }
+}

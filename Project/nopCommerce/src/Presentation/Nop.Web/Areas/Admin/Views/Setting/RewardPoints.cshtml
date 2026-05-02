@@ -1,0 +1,49 @@
+﻿@model RewardPointsSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.RewardPoints").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Reward points");
+}
+
+@{
+    const string hideCommonBlockAttributeName = "RewardPointsSettingsPage.HideCommonBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
+
+    const string hideEarningRewardPointsBlockAttributeName = "RewardPointsSettingsPage.HideEarningRewardPointsBlock";
+    var hideEarningRewardPointsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideEarningRewardPointsBlockAttributeName);
+}
+
+<form asp-controller="Setting" asp-action="RewardPoints" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Settings.RewardPoints")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.RewardPointsSettingsButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+                @await Component.InvokeAsync(typeof(SettingModeViewComponent))
+                <div asp-validation-summary="All"></div>
+
+                <nop-cards id="rewardpointssettings-cards">
+                    <nop-card asp-name="rewardpointssettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.RewardPoints.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_RewardPoints.Common", Model)</nop-card>
+                    <nop-card asp-name="rewardpointssettings-earning-reward-points" asp-icon="fas fa-dollar-sign" asp-title="@T("Admin.Configuration.Settings.RewardPoints.Earning")" asp-hide-block-attribute-name="@hideEarningRewardPointsBlockAttributeName" asp-hide="@hideEarningRewardPointsBlock" asp-advanced="false">@await Html.PartialAsync("_RewardPoints.EarningRewardPoints", Model)</nop-card>
+
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.RewardPointsSettingsDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+</form>
