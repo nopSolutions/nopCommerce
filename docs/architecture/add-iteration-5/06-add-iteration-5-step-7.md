@@ -65,7 +65,7 @@ The QAS set is now structurally complete.
 
 ## Iteration Verdict
 
-Iteration 5 closed QAS-5 by adding one scheduled task and one API method. The design is constraint-driven: OpenBoxes has no outbound webhook capability, so polling is the only automated path. One architectural decision was recorded:
+Iteration 5 closed QAS-5 by adding one scheduled task and one API method. The design is choice-driven: OpenBoxes does support outbound webhooks, but polling was selected deliberately for reliability (self-healing, no missed events) and to preserve the unidirectional dependency between OpenBoxes and nopCommerce. One architectural decision was recorded:
 
 - [ADR-015 — OpenBoxes Fulfillment State via Scheduled Polling](../07-adrs/ADR-015-openboxes-status-polling.md)
 

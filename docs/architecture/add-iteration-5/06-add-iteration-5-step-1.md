@@ -4,7 +4,7 @@
 
 Close the warehouse visibility half of QAS-5 by making OpenBoxes fulfillment state observable in nopCommerce without operator intervention.
 
-Iteration 4 satisfied the carrier tracking clause of QAS-5 (inbound webhook → customer-visible status in ≤10 s). The second clause — warehouse fulfillment state (OpenBoxes `ISSUED`) becoming visible in nopCommerce — was deferred when the OpenBoxes feasibility spike confirmed that OpenBoxes has no outbound webhook capability. A polling `IScheduleTask` is the only available automated mechanism.
+Iteration 4 satisfied the carrier tracking clause of QAS-5 (inbound webhook → customer-visible status in ≤10 s). The second clause — warehouse fulfillment state (OpenBoxes `ISSUED`) becoming visible in nopCommerce — was deferred. A polling `IScheduleTask` is the selected automation mechanism — a deliberate choice over the webhook capability that OpenBoxes does provide.
 
 This iteration is deliberately narrow: one new component, one new ADR, one constrained design space.
 
@@ -28,11 +28,17 @@ Inherited from Iteration 4 Step 7.
 
 ---
 
-### Confirmed Constraint from Feasibility Spike
+### Design Rationale: Polling over Webhooks
 
-OpenBoxes provides no outbound webhook or event-push mechanism. Its API is purely pull-based (REST CRUD). This was confirmed by reviewing the OpenBoxes documentation (`docs.openboxes.com`) — no webhook registration endpoint, no event subscription API, no push notification capability.
+OpenBoxes does support outbound webhooks — it provides configurable webhook endpoints per event type, including inventory, shipment, and order events (confirmed by reviewing `openboxes.com/features`). A webhook-based design is therefore available but was deliberately not chosen.
 
-**Consequence:** nopCommerce must poll. A push-based design is architecturally preferable but not available. The constraint is external and non-negotiable.
+Polling was selected for two reasons:
+
+1. **Reliability.** Polling is self-healing by construction: nopCommerce reads current state on every tick. A missed poll due to a transient failure is recovered by the next tick. With webhooks, if nopCommerce is unavailable when an event fires and OpenBoxes exhausts its retries, the state change is silently lost — requiring manual reconciliation. This directly contradicts the reliability theme of QAS-1 and QAS-4.
+
+2. **Unidirectional dependency.** The architecture keeps OpenBoxes unaware of nopCommerce throughout. Webhooks would require configuring OpenBoxes with nopCommerce's address and credentials, coupling the warehouse system to the commerce core in the reverse direction. Polling preserves the existing boundary: nopCommerce integrates with OpenBoxes; OpenBoxes does not integrate with nopCommerce.
+
+**Consequence:** Polling introduces up to 30 seconds of visibility lag. This is acceptable — QAS-5 requires ≤30 s, and the tradeoff favours reliability and clean dependency direction over sub-second latency.
 
 ---
 
@@ -41,7 +47,7 @@ OpenBoxes provides no outbound webhook or event-push mechanism. Its API is purel
 | Inherited input | Source |
 | --- | --- |
 | Primary driver: QAS-5 warehouse visibility half | Iter 4 Step 7 — inputs carried forward |
-| Confirmed constraint: OpenBoxes has no outbound webhook | OpenBoxes feasibility spike |
+| Design choice: polling over OpenBoxes webhooks | Step 3 rationale — reliability and unidirectional dependency |
 | Existing pattern: `IScheduleTask` for periodic background work | `OutboxDispatcherTask` (Iter 2), `ReleaseExpiredReservationsTask` (Iter 3) |
 | Existing pattern: `IOpenBoxesClient` interface in the bridge | ADR-008 — the bridge already calls OpenBoxes; the polling task reuses the same API |
 
@@ -53,7 +59,7 @@ OpenBoxes provides no outbound webhook or event-push mechanism. Its API is purel
 | --- | --- |
 | nopCommerce remains the fixed commerce core | Carried from Iterations 1–4 |
 | Integration code lives inside plugins | ADR-002 |
-| OpenBoxes API is pull-only | Confirmed by feasibility spike |
+| Polling chosen over OpenBoxes webhooks | Deliberate — reliability and unidirectional dependency direction |
 | No new independently deployable subsystem — the brief's requirement is already met by ADR-008 | Assignment brief |
 | Polling interval must be configurable without redeployment | `ISettings` convention |
 

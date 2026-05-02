@@ -23,6 +23,6 @@ The element to decompose is the **nopCommerce side of the warehouse observation 
 | Detecting `ISSUED` state in OpenBoxes and updating nopCommerce order status | Full warehouse lifecycle (PICKING, VERIFYING, etc.) beyond ISSUED |
 | Correlating OpenBoxes fulfillment orders back to nopCommerce orders via `OrderGuid` | Pushing additional data (line-item detail, warehouse notes) back to nopCommerce |
 | Triggering the carrier booking automatically on `ISSUED` detection | Replacing the existing manual carrier booking trigger |
-| Configurable polling interval | Real-time push (not available from OpenBoxes) |
+| Configurable polling interval | Real-time push via OpenBoxes webhooks (available but not chosen — see Step 3 for rationale) |
 
 Step 3 evaluates the candidate design concepts for this element.

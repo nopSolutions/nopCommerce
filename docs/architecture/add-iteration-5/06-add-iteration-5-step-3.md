@@ -7,7 +7,8 @@
 A new `IScheduleTask` registered inside `Nop.Plugin.Inventory.AllocationGate` (or a new lightweight plugin) polls `GET /api/generic/shipment` on OpenBoxes on a configurable interval. For each fulfillment order that has reached `ISSUED`, it correlates back to the nopCommerce order via `OrderGuid` and updates the order status.
 
 **Why selected:**
-- OpenBoxes has no outbound webhook capability — polling is the only automated path (confirmed by feasibility spike)
+- **Reliability over latency.** Polling is self-healing: nopCommerce reads current state on every tick regardless of what happened between ticks. A webhook missed because nopCommerce was temporarily unavailable is a silent data loss unless OpenBoxes retries indefinitely — which it does not guarantee. Polling has no equivalent failure mode; the next tick always recovers.
+- **Unidirectional dependency preserved.** OpenBoxes supports outbound webhooks (confirmed by `openboxes.com/features`), but using them would require configuring OpenBoxes with nopCommerce's address and credentials, coupling the warehouse system to the commerce core in the reverse direction. Polling keeps the boundary clean: nopCommerce reaches out to OpenBoxes; OpenBoxes remains unaware of nopCommerce.
 - `IScheduleTask` is the established nopCommerce pattern for periodic background work; already used by `OutboxDispatcherTask` and `ReleaseExpiredReservationsTask`
 - Stateless by design — each tick is independent; no inter-tick coordination needed
 - Configurable interval via `ISettings` without redeployment
@@ -15,7 +16,15 @@ A new `IScheduleTask` registered inside `Nop.Plugin.Inventory.AllocationGate` (o
 
 ---
 
-### Concept 2 — Manual admin trigger (rejected)
+### Concept 2 — Outbound webhook from OpenBoxes (rejected)
+
+OpenBoxes supports configurable outbound webhooks per event type, including shipment events. nopCommerce would expose a new inbound webhook endpoint (following the pattern established in Iteration 4's `CarrierWebhook` plugin), and OpenBoxes would be configured to call it when a fulfillment order reaches `ISSUED`.
+
+*Rejected* for two reasons. First, reliability: webhooks are fire-and-forget from OpenBoxes' side. If nopCommerce is temporarily unavailable and OpenBoxes exhausts its retry window, the `ISSUED` event is lost — nopCommerce never learns the order shipped without manual reconciliation. Polling has no equivalent failure mode. Second, dependency direction: this would require configuring OpenBoxes with nopCommerce's address and credentials, making the warehouse system aware of the commerce core. The architecture has consistently kept that boundary unidirectional throughout all five iterations.
+
+---
+
+### Concept 3 — Manual admin trigger (rejected)
 
 An admin observes OpenBoxes and manually marks the order as fulfilled in nopCommerce.
 
@@ -23,7 +32,7 @@ An admin observes OpenBoxes and manually marks the order as fulfilled in nopComm
 
 ---
 
-### Concept 3 — Continuous HTTP long-polling or SSE (rejected)
+### Concept 4 — Continuous HTTP long-polling or SSE (rejected)
 
 nopCommerce maintains a persistent connection to OpenBoxes and waits for state changes.
 

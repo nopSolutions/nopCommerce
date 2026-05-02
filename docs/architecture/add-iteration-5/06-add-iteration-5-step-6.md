@@ -78,6 +78,6 @@ CarrierStatusConsumer (existing — Iter 4)
 | `IOpenBoxesClient` extension | New `GetIssuedFulfillmentOrdersAsync` method |
 | `OpenBoxesFulfillmentOrder` DTO | Correlation record from OpenBoxes API |
 | `AllocationSettings` extension | Four new fields for OpenBoxes URL, API key, interval, batch size |
-| ADR-015 | Polling over webhook — constraint-driven decision |
+| ADR-015 | Polling over webhook — deliberate choice for reliability and unidirectional dependency |
 
 Step 7 verifies the design against QAS-5's warehouse visibility clause and closes the iteration.

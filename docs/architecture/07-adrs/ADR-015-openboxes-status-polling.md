@@ -8,9 +8,7 @@
 
 ## Context
 
-QAS-5's warehouse visibility clause requires that when OpenBoxes marks a fulfillment order as `ISSUED`, that state becomes visible in nopCommerce within a bounded interval without operator intervention. The OpenBoxes feasibility spike confirmed that OpenBoxes provides no outbound webhook or event-push mechanism — its API is purely pull-based REST CRUD. A push-based design is architecturally preferable but not available.
-
-The only automated option is polling.
+QAS-5's warehouse visibility clause requires that when OpenBoxes marks a fulfillment order as `ISSUED`, that state becomes visible in nopCommerce within a bounded interval without operator intervention. OpenBoxes does support outbound webhooks (configurable per event type, including shipment events). A webhook-based design was considered and rejected in favour of polling for two reasons: reliability (polling is self-healing; a missed webhook due to nopCommerce downtime is a silent data loss with no automatic recovery) and dependency direction (webhooks would require configuring OpenBoxes with nopCommerce's address and credentials, introducing coupling in the reverse direction that the architecture has consistently avoided).
 
 ## Decision
 
@@ -21,7 +19,7 @@ The task is idempotent: if the order is already `Complete`, the detection is a n
 ## Rejected Alternatives
 
 **Outbound webhook from OpenBoxes.**
-*Rejected:* OpenBoxes has no webhook registration or event-push capability. Not an architectural choice — an external constraint confirmed by the feasibility spike.
+*Rejected:* OpenBoxes supports outbound webhooks, but this option was rejected on two grounds. First, reliability: if nopCommerce is temporarily unavailable when OpenBoxes fires the event and retries are exhausted, the state change is lost silently — polling has no equivalent failure mode. Second, dependency direction: configuring OpenBoxes with nopCommerce's address and credentials would couple the warehouse system to the commerce core in the reverse direction, breaking the unidirectional boundary maintained throughout all five iterations.
 
 **Manual admin trigger.**
 *Rejected:* violates QAS-5's "no operator action required" clause. Introduces unbounded latency dependent on staff availability. A 30-second polling cadence costs one HTTP call per tick; a manual step costs operator attention on every order.
