@@ -18,6 +18,30 @@ The polling task is added to the existing `Nop.Plugin.Inventory.AllocationGate` 
 
 ---
 
+## Component Relationships
+
+```
+nopCommerce scheduler (every 30 s)
+        │
+        ▼
+OpenBoxesStatusPollerTask
+        │ GetIssuedFulfillmentOrdersAsync()
+        ▼
+IOpenBoxesClient ──── AllocationSettings (OpenBoxesBaseUrl, OpenBoxesApiKey)
+        │ GET /api/generic/shipment?status=ISSUED
+        ▼
+OpenBoxes REST API
+        │ returns [ OpenBoxesFulfillmentOrder (FulfillmentId, OrderGuid, Status) ]
+        ▼
+OpenBoxesStatusPollerTask
+        ├── IOrderService           (lookup order by OrderGuid)
+        ├── IShipmentService        (create Shipment + ShipmentItem rows)
+        ├── IOrderProcessingService (transition order status to Complete)
+        └── IOutboxRepository       (write carrier.booking.requested row)
+```
+
+---
+
 ## What Step 5 Will Do
 
 Step 5 defines the `IOpenBoxesClient` extension, the DTO shape, and the OpenBoxes API contract.

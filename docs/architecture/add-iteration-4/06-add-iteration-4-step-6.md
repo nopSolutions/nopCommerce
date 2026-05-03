@@ -6,6 +6,62 @@ Step 6 produces the updated views (component + sequence) for the two new flows �
 
 ---
 
+## Component View (Updated)
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  nopCommerce process                                                          │
+│                                                                               │
+│  ┌────────────────────────────────────────────────────────────────────────┐  │
+│  │  Nop.Plugin.Shipping.CarrierWebhook  (NEW)                             │  │
+│  │                                                                        │  │
+│  │  [ Outbound path ]                                                     │  │
+│  │  ShipmentSentEventConsumer                                             │  │
+│  │       │ on ShipmentSentEvent: INSERT Outbox (carrier.booking.requested)│  │
+│  │       ▼                                                                │  │
+│  │  OutboxDispatcherTask (Iter 2 — unchanged)                             │  │
+│  │       │ publishes → verdemart.carrier.booking                          │  │
+│  │       ▼                                                                │  │
+│  │  CarrierBookingConsumer  (IHostedService)                              │  │
+│  │       │ BookShipmentAsync → WireMock                                   │  │
+│  │       │ on success: SET Shipment.ExternalShipmentId                    │  │
+│  │                                                                        │  │
+│  │  [ Inbound path ]                                                      │  │
+│  │  POST /api/carrier/webhook ──▶ CarrierWebhookController                │  │
+│  │       │ bearer auth                                                    │  │
+│  │       │ ICarrierWebhookAuditService → INSERT CarrierWebhookEvent       │  │
+│  │       │ publish → verdemart.carrier.status                             │  │
+│  │       └── return 200 immediately                                       │  │
+│  │       ▼                                                                │  │
+│  │  CarrierStatusConsumer  (IHostedService)                               │  │
+│  │       │ IProcessedCarrierEventRepository (dedup by EventId)            │  │
+│  │       │ IExternalStatusMapper (carrier vocab → ShippingStatus)         │  │
+│  │       │ out-of-order guard (OccurredAtUtc)                             │  │
+│  │       │ DB TX: UPDATE Shipment + IWorkflowMessageService (email)       │  │
+│  │       └── Ack / Nack → DLQ after threshold                            │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                               │
+│  ┌────────────────────────────────────────────────────────────────────────┐  │
+│  │  Existing — Iter 1 + 2 + 3  (UNCHANGED)                                │  │
+│  │  Outbox, OutboxDispatcherTask, AllocationGate, RabbitMqConnectionFactory│  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+└──────────────────────┬──────────────────────────────────────┬─────────────────┘
+                       │                                      │
+          ┌────────────▼─────────────────────┐     ┌─────────▼──────┐
+          │  RabbitMQ                         │     │  WireMock      │
+          │                                   │     │  (carrier)     │
+          │  verdemart.carrier.booking        │     │                │
+          │    queue: …requested (durable)    │     │  POST /booking │
+          │    dlq:   …booking.dlq            │     └────────────────┘
+          │                                   │
+          │  verdemart.carrier.status         │
+          │    queue: …received (durable)     │
+          │    dlq:   …status.dlq             │
+          └───────────────────────────────────┘
+```
+
+---
+
 ## Decisions Recorded
 
 This iteration produced one architectural decision. Its full text lives in `07-adrs/`:

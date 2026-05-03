@@ -26,6 +26,24 @@ The `referenceNumber` → `OrderGuid` mapping was confirmed by reviewing the Ope
 
 ---
 
+## Dependency Map
+
+```
+OpenBoxesStatusPollerTask
+    depends on → IOpenBoxesClient
+    depends on → IOrderService           (existing nopCommerce)
+    depends on → IOrderProcessingService (existing nopCommerce)
+    depends on → IShipmentService        (existing nopCommerce)
+    depends on → IOutboxRepository       (Iter 2)
+    depends on → AllocationSettings
+
+IOpenBoxesClient / OpenBoxesClient
+    depends on → AllocationSettings (OpenBoxesBaseUrl, OpenBoxesApiKey)
+    calls      → OpenBoxes REST API
+```
+
+---
+
 ## What Step 6 Will Do
 
 Step 6 sketches the updated component view and records the polling design decision.
