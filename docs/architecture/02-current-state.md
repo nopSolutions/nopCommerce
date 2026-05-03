@@ -2,19 +2,19 @@
 
 ## What Already Works in Our Favour
 
-**Multi-warehouse inventory model**
+**Multi-warehouse inventory model** - 
 `ProductWarehouseInventory` tracks `StockQuantity` and `ReservedQuantity` per warehouse per product. `AdjustInventoryAsync` and `BookReservedInventoryAsync` in `ProductService` handle the reservation → sold lifecycle. A `StockQuantityHistory` audit table logs every adjustment with a message tag (e.g. "PlaceOrder", "Ship"), giving an audit foundation.
 
-**Rich order state model**
+**Rich order state model** - 
 Orders carry three independent status axes: `OrderStatus`, `PaymentStatus`, and `ShippingStatus`. `OrderProcessingService` exposes explicit transition methods - `MarkOrderAsPaidAsync`, `ShipAsync`, `ReadyForPickupAsync`, `DeliverAsync`, `CancelOrderAsync` - each one publishing a typed domain event.
 
-**Internal pub/sub event system**
+**Internal pub/sub event system** - 
 `IEventPublisher` / `IConsumer<T>` provides a type-safe in-process event bus. Domain events exist for every major state change: `OrderPlacedEvent`, `OrderPaidEvent`, `ShipmentSentEvent`, `ShipmentDeliveredEvent`, `ShipmentReadyForPickupEvent`. Any plugin can implement `IConsumer<T>` and react to these - this is the natural integration hook.
 
-**Plugin extension points**
+**Plugin extension points** - 
 `IPaymentMethod`, `IShippingRateComputationMethod`, and `IShipmentTracker` are designed for third-party integration. The `IScheduleTask` framework supports polling loops.
 
-**GenericAttribute as escape hatch**
+**GenericAttribute as escape hatch** - 
 Any entity can carry arbitrary key-value data via `GenericAttribute`. `Order.OrderGuid` is a stable UUID for cross-system correlation.
 
 ---
