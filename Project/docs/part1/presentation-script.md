@@ -1,4 +1,4 @@
-# 7-Minute Presentation Script - Part 1
+# 7-Minute Presentation Script - Part 1 (10 slides)
 
 ## Slide 1 - Scenario and Problem (0:00-0:45)
 
@@ -63,28 +63,43 @@ Main ADRs:
 
 Rejected alternatives include full microservice extraction, direct WMS calls during checkout and direct database integration.
 
-## Slide 8 - Risks and Spike (5:45-6:35)
+## Slide 8 - Risks and Spike (5:45-6:20)
 
 The main risk is whether we can integrate without blocking checkout or rewriting order processing.
 
-Our spike inspected the extension points and confirms the feasible path:
+We ran a concrete spike on this and confirmed the feasible path:
 
-- `OrderPlacedEvent` is raised after persistence.
-- A plugin can consume this event.
-- A plugin can own tables for outbox/inbox/projections.
-- A scheduled task can publish messages after checkout.
+- `OrderPlacedEvent` is raised after persistence — a plugin can consume it without touching checkout.
+- A plugin can own its own migration tables for outbox, inbox and projections.
+- A scheduled task can publish pending messages after checkout completes.
 
-This gives us a concrete implementation path for Part 2.
+This is not a guess. We have located the exact source points and the event shape is defined.
 
-## Slide 9 - Roadmap and Demo Plan (6:35-7:00)
+## Slide 9 - Scope and Commitment (6:20-6:45)
 
-Next we implement the plugin, worker, RabbitMQ and simulators.
+**In scope for the final delivery:**
 
-Final demo will show:
+- `Nop.Plugin.Misc.OmnichannelCore` — outbox, inbox, projections, callback API
+- Omnichannel Worker — RabbitMQ consumer, WMS coordination, retry, circuit breaker, DLQ
+- WMS simulator — normal, slow, unavailable and contradictory modes
+- POS simulator — stock events with duplicate and stale variants
+- Docker Compose — single command to run the full environment
+- Architecture report, updated ADRs and evidence pack
 
-1. Normal order-to-WMS fulfillment.
-2. WMS unavailable while checkout still succeeds.
-3. Recovery after WMS comes back.
-4. POS stock update becoming visible.
-5. Duplicate or stale update handled safely.
+**Out of scope:**
+
+- Rewriting or extracting nopCommerce core services
+- Real ERP, WMS or POS systems
+- Keycloak, real payments or real shipping carriers
+- Distributed exactly-once guarantees
+
+## Slide 10 - Demo Plan (6:45-7:00)
+
+The final demo will show five scenarios:
+
+1. Normal order placed → WMS accepts → fulfillment confirmed.
+2. WMS unavailable → checkout still succeeds → order queued.
+3. WMS recovers → pending order processed → fulfillment confirmed.
+4. POS stock change → visible in nopCommerce.
+5. Duplicate or stale POS event → silently ignored with evidence.
 
