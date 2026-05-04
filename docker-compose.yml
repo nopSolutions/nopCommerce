@@ -4,8 +4,11 @@ services:
         container_name: nopcommerce
         ports:
             - "80:80"
+        volumes:
+            - nopcommerce_data:/app/App_Data
         depends_on:
             - nopcommerce_database
+            - rabbitmq
     nopcommerce_database:
         image: "mcr.microsoft.com/mssql/server:2019-latest"
         container_name: nopcommerce_mssql_server
@@ -13,6 +16,18 @@ services:
             SA_PASSWORD: "nopCommerce_db_password"
             ACCEPT_EULA: "Y"
             MSSQL_PID: "Express"
+    rabbitmq:
+        image: "rabbitmq:3-management"
+        container_name: nopcommerce_rabbitmq
+        ports:
+            - "5672:5672"    # AMQP protocol
+            - "15672:15672"  # Management UI
+        environment:
+            RABBITMQ_DEFAULT_USER: "guest"
+            RABBITMQ_DEFAULT_PASS: "guest"
+        volumes:
+            - rabbitmq_data:/var/lib/rabbitmq
 
 volumes:
-  nopcommerce_data:            
+  nopcommerce_data:
+  rabbitmq_data:            
