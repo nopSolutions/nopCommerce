@@ -47,16 +47,29 @@ Subdomain classification:
 
 ```mermaid
 flowchart LR
-    OM["Order Management <br> (Core Domain)"]
-    CP["Catalog & Pricing <br> (Core Domain)"]
-    FC["Fulfillment Coordination <br> (Supporting)"]
-    ERP["ERP / Back-Office <br> (Generic)"]
-    WMS["Warehouse / Inventory <br> (Supporting)"]
+    subgraph NOP["nopCommerce Monolith"]
+        ID["Identity <br/>(cross-cutting)"]
+        OM["Order Management <br/>(Core Domain)"]
+        CP["Catalog & Pricing <br/>(Core Domain)"]
+    end
 
-    OM -->|"order.placed <br> outbox → RabbitMQ <br> [Upstream / Downstream]"| FC
-    FC -->|"POST /orders <br> HTTP + retry <br> [Customer / Supplier]"| ERP
-    FC -->|"POST /reservations <br> HTTP + circuit breaker <br> [Customer / Supplier + ACL]"| WMS
-    WMS -->|"stock.updated <br> RabbitMQ <br> [Published Language]"| CP
+    RMQ[("RabbitMQ")]
+
+    subgraph EXTRACTED["Extracted Services"]
+        FC["Fulfillment Coordination <br/>(Supporting — stateless)"]
+    end
+
+    subgraph EXTERNAL["External Systems"]
+        ERP["ERP / Back-Office <br/>(Generic)"]
+        WMS["Warehouse / Inventory <br/>(Supporting)"]
+    end
+
+    OM -->|"order.placed <br/> outbox <br/> [Upstream / Downstream]"| RMQ
+    RMQ --> FC
+    FC -->|"POST /orders <br/> HTTP + retry <br/> [Customer / Supplier]"| ERP
+    FC -->|"POST /reservations <br/> HTTP + circuit breaker <br/> [Customer / Supplier + ACL]"| WMS
+    WMS -->|"stock.updated <br/> [Published Language]"| RMQ
+    RMQ -->|"stock.updated"| CP
 ```
 
 ### Relationship Descriptions
