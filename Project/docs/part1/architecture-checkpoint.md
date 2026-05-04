@@ -231,7 +231,12 @@ Iteration decisions:
 - Iteration 2 (consistency): [ADR-0006 - Idempotency strategy](../adr/0006-idempotency-strategy.md), [ADR-0007 - Projection vs write-through](../adr/0007-stock-projection-vs-writethrough.md)
 - Iteration 3 (traceability): [ADR-0008 - Correlation and traceability](../adr/0008-correlation-and-traceability.md)
 
-Each ADR includes Status, Context, Decision, Consequences, **Tradeoffs**, and Rejected Alternatives.
+Rejected decisions (recorded explicitly so they don't return as proposals):
+
+- [ADR-0009 - Reject microservices extraction](../adr/0009-reject-microservices-extraction.md)
+- [ADR-0010 - Reject distributed tracing infrastructure](../adr/0010-reject-distributed-tracing.md)
+
+Each Accepted ADR includes Status, Context, Decision, Consequences, **Tradeoffs**, and Rejected Alternatives. Rejected ADRs replace "Rejected Alternatives" with **Triggers to revisit**.
 
 ## 8. Risk and Validation Plan
 
