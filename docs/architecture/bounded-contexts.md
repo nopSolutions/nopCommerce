@@ -7,57 +7,71 @@
 
 ## Identified Bounded Contexts
 
-_TODO (Duarte): Flesh out each context with subdomain classification (core/supporting/generic), key entities, and data ownership._
+Subdomain classification:
+- **Core Domain** — primary business differentiator; highest investment priority
+- **Supporting Subdomain** — operationally necessary but not a competitive differentiator
+- **Generic Subdomain** — standard capability; could be bought off the shelf
 
 ### 1. Order Management (nopCommerce — Core Domain)
-- **Owns**: Orders, order items, order status, payment status, shipping status
-- **Key entities**: `Order`, `OrderItem`, `OrderNote`
-- **Upstream from**: Inventory/Stock (reads stock before placing), Fulfillment (pushes order events)
-- **Data store**: nopCommerce PostgreSQL
+- **Owns**: Orders, order items, order status, payment status, integration event outbox
+- **Key entities**: `Order`, `OrderItem`, `OrderNote`, `IntegrationEvent` (outbox)
+- **Relationships**: upstream of Fulfillment Coordination (publishes `order.placed`); downstream of Warehouse/Inventory (consumes `stock.updated`)
+- **Data store**: nopCommerce PostgreSQL — authoritative, not shared
 
 ### 2. Catalog & Pricing (nopCommerce — Core Domain)
-- **Owns**: Products, categories, prices, discounts, attributes
+- **Owns**: Products, categories, prices, discounts, attributes, stock quantities
 - **Key entities**: `Product`, `Category`, `ProductWarehouseInventory`, `StockQuantityHistory`
-- **Stock quantities live here** but are updated by events from the WMS (cross-channel stock corrections)
-- **Data store**: nopCommerce PostgreSQL
+- **Note**: nopCommerce is the source of truth for web-visible stock; the WMS is the source of truth for physical stock. The two are reconciled via `stock.updated` events.
+- **Data store**: nopCommerce PostgreSQL — authoritative, not shared
 
-### 3. Fulfillment Coordination (Order Integration Service — Supporting)
-- **Owns**: The coordination protocol between a placed order and external operational systems
-- **Stateless** — does not persist orders; reads from RabbitMQ, forwards to ERP/WMS
-- **Key responsibility**: reliability (retry, circuit breaker, dead-letter, reconciliation)
-- **Data store**: None (RabbitMQ dead-letter queue acts as transient state)
+### 3. Fulfillment Coordination (Order Integration Service — Supporting Subdomain)
+- **Owns**: The coordination protocol between the commerce core and external operational systems
+- **Stateless by design** — does not persist orders; reads from RabbitMQ, forwards to ERP and WMS adapters
+- **Key responsibility**: reliability — retry on ERP, circuit breaker + dead-letter queue + reconciliation on WMS
+- **Data store**: None — RabbitMQ dead-letter queue provides transient durability during WMS outage
 
-### 4. ERP / Back-Office (ERP Stub — External / Generic)
+### 4. ERP / Back-Office (ERP Stub — Generic Subdomain)
 - **Owns**: Confirmed order records for accounting and invoicing
-- **Upstream from**: Fulfillment Coordination (receives order events)
-- **Data store**: ERP stub in-memory (not shared with nopCommerce)
+- **Receives**: `order.placed` events forwarded by Fulfillment Coordination via HTTP
+- **Data store**: In-memory — isolated; never shared with nopCommerce or WMS
 
-### 5. Warehouse / Inventory (WMS Stub — External / Supporting)
-- **Owns**: Physical stock quantities, warehouse reservations
-- **Publishes** `stock.updated` events that drive corrections in nopCommerce Catalog context
-- **Data store**: WMS stub in-memory (not shared with nopCommerce)
+### 5. Warehouse / Inventory (WMS Stub — Supporting Subdomain)
+- **Owns**: Physical stock quantities and warehouse reservation state
+- **Publishes**: `stock.updated` to RabbitMQ after a successful reservation
+- **Pressure point**: the WMS can become slow, unavailable, or contradictory — the architecture must isolate this failure from the rest of the system
+- **Data store**: In-memory — isolated; never shared with nopCommerce or ERP
 
 ---
 
 ## Context Map
 
-_TODO (Duarte): Draw or describe the relationships between contexts._
+```mermaid
+flowchart LR
+    OM["Order Management <br> (Core Domain)"]
+    CP["Catalog & Pricing <br> (Core Domain)"]
+    FC["Fulfillment Coordination <br> (Supporting)"]
+    ERP["ERP / Back-Office <br> (Generic)"]
+    WMS["Warehouse / Inventory <br> (Supporting)"]
 
-```
-[Order Management] ──(OrderPlacedEvent via outbox)──▶ [Fulfillment Coordination]
-                                                              │
-                                        ┌─────────────────────┤
-                                        ▼                     ▼
-                               [ERP/Back-Office]    [Warehouse/Inventory]
-                                                             │
-                               [Catalog & Pricing] ◀─(stock.updated)─┘
+    OM -->|"order.placed <br> outbox → RabbitMQ <br> [Upstream / Downstream]"| FC
+    FC -->|"POST /orders <br> HTTP + retry <br> [Customer / Supplier]"| ERP
+    FC -->|"POST /reservations <br> HTTP + circuit breaker <br> [Customer / Supplier + ACL]"| WMS
+    WMS -->|"stock.updated <br> RabbitMQ <br> [Published Language]"| CP
 ```
 
-Relationships:
-- Order Management → Fulfillment Coordination: **Upstream/Downstream** (nopCommerce is upstream; Integration Service consumes its events)
-- Fulfillment Coordination → ERP: **Customer/Supplier** (Integration Service calls ERP adapter)
-- Fulfillment Coordination → Warehouse: **Customer/Supplier** with **Anti-Corruption Layer** (circuit breaker protects core from WMS failures)
-- Warehouse → Catalog & Pricing: **Published Language** (WMS publishes `stock.updated` events with a well-defined schema)
+### Relationship Descriptions
+
+**Order Management → Fulfillment Coordination: Upstream / Downstream**  
+nopCommerce defines the `order.placed` schema and publishes it without knowledge of consumers. The outbox pattern ensures the event is written atomically with the order — nopCommerce never waits for the Integration Service to be available.
+
+**Fulfillment Coordination → ERP: Customer / Supplier**  
+The Integration Service calls the ERP over HTTP with exponential-backoff retry (Polly). The ERP owns its own data model; the Integration Service translates to it. ERP failure does not block order placement.
+
+**Fulfillment Coordination → WMS: Customer / Supplier with Anti-Corruption Layer**  
+The circuit breaker (Polly) on the WMS adapter acts as the ACL: it absorbs WMS instability, opens after repeated failures, and routes undeliverable messages to the dead-letter queue rather than blocking order flow.
+
+**WMS → Catalog & Pricing: Published Language**  
+The WMS publishes `stock.updated` events using a stable, well-defined schema. nopCommerce consumes these events to correct web-visible stock quantities without knowing WMS internals, enabling cross-channel stock visibility.
 
 ---
 
@@ -65,40 +79,28 @@ Relationships:
 
 | Data | Authoritative Owner | How other contexts access it |
 |------|---------------------|------------------------------|
-| Order state | nopCommerce (Order Management) | Read-only via nopCommerce API; never written by external systems directly |
-| Product stock quantity | nopCommerce (Catalog) | Written by `StockUpdateConsumerBackgroundService` on `stock.updated` event |
+| Order state | nopCommerce (Order Management) | Read-only; never written by external systems directly |
+| Product stock quantity | nopCommerce (Catalog) | Updated by `StockUpdateConsumerBackgroundService` on `stock.updated` |
 | Warehouse reservation | WMS Stub | Never read by nopCommerce directly |
 | ERP order record | ERP Stub | Never read by nopCommerce directly |
 
-**No shared database across extracted boundaries.** Each bounded context has its own data store. Cross-context communication is exclusively via events or explicit HTTP calls with well-defined contracts.
+No shared database across extracted boundaries. Cross-context communication is exclusively via events or explicit HTTP calls with well-defined contracts.
 
 ---
 
-## Evolution Roadmap
+## Scope Decisions
 
-_TODO (Duarte): Describe the sequence of steps from current monolith to target state._
+Scenario C lists eight candidate surrounding systems. The table below records which were included and why the rest were excluded.
 
-### Phase 0 — Baseline (current)
-nopCommerce operates as an isolated monolith. No external system integrations. Orders placed → DB only. Stock managed locally.
+| System | Decision | Justification |
+|--------|----------|---------------|
+| ERPNext / Odoo (ERP) | **In scope — ERP Stub** | Required by UC1: every placed order must reach the back-office. Introduces the retry reliability pattern on the FC → ERP edge. |
+| OpenBoxes / WMS | **In scope — WMS Stub** | Required by UC1, UC2, and the mandatory pressure point. Introduces circuit breaker, dead-letter queue, and reconciliation loop. |
+| Open Source POS | **Out of scope** | Would duplicate the WMS pressure point without adding a new architectural pattern. UC2 is already covered by the WMS → nopCommerce `stock.updated` flow, which represents any channel that modifies physical stock. |
+| EspoCRM | **Out of scope** | CRM concerns (loyalty, support history) do not affect order placement or fulfillment and are not exercised by either mandatory use case. |
+| OpenSearch / Meilisearch | **Out of scope** | Search freshness is orthogonal to the reliability and cross-channel visibility problem. Search index staleness does not affect the order or fulfillment path. |
+| WireMock / Shipping carrier | **Out of scope** | Shipping occurs after fulfillment is confirmed and does not affect order acceptance or WMS reservation. Neither mandatory use case requires it. |
+| Keycloak / authentik | **Out of scope** | nopCommerce has built-in auth. Federated identity is the core problem of Scenario A, not Scenario C. |
+| RabbitMQ / Kafka | **In scope — RabbitMQ** | Required for the async workflow and dead-letter pattern. See ADR-001 for the choice over Kafka. |
 
-### Phase 1 — Outbox & Message Backbone
-- Add `IntegrationEvent` outbox table to nopCommerce DB
-- Add background publisher → RabbitMQ
-- Deploy RabbitMQ alongside nopCommerce (Docker Compose)
-- **What coexists**: nopCommerce still fully functional without Integration Service running
-
-### Phase 2 — Fulfillment Coordination
-- Deploy Order Integration Service
-- Connect to RabbitMQ consumer
-- ERP and WMS stubs deployed
-- Happy path: order placed → ERP + WMS notified → stock updated back
-
-### Phase 3 — Resilience & Pressure Point
-- Add circuit breaker (WMS adapter)
-- Add dead-letter queue handling
-- Add reconciliation loop
-- Add observability dashboard
-
-### Transition Constraints
-- During Phase 1–2, nopCommerce must remain fully operational for web customers even if Integration Service or stubs are not running
-- The outbox acts as a buffer: if Integration Service is down, events accumulate and are processed when it starts
+ERP and WMS are the only systems directly exercised by both mandatory use cases and the mandatory pressure point. All others add operational complexity without changing the architectural patterns demonstrated.
