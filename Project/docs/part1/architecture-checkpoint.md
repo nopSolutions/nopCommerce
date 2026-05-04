@@ -48,26 +48,34 @@ Key source observations:
 
 ## 3. Domain and Boundary Model
 
-Relevant subdomains:
+Following DDD vocabulary: **subdomains** describe the *problem space*; **bounded contexts** are the *solution-space* areas where one model is consistent. The two do not have to map 1-to-1.
 
-- **Commerce Core**: checkout, orders, customers, catalog, pricing and payment status. Owner: nopCommerce monolith.
-- **Inventory Visibility**: product stock projection, warehouse-specific quantities and stale-state detection. Owner: nopCommerce plugin, fed by POS/WMS events.
-- **Fulfillment Coordination**: handoff from placed order to warehouse processing. Owner: independent Omnichannel Worker.
-- **Warehouse Operations**: external WMS simulator responsible for accept/reject/delay/contradict fulfillment requests.
-- **Store Operations/POS**: POS simulator responsible for stock movements outside web checkout.
-- **Integration Reliability**: outbox, inbox, retries, dead-letter handling and idempotency. Shared responsibility between plugin and worker, with separate storage.
+### Subdomains (problem space)
 
-Bounded contexts:
+- **Commerce Core**: checkout, orders, customers, catalog, pricing, payment status.
+- **Inventory Visibility**: product stock projection, warehouse-specific quantities, stale-state detection.
+- **Fulfillment Coordination**: handoff from placed order to warehouse processing.
+- **Warehouse Operations**: external WMS behavior (accept/reject/delay/contradict).
+- **Store Operations / POS**: stock movements that originate outside the web channel.
+- **Integration Reliability**: outbox, inbox, retries, DLQ, idempotency. Cuts across the others.
 
-- **nopCommerce Core Context**: owns `Order`, `OrderItem`, `Product`, `ProductWarehouseInventory`, `Shipment`.
-- **Omnichannel Integration Context**: owns outbox/inbox messages, fulfillment projection and stock sync state.
-- **WMS Context**: owns external fulfillment request state and simulated degradation modes.
-- **POS Context**: owns store-originated stock changes.
+### Bounded contexts (solution space)
 
-Boundary rule:
+- **nopCommerce Core Context** — owns `Order`, `OrderItem`, `Product`, `ProductWarehouseInventory`, `Shipment`. Maps to subdomain *Commerce Core*.
+- **Omnichannel Integration Context** — owns outbox/inbox messages, fulfillment projection, stock sync state. Maps to *Inventory Visibility* + *Fulfillment Coordination* + *Integration Reliability* — three subdomains in one context because they share the same model (correlated by `OrderGuid` and `messageId`).
+- **WMS Context** — external; owns fulfillment request state. Maps to *Warehouse Operations*.
+- **POS Context** — external; owns store-originated stock changes. Maps to *Store Operations / POS*.
 
-- The worker, WMS simulator and POS simulator must not read or write nopCommerce database tables directly.
-- They communicate through RabbitMQ and plugin HTTP endpoints only.
+### Context relationships
+
+See the context-map diagram in [diagrams.md](diagrams.md#ddd-context-map-bounded-contexts--relationships). Key relationships:
+
+- The **Omnichannel Worker acts as an Anti-Corruption Layer (ACL)** on both the WMS and POS edges: external schemas, statuses, and quirks are translated into the omnichannel envelope (ADR-0008) before they reach the plugin.
+- nopCommerce Core ↔ Omnichannel Integration is a **customer/supplier** relationship via versioned event contracts (`commerce.order.placed.v1`, `fulfillment.status.changed.v1`), not a shared model.
+
+### Boundary rule
+
+The worker, WMS simulator, and POS simulator must not read or write nopCommerce database tables directly. All cross-context communication is RabbitMQ events + plugin HTTP endpoints (ADR-0005).
 
 ## 4. Quality Attribute Scenarios
 
@@ -119,6 +127,8 @@ Visual notation: **C4 Model** for context, container, component and runtime diag
 
 Components, ownership, and interaction style are described iteration by iteration below. Each iteration follows ADD's 7-step loop and ends with an ACDM-style go/no-go.
 
+**Iteration ordering rationale.** Resilience first (Iteration 1) because it gates everything else: until checkout is decoupled from WMS, every other quality attribute is theoretical. Consistency second (Iteration 2) because Iteration 1 introduces at-least-once delivery — that cost has to be paid before the system is honest. Traceability third (Iteration 3) because it instruments what now exists; doing it earlier would be premature, and doing it later would mean the demo cannot explain itself.
+
 ### Components and ownership (cross-iteration view)
 
 | Component                | Owner team   | Responsibility                                                                 |
@@ -134,36 +144,66 @@ Components, ownership, and interaction style are described iteration by iteratio
 
 ### Iteration 1 — Stay useful when WMS is slow or unavailable
 
-- **Driver**: Resilience scenario QA-1 (see [QA scenarios](quality-attribute-scenarios.md)).
+- **Why now**: Gates the rest. Until checkout no longer waits on WMS, every other QA is hypothetical.
+- **Driver**: Resilience+Recovery scenario QA-1 (see [QA scenarios](quality-attribute-scenarios.md)).
 - **Element refined**: Order → WMS edge.
 - **Tactics**: outbox, async messaging, retry with exponential backoff, circuit breaker, dead-letter queue.
+- **Concepts considered**:
+
+  | Option                                  | Outcome  | Why                                                          |
+  |-----------------------------------------|----------|--------------------------------------------------------------|
+  | Outbox + RabbitMQ + worker (chosen)     | Selected | Decouples checkout from WMS without changing core processing |
+  | Synchronous HTTP from checkout to WMS   | Rejected | WMS degradation directly degrades checkout (ADR-0003)        |
+  | Worker polling the nopCommerce DB       | Rejected | Hidden shared-DB coupling; violates ADR-0005                 |
+
 - **Responsibilities**: plugin writes outbox row inside `OrderPlacedEvent` consumer; scheduled task publishes to RabbitMQ with publisher confirms; worker consumes, calls WMS, callbacks plugin.
 - **Interfaces**: `commerce.order.placed.v1` (plugin → MQ → worker); `fulfillment.status.changed.v1` (worker → plugin HTTP).
 - **Decisions**: [ADR-0003](../adr/0003-use-outbox-rabbitmq-for-fulfillment.md), [ADR-0005](../adr/0005-no-shared-database-boundaries.md).
-- **Analysis**: checkout latency stays bounded under WMS 503 (validated by spike). DLQ contains poison messages without blocking the live path.
+- **Analysis**: checkout latency stays bounded under WMS 503 (validated by spike). DLQ contains poison messages without blocking the live path. Backlog drain on recovery is bounded by worker concurrency.
 - **Go/Partial-Go/No-Go**: **Go** on outbox + RabbitMQ + worker. Risk: scheduled-task publish lag must stay under one minute under load — measured in Part 2.
+- **Trade-off accepted**: at-least-once delivery and added operational surface (scheduled task health, queue lag) in exchange for checkout independence from WMS. Iteration 2 pays the at-least-once bill.
 
 ### Iteration 2 — Don't lose state under at-least-once delivery and stale POS updates
 
+- **Why now**: Iteration 1 introduces at-least-once delivery. Without idempotency, every duplicate causes a duplicate fulfillment. This must close before Iteration 3 has anything stable to instrument.
 - **Driver**: Consistency scenario QA-2.
 - **Element refined**: Inbox / projection edge.
 - **Tactics**: idempotent receiver (`messageId`), version-based stale detection (`sourceVersion`), local projection.
+- **Concepts considered**:
+
+  | Option                                       | Outcome  | Why                                                           |
+  |----------------------------------------------|----------|---------------------------------------------------------------|
+  | `messageId` inbox + `sourceVersion` (chosen) | Selected | Two-layer protection: transport replay + domain staleness     |
+  | Queue-level dedup only (broker header)       | Rejected | Not portable; ties idempotency to infra (ADR-0006)            |
+  | Last-write-wins on stock                     | Rejected | Silently corrupts state under out-of-order delivery (ADR-0006)|
+
 - **Responsibilities**: plugin records every external `messageId` in `OmniInboxMessage` before applying side effects; stock updates compare `sourceVersion`; projection table `OmniStockSyncState` shadows core stock without writing to it (initially).
 - **Interfaces**: `pos.stock.changed.v1` (POS → MQ → worker → plugin HTTP).
 - **Decisions**: [ADR-0006](../adr/0006-idempotency-strategy.md), [ADR-0007](../adr/0007-stock-projection-vs-writethrough.md).
 - **Analysis**: duplicates rejected; older `sourceVersion` ignored; projection diverges from core stock only when external stock changes — surfaced as drift, not silently merged.
 - **Go/Partial-Go/No-Go**: **Go** on idempotent inbox. **Partial-go** on projection-only stock; revisit write-through after Part 2 measures drift impact.
+- **Trade-off accepted**: a second view of stock (projection vs core) means support must reason about both, and inbox table grows linearly with traffic. Both are visible costs that we choose over silent corruption.
 
 ### Iteration 3 — Make ops and audit able to explain a delayed or recovering order
 
-- **Driver**: Traceability scenario QA-3.
+- **Why now**: Iterations 1–2 produce a correct system with multiple state holders. Without correlation, a delayed order is indistinguishable from a stuck one. Last because it instruments what now exists.
+- **Driver**: Traceability scenario QA-3 (plus Operability QA-4).
 - **Element refined**: Cross-cutting correlation and observability.
 - **Tactics**: correlation ID propagation, structured outbox/inbox state transitions, queue/retry/DLQ exposure.
+- **Concepts considered**:
+
+  | Option                                                       | Outcome  | Why                                                                          |
+  |--------------------------------------------------------------|----------|------------------------------------------------------------------------------|
+  | Three explicit IDs (`OrderGuid` + `messageId` + `externalRequestId`) (chosen) | Selected | Support starts from `OrderGuid`; explicit IDs survive log cuts and retention |
+  | Distributed tracing (OpenTelemetry)                          | Rejected | Adds Part 2 scope (collector, storage, UI); explicit IDs satisfy QA-3 (ADR-0008) |
+  | Timestamp-based correlation only                             | Rejected | Clock skew across services makes forensic queries unreliable (ADR-0008)      |
+
 - **Responsibilities**: every log line, message, and DB row carries `OrderGuid` + `messageId` + `externalRequestId`; admin view in plugin lists fulfillment state per order; RabbitMQ management UI exposes queue depth and DLQ.
 - **Interfaces**: standard message envelope (`messageId`, `correlationId`, `eventType`, `occurredOnUtc`).
 - **Decisions**: [ADR-0008](../adr/0008-correlation-and-traceability.md).
 - **Analysis**: support can answer "why is this order pending?" from the plugin admin view alone, without code spelunking.
 - **Go/Partial-Go/No-Go**: **Go** on correlation propagation. Risk: dashboard depth depends on Part 2 implementation budget.
+- **Trade-off accepted**: every component must propagate IDs correctly even on error paths — a producer or worker bug makes traceability silently fail. We pay this discipline cost over a heavier observability stack.
 
 ### Required Technical Constraints — coverage map
 
@@ -206,6 +246,8 @@ Each ADR includes Status, Context, Decision, Consequences, **Tradeoffs**, and Re
 ## 9. Evolution Roadmap
 
 Format: ADM Phase-F migration table (stage / move / why now / what coexists / owner). Each stage is one move; nothing is replaced wholesale.
+
+The **execution view** of these stages — with verification gates, deliverables, and risks per phase — lives in [roadmap.md](../../roadmap.md). Stages 1–5 below correspond to roadmap Phases 1–5.
 
 | Stage | Move                                                                  | Why now                                              | What still coexists                                      | Owner          |
 |-------|-----------------------------------------------------------------------|------------------------------------------------------|----------------------------------------------------------|----------------|

@@ -1,5 +1,6 @@
 {
   "messageId": "ba8a04d4-8baa-4ad8-a452-31be38f4cb43",
+  "correlationId": "8b5ce538-9b8b-4e81-9019-3e11f0a9d4ef",
   "eventType": "fulfillment.status.changed.v1",
   "occurredOnUtc": "2026-05-02T12:07:00Z",
   "orderGuid": "8b5ce538-9b8b-4e81-9019-3e11f0a9d4ef",
@@ -8,4 +9,3 @@
   "trackingNumber": "TRACK-0001",
   "reason": null
 }
-

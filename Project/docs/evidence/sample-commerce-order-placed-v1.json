@@ -1,5 +1,6 @@
 {
   "messageId": "c260f7b0-6db9-4124-9c54-cd5c706b7c7e",
+  "correlationId": "8b5ce538-9b8b-4e81-9019-3e11f0a9d4ef",
   "eventType": "commerce.order.placed.v1",
   "occurredOnUtc": "2026-05-02T12:00:00Z",
   "orderGuid": "8b5ce538-9b8b-4e81-9019-3e11f0a9d4ef",
@@ -15,4 +16,3 @@
     }
   ]
 }
-
