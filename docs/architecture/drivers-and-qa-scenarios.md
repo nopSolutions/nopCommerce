@@ -7,8 +7,6 @@
 
 ## Business Drivers
 
-_TODO (Martim): Fill in with 3–5 business drivers. Examples to refine:_
-
 1. **Cross-channel unified commerce** — VerdeMart operates web, physical stores, and warehouse. Customers expect consistent order state and stock visibility across all channels.
 2. **Operational resilience** — The web store must remain functional even when warehouse or ERP systems are temporarily unavailable. An outage in one system must not block customer orders.
 3. **Real-time stock accuracy** — Stock sold in physical stores must be reflected on the website within seconds, preventing overselling.
@@ -18,8 +16,6 @@ _TODO (Martim): Fill in with 3–5 business drivers. Examples to refine:_
 
 ## Architectural Drivers
 
-_TODO (Martim): Define the key architectural drivers (constraints, quality goals):_
-
 - At-least-once delivery of order events to ERP and WMS
 - Circuit isolation: WMS failure must not block order acceptance
 - Stock consistency across channels (eventual, bounded lag)
@@ -28,8 +24,6 @@ _TODO (Martim): Define the key architectural drivers (constraints, quality goals
 ---
 
 ## Quality Attribute Scenarios
-
-_TODO (Martim): Write 4–5 QA scenarios in stimulus/environment/response/measure format. Template below:_
 
 ### QA-1: Availability — WMS Unavailable During Order Peak
 
@@ -75,15 +69,19 @@ _TODO (Martim): Write 4–5 QA scenarios in stimulus/environment/response/measur
 | Response | Dashboard shows circuit breaker state as `OPEN` or `HALF_OPEN`, dead-letter queue depth increasing, WMS mode |
 | Measure | State change visible on dashboard within 5 s of first WMS timeout |
 
-### QA-5: _(TODO — Martim: Add a fifth scenario, e.g., around ERP retry or idempotency)_
+### QA-5: Reliability — ERP Transient Failure Recovery
+
+| Field | Value |
+|-------|-------|
+| Source | Order Integration Service processing an `order.placed` event |
+| Stimulus | ERP stub returns 503 (Service Unavailable) for two consecutive requests before recovering |
+| Environment | Normal operating hours; transient ERP failure lasting under 30 s |
+| Artifact | `ErpAdapter` + Polly retry policy (3 attempts, exponential backoff) |
+| Response | Order Integration Service retries automatically with backoff; on the third attempt ERP accepts the order; the event is neither lost nor delivered twice |
+| Measure | Order confirmed in ERP within 30 s of first failure; zero events lost; no duplicate orders visible in ERP; all retry attempts logged with `correlationId` |
 
 ---
 
 ## Chosen Framework: ADD (Attribute-Driven Design)
 
-_TODO (Martim): Write a short justification (3–5 sentences) for choosing ADD over ACDM/ADM._
-
-Suggested argument:
-- ADD starts from quality attribute scenarios and uses them to drive decomposition decisions
-- Our key architectural decisions (outbox, circuit breaker, dead-letter, messaging topology) are all directly motivated by QA-1 through QA-4 above
-- ADD's iterative refinement aligns with how we are selectively evolving nopCommerce rather than redesigning it from scratch
+ADD was chosen because it starts from quality attribute scenarios and uses them directly to drive decomposition decisions. Every major architectural choice in this design — the outbox pattern (QA-1), the circuit breaker (QA-3, QA-4), the dead-letter queue (QA-3), and the retry policy (QA-5) — is traceable to a specific QA scenario. This traceability is a core ADD principle and makes the design defensible: each structural decision exists because a measurable quality requirement demands it. ADD's iterative refinement also aligns with our approach of selectively evolving nopCommerce rather than redesigning it from scratch, allowing each phase to be validated against the scenarios before the next begins.
