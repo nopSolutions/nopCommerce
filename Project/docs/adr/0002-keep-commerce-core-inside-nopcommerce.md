@@ -20,6 +20,12 @@ Add omnichannel behavior through a plugin and one independently deployable worke
 - Existing nopCommerce services remain the source of truth for commerce state.
 - The worker coordinates external systems but does not own orders or products.
 
+## Tradeoffs
+
+- Future scaling of order/catalog independently is constrained by the monolith's boundaries.
+- The plugin must stay disciplined about not bypassing core services — easy to violate in code review if not enforced.
+- We accept nopCommerce's release cadence for any change that touches core (we don't, by design, but the constraint exists).
+
 ## Rejected Alternatives
 
 - Extracting order service and catalog service was rejected because it would create high migration risk and weak scope control.

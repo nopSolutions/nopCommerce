@@ -71,126 +71,165 @@ Boundary rule:
 
 ## 4. Quality Attribute Scenarios
 
-| Attribute | Scenario | Response | Measure |
-| --- | --- | --- | --- |
-| Resilience | WMS is unavailable when an order is placed | Checkout succeeds, outbox records event, fulfillment remains pending and worker retries | User receives order confirmation; no checkout failure caused by WMS |
-| Consistency | POS sends duplicate or stale stock event | Plugin inbox detects duplicate/stale `messageId` or `sourceVersion` | Duplicate ignored; stale update marked as ignored/reconciled |
-| Traceability | Reviewer asks why an order is pending | OrderGuid links outbox message, worker attempt and fulfillment projection | Evidence pack includes order, message and retry log |
-| Operability | WMS outage persists | RabbitMQ queue depth/retry/DLQ becomes visible in demo logs | Demo shows pending/retry/DLQ state |
-| Performance | WMS is slow for 10 seconds | Checkout does not wait for WMS response | Checkout duration remains close to normal-path baseline |
+Summary table below. **Full SEI 6-part scenarios with numeric measures**: [quality-attribute-scenarios.md](quality-attribute-scenarios.md). Each scenario drives one ADD iteration in section 6.
+
+| ID  | Attribute     | Stimulus                                       | Response                                                | Measure (full version in QA doc)              |
+|-----|---------------|------------------------------------------------|---------------------------------------------------------|-----------------------------------------------|
+| QA-1| Resilience    | WMS returns 503 for 30 s                       | Checkout completes; order pending; worker retries       | Checkout P95 ≤ 1.5× baseline; 0 checkout failures |
+| QA-2| Consistency   | Duplicate or stale POS event                   | Inbox rejects duplicate; stale `sourceVersion` ignored  | Duplicate detection ≤ 50 ms; 0 duplicate fulfillment |
+| QA-3| Traceability  | Support investigates a pending order           | Outbox/MQ/worker/projection linked by `OrderGuid`       | 100% of orders link end-to-end; ≤ 3 admin clicks |
+| QA-4| Operability   | WMS in `slow` or `unavailable` mode            | Queue/retry/DLQ visible in dashboard                    | Single dashboard view; refresh ≤ 5 s          |
+| QA-5| Performance   | `OrderPlacedEvent` fired                       | Plugin writes outbox row, no sync external call         | Outbox row ≤ 100 ms; 0 sync HTTP in checkout  |
 
 ## 5. Chosen Design Framework
 
-Chosen method: **ADD - Attribute-Driven Design**.
+Chosen method: **ADD - Attribute-Driven Design**, primary. **ACDM** governance vocabulary and **ADM Phase F** migration discipline are borrowed where ADD is silent.
 
-Why ADD fits:
+### Why ADD, and why not ACDM or ADM
 
-- The assignment is explicitly driven by quality attributes such as resilience, consistency, operability and traceability.
-- The target architecture is a selective evolution, not a full enterprise architecture program.
-- ADD lets the team start from drivers, choose tactics and then justify concrete design decisions.
+Scenario C has multiple interacting quality drivers (resilience, consistency, traceability, operability, performance) and demands a selective evolution of one existing product. ADD fits because it is iterative (one driver per iteration), driver-first (decompose only where pressure exists), and its 7-step iteration output (goal, drivers, refined element, concepts/tactics, responsibilities, interfaces, 2–5 decisions, analysis) maps directly to this rubric.
 
-ADD application:
+- **ADD over ACDM**: ACDM is single-pass single-driver (slide 11). Compressing five QA drivers into one pass loses fidelity; doing three independent ACDM passes is not what the method prescribes. ADD's iterative loop is the natural fit.
+- **ADD over ADM**: ADM assumes enterprise breadth — business architecture, multiple delivery teams, cross-unit governance. We evolve one product. The rubric explicitly penalises inflated scope.
 
-1. Identify drivers: omnichannel visibility, resilience under degradation, traceable recovery.
-2. Select architectural tactics: asynchronous messaging, outbox, idempotent consumers, retry/DLQ, circuit breaker, projection state.
-3. Allocate responsibilities: nopCommerce owns commerce core; worker owns external coordination; simulators create pressure.
-4. Validate with scenarios: normal order, WMS down, WMS recovery, POS stock update, duplicate/stale event.
+### What we borrow and why
 
-Visual notation: **C4 Model**, used for context, container, component and runtime diagrams.
+| Borrowed                         | From  | Fills which ADD gap                          |
+|----------------------------------|-------|----------------------------------------------|
+| Go / partial-go / no-go decision | ACDM  | ADD does not define architecture evaluation  |
+| Experiment charter framing       | ACDM  | Anchors the feasibility spike artefact       |
+| Phase-F migration table          | ADM   | ADD does not cover migration sequencing      |
+| Phase-H change vocabulary        | ADM   | ADD does not cover post-rollout governance   |
+
+### How ADD is applied here
+
+Three iterations, each producing the seven ADD outputs and ending with an ACDM-style go/no-go. Iteration goals, refined elements, tactics, and decisions are detailed in §6.
+
+| # | Iteration goal (one driver)                                          | Element refined           | Decisions                          |
+|---|----------------------------------------------------------------------|---------------------------|------------------------------------|
+| 1 | Stay useful when WMS is slow or unavailable                          | Order → WMS edge          | ADR-0003, ADR-0005                 |
+| 2 | Don't lose state under at-least-once delivery and stale POS updates  | Inbox / projection edge   | ADR-0006, ADR-0007                 |
+| 3 | Make ops and audit able to explain a delayed/recovering order        | Cross-cutting traceability| ADR-0008                           |
+
+Frame decisions (precede the iterations): ADR-0001 (scenario), ADR-0002 (keep core in monolith), ADR-0004 (simulators).
+
+Visual notation: **C4 Model** for context, container, component and runtime diagrams.
 
 ## 6. Target Architecture
 
-Main components:
+Components, ownership, and interaction style are described iteration by iteration below. Each iteration follows ADD's 7-step loop and ends with an ACDM-style go/no-go.
 
-- **nopCommerce monolith**: existing storefront, checkout, order and catalog behavior.
-- **Omnichannel Core plugin**: listens to `OrderPlacedEvent`, stores outbox messages, exposes internal update endpoints and maintains projection tables.
-- **RabbitMQ**: durable asynchronous transport between nopCommerce and the worker.
-- **Omnichannel Worker**: independently deployable service that consumes integration events, calls external systems and returns status updates.
-- **WMS simulator**: receives fulfillment requests and can act normal, slow, unavailable or contradictory.
-- **POS simulator**: emits stock changes from store operations.
+### Components and ownership (cross-iteration view)
 
-Data ownership:
+| Component                | Owner team   | Responsibility                                                                 |
+|--------------------------|--------------|--------------------------------------------------------------------------------|
+| nopCommerce monolith     | nopCommerce  | Storefront, checkout, order, catalog, stock, shipments                         |
+| Omnichannel Core plugin  | Omnichannel  | OrderPlacedEvent consumer, outbox, inbox, projections, internal callback API   |
+| RabbitMQ                 | Omnichannel  | Durable async transport                                                        |
+| Omnichannel Worker       | Omnichannel  | Consumes events, calls WMS, returns status; idempotency state                  |
+| WMS simulator            | external     | Fulfillment behavior with normal/slow/unavailable/contradictory modes          |
+| POS simulator            | external     | Store-originated stock change events                                           |
 
-- nopCommerce owns orders, products, stock and shipments.
-- Plugin owns integration metadata and projections: outbox, inbox, fulfillment state, stock sync state.
-- Worker owns only its local delivery/idempotency state.
-- WMS/POS simulators own their own simulated state.
+**Boundary rule** (ADR-0005): worker, WMS, POS never read or write nopCommerce DB. All cross-boundary communication is RabbitMQ events or plugin HTTP endpoints.
 
-Interaction style:
+### Iteration 1 — Stay useful when WMS is slow or unavailable
 
-- Checkout path stays synchronous inside nopCommerce.
-- Integration path is asynchronous: `OrderPlacedEvent -> Outbox -> RabbitMQ -> Worker -> WMS -> Plugin callback`.
-- POS stock updates are asynchronous: `POS -> RabbitMQ -> Worker -> Plugin endpoint`.
+- **Driver**: Resilience scenario QA-1 (see [QA scenarios](quality-attribute-scenarios.md)).
+- **Element refined**: Order → WMS edge.
+- **Tactics**: outbox, async messaging, retry with exponential backoff, circuit breaker, dead-letter queue.
+- **Responsibilities**: plugin writes outbox row inside `OrderPlacedEvent` consumer; scheduled task publishes to RabbitMQ with publisher confirms; worker consumes, calls WMS, callbacks plugin.
+- **Interfaces**: `commerce.order.placed.v1` (plugin → MQ → worker); `fulfillment.status.changed.v1` (worker → plugin HTTP).
+- **Decisions**: [ADR-0003](../adr/0003-use-outbox-rabbitmq-for-fulfillment.md), [ADR-0005](../adr/0005-no-shared-database-boundaries.md).
+- **Analysis**: checkout latency stays bounded under WMS 503 (validated by spike). DLQ contains poison messages without blocking the live path.
+- **Go/Partial-Go/No-Go**: **Go** on outbox + RabbitMQ + worker. Risk: scheduled-task publish lag must stay under one minute under load — measured in Part 2.
 
-Cross-cutting decisions:
+### Iteration 2 — Don't lose state under at-least-once delivery and stale POS updates
 
-- At-least-once delivery with idempotent consumers.
-- Retry with backoff and DLQ for persistent failures.
-- Circuit breaker around WMS calls.
-- Correlation by `OrderGuid`, `messageId` and `externalRequestId`.
-- No shared database across extracted service boundaries.
+- **Driver**: Consistency scenario QA-2.
+- **Element refined**: Inbox / projection edge.
+- **Tactics**: idempotent receiver (`messageId`), version-based stale detection (`sourceVersion`), local projection.
+- **Responsibilities**: plugin records every external `messageId` in `OmniInboxMessage` before applying side effects; stock updates compare `sourceVersion`; projection table `OmniStockSyncState` shadows core stock without writing to it (initially).
+- **Interfaces**: `pos.stock.changed.v1` (POS → MQ → worker → plugin HTTP).
+- **Decisions**: [ADR-0006](../adr/0006-idempotency-strategy.md), [ADR-0007](../adr/0007-stock-projection-vs-writethrough.md).
+- **Analysis**: duplicates rejected; older `sourceVersion` ignored; projection diverges from core stock only when external stock changes — surfaced as drift, not silently merged.
+- **Go/Partial-Go/No-Go**: **Go** on idempotent inbox. **Partial-go** on projection-only stock; revisit write-through after Part 2 measures drift impact.
+
+### Iteration 3 — Make ops and audit able to explain a delayed or recovering order
+
+- **Driver**: Traceability scenario QA-3.
+- **Element refined**: Cross-cutting correlation and observability.
+- **Tactics**: correlation ID propagation, structured outbox/inbox state transitions, queue/retry/DLQ exposure.
+- **Responsibilities**: every log line, message, and DB row carries `OrderGuid` + `messageId` + `externalRequestId`; admin view in plugin lists fulfillment state per order; RabbitMQ management UI exposes queue depth and DLQ.
+- **Interfaces**: standard message envelope (`messageId`, `correlationId`, `eventType`, `occurredOnUtc`).
+- **Decisions**: [ADR-0008](../adr/0008-correlation-and-traceability.md).
+- **Analysis**: support can answer "why is this order pending?" from the plugin admin view alone, without code spelunking.
+- **Go/Partial-Go/No-Go**: **Go** on correlation propagation. Risk: dashboard depth depends on Part 2 implementation budget.
+
+### Required Technical Constraints — coverage map
+
+| Constraint (assignment §)                              | Where satisfied                                          |
+|--------------------------------------------------------|----------------------------------------------------------|
+| 1. At least one asynchronous workflow                  | Iteration 1: outbox → RabbitMQ → worker                  |
+| 2. At least one explicit reliability decision          | Iteration 1: ADR-0003 (retry/backoff, circuit breaker, DLQ); Iteration 2: ADR-0006 (idempotency)         |
+| 3. Two surrounding systems represented                 | WMS simulator + POS simulator (ADR-0004)                 |
+| 4. One independently deployable subsystem              | Omnichannel Worker                                       |
+| 5. No shared database across extracted boundaries      | ADR-0005                                                 |
+| 6. Justify what remains in the monolith                | ADR-0002                                                 |
+| 7. Performance/resilience/operability/traceability evidence | Part 2 evidence pack (see Iteration 1–3 measures)   |
 
 ## 7. Architectural Decisions
 
-Initial ADRs:
+Frame decisions:
 
 - [ADR-0001 - Select Scenario C](../adr/0001-select-scenario-c-omnichannel.md)
 - [ADR-0002 - Keep commerce core inside nopCommerce](../adr/0002-keep-commerce-core-inside-nopcommerce.md)
-- [ADR-0003 - Use outbox and RabbitMQ for fulfillment integration](../adr/0003-use-outbox-rabbitmq-for-fulfillment.md)
 - [ADR-0004 - Use WMS and POS simulators](../adr/0004-use-wms-pos-simulators.md)
-- [ADR-0005 - Do not share databases across service boundaries](../adr/0005-no-shared-database-boundaries.md)
+
+Iteration decisions:
+
+- Iteration 1 (resilience): [ADR-0003 - Outbox + RabbitMQ](../adr/0003-use-outbox-rabbitmq-for-fulfillment.md), [ADR-0005 - No shared database](../adr/0005-no-shared-database-boundaries.md)
+- Iteration 2 (consistency): [ADR-0006 - Idempotency strategy](../adr/0006-idempotency-strategy.md), [ADR-0007 - Projection vs write-through](../adr/0007-stock-projection-vs-writethrough.md)
+- Iteration 3 (traceability): [ADR-0008 - Correlation and traceability](../adr/0008-correlation-and-traceability.md)
+
+Each ADR includes Status, Context, Decision, Consequences, **Tradeoffs**, and Rejected Alternatives.
 
 ## 8. Risk and Validation Plan
 
-| Risk | Why it matters | Validation |
-| --- | --- | --- |
-| Checkout accidentally depends on WMS availability | Would fail mandatory pressure point | Spike proves event can be captured after order placement and published later |
-| Duplicate messages create duplicate fulfillment | At-least-once messaging requires idempotency | Inbox test and duplicate demo event |
-| Stock projection becomes misleading | Cross-channel visibility depends on freshness | POS stale-version scenario |
-| Too much scope for final delivery | Assignment rewards selective evolution | Keep WMS/POS as simulators and avoid real ERP/POS setup |
-| nopCommerce plugin integration is harder than expected | Plugin is the main extension seam | Part 1 spike maps extension points and final plugin files |
+| Risk                                                  | Why it matters                                | Validation                                           | Success signal                                                          |
+|-------------------------------------------------------|-----------------------------------------------|------------------------------------------------------|-------------------------------------------------------------------------|
+| Checkout accidentally depends on WMS availability     | Fails mandatory pressure point (QA-1)         | Spike + Part 2 e2e test with WMS sim returning 503   | Checkout test passes; checkout P95 ≤ 1.5× baseline                      |
+| Duplicate messages create duplicate fulfillment        | At-least-once requires idempotency (QA-2)     | Inbox test with replayed `messageId`                 | 0 duplicate fulfillment rows; duplicate detected ≤ 50 ms                |
+| Stock projection becomes misleading                    | Cross-channel visibility (QA-2, QA-3)         | POS stale-version scenario; admin drift view         | Older `sourceVersion` ignored; drift count visible in admin             |
+| Too much scope for final delivery                      | Assignment rewards selective evolution        | Migration table (§9) caps stages to 5 moves          | All stages traceable to one ADD iteration; no out-of-scope work added   |
+| nopCommerce plugin integration harder than expected    | Plugin is the main extension seam             | Part 1 spike maps extension points                   | Spike outcome documented in `feasibility-spike.md`; result = feasible   |
 
 ## 9. Evolution Roadmap
 
-Phase 1 - Checkpoint:
+Format: ADM Phase-F migration table (stage / move / why now / what coexists / owner). Each stage is one move; nothing is replaced wholesale.
 
-- Decide scenario C and quality attributes.
-- Document current architecture pressure points.
-- Define target architecture and ADRs.
-- Validate extension feasibility through spike.
+| Stage | Move                                                                  | Why now                                              | What still coexists                                      | Owner          |
+|-------|-----------------------------------------------------------------------|------------------------------------------------------|----------------------------------------------------------|----------------|
+| 1     | Plugin scaffolding + outbox/inbox/projection tables                   | Foundation for Iterations 1–3; lowest risk           | nopCommerce checkout, in-process events, existing plugins| Omnichannel    |
+| 2     | RabbitMQ + worker + Iteration 1 normal flow (order → WMS sim)         | Validates async path end-to-end before pressure work | All Stage 1; WMS sim in `normal` mode only               | Omnichannel    |
+| 3     | Iteration 1 pressure work: retry, circuit breaker, DLQ + WMS modes    | Demonstrates resilience under degradation            | Stage 2; reuses worker and plugin                        | Omnichannel    |
+| 4     | Iteration 2: POS sim, idempotent inbox, stock projection              | Adds consistency dimension once resilience is stable | All Stages 1–3                                           | Omnichannel    |
+| 5     | Iteration 3: correlation propagation + admin view + dashboard         | Closes traceability/operability rubric items         | All prior stages; instruments existing flows             | Omnichannel    |
 
-Phase 2 - Minimal runtime skeleton:
+### Coexistence rules
 
-- Create `Nop.Plugin.Misc.OmnichannelCore`.
-- Add plugin tables and admin/internal views for outbox/projections.
-- Add worker, RabbitMQ, WMS simulator and POS simulator to Docker Compose.
+- nopCommerce DB stays single-owner. Worker, WMS, POS never read or write it (ADR-0005).
+- In-process `OrderPlacedEvent` continues to exist for non-omnichannel consumers. The plugin **adds** a consumer; it does not replace the event.
+- WMS/POS simulators replace real systems only for the demo. Production swap-out is out of scope; contracts (`commerce.order.placed.v1`, `pos.stock.changed.v1`, `fulfillment.status.changed.v1`) are versioned to allow it.
+- No core nopCommerce service is modified. Plugin migrations own all new tables.
 
-Phase 3 - Normal flow:
+## 10. Feasibility Spike (Experiment Charter)
 
-- Capture `OrderPlacedEvent`.
-- Publish `commerce.order.placed.v1`.
-- Worker calls WMS simulator.
-- Plugin records fulfillment status.
+Framed as an ACDM-style experiment charter:
 
-Phase 4 - Pressure and recovery:
+- **Question**: can a placed order start an asynchronous omnichannel workflow without making checkout depend on WMS/POS availability and without rewriting core order processing?
+- **Success signal**: a plugin consumer of `OrderPlacedEvent` can write a durable outbox row in < 100 ms and return; a scheduled task can publish that row to RabbitMQ later; no synchronous external HTTP on the checkout thread.
+- **If it fails**: the architecture must change — either extract order processing or accept synchronous WMS coupling. Both would invalidate the current target architecture.
+- **Outcome**: **feasible**. `OrderPlacedEvent` is published after order persistence (`OrderProcessingService.cs:1617`); plugins can consume it and own their tables; scheduled tasks decouple publish from checkout.
 
-- Add WMS `slow`, `unavailable` and `contradictory` modes.
-- Add retry, circuit breaker and DLQ.
-- Add POS stock update flow.
-- Record evidence pack.
-
-## 10. Feasibility Spike
-
-Spike result: **feasible**.
-
-The riskiest design point is whether a placed order can be turned into a durable external integration message without rewriting checkout.
-
-Findings:
-
-- nopCommerce already publishes `OrderPlacedEvent` after order persistence.
-- Plugins can register consumers and services through the existing plugin infrastructure.
-- A plugin can create its own tables using nopCommerce migration patterns.
-- A scheduled task can later publish pending outbox rows, keeping RabbitMQ off the checkout critical path.
-
-See [feasibility spike](../evidence/feasibility-spike.md) for concrete event shape, insertion points and Part 2 implementation notes.
+See [feasibility spike](../evidence/feasibility-spike.md) for concrete event shape, source insertion points and Part 2 implementation notes.
 

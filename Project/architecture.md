@@ -98,7 +98,9 @@ Plugins may depend on any layer. External services (worker, simulators) must not
 
 ## Architectural Pressure Points for Scenario C
 
-These are the specific gaps between the current nopCommerce architecture and what Scenario C (Omnichannel Commerce Core) requires. They directly motivate the target architecture decisions documented in `docs/part1/architecture-checkpoint.md`.
+These are the specific gaps between the current nopCommerce architecture and what Scenario C (Omnichannel Commerce Core) requires. They directly motivate the target architecture decisions in `docs/part1/architecture-checkpoint.md` §6.
+
+In ADD terms, this list is the **input set for Iteration 1** (resilience driver). Each pressure point becomes either an iteration goal, a constraint, or an explicit out-of-scope decision.
 
 ### 1. In-Process Events Are Not a Durable Integration Boundary
 
@@ -140,9 +142,10 @@ Existing plugins demonstrate that nopCommerce supports independent plugin folder
 
 ## Assignment 2 Artefacts
 
-- [Architecture checkpoint and target architecture](docs/part1/architecture-checkpoint.md)
-- [C4 and runtime diagrams](docs/part1/diagrams.md)
-- [ADR set](docs/adr/)
-- [Feasibility spike](docs/evidence/feasibility-spike.md)
+- [Architecture checkpoint and target architecture](docs/part1/architecture-checkpoint.md) — 3 ADD iterations, framework justification, migration roadmap.
+- [Quality attribute scenarios](docs/part1/quality-attribute-scenarios.md) — SEI 6-part with numeric measures.
+- [Context map and C4 diagrams](docs/part1/diagrams.md)
+- [ADR set](docs/adr/) — 8 ADRs.
+- [Feasibility spike (experiment charter)](docs/evidence/feasibility-spike.md)
 
 **Key takeaway**: nopCommerce's plugin model and existing domain concepts make it a viable base for Scenario C. The missing pieces — durable events, outbox, inbox, and external system coordination — are the exact architectural problem the evolution is designed to solve.

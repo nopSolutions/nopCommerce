@@ -1,5 +1,14 @@
 # Feasibility Spike - OrderPlacedEvent to Durable Outbox
 
+## Experiment Charter
+
+| Field          | Value                                                                                              |
+|----------------|----------------------------------------------------------------------------------------------------|
+| Question       | Can a placed order start an asynchronous omnichannel workflow without making checkout depend on WMS/POS availability and without rewriting core order processing? |
+| Success signal | A plugin consumer of `OrderPlacedEvent` writes a durable outbox row in < 100 ms and returns; a scheduled task publishes that row to RabbitMQ later; no synchronous external HTTP on the checkout thread. |
+| If it fails    | Architecture must change — extract order processing or accept synchronous WMS coupling. Both invalidate the current target architecture. |
+| Outcome        | **Feasible.** Findings below.                                                                      |
+
 ## Goal
 
 Validate the riskiest Part 2 assumption: a placed nopCommerce order can start an asynchronous omnichannel workflow without making checkout depend on WMS/POS availability and without rewriting core order processing.

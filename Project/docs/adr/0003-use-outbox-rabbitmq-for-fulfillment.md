@@ -20,6 +20,12 @@ The plugin will write `OmniOutboxMessage` when it observes `OrderPlacedEvent`. A
 - Delivery is at-least-once, so consumers must be idempotent.
 - Retry, DLQ and recovery become visible and demonstrable.
 
+## Tradeoffs
+
+- At-least-once shifts complexity to consumers (`messageId` deduplication, see ADR-0006).
+- Outbox publisher adds operational surface: scheduled-task health and queue lag must be monitored.
+- Recovery time after RabbitMQ failure depends on backlog drain rate; not bounded by the architecture itself.
+
 ## Rejected Alternatives
 
 - Synchronous HTTP from checkout to WMS was rejected because WMS degradation would break checkout or force long user waits.

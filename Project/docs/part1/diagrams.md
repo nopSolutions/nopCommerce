@@ -1,6 +1,36 @@
 # Part 1 Diagrams
 
-These diagrams are intentionally compact for the 7-minute checkpoint. They are written in Mermaid so they can be rendered by common Markdown viewers.
+Compact diagrams for the checkpoint. Mermaid format so any Markdown viewer renders them.
+
+## DDD Context Map (bounded contexts + relationships)
+
+```mermaid
+flowchart LR
+    subgraph Core["nopCommerce Core Context"]
+        CC[Order, Product, Stock, Shipment]
+    end
+
+    subgraph Omni["Omnichannel Integration Context"]
+        OI[Outbox, Inbox, Projection]
+    end
+
+    subgraph WMSCtx["WMS Context (external)"]
+        WC[Fulfillment requests]
+    end
+
+    subgraph POSCtx["POS Context (external)"]
+        PC[Stock changes]
+    end
+
+    Core -->|upstream: domain event| Omni
+    Omni -->|downstream: callback API| Core
+    Omni -->|downstream: ACL via worker| WMSCtx
+    POSCtx -->|upstream: ACL via worker| Omni
+```
+
+- **Upstream** (provider) → **downstream** (consumer) is read in the direction of the arrow.
+- The Worker acts as an **anti-corruption layer (ACL)** on the WMS and POS edges: external schemas and quirks are translated into the omnichannel envelope before the plugin sees them.
+- nopCommerce Core is upstream of Omnichannel for the order event, but downstream of Omnichannel for fulfillment/stock callbacks — the two contexts have a **customer/supplier** relationship via versioned contracts, not a shared model.
 
 ## C4 Level 1 - System Context
 
@@ -25,23 +55,25 @@ flowchart LR
 
 ## C4 Level 2 - Containers
 
+Owner labels in `[brackets]` show team responsibility (see ADR-0005 for boundary rules).
+
 ```mermaid
 flowchart TB
-    subgraph Core["nopCommerce container"]
-        Web[Nop.Web storefront/admin]
-        Services[Nop.Services orders/catalog/shipping]
-        Plugin[Omnichannel Core plugin]
-        NopDb[(nopCommerce DB)]
+    subgraph Core["nopCommerce container [nopCommerce team]"]
+        Web["Nop.Web storefront/admin<br>[nopCommerce]"]
+        Services["Nop.Services orders/catalog/shipping<br>[nopCommerce]"]
+        Plugin["Omnichannel Core plugin<br>[Omnichannel]"]
+        NopDb[("nopCommerce DB<br>[nopCommerce]")]
         Web --> Services
         Services --> NopDb
         Services -->|OrderPlacedEvent| Plugin
         Plugin --> NopDb
     end
 
-    MQ[(RabbitMQ)]
-    Worker[Omnichannel Worker]
-    WMS[WMS Simulator]
-    POS[POS Simulator]
+    MQ[("RabbitMQ<br>[Omnichannel]")]
+    Worker["Omnichannel Worker<br>[Omnichannel]"]
+    WMS["WMS Simulator<br>[external]"]
+    POS["POS Simulator<br>[external]"]
 
     Plugin -->|publish outbox| MQ
     POS -->|stock changed| MQ
