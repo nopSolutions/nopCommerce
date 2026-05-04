@@ -122,9 +122,9 @@ Navigate to Admin area (if installed) → System → Log
 
 ## Success Criteria (from risk-plan.md)
 
-✅ **Message appears in RabbitMQ within 10s of startup**  
-✅ **Row marked as `Published = true` in database**  
-✅ **No DI registration errors or crashes**
+**Message appears in RabbitMQ within 10s of startup**  
+**Row marked as `Published = true` in database**  
+**No DI registration errors or crashes**
 
 ## Troubleshooting
 
@@ -169,11 +169,11 @@ DELETE FROM "IntegrationEvent";
 ## Next Steps After Successful Spike
 
 If all verification passes:
-1. ✅ Mark Risk 1 as MITIGATED in risk-plan.md
-2. ✅ Document spike results in docs/evidence/
-3. ✅ Refactor spike code for production:
+1. Mark Risk 1 as MITIGATED in risk-plan.md
+2. Document spike results in docs/evidence/
+3. Refactor spike code for production:
    - Remove "Spike" prefix from classes
    - Move RabbitMQ config to appsettings.json
    - Add Polly retry policies
    - Replace AppStartedEventConsumer with real OrderPlacedEvent consumer
-4. ✅ Proceed with full Part 2 implementation
+4. Proceed with full Part 2 implementation
