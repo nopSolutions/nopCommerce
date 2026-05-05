@@ -4,79 +4,45 @@
 
 Step 3 selects the architectural tactics and patterns that the carrier integration channel applies. Each concept is paired with the alternative considered and the reason for rejection — the traceability that justifies each decision in the ADRs that close the iteration.
 
-Eight concepts are selected. The first four address the **inbound webhook path** and the QAS-5 response measure directly; the next two address the **outbound booking path** that establishes the correlation key; the last two close cross-cutting concerns (auth and audit).
+Six concepts are selected. The first two address the **inbound polling path** and the QAS-5 response measure directly; the next two address the **outbound booking path** that establishes the correlation key; the last two close cross-cutting concerns (status vocabulary and concurrent update safety).
 
 ---
 
-## Inbound Phase — Webhook Ingestion
+## Inbound Phase — Carrier Status Polling
 
-### 1. Async Handoff: Webhook Controller Acks Immediately, Internal Queue Drives Processing
+### 1. Scheduled Polling via `IScheduleTask`; nopCommerce Owns the Detection Cadence
 
-**Driver:** QAS-5 — visible to customer within 10 s; CON-24 — synchronous external work in the controller eats the budget; CON-18 — carriers retry on slow responses.
+**Driver:** QAS-5 — visible to customer within 30 s; reliability guarantee must be unconditional and not dependent on the carrier sending anything.
 
-**Concept:** The webhook controller has three responsibilities only — authenticate, write the raw payload to the audit table, and publish a `carrier.status.received` message to a local RabbitMQ queue (`verdemart.carrier.status`). Then it returns 200. A separate `CarrierStatusConsumer` drains the queue and does the real work: dedup, correlation, status update, email enqueue.
+**Concept:** A new `CarrierStatusPollerTask` implements `IScheduleTask` and runs every 30 seconds. On each tick it fetches the current status for every `Shipment` that has an `ExternalShipmentId` and is not in a terminal state (`Delivered`, `ShippingNotRequired`). For each shipment, it compares the returned status string against `Shipment.ExternalShippingStatus`. If they differ, it updates the shipment and enqueues a customer notification email inside one DB transaction. If WireMock is unreachable, the tick logs the error and returns — no state is lost; the next tick retries the same reads.
 
-This separates two failure domains: the carrier's view of the integration ("did my POST succeed?") and nopCommerce's internal processing latency. The carrier sees a fast 200 every time the endpoint is reachable; internal retries happen on the queue, where they are deterministic and the DLQ pattern applies.
+Polling reads current state on every tick. After any outage of any duration, the next tick recovers the correct state without any dependency on WireMock having retained a pending notification.
 
 **Rejected alternatives:**
 
-- *Synchronous in-controller processing* — Rejected because (a) any internal slowness (DB contention on the `Shipment` lookup, slow email infrastructure) translates directly to slow carrier responses and triggers carrier retries with opaque timing; (b) the 10 s budget would be split between WireMock's HTTP timeout and nopCommerce's processing — half the budget gets eaten before anything starts; (c) the controller would own retry logic that the broker already provides for free.
+- *Inbound webhook from WireMock* — Rejected because WireMock does not implement webhook retry logic. A single failed delivery leaves nopCommerce silently diverged from carrier state with no self-healing path. QAS-5's guarantee cannot be satisfied by a mechanism the sender can abandon. Polling gives nopCommerce full ownership of the detection cadence.
 
-- *Persist to a DB outbox and use the existing `OutboxDispatcherTask`* — Rejected because the existing Outbox is publisher-side (writes that need to *leave* nopCommerce) and the dispatcher's polling cadence is tuned for that. An inbound queue with a push consumer is lower-latency and structurally clearer; reusing the outbox here would conflate semantics.
+- *`IHostedService` polling loop instead of `IScheduleTask`* — Rejected because `IScheduleTask` is the nopCommerce-native scheduling primitive, already used for outbox dispatch, queue drain, and similar periodic work. It is registered, monitored, and configured through the existing admin schedule-tasks UI with no additional infrastructure. A raw `BackgroundService` loop would replicate the scheduling and logging that `IScheduleTask` provides for free.
 
 ---
 
-### 2. Idempotency via Carrier-Supplied `eventId` with Out-of-Order Guard
+### 2. Last-Write-Wins on `ExternalShippingStatus`; No Dedup Table Required
 
-**Driver:** CON-18 — carriers retry on 5xx and timeout; CON-19 — out-of-order delivery is real; ADR-003 — at-least-once delivery requires consumer-side idempotency.
+**Driver:** CON-19 — concurrent poll ticks in a future multi-node deployment could both attempt to write the same status transition; the update must be safe under concurrency.
 
-**Concept:** Every webhook payload carries an `eventId` (UUID) generated by the carrier. The `CarrierStatusConsumer` keeps a small dedup table (`processed_carrier_events`, PK `EventId`). On each message: if the `EventId` exists, ack and skip. Otherwise, perform an out-of-order guard — the update applies only if the payload's `occurredAtUtc` is strictly greater than the `Shipment.LastStatusOccurredAtUtc` already on file. Older events are recorded in the audit table but do not move state. Then update state and insert the dedup row inside one DB transaction.
-
-This handles three real cases: carrier-side retries of the same event (dedup), reordered delivery of distinct events (timestamp guard), and corrective updates (carriers don't edit; they emit a new event with a newer timestamp, which wins).
+**Concept:** The poller applies a status update only when the value returned by WireMock differs from the value currently stored in `Shipment.ExternalShippingStatus`. The check and the update run inside one DB transaction; the unique correlation key (`ExternalShipmentId`) serialises concurrent writers at the row level. A concurrent tick that reads the same status as what was just committed will find no difference and skip — no duplicate email is enqueued. No separate dedup table is needed because the `Shipment` row itself is the dedup state.
 
 **Rejected alternatives:**
 
-- *Dedup by `(ExternalShipmentId, status, occurredAtUtc)` triple* — Rejected because it doesn't catch the "two heartbeats with same status, same timestamp" case (rare but possible) without race-condition risk on the composite key.
+- *Timestamp-based out-of-order guard* — Not applicable: polling always reads the current carrier state, not an event stream. There is no sequence of events that could arrive out of order — each tick returns one value representing the present state. A timestamp guard adds complexity for a problem that doesn't exist in the polling model.
 
-- *Last-write-wins by arrival order* — Rejected because the QAS-5 worry the user explicitly raised is real: webhook A ("In Transit") arriving after webhook B ("Delivered") because of carrier retry delays would corrupt the customer-visible state. Carrier `occurredAtUtc` is the authoritative ordering signal.
-
-- *Trust the broker's once-only delivery and skip dedup* — Rejected because the at-least-once contract from ADR-003/ADR-004 is system-wide; making this consumer the exception introduces a special case for no operational benefit.
-
----
-
-### 3. External Status Preserved as a String Field; `ShippingStatus` Enum Untouched
-
-**Driver:** CON-21 — coarsening loses information, extending core enum violates the plugin boundary; QAS-5 response — "tracking status visible to the customer" implies the customer sees the carrier vocabulary, not a coarsened summary.
-
-**Concept:** A new `ExternalShippingStatus` column (varchar) on `Shipment` holds the raw carrier vocabulary verbatim — `IN_TRANSIT`, `OUT_FOR_DELIVERY`, etc. The existing `ShippingStatus` enum in `Nop.Core.Domain.Shipping` is left untouched and continues to serve nopCommerce-internal logic at its existing granularity. A small hard-coded mapper inside the plugin (`IExternalStatusMapper`) translates carrier vocab into the coarse internal enum *only when the new external status crosses one of the internal enum's thresholds* — e.g. `DELIVERED` triggers a `ShippingStatus.Delivered` transition; `IN_TRANSIT` and `OUT_FOR_DELIVERY` both leave `ShippingStatus.Shipped` unchanged. The order detail page renders `ExternalShippingStatus` when present and falls back to the internal enum otherwise.
-
-This preserves carrier richness for the customer-facing view, keeps internal nopCommerce code paths working unchanged, and respects ADR-002's plugin boundary (no `Nop.Core` modification).
-
-**Rejected alternatives:**
-
-- *Extend the `ShippingStatus` enum with new members* — Rejected because the enum lives in `Nop.Core` and is consumed by every shipping-related service in the framework. Adding members forces existing `switch` statements to handle new cases or break; the change is invasive and out of plugin scope.
-
-- *Many-to-few mapping only, no external string field* — Rejected because the customer loses visibility of "Out for Delivery" — exactly the visibility QAS-5 set out to give them.
-
-- *Introduce a parallel plugin-local enum and store the integer* — Rejected as more brittle than a string: a string survives carrier vocabulary additions without code change, while a new enum member forces a plugin redeploy for every carrier-side schema bump.
-
----
-
-### 4. Hard-Coded Mapping Table Inside the Plugin
-
-**Driver:** CON-21 — mapping policy must exist somewhere; the user's preference for simplicity over admin-configurability for a stable mapping; the carrier vocabulary is stable for the demo.
-
-**Concept:** The mapping from carrier vocabulary → internal `ShippingStatus` lives inside `IExternalStatusMapper` as a `switch` expression. Adding a new carrier value requires a small code change and plugin redeploy; this is acceptable because carrier vocabularies are rarely revised and the change has obvious code-review semantics.
-
-**Rejected alternative:**
-
-- *DB-backed mapping table editable in the admin UI* — Rejected because it adds a CRUD UI, a migration, a settings surface, and an admin-procedure document for a mapping that changes maybe once a year. The simpler concept can be promoted to admin-configurable later if the operational reality demands it.
+- *Separate dedup table keyed on `(ExternalShipmentId, status)`* — Rejected because the `Shipment` row already holds `ExternalShippingStatus`; maintaining a separate store for the same fact is redundant and adds a migration without benefit.
 
 ---
 
 ## Outbound Phase — Booking via the Outbox
 
-### 5. Outbound Booking Reuses Iter 2's Outbox
+### 3. Outbound Booking Reuses Iter 2's Outbox
 
 **Driver:** CON-22 — admin UI must not block on WireMock; ADR-004 — Outbox is the established pattern for guaranteed cross-process delivery; constraint from Step 1 — reuse, don't duplicate.
 
@@ -92,13 +58,13 @@ The admin UI returns as soon as `ShipmentSentEvent` fires; WireMock's latency is
 
 ---
 
-### 6. Booking Consumer Hosted In-Process Inside nopCommerce
+### 4. Booking Consumer Hosted In-Process Inside nopCommerce
 
 **Driver:** CON-22 — no new deployable required for QAS-5; the brief's "≥1 independently deployable subsystem" requirement is already met by ADR-007.
 
 **Concept:** `CarrierBookingConsumer` is a `BackgroundService` registered through `INopStartup` and runs in the same process as the nopCommerce web app. It connects to RabbitMQ on startup, subscribes to the carrier-booking queue, and processes messages with manual ack. Because the booking call writes back into nopCommerce's own database, in-process hosting avoids cross-process coordination on the writeback path.
 
-This is the deliberate counterpart to ADR-007's bridge: the OpenBoxes bridge talks to an external system *and* writes nothing back into nopCommerce, so it lives outside; the carrier booking consumer talks to an external system *and* must update nopCommerce's `Shipment` row, so it lives inside.
+This is the deliberate counterpart to ADR-007's bridge: the OpenBoxes bridge talks to an external system and writes nothing back into nopCommerce, so it lives outside; the carrier booking consumer talks to an external system and must update nopCommerce's `Shipment` row, so it lives inside.
 
 **Rejected alternative:**
 
@@ -108,55 +74,49 @@ This is the deliberate counterpart to ADR-007's bridge: the OpenBoxes bridge tal
 
 ## Cross-Cutting
 
-### 7. Bearer Token Authentication on the Webhook Endpoint
+### 5. External Status Preserved as a String Field; `ShippingStatus` Enum Untouched
 
-**Driver:** CON-20 — public-internet endpoint must authenticate; demo simplicity.
+**Driver:** CON-21 — coarsening loses information, extending core enum violates the plugin boundary; QAS-5 response — "tracking status visible to the customer" implies the customer sees the carrier vocabulary, not a coarsened summary.
 
-**Concept:** WireMock is configured to send `Authorization: Bearer <token>` on every webhook POST. The plugin reads the expected token from `appsettings.json` (override-able by environment variable in production). The controller compares using a constant-time string comparison and rejects mismatches with `401 Unauthorized` *before* any payload work is done. Mismatched requests are still recorded in the audit table with `Outcome = Rejected` so that misconfiguration is visible.
+**Concept:** A new `ExternalShippingStatus` column (varchar) on `Shipment` holds the raw carrier vocabulary verbatim — `IN_TRANSIT`, `OUT_FOR_DELIVERY`, etc. The existing `ShippingStatus` enum in `Nop.Core.Domain.Shipping` is left untouched and continues to serve nopCommerce-internal logic at its existing granularity. A small hard-coded mapper inside the plugin (`IExternalStatusMapper`) translates carrier vocab into the coarse internal enum only when the new external status crosses one of the internal enum's thresholds — e.g. `DELIVERED` triggers a `ShippingStatus.Delivered` transition; `IN_TRANSIT` and `OUT_FOR_DELIVERY` both leave `ShippingStatus.Shipped` unchanged. The order detail page renders `ExternalShippingStatus` when present and falls back to the internal enum otherwise.
 
 **Rejected alternatives:**
 
-- *HMAC payload signing* — Rejected for this iteration because (a) bearer is sufficient against the WireMock threat model (the simulator sends what we tell it); (b) HMAC requires both ends to agree on the canonicalisation rules, adding a moving part for no QAS-5 benefit; (c) explicitly recorded as a residual hardening for production.
+- *Extend the `ShippingStatus` enum with new members* — Rejected because the enum lives in `Nop.Core` and is consumed by every shipping-related service in the framework. Adding members forces existing `switch` statements to handle new cases or break; the change is invasive and out of plugin scope.
 
-- *IP allowlist* — Rejected because WireMock's deployment IP can shift between local and Docker-network and the allowlist becomes operational toil; bearer is more portable.
+- *Many-to-few mapping only, no external string field* — Rejected because the customer loses visibility of "Out for Delivery" — exactly the visibility QAS-5 set out to give them.
 
-- *No auth (demo only)* — Rejected because exposing an unauthenticated endpoint that mutates customer-visible state is the kind of footgun the architecture exercise is supposed to *avoid*, not normalise.
+- *Introduce a parallel plugin-local enum and store the integer* — Rejected as more brittle than a string: a string survives carrier vocabulary additions without code change, while a new enum member forces a plugin redeploy for every carrier-side schema bump.
 
 ---
 
-### 8. Audit Table for Every Webhook Receipt
+### 6. Hard-Coded Mapping Table Inside the Plugin
 
-**Driver:** CON-23 — webhook-driven state changes get disputed; operational visibility for an external-system integration.
+**Driver:** CON-21 — mapping policy must exist somewhere; simplicity over admin-configurability for a stable mapping; the carrier vocabulary is stable for the demo.
 
-**Concept:** A new `CarrierWebhookEvent` table captures every receipt: PK `Id`, `EventId` (nullable — populated only on successfully parsed payloads), `ReceivedAtUtc`, `RawPayload` (full JSON as text), `RemoteIp`, `Outcome` (`Accepted`, `Duplicate`, `Rejected`, `Unmatched`), and `Notes` (short string explaining a rejection). Records are written by the controller before any other work — one INSERT per HTTP request, regardless of whether the payload parses, whether the auth succeeds, or whether the eventual processing succeeds.
+**Concept:** The mapping from carrier vocabulary → internal `ShippingStatus` lives inside `IExternalStatusMapper` as a `switch` expression. Adding a new carrier value requires a small code change and plugin redeploy; this is acceptable because carrier vocabularies are rarely revised and the change has obvious code-review semantics.
 
-The cost is one row per webhook (small) and trivial retention (operational task — out of scope here). The benefit is that any later dispute ("the carrier says they delivered, but my order page says pending") can be answered against ground truth.
+**Rejected alternative:**
 
-**Rejected alternatives:**
-
-- *Log-only (no DB table)* — Rejected because logs rotate and dispute resolution needs queryable structured data; greping logs is an antipattern for compliance-relevant evidence.
-
-- *Audit only successful receipts* — Rejected because rejected receipts (auth failures, malformed payloads) are exactly the ones operators most need to see — they indicate misconfiguration or attack.
+- *DB-backed mapping table editable in the admin UI* — Rejected because it adds a CRUD UI, a migration, a settings surface, and an admin-procedure document for a mapping that changes maybe once a year. The simpler concept can be promoted to admin-configurable later if the operational reality demands it.
 
 ---
 
 ## Summary: Concepts → Drivers → Rejected Alternatives
 
 | # | Concept | Driver(s) satisfied | Rejected alternative |
-| --- |---| --- |---|
-| 1 | Async handoff via internal queue | QAS-5 + CON-24 + CON-18 | Sync in-controller; reuse publisher Outbox |
-| 2 | Dedup by `eventId` + timestamp guard | CON-18 + CON-19 + ADR-003 | Triple-key dedup; arrival-order LWW; trust the broker |
-| 3 | External status as string; enum untouched | CON-21 + QAS-5 | Extend enum; coarsen-only; new plugin enum |
-| 4 | Hard-coded mapping in plugin | CON-21 | DB-configurable mapping |
-| 5 | Outbound booking via existing Outbox | CON-22 + ADR-004 | Sync admin call; new outbox table |
-| 6 | Booking consumer in-process | CON-22 | Separate deployable |
-| 7 | Bearer token auth | CON-20 | HMAC; IP allowlist; no auth |
-| 8 | Audit table for every receipt | CON-23 | Log-only; success-only |
+| --- | --- | --- | --- |
+| 1 | Scheduled polling via `IScheduleTask` | QAS-5 | Inbound webhook; raw `BackgroundService` loop |
+| 2 | Last-write-wins on `ExternalShippingStatus` | CON-19 | Timestamp guard; separate dedup table |
+| 3 | Outbound booking via existing Outbox | CON-22 + ADR-004 | Sync admin call; new outbox table |
+| 4 | Booking consumer in-process | CON-22 | Separate deployable |
+| 5 | External status as string; enum untouched | CON-21 + QAS-5 | Extend enum; coarsen-only; new plugin enum |
+| 6 | Hard-coded mapping in plugin | CON-21 | DB-configurable mapping |
 
-CON-17 (race between webhook arrival and dispatch event committing the local record) is satisfied by the combination of concepts 1 and 2: an unmatched webhook is NACKed with requeue, redelivery limit applies (default 5), and only after the limit does it route to the DLQ. By that point either the dispatch event has committed, or operators have a queue-tooling-visible signal that something else is wrong.
+CON-17 (race between poll tick and dispatch event committing `ExternalShipmentId`) is handled by concept 1: the poller skips any shipment where `ExternalShipmentId` is null. By the time the booking consumer writes the identifier, the next poll tick will pick it up.
 
 ---
 
 ## What Step 4 Will Do
 
-Step 4 turns these concepts into named components: classes, files, schemas, registration points, and the precise shape of the Outbox event payload and webhook envelope. The plugin layout, the `Shipment` schema migration, the audit table, the new RabbitMQ exchanges and queues, and the new dedup table are all defined there with enough precision for Step 5 to specify interfaces ready for implementation.
+Step 4 turns these concepts into named components: classes, files, schemas, registration points, and the precise shape of the Outbox event payload and polling response. The plugin layout, the `Shipment` schema migration, the new RabbitMQ exchange and queue, and the poller task are all defined there with enough precision for Step 5 to specify interfaces ready for implementation.

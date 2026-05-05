@@ -20,10 +20,19 @@ The OpenBoxes bridge is a small independent service (`VerdeMart.OpenBoxesBridge`
 
 The implementation language is .NET 8 by default for stack consistency with the main nopCommerce codebase, but the choice is reversible — any language with RabbitMQ and HTTP support can host the bridge.
 
-## Rejected Alternative
+## Rejected Alternatives
 
 **Bridge as a nopCommerce plugin consuming RabbitMQ in-process.**
 *Rejected:* (a) makes nopCommerce knowledgeable about an external system's API, weakening the boundary the plugin layer was meant to protect; (b) the project as a whole would not satisfy the brief's "independently deployable subsystem" requirement; (c) ADR-002's spirit was decoupling the **commerce core** from downstream specifics — pulling OpenBoxes back into the same process re-couples them at the assembly level, defeating that aim.
+
+**Outbox dispatcher calls OpenBoxes REST API directly, bypassing RabbitMQ for this path.**
+The `OutboxDispatcherTask` already polls `OutboxMessage` rows and could call the OpenBoxes HTTP API directly instead of publishing to the broker, eliminating the bridge and one infrastructure hop entirely. *Rejected:* this couples the nopCommerce scheduler loop to OpenBoxes availability. If OpenBoxes is slow or unreachable, the dispatcher stalls and all other outbox rows (carrier bookings, future integrations) are also delayed — a single slow external system contaminates the shared retry loop. This directly threatens QAS-1: a stalled dispatcher cannot guarantee delivery within 60 seconds of OpenBoxes recovery, and the retry behaviour under a prolonged outage is undefined rather than structurally safe. It also threatens QAS-3: although checkout itself is insulated by the outbox write, a dispatcher blocked on a dead OpenBoxes endpoint delays carrier booking rows regardless of carrier availability — a surrounding system the customer never interacted with disrupts an unrelated integration path. More fundamentally, it violates ADR-001: the explicit motivation for RabbitMQ was to remove direct HTTP calls from any nopCommerce processing path. The broker is the durability boundary; moving the HTTP call back inside the nopCommerce process erases it.
+
+**nopCommerce `IScheduleTask` polling a staging table and pushing to OpenBoxes.**
+A scheduled task could read orders with `SyncStatus = Pending` from a staging table and POST them to OpenBoxes on a fixed interval, with no broker involvement at all. *Rejected:* `02-current-state.md` documents that the `IScheduleTask` framework has no per-item progress tracking and no at-least-once guarantee — a task that crashes on the 51st row restarts from scratch. Achieving reliable at-least-once delivery on top of it requires implementing exactly the outbox pattern that ADR-004 already adopts, making this alternative a worse reimplementation of what is already in place. It also re-introduces the OpenBoxes-availability coupling that RabbitMQ was chosen to eliminate.
+
+**RabbitMQ Shovel plugin forwarding messages as HTTP POST to OpenBoxes.**
+RabbitMQ's Shovel plugin can forward messages between brokers or to AMQP endpoints. A hypothetical HTTP-delivery variant would let the broker call the OpenBoxes REST API directly, removing the need for any bridge process. *Rejected:* RabbitMQ Shovel transfers messages between AMQP endpoints, not to arbitrary HTTP REST APIs. Achieving HTTP delivery from RabbitMQ requires either the community `rabbitmq-web-dispatch` plugin (unmaintained, not production-grade) or replacing RabbitMQ with a broker that natively supports HTTP push (e.g. a webhook relay service). Either path changes the broker decision recorded in ADR-001 and adds a dependency with shallower community support than the chosen stack. The operational cost of debugging a misconfigured broker-level HTTP delivery is higher than debugging a purpose-built `BackgroundService`.
 
 ## Consequences
 

@@ -7,6 +7,7 @@
 A new `IScheduleTask` registered inside `Nop.Plugin.Inventory.AllocationGate` (or a new lightweight plugin) polls `GET /api/generic/shipment` on OpenBoxes on a configurable interval. For each fulfillment order that has reached `ISSUED`, it correlates back to the nopCommerce order via `OrderGuid` and updates the order status.
 
 **Why selected:**
+
 - **Reliability over latency.** Polling is self-healing: nopCommerce reads current state on every tick regardless of what happened between ticks. A webhook missed because nopCommerce was temporarily unavailable is a silent data loss unless OpenBoxes retries indefinitely — which it does not guarantee. Polling has no equivalent failure mode; the next tick always recovers.
 - **Unidirectional dependency preserved.** OpenBoxes supports outbound webhooks (confirmed by `openboxes.com/features`), but using them would require configuring OpenBoxes with nopCommerce's address and credentials, coupling the warehouse system to the commerce core in the reverse direction. Polling keeps the boundary clean: nopCommerce reaches out to OpenBoxes; OpenBoxes remains unaware of nopCommerce.
 - `IScheduleTask` is the established nopCommerce pattern for periodic background work; already used by `OutboxDispatcherTask` and `ReleaseExpiredReservationsTask`
@@ -37,6 +38,26 @@ An admin observes OpenBoxes and manually marks the order as fulfilled in nopComm
 nopCommerce maintains a persistent connection to OpenBoxes and waits for state changes.
 
 *Rejected:* OpenBoxes does not support SSE or long-polling. Even if it did, a persistent connection from nopCommerce to an external system would require connection lifecycle management that is out of scope for a plugin-based `IScheduleTask`. The polling cadence of 30 seconds is sufficient for the QAS-5 response measure.
+
+---
+
+## Redis as Read-Through Cache (addresses CON-29)
+
+On each tick the polling task needs the last-known status of every open order to detect changes. Reading this from the DB on every 30-second tick across all nopCommerce nodes scales linearly with the number of open orders and grows further as the deployment is scaled out.
+
+Redis is introduced as a read-through cache for last-known statuses. The tick flow becomes:
+
+1. Read last-known status from Redis (cache hit — no DB query)
+2. Call OpenBoxes API
+3. Compare API response against cached status
+4. On change: write updated status to DB, update Redis cache
+5. On no change: nothing written
+
+The DB is consulted only when a status change is detected. Redis receives one write per detected change, not one write per tick. On a cold start or cache miss the task falls back to the DB and populates Redis before the comparison.
+
+**Why Redis and not the DB for reads:** the DB is the system of record and must receive all writes; it is not the right tool for high-frequency reads that produce no write in the common case. Redis is built into the nopCommerce stack as an optional distributed cache and requires no new infrastructure decision.
+
+**Distributed lock for external API control:** DB and Redis writes are idempotent — two nodes writing the same status change is harmless for correctness. However, without coordination, all N nodes would independently call OpenBoxes and WireMock on every tick, multiplying external API load by the node count. These are systems not owned by VerdeMart. A Redis distributed lock (`SET NX EX`) is introduced at the start of each tick: the node that acquires the lock runs the full tick; all other nodes skip immediately after the failed lock attempt — no cache read, no API call, no DB access. The lock is one Redis call per node per tick. Given Redis is already in the stack, the implementation cost is negligible.
 
 ---
 

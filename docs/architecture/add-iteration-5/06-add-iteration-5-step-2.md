@@ -24,5 +24,6 @@ The element to decompose is the **nopCommerce side of the warehouse observation 
 | Correlating OpenBoxes fulfillment orders back to nopCommerce orders via `OrderGuid` | Pushing additional data (line-item detail, warehouse notes) back to nopCommerce |
 | Triggering the carrier booking automatically on `ISSUED` detection | Replacing the existing manual carrier booking trigger |
 | Configurable polling interval | Real-time push via OpenBoxes webhooks (available but not chosen — see Step 3 for rationale) |
+| Redis read-through cache for last-known statuses — DB consulted only on detected change (CON-29) | Using Redis as a system of record — DB remains the source of truth |
 
 Step 3 evaluates the candidate design concepts for this element.

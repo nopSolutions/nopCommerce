@@ -41,6 +41,8 @@ The QAS set is now structurally complete.
 - **QAS-5 fully closed** — both visibility clauses satisfied: carrier tracking (≤10 s, Iter 4) and warehouse fulfillment state (≤30 s polling interval, this iteration)
 - **Carrier booking fully automated** — no admin trigger needed; `ISSUED` detection in the poller writes the outbox row that drives the carrier booking chain
 - **Use case 2 unambiguously satisfied** — a change outside nopCommerce (OpenBoxes `ISSUED`) becomes visible back in the commerce experience automatically
+- **CON-29 closed** — Redis introduced as a read-through cache for last-known statuses; DB consulted only on detected status change, not on every tick; read load no longer grows with open order count per tick
+- **Multi-node polling closed** — Redis distributed lock (`SET NX EX`) ensures exactly one node runs each polling tick; other nodes skip immediately after the failed lock attempt; external API call count remains 1 per tick regardless of node count
 
 ---
 
@@ -60,14 +62,16 @@ The QAS set is now structurally complete.
 | OpenBoxes `CANCELED` state not handled | Out of scope for this iteration — requires operator review | Future iteration if cancellation becomes business-relevant |
 | `PICKED` state not surfaced to customer | Step 3 explicitly deferred this | Future iteration for richer fulfillment progress visibility |
 | Poller adds HTTP load to OpenBoxes | One call per 30 s; acceptable at VerdeMart's scale | Monitor in production; increase interval or add filter if load grows |
+| Redis unavailability | If Redis is down, the poller falls back to the DB on every tick — correctness is preserved but the DB read reduction is lost for the duration of the outage | Operational concern; Redis availability should be monitored alongside nopCommerce |
 
 ---
 
 ## Iteration Verdict
 
-Iteration 5 closed QAS-5 by adding one scheduled task and one API method. The design is choice-driven: OpenBoxes does support outbound webhooks, but polling was selected deliberately for reliability (self-healing, no missed events) and to preserve the unidirectional dependency between OpenBoxes and nopCommerce. One architectural decision was recorded:
+Iteration 5 closed QAS-5 by adding one scheduled task, one API method, and a Redis read-through cache. The design is choice-driven: OpenBoxes does support outbound webhooks, but polling was selected deliberately for reliability (self-healing, no missed events) and to preserve the unidirectional dependency between OpenBoxes and nopCommerce. Redis reduces DB read load by caching last-known statuses — the DB is written only on detected status changes, not on every tick. One architectural decision was recorded:
 
 - Polling design decision: polling chosen over OpenBoxes webhooks for reliability and unidirectional dependency (see Step 3)
+- [ADR-010 — Redis as Read-Through Status Cache for Polling Tasks](../07-adrs/ADR-010-redis-status-cache-for-pollers.md)
 
 The QAS set defined in `04-qas.md` is now **structurally complete** across all five scenarios. The remaining gap is empirical confirmation, owed by the bundled feasibility spike.
 

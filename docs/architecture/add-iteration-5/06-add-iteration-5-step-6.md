@@ -17,7 +17,8 @@
 │  │   ├── IOrderService.GetOrderByGuidAsync()                │   │
 │  │   ├── IShipmentService.InsertShipmentAsync()             │   │
 │  │   ├── IOrderProcessingService (status transition)        │   │
-│  │   └── IOutboxRepository (carrier booking trigger)        │   │
+│  │   ├── IStaticCacheManager (Redis — last-known status)    │   │
+   └── IOutboxRepository (carrier booking trigger)        │   │
 │  └──────────────────────────────────────────────────────────┘   │
 └──────────────────────────────┬──────────────────────────────────┘
                                │ GET /api/generic/shipment?status=ISSUED
@@ -26,6 +27,10 @@
                           ┌──────────┐
                           │ OpenBoxes │
                           └──────────┘
+
+[ Redis ]
+  verdemart:lock:openboxes-poller       — distributed lock; TTL 60 s; one node runs per tick
+  verdemart:openboxes:status:{OrderGuid} — status cache; TTL 24 h; written only on change
 ```
 
 ## Sequence: Fulfillment State Detected
@@ -33,20 +38,29 @@
 ```text
 OpenBoxesStatusPollerTask
     │ (every 30 s)
-    │ GET /api/generic/shipment?status=ISSUED
+    │ SET verdemart:lock:openboxes-poller NX EX 60
+    │ → nil: return immediately (no cache, no API, no DB)
+    │ → OK:  read last-known status from Redis (verdemart:openboxes:status:{OrderGuid})
+    │        cache miss → fall back to DB, populate Redis
+    │        GET /api/generic/shipment?status=ISSUED
     ▼
 OpenBoxes REST API
     │ returns [ { referenceNumber: OrderGuid, status: ISSUED } ]
     ▼
 OpenBoxesStatusPollerTask
-    │ GetOrderByGuidAsync(OrderGuid)
-    │ if Shipment exists + ExternalShipmentId set → skip
-    │ else → BEGIN TRANSACTION
-    │           InsertShipmentAsync (+ ShipmentItem per order item)
-    │             fires ShipmentCreatedEvent
-    │           SetOrderStatus(Complete)
-    │           write outbox row (carrier.booking.requested, ShipmentId in payload)
-    │        COMMIT  (rollback on any failure → next tick retries)
+    │ compare API status against Redis cached status
+    │ if no change → skip (no DB read, no DB write)
+    │ if changed → BEGIN TRANSACTION
+    │                GetOrderByGuidAsync(OrderGuid)
+    │                if Shipment exists + ExternalShipmentId set → skip
+    │                else:
+    │                  InsertShipmentAsync (+ ShipmentItem per order item)
+    │                    fires ShipmentCreatedEvent
+    │                  SetOrderStatus(Complete)
+    │                  write outbox row (carrier.booking.requested, ShipmentId in payload)
+    │              COMMIT  (rollback on any failure → next tick retries)
+    │              update Redis cache (verdemart:openboxes:status:{OrderGuid} = ISSUED)
+    │              DEL verdemart:lock:openboxes-poller
     ▼
 OutboxDispatcherTask (existing — Iter 2)
     │ publishes carrier.booking.requested
@@ -78,6 +92,7 @@ Polling was chosen over OpenBoxes webhooks for reliability (self-healing, no mis
 | `IOpenBoxesClient` extension | New `GetIssuedFulfillmentOrdersAsync` method |
 | `OpenBoxesFulfillmentOrder` DTO | Correlation record from OpenBoxes API |
 | `AllocationSettings` extension | Four new fields for OpenBoxes URL, API key, interval, batch size |
+| Redis cache contract | Key pattern `verdemart:openboxes:status:{OrderGuid}`, 24 h TTL, read on every tick, written only on detected status change |
 | Polling design decision | Deliberate choice over webhooks — reliability and unidirectional dependency |
 
 Step 7 verifies the design against QAS-5's warehouse visibility clause and closes the iteration.

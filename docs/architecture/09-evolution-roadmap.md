@@ -44,12 +44,9 @@ The implementation follows the ADD iteration sequence directly. Each phase is sh
 - Schema additions on `Shipment`: `ExternalShipmentId`, `ExternalCarrierCode`, `ExternalShippingStatus`, `LastStatusOccurredAtUtc`.
 - `ShipmentSentConsumer`: writes a `carrier.booking.requested` row to the existing outbox when a shipment is dispatched.
 - `CarrierBookingConsumer`: drains those outbox rows, calls WireMock, stores the returned tracking ID on the shipment.
-- `POST /api/carrier/webhook` controller: authenticates (bearer), audits to `CarrierWebhookEvent` table, hands off to an in-process queue.
-- `CarrierStatusConsumer`: correlates by `ExternalShipmentId`, applies an out-of-order timestamp guard, updates status and enqueues customer notification email in one DB transaction.
+- `CarrierStatusPollerTask` (`IScheduleTask`, 30-second poll): polls `GET /api/shipments/{ExternalShipmentId}/status` on WireMock for each open shipment; on status change updates `Shipment.ExternalShippingStatus` and enqueues a customer notification email in one DB transaction.
 
-**Outcome:** The customer sees live carrier tracking status within 10 seconds of a webhook arriving. QAS-5's carrier clause is structurally satisfied.
-
----
+**Outcome:** The customer sees live carrier tracking status within 30 seconds of the status changing in WireMock. QAS-5's carrier clause is structurally satisfied.
 
 ---
 
@@ -59,6 +56,7 @@ The implementation follows the ADD iteration sequence directly. Each phase is sh
 - `OpenBoxesStatusPollerTask` (`IScheduleTask`, 30-second poll) added to `Nop.Plugin.Inventory.AllocationGate`.
 - `IOpenBoxesClient` extended with `GetIssuedFulfillmentOrdersAsync()` — polls `GET /api/generic/shipment?status=ISSUED`.
 - On `ISSUED` detection: updates nopCommerce order status + writes outbox row to trigger carrier booking automatically.
+- Redis introduced as a distributed lock and read-through status cache for both polling tasks — one node polls per tick; DB consulted only on detected change.
 
 **Outcome:** OpenBoxes fulfillment state is visible in nopCommerce within 30 seconds — no operator action. Carrier booking is fully automated. The full QAS set is structurally complete.
 
@@ -77,5 +75,6 @@ The implementation follows the ADD iteration sequence directly. Each phase is sh
 | OpenBoxes Bridge container | | | Active | Active | Active |
 | `Nop.Plugin.Shipping.CarrierWebhook` + WireMock | | | | Active | Active |
 | `OpenBoxesStatusPollerTask` | | | | | Active |
+| Redis (distributed lock + status cache) | | | | | Active |
 
 The only breaking transition is from Phase 1 to Phase 2. Everything else is additive.

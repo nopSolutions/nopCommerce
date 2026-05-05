@@ -7,12 +7,13 @@ The polling task is added to the existing `Nop.Plugin.Inventory.AllocationGate` 
 ## New Components
 
 | Component | Type | Responsibility |
-|---|---|---|
-| `OpenBoxesStatusPollerTask` | `IScheduleTask` | Polls OpenBoxes every 30 s for fulfillment orders in `ISSUED` state; for each match, creates a `Shipment` record, transitions the order to `Complete`, and writes a `carrier.booking.requested` outbox row — all in one DB transaction; idempotent; never throws |
+| --- | --- | --- |
+| `OpenBoxesStatusPollerTask` | `IScheduleTask` | Acquires Redis distributed lock at tick start; skips tick if lock not acquired. Polls OpenBoxes every 30 s for fulfillment orders in `ISSUED` state; reads last-known status from Redis cache; on change, creates a `Shipment` record, transitions the order to `Complete`, writes a `carrier.booking.requested` outbox row, and updates Redis — all in one DB transaction; releases lock on completion; idempotent; never throws |
 | `IOpenBoxesClient` (extended) | Typed HTTP client | Gains `GetIssuedFulfillmentOrdersAsync()` — calls `GET /api/generic/shipment?status=ISSUED`; returns correlation records keyed on `OrderGuid` |
 | `OpenBoxesFulfillmentOrder` | DTO | Correlation record from OpenBoxes: `FulfillmentId`, `OrderGuid`, `Status`, `IssuedAtUtc` |
+| Redis cache | Distributed cache | Stores last-known fulfillment status per `OrderGuid`; read on every tick by both poller tasks; written only on detected status change; DB remains the system of record |
 
-**Existing dependencies injected into the poller:** `IOrderService`, `IOrderProcessingService`, `IShipmentService` (to create the `Shipment` row before the carrier booking consumer needs it), `IOutboxRepository`, `AllocationSettings`.
+**Existing dependencies injected into the poller:** `IOrderService`, `IOrderProcessingService`, `IShipmentService` (to create the `Shipment` row before the carrier booking consumer needs it), `IOutboxRepository`, `IStaticCacheManager` (nopCommerce Redis cache abstraction), `AllocationSettings`.
 
 **Settings extension (`AllocationSettings`):** four new fields — `OpenBoxesBaseUrl`, `OpenBoxesApiKey`, `PollerIntervalSeconds` (default 30), `PollerBatchSize` (default 50).
 

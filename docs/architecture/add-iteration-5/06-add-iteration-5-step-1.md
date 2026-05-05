@@ -4,7 +4,7 @@
 
 Close the warehouse visibility half of QAS-5 by making OpenBoxes fulfillment state observable in nopCommerce without operator intervention.
 
-Iteration 4 satisfied the carrier tracking clause of QAS-5 (inbound webhook → customer-visible status in ≤10 s). The second clause — warehouse fulfillment state (OpenBoxes `ISSUED`) becoming visible in nopCommerce — was deferred. A polling `IScheduleTask` is the selected automation mechanism — a deliberate choice over the webhook capability that OpenBoxes does provide.
+Iteration 4 satisfied the carrier tracking clause of QAS-5 (inbound webhook → customer-visible status in ≤30 s). The second clause — warehouse fulfillment state (OpenBoxes `ISSUED`) becoming visible in nopCommerce — was deferred. A polling `IScheduleTask` is the selected automation mechanism — a deliberate choice over the webhook capability that OpenBoxes does provide.
 
 This iteration is deliberately narrow: one new component, one new ADR, one constrained design space.
 
@@ -62,6 +62,7 @@ Polling was selected for two reasons:
 | Polling chosen over OpenBoxes webhooks | Deliberate — reliability and unidirectional dependency direction |
 | No new independently deployable subsystem — the brief's requirement is already met by ADR-007 | Assignment brief |
 | Polling interval must be configurable without redeployment | `ISettings` convention |
+| Redis is available as the nopCommerce distributed cache provider | Technology stack — optional Redis support is built into nopCommerce core |
 
 ---
 
@@ -73,6 +74,7 @@ Polling was selected for two reasons:
 | CON-26 | Idempotency: the task may run multiple times while a fulfillment order is in `ISSUED` state. Status updates must be idempotent — applying the same transition twice must not corrupt state |
 | CON-27 | Polling frequency vs load: polling too frequently adds unnecessary HTTP calls to OpenBoxes; too infrequently increases the visibility lag beyond the QAS-5 response measure |
 | CON-28 | What to do with OpenBoxes states other than `ISSUED` — `PICKED`, `CANCELED`, etc. The task must define a clear mapping policy |
+| CON-29 | DB read load scales with open orders: on every tick both poller tasks must know the last-known status of each open order to detect changes. Reading this from the DB on every tick across all nodes grows linearly with the number of open orders. Redis is introduced as a read-through cache to absorb these reads — the DB is consulted only when a status change is detected |
 
 ---
 
