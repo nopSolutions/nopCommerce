@@ -161,13 +161,13 @@ sequenceDiagram
     participant R as RabbitMQ
     participant W as Worker
     participant P as Omnichannel Plugin
-    participant N as nopCommerce Catalog
 
     POS->>R: pos.stock.changed.v1
     R->>W: Deliver stock event
     W->>P: Submit stock sync update
     P->>P: Check messageId and sourceVersion
-    P->>N: Adjust stock/projection
-    P-->>W: Accepted or ignored as stale
+    P->>P: Upsert OmniStockSyncState projection
+    P-->>W: Accepted or ignored as duplicate/stale
 ```
 
+Per ADR-0007, this flow is projection-first. POS updates do not directly write through to nopCommerce core `ProductWarehouseInventory` during the demo; any drift is made visible instead of being silently merged.

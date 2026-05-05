@@ -130,7 +130,7 @@ There is no existing concept of a durable outbox message, an inbox for deduplica
 
 - **Sources**: `src/Libraries/Nop.Services/Catalog/ProductService.cs:1438` and `:1699`
 - **Problem**: These are internal operations. There is no model for stock changes arriving from external systems (POS, WMS) or for detecting stale updates from those systems.
-- **Consequence**: The plugin must either update core stock directly or maintain a separate projection — a decision that must be made and documented as an ADR.
+- **Consequence**: The omnichannel layer needs its own stock-sync model. ADR-0007 chooses a projection-first approach: POS-originated stock is recorded in `OmniStockSyncState`, while core `ProductWarehouseInventory` remains owned by nopCommerce flows during the demo.
 
 ### 5. Plugin Architecture Is the Correct Extension Seam
 
@@ -145,7 +145,7 @@ Existing plugins demonstrate that nopCommerce supports independent plugin folder
 - [Architecture checkpoint and target architecture](part1/architecture-checkpoint.md) — 3 ADD iterations, framework justification, migration roadmap.
 - [Quality attribute scenarios](part1/quality-attribute-scenarios.md) — SEI 6-part with numeric measures.
 - [Context map and C4 diagrams](part1/diagrams.md)
-- [ADR set](adr/) — 8 ADRs.
+- [ADR set](adr/) — 10 ADRs: 8 accepted decisions and 2 explicit rejected decisions.
 - [Feasibility spike (experiment charter)](evidence/feasibility-spike.md)
 
 **Key takeaway**: nopCommerce's plugin model and existing domain concepts make it a viable base for Scenario C. The missing pieces — durable events, outbox, inbox, and external system coordination — are the exact architectural problem the evolution is designed to solve.

@@ -45,7 +45,7 @@ Source: `nopCommerce/src/Libraries/Nop.Services/Catalog/ProductService.cs:1438`.
 
 Source: `nopCommerce/src/Libraries/Nop.Services/Catalog/ProductService.cs:1699`.
 
-Implication: the final implementation can use existing stock services or maintain an omnichannel projection before deciding whether to update core stock directly.
+Implication: the final implementation can expose cross-channel stock state without changing the checkout path. ADR-0007 resolves the stock decision as projection-first: POS-originated state is recorded in `OmniStockSyncState`, while core stock remains owned by nopCommerce during the demo.
 
 ### 4. Plugin extension is the smallest architectural change
 
@@ -101,7 +101,6 @@ The spike validates the architecture path:
 ## Remaining Risks for Part 2
 
 - Confirm exact nopCommerce migration and plugin installation steps in the active branch.
-- Decide whether stock updates alter core `ProductWarehouseInventory` immediately or remain as plugin projection first.
+- Validate that projection-first stock visibility is understandable in the admin view and does not confuse the final demo narrative.
 - Add tests for duplicate `messageId` and stale POS `sourceVersion`.
 - Ensure Docker has .NET 10 SDK/runtime because local `dotnet` is not available in the current shell.
-
