@@ -2,31 +2,7 @@
 
 ## Updated Component View
 
-```text
-[ nopCommerce process ]
-
-┌─────────────────────────────────────────────────────────────────┐
-│  Nop.Plugin.Inventory.AllocationGate (extended)                  │
-│                                                                  │
-│  AllocationGate + AllocationApiController  (unchanged — Iter 3) │
-│  ReleaseExpiredReservationsTask            (unchanged — Iter 3) │
-│                                                                  │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │  OpenBoxesStatusPollerTask  (NEW)                         │   │
-│  │   ├── IOpenBoxesClient.GetIssuedFulfillmentOrdersAsync() │   │
-│  │   ├── IOrderService.GetOrderByGuidAsync()                │   │
-│  │   ├── IShipmentService.InsertShipmentAsync()             │   │
-│  │   ├── IOrderProcessingService (status transition)        │   │
-│  │   └── IOutboxRepository (carrier booking trigger)        │   │
-│  └──────────────────────────────────────────────────────────┘   │
-└──────────────────────────────┬──────────────────────────────────┘
-                               │ GET /api/generic/shipment?status=ISSUED
-                               │ (every 30 s)
-                               ▼
-                          ┌──────────┐
-                          │ OpenBoxes │
-                          └──────────┘
-```
+![Iteration 5 Architecture Diagram](../diagrams/I5-Architecture.png)
 
 ## Sequence: Fulfillment State Detected
 

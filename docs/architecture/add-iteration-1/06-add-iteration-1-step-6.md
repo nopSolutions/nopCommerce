@@ -8,55 +8,7 @@ Step 6 produces two outputs: a component view of what was designed, and the ADRs
 
 ## Component View
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  nopCommerce                                                 │
-│                                                             │
-│  OrderProcessingService                                     │
-│       │ PlaceOrderAsync()                                   │
-│       │ fires                                               │
-│       ▼                                                     │
-│  [ OrderPlacedEvent ]                                       │
-│       │                                                     │
-│       │ nopCommerce event system                            │
-│       ▼                                                     │
-│  ┌─────────────────────────────────────────────────┐        │
-│  │  Nop.Plugin.Messaging.RabbitMq                  │        │
-│  │                                                 │        │
-│  │  OrderPlacedConsumer                            │        │
-│  │       │ builds OrderPlacedMessage               │        │
-│  │       │ calls CreateChannel()                   │        │
-│  │       ▼                                         │        │
-│  │  RabbitMqConnectionFactory (singleton)          │        │
-│  │       │ reads RabbitMqSettings                  │        │
-│  │       │ holds IConnection                       │        │
-│  │       │ returns IModel (channel)                │        │
-│  └───────┼─────────────────────────────────────────┘        │
-│          │                                                   │
-└──────────┼───────────────────────────────────────────────────┘
-           │ BasicPublish()
-           │ exchange: verdemart.orders
-           │ routing key: order.placed
-           │ delivery mode: persistent
-           ▼
-┌─────────────────────────────┐
-│  RabbitMQ                   │
-│                             │
-│  exchange: verdemart.orders │
-│       │ direct              │
-│       │ durable             │
-│       ▼                     │
-│  queue: verdemart.orders    │
-│         .openboxes          │
-│       durable               │
-│       manual ack            │
-└─────────────────────────────┘
-           │
-           │ (future iterations)
-           ▼
-    OpenBoxes bridge service
-    (other surrounding system consumers — future iterations)
-```
+![Iteration 1 Architecture Diagram](../diagrams/I1-Architecture.png)
 
 ---
 

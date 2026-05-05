@@ -8,55 +8,7 @@ Step 6 produces the updated views (component + sequence) for the modified publis
 
 ## Component View (Updated)
 
-```
-┌────────────────────────────────────────────────────────────────┐
-│  nopCommerce process                                           │
-│                                                                │
-│  ┌─────────────────────────────────────────┐                   │
-│  │  Request thread (checkout)              │                   │
-│  │                                         │                   │
-│  │  OrderProcessingService                 │                   │
-│  │      │ DB TX open                       │                   │
-│  │      │ INSERT Order                     │                   │
-│  │      │ UPDATE StockQuantity             │                   │
-│  │      │ fires OrderPlacedEvent           │                   │
-│  │      ▼                                  │                   │
-│  │  OrderPlacedConsumer                    │                   │
-│  │      │ build OrderPlacedMessage         │                   │
-│  │      ▼                                  │                   │
-│  │  OutboxWriter                           │                   │
-│  │      │ INSERT Outbox (Pending)          │                   │
-│  │      ▼                                  │                   │
-│  │  DB COMMIT  ──── request returns        │                   │
-│  └─────────────────────────────────────────┘                   │
-│                                                                │
-│  ┌─────────────────────────────────────────┐                   │
-│  │  Scheduler thread (every 1 s)           │                   │
-│  │                                         │                   │
-│  │  OutboxDispatcherTask                   │                   │
-│  │      │ FetchPendingBatchAsync           │                   │
-│  │      ▼                                  │                   │
-│  │  OutboxRepository                       │                   │
-│  │      │ rows (FOR UPDATE SKIP LOCKED)    │                   │
-│  │      ▼                                  │                   │
-│  │  for each row:                          │                   │
-│  │      RabbitMqConnectionFactory          │                   │
-│  │           CreateChannel()               │                   │
-│  │           BasicPublish(...)             │                   │
-│  │      MarkSentAsync(id)                  │                   │
-│  └─────────────────────────────────────────┘                   │
-└──────────────┬─────────────────────────────────────────────────┘
-               │
-               │ persistent message
-               ▼
-┌──────────────────────────────┐
-│  RabbitMQ                    │
-│  exchange: verdemart.orders  │
-│  queue: …openboxes (durable) │
-└──────────────────────────────┘
-```
-
-The two threads share the database but never share thread context. The request thread never touches RabbitMQ.
+![Iteration 2 Architecture Diagram](../diagrams/I2-Architecture.png)
 
 ---
 
