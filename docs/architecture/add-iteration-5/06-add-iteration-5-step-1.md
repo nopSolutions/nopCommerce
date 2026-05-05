@@ -28,20 +28,6 @@ Inherited from Iteration 4 Step 7.
 
 ---
 
-### Design Rationale: Polling over Webhooks
-
-OpenBoxes does support outbound webhooks — it provides configurable webhook endpoints per event type, including inventory, shipment, and order events (confirmed by reviewing `openboxes.com/features`). A webhook-based design is therefore available but was deliberately not chosen.
-
-Polling was selected for two reasons:
-
-1. **Reliability.** Polling is self-healing by construction: nopCommerce reads current state on every tick. A missed poll due to a transient failure is recovered by the next tick. With webhooks, if nopCommerce is unavailable when an event fires and OpenBoxes exhausts its retries, the state change is silently lost — requiring manual reconciliation. This directly contradicts the reliability theme of QAS-1 and QAS-4.
-
-2. **Unidirectional dependency.** The architecture keeps OpenBoxes unaware of nopCommerce throughout. Webhooks would require configuring OpenBoxes with nopCommerce's address and credentials, coupling the warehouse system to the commerce core in the reverse direction. Polling preserves the existing boundary: nopCommerce integrates with OpenBoxes; OpenBoxes does not integrate with nopCommerce.
-
-**Consequence:** Polling introduces up to 30 seconds of visibility lag. This is acceptable — QAS-5 requires ≤30 s, and the tradeoff favours reliability and clean dependency direction over sub-second latency.
-
----
-
 ### Inherited from Iteration 4 Step 7
 
 | Inherited input | Source |
@@ -81,6 +67,5 @@ Polling was selected for two reasons:
 ## What Step 1 Establishes
 
 - The iteration has a single focus: close the warehouse visibility gap with a polling task
-- The design space is constrained — polling is the only automated option
 - Step 2 selects the element to decompose (the gap between OpenBoxes state and nopCommerce order status)
-- Step 3 evaluates the polling task design against the only alternative (manual admin trigger)
+- Step 3 evaluates the polling task design against other alternatives, specially webhooks

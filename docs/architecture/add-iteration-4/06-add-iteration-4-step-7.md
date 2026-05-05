@@ -40,7 +40,7 @@ Empirical confirmation under load remains pending — listed in "Partially Satis
 | QAS-4 | Recoverability | Mechanism-complete (Iter 1+2+3); empirical drain pending spike | Unchanged — empirical drain still pending |
 | QAS-5 | Visibility | Not addressed | Carrier half structurally satisfied; warehouse visibility half (OpenBoxes polling) carried to Iteration 5 |
 
-QAS-5 is partially satisfied. The carrier polling path closes the tracking-status clause. The warehouse fulfillment-state clause (OpenBoxes `ISSUED` → nopCommerce) requires a polling `IScheduleTask` — deferred to Iteration 5.
+QAS-5 is partially satisfied. The carrier webhook path closes the tracking-status clause. The warehouse fulfillment-state clause (OpenBoxes `ISSUED` → nopCommerce) requires a polling `IScheduleTask` — deferred to Iteration 5. Polling was chosen deliberately over OpenBoxes webhooks for reliability and to preserve the unidirectional dependency; the rationale is recorded in Iteration 5 Step 3.
 
 ---
 
@@ -85,7 +85,7 @@ QAS-5 is partially satisfied. The carrier polling path closes the tracking-statu
 
 | Carry-over | Origin |
 | --- | --- |
-| **Primary driver: QAS-5 warehouse half** — OpenBoxes `ISSUED` state must become visible in nopCommerce; polling `IScheduleTask` required | This iteration — OpenBoxes has no outbound webhook capability (confirmed spike) |
+| **Primary driver: QAS-5 warehouse half** — OpenBoxes `ISSUED` state must become visible in nopCommerce; polling `IScheduleTask` required | This iteration — polling chosen over OpenBoxes webhooks for reliability and unidirectional dependency |
 | Bundled feasibility spike — empirical timing of QAS-1/2/4/5; OpenBoxes API capability | Iter 3 Step 7 + this iteration |
 | Rejected-order DB pollution cleanup | Iter 3 Step 7 |
 | Outbox row retention policy | Iter 2 Step 7 |

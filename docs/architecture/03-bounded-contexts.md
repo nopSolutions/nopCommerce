@@ -143,3 +143,6 @@ Every `order.placed` event creates both a nopCommerce Order and an ERPNext Sales
 
 **Customer identity is split across systems.**
 Keycloak owns authentication identity. nopCommerce, ERPNext, and POS each hold a local customer/contact record linked by the Keycloak subject ID (`sub` claim). Profile changes in one system do not automatically propagate - this is a documented limitation for the demo scope.
+
+**`inventory.adjusted` is declared bidirectional but only one direction is implemented.**
+The publish/consume tables above declare `inventory.adjusted` flowing in both directions — Warehouse and POS publish corrections, Commerce consumes them. The current design only delivers the nopCommerce → OpenBoxes direction (via `order.placed` and the bridge). Warehouse-originated corrections (returns, shrinkage, goods receipts) are out of scope for the implemented iterations: they would require either stock pulls inside `OpenBoxesStatusPollerTask` or an OpenBoxes-side outbound publisher. Recorded as an accepted limitation in `08-risk-and-validation-plan.md` section 5.

@@ -25,3 +25,11 @@ ADD is appropriate here for three specific reasons.
 - QAS-1 + QAS-3 demand the integration stays outside the monolith core → ADR-003: Plugin architecture
 
 This traceability makes the reasoning behind each design choice explicit and defensible.
+
+## Why Not ADM/TOGAF or ACDM
+
+**ADM/TOGAF** is designed for enterprise-wide transformation programmes spanning years, with multiple teams, governance layers, and organisational change management. VerdeMart is integrating a defined set of systems for a defined set of use cases. Applying ADM here would introduce disproportionate process overhead (governance artefacts, capability models, and phase gates that add no value at this scale).
+
+**ACDM (Architecture-Centric Design Method)** has more steps, more artefacts, and more ceremony around stakeholder management than ADD. When one or two people are designing and building the same system, that overhead adds no value. ADD is lean enough to match the project scale while still providing the structure needed to make decisions traceable.
+
+The key distinction is that neither ADM nor ACDM treats quality attributes as the **primary input** to every design decision. Both can produce good architectures, but they are not optimised for quality-attribute-driven scenarios. Since the entire problem here is defined by quality attributes, like reliability, consistency, availability, recoverability, and visibility, using a framework that puts them at the centre is the natural fit.

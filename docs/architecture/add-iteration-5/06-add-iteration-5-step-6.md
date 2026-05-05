@@ -2,36 +2,7 @@
 
 ## Updated Component View
 
-```text
-[ nopCommerce process ]
-
-┌─────────────────────────────────────────────────────────────────┐
-│  Nop.Plugin.Inventory.AllocationGate (extended)                  │
-│                                                                  │
-│  AllocationGate + AllocationApiController  (unchanged — Iter 3) │
-│  ReleaseExpiredReservationsTask            (unchanged — Iter 3) │
-│                                                                  │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │  OpenBoxesStatusPollerTask  (NEW)                         │   │
-│  │   ├── IOpenBoxesClient.GetIssuedFulfillmentOrdersAsync() │   │
-│  │   ├── IOrderService.GetOrderByGuidAsync()                │   │
-│  │   ├── IShipmentService.InsertShipmentAsync()             │   │
-│  │   ├── IOrderProcessingService (status transition)        │   │
-│  │   ├── IStaticCacheManager (Redis — last-known status)    │   │
-   └── IOutboxRepository (carrier booking trigger)        │   │
-│  └──────────────────────────────────────────────────────────┘   │
-└──────────────────────────────┬──────────────────────────────────┘
-                               │ GET /api/generic/shipment?status=ISSUED
-                               │ (every 30 s)
-                               ▼
-                          ┌──────────┐
-                          │ OpenBoxes │
-                          └──────────┘
-
-[ Redis ]
-  verdemart:lock:openboxes-poller       — distributed lock; TTL 60 s; one node runs per tick
-  verdemart:openboxes:status:{OrderGuid} — status cache; TTL 24 h; written only on change
-```
+![Iteration 5 Architecture Diagram](../diagrams/I5-Architecture.png)
 
 ## Sequence: Fulfillment State Detected
 

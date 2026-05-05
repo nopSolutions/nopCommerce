@@ -6,6 +6,12 @@ Step 6 produces the updated views (component + sequence) for the two new flows â
 
 ---
 
+## Component View (Updated)
+
+![Iteration 4 Architecture Diagram](../diagrams/I4-Architecture.png)
+
+---
+
 ## Decisions Recorded
 
 This iteration produced one architectural decision. Its full text lives in `07-adrs/`:
