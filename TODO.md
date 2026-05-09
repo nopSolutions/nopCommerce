@@ -21,11 +21,12 @@
 - [x] All Part 1 commits pushed to origin/develop
 
 ### Documentation Updates (Post-Checkpoint)
-- [ ] Update risk-plan.md with spike evidence
-- [ ] Update target-architecture.md diagrams to include OSPOS
-- [ ] Document OSPOS integration pattern (new ADR or section in ADR-004)
-- [ ] Update C4 Context diagram with OSPOS
-- [ ] Update sequence diagrams with OSPOS sale flow
+- [x] Update risk-plan.md with spike evidence (Risk 1 MITIGATED, Risk 3 updated)
+- [x] Update target-architecture.md diagrams to include OSPOS
+- [x] Document OSPOS integration pattern in ADR-004
+- [x] Update C4 Context diagram with OSPOS and Cashier actor
+- [x] Update Architecture Overview with OSPOS Adapter
+- [x] Update evolution path with OSPOS deployment step
 
 ---
 
