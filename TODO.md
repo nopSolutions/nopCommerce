@@ -89,16 +89,14 @@
   - [ ] Dockerfile
   - [ ] Add to docker-compose.yml
 
-#### WMS Event Adapter (NEW)
-- [ ] Create `services/wms-adapter/` project
+#### WMS Webhook Endpoint (Inside Integration Service)
+- [ ] Add webhook controller to Integration Service
 - [ ] POST /webhooks/stock-changed endpoint
   - [ ] Receive webhook from WMS stub
   - [ ] Transform WMS payload → `stock.updated` event format
   - [ ] Publish to RabbitMQ `verdemart.events`
 - [ ] Logging with correlation IDs
-- [ ] Dockerize
-  - [ ] Dockerfile
-  - [ ] Add to docker-compose.yml
+- [ ] No separate deployment needed (part of Integration Service)
 
 #### Docker Compose Updates
 - [ ] Add health checks for all services
@@ -297,12 +295,14 @@
 #### Defense Preparation
 - [ ] Anticipated questions:
   - [ ] Why RabbitMQ over Kafka? (ADR-001)
-  - [ ] Why stubs instead of real systems? (ADR-004)
+  - [ ] Why stubs for ERP/WMS but real OSPOS? (ADR-004 + bounded-contexts)
+  - [ ] How does OSPOS integration work? (polling vs webhooks)
   - [ ] What happens if RabbitMQ goes down?
   - [ ] How do you handle message ordering?
   - [ ] Why POS priority over web orders?
   - [ ] What's the latency for cross-channel stock updates?
-  - [ ] How would this scale to 100 stores?
+  - [ ] How would this scale to 100 stores with OSPOS?
+  - [ ] Why not use OSPOS API instead of database polling?
 
 ---
 
