@@ -1,7 +1,7 @@
-# ADR-004: WMS Integration — Real OpenBoxes vs Stub Service
+# ADR-004: External Systems — Real vs Stub
 
 **Status:** Accepted  
-**Date:** 2026-04-26  
+**Date:** 2026-04-26 (Updated: 2026-05-09)  
 **Owner:** Sebastião  
 **Deciders:** Full team
 
@@ -9,15 +9,15 @@
 
 ## Context
 
-Scenario C names OpenBoxes (or similar WMS/inventory platform) as a surrounding system. We must decide whether to integrate with the real OpenBoxes system or build a purpose-built stub service.
-
-The same question applies to the ERP (ERPNext vs ERP stub).
+Scenario C names multiple surrounding systems: ERP (ERPNext/Odoo), WMS (OpenBoxes), and POS (Open Source Point of Sale). We must decide for each system whether to integrate with the real implementation or build a purpose-built stub service.
 
 ---
 
 ## Decision
 
-**Use stub services** for both WMS and ERP.
+- **ERP**: Use stub service
+- **WMS**: Use stub service
+- **POS**: Use real OSPOS (Open Source Point of Sale)
 
 ---
 
@@ -46,9 +46,29 @@ A WMS stub provides:
 
 The same reasoning applies to ERP (ERPNext would require a full Odoo/ERPNext stack with no demo value over a stub).
 
+### POS — Real OSPOS
+
+**Decision:** Use real Open Source Point of Sale (OSPOS) system, not a stub.
+
+**Rationale:**
+
+1. **Demonstrates third-party integration patterns**: OSPOS lacks native RabbitMQ support, requiring an integration adapter that polls the OSPOS database and publishes events. This validates our ability to integrate with systems we don't control.
+
+2. **Avoids artificial coupling**: Using WMS to simulate POS sales creates false architectural coupling between warehouse and retail operations. In real omnichannel retail, POS and WMS are independent systems.
+
+3. **Cross-channel conflict resolution**: Real OSPOS provides authentic retail sale workflow, proving the cross-channel conflict resolution pattern (physical store sales prioritize over web orders) against a genuine third-party system.
+
+4. **Minimal operational overhead**: OSPOS Docker deployment is lightweight (MySQL + PHP application), and setup time is acceptable for the architectural learning value gained.
+
+5. **Different integration pattern than stubs**: While ERP/WMS stubs accept HTTP calls from our Integration Service, OSPOS requires polling (adapter pulls data), demonstrating bidirectional integration patterns.
+
+**Trade-off accepted**: OSPOS Adapter must poll the database (or API) on an interval, introducing 30-60 second latency for cross-channel stock updates. This is acceptable for UC2 requirements and QA-2 (30 second stock sync target).
+
 ---
 
-## Rejected Alternative: Real OpenBoxes
+## Rejected Alternatives
+
+### Real OpenBoxes
 
 Rejected because:
 - High operational overhead for negligible architectural benefit
@@ -57,9 +77,29 @@ Rejected because:
 
 ---
 
+### POS Stub
+
+Rejected because:
+- Would artificially couple POS sales to WMS (same stub simulating both)
+- Would not prove integration with third-party systems lacking native event publishing
+- Misses opportunity to demonstrate polling-based integration adapter pattern
+- Creates unrealistic architecture where all external systems are under our control
+
+---
+
 ## Consequences
 
-- `services/wms-stub/` and `services/erp-stub/` are purpose-built lightweight HTTP services
-- WMS stub publishes `stock.updated` to RabbitMQ directly (simulating the real WMS webhook/event behavior)
-- Stub behavior is explicitly documented in the architecture report as a justified scope cut
-- The architectural pressure (circuit breaker trigger, dead-letter accumulation, reconciliation) is fully preserved
+### ERP and WMS Stubs
+- `services/erp-stub/` and `services/wms-stub/` are purpose-built lightweight HTTP services
+- WMS stub publishes `stock.updated` to RabbitMQ directly (simulating real WMS webhook/event behavior)
+- Stub behavior is explicitly documented in architecture report as justified scope cut
+- Architectural pressure (circuit breaker trigger, dead-letter accumulation, reconciliation) is fully preserved
+
+### Real OSPOS
+- `services/ospos/` runs real OSPOS Docker container with MySQL database
+- `services/ospos-adapter/` polls OSPOS sales table and publishes `sale.completed` events to RabbitMQ
+- Product catalog must be synced between nopCommerce and OSPOS (setup overhead)
+- Integration adapter introduces polling latency (30-60s configurable interval)
+- Cross-channel conflict resolution implemented in nopCommerce StockUpdateConsumer (OSPOS sales prioritized)
+- Demonstrates realistic integration with third-party retail system
+- Adapter pattern is reusable for other systems lacking native event publishing (e.g., legacy ERP APIs)

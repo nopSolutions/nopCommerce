@@ -7,12 +7,21 @@
 
 ## Top Architectural Risks
 
-### Risk 1 — Outbox Integration with nopCommerce (HIGH)
+### Risk 1 — Outbox Integration with nopCommerce (MITIGATED)
 **Description:** Adding the `IntegrationEvent` table and `OutboxPublisherBackgroundService` requires modifying the nopCommerce monolith — specifically hooking into `OrderProcessingService.PlaceOrderAsync()` and registering a background hosted service via `INopStartup`. nopCommerce uses Autofac DI, FluentMigrator for migrations, and a specific `IRepository<T>` pattern. Getting this wrong means events are never published.
 
 **Mitigation:** Feasibility spike (Sebastião, Week 1) — prove end-to-end: order placed → outbox row written → background service reads → message delivered to RabbitMQ. This must be green before Week 2 implementation begins.
 
-**Residual risk:** Low after spike.
+**Status:** MITIGATED (May 4, 2026)
+- IntegrationEvent table created via FluentMigrator migration
+- SpikeOutboxPublisherTask (IScheduleTask) polls outbox every 10s
+- AppStartedEvent triggers test event write to outbox
+- Event published to RabbitMQ verdemart.events exchange in 4 seconds
+- Verified in RabbitMQ Management UI
+- No DI registration errors
+- Spike merged to develop via PR #1
+
+**Residual risk:** LOW — core mechanism proven, production implementation is refinement of working spike code.
 
 ---
 
@@ -25,12 +34,28 @@
 
 ---
 
-### Risk 3 — Docker Compose Startup Order (LOW-MEDIUM)
-**Description:** nopCommerce must start after PostgreSQL is ready, and Integration Service must start after RabbitMQ is ready. If health-check dependencies in `docker-compose.yml` are wrong, the demo environment fails to start cleanly.
+### Risk 3 — Cross-Channel Inventory Conflicts (MEDIUM-HIGH)
+**Description:** When OSPOS and web orders execute simultaneously on the last available unit, race conditions become possible:
+- Physical store sells last unit via OSPOS → OSPOS Adapter publishes `sale.completed` (quantity: 0)
+- Simultaneously, web customer completes checkout
+- Both channels believe inventory is available → overselling
 
-**Mitigation:** Use Docker Compose `depends_on` with `condition: service_healthy` and explicit healthcheck commands. Tested in Duarte's Docker Compose work (Week 2).
+The current architecture has no conflict resolution mechanism. Events are processed in arrival order, but network latency between OSPOS→RabbitMQ and Web→nopCommerce varies. A web order placed 2 seconds before an OSPOS sale could arrive at the Integration Service 5 seconds later due to OSPOS adapter polling delay.
 
-**Residual risk:** Low after testing.
+**Impact:** Violates QA-2 ("preventing overselling") and business driver ("real-time stock accuracy across channels").
+
+**Mitigation:**
+- Priority rule: OSPOS sales > Web orders (physical sale is immutable — customer already left with product)
+- Conflict detection: When `sale.completed` event processed, if stock becomes negative
+- Compensating action: Cancel most recent web order(s) until stock >= 0
+- Customer notification: "Item sold out during checkout, refund processed"
+- Integration Service publishes `order.cancelled` event for tracking
+
+**Alternative (out of scope):** Distributed inventory lock (Redis) or centralized inventory service — adds complexity without additional architectural learning value.
+
+**Validation:** Integration test (Week 4) simulates concurrent OSPOS sale + web order → verify OSPOS succeeds, web order cancelled gracefully, customer notified.
+
+**Residual risk:** MEDIUM — 30-60 second window (OSPOS polling interval) where overselling possible, but observable and recoverable. Acceptable for demo purposes; real production would require tighter polling or OSPOS webhooks.
 
 ---
 

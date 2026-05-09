@@ -41,9 +41,14 @@ graph TB
     WmsAdapter --> WMS["WMS Stub\n(own state, failure ctrl)"]
     WMS -->|"stock.updated"| RMQ
 
+    OSPOS["OSPOS\n(Open Source POS)"] -->|"polls sales table"| OSPOSAdapter["OSPOS Adapter"]
+    OSPOSAdapter -->|"sale.completed"| RMQ
+    RMQ -->|"sale.completed"| StockConsumer
+
     Dashboard["Observability Dashboard"] -->|"polls /health"| IntSvc
     Dashboard -->|"polls /health"| NOP
     Operator(["Store Operator"]) --> Dashboard
+    Cashier(["Store Cashier"]) --> OSPOS
 ```
 
 ## 2. Component Responsibilities
@@ -52,7 +57,7 @@ graph TB
 - Owns: Order lifecycle, customer data, product catalog, payment processing, stock quantities
 - **New**: `IntegrationEvent` outbox table (FluentMigrator migration)
 - **New**: `OutboxPublisherBackgroundService` — polls pending outbox rows, publishes to RabbitMQ `verdemart.events` exchange, marks as published
-- **New**: `StockUpdateConsumerBackgroundService` — subscribes to `stock.updated` routing key, calls `ProductService.AdjustInventoryAsync()`
+- **New**: `StockUpdateConsumerBackgroundService` — subscribes to `stock.updated` and `sale.completed` routing keys, calls `ProductService.AdjustInventoryAsync()`, implements cross-channel conflict resolution (OSPOS sales prioritized over web orders)
 - **New**: `/integration/health` — reports pending outbox count, last publish time
 
 ### Order Integration Service (new, independently deployable)
@@ -75,6 +80,21 @@ graph TB
 - `POST /reservations` — accepts reservation; on success, publishes `stock.updated` to RabbitMQ
 - `GET /stock/{productId}` — returns current warehouse stock
 - `POST /admin/mode` — toggle `normal` | `slow` | `down` for demo pressure point
+
+### OSPOS (Open Source Point of Sale)
+- Real open-source POS system (not a stub)
+- Runs in physical retail store context
+- Cashier records sales at terminal
+- Stores sales in MySQL database
+- Product catalog synced with nopCommerce
+- Demonstrates integration with third-party retail system
+
+### OSPOS Integration Adapter (`services/ospos-adapter/`)
+- Polls OSPOS MySQL database for new sales (configurable interval, default 30s)
+- Transforms OSPOS sale format to `sale.completed` event
+- Publishes to RabbitMQ `verdemart.events` exchange
+- Tracks processed sale IDs for idempotency
+- Handles OSPOS database connection failures with retry logic
 
 ### Observability Dashboard (`services/dashboard/`)
 - Polls `/health` from Integration Service and nopCommerce every 2s
@@ -209,11 +229,12 @@ Step 1  Add IntegrationEvent table migration + outbox writer hook in OrderProces
 Step 2  Add OutboxPublisherBackgroundService (polls + publishes to RabbitMQ)
 Step 3  Build Order Integration Service skeleton + RabbitMQ consumer
 Step 4  Build ERP stub + WMS stub (Dockerized)
-Step 5  Add ERP adapter + retry policy in Integration Service
-Step 6  Add WMS adapter + circuit breaker + dead-letter + reconciliation
-Step 7  Add StockUpdateConsumerBackgroundService in nopCommerce
-Step 8  Add observability dashboard + health endpoints
-Step 9  Demonstrate pressure point: WMS → down → orders queue → WMS up → reconcile
+Step 5  Deploy OSPOS + build OSPOS Integration Adapter
+Step 6  Add ERP adapter + retry policy in Integration Service
+Step 7  Add WMS adapter + circuit breaker + dead-letter + reconciliation
+Step 8  Add StockUpdateConsumerBackgroundService in nopCommerce + cross-channel conflict resolution
+Step 9  Add observability dashboard + health endpoints
+Step 10 Demonstrate pressure point: WMS → down → orders queue → WMS up → reconcile
 ```
 
 ## 11. What Remains Inside the Monolith and Why
@@ -230,6 +251,7 @@ The entire nopCommerce core (catalog, orders, customers, payments, checkout) rem
 graph TD
     Customer(["Customer\n[Person]"])
     Operator(["Store Operator\n[Person]"])
+    Cashier(["Store Cashier\n[Person]"])
 
     subgraph VerdeMart ["VerdeMart Ecosystem"]
         NOP["nopCommerce\n[Commerce Core]\nOrders, catalog, customers,\npayments, stock"]
@@ -237,12 +259,15 @@ graph TD
         RMQ(["RabbitMQ\n[Message Broker]\nverdemart.events"])
         ERP["ERP Stub\n[External System]\nOrder acceptance"]
         WMS["WMS Stub\n[External System]\nWarehouse reservations\n+ stock events"]
+        OSPOS["OSPOS\n[Real POS System]\nPhysical store sales"]
+        OSPOSAdapter["OSPOS Adapter\n[Integration Service]\nPolls sales, publishes events"]
         Dashboard["Observability Dashboard\n[Web UI]\nLive integration state"]
     end
 
     Customer -->|"HTTPS — browse & checkout"| NOP
     Operator -->|"HTTPS — admin UI"| NOP
     Operator -->|"monitors"| Dashboard
+    Cashier -->|"records sales"| OSPOS
 
     NOP -->|"order.placed\n(via outbox)"| RMQ
     RMQ -->|"order.placed"| IntSvc
@@ -250,6 +275,10 @@ graph TD
     IntSvc -->|"POST /reservations\n(HTTP + circuit breaker)"| WMS
     WMS -->|"stock.updated\n(async event)"| RMQ
     RMQ -->|"stock.updated"| NOP
+
+    OSPOS -->|"MySQL polling\n(sales table)"| OSPOSAdapter
+    OSPOSAdapter -->|"sale.completed\n(async event)"| RMQ
+    RMQ -->|"sale.completed"| NOP
 
     Dashboard -->|"GET /health"| IntSvc
     Dashboard -->|"GET /integration/health"| NOP
