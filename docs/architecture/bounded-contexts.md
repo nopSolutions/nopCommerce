@@ -109,11 +109,11 @@ Scenario C lists eight candidate surrounding systems. The table below records wh
 |--------|----------|---------------|
 | ERPNext / Odoo (ERP) | **In scope — ERP Stub** | Required by UC1: every placed order must reach the back-office. Introduces the retry reliability pattern on the FC → ERP edge. |
 | OpenBoxes / WMS | **In scope — WMS Stub** | Required by UC1, UC2, and the mandatory pressure point. Introduces circuit breaker, dead-letter queue, and reconciliation loop. |
-| Open Source POS | **Out of scope** | Would duplicate the WMS pressure point without adding a new architectural pattern. UC2 is already covered by the WMS → nopCommerce `stock.updated` flow, which represents any channel that modifies physical stock. |
+| OSPOS (Open Source POS) | **In scope — Real OSPOS** | Required for UC2 (cross-channel stock visibility) and demonstrates architectural separation between retail point-of-sale and warehouse systems. Using real OSPOS avoids artificial coupling to WMS and proves integration with third-party systems that lack native RabbitMQ support. Requires OSPOS Integration Adapter to poll sales data and publish `sale.completed` events. Validates cross-channel conflict resolution pattern (POS sales take priority over web orders). |
 | EspoCRM | **Out of scope** | CRM concerns (loyalty, support history) do not affect order placement or fulfillment and are not exercised by either mandatory use case. |
 | OpenSearch / Meilisearch | **Out of scope** | Search freshness is orthogonal to the reliability and cross-channel visibility problem. Search index staleness does not affect the order or fulfillment path. |
 | WireMock / Shipping carrier | **Out of scope** | Shipping occurs after fulfillment is confirmed and does not affect order acceptance or WMS reservation. Neither mandatory use case requires it. |
 | Keycloak / authentik | **Out of scope** | nopCommerce has built-in auth. Federated identity is the core problem of Scenario A, not Scenario C. |
 | RabbitMQ / Kafka | **In scope — RabbitMQ** | Required for the async workflow and dead-letter pattern. See ADR-001 for the choice over Kafka. |
 
-ERP and WMS are the only systems directly exercised by both mandatory use cases and the mandatory pressure point. All others add operational complexity without changing the architectural patterns demonstrated.
+ERP, WMS, and OSPOS are the systems directly exercised by the mandatory use cases and pressure point. ERP receives orders (UC1), WMS handles reservations and the pressure point (UC1, UC2), and OSPOS generates cross-channel stock updates (UC2) demonstrating event-driven integration with third-party retail systems. All others add operational complexity without changing the architectural patterns demonstrated.

@@ -20,10 +20,12 @@
 - [x] Pushed to origin (origin/spike/outbox-pattern-feasibility)
 - [x] All Part 1 commits pushed to origin/develop
 
-### Optional Improvements (Not Required for Checkpoint)
+### Documentation Updates (Post-Checkpoint)
 - [ ] Update risk-plan.md with spike evidence
-- [ ] Add POS to architecture diagrams
-- [ ] Update ADR-004 with POS/WMS adapter details
+- [ ] Update target-architecture.md diagrams to include OSPOS
+- [ ] Document OSPOS integration pattern (new ADR or section in ADR-004)
+- [ ] Update C4 Context diagram with OSPOS
+- [ ] Update sequence diagrams with OSPOS sale flow
 
 ---
 
@@ -106,19 +108,53 @@
 
 ---
 
-### Week 3 - POS & nopCommerce Integration
+### Week 3 - OSPOS & nopCommerce Integration
 
-#### POS Stub
-- [ ] Create `services/pos-stub/` project
-- [ ] POST /sales endpoint
-  - [ ] Accept: productId, quantity, storeId, timestamp
-  - [ ] Store sale in-memory
-  - [ ] Publish `sale.completed` event to RabbitMQ
-- [ ] POST /admin/mode endpoint (normal/down)
-- [ ] GET /sales endpoint (for verification)
+#### OSPOS (Open Source Point of Sale)
+- [ ] Deploy OSPOS system
+  - [ ] Pull OSPOS Docker image or setup from source
+  - [ ] Configure MySQL database for OSPOS
+  - [ ] Run OSPOS container
+  - [ ] Access OSPOS web interface
+- [ ] Configure OSPOS
+  - [ ] Create store location
+  - [ ] Create cashier user account
+  - [ ] Configure tax rates
+  - [ ] Sync product catalog with nopCommerce
+    - [ ] Export products from nopCommerce
+    - [ ] Import to OSPOS OR use API to sync
+- [ ] Document OSPOS setup
+  - [ ] Access credentials
+  - [ ] Configuration steps
+  - [ ] Product sync process
+- [ ] Dockerize
+  - [ ] Add OSPOS service to docker-compose.yml
+  - [ ] Configure volumes for persistence
+
+#### OSPOS Integration Adapter
+- [ ] Create `services/ospos-adapter/` project
+- [ ] Implement sale polling mechanism
+  - [ ] Connect to OSPOS MySQL database OR use OSPOS API
+  - [ ] Poll for new sales (query sales table with timestamp filter)
+  - [ ] Track last processed sale ID/timestamp
+- [ ] Transform sale data
+  - [ ] Map OSPOS sale format → `sale.completed` event
+  - [ ] Extract: productId, quantity, storeId, timestamp
+  - [ ] Generate eventId for idempotency
+- [ ] Publish to RabbitMQ
+  - [ ] Publish `sale.completed` to `verdemart.events`
+  - [ ] Include correlation ID for tracing
+- [ ] Idempotency handling
+  - [ ] Track processed sale IDs in-memory or database
+  - [ ] Skip duplicate sales
+- [ ] Error handling and logging
+  - [ ] Log all polling cycles
+  - [ ] Handle OSPOS database connection failures
+  - [ ] Retry logic for RabbitMQ publish failures
 - [ ] Dockerize
   - [ ] Dockerfile
   - [ ] Add to docker-compose.yml
+  - [ ] Configure polling interval via environment variable
 
 #### nopCommerce - Real Order Events
 - [ ] Replace spike's `AppStartedEventConsumer`
