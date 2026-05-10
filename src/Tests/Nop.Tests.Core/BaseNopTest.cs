@@ -111,6 +111,9 @@ public partial class BaseNopTest
         dataProvider.CreateDatabase();
         dataProvider.InitializeDatabase();
 
+        //apply additional schema migrations
+        TestMigration.ApplyMigrations(_serviceProvider.GetService<ITypeFinder>(), _serviceProvider.GetService<IMigrationManager>());
+
         var installationService = _serviceProvider.GetService<IInstallationService>();
 
         installationService.InstallAsync(
