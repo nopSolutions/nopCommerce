@@ -172,10 +172,21 @@ public partial class BaseNopTest
         var services = new ServiceCollection();
         services.AddSingleton<IServiceCollection>(services);
 
-        var rootPath =
-            new DirectoryInfo(
-                    $"{Directory.GetCurrentDirectory().Split("bin")[0]}{Path.Combine([.. @"\..\..\Presentation\Nop.Web".Split('\\', '/')])}")
-                .FullName;
+        var rootPath = findRootPath();
+        static string findRootPath()
+        {
+            var presentationPath = @"..\..\Presentation\Nop.Web";
+            var basePath = $"{Directory.GetCurrentDirectory().Split("bin")[0]}";
+            for (var i = 0; i < 3; i++)
+            {
+                if (i > 0)
+                    presentationPath = @"..\" + presentationPath;
+                var directory = new DirectoryInfo($"{basePath}{Path.Combine(presentationPath.Split('\\', '/'))}");
+                if (directory.Exists)
+                    return directory.FullName;
+            }
+            throw new DirectoryNotFoundException();
+        }
 
         //Presentation\Nop.Web\wwwroot
         var webHostEnvironment = new Mock<IWebHostEnvironment>();
