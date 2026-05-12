@@ -1,0 +1,11 @@
+{
+  "Group": "Misc",
+  "FriendlyName": "Omnichannel Core",
+  "SystemName": "Misc.OmnichannelCore",
+  "Version": "5.00.0",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "AS Group",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.OmnichannelCore.dll",
+  "Description": "Provides the Phase 1 omnichannel integration foundation: outbox, inbox, fulfillment and stock projection tables."
+}

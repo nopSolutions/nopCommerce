@@ -1,0 +1,57 @@
+@model ConfigurationModel
+@using Nop.Plugin.Misc.OmnichannelCore
+@{
+    Layout = "_ConfigurePlugin";
+    NopHtml.SetActiveMenuItemSystemName(OmnichannelCoreDefaults.SystemName);
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">Omnichannel Core</h1>
+</div>
+
+<div class="cards-group">
+    <div class="card card-default">
+        <div class="card-header">
+            Phase 1 foundation
+        </div>
+        <div class="card-body">
+            <p>
+                The plugin is installed as the nopCommerce extension point for the omnichannel evolution.
+                This phase only creates the durable data model and an admin shell. Messaging, workers,
+                WMS/POS simulators and retry logic are intentionally deferred to later roadmap phases.
+            </p>
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Projection</th>
+                        <th>Purpose</th>
+                        <th class="text-right">Rows</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>OmniOutboxMessage</td>
+                        <td>Durable outbound events waiting for publication.</td>
+                        <td class="text-right">@Model.OutboxMessages</td>
+                    </tr>
+                    <tr>
+                        <td>OmniInboxMessage</td>
+                        <td>Inbound message ledger for idempotency and duplicate detection.</td>
+                        <td class="text-right">@Model.InboxMessages</td>
+                    </tr>
+                    <tr>
+                        <td>OmniOrderFulfillment</td>
+                        <td>Order fulfillment projection owned by the plugin.</td>
+                        <td class="text-right">@Model.FulfillmentRecords</td>
+                    </tr>
+                    <tr>
+                        <td>OmniStockSyncState</td>
+                        <td>Cross-channel stock projection with source version tracking.</td>
+                        <td class="text-right">@Model.StockProjectionRecords</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
