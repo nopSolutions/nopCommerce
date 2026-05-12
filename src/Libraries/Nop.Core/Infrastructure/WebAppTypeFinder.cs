@@ -218,6 +218,10 @@ public partial class WebAppTypeFinder : ITypeFinder
                     {
                         Trace.TraceError(ex.ToString());
                     }
+                    catch (FileLoadException ex)
+                    {
+                        Trace.TraceError(ex.ToString());
+                    }
                 }
             }
 
