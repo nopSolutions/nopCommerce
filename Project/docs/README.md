@@ -6,6 +6,8 @@ This folder contains the architecture artefacts for Assignment 2. Scenario C —
 
 **During Part 2**: every code change goes in [journal.md](../journal.md) with its driver (ADR/QA) and verification.
 
+**Current implementation evidence**: [Phase 1 plugin scaffold](evidence/phase-1-plugin-scaffold.md) records the code scope, schema created, exclusions, and remaining runtime verification.
+
 ## Part 1 checkpoint
 
 - [Architecture checkpoint](part1/architecture-checkpoint.md) — primary artefact, organised by 3 ADD iterations.
@@ -24,4 +26,3 @@ The Part 1 decision is to implement a focused omnichannel evolution later:
 - Fulfillment and stock propagation move through asynchronous messaging.
 - WMS and POS are represented by simulators for the final demo.
 - Failure and recovery are part of the runtime evidence, not only documentation.
-

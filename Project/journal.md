@@ -38,4 +38,11 @@ The rubric explicitly penalises "large amounts of generated code with little arc
 
 <!-- Most recent first. -->
 
-_No entries yet — Part 2 has not started. First entry will land in Phase 1 (plugin scaffolding)._
+## 2026-05-12 — Phase 1 plugin scaffold
+
+**Phase**: 1.
+**Driver**: ADR-0003, ADR-0004, ADR-0006, ADR-0007, ADR-0008; QA-1 resilience, QA-2 consistency, QA-3 traceability.
+**Files**: `nopCommerce/src/Plugins/Nop.Plugin.Misc.OmnichannelCore/**`, `nopCommerce/src/NopCommerce.sln`, `roadmap.md`, `docs/evidence/phase-1-plugin-scaffold.md`, `docs/README.md`, `journal.md`.
+**Change**: Added the `Nop.Plugin.Misc.OmnichannelCore` plugin scaffold, schema migration, domain entities, mapping builders, admin shell and solution registration for the Phase 1 foundation.
+**Tradeoff/risk introduced**: Runtime plugin install/uninstall is not yet proven against a fresh nopCommerce database.
+**Verification**: `jq` validates `plugin.json`; `rg` confirms the plugin, solution and evidence references; host `dotnet --info` fails with `command not found`; `docker build --target build -t nopcommerce-omni-phase1-check .` succeeds from `nopCommerce/` with 3 existing warnings and 0 errors. Local install, DBeaver table visibility and admin page visibility were confirmed; uninstall DB validation remains open.

@@ -5,7 +5,7 @@ Authoritative phasing for Assignment 2. Phase 0 covers Part 1 (architecture chec
 | #   | Title                                  | Maps to                              | Status     |
 |-----|----------------------------------------|--------------------------------------|------------|
 | 0   | Architecture Checkpoint                | Part 1 (Wave 1 + Wave 2)             | In review  |
-| 1   | Plugin scaffolding + tables            | Migration Stage 1                    | Not started|
+| 1   | Plugin scaffolding + tables            | Migration Stage 1                    | In review  |
 | 2   | RabbitMQ + worker + normal flow        | Migration Stage 2 (Iter. 1 happy)    | Not started|
 | 3   | Resilience under pressure              | Migration Stage 3 (Iter. 1 pressure) | Not started|
 | 4   | Consistency: idempotent inbox + POS    | Migration Stage 4 (Iter. 2)          | Not started|
@@ -32,11 +32,12 @@ Authoritative phasing for Assignment 2. Phase 0 covers Part 1 (architecture chec
 
 - **Goal**: create `Nop.Plugin.Misc.OmnichannelCore` with the minimum schema to support Iterations 1–3, no integration logic yet.
 - **Deliverables**:
-  - Plugin project under `nopCommerce/src/Plugins/` registered with the standard plugin lifecycle.
-  - Migrations creating `OmniOutboxMessage`, `OmniInboxMessage`, `OmniOrderFulfillment`, `OmniStockSyncState` tables (schemas defined per ADRs 0006/0007/0008).
-  - Empty admin views for outbox/projection (shells only).
-  - Plugin installs cleanly into a fresh nopCommerce DB.
+  - [x] Plugin project under `nopCommerce/src/Plugins/` registered with the standard plugin lifecycle.
+  - [x] Migrations creating `OmniOutboxMessage`, `OmniInboxMessage`, `OmniOrderFulfillment`, `OmniStockSyncState` tables (schemas defined per ADRs 0006/0007/0008).
+  - [x] Empty admin views for outbox/projection (shells only).
+  - [x] Plugin installs cleanly into a fresh nopCommerce DB.
 - **Verification gate**: plugin builds; install/uninstall round-trip leaves DB clean; tables visible with correct columns.
+- **Current evidence**: see [Phase 1 plugin scaffold evidence](docs/evidence/phase-1-plugin-scaffold.md). Code builds through Docker; install, table visibility and admin page visibility were confirmed locally. Uninstall DB validation is still required before marking the phase done.
 - **Risks**: nopCommerce migration tooling not behaving on the active branch; .NET 10 SDK availability in the dev environment.
 
 ## Phase 2 — RabbitMQ + worker + normal flow (Iteration 1 happy path)
