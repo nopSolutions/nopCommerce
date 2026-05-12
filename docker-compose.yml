@@ -1,11 +1,18 @@
 services:
     nopcommerce_web:
         build: .
+        platform: linux/amd64
         container_name: nopcommerce
         ports:
             - "80:80"
         depends_on:
-            - nopcommerce_database
+            nopcommerce_database:
+                condition: service_healthy
+            rabbitmq:
+                condition: service_healthy
+        restart: on-failure
+        volumes:
+            - nopcommerce_app_data:/app/App_Data
     nopcommerce_database:
         image: "mcr.microsoft.com/mssql/server:2019-latest"
         container_name: nopcommerce_mssql_server
@@ -13,6 +20,26 @@ services:
             SA_PASSWORD: "nopCommerce_db_password"
             ACCEPT_EULA: "Y"
             MSSQL_PID: "Express"
+        volumes:
+            - nopcommerce_data:/var/opt/mssql
+        healthcheck:
+            test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "nopCommerce_db_password", "-Q", "SELECT 1", "-C"]
+            interval: 10s
+            timeout: 5s
+            retries: 10
+            start_period: 30s
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: nopcommerce_rabbitmq
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        healthcheck:
+            test: ["CMD", "rabbitmq-diagnostics", "ping"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
 
 volumes:
-  nopcommerce_data:            
+  nopcommerce_data:
+  nopcommerce_app_data:

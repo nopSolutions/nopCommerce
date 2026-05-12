@@ -1,0 +1,11 @@
+{
+  "Group": "Messaging",
+  "FriendlyName": "RabbitMQ",
+  "SystemName": "Messaging.RabbitMq",
+  "Version": "1.00",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "VerdeMart",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Messaging.RabbitMq.dll",
+  "Description": "Publishes order events to RabbitMQ for downstream system integration."
+}
