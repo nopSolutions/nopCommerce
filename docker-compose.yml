@@ -10,7 +10,7 @@ services:
                 condition: service_healthy
             rabbitmq:
                 condition: service_healthy
-        restart: on-failure
+        restart: always
         volumes:
             - nopcommerce_app_data:/app/App_Data
     nopcommerce_database:
