@@ -231,12 +231,12 @@ Iteration decisions:
 - Iteration 2 (consistency): [ADR-0006 - Idempotency strategy](../adr/0006-idempotency-strategy.md), [ADR-0007 - Projection vs write-through](../adr/0007-stock-projection-vs-writethrough.md)
 - Iteration 3 (traceability): [ADR-0008 - Correlation and traceability](../adr/0008-correlation-and-traceability.md)
 
-Rejected decisions (recorded explicitly so they don't return as proposals):
+Cross-cutting decisions (shape the integration pattern and observability mechanism across all three iterations):
 
-- [ADR-0009 - Reject microservices extraction](../adr/0009-reject-microservices-extraction.md)
-- [ADR-0010 - Reject distributed tracing infrastructure](../adr/0010-reject-distributed-tracing.md)
+- [ADR-0009 - Plugin + Worker Boundary as Integration Pattern](../adr/0009-plugin-worker-boundary.md)
+- [ADR-0010 - Structured-Log Observability with Explicit Correlation IDs](../adr/0010-structured-log-observability.md)
 
-Each Accepted ADR includes Status, Context, Decision, Consequences, **Tradeoffs**, and Rejected Alternatives. Rejected ADRs replace "Rejected Alternatives" with **Triggers to revisit**.
+Each ADR includes Status, Context, Decision, Consequences, **Tradeoffs**, and Rejected Alternatives. ADR-0009 and ADR-0010 additionally record **Triggers to revisit** because they rule out serious-looking alternatives (full microservices extraction, distributed-tracing infrastructure) that may resurface.
 
 ## 8. Risk and Validation Plan
 

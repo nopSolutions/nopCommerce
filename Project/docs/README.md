@@ -16,7 +16,7 @@ This folder contains the architecture artefacts for Assignment 2. Scenario C —
 - [Current-state analysis](architecture.md) — pressure points feeding Iteration 1.
 - [Presentation script](part1/presentation-script.md) — to be revised after content lock.
 - [Feasibility spike (experiment charter)](evidence/feasibility-spike.md)
-- [ADRs](adr/) — **10 ADRs**: 8 Accepted (each with Tradeoffs and Rejected Alternatives) and 2 Rejected (microservices extraction, distributed tracing) — recorded explicitly so non-decisions don't quietly return as proposals. Use [template.md](adr/template.md) for new ADRs.
+- [ADRs](adr/) — **10 ADRs**, all Accepted. Each ADR documents Status, Context, Decision, Consequences, Tradeoffs, and Rejected Alternatives; cross-cutting decisions (ADR-0009 plugin+worker boundary, ADR-0010 structured-log observability) additionally record Triggers to revisit. Use [template.md](adr/template.md) for new ADRs.
 
 ## Final delivery placeholders
 

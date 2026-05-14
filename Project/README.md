@@ -19,7 +19,7 @@ Compact orientation page. Detail lives in the canonical docs.
 - **[docs/part1/architecture-checkpoint.md](docs/part1/architecture-checkpoint.md)** — design intent (3 ADD iterations, framework, target arch, ADR map).
 - **[docs/part1/quality-attribute-scenarios.md](docs/part1/quality-attribute-scenarios.md)** — five QA scenarios with numeric measures.
 - **[docs/architecture.md](docs/architecture.md)** — current-state analysis with source-line citations.
-- **[docs/adr/](docs/adr/)** — 10 ADRs: 8 accepted decisions plus 2 explicit rejected decisions; new ADRs use [docs/adr/template.md](docs/adr/template.md).
+- **[docs/adr/](docs/adr/)** — 10 ADRs, all Accepted (each with Tradeoffs and Rejected Alternatives); new ADRs use [docs/adr/template.md](docs/adr/template.md).
 
 ## Technology stack
 

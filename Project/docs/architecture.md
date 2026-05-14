@@ -145,7 +145,7 @@ Existing plugins demonstrate that nopCommerce supports independent plugin folder
 - [Architecture checkpoint and target architecture](part1/architecture-checkpoint.md) — 3 ADD iterations, framework justification, migration roadmap.
 - [Quality attribute scenarios](part1/quality-attribute-scenarios.md) — SEI 6-part with numeric measures.
 - [Context map and C4 diagrams](part1/diagrams.md)
-- [ADR set](adr/) — 10 ADRs: 8 accepted decisions and 2 explicit rejected decisions.
+- [ADR set](adr/) — 10 ADRs, all Accepted.
 - [Feasibility spike (experiment charter)](evidence/feasibility-spike.md)
 
 **Key takeaway**: nopCommerce's plugin model and existing domain concepts make it a viable base for Scenario C. The missing pieces — durable events, outbox, inbox, and external system coordination — are the exact architectural problem the evolution is designed to solve.

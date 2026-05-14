@@ -24,6 +24,6 @@ What we give up by this decision. Bullets, 2–3. This is *not* a list of risks 
 
 Each rejected option as its own bullet: name the option, then one line on why it was rejected. Two to three alternatives is usually enough.
 
----
+## Triggers to revisit (optional)
 
-**For Rejected ADRs** (Status: Rejected): replace the **Rejected Alternatives** section with **Triggers to revisit** — concrete signals that would justify reopening this decision. The Decision section then states what we will *not* do, and Reasons replaces or augments Context. Rejected ADRs document non-decisions explicitly so they don't quietly get re-proposed later.
+If the decision rules out a serious-looking alternative that may resurface, add concrete signals that would justify reopening it. Use this when the decision is load-bearing across iterations and you want future readers to know what would change the calculus.
