@@ -23,7 +23,7 @@ Fill in the placeholder names before kickoff.
 
 Owns the **receive** side: how nopCommerce learns of events and how external state lands in the plugin.
 
-- **Dev 1 — Plugin scaffold + outbox track** · João Roldão
+- **João Roldão — Plugin scaffold + outbox track**
   - `Nop.Plugin.Misc.OmnichannelCore` scaffold, plugin lifecycle, migrations for the four tables.
   - `OrderPlacedEvent` consumer; scheduled outbox publisher with publisher confirms.
   - **Reconciler scheduled task** (per [ADR-0011](docs/adr/0011-order-outbox-insertion-strategy.md) — to be written in Phase 1).
@@ -31,7 +31,7 @@ Owns the **receive** side: how nopCommerce learns of events and how external sta
   - Owns `journal.md` integrity (no missing entries across team).
   - Slides-lead for the **design half** of the Part 2 deck (target arch, ADRs, iterations).
 
-- **Dev 2 — Inbox + POS track** · João Varela
+- **João Varela — Inbox + POS track**
   - Inbox `messageId` dedup at every plugin callback endpoint.
   - `sourceVersion` comparison for stock updates.
   - POS callback endpoint (internal HTTP, demo token).
@@ -42,7 +42,7 @@ Owns the **receive** side: how nopCommerce learns of events and how external sta
 
 Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ behave, how the stack runs.
 
-- **Dev 3 — Worker + messaging track** · António
+- **António — Worker + messaging track**
   - `.NET Worker Service` (independent deployable).
   - RabbitMQ topology: queues, bindings, dead-letter exchange.
   - Shared **message envelope library** consumed by plugin + worker.
@@ -50,7 +50,7 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
   - DLQ wiring and backlog drain logic.
   - Structured logs in worker (3-IDs from ADR-0008).
 
-- **Dev 4 — Sims + Infra + Measurement track** · Diogu
+- **Diogu — Sims + Infra + Measurement track**
   - **WMS simulator** (normal / slow / unavailable / contradictory modes + admin toggle endpoint).
   - **Docker Compose** for the full stack (nopCommerce + SQL Server + RabbitMQ + worker + WMS sim + POS sim).
   - `docs/setup.md` (skeleton in Phase 1; filled incrementally through Phases 2, 3, 6).
@@ -62,16 +62,16 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 
 - Demo dry-runs: all 4 devs run all 5 scenarios end-to-end.
 - Evidence split: Pair A → QA-2 + QA-3; Pair B → QA-1 + QA-4 + baseline.
-- ADR updates reflecting Part 2 reality (Dev 1 leads, all review).
+- ADR updates reflecting Part 2 reality (João Roldão leads, all review).
 
 ## Folded-in patches (from prior audit)
 
 | Patch | Where | Owner | Why now |
 |-------|-------|-------|---------|
-| ADR-0011 — Outbox crash safety net (consumer + reconciler) | Phase 1 | Dev 1 | `EventPublisher.cs:20` catches consumer exceptions silently; without a reconciler an order can exist with no integration trail. |
-| ADR-0005 — Demo-token note (Consequences + Tradeoffs bullet) | Phase 1 | Dev 1 (5 min) | Internal callback auth is a real design decision; presentation already mentions it, ADR must too. |
-| Baseline measurement | Phase 1 (was Phase 6) | Dev 4 | Phase 3's verification gate references "1.5× baseline" — the number must exist before Phase 3, not after. |
-| `docs/setup.md` skeleton | Phase 1, filled in 2/3/6 | Dev 4 | Assignment rubric requires "build and run instructions"; cheap to skeleton now, expensive if left to the end. |
+| ADR-0011 — Outbox crash safety net (consumer + reconciler) | Phase 1 | João Roldão | `EventPublisher.cs:20` catches consumer exceptions silently; without a reconciler an order can exist with no integration trail. |
+| ADR-0005 — Demo-token note (Consequences + Tradeoffs bullet) | Phase 1 | João Roldão (5 min) | Internal callback auth is a real design decision; presentation already mentions it, ADR must too. |
+| Baseline measurement | Phase 1 (was Phase 6) | Diogu | Phase 3's verification gate references "1.5× baseline" — the number must exist before Phase 3, not after. |
+| `docs/setup.md` skeleton | Phase 1, filled in 2/3/6 | Diogu | Assignment rubric requires "build and run instructions"; cheap to skeleton now, expensive if left to the end. |
 
 ## Phase plan
 
@@ -84,29 +84,31 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 
 | Owner | Task | Files / paths |
 |-------|------|---------------|
-| Dev 1 | Plugin scaffold (copy `nopCommerce/src/Plugins/Nop.Plugin.Misc.Omnisend/` structure), `plugin.json`, lifecycle, `Install/Uninstall` | `nopCommerce/src/Plugins/Nop.Plugin.Misc.OmnichannelCore/` |
-| Dev 1 | Migrations for `OmniOutboxMessage`, `OmniInboxMessage`, `OmniOrderFulfillment`, `OmniStockSyncState` | `.../OmnichannelCore/Migrations/` |
-| Dev 1 | Write [ADR-0011](docs/adr/0011-order-outbox-insertion-strategy.md) (consumer + reconciler strategy) | `docs/adr/0011-order-outbox-insertion-strategy.md` |
-| Dev 1 | Add Consequences + Tradeoffs bullet for demo-token auth | `docs/adr/0005-no-shared-database-boundaries.md` |
-| Dev 2 | Admin view shells (empty MVC controller + view skeleton) | `.../OmnichannelCore/Controllers/`, `.../Views/` |
-| Dev 2 | POS simulator scaffold (HTTP server, mode placeholder) | `services/pos-sim/` (new) |
-| Dev 3 | Worker service project scaffold; envelope library project | `services/worker/`, `services/contracts/` (new) |
-| Dev 3 | RabbitMQ topology design (queues, bindings, DLX) documented | `services/worker/README.md` |
-| Dev 4 | WMS simulator scaffold (HTTP server, mode placeholder) | `services/wms-sim/` (new) |
-| Dev 4 | Docker Compose v1: services start, healthchecks pass, no logic yet | `docker-compose.yml` (project root, new) |
-| Dev 4 | `docs/setup.md` skeleton with section headers + Phase markers | `docs/setup.md` |
-| Dev 4 | **Baseline measurement**: place 50 orders against vanilla nopCommerce, capture P50/P95 checkout latency | `docs/evidence/baseline.md` |
+| João Roldão | `[x]` Plugin scaffold (copy `nopCommerce/src/Plugins/Nop.Plugin.Misc.Omnisend/` structure), `plugin.json`, lifecycle, `Install/Uninstall` | `nopCommerce/src/Plugins/Nop.Plugin.Misc.OmnichannelCore/` |
+| João Roldão | `[x]` Migrations for `OmniOutboxMessage`, `OmniInboxMessage`, `OmniOrderFulfillment`, `OmniStockSyncState` | `.../OmnichannelCore/Migrations/` |
+| João Roldão | `[ ]` Write [ADR-0011](docs/adr/0011-order-outbox-insertion-strategy.md) (consumer + reconciler strategy) | `docs/adr/0011-order-outbox-insertion-strategy.md` |
+| João Roldão | `[ ]` Add Consequences + Tradeoffs bullet for demo-token auth | `docs/adr/0005-no-shared-database-boundaries.md` |
+| João Varela | `[x]` Admin view shells (empty MVC controller + view skeleton) | `.../OmnichannelCore/Controllers/`, `.../Views/` |
+| João Varela | `[ ]` POS simulator scaffold (HTTP server, mode placeholder) | `services/pos-sim/` (new) |
+| António | `[ ]` Worker service project scaffold; envelope library project | `services/worker/`, `services/contracts/` (new) |
+| António | `[ ]` RabbitMQ topology design (queues, bindings, DLX) documented | `services/worker/README.md` |
+| Diogu | `[ ]` WMS simulator scaffold (HTTP server, mode placeholder) | `services/wms-sim/` (new) |
+| Diogu | `[ ]` Docker Compose v1: services start, healthchecks pass, no logic yet | `docker-compose.yml` (project root, new) |
+| Diogu | `[ ]` `docs/setup.md` skeleton with section headers + Phase markers | `docs/setup.md` |
+| Diogu | `[ ]` **Baseline measurement**: place 50 orders against vanilla nopCommerce, capture P50/P95 checkout latency | `docs/evidence/baseline.md` |
 
 **Verification gate** (Sun 17 May)
 
-- Plugin install/uninstall round-trip leaves DB clean; the four tables appear with correct columns.
+- Plugin install/uninstall round-trip leaves DB clean; the four tables appear with correct columns. **Status (2026-05-14)**: install + tables + admin page confirmed locally (see [evidence](docs/evidence/phase-1-plugin-scaffold.md)); **uninstall DB validation still pending** — phase remains `In review` in `roadmap.md` until that gate passes.
 - `docker compose up` starts every service with healthcheck green (even if some endpoints return placeholders).
 - `docs/evidence/baseline.md` exists with P50/P95 numbers and the storefront URL used.
 - ADR-0011 exists; ADR-0005 has the demo-token bullet.
 
+**Phase 1 progress (as of 2026-05-14)** — done by Varela on `feat/phase-1-omnichannel-plugin-scaffold` (merged): plugin scaffold, four-table migration, admin shell. **Remaining**: ADR-0011, ADR-0005 demo-token note, POS sim scaffold, worker scaffold + RabbitMQ topology design, WMS sim scaffold, Docker Compose v1, `docs/setup.md` skeleton, baseline measurement, uninstall DB validation.
+
 **Risks**
 
-- nopCommerce migration tooling misbehaves on the active branch — mitigation: Dev 1 runs install/uninstall round-trip on day 1, before any other plugin code.
+- nopCommerce migration tooling misbehaves on the active branch — mitigation: João Roldão runs install/uninstall round-trip on day 1, before any other plugin code.
 - `.NET 10.0.100` SDK not on devs' PATHs — mitigation: README already warns; everyone confirms `dotnet --version` locally on day 1, or commits to Docker-only iteration.
 
 ### Phase 2 — Happy path (Iteration 1 normal flow)
@@ -118,17 +120,17 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 
 | Owner | Task | Files / paths |
 |-------|------|---------------|
-| Dev 1 | `OrderPlacedEvent` consumer writes outbox row | `.../OmnichannelCore/Infrastructure/EventConsumer.cs` |
-| Dev 1 | Scheduled outbox publisher (publisher confirms on) | `.../OmnichannelCore/ScheduleTasks/OutboxPublisherTask.cs` |
-| Dev 1 | Reconciler scheduled task (per ADR-0011): scans recent orders without outbox rows | `.../OmnichannelCore/ScheduleTasks/OutboxReconcilerTask.cs` |
-| Dev 1 | Internal callback endpoint for `fulfillment.status.changed.v1` | `.../OmnichannelCore/Controllers/OmnichannelCallbackController.cs` |
-| Dev 2 | Inbox table read/write skeleton (used in Phase 4) | `.../OmnichannelCore/Services/OmniInboxService.cs` |
-| Dev 3 | Worker consumes `commerce.order.placed.v1`, calls WMS, publishes `fulfillment.status.changed.v1` | `services/worker/` |
-| Dev 3 | Message envelope library finalized (`messageId`, `correlationId`, `eventType`, `occurredOnUtc`) | `services/contracts/Envelope.cs` |
-| Dev 4 | WMS sim `normal` mode: accept fulfillment request, return `externalRequestId` + `accepted` | `services/wms-sim/` |
-| Dev 4 | Docker Compose stitches everything end-to-end | `docker-compose.yml` |
-| Dev 4 | `docs/setup.md` filled in for Phase 2 stack | `docs/setup.md` |
-| Dev 1 + Dev 3 | Cross-pair pairing session on envelope contract (~half a day) | `services/contracts/` |
+| João Roldão | `[ ]` `OrderPlacedEvent` consumer writes outbox row | `.../OmnichannelCore/Infrastructure/EventConsumer.cs` |
+| João Roldão | `[ ]` Scheduled outbox publisher (publisher confirms on) | `.../OmnichannelCore/ScheduleTasks/OutboxPublisherTask.cs` |
+| João Roldão | `[ ]` Reconciler scheduled task (per ADR-0011): scans recent orders without outbox rows | `.../OmnichannelCore/ScheduleTasks/OutboxReconcilerTask.cs` |
+| João Roldão | `[ ]` Internal callback endpoint for `fulfillment.status.changed.v1` | `.../OmnichannelCore/Controllers/OmnichannelCallbackController.cs` |
+| João Varela | `[ ]` Inbox table read/write skeleton (used in Phase 4) | `.../OmnichannelCore/Services/OmniInboxService.cs` |
+| António | `[ ]` Worker consumes `commerce.order.placed.v1`, calls WMS, publishes `fulfillment.status.changed.v1` | `services/worker/` |
+| António | `[ ]` Message envelope library finalized (`messageId`, `correlationId`, `eventType`, `occurredOnUtc`) | `services/contracts/Envelope.cs` |
+| Diogu | `[ ]` WMS sim `normal` mode: accept fulfillment request, return `externalRequestId` + `accepted` | `services/wms-sim/` |
+| Diogu | `[ ]` Docker Compose stitches everything end-to-end | `docker-compose.yml` |
+| Diogu | `[ ]` `docs/setup.md` filled in for Phase 2 stack | `docs/setup.md` |
+| João Roldão + António | `[ ]` Cross-pair pairing session on envelope contract (~half a day) | `services/contracts/` |
 
 **Verification gate** (Sun 24 May)
 
@@ -139,8 +141,8 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 
 **Risks**
 
-- Scheduled-task publish lag larger than expected → mitigation: Dev 1 measures publish latency from outbox-row-created to MQ-published; target ≤ 60 s on day 1 of Phase 2.
-- RabbitMQ publisher confirm semantics misconfigured → mitigation: Dev 3 writes a one-page note on how confirms are wired, reviewed by Dev 1 during the envelope pairing session.
+- Scheduled-task publish lag larger than expected → mitigation: João Roldão measures publish latency from outbox-row-created to MQ-published; target ≤ 60 s on day 1 of Phase 2.
+- RabbitMQ publisher confirm semantics misconfigured → mitigation: António writes a one-page note on how confirms are wired, reviewed by João Roldão during the envelope pairing session.
 
 ### Phase 3 — Resilience (Iteration 1 pressure work)
 
@@ -153,12 +155,12 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 
 | Owner | Task | Files / paths |
 |-------|------|---------------|
-| Dev 4 | WMS sim `slow`, `unavailable`, `contradictory` modes + admin toggle endpoint | `services/wms-sim/` |
-| Dev 3 | Polly retry with exponential backoff on worker → WMS HTTP | `services/worker/Resilience/` |
-| Dev 3 | Polly circuit breaker; trip → mark fulfillment `pending/degraded` | `services/worker/Resilience/` |
-| Dev 3 | Dead-letter queue + handler for poison messages | `services/worker/` |
-| Dev 3 | Backlog drain on circuit-breaker close | `services/worker/` |
-| Dev 4 | Pressure-test harness: toggle WMS to `unavailable` for 30 s, capture P95 + recovery time + orders-pending count | `docs/evidence/qa-1-pressure.md` |
+| Diogu | `[ ]` WMS sim `slow`, `unavailable`, `contradictory` modes + admin toggle endpoint | `services/wms-sim/` |
+| António | `[ ]` Polly retry with exponential backoff on worker → WMS HTTP | `services/worker/Resilience/` |
+| António | `[ ]` Polly circuit breaker; trip → mark fulfillment `pending/degraded` | `services/worker/Resilience/` |
+| António | `[ ]` Dead-letter queue + handler for poison messages | `services/worker/` |
+| António | `[ ]` Backlog drain on circuit-breaker close | `services/worker/` |
+| Diogu | `[ ]` Pressure-test harness: toggle WMS to `unavailable` for 30 s, capture P95 + recovery time + orders-pending count | `docs/evidence/qa-1-pressure.md` |
 
 **Verification gate** (Wed 27 May)
 
@@ -167,7 +169,7 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 
 **Risks**
 
-- Circuit-breaker thresholds tuned for tests but not for demo → mitigation: Dev 3 records the thresholds in `services/worker/README.md` and Dev 4 reproduces the QA-1 scenario at least once in demo conditions on day 14.
+- Circuit-breaker thresholds tuned for tests but not for demo → mitigation: António records the thresholds in `services/worker/README.md` and Diogu reproduces the QA-1 scenario at least once in demo conditions on day 14.
 - Recovery time depends on backlog size; if a long pressure window leaves a big backlog, drain time can exceed 60 s → mitigation: cap the pressure window in the demo to 30 s, document in `qa-1-pressure.md`.
 
 ### Phase 4 — Consistency (Iteration 2)
@@ -181,12 +183,12 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 
 | Owner | Task | Files / paths |
 |-------|------|---------------|
-| Dev 2 | Inbox `messageId` dedup at every callback endpoint | `.../OmnichannelCore/Services/OmniInboxService.cs` |
-| Dev 2 | `sourceVersion` comparison for stock updates (`OmniStockSyncState`) | `.../OmnichannelCore/Services/OmniStockSyncService.cs` |
-| Dev 2 | POS callback endpoint | `.../OmnichannelCore/Controllers/OmnichannelCallbackController.cs` |
-| Dev 2 | POS sim `duplicate` and `stale` modes | `services/pos-sim/` |
-| Dev 1 | Plugin integration: connect POS callback into the inbox + stock projection paths | `.../OmnichannelCore/` |
-| Dev 2 | Unit tests for `messageId` dedup and `sourceVersion` staleness; e2e: duplicate ignored, stale ignored, legitimate update applied | `tests/` or `.../OmnichannelCore/Tests/`; evidence in `docs/evidence/qa-2-consistency.md` |
+| João Varela | `[ ]` Inbox `messageId` dedup at every callback endpoint | `.../OmnichannelCore/Services/OmniInboxService.cs` |
+| João Varela | `[ ]` `sourceVersion` comparison for stock updates (`OmniStockSyncState`) | `.../OmnichannelCore/Services/OmniStockSyncService.cs` |
+| João Varela | `[ ]` POS callback endpoint | `.../OmnichannelCore/Controllers/OmnichannelCallbackController.cs` |
+| João Varela | `[ ]` POS sim `duplicate` and `stale` modes | `services/pos-sim/` |
+| João Roldão | `[ ]` Plugin integration: connect POS callback into the inbox + stock projection paths | `.../OmnichannelCore/` |
+| João Varela | `[ ]` Unit tests for `messageId` dedup and `sourceVersion` staleness; e2e: duplicate ignored, stale ignored, legitimate update applied | `tests/` or `.../OmnichannelCore/Tests/`; evidence in `docs/evidence/qa-2-consistency.md` |
 
 **Verification gate** (Wed 27 May)
 
@@ -195,7 +197,7 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 
 **Risks**
 
-- `sourceVersion` clock semantics broken by POS sim's clock model → mitigation: Dev 2 documents the version-generation rule in `services/pos-sim/README.md`.
+- `sourceVersion` clock semantics broken by POS sim's clock model → mitigation: João Varela documents the version-generation rule in `services/pos-sim/README.md`.
 - Inbox table growth not capped → acceptable for demo; documented in ADR-0006.
 
 ### Phase 5 — Traceability (Iteration 3)
@@ -207,11 +209,11 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 
 | Owner | Task | Files / paths |
 |-------|------|---------------|
-| Dev 1 | Plugin admin view by `OrderGuid`: returns outbox row, MQ message ID, worker attempts, fulfillment state | `.../OmnichannelCore/Views/Admin/`, `.../OmnichannelCore/Controllers/OmnichannelAdminController.cs` |
-| Dev 2 | Plugin-side structured logs carrying `OrderGuid` + `messageId` + `externalRequestId` | `.../OmnichannelCore/` (cross-cutting) |
-| Dev 3 | Worker-side structured logs with the same 3 IDs; envelope enforced on inbound + outbound messages | `services/worker/` |
-| Dev 4 | RabbitMQ Management UI exposed in Compose; one-page ops walkthrough | `docker-compose.yml`, `docs/setup.md` |
-| Dev 1 + Dev 3 | Cross-pair: align log field names (`order_guid`, `message_id`, `external_request_id`) so QA-3 query works end-to-end | (review only) |
+| João Roldão | `[ ]` Plugin admin view by `OrderGuid`: returns outbox row, MQ message ID, worker attempts, fulfillment state | `.../OmnichannelCore/Views/Admin/`, `.../OmnichannelCore/Controllers/OmnichannelAdminController.cs` |
+| João Varela | `[ ]` Plugin-side structured logs carrying `OrderGuid` + `messageId` + `externalRequestId` | `.../OmnichannelCore/` (cross-cutting) |
+| António | `[ ]` Worker-side structured logs with the same 3 IDs; envelope enforced on inbound + outbound messages | `services/worker/` |
+| Diogu | `[ ]` RabbitMQ Management UI exposed in Compose; one-page ops walkthrough | `docker-compose.yml`, `docs/setup.md` |
+| João Roldão + António | `[ ]` Cross-pair: align log field names (`order_guid`, `message_id`, `external_request_id`) so QA-3 query works end-to-end | (review only) |
 
 **Verification gate** (Fri 29 May)
 
@@ -221,7 +223,7 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 **Risks**
 
 - Admin view scope creep → mitigation: stop at "lookup by `OrderGuid` returns the chain"; no search, no filters, no editing.
-- Structured-logging discipline drifts late in the project (someone logs without IDs on an error path) → mitigation: Dev 2 + Dev 3 do a 30-min cross-pair log review on day 16.
+- Structured-logging discipline drifts late in the project (someone logs without IDs on an error path) → mitigation: João Varela + António do a 30-min cross-pair log review on day 16.
 
 ### Phase 6 — Evidence + demo polish
 
@@ -232,13 +234,13 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 
 | Owner | Task | Files / paths |
 |-------|------|---------------|
-| Dev 2 | Evidence pack: QA-2 + QA-3 (consolidate numbers, screenshots, run logs) | `docs/evidence/qa-2-consistency.md`, `docs/evidence/qa-3-traceability.md` |
-| Dev 4 | Evidence pack: QA-1 + QA-4 + baseline (consolidate numbers, screenshots, run logs) | `docs/evidence/qa-1-pressure.md`, `docs/evidence/qa-4-operability.md`, `docs/evidence/baseline.md` |
-| Dev 1 | ADR updates reflecting Part 2 reality (e.g., write-through decision for ADR-0007 after measurement) | `docs/adr/` |
-| Dev 1 | Design slides (target arch, ADRs, iterations) for Part 2 deck | (slides repo / shared deck) |
-| Dev 3 | Worker hardening: clean shutdown, log polish, README finalised | `services/worker/` |
-| Dev 4 | Demo + measurement slides; final Compose smoke from a fresh clone | (slides repo), `docker-compose.yml` |
-| All 4 | Full end-to-end dry run of all 5 demo scenarios (normal, WMS unavailable + recovery, POS legitimate update, POS duplicate, POS stale) | (demo scripts) |
+| João Varela | `[ ]` Evidence pack: QA-2 + QA-3 (consolidate numbers, screenshots, run logs) | `docs/evidence/qa-2-consistency.md`, `docs/evidence/qa-3-traceability.md` |
+| Diogu | `[ ]` Evidence pack: QA-1 + QA-4 + baseline (consolidate numbers, screenshots, run logs) | `docs/evidence/qa-1-pressure.md`, `docs/evidence/qa-4-operability.md`, `docs/evidence/baseline.md` |
+| João Roldão | `[ ]` ADR updates reflecting Part 2 reality (e.g., write-through decision for ADR-0007 after measurement) | `docs/adr/` |
+| João Roldão | `[ ]` Design slides (target arch, ADRs, iterations) for Part 2 deck | (slides repo / shared deck) |
+| António | `[ ]` Worker hardening: clean shutdown, log polish, README finalised | `services/worker/` |
+| Diogu | `[ ]` Demo + measurement slides; final Compose smoke from a fresh clone | (slides repo), `docker-compose.yml` |
+| All 4 | `[ ]` Full end-to-end dry run of all 5 demo scenarios (normal, WMS unavailable + recovery, POS legitimate update, POS duplicate, POS stale) | (demo scripts) |
 
 **Verification gate** (Sun 31 May)
 
@@ -250,8 +252,8 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 
 **Risks**
 
-- Docker Compose drift between dev machines → mitigation: Dev 4 does the fresh-clone smoke on a different machine if possible on day 18.
-- Running out of time on evidence collection vs implementation polish → mitigation: Dev 2 + Dev 4 start evidence consolidation on the morning of day 17, not day 18.
+- Docker Compose drift between dev machines → mitigation: Diogu does the fresh-clone smoke on a different machine if possible on day 18.
+- Running out of time on evidence collection vs implementation polish → mitigation: João Varela + Diogu start evidence consolidation on the morning of day 17, not day 18.
 
 ## Parallelism map
 
@@ -269,7 +271,7 @@ Phase 3 and Phase 4 share **zero files**: Phase 3 touches `services/worker/` + `
 
 ## Cross-cutting discipline
 
-- **`journal.md`**: one entry per logical change, linking to its driver (ADR-NNNN and/or QA-N). Dev 1 owns file integrity — checks weekly that no commit is unreferenced.
+- **`journal.md`**: one entry per logical change, linking to its driver (ADR-NNNN and/or QA-N). João Roldão owns file integrity — checks weekly that no commit is unreferenced.
 - **In-pair PR review**: every PR reviewed by the partner. Cheap and fast; serves as knowledge redundancy.
 - **One cross-pair review per phase**: only on changes that touch the boundary contract (envelope, callback HTTP shape, log field names). Avoids review overhead while preserving boundary integrity.
 - **Daily 15-min stand-up** (recommended): yesterday / today / blockers. Voice or async, doesn't matter.
@@ -279,10 +281,10 @@ Phase 3 and Phase 4 share **zero files**: Phase 3 touches `services/worker/` + `
 
 | Risk | Phase | Owner | Mitigation |
 |------|-------|-------|------------|
-| Scheduled-task publish lag exceeds 60 s under load | 2 | Pair A (Dev 1) | Measure on day 1 of Phase 2; if > 60 s, reduce task interval or batch size before Phase 3. |
-| Circuit-breaker thresholds tuned for unit tests, not the live demo | 3 | Pair B (Dev 3) | Dev 4 runs the QA-1 scenario in demo-like conditions on day 14, not just day 12. |
+| Scheduled-task publish lag exceeds 60 s under load | 2 | Pair A (João Roldão) | Measure on day 1 of Phase 2; if > 60 s, reduce task interval or batch size before Phase 3. |
+| Circuit-breaker thresholds tuned for unit tests, not the live demo | 3 | Pair B (António) | Diogu runs the QA-1 scenario in demo-like conditions on day 14, not just day 12. |
 | Structured-logging discipline drifts on error paths | 5 | Pair A + Pair B | 30-min cross-pair log review on day 16 catches missing IDs before evidence collection. |
-| Docker Compose works on one machine, fails on another | 6 | Dev 4 | Fresh-clone smoke from a second machine on day 18. |
+| Docker Compose works on one machine, fails on another | 6 | Diogu | Fresh-clone smoke from a second machine on day 18. |
 | One dev goes silent for several days (classes / illness) | any | Pair partner | Pair PR review means the partner has full context; daily stand-up surfaces blockers within 24 h. |
 
 ## Pre-freeze verification checklist (2026-05-31)

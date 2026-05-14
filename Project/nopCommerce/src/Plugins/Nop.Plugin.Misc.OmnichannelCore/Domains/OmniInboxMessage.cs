@@ -13,6 +13,12 @@ public class OmniInboxMessage : BaseEntity
     public Guid MessageId { get; set; }
 
     /// <summary>
+    /// Gets or sets the related nopCommerce order GUID, when the message is order-related.
+    /// Null for messages that are not tied to an order (for example, POS stock events).
+    /// </summary>
+    public Guid? OrderGuid { get; set; }
+
+    /// <summary>
     /// Gets or sets the event type
     /// </summary>
     public string EventType { get; set; }

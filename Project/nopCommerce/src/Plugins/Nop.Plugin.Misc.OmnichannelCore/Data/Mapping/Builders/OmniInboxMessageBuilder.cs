@@ -19,6 +19,7 @@ public class OmniInboxMessageBuilder : NopEntityBuilder<OmniInboxMessage>
     {
         table
             .WithColumn(nameof(OmniInboxMessage.MessageId)).AsGuid().NotNullable().Indexed()
+            .WithColumn(nameof(OmniInboxMessage.OrderGuid)).AsGuid().Nullable().Indexed()
             .WithColumn(nameof(OmniInboxMessage.EventType)).AsString(200).NotNullable()
             .WithColumn(nameof(OmniInboxMessage.CorrelationId)).AsString(100).Nullable().Indexed()
             .WithColumn(nameof(OmniInboxMessage.Source)).AsString(100).Nullable()

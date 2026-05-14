@@ -23,6 +23,12 @@ public class OmniOrderFulfillment : BaseEntity
     public Guid? MessageId { get; set; }
 
     /// <summary>
+    /// Gets or sets the correlation identifier carried by the originating outbox message.
+    /// Lets a support agent walk from a messageId back to the originating order chain.
+    /// </summary>
+    public string CorrelationId { get; set; }
+
+    /// <summary>
     /// Gets or sets the external fulfillment request identifier
     /// </summary>
     public string ExternalRequestId { get; set; }

@@ -17,8 +17,10 @@ public class OmniStockSyncStateBuilder : NopEntityBuilder<OmniStockSyncState>
     /// <param name="table">Create table expression builder</param>
     public override void MapEntity(CreateTableExpressionBuilder table)
     {
+        // Note: (ProductId, WarehouseId) composite index is created in SchemaMigration.Up;
+        // leaving ProductId without a single-column index avoids a redundant duplicate.
         table
-            .WithColumn(nameof(OmniStockSyncState.ProductId)).AsInt32().NotNullable().Indexed()
+            .WithColumn(nameof(OmniStockSyncState.ProductId)).AsInt32().NotNullable()
             .WithColumn(nameof(OmniStockSyncState.Sku)).AsString(400).Nullable().Indexed()
             .WithColumn(nameof(OmniStockSyncState.LastMessageId)).AsGuid().Nullable().Indexed()
             .WithColumn(nameof(OmniStockSyncState.Source)).AsString(100).Nullable();

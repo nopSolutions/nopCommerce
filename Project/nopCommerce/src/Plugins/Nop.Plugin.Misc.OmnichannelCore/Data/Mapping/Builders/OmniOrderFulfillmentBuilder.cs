@@ -20,6 +20,7 @@ public class OmniOrderFulfillmentBuilder : NopEntityBuilder<OmniOrderFulfillment
         table
             .WithColumn(nameof(OmniOrderFulfillment.OrderGuid)).AsGuid().NotNullable().Indexed()
             .WithColumn(nameof(OmniOrderFulfillment.MessageId)).AsGuid().Nullable().Indexed()
+            .WithColumn(nameof(OmniOrderFulfillment.CorrelationId)).AsString(100).Nullable().Indexed()
             .WithColumn(nameof(OmniOrderFulfillment.ExternalRequestId)).AsString(100).Nullable().Indexed()
             .WithColumn(nameof(OmniOrderFulfillment.TrackingNumber)).AsString(100).Nullable()
             .WithColumn(nameof(OmniOrderFulfillment.Reason)).AsString(int.MaxValue).Nullable();

@@ -23,6 +23,7 @@ public class OmniOutboxMessageBuilder : NopEntityBuilder<OmniOutboxMessage>
             .WithColumn(nameof(OmniOutboxMessage.CorrelationId)).AsString(100).Nullable().Indexed()
             .WithColumn(nameof(OmniOutboxMessage.OrderGuid)).AsGuid().Nullable().Indexed()
             .WithColumn(nameof(OmniOutboxMessage.Payload)).AsString(int.MaxValue).NotNullable()
+            .WithColumn(nameof(OmniOutboxMessage.StatusId)).AsInt32().NotNullable().Indexed()
             .WithColumn(nameof(OmniOutboxMessage.LastError)).AsString(int.MaxValue).Nullable();
     }
 

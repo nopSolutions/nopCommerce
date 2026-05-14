@@ -19,6 +19,11 @@ public class SchemaMigration : Migration
         this.CreateTableIfNotExists<OmniInboxMessage>();
         this.CreateTableIfNotExists<OmniOrderFulfillment>();
         this.CreateTableIfNotExists<OmniStockSyncState>();
+
+        Create.Index("IX_OmniStockSyncState_ProductId_WarehouseId")
+            .OnTable(nameof(OmniStockSyncState))
+            .OnColumn(nameof(OmniStockSyncState.ProductId)).Ascending()
+            .OnColumn(nameof(OmniStockSyncState.WarehouseId)).Ascending();
     }
 
     /// <summary>
@@ -26,6 +31,8 @@ public class SchemaMigration : Migration
     /// </summary>
     public override void Down()
     {
+        Delete.Index("IX_OmniStockSyncState_ProductId_WarehouseId").OnTable(nameof(OmniStockSyncState));
+
         this.DeleteTableIfExists<OmniStockSyncState>();
         this.DeleteTableIfExists<OmniOrderFulfillment>();
         this.DeleteTableIfExists<OmniInboxMessage>();
