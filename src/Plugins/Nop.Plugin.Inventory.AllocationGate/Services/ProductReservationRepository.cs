@@ -23,8 +23,9 @@ public class ProductReservationRepository : IProductReservationRepository
     public async Task UpdateAsync(ProductReservation reservation)
         => await _repository.UpdateAsync(reservation, publishEvent: false);
 
-    public async Task<IList<ProductReservation>> GetExpiredAsync()
+    public async Task<IList<ProductReservation>> GetExpiredAsync(int batchSize)
         => await _repository.Table
             .Where(r => r.Status == (int)ReservationStatus.Active && r.ReservedUntilUtc != null && r.ReservedUntilUtc < DateTime.UtcNow)
+            .Take(batchSize)
             .ToListAsync();
 }

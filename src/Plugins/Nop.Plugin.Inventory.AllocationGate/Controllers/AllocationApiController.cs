@@ -8,7 +8,7 @@ using Nop.Services.Stores;
 namespace Nop.Plugin.Inventory.AllocationGate.Controllers;
 
 [ApiController]
-[Route("api/allocation")]
+[Route("api/inventory")]
 public class AllocationApiController : ControllerBase
 {
     private readonly IAllocationGate _gate;
@@ -31,7 +31,13 @@ public class AllocationApiController : ControllerBase
         if (request.ProductId <= 0 || request.Quantity <= 0 || string.IsNullOrWhiteSpace(request.ReservationKey))
             return BadRequest(new { error = "invalid-request" });
 
-        var result = await _gate.ReserveAsync(request.ProductId, request.Quantity, "pos", request.ReservationKey, request.TtlSeconds);
+        var result = await _gate.ReserveAsync(
+            request.ProductId,
+            request.WarehouseId,
+            request.Quantity,
+            "pos",
+            request.ReservationKey,
+            request.TtlSeconds);
 
         return result.Success
             ? Ok(new { reservationKey = request.ReservationKey, message = result.Message })
@@ -39,22 +45,28 @@ public class AllocationApiController : ControllerBase
     }
 
     [HttpPost("confirm")]
-    public async Task<IActionResult> Confirm([FromQuery] string key)
+    public async Task<IActionResult> Confirm([FromBody] ConfirmRequest request)
     {
         if (!await IsAuthorizedAsync())
             return Unauthorized(new { error = "invalid-api-key" });
 
-        var ok = await _gate.ConfirmAsync(key);
+        if (string.IsNullOrWhiteSpace(request?.ReservationKey))
+            return BadRequest(new { error = "invalid-request" });
+
+        var ok = await _gate.ConfirmAsync(request.ReservationKey);
         return ok ? Ok(new { confirmed = true }) : NotFound(new { error = "reservation-not-found" });
     }
 
     [HttpPost("release")]
-    public async Task<IActionResult> Release([FromQuery] string key)
+    public async Task<IActionResult> Release([FromBody] ReleaseRequest request)
     {
         if (!await IsAuthorizedAsync())
             return Unauthorized(new { error = "invalid-api-key" });
 
-        var ok = await _gate.ReleaseAsync(key);
+        if (string.IsNullOrWhiteSpace(request?.ReservationKey))
+            return BadRequest(new { error = "invalid-request" });
+
+        var ok = await _gate.ReleaseAsync(request.ReservationKey);
         return ok ? Ok(new { released = true }) : NotFound(new { error = "reservation-not-found" });
     }
 

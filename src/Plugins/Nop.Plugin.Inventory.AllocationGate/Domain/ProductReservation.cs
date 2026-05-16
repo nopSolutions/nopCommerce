@@ -7,6 +7,7 @@ public class ProductReservation : BaseEntity
     public string ReservationKey { get; set; }
     public string ChannelKey { get; set; }
     public int ProductId { get; set; }
+    public int WarehouseId { get; set; }
     public int Quantity { get; set; }
     public int Status { get; set; }
     public DateTime? ReservedUntilUtc { get; set; }

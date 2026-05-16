@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Inventory.AllocationGate.Services;
 using Nop.Services.Catalog;
+using Nop.Services.Configuration;
 
 namespace Nop.Plugin.Inventory.AllocationGate.Infrastructure;
 
@@ -36,7 +38,9 @@ public class PluginNopStartup : INopStartup
                 sp => AllocationGateProductServiceDecorator.Create(
                     (IProductService)sp.GetRequiredService(descriptor.ImplementationType),
                     sp.GetRequiredService<IAllocationGate>(),
-                    sp.GetRequiredService<ILogger<AllocationGateProductServiceDecorator>>()),
+                    sp.GetRequiredService<ILogger<AllocationGateProductServiceDecorator>>(),
+                    sp.GetRequiredService<ISettingService>(),
+                    sp.GetRequiredService<IStoreContext>()),
                 descriptor.Lifetime));
         }
     }

@@ -11,6 +11,7 @@ public class ProductReservationBuilder : NopEntityBuilder<ProductReservation>
         table
             .WithColumn(nameof(ProductReservation.ReservationKey)).AsString(200).NotNullable().Unique()
             .WithColumn(nameof(ProductReservation.ChannelKey)).AsString(20).NotNullable()
+            .WithColumn(nameof(ProductReservation.WarehouseId)).AsInt32().NotNullable().WithDefaultValue(0)
             .WithColumn(nameof(ProductReservation.ReservedUntilUtc)).AsDateTime2().Nullable();
     }
 }

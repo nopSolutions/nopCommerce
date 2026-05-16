@@ -1,56 +1,56 @@
-using System.Collections.Concurrent;
+using System.Transactions;
+using LinqToDB.Data;
+using Nop.Data;
 using Nop.Plugin.Inventory.AllocationGate.Domain;
-using Nop.Services.Catalog;
 
 namespace Nop.Plugin.Inventory.AllocationGate.Services;
 
 public class AllocationGateService : IAllocationGate
 {
-    private static readonly ConcurrentDictionary<int, SemaphoreSlim> _productLocks = new();
-
-    private readonly IProductService _productService;
+    private readonly INopDataProvider _dataProvider;
     private readonly IProductReservationRepository _reservationRepository;
 
-    public AllocationGateService(IProductService productService, IProductReservationRepository reservationRepository)
+    public AllocationGateService(INopDataProvider dataProvider, IProductReservationRepository reservationRepository)
     {
-        _productService = productService;
+        _dataProvider = dataProvider;
         _reservationRepository = reservationRepository;
     }
 
-    public async Task<AllocationResult> ReserveAsync(int productId, int quantity, string channelKey, string reservationKey, int ttlSeconds = 300)
+    public async Task<AllocationResult> ReserveAsync(int productId, int warehouseId, int quantity, string channelKey, string reservationKey, int ttlSeconds = 300)
     {
-        var sem = _productLocks.GetOrAdd(productId, _ => new SemaphoreSlim(1, 1));
-        await sem.WaitAsync();
-        try
+        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+
+        var existing = await _reservationRepository.GetByKeyAsync(reservationKey);
+        if (existing is not null)
         {
-            var existing = await _reservationRepository.GetByKeyAsync(reservationKey);
-            if (existing is not null)
-                return new AllocationResult(true, "already-reserved");
-
-            var product = await _productService.GetProductByIdAsync(productId);
-            if (product is null || product.StockQuantity < quantity)
-                return new AllocationResult(false, "insufficient-stock");
-
-            product.StockQuantity -= quantity;
-            await _productService.UpdateProductAsync(product);
-
-            await _reservationRepository.InsertAsync(new ProductReservation
-            {
-                ReservationKey = reservationKey,
-                ChannelKey = channelKey,
-                ProductId = productId,
-                Quantity = quantity,
-                Status = (int)ReservationStatus.Active,
-                ReservedUntilUtc = DateTime.UtcNow.AddSeconds(ttlSeconds),
-                CreatedOnUtc = DateTime.UtcNow
-            });
-
-            return new AllocationResult(true);
+            scope.Complete();
+            return new AllocationResult(true, "already-reserved");
         }
-        finally
+
+        // Atomic decrement: SQL Server serialises concurrent UPDATEs on the same row —
+        // the WHERE StockQuantity >= @qty acts as the availability check inside the lock.
+        var rows = await _dataProvider.ExecuteNonQueryAsync(
+            "UPDATE Product SET StockQuantity = StockQuantity - @qty WHERE Id = @id AND StockQuantity >= @qty",
+            new DataParameter("@qty", quantity),
+            new DataParameter("@id", productId));
+
+        if (rows == 0)
+            return new AllocationResult(false, "insufficient-stock");
+
+        await _reservationRepository.InsertAsync(new ProductReservation
         {
-            sem.Release();
-        }
+            ReservationKey = reservationKey,
+            ChannelKey = channelKey,
+            ProductId = productId,
+            WarehouseId = warehouseId,
+            Quantity = quantity,
+            Status = (int)ReservationStatus.Active,
+            ReservedUntilUtc = DateTime.UtcNow.AddSeconds(ttlSeconds),
+            CreatedOnUtc = DateTime.UtcNow
+        });
+
+        scope.Complete();
+        return new AllocationResult(true, "reserved");
     }
 
     public async Task<bool> ConfirmAsync(string reservationKey)
@@ -71,16 +71,18 @@ public class AllocationGateService : IAllocationGate
         if (reservation is null || reservation.Status != (int)ReservationStatus.Active)
             return false;
 
-        var product = await _productService.GetProductByIdAsync(reservation.ProductId);
-        if (product is not null)
-        {
-            product.StockQuantity += reservation.Quantity;
-            await _productService.UpdateProductAsync(product);
-        }
+        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+
+        await _dataProvider.ExecuteNonQueryAsync(
+            "UPDATE Product SET StockQuantity = StockQuantity + @qty WHERE Id = @id",
+            new DataParameter("@qty", reservation.Quantity),
+            new DataParameter("@id", reservation.ProductId));
 
         reservation.Status = (int)ReservationStatus.Released;
         reservation.ReservedUntilUtc = null;
         await _reservationRepository.UpdateAsync(reservation);
+
+        scope.Complete();
         return true;
     }
 }
