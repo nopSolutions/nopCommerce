@@ -10,7 +10,7 @@ services:
                 condition: service_healthy
             rabbitmq:
                 condition: service_healthy
-        restart: on-failure
+        restart: always
         volumes:
             - nopcommerce_app_data:/app/App_Data
     nopcommerce_database:
@@ -39,7 +39,31 @@ services:
             interval: 5s
             timeout: 5s
             retries: 10
+    openboxes_bridge:
+        build:
+            context: ./services/VerdeMart.OpenBoxesBridge
+            dockerfile: Dockerfile
+        container_name: verdemart_openboxes_bridge
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+        environment:
+            BRIDGE__RABBITMQHOST: "rabbitmq"
+            BRIDGE__RABBITMQPORT: "5672"
+            BRIDGE__RABBITMQUSERNAME: "guest"
+            BRIDGE__RABBITMQPASSWORD: "guest"
+            BRIDGE__ORDERQUEUENAME: "verdemart.orders.openboxes"
+            BRIDGE__DEADLETTEREXCHANGE: "verdemart.orders.dlx"
+            BRIDGE__DEADLETTERQUEUE: "verdemart.orders.openboxes.dlq"
+            BRIDGE__MAXREDELIVERYATTEMPTS: "5"
+            BRIDGE__OPENBOXESBASEURL: "http://openboxes:8080"
+            BRIDGE__OPENBOXESAPIKEY: ""
+            BRIDGE__DEDUPCONNECTIONSTRING: "Data Source=/data/processed_orders.db"
+        volumes:
+            - openboxes_bridge_data:/data
+        restart: unless-stopped
 
 volumes:
   nopcommerce_data:
   nopcommerce_app_data:
+  openboxes_bridge_data:

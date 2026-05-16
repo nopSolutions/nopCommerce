@@ -1,0 +1,11 @@
+{
+  "Group": "Inventory",
+  "FriendlyName": "Allocation Gate",
+  "SystemName": "Inventory.AllocationGate",
+  "Version": "1.00",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "VerdeMart",
+  "DisplayOrder": 2,
+  "FileName": "Nop.Plugin.Inventory.AllocationGate.dll",
+  "Description": "Prevents cross-channel oversell by gating stock allocation for web and POS channels."
+}
