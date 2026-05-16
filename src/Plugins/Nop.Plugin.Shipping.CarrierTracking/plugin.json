@@ -1,0 +1,11 @@
+{
+  "Group": "Shipping",
+  "FriendlyName": "Carrier Tracking",
+  "SystemName": "Shipping.CarrierTracking",
+  "Version": "1.00",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "VerdeMart",
+  "DisplayOrder": 3,
+  "FileName": "Nop.Plugin.Shipping.CarrierTracking.dll",
+  "Description": "Integrates nopCommerce with the carrier (WireMock) for outbound shipment booking and inbound status polling."
+}
