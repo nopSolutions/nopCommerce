@@ -1,3 +1,6 @@
+# Claude Code context file (local only)
+CLAUDE.md
+
 #################
 ## Visual Studio
 #################
@@ -205,3 +208,6 @@ src/Presentation/Nop.Web/wwwroot/sitemaps/*
 !src/Presentation/Nop.Web/wwwroot/sitemaps/Index.htm
 src/packages/*
 src/Tests/Nop.Tests/Connections.resx
+
+# Claude
+CLAUDE.md

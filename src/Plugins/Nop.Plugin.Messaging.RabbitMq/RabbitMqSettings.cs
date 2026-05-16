@@ -10,4 +10,6 @@ public class RabbitMqSettings : ISettings
     public string Password { get; set; } = "guest";
     public string ExchangeName { get; set; } = "verdemart.orders";
     public string OrderPlacedQueueName { get; set; } = "verdemart.orders.openboxes";
+    public int DispatcherBatchSize { get; set; } = 20;
+    public int DispatcherMaxAttempts { get; set; } = 5;
 }

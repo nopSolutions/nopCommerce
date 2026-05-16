@@ -1,29 +1,25 @@
-using System.Text;
 using System.Text.Json;
 using Nop.Core.Domain.Orders;
+using Nop.Plugin.Messaging.RabbitMq.Domain;
+using Nop.Plugin.Messaging.RabbitMq.Models;
 using Nop.Services.Events;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
-using Nop.Plugin.Messaging.RabbitMq.Models;
-using RabbitMQ.Client;
 
 namespace Nop.Plugin.Messaging.RabbitMq.Services;
 
 public class OrderPlacedConsumer : IConsumer<OrderPlacedEvent>
 {
-    private readonly IRabbitMqConnectionFactory _connectionFactory;
-    private readonly RabbitMqSettings _settings;
+    private readonly IOutboxRepository _outboxRepository;
     private readonly IOrderService _orderService;
     private readonly ILogger _logger;
 
     public OrderPlacedConsumer(
-        IRabbitMqConnectionFactory connectionFactory,
-        RabbitMqSettings settings,
+        IOutboxRepository outboxRepository,
         IOrderService orderService,
         ILogger logger)
     {
-        _connectionFactory = connectionFactory;
-        _settings = settings;
+        _outboxRepository = outboxRepository;
         _orderService = orderService;
         _logger = logger;
     }
@@ -45,24 +41,18 @@ public class OrderPlacedConsumer : IConsumer<OrderPlacedEvent>
                 Quantity: i.Quantity,
                 UnitPriceInclTax: i.UnitPriceInclTax)).ToList());
 
-        var body = new ReadOnlyMemory<byte>(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message)));
-
-        var properties = new BasicProperties
+        var outboxMessage = new OutboxMessage
         {
-            Persistent = true,
-            ContentType = "application/json",
-            MessageId = order.OrderGuid.ToString()
+            AggregateId = order.OrderGuid.ToString(),
+            EventType = "order.placed",
+            Payload = JsonSerializer.Serialize(message),
+            Status = (int)OutboxMessageStatus.Pending,
+            AttemptCount = 0,
+            CreatedAtUtc = DateTime.UtcNow
         };
 
-        await using var channel = await _connectionFactory.CreateChannelAsync();
+        await _outboxRepository.InsertAsync(outboxMessage);
 
-        await channel.BasicPublishAsync(
-            exchange: _settings.ExchangeName,
-            routingKey: "order.placed",
-            mandatory: false,
-            basicProperties: properties,
-            body: body);
-
-        await _logger.InformationAsync($"[RabbitMq] Published order.placed for OrderGuid={order.OrderGuid}");
+        await _logger.InformationAsync($"[RabbitMq] Queued order.placed for OrderGuid={order.OrderGuid}");
     }
 }
