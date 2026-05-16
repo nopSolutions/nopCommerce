@@ -82,11 +82,17 @@ public class RabbitMqConnectionFactory : IRabbitMqConnectionFactory
             durable: true,
             autoDelete: false);
 
+        var queueArgs = new Dictionary<string, object?>
+        {
+            ["x-dead-letter-exchange"] = "verdemart.orders.dlx"
+        };
+
         await channel.QueueDeclareAsync(
             queue: _settings.OrderPlacedQueueName,
             durable: true,
             exclusive: false,
-            autoDelete: false);
+            autoDelete: false,
+            arguments: queueArgs);
 
         await channel.QueueBindAsync(
             queue: _settings.OrderPlacedQueueName,
