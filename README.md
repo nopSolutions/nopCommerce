@@ -29,13 +29,10 @@ The architectural challenge: keep checkout working and eventually deliver a cons
 │       ├── add-iteration-4/             # ADD Iteration 4 — steps 1–7
 │       ├── add-iteration-5/             # ADD Iteration 5 — steps 1–7
 │       └── diagrams/                    # Architecture diagrams
-├── spike/
-│   ├── OutboxSpike/                     # Standalone feasibility spike for ADR-004
-│   └── docker-compose.yml               # Infrastructure for running the spike
+├── spike/                               # Feasibility spikes
 ├── src/
-│   ├── Libraries/                       # nopCommerce core libraries (unmodified)
-│   ├── Plugins/
-│   │   └── Nop.Plugin.Messaging.RabbitMq/   # VerdeMart integration plugin (Phases 1–2)
+│   ├── Libraries/                       # nopCommerce core libraries
+│   ├── Plugins/                         # nopCommerce plugins
 │   ├── Presentation/
 │   │   └── Nop.Web/                     # nopCommerce web application
 │   └── NopCommerce.sln
@@ -85,9 +82,6 @@ On first run, the installation wizard will appear. Use the raw connection string
 - Database name: `nopcommerce_mssql_server`
 - Username: `sa`
 - Password: `nopCommerce_db_password`
-
-**3. Install the RabbitMQ plugin:**
-Admin → Configuration → Local plugins → search "RabbitMq" → Install
 
 **RabbitMQ Management UI:** `http://localhost:15672` (guest / guest)
 
