@@ -10,6 +10,8 @@ services:
                 condition: service_healthy
             rabbitmq:
                 condition: service_healthy
+            wiremock:
+                condition: service_started
         restart: always
         volumes:
             - nopcommerce_app_data:/app/App_Data
@@ -62,6 +64,14 @@ services:
         volumes:
             - openboxes_bridge_data:/data
         restart: unless-stopped
+    wiremock:
+        image: "wiremock/wiremock:latest"
+        container_name: nopcommerce_wiremock
+        entrypoint: ["/docker-entrypoint.sh", "--global-response-templating", "--disable-gzip", "--verbose"]
+        ports:
+            - "8090:8080"
+        volumes:
+            - ./wiremock/mappings:/home/wiremock/mappings
 
 volumes:
   nopcommerce_data:

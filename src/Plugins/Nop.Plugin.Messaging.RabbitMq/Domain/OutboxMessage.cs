@@ -6,6 +6,7 @@ public class OutboxMessage : BaseEntity
 {
     public string AggregateId { get; set; }
     public string EventType { get; set; }
+    public string? Exchange { get; set; }
     public string Payload { get; set; }
     public int Status { get; set; }
     public int AttemptCount { get; set; }

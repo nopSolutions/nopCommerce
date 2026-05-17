@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/shipments"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+    "externalShipmentId": "WIRE-{{randomValue type='NUMERIC' length=5}}"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

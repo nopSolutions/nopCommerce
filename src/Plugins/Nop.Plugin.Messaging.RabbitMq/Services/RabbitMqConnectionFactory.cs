@@ -99,6 +99,41 @@ public class RabbitMqConnectionFactory : IRabbitMqConnectionFactory
             exchange: _settings.ExchangeName,
             routingKey: "order.placed");
 
+        await channel.ExchangeDeclareAsync(
+            exchange: "verdemart.carrier.booking",
+            type: ExchangeType.Direct,
+            durable: true,
+            autoDelete: false);
+
+        await channel.ExchangeDeclareAsync(
+            exchange: "verdemart.carrier.booking.dlx",
+            type: ExchangeType.Direct,
+            durable: true,
+            autoDelete: false);
+
+        await channel.QueueDeclareAsync(
+            queue: "verdemart.carrier.booking.requested",
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            arguments: new Dictionary<string, object?> { ["x-dead-letter-exchange"] = "verdemart.carrier.booking.dlx" });
+
+        await channel.QueueBindAsync(
+            queue: "verdemart.carrier.booking.requested",
+            exchange: "verdemart.carrier.booking",
+            routingKey: "carrier.booking.requested");
+
+        await channel.QueueDeclareAsync(
+            queue: "verdemart.carrier.booking.dlq",
+            durable: true,
+            exclusive: false,
+            autoDelete: false);
+
+        await channel.QueueBindAsync(
+            queue: "verdemart.carrier.booking.dlq",
+            exchange: "verdemart.carrier.booking.dlx",
+            routingKey: "carrier.booking.requested");
+
         _topologyDeclared = true;
     }
 

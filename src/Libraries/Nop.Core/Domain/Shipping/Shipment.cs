@@ -45,4 +45,9 @@ public partial class Shipment : BaseEntity
     /// Gets or sets the entity creation date
     /// </summary>
     public DateTime CreatedOnUtc { get; set; }
+
+    public string? ExternalShipmentId { get; set; }
+    public string? ExternalCarrierCode { get; set; }
+    public string? ExternalShippingStatus { get; set; }
+    public DateTime? LastStatusOccurredAtUtc { get; set; }
 }
