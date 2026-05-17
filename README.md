@@ -90,10 +90,7 @@ On first run, the installation wizard will appear. Use the raw connection string
 | System | Role |
 |--------|------|
 | nopCommerce | Commerce core — order state machine, customer-facing experience |
-| ERPNext | Financial backbone — sales orders, stock ledger, accounting |
 | OpenBoxes | Warehouse — pick/pack/ship, physical inventory truth |
-| Open Source POS | In-store sales channel |
+| POS | In-store sales channel — communicates via the inventory reservation REST API |
 | RabbitMQ | Message broker — async coordination between all systems |
 | WireMock | Shipping carrier simulator |
-| Keycloak | Identity — single sign-on across all channels |
-| Meilisearch | Product search |
