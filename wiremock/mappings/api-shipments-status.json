@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/api/shipments/([^/]+)/status"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "externalShipmentId": "{{request.pathSegments.[2]}}",
+      "status": "IN_TRANSIT",
+      "occurredAtUtc": "{{now}}"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

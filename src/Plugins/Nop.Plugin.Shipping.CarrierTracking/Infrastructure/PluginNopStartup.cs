@@ -12,6 +12,8 @@ public class PluginNopStartup : INopStartup
     {
         services.AddHttpClient<IWireMockClient, WireMockClient>();
         services.AddHostedService<CarrierBookingConsumer>();
+        services.AddSingleton<IExternalStatusMapper, ExternalStatusMapper>();
+        services.AddScoped<CarrierStatusPollerTask>();
     }
 
     public void Configure(IApplicationBuilder application)

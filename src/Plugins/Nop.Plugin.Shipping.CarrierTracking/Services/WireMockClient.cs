@@ -53,6 +53,39 @@ public class WireMockClient : IWireMockClient
         }
     }
 
+    public async Task<ShipmentStatusResult> GetShipmentStatusAsync(string externalShipmentId, CancellationToken ct = default)
+    {
+        var settings = await _settingService.LoadSettingAsync<CarrierTrackingSettings>();
+        _httpClient.BaseAddress = new Uri(settings.WireMockBaseUrl);
+        _httpClient.Timeout = TimeSpan.FromMilliseconds(settings.WireMockTimeoutMs);
+
+        try
+        {
+            var response = await _httpClient.GetAsync($"/api/shipments/{externalShipmentId}/status", ct);
+
+            if (!response.IsSuccessStatusCode)
+                return ShipmentStatusResult.Unreachable(externalShipmentId);
+
+            var body = await response.Content.ReadFromJsonAsync<StatusResponse>(JsonOptions, ct);
+            if (body?.Status is null)
+                return ShipmentStatusResult.Unreachable(externalShipmentId);
+
+            return new ShipmentStatusResult(externalShipmentId, body.Status, body.OccurredAtUtc ?? DateTime.UtcNow, IsUnreachable: false);
+        }
+        catch (TaskCanceledException)
+        {
+            return ShipmentStatusResult.Unreachable(externalShipmentId);
+        }
+        catch (HttpRequestException)
+        {
+            return ShipmentStatusResult.Unreachable(externalShipmentId);
+        }
+    }
+
     private record BookingResponse(
         [property: JsonPropertyName("externalShipmentId")] string? ExternalShipmentId);
+
+    private record StatusResponse(
+        [property: JsonPropertyName("status")] string? Status,
+        [property: JsonPropertyName("occurredAtUtc")] DateTime? OccurredAtUtc);
 }
