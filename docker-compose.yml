@@ -49,6 +49,8 @@ services:
         depends_on:
             rabbitmq:
                 condition: service_healthy
+            wiremock:
+                condition: service_started
         environment:
             BRIDGE__RABBITMQHOST: "rabbitmq"
             BRIDGE__RABBITMQPORT: "5672"
@@ -58,7 +60,7 @@ services:
             BRIDGE__DEADLETTEREXCHANGE: "verdemart.orders.dlx"
             BRIDGE__DEADLETTERQUEUE: "verdemart.orders.openboxes.dlq"
             BRIDGE__MAXREDELIVERYATTEMPTS: "5"
-            BRIDGE__OPENBOXESBASEURL: "http://openboxes:8080"
+            BRIDGE__OPENBOXESBASEURL: "http://wiremock:8080"
             BRIDGE__OPENBOXESAPIKEY: ""
             BRIDGE__DEDUPCONNECTIONSTRING: "Data Source=/data/processed_orders.db"
         volumes:

@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/generic/order"
+  },
+  "response": {
+    "status": 201,
+    "jsonBody": {
+      "fulfillmentId": "OB-{{randomValue type='NUMERIC' length=6}}"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-namespace Nop.Plugin.Inventory.AllocationGate.Models;
+namespace Nop.Plugin.Integration.Pos.Models;
 
 public class ReserveRequest
 {
