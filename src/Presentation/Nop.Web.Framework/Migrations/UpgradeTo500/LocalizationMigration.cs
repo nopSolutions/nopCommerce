@@ -545,18 +545,6 @@ public class LocalizationMigration : MigrationBase
             ["Admin.System.Maintenance.ClearSearchHistory.Text"] = "Delete search history data from the database.",
             ["Admin.System.Maintenance.ClearSearchHistory.Complete"] = "Clearing search history data completed",
             ["Admin.System.Maintenance.ClearSearchHistory.TotalDeleted"] = "{0} items were deleted",
-
-            //#8120
-            ["Admin.Configuration.Settings.Order.AutoCancelEnabled"] = "Enable auto-canceling of unpaid orders",
-            ["Admin.Configuration.Settings.Order.AutoCancelEnabled.Hint"] = "Check this option to enable automatic cancellation of unpaid orders.",
-            ["Admin.Configuration.Settings.Order.AutoCancelDelay"] = "Auto-cancel delay",
-            ["Admin.Configuration.Settings.Order.AutoCancelDelay.Hint"] = "Enter the delay (in minutes) after order placement before unpaid orders are canceled.",
-            ["Admin.Configuration.Settings.Order.AutoCancelIgnoredPaymentMethods"] = "Excluded payment methods",
-            ["Admin.Configuration.Settings.Order.AutoCancelIgnoredPaymentMethods.Hint"] = "Select payment methods excluded from automatic cancellation of unpaid orders.",
-            ["Admin.Configuration.Settings.Order.AutoCancelRestoreShoppingCart"] = "Put order back as shopping cart",
-            ["Admin.Configuration.Settings.Order.AutoCancelRestoreShoppingCart.Hint"] = "Check this option to add auto-canceled orders back to the shopping cart.",
-            ["Admin.Configuration.Settings.Order.Warning.NotFound"] = "Auto-cancel unpaid orders task not found",
-            ["Admin.Configuration.Settings.Order.Warning.TaskDisabled"] = "Please remember <a href=\"{0}\" target=\"_blank\">to enable</a> the \"{1}\" scheduled task.",
         });
 
         #endregion

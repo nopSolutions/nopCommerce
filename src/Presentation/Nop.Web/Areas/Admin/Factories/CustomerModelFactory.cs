@@ -689,7 +689,16 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 model.TimeZoneId = customer.TimeZoneId;
                 model.VatNumber = customer.VatNumber;
                 model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync(customer.VatNumberStatus);
+                model.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
+                model.LastIpAddress = customer.LastIpAddress;
+                model.LastVisitedPage = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute);
                 model.SelectedCustomerRoleIds = (await _customerService.GetCustomerRoleIdsAsync(customer)).ToList();
+                model.RegisteredInStore = (await _storeService.GetAllStoresAsync())
+                    .FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
+                model.DisplayRegisteredInStore = model.Id > 0 && !string.IsNullOrEmpty(model.RegisteredInStore) &&
+                                                 (await _storeService.GetAllStoresAsync()).Select(x => x.Id).Count() > 1;
+                model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
+
                 model.MustChangePassword = customer.MustChangePassword;
 
                 //prepare model affiliate
@@ -700,18 +709,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                     model.AffiliateName = await _affiliateService.GetAffiliateFullNameAsync(affiliate);
                 }
             }
-
-            var allStores = await _storeService.GetAllStoresAsync();
-            model.RegisteredInStore = allStores.FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
-            model.DisplayRegisteredInStore = model.Id > 0
-                                             && !string.IsNullOrEmpty(model.RegisteredInStore)
-                                             && allStores.Select(x => x.Id).Count() > 1;
-
-            model.LastVisitedPage = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute);
-            model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
-            model.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
-            model.LastIpAddress = customer.LastIpAddress;
-
             //prepare reward points model
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
             if (model.DisplayRewardPointsHistory)

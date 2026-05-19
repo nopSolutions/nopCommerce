@@ -36,7 +36,6 @@ using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Plugins;
-using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
@@ -72,7 +71,6 @@ public partial class SettingController : BaseAdminController
     protected readonly INotificationService _notificationService;
     protected readonly IOrderService _orderService;
     protected readonly IPictureService _pictureService;
-    protected readonly IScheduleTaskService _scheduleTaskService;
     protected readonly ISettingModelFactory _settingModelFactory;
     protected readonly ISettingService _settingService;
     protected readonly IStoreContext _storeContext;
@@ -101,7 +99,6 @@ public partial class SettingController : BaseAdminController
         INotificationService notificationService,
         IOrderService orderService,
         IPictureService pictureService,
-        IScheduleTaskService scheduleTaskService,
         ISettingModelFactory settingModelFactory,
         ISettingService settingService,
         IStoreContext storeContext,
@@ -125,7 +122,6 @@ public partial class SettingController : BaseAdminController
         _notificationService = notificationService;
         _orderService = orderService;
         _pictureService = pictureService;
-        _scheduleTaskService = scheduleTaskService;
         _settingModelFactory = settingModelFactory;
         _settingService = settingService;
         _storeContext = storeContext;
@@ -974,10 +970,6 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.AllowCustomersCancelOrders, model.AllowCustomersCancelOrders_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.ShowProductThumbnailInOrderDetailsPage, model.ShowProductThumbnailInOrderDetailsPage_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.DeleteGiftCardUsageHistory, model.DeleteGiftCardUsageHistory_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.AutoCancelEnabled, model.AutoCancelEnabled_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.AutoCancelDelay, model.AutoCancelDelay_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.AutoCancelIgnoredPaymentMethods, model.AutoCancelIgnoredPaymentMethods_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStoreAsync(orderSettings, x => x.AutoCancelRestoreShoppingCart, model.AutoCancelRestoreShoppingCart_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingAsync(orderSettings, x => x.ActivateGiftCardsAfterCompletingOrder, 0, false);
             await _settingService.SaveSettingAsync(orderSettings, x => x.DeactivateGiftCardsAfterCancellingOrder, 0, false);
             await _settingService.SaveSettingAsync(orderSettings, x => x.DeactivateGiftCardsAfterDeletingOrder, 0, false);
@@ -2037,24 +2029,6 @@ public partial class SettingController : BaseAdminController
         }
 
         return Json(new { Result = string.Empty });
-    }
-
-    //Action that displays a notification (warning) to the store owner when the Auto-cancel unpaid orders task is disabled
-    public virtual async Task<IActionResult> AutoCancelOrdersTaskWarning(bool enabled)
-    {
-        if (!enabled)
-            return Json(new { Result = string.Empty });
-
-        var task = await _scheduleTaskService.GetTaskByTypeAsync("Nop.Services.Orders.AutoCancelOrdersTask, Nop.Services");
-
-        if (task is null)
-            return Json(new { Result = await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Order.Warning.NotFound") });
-
-        if (task.Enabled)
-            return Json(new { Result = string.Empty });
-
-        var locale = await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Order.Warning.TaskDisabled");
-        return Json(new { Result = string.Format(locale, Url.Action("List", "ScheduleTask"), task.Name) });
     }
 
     #endregion
