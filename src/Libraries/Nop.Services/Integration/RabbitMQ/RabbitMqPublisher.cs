@@ -1,54 +1,31 @@
 using System.Text;
-using RabbitMQ.Client;
+using Nop.Core.Configuration;
 using Nop.Services.Logging;
+using RabbitMQ.Client;
 
 namespace Nop.Services.Integration.RabbitMQ;
 
-/// <summary>
-/// Represents a RabbitMQ message publisher implementation
-/// </summary>
 public partial class RabbitMqPublisher : IRabbitMqPublisher
 {
-    #region Fields
-
     private readonly ILogger _logger;
-    private readonly string _hostname;
-    private readonly int _port;
-    private readonly string _username;
-    private readonly string _password;
+    private readonly IntegrationConfig _integrationConfig;
 
-    #endregion
-
-    #region Ctor
-
-    public RabbitMqPublisher(ILogger logger)
+    public RabbitMqPublisher(ILogger logger, IntegrationConfig integrationConfig)
     {
         _logger = logger;
-
-        // TODO: Move to appsettings.json in full implementation
-        _hostname = "rabbitmq";
-        _port = 5672;
-        _username = "guest";
-        _password = "guest";
+        _integrationConfig = integrationConfig;
     }
 
-    #endregion
-
-    #region Methods
-
-    /// <summary>
-    /// Publishes a message to the specified exchange
-    /// </summary>
     public async Task PublishAsync(string exchange, string routingKey, string messageBody)
     {
         try
         {
             var factory = new ConnectionFactory
             {
-                HostName = _hostname,
-                Port = _port,
-                UserName = _username,
-                Password = _password
+                HostName = _integrationConfig.RabbitMqHostname,
+                Port = _integrationConfig.RabbitMqPort,
+                UserName = _integrationConfig.RabbitMqUsername,
+                Password = _integrationConfig.RabbitMqPassword
             };
 
             using var connection = factory.CreateConnection();
@@ -58,8 +35,7 @@ public partial class RabbitMqPublisher : IRabbitMqPublisher
                 exchange: exchange,
                 type: ExchangeType.Topic,
                 durable: true,
-                autoDelete: false
-            );
+                autoDelete: false);
 
             var body = Encoding.UTF8.GetBytes(messageBody);
 
@@ -67,17 +43,12 @@ public partial class RabbitMqPublisher : IRabbitMqPublisher
                 exchange: exchange,
                 routingKey: routingKey,
                 basicProperties: null,
-                body: body
-            );
-
-            await _logger.InformationAsync($"Spike: Published message to RabbitMQ: exchange={exchange}, routingKey={routingKey}");
+                body: body);
         }
         catch (Exception ex)
         {
-            await _logger.ErrorAsync($"Spike: Failed to publish message to RabbitMQ: {ex.Message}", ex);
+            await _logger.ErrorAsync($"RabbitMQ publish failed (exchange={exchange}, routingKey={routingKey}): {ex.Message}", ex);
             throw;
         }
     }
-
-    #endregion
 }
