@@ -5,7 +5,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Reminders;
-using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -80,13 +79,6 @@ public class SettingMigration : MigrationBase
         this.SetSettingIfNotExists<ReminderSettings, bool>(settings => settings.PendingOrdersEnabled, false);
         this.SetSettingIfNotExists<ReminderSettings, bool>(settings => settings.IncompleteRegistrationEnabled, false);
         this.SetSettingIfNotExists<ReminderSettings, DateTime?>(settings => settings.ProcessingStartDateUtc, DateTime.UtcNow);
-
-        //#8120
-        this.SetSettingIfNotExists<OrderSettings, bool>(settings => settings.AutoCancelEnabled, false);
-        this.SetSettingIfNotExists<OrderSettings, int>(settings => settings.AutoCancelDelay, 48 * 60);
-        this.SetSettingIfNotExists<OrderSettings, List<string>>(settings => settings.AutoCancelIgnoredPaymentMethods, []);
-        this.SetSettingIfNotExists<OrderSettings, bool>(settings => settings.AutoCancelRestoreShoppingCart, false);
-        this.SetSettingIfNotExists<OrderSettings, DateTime?>(settings => settings.AutoCancelIgnoreBeforeUtc, DateTime.UtcNow);
     }
 
     public override void Down()

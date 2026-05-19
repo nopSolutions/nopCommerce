@@ -794,7 +794,7 @@ public partial class CommonModelFactory : ICommonModelFactory
                 return null;
             });
 
-        return string.IsNullOrEmpty(latestReleaseInfo?.Name) ? null : latestReleaseInfo.Name.Replace("release-", string.Empty);
+        return string.IsNullOrEmpty(latestReleaseInfo.Name) ? null : latestReleaseInfo.Name.Replace("release-", string.Empty);
     }
 
     #endregion

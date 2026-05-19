@@ -8419,30 +8419,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderProcessingEmail.Hint">
     <Value>Check to attach PDF invoice to the "order processing" email sent to a customer.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelIgnoredPaymentMethods">
-    <Value>Excluded payment methods</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelIgnoredPaymentMethods.Hint">
-    <Value>Select payment methods excluded from automatic cancellation of unpaid orders.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelDelay">
-    <Value>Auto-cancel delay</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelDelay.Hint">
-    <Value>Enter the delay (in minutes) after order placement before unpaid orders are canceled.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelEnabled">
-    <Value>Enable auto-canceling of unpaid orders</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelEnabled.Hint">
-    <Value>Check this option to enable automatic cancellation of unpaid orders.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelRestoreShoppingCart">
-    <Value>Put order back as shopping cart</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelRestoreShoppingCart.Hint">
-    <Value>Check this option to add auto-canceled orders back to the shopping cart.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoUpdateOrderTotalsOnEditingOrder">
     <Value>Auto update order totals</Value>
   </LocaleResource>
@@ -8724,12 +8700,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.TermsOfServiceOnShoppingCartPage.Hint">
     <Value>Require customers to accept or decline terms of service before processing the order (on the shopping cart page).</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.Warning.TaskDisabled">
-    <Value><![CDATA[Please remember <a href="{0}" target="_blank">to enable</a> the "{1}" scheduled task.]]></Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.Warning.NotFound">
-    <Value>Auto-cancel unpaid orders task not found</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ACL">
     <Value>Customer roles</Value>

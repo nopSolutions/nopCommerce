@@ -1862,12 +1862,7 @@ public partial class InstallationService
             DisplayCustomerCurrencyOnOrders = false,
             DisplayOrderSummary = true,
             PlaceOrderWithLock = false,
-            CustomerOrdersPageSize = 10,
-            AutoCancelEnabled = false,
-            AutoCancelDelay = 48 * 60,
-            AutoCancelIgnoredPaymentMethods = [],
-            AutoCancelRestoreShoppingCart = false,
-            AutoCancelIgnoreBeforeUtc = DateTime.UtcNow,
+            CustomerOrdersPageSize = 10
         });
 
         await SaveSettingAsync(dictionary, new SecuritySettings
@@ -3468,17 +3463,7 @@ public partial class InstallationService
                 Enabled = true,
                 LastEnabledUtc = lastEnabledUtc,
                 StopOnError = false
-            },
-            new()
-            {
-                Name = "Auto-cancel unpaid orders",
-                //60 minutes
-                Seconds = 3600,
-                Type = "Nop.Services.Orders.AutoCancelOrdersTask, Nop.Services",
-                Enabled = true,
-                LastEnabledUtc = DateTime.UtcNow,
-                StopOnError = false
-            },
+            }
         };
 
         await _dataProvider.BulkInsertEntitiesAsync(tasks);
