@@ -41,6 +41,14 @@ services:
             interval: 5s
             timeout: 5s
             retries: 10
+    openboxes:
+        image: "wiremock/wiremock:latest"
+        container_name: verdemart_openboxes_stub
+        entrypoint: ["/docker-entrypoint.sh", "--global-response-templating", "--disable-gzip", "--verbose"]
+        ports:
+            - "8091:8080"
+        volumes:
+            - ./openboxes-stub/mappings:/home/wiremock/mappings
     openboxes_bridge:
         build:
             context: ./services/VerdeMart.OpenBoxesBridge
@@ -49,7 +57,7 @@ services:
         depends_on:
             rabbitmq:
                 condition: service_healthy
-            wiremock:
+            openboxes:
                 condition: service_started
         environment:
             BRIDGE__RABBITMQHOST: "rabbitmq"
@@ -60,7 +68,7 @@ services:
             BRIDGE__DEADLETTEREXCHANGE: "verdemart.orders.dlx"
             BRIDGE__DEADLETTERQUEUE: "verdemart.orders.openboxes.dlq"
             BRIDGE__MAXREDELIVERYATTEMPTS: "5"
-            BRIDGE__OPENBOXESBASEURL: "http://wiremock:8080"
+            BRIDGE__OPENBOXESBASEURL: "http://openboxes:8080"
             BRIDGE__OPENBOXESAPIKEY: ""
             BRIDGE__DEDUPCONNECTIONSTRING: "Data Source=/data/processed_orders.db"
         volumes:
