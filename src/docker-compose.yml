@@ -1,0 +1,6 @@
+services:
+  nop.web:
+    image: ${DOCKER_REGISTRY-}nopweb
+    build:
+      context: .
+      dockerfile: Presentation/Nop.Web/Dockerfile
