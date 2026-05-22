@@ -25,3 +25,31 @@ jobs:
           file: ./Presentation/Nop.Web/Dockerfile
           push: true
           tags: rajib25/nopcommerce490:latest
+
+      - name: Notify Microsoft Teams
+        if: always()
+        run: |
+          STATUS="${{ job.status }}"
+          COLOR="00FF00"
+          if [ "$STATUS" != "success" ]; then COLOR="FF0000"; fi
+
+          curl -X POST "${{ secrets.TEAMS_WEBHOOK }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"type\": \"message\",
+              \"attachments\": [{
+                \"contentType\": \"application/vnd.microsoft.card.adaptive\",
+                \"content\": {
+                  \"\$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",
+                  \"type\": \"AdaptiveCard\",
+                  \"version\": \"1.2\",
+                  \"body\": [
+                    {\"type\": \"TextBlock\", \"text\": \"nopCommerce CI/CD - $STATUS\", \"weight\": \"Bolder\", \"size\": \"Medium\"},
+                    {\"type\": \"TextBlock\", \"text\": \"Commit: ${{ github.sha }}\"},
+                    {\"type\": \"TextBlock\", \"text\": \"Message: ${{ github.event.head_commit.message }}\"},
+                    {\"type\": \"TextBlock\", \"text\": \"By: ${{ github.actor }}\"},
+                    {\"type\": \"TextBlock\", \"text\": \"Branch: ${{ github.ref_name }}\"}
+                  ]
+                }
+              }]
+            }"
