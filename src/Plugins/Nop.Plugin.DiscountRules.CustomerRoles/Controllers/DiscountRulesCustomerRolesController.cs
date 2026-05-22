@@ -95,12 +95,7 @@ public class DiscountRulesCustomerRolesController : BasePluginController
             Value = "0"
         });
 
-        //model.AvailableCustomerRoles.Insert(0, new SelectListItem
-        //{
-        //    Text = await _localizationService.GetResourceAsync("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select"),
-        //    Value = "0"
-        //});
-
+        //set the HTML field prefix
         //set the HTML field prefix
         ViewData.TemplateInfo.HtmlFieldPrefix = string.Format(DiscountRequirementDefaults.HtmlFieldPrefix, discountRequirementId ?? 0);
 
