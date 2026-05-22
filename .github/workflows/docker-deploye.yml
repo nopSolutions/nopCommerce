@@ -21,8 +21,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Presentation/Nop.Web/Dockerfile
+          context: ./src
+          file: .src/Presentation/Nop.Web/Dockerfile
           push: true
           tags: rajib25/nopcommerce490:latest
 
