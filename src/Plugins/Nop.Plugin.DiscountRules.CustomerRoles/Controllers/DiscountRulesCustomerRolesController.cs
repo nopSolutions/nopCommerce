@@ -95,8 +95,6 @@ public class DiscountRulesCustomerRolesController : BasePluginController
             Value = "0"
         });
 
-        //set the HTML field prefix
-        //set the HTML field prefix
         ViewData.TemplateInfo.HtmlFieldPrefix = string.Format(DiscountRequirementDefaults.HtmlFieldPrefix, discountRequirementId ?? 0);
 
         return View("~/Plugins/DiscountRules.CustomerRoles/Views/Configure.cshtml", model);
