@@ -2,7 +2,7 @@ name: Build and Push nopCommerce to Docker Hub
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "develop" ]
 
 jobs:
   build-and-push:
