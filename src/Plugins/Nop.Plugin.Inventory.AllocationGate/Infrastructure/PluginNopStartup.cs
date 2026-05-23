@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.Inventory.AllocationGate.OpenBoxes;
 using Nop.Plugin.Inventory.AllocationGate.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
@@ -17,6 +18,8 @@ public class PluginNopStartup : INopStartup
         services.AddScoped<IProductReservationRepository, ProductReservationRepository>();
         services.AddScoped<IAllocationGate, AllocationGateService>();
         services.AddScoped<ReleaseExpiredReservationsTask>();
+        services.AddHttpClient<IOpenBoxesClient, OpenBoxesClient>();
+        services.AddScoped<OpenBoxesStatusPollerTask>();
 
         // Descriptor swap: wrap IProductService with AllocationGateProductServiceDecorator.
         // NopStartup (Order=2000) registers IProductService before this plugin (Order=3100),

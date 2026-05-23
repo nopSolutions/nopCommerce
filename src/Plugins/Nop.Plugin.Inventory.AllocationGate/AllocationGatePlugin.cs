@@ -34,6 +34,18 @@ public class AllocationGatePlugin : BasePlugin, IMiscPlugin
             });
         }
 
+        if (await _scheduleTaskService.GetTaskByTypeAsync(typeof(OpenBoxesStatusPollerTask).FullName) is null)
+        {
+            await _scheduleTaskService.InsertTaskAsync(new ScheduleTask
+            {
+                Name = "VerdeMart: poll OpenBoxes fulfillment order status",
+                Seconds = 30,
+                Type = typeof(OpenBoxesStatusPollerTask).FullName,
+                Enabled = true,
+                StopOnError = false
+            });
+        }
+
         await base.InstallAsync();
     }
 
@@ -42,6 +54,10 @@ public class AllocationGatePlugin : BasePlugin, IMiscPlugin
         var task = await _scheduleTaskService.GetTaskByTypeAsync(typeof(ReleaseExpiredReservationsTask).FullName);
         if (task is not null)
             await _scheduleTaskService.DeleteTaskAsync(task);
+
+        var openBoxesTask = await _scheduleTaskService.GetTaskByTypeAsync(typeof(OpenBoxesStatusPollerTask).FullName);
+        if (openBoxesTask is not null)
+            await _scheduleTaskService.DeleteTaskAsync(openBoxesTask);
 
         await _settingService.DeleteSettingAsync<AllocationSettings>();
         await base.UninstallAsync();
