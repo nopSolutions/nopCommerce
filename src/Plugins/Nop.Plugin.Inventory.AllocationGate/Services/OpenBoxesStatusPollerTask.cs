@@ -18,7 +18,7 @@ namespace Nop.Plugin.Inventory.AllocationGate.Services;
 
 public class OpenBoxesStatusPollerTask : IScheduleTask
 {
-    private const string IssuedStatus = "ISSUED";
+    private const string IssuedStatus = "SHIPPED";
 
     private readonly IOpenBoxesClient _openBoxesClient;
     private readonly IOrderService _orderService;

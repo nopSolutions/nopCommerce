@@ -18,7 +18,13 @@ public class PluginNopStartup : INopStartup
         services.AddScoped<IProductReservationRepository, ProductReservationRepository>();
         services.AddScoped<IAllocationGate, AllocationGateService>();
         services.AddScoped<ReleaseExpiredReservationsTask>();
-        services.AddHttpClient<IOpenBoxesClient, OpenBoxesClient>();
+        services.AddHttpClient<IOpenBoxesClient, OpenBoxesClient>()
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                UseCookies = true,
+                CookieContainer = new System.Net.CookieContainer(),
+                AllowAutoRedirect = false
+            });
         services.AddScoped<OpenBoxesStatusPollerTask>();
 
         // Descriptor swap: wrap IProductService with AllocationGateProductServiceDecorator.
