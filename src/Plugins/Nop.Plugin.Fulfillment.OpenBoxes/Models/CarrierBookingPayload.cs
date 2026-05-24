@@ -1,4 +1,4 @@
-namespace Nop.Plugin.Inventory.AllocationGate.Models;
+namespace Nop.Plugin.Fulfillment.OpenBoxes.Models;
 
 public record CarrierBookingRequestedPayload(
     int ShipmentId,

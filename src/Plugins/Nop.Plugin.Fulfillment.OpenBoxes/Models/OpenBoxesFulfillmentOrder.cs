@@ -1,4 +1,4 @@
-namespace Nop.Plugin.Inventory.AllocationGate.OpenBoxes;
+namespace Nop.Plugin.Fulfillment.OpenBoxes.Models;
 
 public record OpenBoxesFulfillmentOrder(
     string FulfillmentId,

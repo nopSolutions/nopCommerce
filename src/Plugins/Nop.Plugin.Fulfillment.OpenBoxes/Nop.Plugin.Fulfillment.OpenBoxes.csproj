@@ -5,7 +5,7 @@
     <Copyright>Copyright © VerdeMart</Copyright>
     <Company>VerdeMart</Company>
     <Authors>VerdeMart</Authors>
-    <OutputPath>$(SolutionDir)\Presentation\Nop.Web\Plugins\Inventory.AllocationGate</OutputPath>
+    <OutputPath>$(SolutionDir)\Presentation\Nop.Web\Plugins\Fulfillment.OpenBoxes</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+    <ProjectReference Include="$(SolutionDir)\Plugins\Nop.Plugin.Messaging.RabbitMq\Nop.Plugin.Messaging.RabbitMq.csproj" />
     <ClearPluginAssemblies Include="$(SolutionDir)\Build\ClearPluginAssemblies.proj" />
   </ItemGroup>
 

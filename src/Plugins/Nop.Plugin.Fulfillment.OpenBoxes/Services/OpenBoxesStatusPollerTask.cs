@@ -3,8 +3,7 @@ using System.Transactions;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
-using Nop.Plugin.Inventory.AllocationGate.Models;
-using Nop.Plugin.Inventory.AllocationGate.OpenBoxes;
+using Nop.Plugin.Fulfillment.OpenBoxes.Models;
 using Nop.Plugin.Messaging.RabbitMq.Domain;
 using Nop.Plugin.Messaging.RabbitMq.Services;
 using Nop.Services.Common;
@@ -14,7 +13,7 @@ using Nop.Services.Orders;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Shipping;
 
-namespace Nop.Plugin.Inventory.AllocationGate.Services;
+namespace Nop.Plugin.Fulfillment.OpenBoxes.Services;
 
 public class OpenBoxesStatusPollerTask : IScheduleTask
 {
@@ -52,7 +51,7 @@ public class OpenBoxesStatusPollerTask : IScheduleTask
     public async Task ExecuteAsync()
     {
         var store = await _storeContext.GetCurrentStoreAsync();
-        var settings = await _settingService.LoadSettingAsync<AllocationSettings>(store.Id);
+        var settings = await _settingService.LoadSettingAsync<OpenBoxesSettings>(store.Id);
 
         var fulfillmentOrders = await _openBoxesClient.GetIssuedFulfillmentOrdersAsync(
             settings.PollerBatchSize, CancellationToken.None);

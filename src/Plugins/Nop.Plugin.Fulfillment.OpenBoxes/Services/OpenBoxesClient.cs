@@ -4,10 +4,11 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Nop.Core;
+using Nop.Plugin.Fulfillment.OpenBoxes.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
 
-namespace Nop.Plugin.Inventory.AllocationGate.OpenBoxes;
+namespace Nop.Plugin.Fulfillment.OpenBoxes.Services;
 
 public class OpenBoxesClient : IOpenBoxesClient
 {
@@ -39,7 +40,7 @@ public class OpenBoxesClient : IOpenBoxesClient
         int batchSize, CancellationToken ct)
     {
         var store = await _storeContext.GetCurrentStoreAsync();
-        var settings = await _settingService.LoadSettingAsync<AllocationSettings>(store.Id);
+        var settings = await _settingService.LoadSettingAsync<OpenBoxesSettings>(store.Id);
 
         if (string.IsNullOrWhiteSpace(settings.OpenBoxesBaseUrl))
         {
@@ -145,7 +146,7 @@ public class OpenBoxesClient : IOpenBoxesClient
     }
 
     private async Task<SendResult> SendWithReloginAsync(
-        AllocationSettings settings,
+        OpenBoxesSettings settings,
         Func<HttpRequestMessage> buildRequest,
         CancellationToken ct)
     {
@@ -182,7 +183,7 @@ public class OpenBoxesClient : IOpenBoxesClient
         _locationChosen = false;
     }
 
-    private async Task EnsureSessionAsync(AllocationSettings settings, CancellationToken ct)
+    private async Task EnsureSessionAsync(OpenBoxesSettings settings, CancellationToken ct)
     {
         if (_loggedIn && _locationChosen) return;
 
@@ -198,7 +199,7 @@ public class OpenBoxesClient : IOpenBoxesClient
         }
     }
 
-    private async Task LoginAsync(AllocationSettings settings, CancellationToken ct)
+    private async Task LoginAsync(OpenBoxesSettings settings, CancellationToken ct)
     {
         using var form = new FormUrlEncodedContent(new[]
         {
@@ -232,7 +233,7 @@ public class OpenBoxesClient : IOpenBoxesClient
             $"OpenBoxes login returned unexpected status {(int)response.StatusCode}");
     }
 
-    private async Task ChooseLocationAsync(AllocationSettings settings, CancellationToken ct)
+    private async Task ChooseLocationAsync(OpenBoxesSettings settings, CancellationToken ct)
     {
         var url = $"dashboard/chooseLocation?id={settings.OpenBoxesOriginLocationId}";
         using var response = await _http.GetAsync(url, ct);
