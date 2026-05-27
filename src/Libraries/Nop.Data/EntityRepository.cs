@@ -123,6 +123,35 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
         return query.OfType<ISoftDeletedEntity>().Where(entry => !entry.Deleted).OfType<TEntity>();
     }
 
+    /// <summary>
+    /// Returns a <see cref="TransactionScope"/> with explicit <see cref="IsolationLevel.ReadCommitted"/>.
+    /// The default <c>new TransactionScope(...)</c> constructor uses <see cref="IsolationLevel.Serializable"/>,
+    /// which holds range locks (RangeS-S / RangeI-N on SQL Server) for the duration of bulk Insert/Update/Delete
+    /// and is the root cause of the deadlocks reported in #6482 and #6681. Row-level atomicity is guaranteed
+    /// by the transaction itself; range locks are not needed for these write paths.
+    /// <para>
+    /// Timeout is set explicitly to <see cref="TransactionManager.MaximumTimeout"/> per the MS-recommended pattern
+    /// — this matches the effective behavior of the previous single-argument <c>TransactionScope</c> constructor
+    /// (which left the scope timer unset). In practice the per-command <c>SqlCommand.CommandTimeout</c> (30s default)
+    /// fires first, so this scope-level value is a generous upper bound.
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// See David Browne (Microsoft), <see href="https://learn.microsoft.com/en-us/archive/blogs/dbrowne/using-new-transactionscope-considered-harmful">
+    /// "using new TransactionScope() Considered Harmful"</see>:
+    /// <em>"in SQL Server SERIALIZABLE transactions are rarely useful and extremely deadlock-prone … its default constructor is setting up SQL Server applications to be deadlock-prone."</em>
+    /// </remarks>
+    private static TransactionScope CreateReadCommittedScope()
+    {
+        return new TransactionScope(TransactionScopeOption.Required,
+            new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TransactionManager.MaximumTimeout
+            },
+            TransactionScopeAsyncFlowOption.Enabled);
+    }
+
     #endregion
 
     #region Methods
@@ -441,7 +470,7 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     {
         ArgumentNullException.ThrowIfNull(entities);
 
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        using var transaction = CreateReadCommittedScope();
         await _dataProvider.BulkInsertEntitiesAsync(entities);
         transaction.Complete();
 
@@ -462,7 +491,7 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     {
         ArgumentNullException.ThrowIfNull(entities);
 
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        using var transaction = CreateReadCommittedScope();
         _dataProvider.BulkInsertEntities(entities);
         transaction.Complete();
 
@@ -632,7 +661,7 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
         if (!entities.Any())
             return;
 
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        using var transaction = CreateReadCommittedScope();
         
         if (typeof(TEntity).GetInterface(nameof(ISoftDeletedEntity)) == null)
             await _dataProvider.BulkDeleteEntitiesAsync(entities);
@@ -666,7 +695,7 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
         if (!entities.Any())
             return;
 
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        using var transaction = CreateReadCommittedScope();
 
         if (typeof(TEntity).GetInterface(nameof(ISoftDeletedEntity)) == null)
             _dataProvider.BulkDeleteEntities(entities);
@@ -700,7 +729,7 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     {
         ArgumentNullException.ThrowIfNull(predicate);
 
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        using var transaction = CreateReadCommittedScope();
         var countDeletedRecords = await _dataProvider.BulkDeleteEntitiesAsync(predicate);
         transaction.Complete();
 
@@ -718,7 +747,7 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     {
         ArgumentNullException.ThrowIfNull(predicate);
 
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        using var transaction = CreateReadCommittedScope();
         var countDeletedRecords = _dataProvider.BulkDeleteEntities(predicate);
         transaction.Complete();
 
