@@ -2,6 +2,7 @@ using System.Text.Json;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Messaging.RabbitMq.Domain;
 using Nop.Plugin.Messaging.RabbitMq.Models;
+using Nop.Services.Catalog;
 using Nop.Services.Events;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -12,15 +13,18 @@ public class OrderPlacedConsumer : IConsumer<OrderPlacedEvent>
 {
     private readonly IOutboxRepository _outboxRepository;
     private readonly IOrderService _orderService;
+    private readonly IProductService _productService;
     private readonly ILogger _logger;
 
     public OrderPlacedConsumer(
         IOutboxRepository outboxRepository,
         IOrderService orderService,
+        IProductService productService,
         ILogger logger)
     {
         _outboxRepository = outboxRepository;
         _orderService = orderService;
+        _productService = productService;
         _logger = logger;
     }
 
@@ -30,16 +34,26 @@ public class OrderPlacedConsumer : IConsumer<OrderPlacedEvent>
 
         var orderItems = await _orderService.GetOrderItemsAsync(order.Id);
 
+        var products = await _productService.GetProductsByIdsAsync(
+            orderItems.Select(i => i.ProductId).Distinct().ToArray());
+        var productById = products.ToDictionary(p => p.Id);
+
         var message = new OrderPlacedMessage(
             OrderId: order.Id,
             OrderGuid: order.OrderGuid,
             CustomerId: order.CustomerId,
             OrderTotal: order.OrderTotal,
             CreatedOnUtc: order.CreatedOnUtc,
-            Items: orderItems.Select(i => new OrderItemMessage(
-                ProductId: i.ProductId,
-                Quantity: i.Quantity,
-                UnitPriceInclTax: i.UnitPriceInclTax)).ToList());
+            Items: orderItems.Select(i =>
+            {
+                productById.TryGetValue(i.ProductId, out var product);
+                return new OrderItemMessage(
+                    ProductId: i.ProductId,
+                    Sku: product?.Sku ?? string.Empty,
+                    Name: product?.Name ?? string.Empty,
+                    Quantity: i.Quantity,
+                    UnitPriceInclTax: i.UnitPriceInclTax);
+            }).ToList());
 
         var outboxMessage = new OutboxMessage
         {

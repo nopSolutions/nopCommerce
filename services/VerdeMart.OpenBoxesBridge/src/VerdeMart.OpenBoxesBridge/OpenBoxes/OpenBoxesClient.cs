@@ -35,6 +35,34 @@ public class OpenBoxesClient : IOpenBoxesClient
 
     public async Task<CreateFulfillmentResult> CreateFulfillmentAsync(OrderPlacedMessage message, CancellationToken ct)
     {
+        // Resolve every ordered product to an OpenBoxes product id (creating it if absent) so the stock
+        // movement can carry real line items. Stock-on-hand is intentionally NOT seeded here — that remains
+        // a warehouse responsibility, so the movement may still require manual stocking before it can be issued.
+        var resolvedByCode = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var lineItems = new List<object>(message.Items.Count);
+        foreach (var item in message.Items)
+        {
+            if (string.IsNullOrWhiteSpace(item.Sku))
+                return new CreateFulfillmentResult.Failure(
+                    $"order item ProductId={item.ProductId} ('{item.Name}') has no SKU; cannot correlate to OpenBoxes",
+                    Transient: false);
+
+            if (!resolvedByCode.TryGetValue(item.Sku, out var productId))
+            {
+                var (resolvedId, itemFailure) = await EnsureProductAsync(item, message.OrderGuid, ct);
+                if (itemFailure is not null)
+                    return itemFailure;
+                productId = resolvedId!;
+                resolvedByCode[item.Sku] = productId;
+            }
+
+            lineItems.Add(new
+            {
+                product = new { id = productId },
+                quantityRequested = item.Quantity
+            });
+        }
+
         var payload = new
         {
             origin = new { id = _settings.OpenBoxesOriginLocationId },
@@ -42,7 +70,8 @@ public class OpenBoxesClient : IOpenBoxesClient
             requestedBy = new { id = _settings.OpenBoxesRequestedByPersonId },
             dateRequested = message.CreatedOnUtc.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
             description = message.OrderGuid.ToString(),
-            requestType = "STOCK"
+            requestType = "STOCK",
+            lineItems
         };
 
         var sendResult = await SendWithReloginAsync(
@@ -79,6 +108,96 @@ public class OpenBoxesClient : IOpenBoxesClient
         return new CreateFulfillmentResult.Failure(
             $"http {(int)response.StatusCode}: {body}",
             Transient: transient);
+    }
+
+    // Resolve a product by its SKU (OpenBoxes productCode), creating it if it does not yet exist.
+    // Returns the OpenBoxes product id, or a Failure that the caller surfaces to the consumer.
+    private async Task<(string? ProductId, CreateFulfillmentResult.Failure? Failure)> EnsureProductAsync(
+        OrderItemMessage item, Guid orderGuid, CancellationToken ct)
+    {
+        var lookup = await FindProductIdByCodeAsync(item.Sku, orderGuid, ct);
+        if (lookup.Failure is not null)
+            return (null, lookup.Failure);
+        if (lookup.ProductId is not null)
+            return (lookup.ProductId, null);
+
+        return await CreateProductAsync(item.Sku, item.Name, orderGuid, ct);
+    }
+
+    private async Task<(string? ProductId, CreateFulfillmentResult.Failure? Failure)> FindProductIdByCodeAsync(
+        string productCode, Guid orderGuid, CancellationToken ct)
+    {
+        var url = $"api/products?productCode={Uri.EscapeDataString(productCode)}";
+        var outcome = await SendWithReloginAsync(() => new HttpRequestMessage(HttpMethod.Get, url), orderGuid, ct);
+        if (outcome.TransportFailure is { } failure)
+            return (null, failure);
+
+        using var response = outcome.Response!;
+        var body = await response.Content.ReadAsStringAsync(ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var transient = (int)response.StatusCode >= 500;
+            return (null, new CreateFulfillmentResult.Failure(
+                $"product lookup for {productCode} returned http {(int)response.StatusCode}: {Truncate(body, 200)}",
+                Transient: transient));
+        }
+
+        // A null id here means "not found" — not an error; the caller will create the product.
+        return (TryReadProductIdByCode(body, productCode), null);
+    }
+
+    private async Task<(string? ProductId, CreateFulfillmentResult.Failure? Failure)> CreateProductAsync(
+        string productCode, string name, Guid orderGuid, CancellationToken ct)
+    {
+        var payload = new Dictionary<string, object>
+        {
+            ["productCode"] = productCode,
+            ["name"] = string.IsNullOrWhiteSpace(name) ? productCode : name,
+            ["productType"] = new { id = _settings.OpenBoxesDefaultProductTypeId }
+        };
+        if (!string.IsNullOrWhiteSpace(_settings.OpenBoxesDefaultCategoryId))
+            payload["category"] = new { id = _settings.OpenBoxesDefaultCategoryId };
+
+        var outcome = await SendWithReloginAsync(() => BuildPostRequest("api/products", payload), orderGuid, ct);
+        if (outcome.TransportFailure is { } failure)
+            return (null, failure);
+
+        using var response = outcome.Response!;
+        var body = await response.Content.ReadAsStringAsync(ct);
+
+        // Another order (or node) may have created the same productCode between our lookup and create.
+        if (response.StatusCode == HttpStatusCode.Conflict)
+        {
+            var existing = await FindProductIdByCodeAsync(productCode, orderGuid, ct);
+            if (existing.Failure is not null)
+                return (null, existing.Failure);
+            if (existing.ProductId is not null)
+                return (existing.ProductId, null);
+            return (null, new CreateFulfillmentResult.Failure(
+                $"product {productCode} reported as conflict but could not be re-resolved", Transient: true));
+        }
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var transient = (int)response.StatusCode >= 500;
+            return (null, new CreateFulfillmentResult.Failure(
+                $"product create for {productCode} returned http {(int)response.StatusCode}: {Truncate(body, 200)}",
+                Transient: transient));
+        }
+
+        var id = TryReadProductId(body);
+        if (id is null)
+        {
+            _logger.LogWarning(
+                "OpenBoxes product create returned 2xx but no id for productCode={ProductCode}. Body: {Body}",
+                productCode, body);
+            return (null, new CreateFulfillmentResult.Failure(
+                $"product create for {productCode} returned no id", Transient: false));
+        }
+
+        _logger.LogInformation("Created OpenBoxes product productCode={ProductCode} id={ProductId}", productCode, id);
+        return (id, null);
     }
 
     private static HttpRequestMessage BuildPostRequest(string relativeUrl, object payload)
@@ -243,6 +362,77 @@ public class OpenBoxesClient : IOpenBoxesClient
         {
         }
 
+        return null;
+    }
+
+    // Reads the id from a create response. OpenBoxes wraps the new product under "product"
+    // ({ "product": { "id": ... } }); also tolerates "data" or a bare { "id": ... }.
+    private static string? TryReadProductId(string body)
+    {
+        if (string.IsNullOrWhiteSpace(body))
+            return null;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(body);
+            var root = doc.RootElement;
+            if (root.TryGetProperty("product", out var product))
+                root = product;
+            else if (root.TryGetProperty("data", out var data))
+                root = data;
+            return ReadId(root);
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+    }
+
+    // Reads the id of the product whose productCode matches exactly from a lookup response.
+    // Handles both list ({ "data": [ ... ] } / [ ... ]) and single-object shapes.
+    private static string? TryReadProductIdByCode(string body, string productCode)
+    {
+        if (string.IsNullOrWhiteSpace(body))
+            return null;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(body);
+            var root = doc.RootElement.TryGetProperty("data", out var data) ? data : doc.RootElement;
+
+            if (root.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var element in root.EnumerateArray())
+                {
+                    if (MatchesProductCode(element, productCode))
+                        return ReadId(element);
+                }
+                return null;
+            }
+
+            if (root.ValueKind == JsonValueKind.Object && MatchesProductCode(root, productCode))
+                return ReadId(root);
+
+            return null;
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+    }
+
+    private static bool MatchesProductCode(JsonElement element, string productCode) =>
+        element.ValueKind == JsonValueKind.Object
+        && element.TryGetProperty("productCode", out var code)
+        && code.ValueKind == JsonValueKind.String
+        && string.Equals(code.GetString(), productCode, StringComparison.OrdinalIgnoreCase);
+
+    private static string? ReadId(JsonElement element)
+    {
+        if (element.ValueKind != JsonValueKind.Object)
+            return null;
+        if (element.TryGetProperty("id", out var idProp) && idProp.ValueKind == JsonValueKind.String)
+            return idProp.GetString();
         return null;
     }
 }

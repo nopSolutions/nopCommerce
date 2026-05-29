@@ -22,5 +22,13 @@ public class BridgeSettings
     public string OpenBoxesDestinationLocationId { get; set; } = "2c9580869e55b7c4019e55c155f20000";
     public string OpenBoxesRequestedByPersonId { get; set; } = "1";
 
+    // Product type assigned to products auto-created by the bridge. OpenBoxes requires a productType;
+    // a fresh instance ships with one whose id is "DEFAULT".
+    public string OpenBoxesDefaultProductTypeId { get; set; } = "DEFAULT";
+
+    // Optional category for auto-created products. Blank by default because a product's category is
+    // nullable in OpenBoxes; set to a real category id only if your instance requires one.
+    public string OpenBoxesDefaultCategoryId { get; set; } = "";
+
     public string DedupConnectionString { get; set; } = "Data Source=/data/processed_orders.db";
 }
