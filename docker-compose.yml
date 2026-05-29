@@ -36,6 +36,8 @@ services:
         ports:
             - "5672:5672"
             - "15672:15672"
+        volumes:
+            - rabbitmq_data:/var/lib/rabbitmq
         healthcheck:
             test: ["CMD", "rabbitmq-diagnostics", "ping"]
             interval: 5s
@@ -64,7 +66,7 @@ services:
             BRIDGE__OPENBOXESUSERNAME: "admin"
             BRIDGE__OPENBOXESPASSWORD: "password"
             BRIDGE__OPENBOXESORIGINLOCATIONID: "1"
-            BRIDGE__OPENBOXESDESTINATIONLOCATIONID: "2c9580869e55b7c4019e55c155f20000"
+            BRIDGE__OPENBOXESDESTINATIONLOCATIONNAME: "VerdeMart Store"
             BRIDGE__OPENBOXESREQUESTEDBYPERSONID: "1"
             BRIDGE__DEDUPCONNECTIONSTRING: "Data Source=/data/processed_orders.db"
         volumes:
@@ -103,9 +105,9 @@ services:
         healthcheck:
             test: ["CMD-SHELL", "curl --fail --silent localhost:8080/openboxes/health | grep UP || exit 1"]
             interval: 15s
-            timeout: 10s
+            timeout: 30s
             retries: 20
-            start_period: 120s
+            start_period: 300s
         restart: unless-stopped
     wiremock:
         image: "wiremock/wiremock:latest"
@@ -121,3 +123,4 @@ volumes:
   nopcommerce_app_data:
   openboxes_bridge_data:
   openboxes_db_data:
+  rabbitmq_data:

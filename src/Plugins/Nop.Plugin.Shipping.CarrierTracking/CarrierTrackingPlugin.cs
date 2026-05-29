@@ -27,7 +27,7 @@ public class CarrierTrackingPlugin : BasePlugin, IMiscPlugin
             await _scheduleTaskService.InsertTaskAsync(new ScheduleTask
             {
                 Name = "VerdeMart: carrier status poller",
-                Seconds = 30,
+                Seconds = 120,
                 Type = typeof(CarrierStatusPollerTask).FullName,
                 Enabled = true,
                 StopOnError = false

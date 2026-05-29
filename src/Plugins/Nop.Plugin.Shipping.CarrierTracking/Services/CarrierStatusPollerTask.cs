@@ -63,6 +63,8 @@ public class CarrierStatusPollerTask : IScheduleTask
             var previousStatus = shipment.ExternalShippingStatus ?? "(none)";
             shipment.ExternalShippingStatus = result.Status;
             shipment.LastStatusOccurredAtUtc = result.OccurredAtUtc;
+            if (result.Status == "DELIVERED")
+                shipment.DeliveryDateUtc = result.OccurredAtUtc;
 
             await _shipmentService.UpdateShipmentAsync(shipment);
 

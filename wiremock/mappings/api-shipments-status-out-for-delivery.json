@@ -1,7 +1,7 @@
 {
   "scenarioName": "shipment-lifecycle",
-  "requiredScenarioState": "Started",
-  "newScenarioState": "out-for-delivery",
+  "requiredScenarioState": "out-for-delivery",
+  "newScenarioState": "delivered",
   "request": {
     "method": "GET",
     "urlPathPattern": "/api/shipments/([^/]+)/status"
@@ -10,7 +10,7 @@
     "status": 200,
     "jsonBody": {
       "externalShipmentId": "{{request.pathSegments.[2]}}",
-      "status": "IN_TRANSIT",
+      "status": "OUT_FOR_DELIVERY",
       "occurredAtUtc": "{{now}}"
     },
     "headers": {

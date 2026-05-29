@@ -18,6 +18,7 @@ public class OpenBoxesClient : IOpenBoxesClient
     private readonly SemaphoreSlim _loginLock = new(1, 1);
     private bool _loggedIn;
     private bool _locationChosen;
+    private string? _resolvedDestinationLocationId;
 
     public OpenBoxesClient(HttpClient http, IOptions<BridgeSettings> options, ILogger<OpenBoxesClient> logger)
     {
@@ -35,18 +36,16 @@ public class OpenBoxesClient : IOpenBoxesClient
 
     public async Task<CreateFulfillmentResult> CreateFulfillmentAsync(OrderPlacedMessage message, CancellationToken ct)
     {
-        var payload = new
-        {
-            origin = new { id = _settings.OpenBoxesOriginLocationId },
-            destination = new { id = _settings.OpenBoxesDestinationLocationId },
-            requestedBy = new { id = _settings.OpenBoxesRequestedByPersonId },
-            dateRequested = message.CreatedOnUtc.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
-            description = message.OrderGuid.ToString(),
-            requestType = "STOCK"
-        };
-
         var sendResult = await SendWithReloginAsync(
-            () => BuildPostRequest("api/stockMovements", payload),
+            () => BuildPostRequest("api/stockMovements", new
+            {
+                origin = new { id = _settings.OpenBoxesOriginLocationId },
+                destination = new { id = _resolvedDestinationLocationId ?? _settings.OpenBoxesDestinationLocationId },
+                requestedBy = new { id = _settings.OpenBoxesRequestedByPersonId },
+                dateRequested = message.CreatedOnUtc.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
+                description = message.OrderGuid.ToString(),
+                requestType = "STOCK"
+            }),
             message.OrderGuid,
             ct);
 
@@ -124,17 +123,22 @@ public class OpenBoxesClient : IOpenBoxesClient
     {
         _loggedIn = false;
         _locationChosen = false;
+        _resolvedDestinationLocationId = null;
     }
 
     private async Task EnsureSessionAsync(CancellationToken ct)
     {
-        if (_loggedIn && _locationChosen) return;
+        var useNameResolution = string.IsNullOrEmpty(_settings.OpenBoxesDestinationLocationId);
+
+        if (_loggedIn && _locationChosen && (!useNameResolution || _resolvedDestinationLocationId is not null)) return;
 
         await _loginLock.WaitAsync(ct);
         try
         {
             if (!_loggedIn) await LoginAsync(ct);
             if (!_locationChosen) await ChooseLocationAsync(ct);
+            if (useNameResolution && _resolvedDestinationLocationId is null)
+                _resolvedDestinationLocationId = await EnsureDestinationLocationAsync(ct);
         }
         finally
         {
@@ -199,6 +203,83 @@ public class OpenBoxesClient : IOpenBoxesClient
         var body = await response.Content.ReadAsStringAsync(ct);
         throw new HttpRequestException(
             $"OpenBoxes chooseLocation returned {(int)response.StatusCode}: {Truncate(body, 200)}");
+    }
+
+    private async Task<string> EnsureDestinationLocationAsync(CancellationToken ct)
+    {
+        var name = _settings.OpenBoxesDestinationLocationName;
+        var encodedName = Uri.EscapeDataString(name);
+
+        using var listResponse = await _http.GetAsync($"api/locations?name={encodedName}&max=1", ct);
+        var listBody = await listResponse.Content.ReadAsStringAsync(ct);
+
+        if (listResponse.IsSuccessStatusCode)
+        {
+            var existing = TryReadLocationId(listBody);
+            if (existing is not null)
+            {
+                _logger.LogInformation(
+                    "Found existing destination location '{Name}' → {Id}", name, existing);
+                return existing;
+            }
+        }
+
+        var createPayload = new { name, locationType = new { id = "2" }, organization = new { id = "1" } };
+        using var createResponse = await _http.SendAsync(
+            BuildPostRequest("api/locations", createPayload), ct);
+        var createBody = await createResponse.Content.ReadAsStringAsync(ct);
+
+        if (!createResponse.IsSuccessStatusCode)
+            throw new HttpRequestException(
+                $"Failed to create destination location '{name}': http {(int)createResponse.StatusCode}: {Truncate(createBody, 200)}");
+
+        var created = TryReadLocationId(createBody)
+            ?? throw new HttpRequestException(
+                $"Created destination location '{name}' but response contained no id. Body: {Truncate(createBody, 200)}");
+
+        _logger.LogInformation(
+            "Created new destination location '{Name}' → {Id}", name, created);
+        return created;
+    }
+
+    private static string? TryReadLocationId(string body)
+    {
+        if (string.IsNullOrWhiteSpace(body))
+            return null;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(body);
+
+            // List response: { "data": [ { "id": "..." } ] }
+            if (doc.RootElement.TryGetProperty("data", out var data))
+            {
+                if (data.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var item in data.EnumerateArray())
+                    {
+                        if (item.TryGetProperty("id", out var idProp) && idProp.ValueKind == JsonValueKind.String)
+                            return idProp.GetString();
+                    }
+                    return null;
+                }
+
+                // Single-object response: { "data": { "id": "..." } }
+                if (data.ValueKind == JsonValueKind.Object
+                    && data.TryGetProperty("id", out var nestedId)
+                    && nestedId.ValueKind == JsonValueKind.String)
+                    return nestedId.GetString();
+            }
+
+            // Flat response: { "id": "..." }
+            if (doc.RootElement.TryGetProperty("id", out var rootId) && rootId.ValueKind == JsonValueKind.String)
+                return rootId.GetString();
+        }
+        catch (JsonException)
+        {
+        }
+
+        return null;
     }
 
     private static string Truncate(string s, int max) =>
