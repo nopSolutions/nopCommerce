@@ -26,9 +26,9 @@ public class BridgeSettings
     // a fresh instance ships with one whose id is "DEFAULT".
     public string OpenBoxesDefaultProductTypeId { get; set; } = "DEFAULT";
 
-    // Optional category for auto-created products. Blank by default because a product's category is
-    // nullable in OpenBoxes; set to a real category id only if your instance requires one.
-    public string OpenBoxesDefaultCategoryId { get; set; } = "";
+    // Category assigned to auto-created products, addressed by name. The bridge resolves this name to an
+    // OpenBoxes category id at runtime, creating the category if it doesn't exist — no manual seeding.
+    public string OpenBoxesDefaultCategoryName { get; set; } = "VerdeMart Default";
 
     public string DedupConnectionString { get; set; } = "Data Source=/data/processed_orders.db";
 }
