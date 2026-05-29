@@ -8,14 +8,14 @@ namespace Nop.Plugin.Shipping.CarrierTracking.Services;
 
 public class CarrierStatusPollerTask : IScheduleTask
 {
+    private static readonly HashSet<string> TerminalStatuses = new() { "DELIVERED", "RETURNED" };
+
     private readonly IShipmentService _shipmentService;
     private readonly IWireMockClient _wireMockClient;
     private readonly IExternalStatusMapper _statusMapper;
     private readonly IWorkflowMessageService _workflowMessageService;
     private readonly IOrderService _orderService;
     private readonly ILogger _logger;
-
-    private static readonly HashSet<string> TerminalStatuses = new() { "DELIVERED", "RETURNED" };
 
     public CarrierStatusPollerTask(
         IShipmentService shipmentService,

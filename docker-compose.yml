@@ -33,6 +33,9 @@ services:
     rabbitmq:
         image: rabbitmq:3-management
         container_name: nopcommerce_rabbitmq
+        hostname: nopcommerce_rabbitmq
+        environment:
+            RABBITMQ_ERLANG_COOKIE: "nopcommerce_secret_cookie"
         ports:
             - "5672:5672"
             - "15672:15672"
