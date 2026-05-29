@@ -96,6 +96,12 @@ public class SettingMigration : MigrationBase
         this.SetSettingIfNotExists<OtpSettings, int>(settings => settings.OtpTimeToRepeat, 15);
         this.SetSettingIfNotExists<OtpSettings, int>(settings => settings.OtpLength, 6);
         this.SetSettingIfNotExists<MessagesSettings, string>(settings => settings.ActiveSmsProviderSystemName, "");
+
+        //phone number validation now uses libphonenumber; the regex/whitelist settings are obsolete
+        this.DeleteSettingsByNames([
+            $"{nameof(CustomerSettings)}.PhoneNumberValidationUseRegex",
+            $"{nameof(CustomerSettings)}.PhoneNumberValidationRule"
+        ]);
     }
 
     public override void Down()

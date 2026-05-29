@@ -554,7 +554,10 @@ public partial class CustomerController : BasePublicController
         }
 
         // Validate phone number
-        if (!PhoneNumberPropertyValidator<LoginModel, string>.IsValid(phone, _customerSettings))
+        var regionCode = _customerSettings.DefaultCountryId.HasValue
+            ? (await _countryService.GetCountryByIdAsync(_customerSettings.DefaultCountryId.Value))?.TwoLetterIsoCode
+            : null;
+        if (!PhoneNumberPropertyValidator<LoginModel, string>.IsValid(phone, _customerSettings, regionCode))
         {
             return Json(new { success = false, message = await _localizationService.GetResourceAsync("Account.Fields.Phone.NotValid") });
         }

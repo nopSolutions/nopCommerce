@@ -8,52 +8,56 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Validators;
 [TestFixture]
 public class PhoneNumberValidatorTests
 {
-    private TestValidator _validator;
-    private CustomerSettings _customerSettings;
+    private static bool IsValid(string phone, CustomerSettings settings, string regionCode)
+        => PhoneNumberPropertyValidator<Person, string>.IsValid(phone, settings, regionCode);
 
-    [OneTimeSetUp]
-    public void Setup()
+    [Test]
+    public void ShouldBeValidWhenValidationDisabled()
     {
-        _customerSettings = new CustomerSettings
-        {
-            PhoneNumberValidationRule = "^[0-9]{1,14}?$",
-            PhoneNumberValidationEnabled = true,
-            PhoneNumberValidationUseRegex = false
-        };
+        var settings = new CustomerSettings { PhoneNumberValidationEnabled = false, PhoneRequired = true };
 
-        _validator = new TestValidator { v => v.RuleFor(x => x.PhoneNumber).IsPhoneNumber(_customerSettings) };
+        IsValid("not-a-phone", settings, "US").Should().BeTrue();
+        IsValid(null, settings, "US").Should().BeTrue();
     }
 
     [Test]
-    public async Task IsValidTests()
+    public void EmptyPhoneShouldRespectPhoneRequired()
     {
-        //optional value is not valid
-        _customerSettings.PhoneRequired = true;
-        var result = await _validator.ValidateAsync(new Person { PhoneNumber = null });
-        result.IsValid.Should().BeFalse();
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = string.Empty });
-        result.IsValid.Should().BeFalse();
+        var settings = new CustomerSettings { PhoneNumberValidationEnabled = true, PhoneRequired = true };
+        IsValid(null, settings, "US").Should().BeFalse();
+        IsValid(string.Empty, settings, "US").Should().BeFalse();
 
-        //validation without regex
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = "test_phone_number" });
-        result.IsValid.Should().BeFalse();
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = string.Empty });
-        result.IsValid.Should().BeFalse();
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = "123" });
-        result.IsValid.Should().BeFalse();
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = "[0-9]{1,14}^" });
-        result.IsValid.Should().BeTrue();
+        settings.PhoneRequired = false;
+        IsValid(null, settings, "US").Should().BeTrue();
+        IsValid(string.Empty, settings, "US").Should().BeTrue();
+    }
 
-        //validation with regex
-        _customerSettings.PhoneNumberValidationUseRegex = true;
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = "test_phone_number" });
-        result.IsValid.Should().BeFalse();
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = "123456789" });
-        result.IsValid.Should().BeTrue();
-        _customerSettings.PhoneRequired = false;
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = string.Empty });
-        result.IsValid.Should().BeTrue();
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = "+123456789" });
-        result.IsValid.Should().BeFalse();
+    [Test]
+    public void ValidLocalNumberWithRegionShouldBeValid()
+    {
+        var settings = new CustomerSettings { PhoneNumberValidationEnabled = true };
+        IsValid("541-754-3010", settings, "US").Should().BeTrue();
+    }
+
+    [Test]
+    public void InvalidNumberShouldBeInvalid()
+    {
+        var settings = new CustomerSettings { PhoneNumberValidationEnabled = true };
+        IsValid("123", settings, "US").Should().BeFalse();
+        IsValid("test_phone_number", settings, "US").Should().BeFalse();
+    }
+
+    [Test]
+    public void InternationalNumberShouldValidateRegardlessOfRegion()
+    {
+        var settings = new CustomerSettings { PhoneNumberValidationEnabled = true };
+        IsValid("+15417543010", settings, null).Should().BeTrue();
+    }
+
+    [Test]
+    public void LocalNumberWithoutRegionShouldBeInvalid()
+    {
+        var settings = new CustomerSettings { PhoneNumberValidationEnabled = true };
+        IsValid("5417543010", settings, null).Should().BeFalse();
     }
 }

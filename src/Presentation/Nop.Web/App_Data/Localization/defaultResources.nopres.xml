@@ -6960,9 +6960,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.UseAjaxCatalogProductsLoading.Hint">
     <Value>Check to load products asynchronously (applicable to 'paging', 'filtering', 'view modes') on catalog pages.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error">
-    <Value>The regular expression for phone number validation is incorrect</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error">
     <Value>The regular expression for username validation is incorrect</Value>
   </LocaleResource>
@@ -7477,19 +7474,7 @@
     <Value>Phone number validation is enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationEnabled.Hint">
-    <Value>Check to enable phone number validation (when registering or changing on the "My Account" page)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule">
-    <Value>Phone number validation rule</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule.Hint">
-    <Value>Set the validation rule for phone number. You can specify a list of allowed characters or a regular expression. If you use a regular expression check the "Use regex for phone number validation" setting.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex">
-    <Value>Use regex for phone number validation</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex.Hint">
-    <Value>Check to use a regular expression for phone number validation (when registering or changing on the "My Account" page)</Value>
+    <Value>Check to enable phone number validation. Numbers are validated with the libphonenumber library against the configured Default country (when registering, changing on the "My Account" page, or editing customers/addresses in the admin area). Numbers in international format (starting with "+") are validated regardless of the Default country.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneRequired">
     <Value>'Phone number' required</Value>

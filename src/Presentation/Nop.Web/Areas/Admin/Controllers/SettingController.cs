@@ -1221,11 +1221,6 @@ public partial class SettingController : BaseAdminController
             var lastUsernameValidationEnabledValue = customerSettings.UsernameValidationEnabled;
             var lastUsernameValidationUseRegexValue = customerSettings.UsernameValidationUseRegex;
 
-            //Phone number validation settings
-            var lastPhoneNumberValidationRule = customerSettings.PhoneNumberValidationRule;
-            var lastPhoneNumberValidationEnabledValue = customerSettings.PhoneNumberValidationEnabled;
-            var lastPhoneNumberValidationUseRegexValue = customerSettings.PhoneNumberValidationUseRegex;
-
             var addressSettings = await _settingService.LoadSettingAsync<AddressSettings>(storeScope);
             var dateTimeSettings = await _settingService.LoadSettingAsync<DateTimeSettings>(storeScope);
             var externalAuthenticationSettings = await _settingService.LoadSettingAsync<ExternalAuthenticationSettings>(storeScope);
@@ -1266,24 +1261,6 @@ public partial class SettingController : BaseAdminController
                     customerSettings.UsernameValidationUseRegex = lastUsernameValidationUseRegexValue;
 
                     _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error"));
-                }
-            }
-
-            if (customerSettings.PhoneNumberValidationEnabled && customerSettings.PhoneNumberValidationUseRegex)
-            {
-                try
-                {
-                    //validate regex rule
-                    var unused = Regex.IsMatch("123456789", customerSettings.PhoneNumberValidationRule);
-                }
-                catch (ArgumentException)
-                {
-                    //restoring previous settings
-                    customerSettings.PhoneNumberValidationRule = lastPhoneNumberValidationRule;
-                    customerSettings.PhoneNumberValidationEnabled = lastPhoneNumberValidationEnabledValue;
-                    customerSettings.PhoneNumberValidationUseRegex = lastPhoneNumberValidationUseRegexValue;
-
-                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error"));
                 }
             }
 

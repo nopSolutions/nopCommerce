@@ -106,6 +106,9 @@ public partial class CustomerValidator : BaseNopValidator<CustomerModel>
                 //only for registered users
                 .WhenAsync(async (x, _) => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
         }
+        RuleFor(x => x.Phone)
+            .IsPhoneNumber(customerSettings)
+            .WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Phone.NotValid"));
         if (customerSettings.FaxRequired && customerSettings.FaxEnabled)
         {
             RuleFor(x => x.Fax)

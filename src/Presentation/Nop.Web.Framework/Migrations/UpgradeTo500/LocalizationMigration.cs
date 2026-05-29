@@ -19,6 +19,13 @@ public class LocalizationMigration : MigrationBase
 
         this.DeleteLocaleResources(new List<string>
         {
+            //phone number validation now uses libphonenumber
+            "Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule",
+            "Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule.Hint",
+            "Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex",
+            "Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex.Hint",
+            "Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error",
+
             //#7340
             "ActivityLog.AddNewNews",
             "ActivityLog.DeleteNews",
@@ -439,6 +446,9 @@ public class LocalizationMigration : MigrationBase
 
         this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
+            //phone number validation now uses libphonenumber
+            ["Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationEnabled.Hint"] = "Check to enable phone number validation. Numbers are validated with the libphonenumber library against the configured Default country (when registering, changing on the \"My Account\" page, or editing customers/addresses in the admin area). Numbers in international format (starting with \"+\") are validated regardless of the Default country.",
+
             //#7898
             ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.LogRequests"] = "Log AI requests",
             ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.LogRequests.Hint"] = "Check to enable logging of all requests to AI services.",
