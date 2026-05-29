@@ -100,6 +100,8 @@ public class CarrierBookingConsumer : BackgroundService
                     case BookingResult.Success success:
                         shipment.ExternalShipmentId = success.CarrierTrackingId;
                         shipment.ExternalCarrierCode = "WIREMOCK";
+                        shipment.TrackingNumber = success.CarrierTrackingId;
+                        shipment.ShippedDateUtc ??= DateTime.UtcNow;
                         await shipmentService.UpdateShipmentAsync(shipment);
                         await channel.BasicAckAsync(args.DeliveryTag, multiple: false, cancellationToken: stoppingToken);
                         await _logger.InformationAsync($"[CarrierTracking] Booked ShipmentId={message.ShipmentId} → TrackingId={success.CarrierTrackingId}");
