@@ -22,6 +22,8 @@ services:
             SA_PASSWORD: "nopCommerce_db_password"
             ACCEPT_EULA: "Y"
             MSSQL_PID: "Express"
+        ports:
+            - "1433:1433"
         volumes:
             - nopcommerce_data:/var/opt/mssql
         healthcheck:
@@ -33,6 +35,10 @@ services:
     rabbitmq:
         image: rabbitmq:3-management
         container_name: nopcommerce_rabbitmq
+        hostname: nopcommerce_rabbitmq
+        user: "0:0"
+        environment:
+            RABBITMQ_ERLANG_COOKIE: "nopcommerce_secret_cookie"
         ports:
             - "5672:5672"
             - "15672:15672"
@@ -64,7 +70,8 @@ services:
             BRIDGE__OPENBOXESUSERNAME: "admin"
             BRIDGE__OPENBOXESPASSWORD: "password"
             BRIDGE__OPENBOXESORIGINLOCATIONID: "1"
-            BRIDGE__OPENBOXESDESTINATIONLOCATIONID: "2c9580869e55b7c4019e55c155f20000"
+            BRIDGE__OPENBOXESDESTINATIONLOCATIONNAME: "VerdeMart Store"
+            BRIDGE__OPENBOXESDEFAULTCATEGORYNAME: "DEFAULT_CATEGORY"
             BRIDGE__OPENBOXESREQUESTEDBYPERSONID: "1"
             BRIDGE__DEDUPCONNECTIONSTRING: "Data Source=/data/processed_orders.db"
         volumes:
@@ -103,9 +110,9 @@ services:
         healthcheck:
             test: ["CMD-SHELL", "curl --fail --silent localhost:8080/openboxes/health | grep UP || exit 1"]
             interval: 15s
-            timeout: 10s
+            timeout: 30s
             retries: 20
-            start_period: 120s
+            start_period: 300s
         restart: unless-stopped
     wiremock:
         image: "wiremock/wiremock:latest"

@@ -7,4 +7,4 @@ public record OrderPlacedMessage(
     decimal OrderTotal,
     DateTime CreatedOnUtc,
     IReadOnlyList<OrderItemMessage> Items,
-    int Version = 1);
+    int Version = 2);
