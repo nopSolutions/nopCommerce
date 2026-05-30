@@ -1,5 +1,5 @@
 {
-  "scenarioName": "shipment-lifecycle",
+  "scenarioName": "shipment-{{request.pathSegments.[2]}}",
   "requiredScenarioState": "out-for-delivery",
   "newScenarioState": "delivered",
   "request": {
