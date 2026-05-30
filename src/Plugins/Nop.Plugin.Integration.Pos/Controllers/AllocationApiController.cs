@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Plugin.Inventory.AllocationGate.Models;
+using Nop.Plugin.Integration.Pos.Models;
+using Nop.Plugin.Inventory.AllocationGate;
 using Nop.Plugin.Inventory.AllocationGate.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Stores;
 
-namespace Nop.Plugin.Inventory.AllocationGate.Controllers;
+namespace Nop.Plugin.Integration.Pos.Controllers;
 
 [ApiController]
 [Route("api/inventory")]
