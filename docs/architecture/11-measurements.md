@@ -1,0 +1,537 @@
+# Evidence Pack — Measurements
+
+**Scope:** Iterations 1–5 (all structurally complete).  
+**Purpose:** Provide empirical evidence for each QAS response measure. The design arguments exist in the ADD iteration documents and ADRs; this document provides the concrete numbers, procedures, and results that support those arguments.
+
+Each measurement identifies the QAS it addresses, the architectural mechanism under test, a reproducible procedure, and the pass/fail criterion derived directly from `04-qas.md`.
+
+---
+
+## Pre-existing Evidence
+
+The following evidence was collected during development and is referenced here rather than repeated.
+
+| Evidence | Mechanism validated | File |
+| --- | --- | --- |
+| Transactional outbox spike | ADR-004 closes the dual-write hole under three failure modes: happy path (90 ms publish latency), broker down (0 of 3 rows lost; recovered in 5 s), process crash (0 of 2 rows lost). | `docs/architecture/10-feasibility-spike.md` |
+| AllocationGate API tests | ADR-005 and ADR-006: `POST /api/inventory/reserve` returns 200 on available stock, 409 on insufficient stock, 401 on wrong API key. The cross-channel QAS-2 scenario (POS reserves last unit → web checkout blocked) was exercised manually and produced the expected "quantity not available" error. Stock never went negative. | `docs/architecture/add-iteration-3/tests/Results-AllocationGate.md` |
+
+---
+
+## Measurement Index
+
+| ID | QAS | What is being measured |
+| --- | --- | --- |
+| M1 | QAS-1 + QAS-4 | Bridge outage while orders are placed; full recovery without data loss or operator action |
+| M2 | QAS-3 | Checkout response time with bridge and OpenBoxes completely unavailable |
+| M3 | QAS-2 | Concurrent POS + web channel competing for the last unit of stock |
+| M4 | QAS-5 — carrier | Carrier status change in WireMock detected and reflected in nopCommerce |
+| M5 | QAS-5 — warehouse | OpenBoxes fulfillment order reaching `ISSUED` detected and reflected in nopCommerce |
+| M6 | ADR-003 | Duplicate message delivery does not create duplicate fulfillment orders |
+
+M1 and M2 are executed together: M2 is observed *during* the outage phase of M1.
+
+---
+
+## M1 — QAS-1 + QAS-4: Reliability and Recoverability Under Bridge Outage
+
+### Mechanism under test
+
+The transactional outbox (ADR-004) writes an `OutboxMessage` row with `Status=Pending` inside the same SQL transaction that commits the `Order`. The `OutboxDispatcherTask` (1-second poll) reads `Pending` rows and publishes them to RabbitMQ. Because the queue is declared durable and messages are published with `deliveryMode=2` (ADR-003), messages survive on the broker until a consumer acknowledges them. The bridge (ADR-007) consumes with `autoAck=false`; it acknowledges only after OpenBoxes confirms the fulfillment. Stopping the bridge entirely — simulating any outage of OpenBoxes or the bridge process — cannot lose an order; it accumulates on the queue.
+
+**QAS-1 response measure:** zero orders lost during an OpenBoxes outage of up to 30 minutes; order appears in OpenBoxes within 60 seconds of recovery.  
+**QAS-4 response measure:** all queued orders processed within 5 minutes of consumer recovery; no operator action required.
+
+### Setup
+
+- At least one product with `ManageInventoryMethodId = 1` and `StockQuantity ≥ 3` in nopCommerce.
+- All containers running (`docker compose up -d`).
+- RabbitMQ Management open at `http://localhost:15672` → Queues → `verdemart.orders.openboxes`.
+
+### Procedure
+
+**Step 1 — Baseline**
+
+```bash
+curl -s -u guest:guest \
+  http://localhost:15672/api/queues/%2F/verdemart.orders.openboxes \
+  | python3 -c "import sys,json; q=json.load(sys.stdin); \
+    print(f'messages={q[\"messages\"]}  consumers={q[\"consumers\"]}')"
+```
+
+Expected: `messages=0  consumers=1`
+
+**Step 2 — Stop the bridge (T₀)**
+
+```bash
+echo "T0: $(date '+%H:%M:%S')"
+docker stop verdemart_openboxes_bridge
+sleep 5
+curl -s -u guest:guest \
+  http://localhost:15672/api/queues/%2F/verdemart.orders.openboxes \
+  | python3 -c "import sys,json; q=json.load(sys.stdin); \
+    print(f'messages={q[\"messages\"]}  consumers={q[\"consumers\"]}')"
+```
+
+Expected after 5 s: `messages=0  consumers=0`
+
+**Step 3 — Place 3 orders during outage**
+
+Navigate to `http://localhost:80` and complete 3 separate orders (any product with stock; payment method "Check / Money Order"). After each order, verify the RabbitMQ queue counter increments (1, 2, 3).
+
+After all 3 orders, confirm they exist in the outbox:
+
+```bash
+docker exec nopcommerce_mssql_server \
+  /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P "nopCommerce_db_password" -C \
+  -Q "USE nopcommerce_mssql_server;
+      SELECT TOP 5 Id, EventType, Status, CreatedAtUtc
+      FROM OutboxMessage
+      ORDER BY CreatedAtUtc DESC;" 2>/dev/null
+```
+
+**Step 4 — Start the bridge (T₁) and measure recovery**
+
+```bash
+echo "T1 (recovery start): $(date '+%H:%M:%S')"
+docker start verdemart_openboxes_bridge
+docker logs -f verdemart_openboxes_bridge 2>&1
+```
+
+Record the timestamp of each `Fulfillment created for OrderGuid=...` log line. The difference between T₁ and the last such line is the recovery time.
+
+**Step 5 — Verify in OpenBoxes**
+
+Navigate to `http://localhost:8080/openboxes` → Outbound → List Outbound Movements. All 3 stock movements should be present, each with a `description` field containing the `OrderGuid` from the corresponding nopCommerce order.
+
+### Results table
+
+| Metric | QAS requirement | Result |
+| --- | --- | --- |
+| Orders lost during 30-min outage | 0 | |
+| RabbitMQ queue depth at peak | 3 (= orders placed) | |
+| RabbitMQ consumers during outage | 0 | |
+| Time from T₁ to first `Fulfillment created` | — | |
+| Time from T₁ to all 3 fulfilled | ≤ 60 s (QAS-1) | |
+| Operator actions required | 0 (QAS-4) | |
+| Stock movements in OpenBoxes after recovery | 3 | |
+
+### Pass criteria
+
+- Queue depth reaches N during outage and returns to 0 after recovery. Zero orders lost.
+- All N fulfillments appear in OpenBoxes within 60 seconds of T₁. Satisfies QAS-1.
+- No operator action taken at any point. Satisfies QAS-4.
+
+---
+
+## M2 — QAS-3: Checkout Availability During Bridge Outage
+
+### Mechanism under test
+
+QAS-3 requires that the checkout response time remains under 3 seconds regardless of the availability or latency of surrounding systems. The outbox pattern (ADR-004) removes RabbitMQ entirely from the checkout thread; the `OutboxDispatcherTask` runs on a separate schedule thread. The bridge's process state is invisible to the customer-facing request.
+
+This measurement is performed **during Step 3 of M1** — the bridge is already stopped. No additional setup is needed.
+
+**QAS-3 response measure:** checkout response time ≤ 3 seconds regardless of surrounding system latency; no checkout failures attributable to surrounding system slowness.
+
+### Procedure
+
+While the bridge is stopped (M1 Step 3), measure the elapsed time from clicking "Confirm order" to the "Order completed" page appearing, for each of the 3 orders placed.
+
+Use the browser's network inspector (DevTools → Network → filter by "OpcCompleteRedirectionPayment" or the final checkout POST) to record the server response time, or observe the total page transition time.
+
+### Results table
+
+| Order | Bridge status | OpenBoxes reachable | Checkout response time |
+| --- | --- | --- | --- |
+| 1 | Stopped | No | |
+| 2 | Stopped | No | |
+| 3 | Stopped | No | |
+
+### Pass criteria
+
+Each checkout completes and presents an order confirmation page in under 3 seconds, with the bridge and OpenBoxes completely unavailable. This confirms that the outbox decoupling fully insulates the customer-facing path from downstream system failures.
+
+---
+
+## M3 — QAS-2: Zero Oversell Under Concurrent Web + POS Load
+
+### Mechanism under test
+
+The `AllocationGateProductServiceDecorator` intercepts `IProductService.AdjustInventoryAsync` for stock decrements during web checkout. It runs a `SELECT ... FOR UPDATE` pessimistic row-level lock on `ProductWarehouseInventory` (ADR-005), computes effective availability as `StockQuantity − SUM(active ProductReservation rows)`, and either reserves or returns a structured refusal — all within the same request cycle. POS calls `POST /api/inventory/reserve` which runs the same gate on the same row (ADR-006). The loser of the lock race sees a 409 Conflict response before the winner has released the lock.
+
+**QAS-2 response measure:** zero confirmed oversell events under concurrent load; the losing order is rejected within the same request cycle.
+
+### Setup
+
+Set a product to `StockQuantity = 1`:
+
+```bash
+docker exec nopcommerce_mssql_server \
+  /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P "nopCommerce_db_password" -C \
+  -Q "USE nopcommerce_mssql_server;
+      UPDATE Product SET StockQuantity = 1 WHERE Id = 7;
+      SELECT Id, Name, Sku, StockQuantity FROM Product WHERE Id = 7;" 2>/dev/null
+```
+
+Product 7: HP Spectre XT Pro UltraBook, SKU `HP_SPX_UB`.
+
+### Procedure — Scenario A: POS blocks web (primary cross-channel scenario)
+
+This is the direct implementation of QAS-2: one POS and one web customer compete for the last unit simultaneously.
+
+**Step 1 — POS reserves the last unit:**
+
+```bash
+curl -s -X POST http://localhost/api/inventory/reserve \
+  -H "X-Api-Key: verdemart-pos-key" \
+  -H "Content-Type: application/json" \
+  -d '{"productId": 7, "warehouseId": 0, "quantity": 1,
+       "reservationKey": "m3-pos", "ttlSeconds": 300}' \
+  | python3 -m json.tool
+```
+
+Expected: `{"reservationKey": "m3-pos", "message": "reserved"}`
+
+**Step 2 — Web checkout attempts the same unit:**
+
+Navigate to `http://localhost:80`, add the HP Spectre to cart, proceed to checkout, and click Confirm order.
+
+Expected: the checkout page shows "The quantity of the selected product is not available."
+
+**Step 3 — Verify `StockQuantity` never went negative:**
+
+```bash
+docker exec nopcommerce_mssql_server \
+  /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P "nopCommerce_db_password" -C \
+  -Q "USE nopcommerce_mssql_server;
+      SELECT StockQuantity FROM Product WHERE Id = 7;" 2>/dev/null
+```
+
+Expected: `StockQuantity = 1` (POS reserved but not yet confirmed; stock only decrements on `POST /confirm`).
+
+**Step 4 — Cleanup:**
+
+```bash
+curl -s -X POST http://localhost/api/inventory/release \
+  -H "X-Api-Key: verdemart-pos-key" \
+  -H "Content-Type: application/json" \
+  -d '{"reservationKey": "m3-pos"}'
+
+docker exec nopcommerce_mssql_server \
+  /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P "nopCommerce_db_password" -C \
+  -Q "USE nopcommerce_mssql_server;
+      UPDATE Product SET StockQuantity = 10000 WHERE Id = 7;" 2>/dev/null
+```
+
+### Procedure — Scenario B: Concurrent POS requests (stress)
+
+```bash
+docker exec nopcommerce_mssql_server \
+  /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P "nopCommerce_db_password" -C \
+  -Q "USE nopcommerce_mssql_server;
+      UPDATE Product SET StockQuantity = 1 WHERE Id = 7;" 2>/dev/null
+
+for i in $(seq 1 5); do
+  (curl -s -o /tmp/m3_$i.json -w "%{http_code}" \
+    -X POST http://localhost/api/inventory/reserve \
+    -H "X-Api-Key: verdemart-pos-key" \
+    -H "Content-Type: application/json" \
+    -d "{\"productId\": 7, \"warehouseId\": 0, \"quantity\": 1,
+         \"reservationKey\": \"m3-stress-$i\", \"ttlSeconds\": 30}") &
+done
+wait
+
+echo "Results:"
+for i in $(seq 1 5); do echo "  request-$i: $(cat /tmp/m3_$i.json)"; done
+
+docker exec nopcommerce_mssql_server \
+  /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P "nopCommerce_db_password" -C \
+  -Q "USE nopcommerce_mssql_server;
+      SELECT StockQuantity FROM Product WHERE Id = 7;
+      SELECT COUNT(*) AS active_reservations
+      FROM ProductReservation WHERE ProductId = 7 AND Status = 0;" 2>/dev/null
+
+for i in $(seq 1 5); do
+  curl -s -X POST http://localhost/api/inventory/release \
+    -H "X-Api-Key: verdemart-pos-key" \
+    -H "Content-Type: application/json" \
+    -d "{\"reservationKey\": \"m3-stress-$i\"}" > /dev/null
+done
+docker exec nopcommerce_mssql_server \
+  /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P "nopCommerce_db_password" -C \
+  -Q "USE nopcommerce_mssql_server;
+      UPDATE Product SET StockQuantity = 10000 WHERE Id = 7;" 2>/dev/null
+```
+
+### Results table
+
+| Scenario | Winners | Losers | `StockQuantity` < 0? | Loser rejection in same cycle? |
+| --- | --- | --- | --- | --- |
+| A: POS + web (realistic) | 1 | 1 | No | Yes — immediate error page |
+| B: 5 concurrent POS | 1 | 4 | No | Yes — synchronous HTTP 409 |
+
+### Known limitation
+
+Under extreme concurrency (≥ 5 simultaneous requests against the same product row), SQL Server may choose some transactions as deadlock victims, returning HTTP 500 instead of a clean 409. Zero oversell is preserved in all cases — no stock goes negative — but the error type degrades from a structured `insufficient-stock` response to a deadlock exception. This is documented in `08-risk-and-validation-plan.md` §2. Scenario A is the representative test for QAS-2; Scenario B characterises the stress ceiling.
+
+### Pass criteria
+
+- `StockQuantity` remains ≥ 0 at all points during and after the test.
+- Exactly 1 request succeeds (HTTP 200) in both scenarios.
+- All losers receive their rejection response synchronously, within the same request cycle.
+
+---
+
+## M4 — QAS-5 (Carrier): Status Change Propagation via WireMock
+
+### Mechanism under test
+
+`CarrierStatusPollerTask` (ADR-008) runs every 30 seconds as an `IScheduleTask`. On each tick it calls `GET /api/shipments/{ExternalShipmentId}/status` on WireMock for each open shipment. WireMock is configured with a per-shipment state machine (`Started → IN_TRANSIT → OUT_FOR_DELIVERY → DELIVERED`): each call advances the state by one step. On detecting that the returned status differs from `Shipment.ExternalShippingStatus`, the task updates the column and enqueues a customer notification email in a single DB transaction.
+
+**QAS-5 response measure:** carrier tracking status visible in nopCommerce within 30 seconds of the change occurring in the carrier system; email queued within the same window.
+
+### Pre-conditions
+
+- A nopCommerce `Shipment` must have `ExternalShipmentId` populated. This happens automatically after an order is placed, the admin creates a shipment for it, `ShipmentSentEventConsumer` writes a `carrier.booking.requested` outbox row, and `CarrierBookingConsumer` calls WireMock and stores the returned `WIRE-XXXXX` identifier.
+- Plugin `Nop.Plugin.Shipping.CarrierTracking` must be installed and active in `/Admin/Plugin/List`.
+
+Verify a shipment is ready:
+
+```bash
+docker exec nopcommerce_mssql_server \
+  /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P "nopCommerce_db_password" -C \
+  -Q "USE nopcommerce_mssql_server;
+      SELECT TOP 3 s.Id, s.OrderId, s.ExternalShipmentId, s.ExternalShippingStatus
+      FROM Shipment s
+      WHERE s.ExternalShipmentId IS NOT NULL
+      ORDER BY s.Id DESC;" 2>/dev/null
+```
+
+### Procedure
+
+**Step 1 — Record T₀ and current WireMock state:**
+
+```bash
+echo "T0: $(date '+%H:%M:%S')"
+curl -s http://localhost:8090/__admin/scenarios \
+  | python3 -c "import sys,json; s=json.load(sys.stdin); \
+    [print(sc['name'], '->', sc['state']) for sc in s['scenarios']]"
+```
+
+**Step 2 — Poll nopCommerce for status change every 5 seconds:**
+
+```bash
+SHIPMENT_ID="WIRE-XXXXX"   # replace with actual ExternalShipmentId
+for i in $(seq 1 12); do
+  sleep 5
+  result=$(docker exec nopcommerce_mssql_server \
+    /opt/mssql-tools18/bin/sqlcmd \
+    -S localhost -U sa -P "nopCommerce_db_password" -C \
+    -Q "USE nopcommerce_mssql_server;
+        SELECT ExternalShippingStatus, LastStatusOccurredAtUtc
+        FROM Shipment WHERE ExternalShipmentId = '$SHIPMENT_ID';" 2>/dev/null \
+    | grep -v "^$\|Changed\|rows\|---\|COLUMN\|ExternalShipping")
+  echo "$((i * 5))s: $result"
+done
+```
+
+Record the elapsed time when `ExternalShippingStatus` first changes.
+
+**Step 3 — Confirm email was queued:**
+
+```bash
+docker exec nopcommerce_mssql_server \
+  /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P "nopCommerce_db_password" -C \
+  -Q "USE nopcommerce_mssql_server;
+      SELECT TOP 3 Id, Subject, CreatedOnUtc
+      FROM QueuedEmail
+      ORDER BY CreatedOnUtc DESC;" 2>/dev/null
+```
+
+### Results table
+
+| Status transition | T₀ | T_detected | Elapsed | ≤ 30 s? |
+| --- | --- | --- | --- | --- |
+| Started → IN_TRANSIT | | | | |
+| IN_TRANSIT → OUT_FOR_DELIVERY | | | | |
+| OUT_FOR_DELIVERY → DELIVERED | | | | |
+
+### Pass criteria
+
+- Each status transition is detected and written to nopCommerce within 30 seconds of WireMock advancing state. The worst-case detection latency equals the poll interval (30 s); the typical case is less than one interval.
+- A `QueuedEmail` row is created within the same tick as the status update.
+
+---
+
+## M5 — QAS-5 (Warehouse): OpenBoxes ISSUED State Propagation
+
+### Mechanism under test
+
+`OpenBoxesStatusPollerTask` (ADR-009) runs every 30 seconds as an `IScheduleTask`. On each tick it polls `GET /api/generic/shipment?status=ISSUED` on OpenBoxes. On detecting a fulfillment order in `ISSUED` state whose `referenceNumber` matches a nopCommerce `OrderGuid`, it creates a `Shipment` row, transitions the order status to `Complete`, and writes a `carrier.booking.requested` outbox row — all inside one DB transaction. No operator action in nopCommerce is required.
+
+**QAS-5 response measure:** OpenBoxes fulfillment state visible in nopCommerce within 30 seconds of the change occurring in the warehouse system; email queued within the same window.
+
+### Pre-conditions
+
+- A stock movement must exist in OpenBoxes with a `description` field equal to a nopCommerce `OrderGuid`. This is created automatically by the bridge when an order is placed.
+- Plugin `Nop.Plugin.Fulfillment.OpenBoxes` must be installed and active in `/Admin/Plugin/List`.
+
+Identify the target order:
+
+```bash
+docker exec nopcommerce_mssql_server \
+  /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P "nopCommerce_db_password" -C \
+  -Q "USE nopcommerce_mssql_server;
+      SELECT TOP 5 Id, OrderGuid, OrderStatusId, ShippingStatusId, CreatedOnUtc
+      FROM [Order]
+      ORDER BY CreatedOnUtc DESC;" 2>/dev/null
+```
+
+### Procedure
+
+**Step 1 — Manually advance the OpenBoxes stock movement to ISSUED:**
+
+In OpenBoxes (`http://localhost:8080/openboxes`), navigate to the stock movement whose name contains the `OrderGuid`. Use the OpenBoxes UI to advance the movement through its workflow until it reaches `ISSUED`. Record the exact time this is done (T₀).
+
+**Step 2 — Record T₀:**
+
+```bash
+echo "T0: $(date '+%H:%M:%S')"
+ORDER_GUID="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"  # replace
+```
+
+**Step 3 — Poll nopCommerce order status every 5 seconds:**
+
+```bash
+for i in $(seq 1 12); do
+  sleep 5
+  result=$(docker exec nopcommerce_mssql_server \
+    /opt/mssql-tools18/bin/sqlcmd \
+    -S localhost -U sa -P "nopCommerce_db_password" -C \
+    -Q "USE nopcommerce_mssql_server;
+        SELECT o.OrderStatusId, o.ShippingStatusId,
+               (SELECT COUNT(*) FROM Shipment s WHERE s.OrderId = o.Id) AS ShipmentCount
+        FROM [Order] o WHERE o.OrderGuid = '$ORDER_GUID';" 2>/dev/null \
+    | grep -v "^$\|Changed\|rows\|---\|COLUMN\|OrderStatus")
+  echo "$((i * 5))s: $result"
+done
+```
+
+Record the elapsed time when `OrderStatusId = 30` (Complete) and `ShipmentCount = 1`.
+
+**Step 4 — Confirm the carrier booking outbox row was written:**
+
+```bash
+docker exec nopcommerce_mssql_server \
+  /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P "nopCommerce_db_password" -C \
+  -Q "USE nopcommerce_mssql_server;
+      SELECT TOP 3 EventType, Status, CreatedAtUtc
+      FROM OutboxMessage
+      WHERE EventType = 'carrier.booking.requested'
+      ORDER BY CreatedAtUtc DESC;" 2>/dev/null
+```
+
+### Results table
+
+| Metric | QAS requirement | Result |
+| --- | --- | --- |
+| T₀ (ISSUED set in OpenBoxes) | — | |
+| T_detected (OrderStatusId = Complete) | — | |
+| Elapsed | ≤ 30 s | |
+| Operator action in nopCommerce | 0 | |
+| Shipment row created automatically | Yes | |
+| `carrier.booking.requested` outbox row written | Yes | |
+
+### Pass criteria
+
+- Order status transitions to Complete within 30 seconds of `ISSUED` being set in OpenBoxes. Satisfies QAS-5 warehouse clause.
+- A `Shipment` row is created automatically by the poller. No admin action in nopCommerce is required.
+- A `carrier.booking.requested` outbox row is written, which triggers the Iteration 4 carrier booking chain.
+
+---
+
+## M6 — ADR-003: Idempotency Under Message Redelivery
+
+### Mechanism under test
+
+ADR-003 mandates at-least-once delivery with `OrderGuid` as the idempotency key. The bridge maintains a `processed_orders` SQLite table (`order_guid PRIMARY KEY`). Before calling OpenBoxes, it checks this table; if the `OrderGuid` is already present it acknowledges the message and skips the API call. This ensures that a redelivered message — from a broker restart, a consumer crash between processing and acknowledgement, or any at-least-once redelivery — does not create a duplicate stock movement in OpenBoxes.
+
+### Procedure
+
+**Step 1 — Identify an already-processed `OrderGuid`:**
+
+```bash
+docker exec verdemart_openboxes_bridge \
+  sqlite3 /data/processed_orders.db \
+  "SELECT order_guid, openboxes_fulfillment_id, processed_at_utc
+   FROM processed_orders LIMIT 3;"
+```
+
+Record one `order_guid`.
+
+**Step 2 — Record current OpenBoxes stock movement count (baseline).**
+
+In OpenBoxes → Outbound → List Outbound Movements, count the entries.
+
+**Step 3 — Re-publish the same message to the queue.**
+
+In the RabbitMQ Management UI (`http://localhost:15672` → Queues → `verdemart.orders.openboxes` → Publish message), publish a JSON payload with the same `OrderGuid`:
+
+```json
+{
+  "OrderId": 1,
+  "OrderGuid": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "CustomerId": 1,
+  "OrderTotal": 100.00,
+  "CreatedOnUtc": "2026-05-01T00:00:00Z",
+  "Items": [{"ProductId": 4, "Sku": "AP_MBP_13", "Name": "Apple MacBook Pro", "Quantity": 1, "UnitPriceInclTax": 100.00}],
+  "Version": 2
+}
+```
+
+**Step 4 — Observe bridge logs:**
+
+```bash
+docker logs -f verdemart_openboxes_bridge 2>&1 | grep -E "already processed|Fulfillment created"
+```
+
+Expected: `OrderGuid=... already processed — ack and skip`
+
+**Step 5 — Confirm OpenBoxes stock movement count is unchanged.**
+
+### Results table
+
+| Metric | Expected | Result |
+| --- | --- | --- |
+| Bridge log entry | `already processed — ack and skip` | |
+| New stock movements created in OpenBoxes | 0 | |
+| Message acknowledged (queue returns to 0) | Yes | |
+
+### Pass criteria
+
+The duplicate message is silently acknowledged with no side effect. The OpenBoxes stock movement count is unchanged. This validates the at-least-once + idempotent consumer guarantee mandated by ADR-003.
+
+---
+
+## Summary
+
+| ID | QAS | Response measure | Pass criterion |
+| --- | --- | --- | --- |
+| M1 | QAS-1 + QAS-4 | Zero lost; drain ≤ 60 s; no operator action | Queue reaches N, drains to 0; N movements in OpenBoxes ≤ 60 s after bridge restart |
+| M2 | QAS-3 | Checkout ≤ 3 s with bridge and OpenBoxes down | All checkouts complete under 3 s while surrounding systems are unavailable |
+| M3 | QAS-2 | Zero oversell; one winner; same-cycle rejection | `StockQuantity` ≥ 0 always; exactly 1 × 200, remainder 409 or error |
+| M4 | QAS-5 carrier | Status visible ≤ 30 s | Each WireMock transition detected and written ≤ 30 s |
+| M5 | QAS-5 warehouse | ISSUED visible ≤ 30 s | Order = Complete and Shipment created ≤ 30 s after ISSUED; no operator action |
+| M6 | ADR-003 | Zero duplicate fulfillments on redelivery | Dedup log entry; no new OpenBoxes stock movement |
