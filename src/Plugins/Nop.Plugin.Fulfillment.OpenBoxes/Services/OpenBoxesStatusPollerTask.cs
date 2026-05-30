@@ -90,6 +90,7 @@ public class OpenBoxesStatusPollerTask : IScheduleTask
         // Idempotency guard: skip if the order is already complete or already has a shipment.
         if (order.OrderStatusId == (int)OrderStatus.Complete)
         {
+            await _openBoxesClient.ReceiveFulfillmentAsync(fulfillment.FulfillmentId, CancellationToken.None);
             await _logger.WarningAsync(
                 $"[OpenBoxesPoller] OrderId={order.Id} already marked as Complete for OrderGuid={fulfillment.OrderGuid}; skipping");
             return;
@@ -167,6 +168,8 @@ public class OpenBoxesStatusPollerTask : IScheduleTask
         });
 
         scope.Complete();
+
+        await _openBoxesClient.ReceiveFulfillmentAsync(fulfillment.FulfillmentId, CancellationToken.None);
 
         await _logger.InformationAsync(
             $"[OpenBoxesPoller] OrderGuid={fulfillment.OrderGuid} ISSUED → ShipmentId={shipment.Id}, order set to Complete, carrier.booking.requested queued");

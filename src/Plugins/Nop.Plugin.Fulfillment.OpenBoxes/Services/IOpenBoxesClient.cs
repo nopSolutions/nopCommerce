@@ -6,4 +6,6 @@ public interface IOpenBoxesClient
 {
     Task<IReadOnlyList<OpenBoxesFulfillmentOrder>> GetIssuedFulfillmentOrdersAsync(
         int batchSize, CancellationToken ct);
+
+    Task ReceiveFulfillmentAsync(string fulfillmentId, CancellationToken ct);
 }
