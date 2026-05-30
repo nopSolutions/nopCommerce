@@ -315,6 +315,8 @@ docker exec nopcommerce_mssql_server \
 | A: POS + web (realistic) — 2026-05-30 | 1 (POS) | 1 (web) | ✅ No | ✅ Yes — "Out of stock" at product page level |
 | B: 5 concurrent POS (stress) | pending | pending | | |
 
+![Out Of Stock](imgs/out_of_stock.png)
+
 **Note:** The rejection happens at the product listing level (before cart), not just at checkout confirm. The `AllocationGate` effective availability (`StockQuantity − SUM(active reservations)`) propagates to the product display, providing an earlier and more visible signal to the web customer than a late checkout failure.
 
 ### Known limitation
