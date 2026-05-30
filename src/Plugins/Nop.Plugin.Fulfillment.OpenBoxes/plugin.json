@@ -1,0 +1,11 @@
+{
+  "Group": "Fulfillment",
+  "FriendlyName": "OpenBoxes Fulfillment",
+  "SystemName": "Fulfillment.OpenBoxes",
+  "Version": "1.00",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "VerdeMart",
+  "DisplayOrder": 2,
+  "FileName": "Nop.Plugin.Fulfillment.OpenBoxes.dll",
+  "Description": "Polls OpenBoxes for issued fulfillment orders, completes nopCommerce orders, and emits carrier.booking.requested events."
+}

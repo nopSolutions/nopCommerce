@@ -7,9 +7,11 @@ public record OrderPlacedMessage(
     decimal OrderTotal,
     DateTime CreatedOnUtc,
     IReadOnlyList<OrderItemMessage> Items,
-    int Version = 1);
+    int Version = 2);
 
 public record OrderItemMessage(
     int ProductId,
+    string Sku,
+    string Name,
     int Quantity,
     decimal UnitPriceInclTax);

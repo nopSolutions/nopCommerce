@@ -18,7 +18,13 @@ builder.Services.AddSingleton<RabbitMqTopology>();
 builder.Services.AddSingleton<RetryCounter>();
 builder.Services.AddScoped<OrderPlacedMessageConsumer>();
 
-builder.Services.AddHttpClient<IOpenBoxesClient, OpenBoxesClient>();
+builder.Services.AddHttpClient<IOpenBoxesClient, OpenBoxesClient>()
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        UseCookies = true,
+        CookieContainer = new System.Net.CookieContainer(),
+        AllowAutoRedirect = false
+    });
 
 builder.Services.AddHostedService<BridgeWorker>();
 
