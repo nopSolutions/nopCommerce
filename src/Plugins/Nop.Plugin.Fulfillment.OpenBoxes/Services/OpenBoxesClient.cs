@@ -106,6 +106,139 @@ public class OpenBoxesClient : IOpenBoxesClient
         return result;
     }
 
+    public async Task ReceiveFulfillmentAsync(string fulfillmentId, CancellationToken ct)
+    {
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var settings = await _settingService.LoadSettingAsync<OpenBoxesSettings>(store.Id);
+
+        if (string.IsNullOrWhiteSpace(settings.OpenBoxesBaseUrl))
+        {
+            await _logger.WarningAsync("[OpenBoxesClient] OpenBoxesBaseUrl is not configured; skipping receive");
+            return;
+        }
+
+        EnsureBaseAddress(settings.OpenBoxesBaseUrl);
+
+        var getResult = await SendWithReloginAsync(
+            settings,
+            () => new HttpRequestMessage(HttpMethod.Get, $"api/partialReceiving/{fulfillmentId}"),
+            ct);
+
+        if (getResult.Failed)
+        {
+            await _logger.WarningAsync($"[OpenBoxesClient] Failed to fetch partial receiving data for FulfillmentId={fulfillmentId}");
+            return;
+        }
+
+        using var getResponse = getResult.Response!;
+        if (!getResponse.IsSuccessStatusCode)
+        {
+            await _logger.WarningAsync($"[OpenBoxesClient] OpenBoxes returned {(int)getResponse.StatusCode} fetching partial receiving for FulfillmentId={fulfillmentId}");
+            return;
+        }
+
+        var getBody = await getResponse.Content.ReadAsStringAsync(ct);
+        PartialReceivingDto? receipt;
+        try
+        {
+            var envelope = JsonSerializer.Deserialize<PartialReceivingEnvelope>(getBody,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            receipt = envelope?.Data;
+        }
+        catch (JsonException ex)
+        {
+            await _logger.WarningAsync($"[OpenBoxesClient] Failed to parse partial receiving response for FulfillmentId={fulfillmentId}", ex);
+            return;
+        }
+
+        if (receipt is null)
+        {
+            await _logger.WarningAsync($"[OpenBoxesClient] Empty partial receiving response for FulfillmentId={fulfillmentId}");
+            return;
+        }
+
+        var dateDelivered = DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm 'Z'", CultureInfo.InvariantCulture);
+
+        // Step 1: POST PENDING to create the receipt and get back receiptItemIds
+        var pendingReceipt = await PostPartialReceivingAsync(settings, fulfillmentId, receipt, "PENDING", dateDelivered, ct);
+        if (pendingReceipt is null)
+        {
+            await _logger.WarningAsync($"[OpenBoxesClient] Failed to save PENDING receipt for FulfillmentId={fulfillmentId}");
+            return;
+        }
+
+        // Step 2: POST COMPLETED using the receiptItemIds from the PENDING response
+        var completed = await PostPartialReceivingAsync(settings, fulfillmentId, pendingReceipt, "COMPLETED", dateDelivered, ct);
+        if (completed is null)
+        {
+            await _logger.WarningAsync($"[OpenBoxesClient] Failed to complete receipt for FulfillmentId={fulfillmentId}");
+            return;
+        }
+
+        await _logger.InformationAsync($"[OpenBoxesClient] FulfillmentId={fulfillmentId} marked as RECEIVED in OpenBoxes");
+    }
+
+    private async Task<PartialReceivingDto?> PostPartialReceivingAsync(
+        OpenBoxesSettings settings,
+        string fulfillmentId,
+        PartialReceivingDto receipt,
+        string receiptStatus,
+        string dateDelivered,
+        CancellationToken ct)
+    {
+        var body = new Dictionary<string, object?>
+        {
+            ["shipment.id"] = fulfillmentId,
+            ["receiptStatus"] = receiptStatus,
+            ["dateDelivered"] = dateDelivered,
+            ["containers"] = receipt.Containers?.Select(c => new Dictionary<string, object?>
+            {
+                ["container.id"] = c.ContainerId,
+                ["shipmentItems"] = c.ShipmentItems?.Select(i => new Dictionary<string, object?>
+                {
+                    ["receiptItemId"] = i.ReceiptItemId,
+                    ["shipmentItemId"] = i.ShipmentItemId,
+                    ["quantityReceiving"] = (i.QuantityReceiving ?? 0) > 0 ? i.QuantityReceiving!.Value : i.QuantityRemaining,
+                    ["cancelRemaining"] = false
+                }).ToList()
+            }).ToList()
+        };
+
+        var json = JsonSerializer.Serialize(body);
+        var result = await SendWithReloginAsync(
+            settings,
+            () => new HttpRequestMessage(HttpMethod.Post, $"api/partialReceiving/{fulfillmentId}")
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            },
+            ct);
+
+        if (result.Failed)
+            return null;
+
+        using var response = result.Response!;
+        if (!response.IsSuccessStatusCode)
+        {
+            await _logger.WarningAsync(
+                $"[OpenBoxesClient] OpenBoxes returned {(int)response.StatusCode} on {receiptStatus} receipt POST for FulfillmentId={fulfillmentId}");
+            return null;
+        }
+
+        var responseBody = await response.Content.ReadAsStringAsync(ct);
+        try
+        {
+            var envelope = JsonSerializer.Deserialize<PartialReceivingEnvelope>(responseBody,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return envelope?.Data;
+        }
+        catch (JsonException ex)
+        {
+            await _logger.WarningAsync(
+                $"[OpenBoxesClient] Failed to parse {receiptStatus} receipt response for FulfillmentId={fulfillmentId}", ex);
+            return null;
+        }
+    }
+
     private void EnsureBaseAddress(string url)
     {
         if (_http.BaseAddress is not null) return;
@@ -279,5 +412,41 @@ public class OpenBoxesClient : IOpenBoxesClient
 
         [JsonPropertyName("actualShippingDate")]
         public string? ActualShippingDate { get; set; }
+    }
+
+    private sealed class PartialReceivingEnvelope
+    {
+        [JsonPropertyName("data")]
+        public PartialReceivingDto? Data { get; set; }
+    }
+
+    private sealed class PartialReceivingDto
+    {
+        [JsonPropertyName("containers")]
+        public List<PartialReceivingContainerDto>? Containers { get; set; }
+    }
+
+    private sealed class PartialReceivingContainerDto
+    {
+        [JsonPropertyName("container.id")]
+        public string? ContainerId { get; set; }
+
+        [JsonPropertyName("shipmentItems")]
+        public List<PartialReceivingItemDto>? ShipmentItems { get; set; }
+    }
+
+    private sealed class PartialReceivingItemDto
+    {
+        [JsonPropertyName("receiptItemId")]
+        public string? ReceiptItemId { get; set; }
+
+        [JsonPropertyName("shipmentItemId")]
+        public string? ShipmentItemId { get; set; }
+
+        [JsonPropertyName("quantityReceiving")]
+        public int? QuantityReceiving { get; set; }
+
+        [JsonPropertyName("quantityRemaining")]
+        public int QuantityRemaining { get; set; }
     }
 }

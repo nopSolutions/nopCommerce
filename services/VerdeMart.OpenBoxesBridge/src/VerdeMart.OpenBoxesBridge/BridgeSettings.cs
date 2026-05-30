@@ -19,7 +19,9 @@ public class BridgeSettings
     public string OpenBoxesPassword { get; set; } = "password";
 
     public string OpenBoxesOriginLocationId { get; set; } = "1";
-    public string OpenBoxesDestinationLocationId { get; set; } = "2c9580869e55b7c4019e55c155f20000";
+    public string OpenBoxesDestinationLocationName { get; set; } = "VerdeMart Store";
+    // Explicit ID override — when set, skips name-based lookup/creation.
+    public string OpenBoxesDestinationLocationId { get; set; } = "";
     public string OpenBoxesRequestedByPersonId { get; set; } = "1";
 
     // Product type assigned to products auto-created by the bridge. OpenBoxes requires a productType;
