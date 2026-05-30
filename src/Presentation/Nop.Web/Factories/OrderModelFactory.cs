@@ -381,6 +381,15 @@ public partial class OrderModelFactory : IOrderModelFactory
                     shipmentModel.ReadyForPickupDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ReadyForPickupDateUtc.Value, DateTimeKind.Utc);
                 if (shipment.DeliveryDateUtc.HasValue)
                     shipmentModel.DeliveryDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
+                shipmentModel.CarrierStatus = shipment.ExternalShipmentId is null
+                    ? "Pending Dispatch"
+                    : shipment.ExternalShippingStatus switch
+                    {
+                        "IN_TRANSIT"       => "In Transit",
+                        "OUT_FOR_DELIVERY" => "Out for Delivery",
+                        "DELIVERED"        => "Delivered",
+                        _                  => "Dispatched"
+                    };
                 model.Shipments.Add(shipmentModel);
             }
         }

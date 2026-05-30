@@ -282,6 +282,30 @@
                     </div>
 
                     <div class="card card-default">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label class="col-form-label">Carrier Status</label>
+                                </div>
+                                <div class="col-md-9">
+                                    @{
+                                        var badgeColor = Model.CarrierStatus switch
+                                        {
+                                            "Pending Dispatch" => "secondary",
+                                            "Dispatched"       => "info",
+                                            "In Transit"       => "primary",
+                                            "Out for Delivery" => "warning",
+                                            "Delivered"        => "success",
+                                            _                  => "secondary"
+                                        };
+                                    }
+                                    <span class="badge badge-@badgeColor">@Model.CarrierStatus</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-default">
                         <div class="card-header">
                             @T("Admin.Orders.Shipments.Products")
                         </div>

@@ -70,5 +70,7 @@ public partial record ShipmentModel : BaseNopEntityModel
 
     public IList<ShipmentStatusEventModel> ShipmentStatusEvents { get; set; }
 
+    public string CarrierStatus { get; set; }
+
     #endregion
 }
