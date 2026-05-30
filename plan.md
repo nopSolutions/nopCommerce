@@ -89,7 +89,7 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 | João Roldão | `[ ]` Write [ADR-0011](docs/adr/0011-order-outbox-insertion-strategy.md) (consumer + reconciler strategy) | `docs/adr/0011-order-outbox-insertion-strategy.md` |
 | João Roldão | `[ ]` Add Consequences + Tradeoffs bullet for demo-token auth | `docs/adr/0005-no-shared-database-boundaries.md` |
 | João Varela | `[x]` Admin view shells (empty MVC controller + view skeleton) | `.../OmnichannelCore/Controllers/`, `.../Views/` |
-| João Varela | `[ ]` POS simulator scaffold (HTTP server, mode placeholder) | `services/pos-sim/` (new) |
+| João Varela | `[x]` POS simulator scaffold (HTTP server, mode placeholder) | `services/pos-sim/` (new) |
 | António | `[ ]` Worker service project scaffold; envelope library project | `services/worker/`, `services/contracts/` (new) |
 | António | `[ ]` RabbitMQ topology design (queues, bindings, DLX) documented | `services/worker/README.md` |
 | Diogu | `[ ]` WMS simulator scaffold (HTTP server, mode placeholder) | `services/wms-sim/` (new) |
@@ -183,11 +183,11 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 
 | Owner | Task | Files / paths |
 |-------|------|---------------|
-| João Varela | `[ ]` Inbox `messageId` dedup at every callback endpoint | `.../OmnichannelCore/Services/OmniInboxService.cs` |
-| João Varela | `[ ]` `sourceVersion` comparison for stock updates (`OmniStockSyncState`) | `.../OmnichannelCore/Services/OmniStockSyncService.cs` |
-| João Varela | `[ ]` POS callback endpoint | `.../OmnichannelCore/Controllers/OmnichannelCallbackController.cs` |
-| João Varela | `[ ]` POS sim `duplicate` and `stale` modes | `services/pos-sim/` |
-| João Roldão | `[ ]` Plugin integration: connect POS callback into the inbox + stock projection paths | `.../OmnichannelCore/` |
+| João Varela | `[x]` Inbox `messageId` dedup at every callback endpoint | `.../OmnichannelCore/Services/OmniInboxService.cs` |
+| João Varela | `[x]` `sourceVersion` comparison for stock updates (`OmniStockSyncState`) | `.../OmnichannelCore/Services/OmniStockSyncService.cs` |
+| João Varela | `[x]` POS callback endpoint | `.../OmnichannelCore/Controllers/OmnichannelCallbackController.cs` |
+| João Varela | `[x]` POS sim `duplicate` and `stale` modes | `services/pos-sim/` |
+| João Roldão | `[x]` Plugin integration: connect POS callback into the inbox + stock projection paths | `.../OmnichannelCore/` |
 | João Varela | `[ ]` Unit tests for `messageId` dedup and `sourceVersion` staleness; e2e: duplicate ignored, stale ignored, legitimate update applied | `tests/` or `.../OmnichannelCore/Tests/`; evidence in `docs/evidence/qa-2-consistency.md` |
 
 **Verification gate** (Wed 27 May)

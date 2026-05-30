@@ -20,7 +20,9 @@ public class PluginNopStartup : INopStartup
     /// <param name="configuration">Configuration of the application</param>
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
+        services.AddScoped<OmniInboxService>();
         services.AddScoped<OmnichannelCoreService>();
+        services.AddScoped<OmniStockSyncService>();
     }
 
     /// <summary>

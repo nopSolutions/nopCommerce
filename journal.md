@@ -38,6 +38,15 @@ The rubric explicitly penalises "large amounts of generated code with little arc
 
 <!-- Most recent first. -->
 
+## 2026-05-15 — Inbox + POS consistency track
+
+**Phase**: 4.
+**Driver**: ADR-0006, ADR-0007, ADR-0008; QA-2 consistency and QA-3 traceability.
+**Files**: `nopCommerce/src/Plugins/Nop.Plugin.Misc.OmnichannelCore/Controllers/OmnichannelCallbackController.cs`, `nopCommerce/src/Plugins/Nop.Plugin.Misc.OmnichannelCore/Services/OmniInboxService.cs`, `nopCommerce/src/Plugins/Nop.Plugin.Misc.OmnichannelCore/Services/OmniStockSyncService.cs`, `nopCommerce/src/Plugins/Nop.Plugin.Misc.OmnichannelCore/Models/Callbacks/**`, `nopCommerce/src/Plugins/Nop.Plugin.Misc.OmnichannelCore/OmnichannelCoreDefaults.cs`, `nopCommerce/src/Plugins/Nop.Plugin.Misc.OmnichannelCore/Infrastructure/PluginNopStartup.cs`, `services/pos-sim/**`, `docs/evidence/qa-2-consistency.md`, `docs/evidence/qa-3-traceability.md`, `docs/README.md`, `roadmap.md`, `plan.md`, `journal.md`.
+**Change**: Added the internal POS stock callback, demo-token validation, inbox `messageId` dedup, projection-first stock update logic with `sourceVersion` stale detection, POS simulator modes (`normal`, `duplicate`, `stale`) and evidence runbooks for QA-2/QA-3.
+**Tradeoff/risk introduced**: Duplicate protection is implemented at service level; there is still no database unique constraint on `OmniInboxMessage.MessageId`, so simultaneous duplicate callbacks are a residual race outside the demo path.
+**Verification**: `git diff --check` passes; `docker build --target build -t nopcommerce-omni-inbox-pos-check .` succeeds from `nopCommerce/` with 3 existing nopCommerce warnings and 0 errors; `docker build -t omni-pos-sim-check .` succeeds from `services/pos-sim/` with 0 warnings and 0 errors; POS simulator smoke returns `{"status":"ok","simulator":"pos-sim","mode":"normal"}` from `/health`. Runtime QA measurements remain to be captured from a running nopCommerce instance.
+
 ## 2026-05-14 — Phase 1 schema tightening (indexes + correlation columns)
 
 **Phase**: 1 (follow-up to Varela's plugin scaffold; closes the four "Minor" items from the same-day review entry below).

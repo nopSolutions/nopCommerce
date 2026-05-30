@@ -8,7 +8,7 @@ Authoritative phasing for Assignment 2. Phase 0 covers Part 1 (architecture chec
 | 1   | Plugin scaffolding + tables            | Migration Stage 1                    | In review  |
 | 2   | RabbitMQ + worker + normal flow        | Migration Stage 2 (Iter. 1 happy)    | Not started|
 | 3   | Resilience under pressure              | Migration Stage 3 (Iter. 1 pressure) | Not started|
-| 4   | Consistency: idempotent inbox + POS    | Migration Stage 4 (Iter. 2)          | Not started|
+| 4   | Consistency: idempotent inbox + POS    | Migration Stage 4 (Iter. 2)          | In progress|
 | 5   | Traceability: correlation + admin      | Migration Stage 5 (Iter. 3)          | Not started|
 | 6   | Evidence pack + demo + presentation    | Part 2 final delivery                | Not started|
 
@@ -68,12 +68,13 @@ Authoritative phasing for Assignment 2. Phase 0 covers Part 1 (architecture chec
 
 - **Goal**: handle at-least-once delivery and stale POS updates without losing or duplicating state.
 - **Deliverables**:
-  - [ ] Inbox enforcement on every plugin callback endpoint.
-  - [ ] `sourceVersion` comparison on stock updates; older versions ignored.
-  - [ ] POS simulator with `duplicate` and `stale` modes.
+  - [x] Inbox enforcement on every plugin callback endpoint.
+  - [x] `sourceVersion` comparison on stock updates; older versions ignored.
+  - [x] POS simulator with `duplicate` and `stale` modes.
   - [ ] Unit tests for `messageId` deduplication and `sourceVersion` staleness.
-  - [ ] Demo script: duplicate POS event → ignored; stale POS event → ignored; legitimate update → applied.
+  - [x] Demo script: duplicate POS event → ignored; stale POS event → ignored; legitimate update → applied.
 - **Verification gate**: QA-2 measures hit (duplicate detected ≤ 50 ms; 0 duplicate fulfillment rows; older `sourceVersion` ignored). Go/no-go: **Go** on idempotent inbox; **Partial-go** on projection-only stock (write-through deferred).
+- **Current evidence**: see [QA-2 POS consistency](docs/evidence/qa-2-consistency.md) and [QA-3 plugin-side traceability](docs/evidence/qa-3-traceability.md). Docker builds pass; runtime QA measurements still need to be captured before the phase can move to `Done`.
 - **Risks**: `sourceVersion` clock semantics broken by POS sim's clock model; inbox table growth not capped (acceptable for demo).
 
 ## Phase 5 — Traceability: correlation + admin (Iteration 3)
