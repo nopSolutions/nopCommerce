@@ -198,7 +198,7 @@ public class OpenBoxesClient : IOpenBoxesClient
                 {
                     ["receiptItemId"] = i.ReceiptItemId,
                     ["shipmentItemId"] = i.ShipmentItemId,
-                    ["quantityReceiving"] = i.QuantityReceiving > 0 ? i.QuantityReceiving : i.QuantityRemaining,
+                    ["quantityReceiving"] = (i.QuantityReceiving ?? 0) > 0 ? i.QuantityReceiving!.Value : i.QuantityRemaining,
                     ["cancelRemaining"] = false
                 }).ToList()
             }).ToList()
@@ -444,7 +444,7 @@ public class OpenBoxesClient : IOpenBoxesClient
         public string? ShipmentItemId { get; set; }
 
         [JsonPropertyName("quantityReceiving")]
-        public int QuantityReceiving { get; set; }
+        public int? QuantityReceiving { get; set; }
 
         [JsonPropertyName("quantityRemaining")]
         public int QuantityRemaining { get; set; }
