@@ -1,0 +1,11 @@
+{
+  "Group": "Integration",
+  "FriendlyName": "POS Integration",
+  "SystemName": "Integration.Pos",
+  "Version": "1.00",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "VerdeMart",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Integration.Pos.dll",
+  "Description": "HTTP adapter that exposes the Allocation Gate to external POS systems."
+}
