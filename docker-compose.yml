@@ -47,14 +47,6 @@ services:
             interval: 5s
             timeout: 5s
             retries: 10
-    openboxes:
-        image: "wiremock/wiremock:latest"
-        container_name: verdemart_openboxes_stub
-        entrypoint: ["/docker-entrypoint.sh", "--global-response-templating", "--disable-gzip", "--verbose"]
-        ports:
-            - "8091:8080"
-        volumes:
-            - ./openboxes-stub/mappings:/home/wiremock/mappings
     openboxes_bridge:
         build:
             context: ./services/VerdeMart.OpenBoxesBridge
