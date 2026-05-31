@@ -10,7 +10,7 @@ Three structural tensions drive every design decision:
 - **Availability** — checkout must complete regardless of warehouse or carrier latency.
 - **Consistency** — stock sold in one channel must be visible and respected in all channels.
 
-Full scenario: [`01-scenario.md`](01-scenario.md)
+Full scenario: [`01-scenario.md`](01-scenario.md) | Current-state analysis: [`02-current-state.md`](02-current-state.md) | Bounded contexts: [`03-bounded-contexts.md`](03-bounded-contexts.md)
 
 ---
 
@@ -100,4 +100,4 @@ All major decisions, including rejected alternatives, are recorded in [`07-adrs/
 - **Stock back-propagation from OpenBoxes to nopCommerce** is not implemented. Warehouse-originated stock adjustments (returns, shrinkage, supplier receipts) do not update `Product.StockQuantity`. The demo drives all stock movements through the application, so divergence does not surface during the demonstration.
 - **DLQ replay tooling** is not automated. Three dead-letter queues exist. Poison message inspection and replay require the RabbitMQ Management Console.
 
-Full risk register and accepted limitations: [`08-risk-and-validation-plan.md`](08-risk-and-validation-plan.md)
+Full risk register and accepted limitations: [`08-risk-and-validation-plan.md`](08-risk-and-validation-plan.md) | Feasibility spike: [`10-feasibility-spike.md`](10-feasibility-spike.md)
