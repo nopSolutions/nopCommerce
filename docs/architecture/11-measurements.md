@@ -431,18 +431,30 @@ docker exec nopcommerce_mssql_server \
       ORDER BY CreatedOnUtc DESC;" 2>/dev/null
 ```
 
-### Results table
+### Results — Run 2026-05-31 (T₀ 15:54:21)
+
+Shipment `WIRE-15655` (Order #18). Times below are the server-side `LastStatusOccurredAtUtc` values (UTC).
 
 | Status transition | T₀ | T_detected | Elapsed | ≤ 30 s? |
 | --- | --- | --- | --- | --- |
-| Started → IN_TRANSIT | | | | |
-| IN_TRANSIT → OUT_FOR_DELIVERY | | | | |
-| OUT_FOR_DELIVERY → DELIVERED | | | | |
+| Started → IN_TRANSIT | 14:54:21 (T₀, scenario at `Started`) | 14:54:33 | 12 s | ✅ |
+| IN_TRANSIT → OUT_FOR_DELIVERY | 14:54:33 | 14:55:03 | 30 s | ✅ |
+| OUT_FOR_DELIVERY → DELIVERED | 14:55:03 | 14:55:33 | 30 s | ✅ |
+
+**Email evidence: `QueuedEmail` rows queued in the same second as each status write:**
+
+| Id | Subject | CreatedOnUtc | Matches transition |
+| --- | --- | --- | --- |
+| 39 | Your order … has been shipped | 14:54:33 | IN_TRANSIT ✅ |
+| 40 | Your order … has been shipped | 14:55:03 | OUT_FOR_DELIVERY ✅ |
+| 41 | Your order … has been partially shipped | 14:55:33 | DELIVERED ✅ |
+
+**Note — poller cadence:** The three transitions are spaced exactly 30 s apart, matching the `CarrierStatusPollerTask` 30 s poll interval. Because the poller's `GET` both advances the WireMock state machine and reads the new state within the same call, the status is written to nopCommerce on the very tick the change becomes visible; the 30 s poll interval is therefore the worst-case detection latency for an independent carrier-side change. The first transition surfaced 12 s after T₀ (the first poll tick following booking).
 
 ### Pass criteria
 
-- Each status transition is detected and written to nopCommerce within 30 seconds of WireMock advancing state. The worst-case detection latency equals the poll interval (30 s); the typical case is less than one interval.
-- A `QueuedEmail` row is created within the same tick as the status update.
+- Each status transition is detected and written to nopCommerce within 30 seconds of WireMock advancing state. The worst-case detection latency equals the poll interval (30 s); all three transitions detected within one poll interval.
+- A `QueuedEmail` row is created within the same tick as the status update. Emails 39/40/41 timestamps match the status writes to the second.
 
 ---
 
@@ -516,22 +528,35 @@ docker exec nopcommerce_mssql_server \
       ORDER BY CreatedAtUtc DESC;" 2>/dev/null
 ```
 
-### Results table
+### Results — Run 2026-05-31 (T₀ 16:29:15)
+
+Order #19 (`OrderGuid = D3C0C3EC-8C73-4B26-BE8D-5C497AEFC350`), placed 15:27:49 UTC. The OpenBoxes outbound movement was advanced to `ISSUED` manually; the poller detected it on the next tick.
 
 | Metric | QAS requirement | Result |
 | --- | --- | --- |
-| T₀ (ISSUED set in OpenBoxes) | — | |
-| T_detected (OrderStatusId = Complete) | — | |
-| Elapsed | ≤ 30 s | |
-| Operator action in nopCommerce | 0 | |
-| Shipment row created automatically | Yes | |
-| `carrier.booking.requested` outbox row written | Yes | |
+| T₀ (ISSUED set in OpenBoxes) | — | ~15:29:15 UTC (order still Pending at poll +5/+10/+15 s) |
+| T_detected (OrderStatusId = Complete) | — | 15:29:33 UTC (Shipment 9 + outbox row both stamped 15:29:33) |
+| Elapsed | ≤ 30 s | ✅ ~18 s |
+| Operator action in nopCommerce | 0 | ✅ 0 — poller created everything automatically |
+| Shipment row created automatically | Yes | ✅ Shipment 9, `ExternalShipmentId = WIRE-62343` |
+| `carrier.booking.requested` outbox row written | Yes | ✅ stamped 15:29:33.547, Status=1 (dispatched) |
+
+**End-to-end cascade (no operator action at any step):** 
+
+```
+OpenBoxes ISSUED
+    (M5 OpenBoxesStatusPollerTask)→ Order #19 Complete + Shipment 9 + carrier.booking.requested  [15:29:33]
+         (CarrierBookingConsumer)→ WIRE-62343 booked, ShippingStatus → Shipped                    [15:29:43]
+              (CarrierStatusPollerTask)→ IN_TRANSIT → OUT_FOR_DELIVERY → DELIVERED                 [→ 15:31:03]
+```
+
+Final state confirmed: Order #19 `OrderStatusId = 30` (Complete), `ShippingStatusId = 40` (Delivered); Shipment 9 `ExternalShippingStatus = DELIVERED`, DeliveryDateUtc 15:31:03.
 
 ### Pass criteria
 
-- Order status transitions to Complete within 30 seconds of `ISSUED` being set in OpenBoxes. Satisfies QAS-5 warehouse clause.
-- A `Shipment` row is created automatically by the poller. No admin action in nopCommerce is required.
-- A `carrier.booking.requested` outbox row is written, which triggers the Iteration 4 carrier booking chain.
+- Order status transitions to Complete within 30 seconds of `ISSUED` being set in OpenBoxes. Satisfies QAS-5 warehouse clause. ✅ Complete in ~18 s.
+- A `Shipment` row is created automatically by the poller. No admin action in nopCommerce is required. ✅ Shipment 9 created automatically.
+- A `carrier.booking.requested` outbox row is written, which triggers the Iteration 4 carrier booking chain. ✅ Written at 15:29:33 and the chain ran through to Delivered.
 
 ---
 
