@@ -182,6 +182,7 @@ public partial record OrderModel : BaseNopEntityModel
     public string ShippingStatus { get; set; }
     [NopResourceDisplayName("Admin.Orders.Fields.ShippingStatus")]
     public int ShippingStatusId { get; set; }
+    public string CarrierStatus { get; set; }
     [NopResourceDisplayName("Admin.Orders.Fields.DesiredDeliveryDate")]
     public string DesiredDeliveryDate { get; set; }
     [NopResourceDisplayName("Admin.Orders.Fields.ShippingAddress")]

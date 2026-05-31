@@ -646,6 +646,19 @@
         </div>
         if (canShipmentsView)
         {
+            <script>
+                function renderCarrierStatus(data) {
+                    var colors = {
+                        'Pending Dispatch': 'secondary',
+                        'Dispatched': 'info',
+                        'In Transit': 'primary',
+                        'Out for Delivery': 'warning',
+                        'Delivered': 'success'
+                    };
+                    var color = colors[data] || 'secondary';
+                    return '<span class="badge badge-' + color + '">' + data + '</span>';
+                }
+            </script>
             <div class="card card-default">
                 <div class="card-header">
                     @T("Admin.Orders.Shipments")
@@ -695,6 +708,11 @@
                             new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
                             {
                                 Title = T("Admin.Orders.Shipments.DeliveryDate").Text
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.CarrierStatus))
+                            {
+                                Title = "Carrier Status",
+                                Render = new RenderCustom("renderCarrierStatus")
                             },
                             new ColumnProperty(nameof(ShipmentModel.Id))
                             {

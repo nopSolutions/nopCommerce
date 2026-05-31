@@ -351,6 +351,10 @@
                                         {
                                             Title = T("Admin.Orders.Fields.ShippingStatus").Text
                                         });
+                                        gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CarrierStatus))
+                                        {
+                                            Title = "Carrier Status"
+                                        });
                                     }
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
                                     {
