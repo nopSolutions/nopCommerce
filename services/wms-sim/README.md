@@ -4,8 +4,8 @@ Controlled HTTP boundary for the warehouse management system in Scenario C.
 The omnichannel worker will call this service when it receives
 `commerce.order.placed.v1` messages from RabbitMQ.
 
-This is the Phase 1 scaffold: it supports the happy-path `normal` mode only.
-Failure modes are intentionally left for Phase 3.
+The simulator supports the happy-path `normal` mode plus the Phase 3 pressure
+modes, so QA-1 can toggle WMS behavior without restarting the stack.
 
 ## Run
 
@@ -37,11 +37,40 @@ curl -X POST http://localhost:8080/fulfillments \
 
 ### `GET /health`
 
-Returns liveness plus the active simulator mode.
+Returns liveness plus the active simulator mode. This endpoint stays healthy
+even when the simulator mode is `unavailable`, so Docker health checks do not
+fight the pressure scenario.
 
 ### `GET /mode`
 
-Returns the active mode and supported modes.
+Returns the active mode, supported modes, and the configured `slow` delay.
+
+### `POST /mode/{mode}`
+
+Changes the active mode at runtime. Supported values:
+
+- `normal`: return HTTP `202` with `status = Accepted`.
+- `slow`: wait `WMS_SLOW_DELAY_SECONDS`, then return the normal accepted
+  response.
+- `unavailable`: return HTTP `503` with `error = wms_unavailable`.
+- `contradictory`: return HTTP `409` with `error = inventory_contradiction`.
+
+Examples:
+
+```bash
+curl -X POST http://localhost:8080/mode/slow
+curl -X POST http://localhost:8080/mode/unavailable
+curl -X POST http://localhost:8080/mode/contradictory
+curl -X POST http://localhost:8080/mode/normal
+```
+
+`POST /mode` with a JSON body is also accepted:
+
+```bash
+curl -X POST http://localhost:8080/mode \
+  -H 'Content-Type: application/json' \
+  -d '{"mode":"unavailable"}'
+```
 
 ### `POST /fulfillments`
 
@@ -78,13 +107,7 @@ the WMS response into `fulfillment.status.changed.v1` remains the worker's job.
 
 ## Configuration
 
-- `WMS_MODE`: defaults to `normal`. This scaffold supports only `normal`; any
-  other value fails startup loudly.
+- `WMS_MODE`: defaults to `normal`. Startup fails if the value is not one of the
+  supported modes.
+- `WMS_SLOW_DELAY_SECONDS`: defaults to `3`; used by `slow` mode.
 - `PORT`: defaults to `8080` in the Docker image.
-
-## Future Modes
-
-- `slow`: delay the fulfillment response.
-- `unavailable`: return HTTP 503.
-- `contradictory`: return a domain contradiction response for Phase 3 demo
-  pressure.

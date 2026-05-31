@@ -49,7 +49,9 @@ _(Filled in Phases 2–6; one block per scenario.)_
 - **WMS pressure + recovery (Phase 3, QA-1)** —
   `curl -X POST http://localhost:8081/mode/unavailable`, place orders, observe
   worker retry → circuit breaker → backlog drain after
-  `curl -X POST http://localhost:8081/mode/normal`.
+  `curl -X POST http://localhost:8081/mode/normal`. Other WMS modes:
+  `curl -X POST http://localhost:8081/mode/slow` and
+  `curl -X POST http://localhost:8081/mode/contradictory`.
 - **POS consistency (Phase 4, QA-2)** — `services/pos-sim` `normal` / `duplicate`
   / `stale`; see `docs/evidence/qa-2-consistency.md`.
 - **Traceability (Phase 5, QA-3)** — look up an `OrderGuid` in the plugin admin

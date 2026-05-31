@@ -16,6 +16,15 @@ class HealthResponse(BaseModel):
 class ModeResponse(BaseModel):
     mode: str
     supportedModes: list[str]
+    slowDelaySeconds: float
+
+
+class ModeChangeRequest(BaseModel):
+    mode: str
+
+
+class ModeChangedResponse(ModeResponse):
+    previousMode: str
 
 
 class FulfillmentItem(BaseModel):
@@ -48,5 +57,12 @@ class FulfillmentRequest(BaseModel):
 class FulfillmentAcceptedResponse(BaseModel):
     externalRequestId: str
     status: Literal["Accepted"]
+    orderGuid: UUID
+    messageId: UUID
+
+
+class FulfillmentErrorDetail(BaseModel):
+    error: str
+    mode: str
     orderGuid: UUID
     messageId: UUID

@@ -92,7 +92,7 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 | João Varela | `[x]` POS simulator scaffold (HTTP server, mode placeholder) | `services/pos-sim/` (new) |
 | António | `[ ]` Worker service project scaffold; envelope library project | `services/worker/`, `services/contracts/` (new) |
 | António | `[ ]` RabbitMQ topology design (queues, bindings, DLX) documented | `services/worker/README.md` |
-| Diogu | `[ ]` WMS simulator scaffold (HTTP server, mode placeholder) | `services/wms-sim/` (new) |
+| Diogu | `[x]` WMS simulator scaffold (HTTP server, mode placeholder) | `services/wms-sim/` (new) |
 | Diogu | `[ ]` Docker Compose v1: services start, healthchecks pass, no logic yet | `docker-compose.yml` (project root, new) |
 | Diogu | `[ ]` `docs/setup.md` skeleton with section headers + Phase markers | `docs/setup.md` |
 | Diogu | `[ ]` **Baseline measurement**: place 50 orders against vanilla nopCommerce, capture P50/P95 checkout latency | `docs/evidence/baseline.md` |
@@ -127,7 +127,7 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 | João Varela | `[ ]` Inbox table read/write skeleton (used in Phase 4) | `.../OmnichannelCore/Services/OmniInboxService.cs` |
 | António | `[ ]` Worker consumes `commerce.order.placed.v1`, calls WMS, publishes `fulfillment.status.changed.v1` | `services/worker/` |
 | António | `[ ]` Message envelope library finalized (`messageId`, `correlationId`, `eventType`, `occurredOnUtc`) | `services/contracts/Envelope.cs` |
-| Diogu | `[ ]` WMS sim `normal` mode: accept fulfillment request, return `externalRequestId` + `accepted` | `services/wms-sim/` |
+| Diogu | `[x]` WMS sim `normal` mode: accept fulfillment request, return `externalRequestId` + `accepted` | `services/wms-sim/` |
 | Diogu | `[ ]` Docker Compose stitches everything end-to-end | `docker-compose.yml` |
 | Diogu | `[ ]` `docs/setup.md` filled in for Phase 2 stack | `docs/setup.md` |
 | João Roldão + António | `[ ]` Cross-pair pairing session on envelope contract (~half a day) | `services/contracts/` |
@@ -155,7 +155,7 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 
 | Owner | Task | Files / paths |
 |-------|------|---------------|
-| Diogu | `[ ]` WMS sim `slow`, `unavailable`, `contradictory` modes + admin toggle endpoint | `services/wms-sim/` |
+| Diogu | `[x]` WMS sim `slow`, `unavailable`, `contradictory` modes + admin toggle endpoint | `services/wms-sim/` |
 | António | `[ ]` Polly retry with exponential backoff on worker → WMS HTTP | `services/worker/Resilience/` |
 | António | `[ ]` Polly circuit breaker; trip → mark fulfillment `pending/degraded` | `services/worker/Resilience/` |
 | António | `[ ]` Dead-letter queue + handler for poison messages | `services/worker/` |

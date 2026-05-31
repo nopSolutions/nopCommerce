@@ -64,6 +64,7 @@ services:
       context: ./services/wms-sim
     environment:
       WMS_MODE: normal
+      WMS_SLOW_DELAY_SECONDS: "3"
     ports:
       - "8081:8080"
     healthcheck:
