@@ -11,6 +11,7 @@ Scenarios are ordered from most critical (mandatory pressure point) to supportin
 
 **Targets:** QAS-1 (Reliability), QAS-3 (Availability), QAS-4 (Recoverability)  
 **Measurement:** M1 + M2  
+**Status:** ✅ Run 2026-05-30  
 **Why this is the mandatory pressure point:** The core architectural claim of VerdeMart is that the commerce core remains useful when surrounding systems are unavailable. This scenario directly challenges that claim by removing the warehouse integration layer entirely while customers continue to place orders.
 
 ### Preconditions
@@ -43,12 +44,23 @@ Scenarios are ordered from most critical (mandatory pressure point) to supportin
 
 The bridge reconnects automatically (`AutomaticRecoveryEnabled=true`), consumes all pending messages in order, and acknowledges each after OpenBoxes confirms the fulfillment. No replay command is issued. No message is lost.
 
+### Results (run 2026-05-30, evidence in M1 + M2)
+
+| Metric | Required | Observed |
+| --- | --- | --- |
+| Orders lost during outage | 0 | ✅ 0 — queue reached `Ready=3, Persistent=3` while bridge was stopped |
+| All 3 fulfillments in OpenBoxes after recovery | Within 60 s | ✅ All 3 `Fulfillment created` log lines within ≤ 60 s of bridge restart |
+| Operator actions | 0 | ✅ 0 — bridge self-healed and drained automatically |
+| DLQ messages | 0 | ✅ 0 |
+| Checkout response time (during outage) | ≤ 3 s | ✅ 83–92 ms — 30× below threshold; outbox fully decouples customer path |
+
 ---
 
 ## TS-2 — Cross-Channel Oversell Prevention
 
 **Targets:** QAS-2 (Consistency)  
 **Measurement:** M3  
+**Status:** ✅ Run 2026-05-30  
 **Why this matters:** The scenario that motivated the entire Iteration 3 design — two channels competing for the same last unit. Without the allocation gate, both could succeed simultaneously, driving stock negative.
 
 ### Preconditions
@@ -79,12 +91,22 @@ The bridge reconnects automatically (`AutomaticRecoveryEnabled=true`), consumes 
 
 Both web checkout and POS reach the **same** `IAllocationGate` via different entry points: the web channel through the `AllocationGateProductServiceDecorator` (which intercepts `IProductService.AdjustInventoryAsync`), and the POS channel through the HTTP adapter in `Nop.Plugin.Integration.Pos` (which delegates to the same `IAllocationGate`). A single authority prevents oversell regardless of channel.
 
+### Results (run 2026-05-30 + 2026-05-31, evidence in M3)
+
+| Scenario | Winners | Losers | `StockQuantity` < 0? | QAS-2 satisfied? |
+| --- | --- | --- | --- | --- |
+| A: POS + web (primary, 1 unit) | 1 (POS HTTP 200) | 1 (web "Out of stock") | ✅ No | ✅ Yes |
+| B: 5 concurrent POS requests (stress) | 1 (HTTP 200) | 4 (deadlock → HTTP 500) | ✅ No | ✅ Yes — zero oversell holds; error type degrades under extreme concurrency (see `13-known-limitations.md` §4) |
+
+The allocation gate blocks the web channel at the product listing level (before cart), not only at checkout confirm. `StockQuantity` remained ≥ 1 throughout both scenarios.
+
 ---
 
 ## TS-3 — At-Least-Once Delivery with Idempotent Consumer
 
 **Targets:** ADR-003 (Durable queues + idempotent consumer)  
 **Measurement:** M6  
+**Status:** ✅ Run 2026-05-30  
 **Why this matters:** The outbox guarantees at-least-once delivery. Under real conditions (broker restart, consumer crash mid-processing), a message may be delivered more than once. The bridge must absorb duplicates without creating duplicate fulfillments in OpenBoxes.
 
 ### Preconditions
@@ -108,13 +130,23 @@ Re-publish the original `OrderPlacedMessage` for an already-processed `OrderGuid
 
 The dedup check happens **before** the OpenBoxes call in `OrderPlacedMessageConsumer.HandleAsync`. The message is ACK'd regardless of whether the OpenBoxes call is made — the duplicate is not requeued, it is discarded with an ACK. This ensures that redeliveries do not accumulate on the queue.
 
+### Results (run 2026-05-30, evidence in M6)
+
+Duplicate `OrderGuid=f69aee6c-adbe-4f1a-a3c7-7490ce5e5a93` re-published via RabbitMQ Management UI.
+
+| Metric | Expected | Observed |
+| --- | --- | --- |
+| Bridge log | `already processed — ack and skip` | ✅ Exact match |
+| New stock movements in OpenBoxes | 0 | ✅ 0 — OpenBoxes API never called |
+| Message acknowledged | Yes (queue → 0) | ✅ ACK'd immediately; queue depth returned to 0 |
+
 ---
 
 ## TS-4 — Carrier Status Propagation via Scheduled Polling
 
 **Targets:** QAS-5 — carrier half  
 **Measurement:** M4  
-**Status:** Pending — requires a shipment with `ExternalShipmentId` populated (carrier booking flow must complete first)
+**Status:** ✅ Run 2026-05-31
 
 ### Preconditions
 
@@ -134,13 +166,25 @@ WireMock advances the shipment state on each poll (`GET /api/shipments/{id}/stat
 | A `QueuedEmail` row is created within the same DB transaction as the status update | Customer notification is atomic with the status change |
 | No operator action required | Polling is fully automated |
 
+### Results (run 2026-05-31, evidence in M4)
+
+Shipment `WIRE-15655` (Order #18). T₀ = 14:54:21 UTC.
+
+| Transition | T_detected | Elapsed | ≤ 30 s? |
+| --- | --- | --- | --- |
+| `Started → IN_TRANSIT` | 14:54:33 | 12 s | ✅ |
+| `IN_TRANSIT → OUT_FOR_DELIVERY` | 14:55:03 | 30 s | ✅ |
+| `OUT_FOR_DELIVERY → DELIVERED` | 14:55:33 | 30 s | ✅ |
+
+Three `QueuedEmail` rows (ids 39, 40, 41) created in the same second as the corresponding status writes. No operator action at any point. The 30 s worst-case detection latency equals the poll interval; all transitions satisfied the QAS-5 ≤ 30 s threshold.
+
 ---
 
 ## TS-5 — OpenBoxes Fulfillment State Propagation via Scheduled Polling
 
 **Targets:** QAS-5 — warehouse half  
 **Measurement:** M5  
-**Status:** Pending — requires an OpenBoxes stock movement to be manually advanced to `ISSUED`
+**Status:** ✅ Run 2026-05-31
 
 ### Preconditions
 
@@ -161,12 +205,27 @@ Operator manually advances the stock movement to `ISSUED` in OpenBoxes. The `Ope
 | A `carrier.booking.requested` row appears in `OutboxMessage` | Poller triggers the Iteration 4 carrier booking chain automatically |
 | No operator action in nopCommerce required | Polling is fully automated; the QAS-5 "no operator action" clause is satisfied |
 
+### Results (run 2026-05-31, evidence in M5)
+
+Order #19 (`OrderGuid = D3C0C3EC-8C73-4B26-BE8D-5C497AEFC350`). T₀ = ~15:29:15 UTC (ISSUED set manually in OpenBoxes).
+
+| Metric | Required | Observed |
+| --- | --- | --- |
+| `OrderStatusId = Complete` | ≤ 30 s from T₀ | ✅ ~18 s — detected at 15:29:33 UTC |
+| `Shipment` row created automatically | Yes | ✅ Shipment #9, `ExternalShipmentId = WIRE-62343` |
+| `carrier.booking.requested` outbox row | Yes | ✅ Written at 15:29:33.547; triggered full carrier booking chain |
+| Operator actions in nopCommerce | 0 | ✅ 0 — poller handled everything |
+
+**End-to-end cascade triggered automatically (no operator action at any step):**  
+`OpenBoxes ISSUED` → `Order #19 Complete + Shipment #9` → `carrier.booking.requested` → `WIRE-62343 booked` → `IN_TRANSIT → OUT_FOR_DELIVERY → DELIVERED` (final state 15:31:03).
+
 ---
 
 ## TS-6 — Happy Path End-to-End (Baseline)
 
 **Targets:** All QAS (baseline validation)  
 **Measurement:** Pre-existing evidence + M1 happy path  
+**Status:** ✅ Run 2026-05-30  
 **Why this matters:** Before exercising pressure points, the system must work correctly under normal conditions. This scenario establishes the baseline that all other scenarios deviate from.
 
 ### Preconditions
@@ -192,15 +251,21 @@ A customer places a single order through the web storefront with no external sys
 
 The product, category, and destination location in OpenBoxes are created on demand by the bridge if they do not yet exist. This lazy provisioning means a fresh OpenBoxes instance does not require any manual seeding before the first order can be fulfilled.
 
+### Results (run 2026-05-30, confirmed in M1 setup)
+
+All steps observed as expected. Checkout < 3 s. `OutboxMessage` dispatched within 1 s. Bridge fulfilled all orders; stock movements appeared in OpenBoxes. Product, category, and destination location auto-provisioned on first order (subsequent orders reused them). No errors at any step.
+
 ---
 
 ## Scenario Coverage Summary
 
-| Scenario | QAS targeted | Pressure applied | Status |
-| --- | --- | --- | --- |
-| TS-1 — Bridge outage + recovery | QAS-1, QAS-3, QAS-4 | Bridge container stopped during order placement | ✅ Run 2026-05-30 |
-| TS-2 — Cross-channel oversell | QAS-2 | POS holds last unit while web checkout proceeds | ✅ Run 2026-05-30 |
-| TS-3 — Idempotent redelivery | ADR-003 | Duplicate message published to live queue | ✅ Run 2026-05-30 |
-| TS-4 — Carrier status propagation | QAS-5 carrier | WireMock state machine advances; poller detects | ✅ Run 2026-05-31 |
-| TS-5 — Warehouse fulfillment state | QAS-5 warehouse | OpenBoxes ISSUED; poller detects | ✅ Run 2026-05-31 |
-| TS-6 — Happy path baseline | All QAS | None — normal operation | ✅ Run 2026-05-30 (M1 + today's session) |
+All six scenarios were executed. Each scenario body above contains a **Results** section with the concrete outcomes observed. Full measurement data, procedures, screenshots, and pass criteria are in `11-measurements.md`.
+
+| Scenario | QAS / property | Pressure applied | Measurement | Outcome |
+| --- | --- | --- | --- | --- |
+| TS-1 — Bridge outage + recovery | QAS-1, QAS-3, QAS-4 | Bridge stopped during 3 orders | M1 + M2 | ✅ 0 lost; drain ≤ 60 s; checkout 83–92 ms |
+| TS-2 — Cross-channel oversell | QAS-2 | POS reserves last unit; web attempts checkout | M3 | ✅ 0 oversell; web blocked; 409/500 synchronous |
+| TS-3 — Idempotent redelivery | ADR-003 | Duplicate message published to live queue | M6 | ✅ `ack and skip`; 0 new OpenBoxes movements |
+| TS-4 — Carrier status propagation | QAS-5 carrier | WireMock state machine advances on poll | M4 | ✅ All 3 transitions ≤ 30 s; emails queued atomically |
+| TS-5 — Warehouse fulfillment state | QAS-5 warehouse | OpenBoxes ISSUED; poller detects | M5 | ✅ Complete in ~18 s; Shipment + outbox row created automatically |
+| TS-6 — Happy path baseline | All QAS | None — normal operation | M1 setup | ✅ Checkout < 3 s; end-to-end chain confirmed |

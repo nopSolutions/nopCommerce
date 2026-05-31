@@ -47,9 +47,11 @@ These are absent features that would be needed to operate the system in producti
 
 ## 4. Limitations Discovered During Testing
 
-These were not anticipated in the pre-test risk plan. They surfaced during the measurement runs documented in `11-measurements.md`.
+These were not anticipated in the pre-test risk plan. They surfaced during the measurement runs; each subsection below names the measurement where the finding first appeared. Full measurement records are in `11-measurements.md`.
 
 ### SQL deadlocks under extreme POS concurrency (M3 Scenario B)
+
+**Discovered during:** M3 Scenario B (5 concurrent POS reserve requests against StockQuantity = 1).
 
 **Finding:** When 5 simultaneous POS reserve requests target the same product row, SQL Server chose some transactions as deadlock victims and returned HTTP 500 instead of a structured 409. Zero oversell occurred in both runs — the core QAS-2 guarantee held — but the error type degraded from `{"error":"insufficient-stock"}` to an unhandled server error page.
 
@@ -65,6 +67,8 @@ These were not anticipated in the pre-test risk plan. They surfaced during the m
 
 ### Two-plugin dependency for POS API
 
+**Discovered during:** M3 setup (POS reserve calls required both plugins active).
+
 **Finding:** The POS HTTP adapter was extracted from `Nop.Plugin.Inventory.AllocationGate` into a new plugin `Nop.Plugin.Integration.Pos` as a separation-of-concerns refactoring. Both plugins must be installed and active for the POS API to function. If `Integration.Pos` is installed but `AllocationGate` is not, the DI registration for `IAllocationGate` is absent and the controller fails to resolve its dependency.
 
 **Operational impact:** A fresh nopCommerce installation requires installing both plugins explicitly. Forgetting one silently breaks the POS channel.
@@ -75,11 +79,13 @@ These were not anticipated in the pre-test risk plan. They surfaced during the m
 
 ### Bridge auto-provisioning of destination location, products, and categories has no ADR
 
+**Discovered during:** M1 first run (FK constraint failure in OpenBoxes; bridge extended to self-provision).
+
 **Finding:** The bridge (`VerdeMart.OpenBoxesBridge`) was extended to auto-create the OpenBoxes destination location ("VerdeMart Store"), product categories, and product records on demand if they do not exist — based on the `OrderPlacedMessage` SKU. This extension is not documented in any ADR and was not in the original ADR-007 scope.
 
-**Architectural implication:** The bridge now owns master data provisioning responsibility in OpenBoxes in addition to its original fulfillment-order creation role. This broadens the bridge's boundary. The lazy-creation approach means a fresh OpenBoxes instance requires no manual seeding, which is operationally convenient but introduces implicit coupling between the bridge's product-creation logic and the OpenBoxes data model.
+**Architectural implication:** The bridge now owns master data provisioning responsibility in OpenBoxes in addition to its original fulfillment-order creation role. This broadens the bridge's boundary beyond what ADR-007 scoped it to. The lazy-creation approach eliminates the need for manual OpenBoxes seeding, which is operationally convenient, but introduces implicit coupling between the bridge's product-creation logic and the OpenBoxes data model.
 
-**Status:** Accepted and working. Hardening path: write ADR-011 to formalise the decision.
+**Status:** Accepted and working. The decision is not governed by any formal ADR; it represents an undocumented boundary expansion relative to ADR-007.
 
 ---
 

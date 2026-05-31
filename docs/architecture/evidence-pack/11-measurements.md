@@ -1,20 +1,24 @@
-# Evidence Pack — Measurements
+# Evidence Pack — Measurements and Experiment Results
 
 **Scope:** Iterations 1–5 (all structurally complete).  
-**Purpose:** Provide empirical evidence for each QAS response measure. The design arguments exist in the ADD iteration documents and ADRs; this document provides the concrete numbers, procedures, and results that support those arguments.
+**Purpose:** Provide empirical evidence for each QAS response measure and record the results of architectural experiments conducted during development. The design arguments exist in the ADD iteration documents and ADRs; this document provides the concrete numbers, procedures, and results that support those arguments.
+
+This file covers two categories of evidence:
+- **Measurements (M1–M6):** Controlled runs against explicit QAS pass/fail criteria, executed after the architecture was complete.
+- **Experiment results (Pre-existing Evidence):** Exploratory experiments and spikes conducted during design to validate key assumptions before committing to an architectural decision.
 
 Each measurement identifies the QAS it addresses, the architectural mechanism under test, a reproducible procedure, and the pass/fail criterion derived directly from `04-qas.md`.
 
 ---
 
-## Pre-existing Evidence
+## Experiment Results — Pre-existing Evidence
 
-The following evidence was collected during development and is referenced here rather than repeated.
+The following experiments were conducted during the design process to de-risk specific architectural decisions before the full implementation was built. Results are referenced here rather than repeated inline.
 
-| Evidence | Mechanism validated | File |
-| --- | --- | --- |
-| Transactional outbox spike | ADR-004 closes the dual-write hole under three failure modes: happy path (90 ms publish latency), broker down (0 of 3 rows lost; recovered in 5 s), process crash (0 of 2 rows lost). | `docs/architecture/10-feasibility-spike.md` |
-| AllocationGate API tests | ADR-005 and ADR-006: `POST /api/inventory/reserve` returns 200 on available stock, 409 on insufficient stock, 401 on wrong API key. The cross-channel QAS-2 scenario (POS reserves last unit → web checkout blocked) was exercised manually and produced the expected "quantity not available" error. Stock never went negative. | `docs/architecture/add-iteration-3/tests/Results-AllocationGate.md` |
+| Experiment | Decision de-risked | Key result | Full record |
+| --- | --- | --- | --- |
+| Transactional outbox spike | ADR-004 — closes the dual-write hole | Three failure modes validated: happy path (90 ms publish latency); broker down (0 of 3 rows lost, recovered in 5 s); process crash (0 of 2 rows lost). | `docs/architecture/10-feasibility-spike.md` |
+| AllocationGate API tests | ADR-005 and ADR-006 — pessimistic lock gate + POS HTTP adapter | `POST /api/inventory/reserve` returns 200 on available stock, 409 on insufficient, 401 on wrong API key. Cross-channel QAS-2 scenario (POS reserves last unit → web checkout blocked) exercised manually; stock never went negative. | `docs/architecture/add-iteration-3/tests/Results-AllocationGate.md` |
 
 ---
 
