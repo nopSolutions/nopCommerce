@@ -35,5 +35,5 @@ The publish is therefore decoupled from the request thread entirely. RabbitMQ ne
 - Checkout latency is bounded by database performance only.
 - At-least-once delivery becomes mandatory; consumers must be idempotent (already mandated by ADR-003, with `OrderGuid` as the idempotency key).
 - A new database table (`Outbox`) is added to the nopCommerce schema and grows over time; a retention strategy is needed (deferred to a later iteration).
-- A new component (`OutboxDispatcherTask`) is introduced; it runs as an `IScheduleTask` inside the nopCommerce process on a 1-second poll interval, using `FOR UPDATE SKIP LOCKED` so future multi-node deployments remain safe without a distributed lock.
-- Per-message latency between order commit and broker arrival increases by at most one polling interval (1 s default), well under QAS-1's 60 s recovery clause.
+- A new component (`OutboxDispatcherTask`) is introduced; it runs as an `IScheduleTask` inside the nopCommerce process on a 10-second poll interval, using `FOR UPDATE SKIP LOCKED` so future multi-node deployments remain safe without a distributed lock.
+- Per-message latency between order commit and broker arrival increases by at most one polling interval (10 s default), well under QAS-1's 60 s recovery clause.
