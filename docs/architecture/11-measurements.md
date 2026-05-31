@@ -142,6 +142,17 @@ Fulfillment created for OrderGuid=e52d4de2-... FulfillmentId=4028...000c  ✅
 
 **Note — destination location auto-provisioning:** The bridge now dynamically creates the destination location ("VerdeMart Store") in OpenBoxes on the first order if it does not exist, then reuses it on subsequent orders. This extension to ADR-007 was added by the team and resolves the FK constraint failure observed in the earlier run.
 
+**Screenshots — Run 2026-05-31:**
+
+![RabbitMQ queue during outage — Ready=3, Consumers=0](imgs/m1-queue-outage-ready3.png)
+*RabbitMQ queue at peak: 3 messages durable on disk, 0 consumers (bridge stopped).*
+
+![Bridge logs — Fulfillment created for all OrderGuids](imgs/m1-bridge-logs.png)
+*Bridge logs confirming all fulfillments created in OpenBoxes after restart.*
+
+![OpenBoxes Outbound Movement List — stock movements created by bridge](imgs/m1-openboxes-movements.png)
+*OpenBoxes showing stock movements created automatically by the bridge (Destination: VerdeMart Store).*
+
 ### Pass criteria
 
 - Zero orders lost: queue depth reached 3 during outage, drained to 0 after recovery. ✅
@@ -167,20 +178,28 @@ While the bridge is stopped (M1 Step 3), measure the elapsed time from clicking 
 
 Use the browser's network inspector (DevTools → Network → filter by "OpcCompleteRedirectionPayment" or the final checkout POST) to record the server response time, or observe the total page transition time.
 
-### Results — Run 2026-05-30
+### Results — Run 2026-05-31
 
 | Order | Bridge status | OpenBoxes reachable | Checkout response time |
 | --- | --- | --- | --- |
-| 1 (~19:24) | ❌ Stopped | ❌ No | ✅ < 3 s — order confirmation appeared immediately |
-| 2 (~19:26) | ❌ Stopped | ❌ No | ✅ < 3 s — order confirmation appeared immediately |
-| 3 (~19:29) | ❌ Stopped | ❌ No | ✅ < 3 s — order confirmation appeared immediately |
-| 1 | Stopped | No | |
-| 2 | Stopped | No | |
-| 3 | Stopped | No | |
+| 1 | ❌ Stopped | ❌ No | ✅ 88 ms (DOMContentLoaded) |
+| 2 | ❌ Stopped | ❌ No | ✅ 92 ms (DOMContentLoaded) |
+| 3 | ❌ Stopped | ❌ No | ✅ 83 ms (DOMContentLoaded) |
+
+![DevTools Network — DOMContentLoaded 88 ms with bridge stopped](imgs/m2-checkout-88ms.png)
+*Order 1: checkout completes in 88 ms — bridge and OpenBoxes completely unavailable.*
+
+![DevTools Network — DOMContentLoaded 92 ms with bridge stopped](imgs/m2-checkout-92ms.png)
+*Order 2: checkout completes in 92 ms.*
+
+![DevTools Network — DOMContentLoaded 83 ms with bridge stopped](imgs/m2-checkout-83ms.png)
+*Order 3: checkout completes in 83 ms.*
+
+All three checkouts complete in under 100 ms with bridge and OpenBoxes stopped — 30× below the 3 s QAS-3 threshold. None of the response time is attributable to the bridge or OpenBoxes; both were stopped throughout.
 
 ### Pass criteria
 
-Each checkout completes and presents an order confirmation page in under 3 seconds, with the bridge and OpenBoxes completely unavailable. This confirms that the outbox decoupling fully insulates the customer-facing path from downstream system failures.
+Each checkout completes and presents an order confirmation page in under 3 seconds, with the bridge and OpenBoxes completely unavailable. This confirms that the outbox decoupling fully insulates the customer-facing path from downstream system failures. ✅
 
 ---
 
@@ -300,11 +319,11 @@ docker exec nopcommerce_mssql_server \
       UPDATE Product SET StockQuantity = 10000 WHERE Id = 7;" 2>/dev/null
 ```
 
-### Results — Run 2026-05-30 (~19:38)
+### Results — Run 2026-05-30 / 2026-05-31
 
 **Scenario A (POS + web, primary scenario):**
-- `StockQuantity` set to 1 in DB
-- POS reserve → HTTP 200 `{"reservationKey":"m3-final","message":"reserved"}`
+- `StockQuantity` set to 1 via nopCommerce Admin (Catalog → Products → HP Spectre XT Pro UltraBook)
+- POS reserve → HTTP 200 `{"reservationKey":"m3-pos","message":"reserved"}`
 - Effective available stock = StockQuantity(1) − active_reservations(1) = 0
 - Web channel: product page shows **"Out of stock"** banner — blocked before reaching cart or checkout
 - POS release → HTTP 200 `{"released":true}`
@@ -313,9 +332,22 @@ docker exec nopcommerce_mssql_server \
 | Scenario | Winners | Losers | `StockQuantity` < 0? | Loser rejection in same cycle? |
 | --- | --- | --- | --- | --- |
 | A: POS + web (realistic) — 2026-05-30 | 1 (POS) | 1 (web) | ✅ No | ✅ Yes — "Out of stock" at product page level |
-| B: 5 concurrent POS (stress) | pending | pending | | |
+| B: 5 concurrent POS (stress) — 2026-05-31 | 1 | 4 (deadlock) | ✅ No | ✅ Yes — rejected within same request cycle |
 
-![Out Of Stock](imgs/out_of_stock.png)
+![Admin panel — HP Spectre XT Pro UltraBook StockQuantity set to 1](imgs/m3-admin-stock-1.png)
+*Baseline: nopCommerce Admin showing HP Spectre XT Pro UltraBook (SKU: HP\_SPX\_UB) with StockQuantity = 1 before the test.*
+
+![Terminal — POS reserve returns 200 and release returns released:true](imgs/m3-terminal-reserve-release.png)
+*POS channel wins the last unit (HTTP 200 `reserved`). After the test, release returns `{"released":true}` — the reservation lifecycle completes correctly.*
+
+![Web storefront — product page shows Out of stock while POS reservation is active](imgs/out_of_stock.png)
+*Web channel blocked at the product page ("Out of stock") while the POS reservation is active. Effective availability = StockQuantity(1) − active\_reservations(1) = 0 propagates to the display layer.*
+
+![Admin panel — HP Spectre XT Pro UltraBook StockQuantity still 1 after release](imgs/m3-admin-stock-after-release.png)
+*After POS release: StockQuantity remains 1 in the database. Physical stock was never decremented — the gate prevents any decrement until `confirm` is called. Zero oversell confirmed.*
+
+![Terminal — 5 concurrent POS requests: 1 winner (200) and 4 deadlock victims (500)](imgs/m3-stress-results.png)
+*Scenario B: 5 simultaneous POS reserve requests with StockQuantity = 1. Exactly 1 request wins (HTTP 200). The remaining 4 are rejected — 4 as SQL Server deadlock victims (HTTP 500) rather than clean 409s. StockQuantity never goes negative. This matches the documented known limitation: under ≥ 5 concurrent requests on the same row, SQL Server may deadlock instead of returning a structured 409.*
 
 **Note:** The rejection happens at the product listing level (before cart), not just at checkout confirm. The `AllocationGate` effective availability (`StockQuantity − SUM(active reservations)`) propagates to the product display, providing an earlier and more visible signal to the web customer than a late checkout failure.
 
@@ -325,9 +357,9 @@ Under extreme concurrency (≥ 5 simultaneous requests against the same product 
 
 ### Pass criteria
 
-- `StockQuantity` remains ≥ 0 at all points during and after the test. ✅ (Scenario A confirmed)
-- Exactly 1 request succeeds (HTTP 200) in both scenarios. ✅ (Scenario A confirmed)
-- All losers receive their rejection response synchronously, within the same request cycle. ✅ (Scenario A confirmed)
+- `StockQuantity` remains ≥ 0 at all points during and after the test. ✅ (both scenarios confirmed)
+- Exactly 1 request succeeds (HTTP 200) in both scenarios. ✅ (both scenarios confirmed)
+- All losers receive their rejection response synchronously, within the same request cycle. ✅ (both scenarios confirmed)
 
 ---
 
