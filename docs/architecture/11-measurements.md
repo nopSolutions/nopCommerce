@@ -399,18 +399,30 @@ docker exec nopcommerce_mssql_server \
       ORDER BY CreatedOnUtc DESC;" 2>/dev/null
 ```
 
-### Results table
+### Results — Run 2026-05-31 (T₀ 15:54:21 UTC)
+
+Shipment `WIRE-15655` (Order #18). Times below are the server-side `LastStatusOccurredAtUtc` values (UTC).
 
 | Status transition | T₀ | T_detected | Elapsed | ≤ 30 s? |
 | --- | --- | --- | --- | --- |
-| Started → IN_TRANSIT | | | | |
-| IN_TRANSIT → OUT_FOR_DELIVERY | | | | |
-| OUT_FOR_DELIVERY → DELIVERED | | | | |
+| Started → IN_TRANSIT | 14:54:21 (T₀, scenario at `Started`) | 14:54:33 | 12 s | ✅ |
+| IN_TRANSIT → OUT_FOR_DELIVERY | 14:54:33 | 14:55:03 | 30 s | ✅ |
+| OUT_FOR_DELIVERY → DELIVERED | 14:55:03 | 14:55:33 | 30 s | ✅ |
+
+**Email evidence: `QueuedEmail` rows queued in the same second as each status write:**
+
+| Id | Subject | CreatedOnUtc | Matches transition |
+| --- | --- | --- | --- |
+| 39 | Your order … has been shipped | 14:54:33 | IN_TRANSIT ✅ |
+| 40 | Your order … has been shipped | 14:55:03 | OUT_FOR_DELIVERY ✅ |
+| 41 | Your order … has been partially shipped | 14:55:33 | DELIVERED ✅ |
+
+**Note — poller cadence:** The three transitions are spaced exactly 30 s apart, matching the `CarrierStatusPollerTask` 30 s poll interval. Because the poller's `GET` both advances the WireMock state machine and reads the new state within the same call, the status is written to nopCommerce on the very tick the change becomes visible; the 30 s poll interval is therefore the worst-case detection latency for an independent carrier-side change. The first transition surfaced 12 s after T₀ (the first poll tick following booking).
 
 ### Pass criteria
 
-- Each status transition is detected and written to nopCommerce within 30 seconds of WireMock advancing state. The worst-case detection latency equals the poll interval (30 s); the typical case is less than one interval.
-- A `QueuedEmail` row is created within the same tick as the status update.
+- Each status transition is detected and written to nopCommerce within 30 seconds of WireMock advancing state. The worst-case detection latency equals the poll interval (30 s); all three transitions detected within one poll interval.
+- A `QueuedEmail` row is created within the same tick as the status update. Emails 39/40/41 timestamps match the status writes to the second.
 
 ---
 
