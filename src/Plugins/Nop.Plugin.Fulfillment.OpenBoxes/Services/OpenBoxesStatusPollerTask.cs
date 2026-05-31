@@ -18,6 +18,7 @@ namespace Nop.Plugin.Fulfillment.OpenBoxes.Services;
 public class OpenBoxesStatusPollerTask : IScheduleTask
 {
     private const string IssuedStatus = "SHIPPED";
+    private const string ReceiveConfirmedKey = "OpenBoxesReceiveConfirmed";
 
     private readonly IOpenBoxesClient _openBoxesClient;
     private readonly IOrderService _orderService;
@@ -26,6 +27,7 @@ public class OpenBoxesStatusPollerTask : IScheduleTask
     private readonly IOutboxRepository _outboxRepository;
     private readonly ISettingService _settingService;
     private readonly IStoreContext _storeContext;
+    private readonly IGenericAttributeService _genericAttributeService;
     private readonly ILogger _logger;
 
     public OpenBoxesStatusPollerTask(
@@ -36,6 +38,7 @@ public class OpenBoxesStatusPollerTask : IScheduleTask
         IOutboxRepository outboxRepository,
         ISettingService settingService,
         IStoreContext storeContext,
+        IGenericAttributeService genericAttributeService,
         ILogger logger)
     {
         _openBoxesClient = openBoxesClient;
@@ -45,6 +48,7 @@ public class OpenBoxesStatusPollerTask : IScheduleTask
         _outboxRepository = outboxRepository;
         _settingService = settingService;
         _storeContext = storeContext;
+        _genericAttributeService = genericAttributeService;
         _logger = logger;
     }
 
@@ -99,8 +103,18 @@ public class OpenBoxesStatusPollerTask : IScheduleTask
         var existingShipments = await _shipmentService.GetShipmentsByOrderIdAsync(order.Id);
         if (existingShipments.Any())
         {
-            await _logger.WarningAsync(
-                $"[OpenBoxesPoller] OrderId={order.Id} already has shipments; skipping creation of duplicate shipment for OrderGuid={fulfillment.OrderGuid}");
+            var existingShipment = existingShipments.First();
+            var alreadyConfirmed = await _genericAttributeService
+                .GetAttributeAsync<bool>(existingShipment, ReceiveConfirmedKey);
+
+            if (alreadyConfirmed)
+                return;
+
+            // shipment exists but receive was never confirmed — retry receive only
+            await _openBoxesClient.ReceiveFulfillmentAsync(fulfillment.FulfillmentId, CancellationToken.None);
+            await _genericAttributeService.SaveAttributeAsync(existingShipment, ReceiveConfirmedKey, true);
+            await _logger.InformationAsync(
+                $"[OpenBoxesPoller] Retried receive for OrderGuid={fulfillment.OrderGuid}, ShipmentId={existingShipment.Id}");
             return;
         }
 
@@ -170,6 +184,7 @@ public class OpenBoxesStatusPollerTask : IScheduleTask
         scope.Complete();
 
         await _openBoxesClient.ReceiveFulfillmentAsync(fulfillment.FulfillmentId, CancellationToken.None);
+        await _genericAttributeService.SaveAttributeAsync(shipment, ReceiveConfirmedKey, true);
 
         await _logger.InformationAsync(
             $"[OpenBoxesPoller] OrderGuid={fulfillment.OrderGuid} ISSUED → ShipmentId={shipment.Id}, order set to Complete, carrier.booking.requested queued");

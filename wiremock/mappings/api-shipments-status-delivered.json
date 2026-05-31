@@ -1,6 +1,7 @@
 {
   "scenarioName": "shipment-{{request.pathSegments.[2]}}",
   "requiredScenarioState": "delivered",
+  "newScenarioState": "Started",
   "request": {
     "method": "GET",
     "urlPathPattern": "/api/shipments/([^/]+)/status"

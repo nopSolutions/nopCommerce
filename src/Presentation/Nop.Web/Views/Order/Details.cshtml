@@ -279,6 +279,7 @@
                             <col />
                             <col />
                             <col />
+                            <col />
                         </colgroup>
                         <thead>
                             <tr>
@@ -302,6 +303,9 @@
                                 }
                                 <th class="delivery-date">
                                     @T("Order.Shipments.DeliveryDate")
+                                </th>
+                                <th class="carrier-status">
+                                    Carrier Status
                                 </th>
                                 <th class="view-details">
                                     @T("Order.Shipments.ViewDetails")
@@ -358,6 +362,21 @@
                                         {
                                             <span>@T("Order.Shipments.DeliveryDate.NotYet")</span>
                                         }
+                                    </td>
+                                    <td class="carrier-status">
+                                        <label>Carrier Status:</label>
+                                        @{
+                                            var statusColor = item.CarrierStatus switch
+                                            {
+                                                "Pending Dispatch" => "#6c757d",
+                                                "Dispatched"       => "#17a2b8",
+                                                "In Transit"       => "#007bff",
+                                                "Out for Delivery" => "#ffc107",
+                                                "Delivered"        => "#28a745",
+                                                _                  => "#6c757d"
+                                            };
+                                        }
+                                        <span style="display:inline-block;padding:2px 8px;border-radius:4px;background-color:@statusColor;color:@(item.CarrierStatus == "Out for Delivery" ? "#212529" : "#fff");font-size:.85em;font-weight:600;">@item.CarrierStatus</span>
                                     </td>
                                     <td class="view-details">
                                         <a href="@Url.RouteUrl(NopRouteNames.Standard.SHIPMENT_DETAILS, new { shipmentId = item.Id })" title="@T("Order.Shipments.ViewDetails")">@T("Order.Shipments.ViewDetails")</a>

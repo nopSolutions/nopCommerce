@@ -18,9 +18,9 @@ This is the same reasoning that drove ADR-009 for OpenBoxes, and the same `ISche
 
 ## Decision
 
-Introduce `CarrierStatusPollerTask`, an `IScheduleTask` running inside the `Nop.Plugin.Shipping.CarrierWebhook` plugin, polling `GET /api/shipments/{ExternalShipmentId}/status` against WireMock every 30 seconds for each open shipment.
+Introduce `CarrierStatusPollerTask`, an `IScheduleTask` running inside `Nop.Plugin.Shipping.CarrierTracking`, polling `GET /api/shipments/{ExternalShipmentId}/status` against WireMock every 30 seconds for each open shipment.
 
-On each tick the task fetches the current status for all shipments in a non-terminal state and compares against the last-known status recorded in nopCommerce. When a status transition is detected:
+On each tick the task loads all shipments with a non-terminal `ExternalShippingStatus` (terminal statuses are `DELIVERED` and `RETURNED`) and compares the API response against `Shipment.ExternalShippingStatus` — a column added by migration to the nopCommerce `Shipment` entity. Last-known status is stored in this column directly; no separate cache is needed. When a status transition is detected:
 
 1. `Shipment.ExternalShippingStatus` is updated.
 2. A customer notification email is queued.
@@ -39,6 +39,9 @@ nopCommerce could detect a missed delivery by comparing expected transitions aga
 
 **Polling from inside the OpenBoxes Bridge.**
 The bridge runs as an independent process and could be extended to also poll the carrier API. *Rejected:* the bridge's responsibility is translating `order.placed` messages into OpenBoxes fulfillment orders. Adding a carrier polling loop couples two unrelated concerns and inverts the dependency direction ADR-007 established.
+
+**Redis cache and distributed lock (ADR-010).**
+A status cache and distributed lock were designed to handle multi-node deployments and reduce DB reads. *Superseded:* last-known status is already on the loaded `Shipment` entity — there is no extra DB read to cache. The only valid use case would be a distributed lock for multi-instance deployments, which none of the QASs define. See ADR-010.
 
 ## Consequences
 

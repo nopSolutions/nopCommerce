@@ -234,6 +234,16 @@ public partial class OrderModelFactory : IOrderModelFactory
         if (shipment.TotalWeight.HasValue)
             shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{(await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name}]";
 
+        shipmentModel.CarrierStatus = shipment.ExternalShipmentId is null
+            ? "Pending Dispatch"
+            : shipment.ExternalShippingStatus switch
+            {
+                "IN_TRANSIT"       => "In Transit",
+                "OUT_FOR_DELIVERY" => "Out for Delivery",
+                "DELIVERED"        => "Delivered",
+                _                  => "Dispatched"
+            };
+
         return shipmentModel;
     }
 
@@ -1062,6 +1072,18 @@ public partial class OrderModelFactory : IOrderModelFactory
                 orderModel.PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
                 orderModel.ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus);
                 orderModel.OrderTotal = await _priceFormatter.FormatPriceAsync(order.OrderTotal, true, false);
+
+                var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(order.Id);
+                var latestShipment = shipments.OrderByDescending(s => s.CreatedOnUtc).FirstOrDefault();
+                orderModel.CarrierStatus = latestShipment?.ExternalShipmentId is null
+                    ? "Pending Dispatch"
+                    : latestShipment.ExternalShippingStatus switch
+                    {
+                        "IN_TRANSIT"       => "In Transit",
+                        "OUT_FOR_DELIVERY" => "Out for Delivery",
+                        "DELIVERED"        => "Delivered",
+                        _                  => "Dispatched"
+                    };
 
                 return orderModel;
             });

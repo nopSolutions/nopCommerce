@@ -18,12 +18,11 @@ A further constraint shapes the hosting decision: `02-current-state.md` document
 
 ## Decision
 
-Introduce `OpenBoxesStatusPollerTask`, an `IScheduleTask` running inside the existing `Nop.Plugin.Messaging.RabbitMq` plugin (or a dedicated OpenBoxes plugin), polling `GET /api/generic/shipment` every 30 seconds.
+Introduce `OpenBoxesStatusPollerTask`, an `IScheduleTask` running inside `Nop.Plugin.Fulfillment.OpenBoxes`, polling `GET /api/generic/shipment?status=ISSUED` every 30 seconds.
 
-On each tick the task fetches fulfillment orders in a non-terminal state and compares their status against the last-known status recorded in nopCommerce. When a fulfillment order transitions to `ISSUED`:
+When a fulfillment order in `SHIPPED` state (the value OpenBoxes returns for issued shipments) is detected, the task creates a `Shipment`, sets the order to `Complete`, and writes a `carrier.booking.requested` outbox row — all within a single `TransactionScope`. After the transaction commits, nopCommerce calls back to OpenBoxes to confirm receipt via the partial-receiving API, closing the fulfillment loop on the OpenBoxes side.
 
-1. The corresponding nopCommerce order status is updated.
-2. A `carrier.booking.requested` row is written to the `OutboxMessage` table, triggering the carrier booking chain established in Iteration 4.
+Idempotency is flag-based: an `OpenBoxesReceiveConfirmed` attribute is stored on the `Shipment` entity after a successful receive confirmation. On subsequent ticks the poller checks this flag rather than comparing statuses. If the transaction committed but the receive confirmation failed, the next tick detects the missing flag and retries only the confirmation, not the full flow.
 
 The 30-second interval is not arbitrary: it is the upper bound stated in QAS-5's response measure. Any shorter interval tightens the QAS-5 margin without changing the architecture; any longer interval violates it.
 
@@ -41,10 +40,17 @@ A dedicated poller service, symmetric to the bridge, could poll OpenBoxes and pu
 **Increasing the OpenBoxes Bridge poll frequency as a substitute.**
 Rather than adding a new task, the bridge could be modified to re-read each fulfillment order it created and push status back via RabbitMQ. *Rejected:* same concern as the bridge hosting option above — it mixes outbound order creation with inbound state feedback in the same component. It also requires the bridge to maintain a local record of every fulfillment order it has ever created in order to query them on each tick, expanding its state surface significantly.
 
+**Outbox for the receive confirmation call.**
+The call to confirm receipt in OpenBoxes runs outside the `TransactionScope`. An outbox would protect against a crash in the millisecond window between the transaction commit and the confirmation call. *Rejected:* the polling interval itself is the retry mechanism — a failed confirmation leaves the fulfillment as `ISSUED` in OpenBoxes, which causes it to reappear in the next tick where only the confirmation is retried. The outbox is the right answer for a webhook design where a missed event is gone forever; for a polling design the next tick recovers unconditionally, making the outbox over-engineering.
+
+**Redis cache and distributed lock (ADR-010).**
+A status cache and distributed lock were designed to handle multi-node deployments and reduce DB reads. *Superseded:* no QA requires multi-instance deployment, and each fulfillment is processed exactly once — after confirmation it leaves the `ISSUED` state and never reappears in the poll batch, so the cache hit rate would be zero. See ADR-010.
+
 ## Consequences
 
-- QAS-5 warehouse half is structurally satisfied: the 30-second poll interval is the worst-case detection latency, and the status update and Outbox write happen within the same tick.
-- The `ISSUED` detection triggers the Iteration 4 carrier booking chain via the Outbox, closing the full fulfillment loop without introducing a new message type or a new consumer.
-- OpenBoxes API availability is on the poll tick path. A degraded OpenBoxes response delays the tick but does not lose state — the next tick retries the same read. This is acceptable under QAS-1's 30-minute outage budget.
-- The polling task adds one outbound HTTP dependency inside the nopCommerce process. Circuit-breaker and timeout configuration for this call are recorded as a production-hardening residual.
-- The `IScheduleTask` framework runs on a single node. In a multi-node nopCommerce deployment, multiple nodes would poll concurrently. The Outbox write is idempotent on `OrderGuid`, so duplicate writes are harmless; the order status update must be guarded by a last-write-wins check on the current status to avoid a redundant transition. This is a known gap at VerdeMart's current single-node scale and is documented in `08-risk-and-validation-plan.md`.
+- QAS-5 warehouse half is structurally satisfied: the 30-second poll interval is the worst-case detection latency, and the shipment creation, order status update, and outbox write happen within the same tick.
+- The `SHIPPED` detection triggers the carrier booking chain via the outbox, closing the full fulfillment loop without introducing a new message type or a new consumer.
+- nopCommerce now has a bidirectional relationship with OpenBoxes: the bridge sends orders outbound, and the poller confirms receipt inbound. This is a deliberate scope extension of the OpenBoxes integration.
+- A partial tick failure (transaction committed, receive confirmation failed) self-heals on the next tick via the `OpenBoxesReceiveConfirmed` flag. No operator action is required.
+- OpenBoxes API availability is on the poll tick path. A degraded response delays the tick but does not lose state — the next tick retries unconditionally.
+- The `IScheduleTask` framework runs on a single node. In a multi-node deployment, multiple nodes would poll and process concurrently. The `TransactionScope` write is idempotent on `OrderGuid` but the receive confirmation could be duplicated. This is a known gap at VerdeMart's current single-node scale and is documented in `08-risk-and-validation-plan.md`.

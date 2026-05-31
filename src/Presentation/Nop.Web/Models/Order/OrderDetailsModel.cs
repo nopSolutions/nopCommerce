@@ -147,6 +147,7 @@ public partial record OrderDetailsModel : BaseNopEntityModel
         public DateTime? ShippedDate { get; set; }
         public DateTime? ReadyForPickupDate { get; set; }
         public DateTime? DeliveryDate { get; set; }
+        public string CarrierStatus { get; set; }
     }
 
     #endregion
