@@ -399,7 +399,7 @@ docker exec nopcommerce_mssql_server \
       ORDER BY CreatedOnUtc DESC;" 2>/dev/null
 ```
 
-### Results — Run 2026-05-31 (T₀ 15:54:21 UTC)
+### Results — Run 2026-05-31 (T₀ 15:54:21)
 
 Shipment `WIRE-15655` (Order #18). Times below are the server-side `LastStatusOccurredAtUtc` values (UTC).
 
@@ -496,22 +496,35 @@ docker exec nopcommerce_mssql_server \
       ORDER BY CreatedAtUtc DESC;" 2>/dev/null
 ```
 
-### Results table
+### Results — Run 2026-05-31 (T₀ 16:29:15)
+
+Order #19 (`OrderGuid = D3C0C3EC-8C73-4B26-BE8D-5C497AEFC350`), placed 15:27:49 UTC. The OpenBoxes outbound movement was advanced to `ISSUED` manually; the poller detected it on the next tick.
 
 | Metric | QAS requirement | Result |
 | --- | --- | --- |
-| T₀ (ISSUED set in OpenBoxes) | — | |
-| T_detected (OrderStatusId = Complete) | — | |
-| Elapsed | ≤ 30 s | |
-| Operator action in nopCommerce | 0 | |
-| Shipment row created automatically | Yes | |
-| `carrier.booking.requested` outbox row written | Yes | |
+| T₀ (ISSUED set in OpenBoxes) | — | ~15:29:15 UTC (order still Pending at poll +5/+10/+15 s) |
+| T_detected (OrderStatusId = Complete) | — | 15:29:33 UTC (Shipment 9 + outbox row both stamped 15:29:33) |
+| Elapsed | ≤ 30 s | ✅ ~18 s |
+| Operator action in nopCommerce | 0 | ✅ 0 — poller created everything automatically |
+| Shipment row created automatically | Yes | ✅ Shipment 9, `ExternalShipmentId = WIRE-62343` |
+| `carrier.booking.requested` outbox row written | Yes | ✅ stamped 15:29:33.547, Status=1 (dispatched) |
+
+**End-to-end cascade (no operator action at any step):** 
+
+```
+OpenBoxes ISSUED
+    (M5 OpenBoxesStatusPollerTask)→ Order #19 Complete + Shipment 9 + carrier.booking.requested  [15:29:33]
+         (CarrierBookingConsumer)→ WIRE-62343 booked, ShippingStatus → Shipped                    [15:29:43]
+              (CarrierStatusPollerTask)→ IN_TRANSIT → OUT_FOR_DELIVERY → DELIVERED                 [→ 15:31:03]
+```
+
+Final state confirmed: Order #19 `OrderStatusId = 30` (Complete), `ShippingStatusId = 40` (Delivered); Shipment 9 `ExternalShippingStatus = DELIVERED`, DeliveryDateUtc 15:31:03.
 
 ### Pass criteria
 
-- Order status transitions to Complete within 30 seconds of `ISSUED` being set in OpenBoxes. Satisfies QAS-5 warehouse clause.
-- A `Shipment` row is created automatically by the poller. No admin action in nopCommerce is required.
-- A `carrier.booking.requested` outbox row is written, which triggers the Iteration 4 carrier booking chain.
+- Order status transitions to Complete within 30 seconds of `ISSUED` being set in OpenBoxes. Satisfies QAS-5 warehouse clause. ✅ Complete in ~18 s.
+- A `Shipment` row is created automatically by the poller. No admin action in nopCommerce is required. ✅ Shipment 9 created automatically.
+- A `carrier.booking.requested` outbox row is written, which triggers the Iteration 4 carrier booking chain. ✅ Written at 15:29:33 and the chain ran through to Delivered.
 
 ---
 
