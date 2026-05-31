@@ -609,13 +609,13 @@ Expected: `OrderGuid=... already processed — ack and skip`
 
 **Step 5 — Confirm OpenBoxes stock movement count is unchanged.**
 
-### Results — Run 2026-05-30
+### Results — Run 2026-05-30 / 2026-05-31
 
-**Message re-published via RabbitMQ Management:** `OrderGuid=ef266ca4-088f-4024-a9f1-0ba19b313c8d` (HTC smartphone, originally fulfilled in M1 at ~19:32).
+**Message re-published via RabbitMQ Management:** `OrderGuid=f69aee6c-adbe-4f1a-a3c7-7490ce5e5a93` (originally fulfilled in M1).
 
 **Bridge log:**
 ```
-OrderGuid=ef266ca4-088f-4024-a9f1-0ba19b313c8d already processed — ack and skip
+OrderGuid=f69aee6c-adbe-4f1a-a3c7-7490ce5e5a93 already processed — ack and skip
 ```
 
 | Metric | Expected | Result |
@@ -623,6 +623,15 @@ OrderGuid=ef266ca4-088f-4024-a9f1-0ba19b313c8d already processed — ack and ski
 | Bridge log entry | `already processed — ack and skip` | ✅ Exact match |
 | New stock movements created in OpenBoxes | 0 | ✅ 0 — OpenBoxes API not called |
 | Message acknowledged (queue returns to 0) | Yes | ✅ ACK'd immediately |
+
+![Terminal — SQLite dedup table showing 3 already-processed OrderGuids](imgs/m6-dedup-table.png)
+*Bridge's local SQLite `processed_orders` table. Each row is an OrderGuid the bridge has already fulfilled in OpenBoxes. Before any OpenBoxes call, the bridge checks this table.*
+
+![RabbitMQ Management — duplicate message published to verdemart.orders.openboxes](imgs/m6-rabbitmq-publish.png)
+*Duplicate message published via RabbitMQ Management UI with the same OrderGuid (`f69aee6c...`). Delivery mode 2 - Persistent. The bridge consumed it immediately — queue depth returned to 0.*
+
+![Bridge logs — already processed — ack and skip](imgs/m6-bridge-already-processed.png)
+*Bridge logs confirming the duplicate was detected and silently discarded. The OpenBoxes API was never called. The message was ACK'd immediately.*
 
 ### Pass criteria
 
