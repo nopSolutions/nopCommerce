@@ -144,13 +144,13 @@ Fulfillment created for OrderGuid=e52d4de2-... FulfillmentId=4028...000c  ✅
 
 **Screenshots — Run 2026-05-31:**
 
-![RabbitMQ queue during outage — Ready=3, Consumers=0](imgs/m1-queue-outage-ready3.png)
+![RabbitMQ queue during outage — Ready=3, Consumers=0](../imgs/m1-queue-outage-ready3.png)
 *RabbitMQ queue at peak: 3 messages durable on disk, 0 consumers (bridge stopped).*
 
-![Bridge logs — Fulfillment created for all OrderGuids](imgs/m1-bridge-logs.png)
+![Bridge logs — Fulfillment created for all OrderGuids](../imgs/m1-bridge-logs.png)
 *Bridge logs confirming all fulfillments created in OpenBoxes after restart.*
 
-![OpenBoxes Outbound Movement List — stock movements created by bridge](imgs/m1-openboxes-movements.png)
+![OpenBoxes Outbound Movement List — stock movements created by bridge](../imgs/m1-openboxes-movements.png)
 *OpenBoxes showing stock movements created automatically by the bridge (Destination: VerdeMart Store).*
 
 ### Pass criteria
@@ -186,13 +186,13 @@ Use the browser's network inspector (DevTools → Network → filter by "OpcComp
 | 2 | ❌ Stopped | ❌ No | ✅ 92 ms (DOMContentLoaded) |
 | 3 | ❌ Stopped | ❌ No | ✅ 83 ms (DOMContentLoaded) |
 
-![DevTools Network — DOMContentLoaded 88 ms with bridge stopped](imgs/m2-checkout-88ms.png)
+![DevTools Network — DOMContentLoaded 88 ms with bridge stopped](../imgs/m2-checkout-88ms.png)
 *Order 1: checkout completes in 88 ms — bridge and OpenBoxes completely unavailable.*
 
-![DevTools Network — DOMContentLoaded 92 ms with bridge stopped](imgs/m2-checkout-92ms.png)
+![DevTools Network — DOMContentLoaded 92 ms with bridge stopped](../imgs/m2-checkout-92ms.png)
 *Order 2: checkout completes in 92 ms.*
 
-![DevTools Network — DOMContentLoaded 83 ms with bridge stopped](imgs/m2-checkout-83ms.png)
+![DevTools Network — DOMContentLoaded 83 ms with bridge stopped](../imgs/m2-checkout-83ms.png)
 *Order 3: checkout completes in 83 ms.*
 
 All three checkouts complete in under 100 ms with bridge and OpenBoxes stopped — 30× below the 3 s QAS-3 threshold. None of the response time is attributable to the bridge or OpenBoxes; both were stopped throughout.
@@ -334,19 +334,19 @@ docker exec nopcommerce_mssql_server \
 | A: POS + web (realistic) — 2026-05-30 | 1 (POS) | 1 (web) | ✅ No | ✅ Yes — "Out of stock" at product page level |
 | B: 5 concurrent POS (stress) — 2026-05-31 | 1 | 4 (deadlock) | ✅ No | ✅ Yes — rejected within same request cycle |
 
-![Admin panel — HP Spectre XT Pro UltraBook StockQuantity set to 1](imgs/m3-admin-stock-1.png)
+![Admin panel — HP Spectre XT Pro UltraBook StockQuantity set to 1](../imgs/m3-admin-stock-1.png)
 *Baseline: nopCommerce Admin showing HP Spectre XT Pro UltraBook (SKU: HP\_SPX\_UB) with StockQuantity = 1 before the test.*
 
-![Terminal — POS reserve returns 200 and release returns released:true](imgs/m3-terminal-reserve-release.png)
+![Terminal — POS reserve returns 200 and release returns released:true](../imgs/m3-terminal-reserve-release.png)
 *POS channel wins the last unit (HTTP 200 `reserved`). After the test, release returns `{"released":true}` — the reservation lifecycle completes correctly.*
 
-![Web storefront — product page shows Out of stock while POS reservation is active](imgs/out_of_stock.png)
+![Web storefront — product page shows Out of stock while POS reservation is active](../imgs/out_of_stock.png)
 *Web channel blocked at the product page ("Out of stock") while the POS reservation is active. Effective availability = StockQuantity(1) − active\_reservations(1) = 0 propagates to the display layer.*
 
-![Admin panel — HP Spectre XT Pro UltraBook StockQuantity still 1 after release](imgs/m3-admin-stock-after-release.png)
+![Admin panel — HP Spectre XT Pro UltraBook StockQuantity still 1 after release](../imgs/m3-admin-stock-after-release.png)
 *After POS release: StockQuantity remains 1 in the database. Physical stock was never decremented — the gate prevents any decrement until `confirm` is called. Zero oversell confirmed.*
 
-![Terminal — 5 concurrent POS requests: 1 winner (200) and 4 deadlock victims (500)](imgs/m3-stress-results.png)
+![Terminal — 5 concurrent POS requests: 1 winner (200) and 4 deadlock victims (500)](../imgs/m3-stress-results.png)
 *Scenario B: 5 simultaneous POS reserve requests with StockQuantity = 1. Exactly 1 request wins (HTTP 200). The remaining 4 are rejected — 4 as SQL Server deadlock victims (HTTP 500) rather than clean 409s. StockQuantity never goes negative. This matches the documented known limitation: under ≥ 5 concurrent requests on the same row, SQL Server may deadlock instead of returning a structured 409.*
 
 **Note:** The rejection happens at the product listing level (before cart), not just at checkout confirm. The `AllocationGate` effective availability (`StockQuantity − SUM(active reservations)`) propagates to the product display, providing an earlier and more visible signal to the web customer than a late checkout failure.
@@ -624,13 +624,13 @@ OrderGuid=f69aee6c-adbe-4f1a-a3c7-7490ce5e5a93 already processed — ack and ski
 | New stock movements created in OpenBoxes | 0 | ✅ 0 — OpenBoxes API not called |
 | Message acknowledged (queue returns to 0) | Yes | ✅ ACK'd immediately |
 
-![Terminal — SQLite dedup table showing 3 already-processed OrderGuids](imgs/m6-dedup-table.png)
+![Terminal — SQLite dedup table showing 3 already-processed OrderGuids](../imgs/m6-dedup-table.png)
 *Bridge's local SQLite `processed_orders` table. Each row is an OrderGuid the bridge has already fulfilled in OpenBoxes. Before any OpenBoxes call, the bridge checks this table.*
 
-![RabbitMQ Management — duplicate message published to verdemart.orders.openboxes](imgs/m6-rabbitmq-publish.png)
+![RabbitMQ Management — duplicate message published to verdemart.orders.openboxes](../imgs/m6-rabbitmq-publish.png)
 *Duplicate message published via RabbitMQ Management UI with the same OrderGuid (`f69aee6c...`). Delivery mode 2 - Persistent. The bridge consumed it immediately — queue depth returned to 0.*
 
-![Bridge logs — already processed — ack and skip](imgs/m6-bridge-already-processed.png)
+![Bridge logs — already processed — ack and skip](../imgs/m6-bridge-already-processed.png)
 *Bridge logs confirming the duplicate was detected and silently discarded. The OpenBoxes API was never called. The message was ACK'd immediately.*
 
 ### Pass criteria

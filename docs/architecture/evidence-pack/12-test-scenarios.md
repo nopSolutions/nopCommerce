@@ -201,6 +201,6 @@ The product, category, and destination location in OpenBoxes are created on dema
 | TS-1 — Bridge outage + recovery | QAS-1, QAS-3, QAS-4 | Bridge container stopped during order placement | ✅ Run 2026-05-30 |
 | TS-2 — Cross-channel oversell | QAS-2 | POS holds last unit while web checkout proceeds | ✅ Run 2026-05-30 |
 | TS-3 — Idempotent redelivery | ADR-003 | Duplicate message published to live queue | ✅ Run 2026-05-30 |
-| TS-4 — Carrier status propagation | QAS-5 carrier | WireMock state machine advances; poller detects | ⏳ Pending |
-| TS-5 — Warehouse fulfillment state | QAS-5 warehouse | OpenBoxes ISSUED; poller detects | ⏳ Pending |
+| TS-4 — Carrier status propagation | QAS-5 carrier | WireMock state machine advances; poller detects | ✅ Run 2026-05-31 |
+| TS-5 — Warehouse fulfillment state | QAS-5 warehouse | OpenBoxes ISSUED; poller detects | ✅ Run 2026-05-31 |
 | TS-6 — Happy path baseline | All QAS | None — normal operation | ✅ Run 2026-05-30 (M1 + today's session) |
