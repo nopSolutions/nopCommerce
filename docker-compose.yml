@@ -1,17 +1,18 @@
 # Full omnichannel demo stack for Scenario C.
 #
-# SCAFFOLD (plan.md Phase 1 "Docker Compose v1" → filled through Phases 2/3/6):
-# every service boots and has a healthcheck, but the end-to-end wiring is only
-# as complete as the worker/plugin scaffolds. nopCommerce is configured against
-# SQL Server (the QA-2/QA-3 evidence uses T-SQL); the DB/connection is chosen in
-# the nopCommerce install wizard on first run, pointed at the `sqlserver` host.
+# Phase 1 goal for Compose: every container starts, exposes its intended port,
+# and reports healthy without requiring service-specific manual steps beyond the
+# nopCommerce install wizard. End-to-end behavior is filled incrementally in
+# later phases.
 #
 # Bring up:   docker compose up --build
-# Storefront: http://localhost:8080   RabbitMQ UI: http://localhost:15672 (guest/guest)
+# Storefront: http://localhost:8080
+# RabbitMQ UI: http://localhost:15672 (guest/guest)
 
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "Omni_Demo_Pass1"
@@ -21,7 +22,11 @@ services:
     volumes:
       - mssql_data:/var/opt/mssql
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -No -Q 'SELECT 1' || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "SQLCMD=$$(command -v /opt/mssql-tools18/bin/sqlcmd || command -v /opt/mssql-tools/bin/sqlcmd); $$SQLCMD -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q 'SELECT 1' >/dev/null || exit 1"
+        ]
       interval: 10s
       timeout: 5s
       retries: 12
@@ -31,6 +36,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.13-management
+    restart: unless-stopped
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
@@ -50,18 +56,29 @@ services:
     build:
       context: ./nopCommerce
       dockerfile: Dockerfile
+    restart: unless-stopped
     ports:
       - "8080:80"
-    restart: on-failure
     depends_on:
       sqlserver:
         condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q --spider http://localhost/install || wget -q --spider http://localhost/"
+        ]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 90s
     networks:
       - omni_network
 
   wms-sim:
     build:
       context: ./services/wms-sim
+    restart: unless-stopped
     environment:
       WMS_MODE: normal
       WMS_SLOW_DELAY_SECONDS: "3"
@@ -79,13 +96,25 @@ services:
   pos-sim:
     build:
       context: ./services/pos-sim
+    restart: unless-stopped
     environment:
       NopCommerce__BaseUrl: http://nopcommerce:80
       OmnichannelCore__DemoToken: omni-demo-token
     ports:
       - "8082:8080"
     depends_on:
-      - nopcommerce
+      nopcommerce:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -qO- http://localhost:8080/health >/dev/null || exit 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     networks:
       - omni_network
 
@@ -93,17 +122,25 @@ services:
     build:
       context: ./services
       dockerfile: worker/Dockerfile
+    restart: unless-stopped
     environment:
       Worker__RabbitMqUri: amqp://guest:guest@rabbitmq:5672/
       Worker__WmsBaseUrl: http://wms-sim:8080
       Worker__NopCommerceBaseUrl: http://nopcommerce:80
       Worker__DemoToken: omni-demo-token
-    restart: on-failure
     depends_on:
       rabbitmq:
         condition: service_healthy
       wms-sim:
         condition: service_healthy
+      nopcommerce:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pidof dotnet >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     networks:
       - omni_network
 
