@@ -1,7 +1,9 @@
 using System.Text.Json;
 using Nop.Core.Events;
+using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Plugin.Misc.OmnichannelCore.Domains;
+using Nop.Services.Events;
 using Nop.Services.Orders;
 
 namespace Nop.Plugin.Misc.OmnichannelCore.Services;

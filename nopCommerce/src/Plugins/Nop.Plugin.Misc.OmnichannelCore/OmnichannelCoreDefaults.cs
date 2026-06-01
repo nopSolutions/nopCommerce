@@ -29,4 +29,9 @@ public static class OmnichannelCoreDefaults
     /// Gets the POS stock changed event type
     /// </summary>
     public const string PosStockChangedEventType = "pos.stock.changed.v1";
+
+    /// <summary>
+    /// Gets the order placed event type
+    /// </summary>
+    public const string OrderPlacedEventType = "commerce.order.placed.v1";
 }
