@@ -1,4 +1,4 @@
-﻿using Nop.Core.Configuration;
+using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Orders;
 
@@ -202,4 +202,29 @@ public partial class OrderSettings : ISettings
     /// Gets or sets a value indicating whether to allow customers to cancel orders
     /// </summary>
     public bool AllowCustomersCancelOrders { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether auto-cancel is enabled
+    /// </summary>
+    public bool AutoCancelEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to ignore orders created before this date
+    /// </summary>
+    public System.DateTime? AutoCancelIgnoreBeforeUtc { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating the delay (in minutes) for auto-cancel
+    /// </summary>
+    public int AutoCancelDelay { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating the ignored payment methods for auto-cancel
+    /// </summary>
+    public System.Collections.Generic.List<string> AutoCancelIgnoredPaymentMethods { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to restore shopping cart after auto-cancel
+    /// </summary>
+    public bool AutoCancelRestoreShoppingCart { get; set; }
 }

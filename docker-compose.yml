@@ -51,7 +51,7 @@ services:
       context: ./nopCommerce
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8080:80"
     restart: on-failure
     depends_on:
       sqlserver:
@@ -80,7 +80,7 @@ services:
     build:
       context: ./services/pos-sim
     environment:
-      NopCommerce__BaseUrl: http://nopcommerce:8080
+      NopCommerce__BaseUrl: http://nopcommerce:80
       OmnichannelCore__DemoToken: omni-demo-token
     ports:
       - "8082:8080"
@@ -96,7 +96,7 @@ services:
     environment:
       Worker__RabbitMqUri: amqp://guest:guest@rabbitmq:5672/
       Worker__WmsBaseUrl: http://wms-sim:8080
-      Worker__NopCommerceBaseUrl: http://nopcommerce:8080
+      Worker__NopCommerceBaseUrl: http://nopcommerce:80
       Worker__DemoToken: omni-demo-token
     restart: on-failure
     depends_on:
