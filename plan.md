@@ -95,7 +95,7 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 | Diogu | `[x]` WMS simulator scaffold (HTTP server, mode placeholder) | `services/wms-sim/` (new) |
 | Diogu | `[x]` Docker Compose v1: services start, healthchecks pass, no logic yet | `docker-compose.yml` (project root, new) |
 | Diogu | `[ ]` `docs/setup.md` skeleton with section headers + Phase markers | `docs/setup.md` |
-| Diogu | `[ ]` **Baseline measurement**: place 50 orders against vanilla nopCommerce, capture P50/P95 checkout latency | `docs/evidence/baseline.md` |
+| Diogu | `[x]` **Baseline measurement**: place 50 orders against vanilla nopCommerce, capture P50/P95 checkout latency | `docs/evidence/baseline.md` |
 
 **Verification gate** (Sun 17 May)
 

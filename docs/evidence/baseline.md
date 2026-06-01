@@ -1,35 +1,51 @@
 # Baseline Measurement
 
-Checkout latency of **vanilla nopCommerce** (before the OmnichannelCore plugin is
-installed). The QA-1 resilience gate is stated relative to this number
-("checkout P95 ≤ 1.5× baseline during a 30 s WMS 503"), so it must be captured
-first.
-
-> **Status: template (plan.md Phase 1, owner Diogu).** Fill the numbers below
-> from an actual run; do not leave placeholders in the final evidence pack.
+Checkout latency baseline captured against nopCommerce before `Misc.OmnichannelCore`
+was installed in the running store. The runtime plugin registry in
+`/app/App_Data/plugins.json` did not list `Misc.OmnichannelCore` during this run.
 
 ## Method
 
-- Stack: `docker compose up` with the **plugin uninstalled** (or a vanilla
-  nopCommerce image).
-- Storefront URL used: `http://localhost:8080` _(record exact build/commit)_.
-- Load: place **50** orders through the storefront checkout (record the tool /
-  script used).
-- Metric: server-side checkout request latency (record how it was measured —
-  e.g. app logs, reverse-proxy timing, or k6/JMeter).
+- Stack: existing `docker compose` environment already running at capture time; no
+  rebuild/reset performed for this run.
+- Storefront URL: `http://localhost:8080`
+- Commit: `6ac5a7dd72`
+- Capture date: `2026-06-01T19:00:02+01:00`
+- Tool: `load-test/automated-order-placement.js` via
+  `ORDER_TARGET=50 ./run-load-test.sh automated`
+- Metric: `order_placement_duration_ms` from the k6 summary
+- Smoke validation: `ORDER_TARGET=1 ./run-load-test.sh automated` succeeded before
+  the full run
+- Final baseline log: `/tmp/loadtest-baseline-nowait.log`
+
+## Notes
+
+- The checkout automation required two fixes before baseline capture:
+  - the add-to-cart payload now sends `addtocart_<productId>.EnteredQuantity`
+  - checkout-page validation now rejects redirects that land on `/cart`
+- The final baseline removed all scripted `sleep(humanDelay(...))` waits, so the
+  latency numbers reflect the HTTP-driven checkout flow rather than simulated
+  shopper pacing.
+- Failure analysis on the first 50-attempt run showed all checkout-page failures
+  came from product `4` (`/apple-macbook-pro`), so the final baseline excludes
+  that product from the pool.
+- The final scripted product pool was: `3, 5, 6, 9, 22`
 
 ## Results
 
 | Metric | Value |
 |--------|-------|
-| Orders placed | _TODO_ |
-| P50 checkout latency | _TODO ms_ |
-| P95 checkout latency | _TODO ms_ |
-| Max | _TODO ms_ |
-| Date captured | _TODO_ |
-| nopCommerce commit | _TODO_ |
+| Order attempts | 50 |
+| Successful orders | 50 |
+| Failed attempts | 0 |
+| P50 checkout latency | 1235 ms |
+| P95 checkout latency | 1390.05 ms |
+| Max checkout latency | 1421 ms |
+| Date captured | 2026-06-01T19:00:02+01:00 |
+| nopCommerce commit | 6ac5a7dd72 |
 
-## Derived QA-1 threshold
+## Derived QA-1 Threshold
 
-`P95 × 1.5 = _TODO ms_` — checkout P95 during the 30 s WMS-unavailable window
-must stay at or under this value.
+`1390.05 ms x 1.5 = 2085.075 ms`
+
+Rounded operational threshold: `2085 ms`
