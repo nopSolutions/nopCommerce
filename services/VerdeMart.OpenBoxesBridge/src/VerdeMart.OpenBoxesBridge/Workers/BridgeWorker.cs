@@ -14,6 +14,7 @@ public class BridgeWorker : BackgroundService
     private readonly BridgeSettings _settings;
     private readonly IDedupRepository _dedup;
     private readonly RabbitMqTopology _topology;
+    private readonly CircuitBreaker _circuit;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<BridgeWorker> _logger;
 
@@ -21,12 +22,14 @@ public class BridgeWorker : BackgroundService
         IOptions<BridgeSettings> options,
         IDedupRepository dedup,
         RabbitMqTopology topology,
+        CircuitBreaker circuit,
         IServiceScopeFactory scopeFactory,
         ILogger<BridgeWorker> logger)
     {
         _settings = options.Value;
         _dedup = dedup;
         _topology = topology;
+        _circuit = circuit;
         _scopeFactory = scopeFactory;
         _logger = logger;
     }
@@ -59,8 +62,6 @@ public class BridgeWorker : BackgroundService
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += async (_, args) =>
         {
-            // Per-message scope: each message gets its own OrderPlacedMessageConsumer instance
-            // Aligns with Step 6 sequence diagram ("open per-message scope")
             await using var scope = _scopeFactory.CreateAsyncScope();
             var messageConsumer = scope.ServiceProvider.GetRequiredService<OrderPlacedMessageConsumer>();
             try
@@ -73,23 +74,46 @@ public class BridgeWorker : BackgroundService
             }
         };
 
-        await channel.BasicConsumeAsync(
-            queue: _settings.OrderQueueName,
-            autoAck: false,
-            consumer: consumer,
-            cancellationToken: stoppingToken);
-
-        _logger.LogInformation("Consuming queue {Queue} (manual ack, prefetch={Prefetch})",
-            _settings.OrderQueueName, _settings.PrefetchCount);
-
-        try
+        // Circuit breaker loop: start consuming, pause when circuit opens, resume when half-open.
+        while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(Timeout.Infinite, stoppingToken);
+            var consumerTag = await channel.BasicConsumeAsync(
+                queue: _settings.OrderQueueName,
+                autoAck: false,
+                consumer: consumer,
+                cancellationToken: stoppingToken);
+
+            _logger.LogInformation("Consuming queue {Queue} (circuit {State})",
+                _settings.OrderQueueName, _circuit.State);
+
+            // Wait while the circuit is healthy (Closed or HalfOpen).
+            while (_circuit.ShouldAttempt() && !stoppingToken.IsCancellationRequested)
+                await Task.Delay(200, stoppingToken);
+
+            if (stoppingToken.IsCancellationRequested)
+                break;
+
+            // Circuit opened — stop accepting new messages. In-flight messages complete
+            // normally; they will nack with requeue=true back to the queue.
+            try
+            {
+                await channel.BasicCancelAsync(consumerTag, cancellationToken: stoppingToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "BasicCancelAsync failed — channel may be recovering");
+            }
+
+            _logger.LogInformation("Consumer paused — waiting for circuit to reach half-open state");
+
+            // Wait until the circuit timeout elapses and ShouldAttempt returns true again.
+            while (!_circuit.ShouldAttempt() && !stoppingToken.IsCancellationRequested)
+                await Task.Delay(1000, stoppingToken);
+
+            _logger.LogInformation("Circuit half-open — resuming consumer for probe");
         }
-        catch (OperationCanceledException)
-        {
-            _logger.LogInformation("VerdeMart.OpenBoxesBridge stopping");
-        }
+
+        _logger.LogInformation("VerdeMart.OpenBoxesBridge stopping");
     }
 
     private async Task<IConnection> OpenConnectionWithRetryAsync(ConnectionFactory factory, CancellationToken ct)
