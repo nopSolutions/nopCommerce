@@ -38,6 +38,15 @@ The rubric explicitly penalises "large amounts of generated code with little arc
 
 <!-- Most recent first. -->
 
+## 2026-06-01 — QA-2 unit + controller tests for inbox dedup and stock staleness
+
+**Phase**: 4.
+**Driver**: QA-2 consistency (duplicate `messageId` rejected; stale `sourceVersion` ignored; legitimate update applied).
+**Files**: `nopCommerce/src/Tests/Nop.Tests/Nop.Plugin.Misc.OmnichannelCore.Tests/{InMemoryRepository,OmniInboxServiceTests,OmniStockSyncServiceTests,OmnichannelCallbackControllerTests}.cs`, `nopCommerce/src/Tests/Nop.Tests/Nop.Tests.csproj`, `plan.md`.
+**Change**: Added the QA-2 test suite — `OmniInboxService` dedup, `OmniStockSyncService` newer-vs-stale `sourceVersion` projection, and `OmnichannelCallbackController` happy/duplicate/stale/unauthorized paths — backed by an in-memory `IRepository<T>` double; linked the plugin sources into `Nop.Tests` via `<Compile Include>` since the plugin is not a normal project reference. Ported from the `feat/qa2-inbox-pos-consistency` branch and adapted to the implementation already on `develop` (which superseded the branch's parallel reimplementation via the repo reorganization).
+**Tradeoff/risk introduced**: Tests exercise the services/controller directly with an in-memory repository (no LinqToDB provider), so they validate logic, not SQL translation or the missing `OmniInboxMessage.MessageId` unique constraint (residual race noted in the 2026-05-15 entry).
+**Verification**: `dotnet test nopCommerce/src/Tests/Nop.Tests/Nop.Tests.csproj --filter FullyQualifiedName~OmnichannelCore` (run in the `mcr.microsoft.com/dotnet/sdk:10.0` container, since the host has only the .NET 9 SDK while `global.json` pins 10.0.100) — full Nop.Web build succeeded, **7/7 tests passed** in ~1.5 s, including the duplicate-rejection ≤50 ms QA-2 threshold check.
+
 ## 2026-05-15 — Inbox + POS consistency track
 
 **Phase**: 4.
