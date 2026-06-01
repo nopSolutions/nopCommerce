@@ -33,4 +33,7 @@ public class BridgeSettings
     public string OpenBoxesDefaultCategoryName { get; set; } = "VerdeMart Default";
 
     public string DedupConnectionString { get; set; } = "Data Source=/data/processed_orders.db";
+
+    public int CircuitBreakerFailureThreshold { get; set; } = 3;
+    public int CircuitBreakerOpenTimeoutSeconds { get; set; } = 60;
 }
