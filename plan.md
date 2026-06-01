@@ -93,7 +93,7 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 | António | `[ ]` Worker service project scaffold; envelope library project | `services/worker/`, `services/contracts/` (new) |
 | António | `[ ]` RabbitMQ topology design (queues, bindings, DLX) documented | `services/worker/README.md` |
 | Diogu | `[x]` WMS simulator scaffold (HTTP server, mode placeholder) | `services/wms-sim/` (new) |
-| Diogu | `[ ]` Docker Compose v1: services start, healthchecks pass, no logic yet | `docker-compose.yml` (project root, new) |
+| Diogu | `[x]` Docker Compose v1: services start, healthchecks pass, no logic yet | `docker-compose.yml` (project root, new) |
 | Diogu | `[ ]` `docs/setup.md` skeleton with section headers + Phase markers | `docs/setup.md` |
 | Diogu | `[ ]` **Baseline measurement**: place 50 orders against vanilla nopCommerce, capture P50/P95 checkout latency | `docs/evidence/baseline.md` |
 
@@ -104,7 +104,7 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 - `docs/evidence/baseline.md` exists with P50/P95 numbers and the storefront URL used.
 - ADR-0011 exists; ADR-0005 has the demo-token bullet.
 
-**Phase 1 progress (as of 2026-05-14)** — done by Varela on `feat/phase-1-omnichannel-plugin-scaffold` (merged): plugin scaffold, four-table migration, admin shell. **Remaining**: ADR-0011, ADR-0005 demo-token note, POS sim scaffold, worker scaffold + RabbitMQ topology design, WMS sim scaffold, Docker Compose v1, `docs/setup.md` skeleton, baseline measurement, uninstall DB validation.
+**Phase 1 progress (as of 2026-05-14)** — Varela completed the plugin scaffold, four-table migration, and admin shell on `feat/phase-1-omnichannel-plugin-scaffold` (merged). Diogu completed Docker Compose v1 (`docker compose up` starts every service with healthchecks green). **Remaining**: ADR-0011, ADR-0005 demo-token note, POS sim scaffold, worker scaffold + RabbitMQ topology design, WMS sim scaffold, `docs/setup.md` skeleton, baseline measurement, uninstall DB validation.
 
 **Risks**
 
