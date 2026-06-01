@@ -57,7 +57,7 @@ public class OutboxDispatcherTask : IScheduleTask
                     };
 
                     await channel.BasicPublishAsync(
-                        exchange: _settings.ExchangeName,
+                        exchange: message.Exchange ?? _settings.ExchangeName,
                         routingKey: message.EventType,
                         mandatory: false,
                         basicProperties: properties,

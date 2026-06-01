@@ -56,7 +56,7 @@ The implementation follows the ADD iteration sequence directly. Each phase is sh
 - `OpenBoxesStatusPollerTask` (`IScheduleTask`, 30-second poll) added to `Nop.Plugin.Inventory.AllocationGate`.
 - `IOpenBoxesClient` extended with `GetIssuedFulfillmentOrdersAsync()` — polls `GET /api/generic/shipment?status=ISSUED`.
 - On `ISSUED` detection: updates nopCommerce order status + writes outbox row to trigger carrier booking automatically.
-- Redis introduced as a distributed lock and read-through status cache for both polling tasks — one node polls per tick; DB consulted only on detected change.
+- Idempotency without added infrastructure: the OpenBoxes poller acts on a fulfillment only when no `Shipment` with an `ExternalShipmentId` exists yet, and its receive-confirmation call-back to OpenBoxes is guarded by a flag on the `Shipment`; the carrier poller (Phase 4) compares the API response against `Shipment.ExternalShippingStatus` already persisted in the DB. No distributed cache or lock is introduced — Redis was evaluated for this role and rejected (see [ADR-010](07-adrs/ADR-010-redis-status-cache-for-pollers.md): no QAS drives it, the OpenBoxes poller has no status to cache, and the only valid use — a multi-node lock — is not required at VerdeMart's single-node scale).
 
 **Outcome:** OpenBoxes fulfillment state is visible in nopCommerce within 30 seconds — no operator action. Carrier booking is fully automated. The full QAS set is structurally complete.
 
@@ -75,6 +75,5 @@ The implementation follows the ADD iteration sequence directly. Each phase is sh
 | OpenBoxes Bridge container | | | Active | Active | Active |
 | `Nop.Plugin.Shipping.CarrierWebhook` + WireMock | | | | Active | Active |
 | `OpenBoxesStatusPollerTask` | | | | | Active |
-| Redis (distributed lock + status cache) | | | | | Active |
 
 The only breaking transition is from Phase 1 to Phase 2. Everything else is additive.

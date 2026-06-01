@@ -1,0 +1,20 @@
+{
+  "scenarioName": "shipment-{{request.pathSegments.[2]}}",
+  "requiredScenarioState": "delivered",
+  "newScenarioState": "Started",
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/api/shipments/([^/]+)/status"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "externalShipmentId": "{{request.pathSegments.[2]}}",
+      "status": "DELIVERED",
+      "occurredAtUtc": "{{now}}"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

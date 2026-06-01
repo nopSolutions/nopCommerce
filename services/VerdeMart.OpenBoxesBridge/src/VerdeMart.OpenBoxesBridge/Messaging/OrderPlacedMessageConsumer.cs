@@ -20,6 +20,7 @@ public class OrderPlacedMessageConsumer
     private readonly IDedupRepository _dedup;
     private readonly IOpenBoxesClient _openBoxes;
     private readonly RetryCounter _retryCounter;
+    private readonly CircuitBreaker _circuit;
     private readonly BridgeSettings _settings;
     private readonly ILogger<OrderPlacedMessageConsumer> _logger;
 
@@ -27,18 +28,30 @@ public class OrderPlacedMessageConsumer
         IDedupRepository dedup,
         IOpenBoxesClient openBoxes,
         RetryCounter retryCounter,
+        CircuitBreaker circuit,
         IOptions<BridgeSettings> options,
         ILogger<OrderPlacedMessageConsumer> logger)
     {
         _dedup = dedup;
         _openBoxes = openBoxes;
         _retryCounter = retryCounter;
+        _circuit = circuit;
         _settings = options.Value;
         _logger = logger;
     }
 
     public async Task HandleAsync(IChannel channel, BasicDeliverEventArgs args, CancellationToken ct)
     {
+        // Guard against the race window between the circuit opening and BridgeWorker
+        // calling BasicCancelAsync — messages delivered in that window are nacked so
+        // they stay in the main queue until the consumer resumes.
+        if (!_circuit.ShouldAttempt())
+        {
+            _logger.LogInformation("Circuit open — nacking message back to queue");
+            await channel.BasicNackAsync(args.DeliveryTag, multiple: false, requeue: true, cancellationToken: ct);
+            return;
+        }
+
         OrderPlacedMessage? message;
         try
         {
@@ -81,6 +94,7 @@ public class OrderPlacedMessageConsumer
         switch (result)
         {
             case CreateFulfillmentResult.Success success:
+                _circuit.RecordSuccess();
                 _retryCounter.Remove(message.OrderGuid);
                 await _dedup.RecordProcessedAsync(message.OrderGuid, success.FulfillmentId, ct);
                 await channel.BasicAckAsync(args.DeliveryTag, multiple: false, cancellationToken: ct);
@@ -90,6 +104,7 @@ public class OrderPlacedMessageConsumer
                 break;
 
             case CreateFulfillmentResult.Duplicate duplicate:
+                _circuit.RecordSuccess();
                 _retryCounter.Remove(message.OrderGuid);
                 await _dedup.RecordProcessedAsync(message.OrderGuid, duplicate.FulfillmentId, ct);
                 await channel.BasicAckAsync(args.DeliveryTag, multiple: false, cancellationToken: ct);
@@ -98,28 +113,24 @@ public class OrderPlacedMessageConsumer
                     message.OrderGuid, duplicate.FulfillmentId);
                 break;
 
-            case CreateFulfillmentResult.Failure failure:
+            case CreateFulfillmentResult.Failure failure when failure.Transient:
+                _circuit.RecordFailure();
                 var attempt = _retryCounter.Increment(message.OrderGuid);
-                if (!failure.Transient || attempt >= _settings.MaxRedeliveryAttempts)
-                {
-                    _retryCounter.Remove(message.OrderGuid);
-                    _logger.LogError(
-                        "OpenBoxes failure for OrderGuid={OrderGuid} (attempt {Attempt}/{Max}, transient={Transient}): {Reason} — sending to DLQ",
-                        message.OrderGuid, attempt, _settings.MaxRedeliveryAttempts, failure.Transient, failure.Reason);
-                    await channel.BasicNackAsync(args.DeliveryTag, multiple: false, requeue: false, cancellationToken: ct);
-                }
-                else
-                {
-                    // Exponential backoff: 2s, 4s, 8s, 16s before requeue
-                    var delay = TimeSpan.FromSeconds(Math.Min(30, Math.Pow(2, attempt)));
-                    _logger.LogWarning(
-                        "Transient OpenBoxes failure for OrderGuid={OrderGuid} (attempt {Attempt}/{Max}): {Reason} — retrying in {Delay}s",
-                        message.OrderGuid, attempt, _settings.MaxRedeliveryAttempts, failure.Reason, delay.TotalSeconds);
-                    await Task.Delay(delay, ct);
-                    await channel.BasicNackAsync(args.DeliveryTag, multiple: false, requeue: true, cancellationToken: ct);
-                }
+                var delay = TimeSpan.FromSeconds(Math.Min(30, Math.Pow(2, attempt)));
+                _logger.LogWarning(
+                    "Transient OpenBoxes failure for OrderGuid={OrderGuid} (attempt {Attempt}/{Max}): {Reason} — requeuing in {Delay}s",
+                    message.OrderGuid, attempt, _settings.MaxRedeliveryAttempts, failure.Reason, delay.TotalSeconds);
+                await Task.Delay(delay, ct);
+                await channel.BasicNackAsync(args.DeliveryTag, multiple: false, requeue: true, cancellationToken: ct);
+                break;
+
+            case CreateFulfillmentResult.Failure failure:
+                _retryCounter.Remove(message.OrderGuid);
+                _logger.LogError(
+                    "Permanent OpenBoxes failure for OrderGuid={OrderGuid}: {Reason} — sending to DLQ",
+                    message.OrderGuid, failure.Reason);
+                await channel.BasicNackAsync(args.DeliveryTag, multiple: false, requeue: false, cancellationToken: ct);
                 break;
         }
     }
-
 }

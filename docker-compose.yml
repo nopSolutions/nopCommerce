@@ -10,6 +10,8 @@ services:
                 condition: service_healthy
             rabbitmq:
                 condition: service_healthy
+            wiremock:
+                condition: service_started
         restart: always
         volumes:
             - nopcommerce_app_data:/app/App_Data
@@ -20,6 +22,8 @@ services:
             SA_PASSWORD: "nopCommerce_db_password"
             ACCEPT_EULA: "Y"
             MSSQL_PID: "Express"
+        ports:
+            - "1433:1433"
         volumes:
             - nopcommerce_data:/var/opt/mssql
         healthcheck:
@@ -31,6 +35,10 @@ services:
     rabbitmq:
         image: rabbitmq:3-management
         container_name: nopcommerce_rabbitmq
+        hostname: nopcommerce_rabbitmq
+        user: "0:0"
+        environment:
+            RABBITMQ_ERLANG_COOKIE: "nopcommerce_secret_cookie"
         ports:
             - "5672:5672"
             - "15672:15672"
@@ -47,6 +55,8 @@ services:
         depends_on:
             rabbitmq:
                 condition: service_healthy
+            openboxes:
+                condition: service_healthy
         environment:
             BRIDGE__RABBITMQHOST: "rabbitmq"
             BRIDGE__RABBITMQPORT: "5672"
@@ -56,14 +66,65 @@ services:
             BRIDGE__DEADLETTEREXCHANGE: "verdemart.orders.dlx"
             BRIDGE__DEADLETTERQUEUE: "verdemart.orders.openboxes.dlq"
             BRIDGE__MAXREDELIVERYATTEMPTS: "5"
-            BRIDGE__OPENBOXESBASEURL: "http://openboxes:8080"
-            BRIDGE__OPENBOXESAPIKEY: ""
+            BRIDGE__OPENBOXESBASEURL: "http://openboxes:8080/openboxes/"
+            BRIDGE__OPENBOXESUSERNAME: "admin"
+            BRIDGE__OPENBOXESPASSWORD: "password"
+            BRIDGE__OPENBOXESORIGINLOCATIONID: "1"
+            BRIDGE__OPENBOXESDESTINATIONLOCATIONNAME: "VerdeMart Store"
+            BRIDGE__OPENBOXESDEFAULTCATEGORYNAME: "DEFAULT_CATEGORY"
+            BRIDGE__OPENBOXESREQUESTEDBYPERSONID: "1"
             BRIDGE__DEDUPCONNECTIONSTRING: "Data Source=/data/processed_orders.db"
         volumes:
             - openboxes_bridge_data:/data
         restart: unless-stopped
+    openboxes_db:
+        image: mariadb:10
+        container_name: openboxes_db
+        environment:
+            MYSQL_ROOT_PASSWORD: "root"
+            MYSQL_DATABASE: "openboxes"
+            MYSQL_USER: "openboxes"
+            MYSQL_PASSWORD: "openboxes"
+        volumes:
+            - openboxes_db_data:/var/lib/mysql
+        healthcheck:
+            test: ["CMD-SHELL", "mariadb-admin ping -h localhost -u openboxes --password=openboxes || mysqladmin ping -h localhost -u openboxes --password=openboxes"]
+            interval: 10s
+            timeout: 5s
+            retries: 10
+            start_period: 20s
+    openboxes:
+        image: ghcr.io/openboxes/openboxes:latest
+        container_name: openboxes
+        depends_on:
+            openboxes_db:
+                condition: service_healthy
+        ports:
+            - "8080:8080"
+        environment:
+            DATASOURCE_URL: "jdbc:mysql://openboxes_db/openboxes?serverTimezone=UTC&useSSL=false"
+            DATASOURCE_USERNAME: "openboxes"
+            DATASOURCE_PASSWORD: "openboxes"
+            GRAILS_SERVER_URL: "http://localhost:8080/openboxes/"
+            JAVA_TOOL_OPTIONS: "-Xms1024m -Xmx1024m -XX:+UseParallelGC -Djava.awt.headless=true"
+        healthcheck:
+            test: ["CMD-SHELL", "curl --fail --silent localhost:8080/openboxes/health | grep UP || exit 1"]
+            interval: 15s
+            timeout: 30s
+            retries: 20
+            start_period: 300s
+        restart: unless-stopped
+    wiremock:
+        image: "wiremock/wiremock:latest"
+        container_name: nopcommerce_wiremock
+        entrypoint: ["/docker-entrypoint.sh", "--global-response-templating", "--disable-gzip", "--verbose"]
+        ports:
+            - "8090:8080"
+        volumes:
+            - ./wiremock/mappings:/home/wiremock/mappings
 
 volumes:
   nopcommerce_data:
   nopcommerce_app_data:
   openboxes_bridge_data:
+  openboxes_db_data:

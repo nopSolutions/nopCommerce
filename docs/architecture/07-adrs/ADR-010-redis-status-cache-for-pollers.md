@@ -2,8 +2,9 @@
 
 | | |
 |---|---|
-| Status | Accepted |
+| Status | Superseded — not implemented |
 | Date | 2026-05-05 |
+| Superseded by | Implementation — pollers adopted different idempotency mechanisms; Redis design assumptions did not hold |
 | Produced by | ADD Iteration 5 — Step 6 (drivers: CON-29; multi-node external API multiplication) |
 
 ## Context
@@ -67,10 +68,17 @@ Each node maintains its own in-memory map of last-known statuses. Simple, no Red
 **Rely on idempotency alone (no lock, shared cache only).**
 DB and Redis writes are idempotent, so concurrent nodes writing the same change is harmless. *Rejected for the lock specifically:* idempotency protects correctness but does not prevent N nodes from calling OpenBoxes and WireMock N times per tick. The lock costs one Redis call per node per tick and is negligible given Redis is already in the stack.
 
+## Why This Decision Was Superseded
+
+**No QA drives Redis.** Latency is governed by the polling interval, reliability by RabbitMQ and the outbox, and consistency by `TransactionScope`. Redis addresses none of these directly.
+
+**Cache hit rate would be zero for the OpenBoxes poller.** Each fulfillment is processed exactly once. After processing, `ReceiveFulfillmentAsync` advances its status out of `ISSUED` in OpenBoxes so it never reappears in the poll batch. There is no repeated read of the same status to cache.
+
+**The only valid Redis use case is a distributed lock for multi-instance deployments.** None of the QASs define a multi-instance requirement for VerdeMart. Introducing Redis infrastructure to solve a problem the QASs do not require violates the brief's explicit warning against technologies added without architectural purpose.
+
+**The idempotency assumption changed.** The cache design assumed both pollers would compare a last-known status string against the API response. The carrier poller does this using `Shipment.ExternalShippingStatus` directly — no extra DB read, nothing to cache. The OpenBoxes poller does not compare statuses at all; it uses an `OpenBoxesReceiveConfirmed` flag on the `Shipment` entity. The cache key pattern `verdemart:openboxes:status:{OrderGuid}` maps to a mechanism that was never built.
+
 ## Consequences
 
-- Exactly one node executes the external API call per tick regardless of how many nodes are running. OpenBoxes and WireMock receive a constant 1 call per 30-second interval.
-- DB read load is absorbed by Redis in the common case. DB writes occur only on detected status changes.
-- Nodes that do not acquire the lock perform a single Redis call and return — no DB, no API, no cache access.
-- Redis unavailability causes all nodes to skip the lock check and fall back to the DB-only design — correctness is preserved, but multiple nodes may call the external API concurrently for the duration of the outage.
-- `IStaticCacheManager` is injected into both poller tasks. No new infrastructure component is introduced beyond enabling the Redis provider already supported by nopCommerce core.
+- No Redis infrastructure is introduced.
+- The multi-node external API multiplication concern is unresolved and documented as a known gap in ADR-008 and ADR-009. It has no practical effect at VerdeMart's current single-node deployment.
