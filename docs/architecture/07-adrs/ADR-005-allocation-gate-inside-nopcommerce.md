@@ -14,7 +14,7 @@ QAS-2 requires that exactly one of two simultaneous orders for the last unit suc
 
 ## Decision
 
-Host the allocation gate inside nopCommerce. The gate operates on `ProductWarehouseInventory` rows under a pessimistic database row-level lock, evaluating effective availability as `StockQuantity − SUM(active reservations)` and either decrementing or returning a structured failure synchronously.
+Host the allocation gate inside nopCommerce. The gate uses an atomic conditional UPDATE on the `Product` table — `UPDATE Product SET StockQuantity = StockQuantity - @qty WHERE Id = @id AND StockQuantity >= @qty` — inside a `TransactionScope`. SQL Server serialises concurrent UPDATEs on the same row; the `WHERE StockQuantity >= @qty` clause acts as the availability check inside the implicit row lock. Stock decrements at reserve time; `ReleaseAsync` and the expiry task return it if the reservation is cancelled or expires. For the VerdeMart demo, `ManageInventoryMethodId = 1` (global stock) is used, so `Product.StockQuantity` is the authoritative field; per-warehouse `ProductWarehouseInventory` is not wired in at this stage.
 
 The bounded-contexts model is preserved by reframing the two roles: **OpenBoxes** is authoritative for physical stock truth (what is on the shelf); **nopCommerce** is authoritative for operational allocation arbitration across channels. The two reconcile via the existing `inventory.adjusted` event flow declared in `03-bounded-contexts.md`.
 
