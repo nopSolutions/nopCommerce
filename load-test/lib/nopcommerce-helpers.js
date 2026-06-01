@@ -74,7 +74,7 @@ export function buildAddToCartFormData(productId, quantity, token) {
         __RequestVerificationToken: token,
         product_id: productId.toString(),
         shoppingcarttype: '1',
-        quantity: quantity.toString(),
+        [`addtocart_${productId}.EnteredQuantity`]: quantity.toString(),
     };
 }
 

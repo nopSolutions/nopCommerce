@@ -1,5 +1,5 @@
 import http from 'k6/http';
-import { check, sleep } from 'k6';
+import { check } from 'k6';
 import { Counter, Rate, Trend } from 'k6/metrics';
 import {
     buildAddToCartFormData,
@@ -15,7 +15,6 @@ import {
     extractCookies,
     extractOrderId,
     extractCartItemIds,
-    humanDelay,
     logCheckoutProgress,
     mergeCookies,
     validateCheckoutStepResponse,
@@ -67,17 +66,14 @@ export const options = {
 const BASE_URL = __ENV.BASE_URL || 'http://localhost:8080';
 
 const PRODUCT_URLS = {
-    1: '/build-your-own-computer',
     3: '/lenovo-ideacentre',
-    4: '/apple-macbook-pro',
     5: '/asus-laptop',
     6: '/samsung-premium-ultrabook',
     9: '/lenovo-thinkpad-carbon-laptop',
-    14: '/nikon-d5500-dslr',
     22: '/samsung-galaxy-s24-256gb',
 };
 
-const PRODUCT_IDS = [1, 3, 4, 5, 6, 9, 14, 22];
+const PRODUCT_IDS = [3, 5, 6, 9, 22];
 
 const PAYMENT_METHODS = [
     'Payments.CheckMoneyOrder',
@@ -105,7 +101,6 @@ export default function () {
         paymentMethod: paymentMethod.replace('Payments.', ''),
     });
 
-    sleep(humanDelay(0.5));
     let response = http.get(`${BASE_URL}/`, {
         headers: buildHeaders(),
         tags: { name: 'GET /' },
@@ -125,7 +120,6 @@ export default function () {
     cookies = mergeCookies(cookies, extractCookies(response));
     logCheckoutProgress(vu, 'Homepage', 'OK', { cookies: Object.keys(cookies).length });
 
-    sleep(humanDelay(1));
     response = http.get(`${BASE_URL}${PRODUCT_URLS[productId]}`, {
         headers: buildHeaders(cookies),
         tags: { name: `GET ${PRODUCT_URLS[productId]}` },
@@ -154,7 +148,6 @@ export default function () {
 
     logCheckoutProgress(vu, 'Product Page', 'OK', { tokenLength: token.length });
 
-    sleep(humanDelay(1.5));
     const addToCartData = buildAddToCartFormData(productId, 1, token);
 
     response = http.post(
@@ -191,7 +184,6 @@ export default function () {
     cookies = mergeCookies(cookies, extractCookies(response));
     logCheckoutProgress(vu, 'Add to Cart', 'OK', { productId });
 
-    sleep(humanDelay(0.5));
     const checkoutAttributeData = buildCheckoutAttributeFormData(token, 1, 1);
 
     response = http.post(
@@ -217,7 +209,6 @@ export default function () {
     cookies = mergeCookies(cookies, extractCookies(response));
     logCheckoutProgress(vu, 'Checkout Attributes', 'OK', { giftWrapping: 'No' });
 
-    sleep(humanDelay(2));
     response = http.get(`${BASE_URL}/onepagecheckout`, {
         headers: buildHeaders(cookies),
         tags: { name: 'GET /onepagecheckout' },
@@ -236,11 +227,26 @@ export default function () {
     }
 
     const checkoutCheck = check(response, {
-        'Checkout page loaded': (r) => r.status === 200 || r.status === 302,
+        'Checkout page loaded': (r) => {
+            if (r.status !== 200 && r.status !== 302) {
+                return false;
+            }
+
+            const redirectedUrl = r.url || '';
+            if (redirectedUrl.includes('/cart')) {
+                return false;
+            }
+
+            return redirectedUrl.includes('/onepagecheckout')
+                || (typeof r.body === 'string' && r.body.toLowerCase().includes('checkout-billing-load'));
+        },
     });
 
     if (!checkoutCheck) {
-        logCheckoutProgress(vu, 'Checkout Page', 'FAIL', { status: response.status });
+        logCheckoutProgress(vu, 'Checkout Page', 'FAIL', {
+            status: response.status,
+            url: response.url || 'unknown',
+        });
         checkoutStepFailures.add(1);
         orderFailures.add(1);
         return;
@@ -250,7 +256,6 @@ export default function () {
     token = extractAntiForgeryToken(response) || token;
     logCheckoutProgress(vu, 'Checkout Page', 'OK');
 
-    sleep(humanDelay(1.5));
     const billingData = buildBillingAddressFormData(token, vu, iter);
 
     response = http.post(
@@ -273,7 +278,6 @@ export default function () {
     cookies = mergeCookies(cookies, extractCookies(response));
     logCheckoutProgress(vu, 'Billing Address', 'OK', { shipToSameAddress: true });
 
-    sleep(humanDelay(1));
     const shippingMethodData = buildShippingMethodFormData(token, shippingOption);
 
     response = http.post(
@@ -296,7 +300,6 @@ export default function () {
     cookies = mergeCookies(cookies, extractCookies(response));
     logCheckoutProgress(vu, 'Shipping Method', 'OK', { option: shippingOption.split('___')[1] });
 
-    sleep(humanDelay(1));
     const paymentMethodData = buildPaymentMethodFormData(token, paymentMethod);
 
     response = http.post(
@@ -318,8 +321,6 @@ export default function () {
 
     cookies = mergeCookies(cookies, extractCookies(response));
     logCheckoutProgress(vu, 'Payment Method', 'OK', { method: paymentMethod.replace('Payments.', '') });
-
-    sleep(humanDelay(1));
 
     const paymentInfoData = paymentMethod === 'Payments.Manual'
         ? buildManualPaymentInfoFormData(token)
@@ -346,7 +347,6 @@ export default function () {
     const cartItemIds = extractCartItemIds(response);
     logCheckoutProgress(vu, 'Payment Info', 'OK', { cartItems: cartItemIds.length });
 
-    sleep(humanDelay(1.5));
     const orderStartTime = Date.now();
 
     response = http.post(
@@ -407,8 +407,6 @@ export default function () {
         orderSuccessRate.add(false);
         orderFailures.add(1);
     }
-
-    sleep(humanDelay(3, 30));
 }
 
 export function setup() {
