@@ -1,0 +1,5 @@
+# Log files from test runs
+logs/*.log
+
+# Keep the directory structure
+!logs/.gitkeep
