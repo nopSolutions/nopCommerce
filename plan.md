@@ -188,7 +188,7 @@ Owns the **send-out** side: how messages flow to WMS, how retries/breakers/DLQ b
 | João Varela | `[x]` POS callback endpoint | `.../OmnichannelCore/Controllers/OmnichannelCallbackController.cs` |
 | João Varela | `[x]` POS sim `duplicate` and `stale` modes | `services/pos-sim/` |
 | João Roldão | `[x]` Plugin integration: connect POS callback into the inbox + stock projection paths | `.../OmnichannelCore/` |
-| João Varela | `[ ]` Unit tests for `messageId` dedup and `sourceVersion` staleness; e2e: duplicate ignored, stale ignored, legitimate update applied | `tests/` or `.../OmnichannelCore/Tests/`; evidence in `docs/evidence/qa-2-consistency.md` |
+| João Varela | `[x]` Unit tests for `messageId` dedup and `sourceVersion` staleness; e2e: duplicate ignored, stale ignored, legitimate update applied | `nopCommerce/src/Tests/Nop.Tests/Nop.Plugin.Misc.OmnichannelCore.Tests/`; evidence in `docs/evidence/qa-2-consistency.md` |
 
 **Verification gate** (Wed 27 May)
 

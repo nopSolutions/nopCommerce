@@ -27,6 +27,24 @@
     <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj" />
   </ItemGroup>
 
+  <!-- The OmnichannelCore plugin is built as a plugin (not referenced as a normal project),
+       so its sources under test are linked in directly for the QA-2 consistency tests. -->
+  <ItemGroup>
+    <Compile Include="..\..\Plugins\Nop.Plugin.Misc.OmnichannelCore\OmnichannelCoreDefaults.cs" Link="Nop.Plugin.Misc.OmnichannelCore\OmnichannelCoreDefaults.cs" />
+    <Compile Include="..\..\Plugins\Nop.Plugin.Misc.OmnichannelCore\Controllers\OmnichannelCallbackController.cs" Link="Nop.Plugin.Misc.OmnichannelCore\Controllers\OmnichannelCallbackController.cs" />
+    <Compile Include="..\..\Plugins\Nop.Plugin.Misc.OmnichannelCore\Domains\OmniInboxMessage.cs" Link="Nop.Plugin.Misc.OmnichannelCore\Domains\OmniInboxMessage.cs" />
+    <Compile Include="..\..\Plugins\Nop.Plugin.Misc.OmnichannelCore\Domains\OmniInboxMessageStatus.cs" Link="Nop.Plugin.Misc.OmnichannelCore\Domains\OmniInboxMessageStatus.cs" />
+    <Compile Include="..\..\Plugins\Nop.Plugin.Misc.OmnichannelCore\Domains\OmniStockSyncState.cs" Link="Nop.Plugin.Misc.OmnichannelCore\Domains\OmniStockSyncState.cs" />
+    <Compile Include="..\..\Plugins\Nop.Plugin.Misc.OmnichannelCore\Domains\OmniStockSyncStatus.cs" Link="Nop.Plugin.Misc.OmnichannelCore\Domains\OmniStockSyncStatus.cs" />
+    <Compile Include="..\..\Plugins\Nop.Plugin.Misc.OmnichannelCore\Models\Callbacks\InboxMessageContext.cs" Link="Nop.Plugin.Misc.OmnichannelCore\Models\Callbacks\InboxMessageContext.cs" />
+    <Compile Include="..\..\Plugins\Nop.Plugin.Misc.OmnichannelCore\Models\Callbacks\InboxProcessingResult.cs" Link="Nop.Plugin.Misc.OmnichannelCore\Models\Callbacks\InboxProcessingResult.cs" />
+    <Compile Include="..\..\Plugins\Nop.Plugin.Misc.OmnichannelCore\Models\Callbacks\OmnichannelCallbackResponse.cs" Link="Nop.Plugin.Misc.OmnichannelCore\Models\Callbacks\OmnichannelCallbackResponse.cs" />
+    <Compile Include="..\..\Plugins\Nop.Plugin.Misc.OmnichannelCore\Models\Callbacks\PosStockChangedRequest.cs" Link="Nop.Plugin.Misc.OmnichannelCore\Models\Callbacks\PosStockChangedRequest.cs" />
+    <Compile Include="..\..\Plugins\Nop.Plugin.Misc.OmnichannelCore\Models\Callbacks\StockSyncResult.cs" Link="Nop.Plugin.Misc.OmnichannelCore\Models\Callbacks\StockSyncResult.cs" />
+    <Compile Include="..\..\Plugins\Nop.Plugin.Misc.OmnichannelCore\Services\OmniInboxService.cs" Link="Nop.Plugin.Misc.OmnichannelCore\Services\OmniInboxService.cs" />
+    <Compile Include="..\..\Plugins\Nop.Plugin.Misc.OmnichannelCore\Services\OmniStockSyncService.cs" Link="Nop.Plugin.Misc.OmnichannelCore\Services\OmniStockSyncService.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Update="Connections.resx">
       <Generator>ResXFileCodeGenerator</Generator>
