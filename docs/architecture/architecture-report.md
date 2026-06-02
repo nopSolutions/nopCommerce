@@ -72,6 +72,7 @@ The architecture was built in five ADD iterations, each closing a specific QAS. 
 - **At-least-once delivery** is guaranteed for order events via the transactional outbox and durable RabbitMQ queues. All consumers are idempotent.
 - **Polling over webhooks** for both external status sources (carrier, OpenBoxes). After any outage, the next tick reads current state unconditionally — no missed events, no operator action.
 - **The bridge is independently deployable.** It has no compile-time dependency on nopCommerce. The only shared contract is the RabbitMQ topology and the JSON shape of `OrderPlacedMessage`.
+- **Circuit breaker on the OpenBoxes Bridge** (ADR-011) prevents transient outages from polluting the DLQ. The bridge transitions to OPEN state on repeated failures, holds messages in RabbitMQ, and resumes consuming automatically on recovery.
 
 ---
 
@@ -91,6 +92,7 @@ All major decisions, including rejected alternatives, are recorded in [`07-adrs/
 | ADR-008 | Carrier status via scheduled polling (not webhooks) |
 | ADR-009 | OpenBoxes fulfillment state via scheduled polling |
 | ADR-010 | Redis cache and lock — superseded; design assumptions did not hold |
+| ADR-011 | Circuit breaker for OpenBoxes Bridge — transient failure isolation and automatic self-healing |
 
 ---
 
@@ -98,6 +100,6 @@ All major decisions, including rejected alternatives, are recorded in [`07-adrs/
 
 - **Multi-node deployment** is not supported for the pollers. Both `CarrierStatusPollerTask` and `OpenBoxesStatusPollerTask` would issue duplicate API calls and concurrent DB writes if multiple nopCommerce nodes ran simultaneously. Writes are idempotent but external API multiplication is not resolved. VerdeMart runs a single node; this is a documented gap for future scale-out.
 - **Stock back-propagation from OpenBoxes to nopCommerce** is not implemented. Warehouse-originated stock adjustments (returns, shrinkage, supplier receipts) do not update `Product.StockQuantity`. The demo drives all stock movements through the application, so divergence does not surface during the demonstration.
-- **DLQ replay tooling** is not automated. Three dead-letter queues exist. Poison message inspection and replay require the RabbitMQ Management Console.
+- **DLQ replay tooling** is not automated. The circuit breaker implemented in ADR-011 routes transient bridge failures back to the RabbitMQ queue rather than to the DLQ — the DLQ now receives only genuine poison messages. Inspection and replay of those still require the RabbitMQ Management Console.
 
 Full risk register and accepted limitations: [`08-risk-and-validation-plan.md`](08-risk-and-validation-plan.md) | Feasibility spike: [`10-feasibility-spike.md`](10-feasibility-spike.md)

@@ -14,6 +14,10 @@ nopCommerce must notify surrounding systems (OpenBoxes, carrier, and others) whe
 
 Use RabbitMQ as the message broker for all cross-context event delivery. All bounded contexts communicate via RabbitMQ exchanges and queues, not via direct HTTP calls in the synchronous request path.
 
+## Rejected Alternatives
+
+**Direct synchronous HTTP call from the checkout thread.** Each downstream system (OpenBoxes, carrier) would be called synchronously at the point of order placement. If any system is slow or unavailable, checkout either blocks or fails. *Rejected:* QAS-1 and QAS-3 explicitly forbid placing a downstream dependency on the checkout critical path — events must not be lost during a downstream outage and checkout must complete regardless of downstream availability. Both are impossible under a synchronous call model.
+
 ## Consequences
 
 - Checkout is decoupled from downstream system availability
