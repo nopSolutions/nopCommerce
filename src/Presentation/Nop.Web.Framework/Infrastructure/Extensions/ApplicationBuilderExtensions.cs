@@ -269,6 +269,7 @@ public static class ApplicationBuilderExtensions
     {
         var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
         var appSettings = EngineContext.Current.Resolve<AppSettings>();
+        var mediaSettings = EngineContext.Current.Resolve<MediaSettings>();
 
         void staticFileResponse(StaticFileResponseContext context)
         {
@@ -299,7 +300,7 @@ public static class ApplicationBuilderExtensions
         //images
         application.UseStaticFiles(new StaticFileOptions
         {
-            FileProvider = new PhysicalFileProvider(fileProvider.GetLocalImagesPath(EngineContext.Current.Resolve<MediaSettings>())),
+            FileProvider = new PhysicalFileProvider(fileProvider.GetLocalImagesPath(mediaSettings)),
             RequestPath = new PathString("/images"),
             OnPrepareResponse = staticFileResponse
         });
@@ -350,6 +351,15 @@ public static class ApplicationBuilderExtensions
         {
             FileProvider = new PhysicalFileProvider(fileProvider.GetAbsolutePath("icons")),
             RequestPath = "/icons",
+            ContentTypeProvider = provider
+        });
+
+        //add support for 3D objects (GLB files)
+        provider.Mappings[".glb"] = MimeTypes.ModelGlb;
+        application.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(fileProvider.Combine(fileProvider.GetLocalImagesPath(mediaSettings), NopMediaDefaults.Default3dObjectsDirectoryName)),
+            RequestPath = new PathString($"/images/3d"),
             ContentTypeProvider = provider
         });
 

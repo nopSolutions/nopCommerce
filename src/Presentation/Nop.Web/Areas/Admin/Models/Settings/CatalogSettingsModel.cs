@@ -434,5 +434,10 @@ public partial record CatalogSettingsModel : BaseNopModel, ISettingsModel
     public ArtificialIntelligenceSettingsModel ArtificialIntelligenceSettingsModel { get; set; }
     public GpsrSettingsModel GpsrSettingsModel { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.PriceListStrategy")]
+    public int PriceListStrategy { get; set; }
+    public bool PriceListStrategy_OverrideForStore { get; set; }
+    public SelectList PriceListStrategyValues { get; set; }
+
     #endregion
 }

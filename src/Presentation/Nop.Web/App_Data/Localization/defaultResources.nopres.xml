@@ -810,6 +810,9 @@
   <LocaleResource Name="ActivityLog.AddNewMenuItem">
     <Value>Added a new menu item ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewPriceList">
+    <Value>Added a new price list. ID: {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewProduct">
     <Value>Added a new product ('{0}')</Value>
   </LocaleResource>
@@ -941,6 +944,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeletePlugin">
     <Value>Deleted a plugin (FriendlyName: '{0}' version: {1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeletePriceList">
+    <Value>Deleted a price list. ID: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteProduct">
     <Value>Deleted a product ('{0}')</Value>
@@ -1083,6 +1089,9 @@
   <LocaleResource Name="ActivityLog.EditPlugin">
     <Value>Edited a plugin (FriendlyName: '{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditPriceList">
+    <Value>Edited a price list. ID: {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.EditProduct">
     <Value>Edited a product ('{0}')</Value>
   </LocaleResource>
@@ -1152,6 +1161,9 @@
   <LocaleResource Name="ActivityLog.ExportOrders">
     <Value>{0} orders were exported</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.ExportPriceLists">
+    <Value>{0} price lists were exported</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.ExportProducts">
     <Value>{0} products were exported</Value>
   </LocaleResource>
@@ -1184,6 +1196,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportOrders">
     <Value>{0} orders were imported</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.ImportPriceLists">
+    <Value>{0} price lists were imported</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.ImportProducts">
     <Value>{0} products were imported</Value>
@@ -2466,8 +2481,8 @@
   <LocaleResource Name="Admin.Catalog.Categories.Updated">
     <Value>The category has been updated successfully.</Value>
   </LocaleResource>
-    <LocaleResource Name="Admin.Catalog.FilterLevelValue.AddNew">
-  <Value>Add a new filter level value</Value>
+  <LocaleResource Name="Admin.Catalog.FilterLevelValue.AddNew">
+    <Value>Add a new filter level value</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.FilterLevelValue.BackToList">
     <Value>back to filter level value list</Value>
@@ -2510,7 +2525,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.FilterLevelValues.Updated">
     <Value>The filter level value has been updated successfully.</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers">
     <Value>Manufacturers</Value>
   </LocaleResource>
@@ -2762,6 +2777,141 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Updated">
     <Value>The manufacturer has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceList.Customers">
+    <Value>Customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceList.Customers.AddNew">
+    <Value>Add customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceList.Customers.SaveBeforeEdit">
+    <Value>You need to save the price list before you can add customers for this page.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.PriceList.Info">
+    <Value>Price list info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceList.Products">
+    <Value>Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceList.Products.AddNew">
+    <Value>Add product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceList.Products.Fields.CalculatedPrice">
+    <Value>Calculated price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceList.Customers.Fields.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceList.Products.Fields.ManualPrice">
+    <Value>Manual price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceList.Products.Fields.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceList.Products.Fields.StandardPrice">
+    <Value>Original price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceList.Products.SaveBeforeEdit">
+    <Value>You need to save the price list before you can add products for this page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists">
+    <Value>Price lists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.AddNew">
+    <Value>Add new price list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Added">
+    <Value>The price list has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.BackToList">
+    <Value>back to price lists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Deleted">
+    <Value>The price list has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.EditPriceListDetails">
+    <Value>Edit price list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.Active">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.Active.Hint">
+    <Value>Check to make the price list active. Inactive price lists won't be applied to products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.CustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.CustomerRoles.Hint">
+    <Value>Select customer roles to which this price list will be applied. If no customer role is selected, the price list will be applied to all customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.Description.Hint">
+    <Value>The description of the price list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.EndDateUtc">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.EndDateUtc.Hint">
+    <Value>The date and time when the price list expires. Leave empty to make it active indefinitely.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.Name.Hint">
+    <Value>The name of the price list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.Name.Required">
+    <Value>The name of the price list is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.PriceCalculationTypeId">
+    <Value>Price calculation type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.PriceCalculationTypeId.Hint">
+    <Value>Select the price calculation type for this price list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.PriceCalculationValue">
+    <Value>Price calculation value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.PriceCalculationValue.Hint">
+    <Value>Specify the price calculation value. Its meaning depends on the selected price calculation type. For example, if you select 'Percentage Increase' as the price calculation type, enter the percentage discount to be applied to product prices (e.g. enter '10' to apply a 10% discount).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.Priority">
+    <Value>Priority</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.Priority.Hint">
+    <Value>The priority of the price list. This field is used to determine the order in which price lists are applied to products. Price lists with higher priority values are applied after price lists with lower priority values. If two or more price lists have the same priority, they are applied in the order they were created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.StartDateUtc">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Fields.StartDateUtc.Hint">
+    <Value>The date and time when the price list becomes active. Leave empty to activate immediately.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Imported">
+    <Value>Price lists have been imported successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.ImportFromExcelTip">
+    <Value>Imported price lists are distinguished by ID. If the ID already exists, then its corresponding price list will be updated. You should not specify ID (leave 0) for new price lists.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.PriceLists.List.CustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.List.CustomerRoles.Hint">
+    <Value>Filter price lists by customer role. Only price lists that are applied to the selected customer role will be displayed in the list.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.PriceLists.List.SearchIsActive">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.List.SearchIsActive.Hint">
+    <Value>Filter price lists by their active status. Leave empty to display all price lists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.NoPriceLists">
+    <Value>No price lists selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.PriceLists.Updated">
+    <Value>The price list has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews">
     <Value>Product reviews</Value>
@@ -3839,6 +3989,30 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Multimedia">
     <Value>Multimedia</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Object3d">
+    <Value>3D model</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Object3d.Fields.FileName">
+    <Value>3D model file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Object3d.Fields.FileName.Hint">
+    <Value>Upload a .glb file containing a 3D model to be displayed on the product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Object3d.Fields.Preview">
+    <Value>Preview</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Object3d.Fields.Preview.Hint">
+    <Value>Upload an image to be used as the thumbnail and displayed as a poster in the viewport until the 3D object is loaded.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Object3d.Fields.AltAttribute">
+    <Value>Alternative text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Object3d.Fields.AltAttribute.Hint">
+    <Value>The "alt" attribute for the "model-viewer" HTML element.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Multimedia.Object3d.Save">
+    <Value>Save</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Multimedia.Pictures">
     <Value>Pictures</Value>
@@ -6323,7 +6497,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.MetaTitleQuery.Hint">
     <Value>Set the query to generate meta title with artificial intelligence.</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery">
     <Value>AI query to generate product description</Value>
   </LocaleResource>
@@ -6662,6 +6836,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.PageShareCode.Hint">
     <Value>A page share button code. By default, we're using ShareThis service.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PriceListStrategy">
+    <Value>Price list strategy</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PriceListStrategy.Hint">
+    <Value>Select the strategy to be used when applying multiple price lists to products. The 'Minimal price' strategy applies all active price lists to products and uses the lowest calculated price. The 'Use by priority' strategy applies price lists to products in the order determined by their priority and uses the price from the first applicable price list.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewPossibleOnlyAfterPurchasing">
     <Value>Product review possible only after product purchasing</Value>
@@ -8318,7 +8498,8 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Translation.Info">
     <Value>
-        <![CDATA[<p>Pre-translate functionality allows you to use third-party translation services such as <a href='https://cloud.google.com/translate' target='_blank'>Google's Cloud Translation</a> or <a href='https://www.deepl.com/products/api' target='_blank'>DeepL</a> to automatically translate localizable fields of entities such as products and their attributes, categories, manufacturers, etc.</p><p><strong>Note:</strong> This functionality will not change any translations that you have added, or edited, manually.</p>]]></Value>
+      <![CDATA[<p>Pre-translate functionality allows you to use third-party translation services such as <a href='https://cloud.google.com/translate' target='_blank'>Google's Cloud Translation</a> or <a href='https://www.deepl.com/products/api' target='_blank'>DeepL</a> to automatically translate localizable fields of entities such as products and their attributes, categories, manufacturers, etc.</p><p><strong>Note:</strong> This functionality will not change any translations that you have added, or edited, manually.</p>]]>
+    </Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TranslationService">
     <Value>Translation service</Value>
@@ -8410,6 +8591,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.BlockTitle.Product">
     <Value>Product</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.BlockTitle.Product3dObject">
+    <Value>Product 3D models</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.CartThumbPictureSize">
     <Value>Cart/Wishlist thumbnail image size</Value>
   </LocaleResource>
@@ -8476,18 +8660,48 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.OrderThumbPictureSize.Hint">
     <Value>The default size (pixels) for product thumbnail images on the order details page.</Value>
   </LocaleResource>
-    <LocaleResource Name="Admin.Configuration.Settings.Media.PicturePath">
-        <Value>Path to the picture files</Value>
-    </LocaleResource>
-    <LocaleResource Name="Admin.Configuration.Settings.Media.PicturePath.Hint">
-        <Value>Set up the path on the file system to store the picture files</Value>
-    </LocaleResource>
-    <LocaleResource Name="Admin.Configuration.Settings.Media.PicturePath.Move">
-        <Value>Move pictures</Value>
-    </LocaleResource>
-    <LocaleResource Name="Admin.Configuration.Settings.Media.PicturePath.NotGrantedPermission">
-        <Value>The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.</Value>
-    </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.Object3dAutoRotateEnabled">
+    <Value>Auto-rotate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.Object3dAutoRotateEnabled.Hint">
+    <Value>Check this option to enable automatic rotation of product 3D models in the viewport.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.Object3dCameraControlEnabled">
+    <Value>Camera control</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.Object3dCameraControlEnabled.Hint">
+    <Value>Check this option to enable camera control in the viewport.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.Object3dLazyLoadingEnabled">
+    <Value>Lazy loading</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.Object3dLazyLoadingEnabled.Hint">
+    <Value>Check this option to enable lazy loading of 3D models on the product details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.Object3dUploadSizeLimit">
+    <Value>Upload size limit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.Object3dUploadSizeLimit.Hint">
+    <Value>The maximum allowed upload size for product 3D model (in megabytes).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.Object3dZoomEnabled">
+    <Value>Zoom</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.Object3dZoomEnabled.Hint">
+    <Value>Check this option to enable zoom functionality for product 3D models.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.PicturePath">
+    <Value>Path to the picture files</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.PicturePath.Hint">
+    <Value>Set up the path on the file system to store the picture files</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.PicturePath.Move">
+    <Value>Move pictures</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.PicturePath.NotGrantedPermission">
+    <Value>The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase">
     <Value>Pictures are stored into...</Value>
   </LocaleResource>
@@ -8562,7 +8776,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AllowCustomersCancelOrders.Hint">
     <Value>Check to allow customers to cancel orders</Value>
-  </LocaleResource>    
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AnonymousCheckoutAllowed">
     <Value>Anonymous checkout allowed</Value>
   </LocaleResource>
@@ -9848,8 +10062,9 @@
     <Value>Measures</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.AdditionalConfirm">
-    <Value><![CDATA[<p>WARNING. It is not recommended to do this on live sites because: </p><ol><li>Other rates have to be updated manually</li><li>You have to ensure that each product has a valid measure (dimension and weights) - they are not adjusted automatically</li></ol>]]>
-        </Value>
+    <Value>
+      <![CDATA[<p>WARNING. It is not recommended to do this on live sites because: </p><ol><li>Other rates have to be updated manually</li><li>You have to ensure that each product has a valid measure (dimension and weights) - they are not adjusted automatically</li></ol>]]>
+    </Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions">
     <Value>Dimensions</Value>
@@ -12917,6 +13132,9 @@
   <LocaleResource Name="Admin.Documentation.Reference.Plugins">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">plugins in nopCommerce</a>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Documentation.Reference.PriceLists">
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">price lists</a>]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ProductAttributes">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">product attributes</a>]]></Value>
   </LocaleResource>
@@ -14338,6 +14556,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Plugins.Saved">
     <Value>The plugin has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PriceLists.Import.ProductsDontExist">
+    <Value>Products with the following SKUs don't exist: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Products.NoProducts">
     <Value>No products selected</Value>
@@ -16131,7 +16352,7 @@
     <Value>Total files: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles.FilesSize">
-     <Value>Total file size: {0} MB</Value>
+    <Value>Total file size: {0} MB</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.DeleteThumbFiles.IsNotSupported">
     <Value>Delete image thumbs is not supported by current picture thumb service.</Value>
@@ -16162,7 +16383,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.ShrinkDatabase.DatabaseSize">
     <Value>Current database size is {0} MB</Value>
-  </LocaleResource>    
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.ShrinkDatabase.Progress">
     <Value>Processing...</Value>
   </LocaleResource>
@@ -16531,7 +16752,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.LoadedAssemblies.Hint">
     <Value>A list of loaded assemblies.</Value>
-  </LocaleResource>    
+  </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.NopLatestVersion">
     <Value>Latest nopCommerce version</Value>
   </LocaleResource>
@@ -18066,10 +18287,10 @@
     <Value>Vendor</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuItemType.Product">
-      <Value>Product</Value>
+    <Value>Product</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Menus.MenuItemType.Text">
-      <Value>Text without link</Value>
+    <Value>Text without link</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Messages.EmailAuthenticationMethod.None">
     <Value>No authentication</Value>
@@ -18172,6 +18393,27 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Payments.PaymentStatus.Voided">
     <Value>Voided</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.PriceLists.PriceListStrategy.MinimalPrice">
+    <Value>Minimal price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.PriceLists.PriceCalculationTypeEnum.PercentageDecrease">
+    <Value>Percentage decrease</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.PriceLists.PriceCalculationTypeEnum.PercentageIncrease">
+    <Value>Percentage increase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.PriceLists.PriceCalculationTypeEnum.AmountDecrease">
+    <Value>Amount decrease</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.PriceLists.PriceCalculationTypeEnum.AmountIncrease">
+    <Value>Amount increase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.PriceLists.PriceCalculationTypeEnum.FixedPrice">
+    <Value>Fixed price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.PriceLists.PriceListStrategy.UseByPriority">
+    <Value>Use by priority</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Security.CaptchaType.CheckBoxReCaptchaV2">
     <Value>reCAPTCHA v2 ("I'm not a robot" Checkbox)</Value>

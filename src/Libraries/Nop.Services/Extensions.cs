@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Collections.Concurrent;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -12,6 +14,43 @@ namespace Nop.Services;
 /// </summary>
 public static class Extensions
 {
+    #region Fields
+
+    private static readonly ConcurrentDictionary<(Type EntityType, string PropertyName), Delegate> _cache = new();
+
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// Get a compiled delegate for the given property selector, reusing a previously cached one
+    /// when the selector targets the same property on the same entity type
+    /// </summary>
+    /// <remarks>
+    /// Avoids repeated calls to <see cref="LambdaExpression.Compile"/> for the same property selector,
+    /// which would otherwise emit a new <c>DynamicMethod</c> on every invocation and create significant
+    /// GC and finalizer pressure under load. Cache key is <c>(EntityType, PropertyName)</c>; selectors
+    /// that do not target a property fall back to a plain compile.
+    /// </remarks>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <typeparam name="TPropType">Property type</typeparam>
+    /// <param name="selector">Property selector expression</param>
+    /// <returns>Compiled delegate</returns>
+    public static Func<TEntity, TPropType> GetCompiled<TEntity, TPropType>(this Expression<Func<TEntity, TPropType>> selector)
+    {
+        ArgumentNullException.ThrowIfNull(selector);
+
+        //fall back to a plain compile for non-property selectors (e.g. method calls, casts)
+        if (selector.Body is not MemberExpression { Member: PropertyInfo propInfo })
+            return selector.Compile();
+
+        var key = (typeof(TEntity), propInfo.Name);
+
+        var compiled = (Func<TEntity, TPropType>)_cache.GetOrAdd(key, static (_, sel) => sel.Compile(), selector);
+
+        return compiled;
+    }
+
     /// <summary>
     /// Convert to select list
     /// </summary>
@@ -143,4 +182,6 @@ public static class Extensions
     {
         return xs.ToGroupedDictionary(keySelector, x => x);
     }
+
+    #endregion
 }

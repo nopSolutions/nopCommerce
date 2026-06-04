@@ -176,7 +176,15 @@ public partial class AdminMenu : IAdminMenu
                                     IconClass = "far fa-circle"
                                 }
                             }
-                        }
+                        },
+                        new()
+                        {
+                            SystemName = "Price lists",
+                            Title = await _localizationService.GetResourceAsync("Admin.Catalog.PriceLists"),
+                            PermissionNames = new List<string> { StandardPermission.Catalog.PRICE_LISTS_VIEW },
+                            Url = GetMenuItemUrl("PriceList", "List"),
+                            IconClass = "far fa-dot-circle"
+                        },
                     }
                 },
                 //sales

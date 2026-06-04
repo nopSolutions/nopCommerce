@@ -173,6 +173,9 @@ public static partial class AdminWidgetZones
     public static string PluginDetailsButtons => "admin_plugin_details_buttons";
     public static string PluginDetailsTop => "admin_plugin_details_top";
     public static string PluginListButtons => "admin_plugin_list_buttons";
+    public static string PriceListListButtons => "admin_price_list_list_buttons";
+    public static string PriceListDetailsButtons => "admin_price_list_details_buttons";
+    public static string PriceListDetailsBlock => "admin_price_list_details_block";
     public static string ProductAttributeCombinationDetailsBottom => "admin_product_attribute_combination_details_bottom";
     public static string ProductAttributeCombinationDetailsButtons => "admin_product_attribute_combination_details_buttons";
     public static string ProductAttributeCombinationDetailsTop => "admin_product_attribute_combination_details_top";

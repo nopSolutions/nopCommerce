@@ -67,6 +67,10 @@ public partial class ModelCacheEventConsumer :
     IConsumer<EntityInsertedEvent<ProductPicture>>,
     IConsumer<EntityUpdatedEvent<ProductPicture>>,
     IConsumer<EntityDeletedEvent<ProductPicture>>,
+    //Product 3D objects
+    IConsumer<EntityInsertedEvent<Product3dObject>>,
+    IConsumer<EntityUpdatedEvent<Product3dObject>>,
+    IConsumer<EntityDeletedEvent<Product3dObject>>,
     //Product review
     IConsumer<EntityDeletedEvent<ProductReview>>,
     //blog posts
@@ -462,6 +466,28 @@ public partial class ModelCacheEventConsumer :
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
         await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.OrderPicturePrefixCacheKey);
+    }
+
+    #endregion
+
+    #region Product 3D objects
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Product3dObject> eventMessage)
+    {
+        await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.Product3dObjectPrefixCacheKeyById, eventMessage.Entity.ProductId));
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task HandleEventAsync(EntityUpdatedEvent<Product3dObject> eventMessage)
+    {
+        await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.Product3dObjectPrefixCacheKeyById, eventMessage.Entity.ProductId));
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task HandleEventAsync(EntityDeletedEvent<Product3dObject> eventMessage)
+    {
+        await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.Product3dObjectPrefixCacheKeyById, eventMessage.Entity.ProductId));
     }
 
     #endregion

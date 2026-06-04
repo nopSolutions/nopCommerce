@@ -12,6 +12,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.PriceLists;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
@@ -31,6 +32,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.PriceLists;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
@@ -71,6 +73,7 @@ public partial class ImportManager : IImportManager
     protected readonly INopFileProvider _fileProvider;
     protected readonly IOrderService _orderService;
     protected readonly IPictureService _pictureService;
+    protected readonly IPriceListService _priceListService;
     protected readonly IProductAttributeService _productAttributeService;
     protected readonly IProductService _productService;
     protected readonly IProductTagService _productTagService;
@@ -120,6 +123,7 @@ public partial class ImportManager : IImportManager
         INopFileProvider fileProvider,
         IOrderService orderService,
         IPictureService pictureService,
+        IPriceListService priceListService,
         IProductAttributeService productAttributeService,
         IProductService productService,
         IProductTagService productTagService,
@@ -164,6 +168,7 @@ public partial class ImportManager : IImportManager
         _newsLetterSubscriptionTypeService = newsLetterSubscriptionTypeService;
         _orderService = orderService;
         _pictureService = pictureService;
+        _priceListService = priceListService;
         _productAttributeService = productAttributeService;
         _productService = productService;
         _productTagService = productTagService;
@@ -323,7 +328,7 @@ public partial class ImportManager : IImportManager
             return null;
 
         var newPicture = await _pictureService.InsertPictureAsync(newPictureBinary, mimeType, await _pictureService.GetPictureSeNameAsync(name));
-        
+
         return newPicture;
     }
 
@@ -650,7 +655,7 @@ public partial class ImportManager : IImportManager
 
         var categoryBreadCrumb = await _categoryService.GetFormattedBreadCrumbAsync(category);
         allCategories.TryAdd(categoryBreadCrumb, category);
-        
+
         if (!string.IsNullOrEmpty(curentCategoryBreadCrumb) && allCategories.ContainsKey(curentCategoryBreadCrumb) &&
             categoryBreadCrumb != curentCategoryBreadCrumb)
             allCategories.Remove(curentCategoryBreadCrumb);
@@ -1248,7 +1253,7 @@ public partial class ImportManager : IImportManager
         var requiredProductIdsCellNum = tempProperty?.PropertyOrderPosition ?? -1;
 
         var requiredProductsData = new Dictionary<string, string>();
-        
+
         if (_catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities)
         {
             tierPriceManager.SetSelectList("Store", (await _storeService.GetAllStoresAsync()).ToSelectList(p => (p as Store)?.Name ?? string.Empty));
@@ -1423,22 +1428,22 @@ public partial class ImportManager : IImportManager
 
         //performance optimization, the check for the existence of the categories in one SQL request
         var notExistingCategories = await _categoryService.GetNotExistingCategoriesAsync(allCategories.ToArray());
-        if (notExistingCategories.Any()) 
+        if (notExistingCategories.Any())
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.CategoriesDontExist"), string.Join(", ", notExistingCategories)));
 
         //performance optimization, the check for the existence of the manufacturers in one SQL request
         var notExistingManufacturers = await _manufacturerService.GetNotExistingManufacturersAsync(allManufacturers.ToArray());
-        if (notExistingManufacturers.Any()) 
+        if (notExistingManufacturers.Any())
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.ManufacturersDontExist"), string.Join(", ", notExistingManufacturers)));
 
         //performance optimization, the check for the existence of the product attributes in one SQL request
         var notExistingProductAttributes = await _productAttributeService.GetNotExistingAttributesAsync(allAttributeIds.ToArray());
-        if (notExistingProductAttributes.Any()) 
+        if (notExistingProductAttributes.Any())
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.ProductAttributesDontExist"), string.Join(", ", notExistingProductAttributes)));
 
         //performance optimization, the check for the existence of the specification attribute options in one SQL request
         var notExistingSpecificationAttributeOptions = await _specificationAttributeService.GetNotExistingSpecificationAttributeOptionsAsync(allSpecificationAttributeOptionIds.Where(saoId => saoId != 0).ToArray());
-        if (notExistingSpecificationAttributeOptions.Any()) 
+        if (notExistingSpecificationAttributeOptions.Any())
             throw new ArgumentException($"The following specification attribute option ID(s) don't exist - {string.Join(", ", notExistingSpecificationAttributeOptions)}");
 
         //performance optimization, the check for the existence of the stores in one SQL request
@@ -1580,7 +1585,7 @@ public partial class ImportManager : IImportManager
                 orderItemManager.ReadDefaultFromXlsx(worksheet, endRow, 2);
 
                 //skip caption row
-                if (!orderItemManager.IsCaption) 
+                if (!orderItemManager.IsCaption)
                     allOrderItemSkus.Add(orderItemManager.GetDefaultProperty("Sku").StringValue);
 
                 endRow++;
@@ -1609,12 +1614,12 @@ public partial class ImportManager : IImportManager
 
         //performance optimization, the check for the existence of the customers in one SQL request
         var notExistingCustomerGuids = await _customerService.GetNotExistingCustomersAsync(allCustomerGuids.ToArray());
-        if (notExistingCustomerGuids.Any()) 
+        if (notExistingCustomerGuids.Any())
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.CustomersDontExist"), string.Join(", ", notExistingCustomerGuids)));
 
         //performance optimization, the check for the existence of the order items in one SQL request
         var notExistingProductSkus = await _productService.GetNotExistingProductsAsync(allOrderItemSkus.ToArray());
-        if (notExistingProductSkus.Any()) 
+        if (notExistingProductSkus.Any())
             throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Orders.Import.ProductsDontExist"), string.Join(", ", notExistingProductSkus)));
 
         return (new ImportOrderMetadata
@@ -1626,6 +1631,74 @@ public partial class ImportManager : IImportManager
             OrderItemManager = orderItemManager,
             AllOrderGuids = allOrderGuids,
             AllCustomerGuids = allCustomerGuids
+        }, worksheet);
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task<(ImportPriceListMetadata, IXLWorksheet)> PrepareImportPriceListDataAsync(IXLWorkbook workbook)
+    {
+        var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
+        //the columns
+        var metadata = GetWorkbookMetadata<PriceList>(workbook, languages);
+        var worksheet = metadata.DefaultWorksheet;
+        var defaultProperties = metadata.DefaultProperties;
+
+        var manager = new PropertyManager<PriceList>(defaultProperties, _catalogSettings);
+
+        var priceListItemProperties = new[]
+        {
+            new PropertyByName<PriceListItem>("Sku"),
+            new PropertyByName<PriceListItem>("ManualPrice")
+        };
+
+        var priceListItemManager = new PropertyManager<PriceListItem>(priceListItemProperties, _catalogSettings);
+
+        var endRow = 2;
+
+        var allPriceListItemSkus = new List<string>();
+        var countPriceListsInFile = 0;
+
+        //find end of data
+        while (true)
+        {
+            var allColumnsAreEmpty = manager.GetDefaultProperties
+                .Select(property => worksheet.Row(endRow).Cell(property.PropertyOrderPosition))
+                .All(cell => string.IsNullOrEmpty(cell?.Value.ToString()));
+
+            if (allColumnsAreEmpty)
+                break;
+
+            if (worksheet.Row(endRow).OutlineLevel != 0)
+            {
+                priceListItemManager.ReadDefaultFromXlsx(worksheet, endRow, 2);
+
+                //skip caption row
+                if (!priceListItemManager.IsCaption)
+                    allPriceListItemSkus.Add(priceListItemManager.GetDefaultProperty("Sku").StringValue);
+
+                endRow++;
+                continue;
+            }
+
+            //counting the number of orders
+            countPriceListsInFile++;
+
+            endRow++;
+        }
+
+        //performance optimization, the check for the existence of the order items in one SQL request
+        var notExistingProductSkus = await _productService.GetNotExistingProductsAsync(allPriceListItemSkus.ToArray());
+        if (notExistingProductSkus.Any())
+            throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.PriceLists.Import.ProductsDontExist"), string.Join(", ", notExistingProductSkus)));
+
+        return (new ImportPriceListMetadata
+        {
+            EndRow = endRow,
+            Manager = manager,
+            Properties = defaultProperties,
+            CountPriceListsInFile = countPriceListsInFile,
+            PriceListItemManager = priceListItemManager
         }, worksheet);
     }
 
@@ -1679,6 +1752,38 @@ public partial class ImportManager : IImportManager
             orderItem.UnitPriceExclTax = priceExclTax;
             orderItem.UnitPriceInclTax = priceInclTax;
             await _orderService.UpdateOrderItemAsync(orderItem);
+        }
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task ImportPriceListItemAsync(PropertyManager<PriceListItem> priceListItemManager, PriceList lastLoadedPriceList)
+    {
+        if (lastLoadedPriceList == null || priceListItemManager.IsCaption)
+            return;
+
+        var sku = priceListItemManager.GetDefaultProperty(nameof(Product.Sku)).StringValue;
+        var manualPrice = priceListItemManager.GetDefaultProperty(nameof(PriceListItem.ManualPrice)).DecimalValue;
+
+        var priceListItemProduct = await _productService.GetProductBySkuAsync(sku);
+        var priceListItem = (await _priceListService.GetPriceListItemsByPriceListIdAsync(lastLoadedPriceList.Id))
+            .FirstOrDefault(pli => pli.ProductId == priceListItemProduct.Id);
+
+        if (priceListItem == null)
+        {
+            //insert price list item
+            priceListItem = new PriceListItem
+            {
+                PriceListId = lastLoadedPriceList.Id,
+                ProductId = priceListItemProduct.Id,
+                ManualPrice = manualPrice
+            };
+            await _priceListService.InsertPriceListItemAsync(priceListItem);
+        }
+        else
+        {
+            //update price list item
+            priceListItem.ManualPrice = manualPrice;
+            await _priceListService.UpdatePriceListItemAsync(priceListItem);
         }
     }
 
@@ -2102,15 +2207,15 @@ public partial class ImportManager : IImportManager
 
         //validate Circular dependency for required products
         var circularDependencyProducts = new List<Product>();
-        
+
         foreach (var data in metadata.RequiredProductsData)
         {
             if (isCyclicallyRequired(data, out var product))
                 circularDependencyProducts.Add(product);
         }
 
-        if(circularDependencyProducts.Any())
-            throw new ArgumentException($"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.RelatedProducts.CyclicallyRelated")} ({string.Join(", ", circularDependencyProducts.Select(p=>p.Name).Distinct())})");
+        if (circularDependencyProducts.Any())
+            throw new ArgumentException($"{await _localizationService.GetResourceAsync("Admin.Catalog.Products.RelatedProducts.CyclicallyRelated")} ({string.Join(", ", circularDependencyProducts.Select(p => p.Name).Distinct())})");
 
         //performance optimization, load all categories IDs for products in one SQL request
         var allProductsCategoryIds = await _categoryService.GetProductCategoryIdsAsync(allProductsBySku.Select(p => p.Id).ToArray());
@@ -2740,7 +2845,7 @@ public partial class ImportManager : IImportManager
 
         bool isCyclicallyRequired(KeyValuePair<string, string> data, out Product product)
         {
-            product = allProductsBySku.FirstOrDefault(p=>p.Sku.Equals(data.Key));
+            product = allProductsBySku.FirstOrDefault(p => p.Sku.Equals(data.Key));
 
             if (product == null)
                 return false;
@@ -3603,6 +3708,165 @@ public partial class ImportManager : IImportManager
             await _logger.ErrorAsync("Error while importing filter level values", ex);
             throw;
         }
+    }
+
+    /// <summary>
+    /// Import price lists from XLSX file
+    /// </summary>
+    /// <param name="stream">Stream</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task ImportPriceListsFromXlsxAsync(Stream stream)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+        using var workbook = new XLWorkbook(stream);
+
+        var (metadata, worksheet) = await PrepareImportPriceListDataAsync(workbook);
+        var priceLists = await _priceListService.GetAllPriceListsAsync();
+        var allRoles = await _customerService.GetAllCustomerRolesAsync();
+
+        PriceList lastLoadedPriceList = null;
+
+        for (var iRow = 2; iRow < metadata.EndRow; iRow++)
+        {
+            //imports items 
+            if (worksheet.Row(iRow).OutlineLevel != 0)
+            {
+                if (lastLoadedPriceList == null)
+                    continue;
+
+                metadata.PriceListItemManager.ReadDefaultFromXlsx(worksheet, iRow, 2);
+
+                //skip caption row
+                if (!metadata.PriceListItemManager.IsCaption)
+                    await ImportPriceListItemAsync(metadata.PriceListItemManager, lastLoadedPriceList);
+
+                continue;
+            }
+
+            metadata.Manager.ReadDefaultFromXlsx(worksheet, iRow);
+
+            var priceList = priceLists.FirstOrDefault(f => f.Id == metadata.Manager.GetDefaultProperty("Id").IntValue);
+            var isNew = priceList == null;
+
+            priceList ??= new PriceList();
+
+            var rolesToSave = new List<int>();
+            var customersToSave = new List<int>();
+
+            foreach (var property in metadata.Manager.GetDefaultProperties)
+            {
+                switch (property.PropertyName)
+                {
+                    case nameof(PriceList.Name):
+                        priceList.Name = property.StringValue;
+                        break;
+                    case nameof(PriceList.Description):
+                        priceList.Description = property.StringValue;
+                        break;
+                    case nameof(PriceList.Active):
+                        priceList.Active = property.BooleanValue;
+                        break;
+                    case nameof(PriceList.StartDateUtc):
+                        if (DateTime.TryParse(property.StringValue, out var startDate))
+                            priceList.StartDateUtc = startDate;
+                        break;
+                    case nameof(PriceList.EndDateUtc):
+                        if (DateTime.TryParse(property.StringValue, out var endDate))
+                            priceList.EndDateUtc = endDate;
+                        break;
+                    case nameof(PriceList.PriceCalculationType):
+                        priceList.PriceCalculationTypeId = property.IntValue;
+                        break;
+                    case nameof(PriceList.PriceCalculationValue):
+                        priceList.PriceCalculationValue = property.DecimalValue;
+                        break;
+                    case nameof(PriceList.Priority):
+                        priceList.Priority = property.IntValue;
+                        break;
+                    case "CustomerRoles":
+                        var roles = property.StringValue.Split(", ");
+
+                        foreach (var role in roles)
+                        {
+                            if (int.TryParse(role, out var roleId))
+                                rolesToSave.Add(roleId);
+                            else
+                            {
+                                var currentRole = allRoles.FirstOrDefault(r =>
+                                    r.Name.Equals(role, StringComparison.InvariantCultureIgnoreCase));
+
+                                if (currentRole != null)
+                                    rolesToSave.Add(currentRole.Id);
+                            }
+                        }
+                        break;
+                    case "Customers":
+                        var customers = property.StringValue.Split(", ");
+
+                        foreach (var customer in customers)
+                        {
+                            if (int.TryParse(customer, out var customerId))
+                                customersToSave.Add(customerId);
+                        }
+                        break;
+                }
+            }
+
+            await (isNew
+                    ? _priceListService.InsertPriceListAsync(priceList)
+                    : _priceListService.UpdatePriceListAsync(priceList));
+
+            //customer role mappings
+            if (rolesToSave.Any())
+            {
+                var priceListCustomerRoles = await _priceListService.GetCustomerRolesAsync(priceList);
+
+                foreach (var roleId in rolesToSave)
+                {
+                    var role = allRoles.FirstOrDefault(r => r.Id == roleId);
+
+                    if (role == null || priceListCustomerRoles.Any(cr => cr.Id == roleId))
+                        continue;
+
+                    await _priceListService.AddCustomerRoleMappingAsync(
+                        new PriceListCustomerRole { PriceListId = priceList.Id, CustomerRoleId = roleId });
+                }
+
+                if (!isNew)
+                {
+                    foreach (var customerRole in priceListCustomerRoles.Where(cr => !rolesToSave.Contains(cr.Id)).ToList())
+                        await _priceListService.RemoveCustomerRoleMappingAsync(priceList, customerRole);
+                }
+            }
+
+            // customer mappings
+            if (customersToSave.Any())
+            {
+                var priceListCustomers = (await _priceListService.GetPriceListCustomersByPriceListIdAsync(priceList.Id)).ToList();
+
+                foreach (var customerId in customersToSave)
+                {
+                    var customer = await _customerService.GetCustomerByIdAsync(customerId);
+                    if (customer == null || priceListCustomers.Any(cr => cr.CustomerId == customerId))
+                        continue;
+
+                    await _priceListService.InsertPriceListCustomerAsync(
+                        new PriceListCustomer { PriceListId = priceList.Id, CustomerId = customerId });
+                }
+
+                if (!isNew)
+                {
+                    foreach (var customer in priceListCustomers.Where(cr => !customersToSave.Contains(cr.CustomerId)).ToList())
+                        await _priceListService.DeletePriceListCustomerAsync(customer);
+                }
+            }
+
+            lastLoadedPriceList = priceList;
+        }
+
+        //activity log
+        await _customerActivityService.InsertActivityAsync("ImportPriceLists",
+            string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportPriceLists"), metadata.CountPriceListsInFile));
     }
 
     #endregion

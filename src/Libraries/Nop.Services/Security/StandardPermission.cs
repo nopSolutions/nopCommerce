@@ -73,6 +73,9 @@ public partial class StandardPermission
         public const string SPECIFICATION_ATTRIBUTES_CREATE_EDIT_DELETE = $"{nameof(Catalog)}.SpecificationAttributesCreateEditDelete";
         public const string CHECKOUT_ATTRIBUTES_VIEW = $"{nameof(Catalog)}.CheckoutAttributesView";
         public const string CHECKOUT_ATTRIBUTES_CREATE_EDIT_DELETE = $"{nameof(Catalog)}.CheckoutAttributesCreateEditDelete";
+        public const string PRICE_LISTS_VIEW = $"{nameof(Catalog)}.PriceListsView";
+        public const string PRICE_LISTS_CREATE_EDIT_DELETE = $"{nameof(Catalog)}.PriceListsCreateEditDelete";
+        public const string PRICE_LISTS_IMPORT_EXPORT = $"{nameof(Catalog)}.PriceListsImportExport";
     }
 
     public partial class Promotions

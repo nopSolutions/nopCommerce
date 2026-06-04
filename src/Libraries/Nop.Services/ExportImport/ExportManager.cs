@@ -15,6 +15,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.PriceLists;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
@@ -34,6 +35,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
+using Nop.Services.PriceLists;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
@@ -75,6 +77,7 @@ public partial class ExportManager : IExportManager
     protected readonly IOrderService _orderService;
     protected readonly IPictureService _pictureService;
     protected readonly IPriceFormatter _priceFormatter;
+    protected readonly IPriceListService _priceListService;
     protected readonly IProductAttributeService _productAttributeService;
     protected readonly IProductService _productService;
     protected readonly IProductTagService _productTagService;
@@ -122,6 +125,7 @@ public partial class ExportManager : IExportManager
         IOrderService orderService,
         IPictureService pictureService,
         IPriceFormatter priceFormatter,
+        IPriceListService priceListService,
         IProductAttributeService productAttributeService,
         IProductService productService,
         IProductTagService productTagService,
@@ -165,6 +169,7 @@ public partial class ExportManager : IExportManager
         _orderService = orderService;
         _pictureService = pictureService;
         _priceFormatter = priceFormatter;
+        _priceListService = priceListService;
         _productAttributeService = productAttributeService;
         _productService = productService;
         _productTagService = productTagService;
@@ -3087,6 +3092,93 @@ public partial class ExportManager : IExportManager
             string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportFilterLevelValues"), filterLevelValues.Count));
 
         return await manager.ExportToXlsxAsync(filterLevelValues);
+    }
+
+    /// <summary>
+    /// Export price lists to XLSX
+    /// </summary>
+    /// <param name="priceLists">Price lists</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task<byte[]> ExportPriceListsToXlsxAsync(IList<PriceList> priceLists)
+    {
+        //property array
+        var properties = new[]
+        {
+            new PropertyByName<PriceList>("Id", (p, _) => p.Id),
+            new PropertyByName<PriceList>("Name", (p, _) => p.Name),
+            new PropertyByName<PriceList>("Description", (p, _) => p.Description),
+            new PropertyByName<PriceList>("Active", (p, _) => p.Active),
+            new PropertyByName<PriceList>("StartDateUtc", (p, _) => p.StartDateUtc),
+            new PropertyByName<PriceList>("EndDateUtc", (p, _) => p.EndDateUtc),
+            new PropertyByName<PriceList>("PriceCalculationType", (p, _) => p.PriceCalculationTypeId),
+            new PropertyByName<PriceList>("PriceCalculationValue", (p, _) => p.PriceCalculationValue),
+            new PropertyByName<PriceList>("Customers",  async (pr, _) =>  string.Join(", ",
+                (await _priceListService.GetPriceListCustomersByPriceListIdAsync(pr.Id)).Select(priceListCustomer => priceListCustomer.CustomerId.ToString()))),
+            new PropertyByName<PriceList>("CustomerRoles",  async (pr, _) =>  string.Join(", ",
+                (await _priceListService.GetCustomerRoleIdsAsync(pr)).Select(roleId => roleId.ToString()))),
+            new PropertyByName<PriceList>("Priority", (p, _) => p.Priority)
+        };
+
+        //activity log
+        await _customerActivityService.InsertActivityAsync("ExportPriceLists",
+            string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportPriceLists"), priceLists.Count));
+
+        //products
+        var priceListItemProperties = new[]
+        {
+            new PropertyByName<PriceListItem>("Sku", async (pli, _) => await _productService.FormatSkuAsync(await _productService.GetProductByIdAsync(pli.ProductId))),
+            new PropertyByName<PriceListItem>("ManualPrice", (pli, _) => pli.ManualPrice)
+        };
+
+        var priceListItemsManager = new PropertyManager<PriceListItem>(priceListItemProperties, _catalogSettings);
+
+        await using var stream = new MemoryStream();
+        // ok, we can run the real code of the sample now
+        using (var workbook = new XLWorkbook())
+        {
+            // uncomment this line if you want the XML written out to the outputDir
+            //xlPackage.DebugMode = true; 
+
+            // get handles to the worksheets
+            // Worksheet names cannot be more than 31 characters
+            var worksheet = workbook.Worksheets.Add(typeof(PriceList).Name);
+            var fpWorksheet = workbook.Worksheets.Add("DataForProductsFilters");
+            fpWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
+
+            //create Headers and format them 
+            var manager = new PropertyManager<PriceList>(properties, _catalogSettings);
+            manager.WriteDefaultCaption(worksheet);
+
+            var row = 2;
+            foreach (var priceList in priceLists)
+            {
+                manager.CurrentObject = priceList;
+                await manager.WriteDefaultToXlsxAsync(worksheet, row++);
+
+                var priceListItems = (await _priceListService.GetPriceListItemsByPriceListIdAsync(priceList.Id)).ToList();
+                if (!priceListItems.Any())
+                    continue;
+
+                priceListItemsManager.WriteDefaultCaption(worksheet, row, 2);
+                worksheet.Row(row).OutlineLevel = 1;
+                worksheet.Row(row).Collapse();
+
+                foreach (var priceListItem in priceListItems)
+                {
+                    row++;
+                    priceListItemsManager.CurrentObject = priceListItem;
+                    await priceListItemsManager.WriteDefaultToXlsxAsync(worksheet, row, 2, fpWorksheet);
+                    worksheet.Row(row).OutlineLevel = 1;
+                    worksheet.Row(row).Collapse();
+                }
+
+                row++;
+            }
+
+            workbook.SaveAs(stream);
+        }
+
+        return stream.ToArray();
     }
 
     #endregion

@@ -490,7 +490,7 @@
                                     {
                                         <td class="picture">
                                             <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new {SeName = item.ProductSeName}))">
-                                                <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.DefaultImageQuality" />
+                                                <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.OrderThumbPictureSize" />
                                             </a>
                                         </td>
                                     }

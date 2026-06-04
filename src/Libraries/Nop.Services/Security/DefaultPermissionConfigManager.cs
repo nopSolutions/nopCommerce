@@ -88,6 +88,9 @@ public partial class DefaultPermissionConfigManager : IPermissionConfigManager
         new ("Admin area. Specification attributes. Create, edit, delete", StandardPermission.Catalog.SPECIFICATION_ATTRIBUTES_CREATE_EDIT_DELETE, nameof(StandardPermission.Catalog), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Checkout attributes. View", StandardPermission.Catalog.CHECKOUT_ATTRIBUTES_VIEW, nameof(StandardPermission.Catalog), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Checkout attributes. Create, edit, delete", StandardPermission.Catalog.CHECKOUT_ATTRIBUTES_CREATE_EDIT_DELETE, nameof(StandardPermission.Catalog), NopCustomerDefaults.AdministratorsRoleName),
+        new ("Admin area. Price lists. View", StandardPermission.Catalog.PRICE_LISTS_VIEW, nameof(StandardPermission.Catalog), NopCustomerDefaults.AdministratorsRoleName, NopCustomerDefaults.VendorsRoleName),
+        new ("Admin area. Price lists. Create, edit, delete", StandardPermission.Catalog.PRICE_LISTS_CREATE_EDIT_DELETE, nameof(StandardPermission.Catalog), NopCustomerDefaults.AdministratorsRoleName, NopCustomerDefaults.VendorsRoleName),
+        new ("Admin area. Price lists. Import and export", StandardPermission.Catalog.PRICE_LISTS_IMPORT_EXPORT, nameof(StandardPermission.Catalog), NopCustomerDefaults.AdministratorsRoleName, NopCustomerDefaults.VendorsRoleName),
 
         #endregion
 

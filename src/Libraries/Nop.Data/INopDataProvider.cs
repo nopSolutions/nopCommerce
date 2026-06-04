@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Transactions;
 using LinqToDB.Data;
 using Nop.Core;
 
@@ -322,7 +323,13 @@ public partial interface INopDataProvider
     /// The task result contains the collation name
     /// </returns>
     Task<string> GetDataBaseCollationAsync();
-    
+
+    /// <summary>
+    /// Creates a new <see cref="TransactionScope"/> with appropriate options for bulk database operations
+    /// </summary>
+    /// <returns>The created transaction scope</returns>
+    TransactionScope CreateTransactionScope();
+
     #endregion
 
     #region Properties

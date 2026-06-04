@@ -61,6 +61,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IOrderModelFactory, OrderModelFactory>();
         services.AddScoped<IPaymentModelFactory, PaymentModelFactory>();
         services.AddScoped<IPluginModelFactory, PluginModelFactory>();
+        services.AddScoped<IPriceListModelFactory, PriceListModelFactory>();
         services.AddScoped<IProductModelFactory, ProductModelFactory>();
         services.AddScoped<IProductAttributeModelFactory, ProductAttributeModelFactory>();
         services.AddScoped<IProductReviewModelFactory, ProductReviewModelFactory>();

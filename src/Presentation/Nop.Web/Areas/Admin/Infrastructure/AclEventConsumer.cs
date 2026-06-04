@@ -16,6 +16,7 @@ using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.Menus;
 using Nop.Web.Areas.Admin.Models.Plugins;
+using Nop.Web.Areas.Admin.Models.PriceLists;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Models;
@@ -138,6 +139,9 @@ public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopMode
                 break;
             case OnlineCustomerSearchModel onlineCustomerSearchModel:
                 await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(onlineCustomerSearchModel);
+                break;
+            case PriceListSearchModel priceListSearchModel:
+                await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(priceListSearchModel);
                 break;
         }
     }

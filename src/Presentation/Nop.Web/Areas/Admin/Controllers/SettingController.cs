@@ -651,6 +651,7 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.ProductUrlStructureTypeId, model.ProductUrlStructureTypeId_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.ShowSearchTermHistory, model.ShowSearchTermHistory_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.NumberOfSearchTermHistoryItems, model.NumberOfSearchTermHistoryItems_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(catalogSettings, x => x.PriceListStrategy, model.PriceListStrategy_OverrideForStore, storeScope, false);
 
             //now settings not overridable per store
             await _settingService.SaveSettingAsync(catalogSettings, x => x.IgnoreDiscounts, 0, false);
@@ -1122,7 +1123,11 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(mediaSettings, x => x.DefaultPictureZoomEnabled, model.DefaultPictureZoomEnabled_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(mediaSettings, x => x.AllowSvgUploads, model.AllowSvgUploads_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(mediaSettings, x => x.ProductDefaultImageId, model.ProductDefaultImageId_OverrideForStore, storeScope, false);
-
+            await _settingService.SaveSettingOverridablePerStoreAsync(mediaSettings, x => x.Object3dAutoRotateEnabled, model.Object3dAutoRotateEnabled_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(mediaSettings, x => x.Object3dCameraControlEnabled, model.Object3dCameraControlEnabled_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(mediaSettings, x => x.Object3dLazyLoadingEnabled, model.Object3dLazyLoadingEnabled_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(mediaSettings, x => x.Object3dUploadSizeLimit, model.Object3dUploadSizeLimit_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(mediaSettings, x => x.Object3dZoomEnabled, model.Object3dZoomEnabled_OverrideForStore, storeScope, false);
             //now clear settings cache
             await _settingService.ClearCacheAsync();
 

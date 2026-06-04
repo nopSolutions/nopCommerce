@@ -8,9 +8,11 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -53,11 +55,12 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly IDiscountService _discountService;
     protected readonly IDiscountSupportedModelFactory _discountSupportedModelFactory;
     protected readonly IFilterLevelValueService _filterLevelValueService;
-    protected readonly ILanguageService _languageService;
+    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILocalizedModelFactory _localizedModelFactory;
     protected readonly IManufacturerService _manufacturerService;
     protected readonly IMeasureService _measureService;
+    protected readonly INopFileProvider _nopFileProvider;
     protected readonly IOrderService _orderService;
     protected readonly IPictureService _pictureService;
     protected readonly IPriceFormatter _priceFormatter;
@@ -78,8 +81,10 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVideoService _videoService;
     protected readonly IWarehouseService _warehouseService;
+    protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
     protected readonly MeasureSettings _measureSettings;
+    protected readonly MediaSettings _mediaSettings;
     protected readonly NopHttpClient _nopHttpClient;
     protected readonly TaxSettings _taxSettings;
     protected readonly VendorSettings _vendorSettings;
@@ -99,11 +104,12 @@ public partial class ProductModelFactory : IProductModelFactory
         IDiscountService discountService,
         IDiscountSupportedModelFactory discountSupportedModelFactory,
         IFilterLevelValueService filterLevelValueService,
-        ILanguageService languageService,
+        IHttpContextAccessor httpContextAccessor,
         ILocalizationService localizationService,
         ILocalizedModelFactory localizedModelFactory,
         IManufacturerService manufacturerService,
         IMeasureService measureService,
+        INopFileProvider nopFileProvider,
         IOrderService orderService,
         IPictureService pictureService,
         IPriceFormatter priceFormatter,
@@ -124,8 +130,10 @@ public partial class ProductModelFactory : IProductModelFactory
         IUrlRecordService urlRecordService,
         IVideoService videoService,
         IWarehouseService warehouseService,
+        IWebHelper webHelper,
         IWorkContext workContext,
         MeasureSettings measureSettings,
+        MediaSettings mediaSettings,
         NopHttpClient nopHttpClient,
         TaxSettings taxSettings,
         VendorSettings vendorSettings)
@@ -141,11 +149,12 @@ public partial class ProductModelFactory : IProductModelFactory
         _discountService = discountService;
         _discountSupportedModelFactory = discountSupportedModelFactory;
         _filterLevelValueService = filterLevelValueService;
-        _languageService = languageService;
+        _httpContextAccessor = httpContextAccessor;
         _localizationService = localizationService;
         _localizedModelFactory = localizedModelFactory;
         _manufacturerService = manufacturerService;
         _measureService = measureService;
+        _nopFileProvider = nopFileProvider;
         _orderService = orderService;
         _pictureService = pictureService;
         _priceFormatter = priceFormatter;
@@ -166,8 +175,10 @@ public partial class ProductModelFactory : IProductModelFactory
         _urlRecordService = urlRecordService;
         _videoService = videoService;
         _warehouseService = warehouseService;
+        _webHelper = webHelper;
         _workContext = workContext;
         _measureSettings = measureSettings;
+        _mediaSettings = mediaSettings;
         _nopHttpClient = nopHttpClient;
         _taxSettings = taxSettings;
         _vendorSettings = vendorSettings;
@@ -377,11 +388,11 @@ public partial class ProductModelFactory : IProductModelFactory
                                     await _productAttributeParser.ParseProductAttributeValuesAsync(productAttributeMapping
                                         .ConditionAttributeXml);
                                 foreach (var attributeValue in selectedValues)
-                                foreach (var item in attributeModel.Values)
-                                {
-                                    if (attributeValue.Id == item.Id)
-                                        item.IsPreSelected = true;
-                                }
+                                    foreach (var item in attributeModel.Values)
+                                    {
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
+                                    }
                             }
 
                             break;
@@ -677,6 +688,45 @@ public partial class ProductModelFactory : IProductModelFactory
         return searchModel;
     }
 
+    /// <summary>
+    /// Prepare product 3D object model
+    /// </summary>
+    /// <param name="model">Product 3D object model</param>
+    /// <param name="product">Product</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the product 3D object model
+    /// </returns>
+    protected virtual async Task<Product3dObjectModel> PrepareProduct3dObjectModelAsync(Product3dObjectModel model, Product product)
+    {
+        ArgumentNullException.ThrowIfNull(product);
+
+        var product3dObject = await _productService.GetProduct3dObjectAsync(product);
+
+        if (product3dObject is not null)
+        {
+            model ??= product3dObject.ToModel<Product3dObjectModel>();
+
+            var baseUrl = _mediaSettings.UseAbsoluteImagePath
+                ? _webHelper.GetStoreLocation()
+                : $"{_httpContextAccessor.HttpContext?.Request.PathBase.Value}/";
+
+            var pathToFile = $"{NopMediaDefaults.DefaultImagesPath}/{NopMediaDefaults.Default3dObjectsDirectoryName}/{model.FileName}";
+
+            model.FileUrl = $"{baseUrl}{pathToFile}";
+            model.FileSize = _nopFileProvider.FileLength(_nopFileProvider.GetAbsolutePath(pathToFile));
+
+            model.UploadLimit = _mediaSettings.Object3dUploadSizeLimit;
+            model.PictureUrl = product3dObject.PreviewPictureId.HasValue
+                ? await _pictureService.GetPictureUrlAsync(product3dObject.PreviewPictureId.Value)
+                : string.Empty;
+
+            return model;
+        }
+
+        return new Product3dObjectModel { UploadLimit = _mediaSettings.Object3dUploadSizeLimit };
+    }
+
     #endregion
 
     #region Methods
@@ -888,6 +938,8 @@ public partial class ProductModelFactory : IProductModelFactory
             await PrepareStockQuantityHistorySearchModelAsync(model.StockQuantityHistorySearchModel, product);
             PrepareProductAttributeMappingSearchModel(model.ProductAttributeMappingSearchModel, product);
             PrepareProductAttributeCombinationSearchModel(model.ProductAttributeCombinationSearchModel, product);
+
+            model.Product3dObject = await PrepareProduct3dObjectModelAsync(null, product);
 
             //define localized model configuration action
             localizedModelConfiguration = async (locale, languageId) =>
@@ -1520,7 +1572,7 @@ public partial class ProductModelFactory : IProductModelFactory
 
                 //fill in additional values (not existing in the entity)
                 var picture = (await _pictureService.GetPictureByIdAsync(productPicture.PictureId))
-                              ?? throw new Exception("Picture cannot be loaded");
+                    ?? throw new Exception("Picture cannot be loaded");
 
                 productPictureModel.PictureUrl = (await _pictureService.GetPictureUrlAsync(picture)).Url;
 
@@ -1561,7 +1613,7 @@ public partial class ProductModelFactory : IProductModelFactory
 
                 //fill in additional values (not existing in the entity)
                 var video = (await _videoService.GetVideoByIdAsync(productVideo.VideoId))
-                            ?? throw new Exception("Video cannot be loaded");
+                    ?? throw new Exception("Video cannot be loaded");
 
                 productVideoModel.VideoUrl = video.VideoUrl;
 
@@ -1663,8 +1715,8 @@ public partial class ProductModelFactory : IProductModelFactory
             };
         }
 
-        var attribute = await _specificationAttributeService.GetProductSpecificationAttributeByIdAsync(specificationId.Value) 
-                        ?? throw new ArgumentException("No specification attribute found with the specified id");
+        var attribute = await _specificationAttributeService.GetProductSpecificationAttributeByIdAsync(specificationId.Value)
+            ?? throw new ArgumentException("No specification attribute found with the specified id");
 
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();

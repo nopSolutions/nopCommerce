@@ -16,6 +16,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Core.Http;
+using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Catalog;
@@ -98,6 +99,7 @@ public partial class ProductController : BaseAdminController
     protected readonly IWorkContext _workContext;
     protected readonly CurrencySettings _currencySettings;
     protected readonly LocalizationSettings _localizationSettings;
+    protected readonly MediaSettings _mediaSettings;
     protected readonly TaxSettings _taxSettings;
     protected readonly VendorSettings _vendorSettings;
     private static readonly char[] _separator = [','];
@@ -152,6 +154,7 @@ public partial class ProductController : BaseAdminController
         IWorkContext workContext,
         CurrencySettings currencySettings,
         LocalizationSettings localizationSettings,
+        MediaSettings mediaSettings,
         TaxSettings taxSettings,
         VendorSettings vendorSettings)
     {
@@ -201,6 +204,7 @@ public partial class ProductController : BaseAdminController
         _workContext = workContext;
         _currencySettings = currencySettings;
         _localizationSettings = localizationSettings;
+        _mediaSettings = mediaSettings;
         _taxSettings = taxSettings;
         _vendorSettings = vendorSettings;
     }
@@ -1227,10 +1231,10 @@ public partial class ProductController : BaseAdminController
             if (product.RequireOtherProducts && !string.IsNullOrEmpty(product.RequiredProductIds))
             {
                 var requiredProductIds = _productService.ParseRequiredProductIds(product);
-                
+
                 foreach (var requiredProduct in await _productService.GetProductsByIdsAsync(requiredProductIds.ToArray()))
                 {
-                    if (product.Id == requiredProduct.Id || await isCyclicallyRequired(requiredProduct)) 
+                    if (product.Id == requiredProduct.Id || await isCyclicallyRequired(requiredProduct))
                         requireOtherProductsError = await _localizationService.GetResourceAsync("Admin.Catalog.Products.RelatedProducts.CyclicallyRelated");
 
                     break;
@@ -4058,6 +4062,126 @@ public partial class ProductController : BaseAdminController
         var model = await _productModelFactory.PrepareStockQuantityHistoryListModelAsync(searchModel, product);
 
         return Json(model);
+    }
+
+    #endregion
+
+    #region Product 3D object
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> Product3dObjectSave(int productId, [Validate] Product3dObjectModel model)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(productId);
+
+        if (!ModelState.IsValid)
+            return ErrorJson(ModelState.SerializeErrors());
+
+        var product = await _productService.GetProductByIdAsync(productId);
+
+        if (product is null)
+            return ErrorJson("No product found with the specified id");
+
+        //a vendor should have access only to his products
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && product.VendorId != currentVendor.Id)
+            return ErrorJson("This is not your product");
+
+        var existed3dObject = await _productService.GetProduct3dObjectAsync(product);
+        if (existed3dObject is null)
+            return ErrorJson("No associated 3D objects found with the specified id");
+
+        try
+        {
+            if (model.Id == 0)
+            {
+                var picture = await _pictureService.GetPictureByIdAsync(existed3dObject.PreviewPictureId ?? 0);
+                if (picture != null)
+                    await _pictureService.DeletePictureAsync(picture);
+
+                await _productService.DeleteProduct3dObjectAsync(existed3dObject);
+
+                var pathTo3dObjects = _fileProvider.Combine(_fileProvider.GetLocalImagesPath(_mediaSettings), NopMediaDefaults.Default3dObjectsDirectoryName);
+
+                if (!string.IsNullOrEmpty(existed3dObject.FileName))
+                    _fileProvider.DeleteFile(_fileProvider.Combine(pathTo3dObjects, existed3dObject.FileName));
+
+                return Json(new { success = true, deleted = true });
+            }
+
+            var objectToUpdate = model.ToEntity<Product3dObject>();
+            objectToUpdate.FileName = existed3dObject.FileName;
+            objectToUpdate.ProductId = productId;
+
+            //delete an old picture (if deleted or updated)
+            if (model.PreviewPictureId != existed3dObject.PreviewPictureId)
+            {
+                if (model.PreviewPictureId == 0)
+                    objectToUpdate.PreviewPictureId = null;
+
+                var prevPicture = await _pictureService.GetPictureByIdAsync(existed3dObject.PreviewPictureId ?? 0);
+                if (prevPicture != null)
+                    await _pictureService.DeletePictureAsync(prevPicture);
+            }
+
+            await _productService.UpdateProduct3dObjectAsync(objectToUpdate);
+        }
+        catch (Exception ex)
+        {
+            return Json(new
+            {
+                success = false,
+                error = ex.Message,
+            });
+        }
+
+        return Json(new { success = true });
+    }
+
+    [HttpPost]
+    //do not validate request token (XSRF)
+    [IgnoreAntiforgeryToken]
+    public virtual async Task<IActionResult> Upload3dObject(int productId)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(productId);
+
+        var product = await _productService.GetProductByIdAsync(productId)
+            ?? throw new ArgumentException("No product found with the specified id");
+
+        var httpPostedFile = await Request.GetFirstOrDefaultFileAsync();
+        if (httpPostedFile == null)
+        {
+            return Json(new
+            {
+                success = false,
+                message = "No file uploaded"
+            });
+        }
+
+        //remove path (passed in IE)
+        var fileName = _fileProvider.GetFileName(httpPostedFile.FileName);
+
+        var pathTo3dObjects = _fileProvider.Combine(_fileProvider.GetLocalImagesPath(_mediaSettings), NopMediaDefaults.Default3dObjectsDirectoryName);
+        _fileProvider.CreateDirectory(pathTo3dObjects);
+
+        var uploadedName = $"{_fileProvider.GetFileNameWithoutExtension(fileName)}_{product.Id:00000}{_fileProvider.GetFileExtension(fileName)}";
+        var fileBinary = await _downloadService.GetDownloadBitsAsync(httpPostedFile);
+        await _fileProvider.WriteAllBytesAsync(_fileProvider.Combine(pathTo3dObjects, uploadedName), fileBinary);
+
+        var product3dObject = new Product3dObject
+        {
+            ProductId = product.Id,
+            FileName = uploadedName,
+        };
+
+        await _productService.InsertProduct3dObjectAsync(product3dObject);
+
+        return Json(new
+        {
+            success = true,
+            fileUrl = product3dObject.FileName,
+            objectId = product3dObject.Id
+        });
     }
 
     #endregion

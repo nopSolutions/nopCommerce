@@ -17,6 +17,7 @@ public partial record ProductDetailsModel : BaseNopEntityModel, IMetaTagsSupport
         DefaultPictureModel = new PictureModel();
         PictureModels = new List<PictureModel>();
         VideoModels = new List<VideoModel>();
+        Product3dObjectModel = new Product3dObjectModel();
         GiftCard = new GiftCardModel();
         ProductPrice = new ProductPriceModel();
         AddToCart = new AddToCartModel();
@@ -40,6 +41,9 @@ public partial record ProductDetailsModel : BaseNopEntityModel, IMetaTagsSupport
 
     //videos
     public IList<VideoModel> VideoModels { get; set; }
+
+    //3D model
+    public Product3dObjectModel Product3dObjectModel { get; set; }
 
     public string Name { get; set; }
     public string ShortDescription { get; set; }
@@ -181,7 +185,7 @@ public partial record ProductDetailsModel : BaseNopEntityModel, IMetaTagsSupport
         public ShoppingCartType? UpdateShoppingCartItemType { get; set; }
         public ProductToWishlistModel ProductToWishlist { get; set; }
     }
-    
+
     public partial record GiftCardModel : BaseNopModel
     {
         public bool IsGiftCard { get; set; }

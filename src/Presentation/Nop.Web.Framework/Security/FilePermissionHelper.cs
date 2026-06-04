@@ -167,7 +167,7 @@ public static class FilePermissionHelper
         //MacOSX file permission check differs slightly from linux
         IList<string> arguments = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
             ? ["-f", "%A %u %g", path]
-            : ["-c", "%a %u %g", path ];
+            : ["-c", "%a %u %g", path];
 
         try
         {
@@ -261,6 +261,7 @@ public static class FilePermissionHelper
             fileProvider.Combine(rootDir, @"wwwroot\files\exportimport"),
             fileProvider.Combine(rootDir, @"wwwroot\icons"),
             fileProvider.Combine(rootDir, @"wwwroot\images"),
+            fileProvider.Combine(rootDir, @"wwwroot\images\3d"),
             fileProvider.Combine(rootDir, @"wwwroot\images\thumbs"),
             fileProvider.Combine(rootDir, @"wwwroot\images\uploaded"),
             fileProvider.Combine(rootDir, @"wwwroot\sitemaps")

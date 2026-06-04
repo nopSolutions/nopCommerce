@@ -4,6 +4,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.PriceLists;
 
 namespace Nop.Services.ExportImport;
 
@@ -269,4 +270,11 @@ public partial interface IExportManager
     /// <param name="filterLevelValues">Filter level values</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task<byte[]> ExportFilterLevelValuesToXlsxAsync(IList<FilterLevelValue> filterLevelValues);
+
+    /// <summary>
+    /// Export price lists to XLSX
+    /// </summary>
+    /// <param name="priceLists">Price lists</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task<byte[]> ExportPriceListsToXlsxAsync(IList<PriceList> priceLists);
 }

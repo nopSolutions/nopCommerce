@@ -17,6 +17,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.PriceLists;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
@@ -53,6 +54,7 @@ using Nop.Web.Areas.Admin.Models.MultiFactorAuthentication;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Payments;
 using Nop.Web.Areas.Admin.Models.Plugins;
+using Nop.Web.Areas.Admin.Models.PriceLists;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Shipping;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
@@ -99,6 +101,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateOrdersMaps();
         CreatePaymentsMaps();
         CreatePluginsMaps();
+        CreatePriceListMaps();
         CreateSecurityMaps();
         CreateSeoMaps();
         CreateShippingMaps();
@@ -415,7 +418,9 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.ProductUrlStructureTypes, mo => mo.Ignore())
             .ForMember(model => model.ShowSearchBoxCategories_OverrideForStore, mo => mo.Ignore())
             .ForMember(model => model.ArtificialIntelligenceSettingsModel, mo => mo.Ignore())
-            .ForMember(model => model.GpsrSettingsModel, mo => mo.Ignore());
+            .ForMember(model => model.GpsrSettingsModel, mo => mo.Ignore())
+            .ForMember(model => model.PriceListStrategyValues, options => options.Ignore())
+            .ForMember(model => model.PriceListStrategy_OverrideForStore, options => options.Ignore());
         CreateMap<CatalogSettingsModel, CatalogSettings>()
             .ForMember(settings => settings.AjaxProcessAttributeChange, options => options.Ignore())
             .ForMember(settings => settings.CompareProductsNumber, options => options.Ignore())
@@ -550,7 +555,8 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.TierPriceSearchModel, options => options.Ignore())
             .ForMember(model => model.SelectedProductTags, options => options.Ignore())
             .ForMember(model => model.AvailableProductTags, options => options.Ignore())
-            .ForMember(model => model.FormattedPrice, options => options.Ignore());
+            .ForMember(model => model.FormattedPrice, options => options.Ignore())
+            .ForMember(model => model.Product3dObject, options => options.Ignore());
         CreateMap<ProductModel, Product>()
             .ForMember(entity => entity.ApprovedRatingSum, options => options.Ignore())
             .ForMember(entity => entity.ApprovedTotalReviews, options => options.Ignore())
@@ -709,6 +715,14 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore());
         CreateMap<TierPriceModel, TierPrice>()
             .ForMember(entity => entity.CustomerRoleId, options => options.Ignore())
+            .ForMember(entity => entity.ProductId, options => options.Ignore());
+
+        CreateMap<Product3dObject, Product3dObjectModel>()
+            .ForMember(model => model.UploadLimit, options => options.Ignore())
+            .ForMember(model => model.FileSize, options => options.Ignore())
+            .ForMember(model => model.FileUrl, options => options.Ignore())
+            .ForMember(model => model.PictureUrl, options => options.Ignore());
+        CreateMap<Product3dObjectModel, Product3dObject>()
             .ForMember(entity => entity.ProductId, options => options.Ignore());
     }
 
@@ -1151,7 +1165,12 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.ProductThumbPictureSize_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.VendorThumbPictureSize_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ProductDefaultImageId_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.AllowSvgUploads_OverrideForStore, options => options.Ignore());
+            .ForMember(model => model.AllowSvgUploads_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.Object3dAutoRotateEnabled_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.Object3dCameraControlEnabled_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.Object3dLazyLoadingEnabled_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.Object3dUploadSizeLimit_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.Object3dZoomEnabled_OverrideForStore, options => options.Ignore());
         CreateMap<MediaSettingsModel, MediaSettings>()
             .ForMember(settings => settings.AutoCompleteSearchThumbPictureSize, options => options.Ignore())
             .ForMember(settings => settings.UseAbsoluteImagePath, options => options.Ignore())
@@ -1452,6 +1471,33 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateMap<PluginDescriptor, PluginModel>()
             .ForMember(model => model.CanChangeEnabled, options => options.Ignore())
             .ForMember(model => model.IsEnabled, options => options.Ignore());
+    }
+
+    /// <summary>
+    /// Create price list maps 
+    /// </summary>
+    protected virtual void CreatePriceListMaps()
+    {
+        CreateMap<PriceList, PriceListModel>()
+            .ForMember(model => model.HidePriority, options => options.Ignore())
+            .ForMember(model => model.CustomerRoleNames, options => options.Ignore())
+            .ForMember(model => model.PriceCalculationValueFormatted, options => options.Ignore())
+            .ForMember(model => model.PriceCalculationTypeName, options => options.Ignore())
+            .ForMember(model => model.PriceListItemSearchModel, options => options.Ignore())
+            .ForMember(model => model.PriceListCustomerSearchModel, options => options.Ignore());
+        CreateMap<PriceListModel, PriceList>()
+            .ForMember(entity => entity.PriceCalculationType, options => options.Ignore());
+
+        CreateMap<PriceListItemModel, PriceListItem>();
+        CreateMap<PriceListItem, PriceListItemModel>()
+            .ForMember(model => model.ProductName, options => options.Ignore())
+            .ForMember(model => model.StandardPrice, options => options.Ignore())
+            .ForMember(model => model.CalculatedPrice, options => options.Ignore())
+            .ForMember(model => model.ManualPrice, options => options.Ignore());
+
+        CreateMap<PriceListCustomerModel, PriceListCustomer>();
+        CreateMap<PriceListCustomer, PriceListCustomerModel>()
+            .ForMember(model => model.CustomerEmail, options => options.Ignore());
     }
 
     /// <summary>
