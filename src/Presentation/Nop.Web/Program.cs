@@ -26,12 +26,14 @@ public partial class Program
         var useAutofac = appSettings.Get<CommonConfig>().UseAutofac;
 
         if (useAutofac)
+        {
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+        }
         else
         {
             builder.Host.UseDefaultServiceProvider(options =>
             {
-                //we don't validate the scopes, since at the app start and the initial configuration we need 
+                //we don't validate the scopes, since at the app start and the initial configuration we need
                 //to resolve some services (registered as "scoped") through the root container
                 options.ValidateScopes = false;
                 options.ValidateOnBuild = true;
