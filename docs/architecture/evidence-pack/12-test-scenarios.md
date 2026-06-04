@@ -85,18 +85,18 @@ The bridge reconnects automatically (`AutomaticRecoveryEnabled=true`), consumes 
 
 ### Degradation path exercised
 
-`POS reserve → lock on ProductWarehouseInventory row → effective stock = 0 → web channel blocked at product page`
+`POS reserve → atomic UPDATE on Product.StockQuantity → StockQuantity = 0 → web channel sees "Out of stock"`
 
 ### Architecture note
 
 Both web checkout and POS reach the **same** `IAllocationGate` via different entry points: the web channel through the `AllocationGateProductServiceDecorator` (which intercepts `IProductService.AdjustInventoryAsync`), and the POS channel through the HTTP adapter in `Nop.Plugin.Integration.Pos` (which delegates to the same `IAllocationGate`). A single authority prevents oversell regardless of channel.
 
-### Results (run 2026-05-30 + 2026-05-31, evidence in M3)
+### Results (run 2026-05-30 + 2026-05-31 + 2026-06-02, evidence in M3)
 
 | Scenario | Winners | Losers | `StockQuantity` < 0? | QAS-2 satisfied? |
 | --- | --- | --- | --- | --- |
 | A: POS + web (primary, 1 unit) | 1 (POS HTTP 200) | 1 (web "Out of stock") | ✅ No | ✅ Yes |
-| B: 5 concurrent POS requests (stress) | 1 (HTTP 200) | 4 (deadlock → HTTP 500) | ✅ No | ✅ Yes — zero oversell holds; error type degrades under extreme concurrency (see `13-known-limitations.md` §4) |
+| B: 5 concurrent POS requests (stress) | 1 (HTTP 200) | 4 (HTTP 409) | ✅ No | ✅ Yes — zero oversell holds; all losers receive structured `insufficient-stock` rejection |
 
 The allocation gate blocks the web channel at the product listing level (before cart), not only at checkout confirm. `StockQuantity` remained ≥ 1 throughout both scenarios.
 
@@ -264,7 +264,7 @@ All six scenarios were executed. Each scenario body above contains a **Results**
 | Scenario | QAS / property | Pressure applied | Measurement | Outcome |
 | --- | --- | --- | --- | --- |
 | TS-1 — Bridge outage + recovery | QAS-1, QAS-3, QAS-4 | Bridge stopped during 3 orders | M1 + M2 | ✅ 0 lost; drain ≤ 60 s; checkout 83–92 ms |
-| TS-2 — Cross-channel oversell | QAS-2 | POS reserves last unit; web attempts checkout | M3 | ✅ 0 oversell; web blocked; 409/500 synchronous |
+| TS-2 — Cross-channel oversell | QAS-2 | POS reserves last unit; web attempts checkout | M3 | ✅ 0 oversell; web blocked; clean 409 in all scenarios |
 | TS-3 — Idempotent redelivery | ADR-003 | Duplicate message published to live queue | M6 | ✅ `ack and skip`; 0 new OpenBoxes movements |
 | TS-4 — Carrier status propagation | QAS-5 carrier | WireMock state machine advances on poll | M4 | ✅ All 3 transitions ≤ 30 s; emails queued atomically |
 | TS-5 — Warehouse fulfillment state | QAS-5 warehouse | OpenBoxes ISSUED; poller detects | M5 | ✅ Complete in ~18 s; Shipment + outbox row created automatically |

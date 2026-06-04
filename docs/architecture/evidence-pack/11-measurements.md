@@ -323,7 +323,7 @@ docker exec nopcommerce_mssql_server \
       UPDATE Product SET StockQuantity = 10000 WHERE Id = 7;" 2>/dev/null
 ```
 
-### Results — Run 2026-05-30 / 2026-05-31
+### Results — Run 2026-05-30 / 2026-05-31 / 2026-06-02 (Scenario B re-run after fix)
 
 **Scenario A (POS + web, primary scenario):**
 - `StockQuantity` set to 1 via nopCommerce Admin (Catalog → Products → HP Spectre XT Pro UltraBook)
@@ -336,7 +336,7 @@ docker exec nopcommerce_mssql_server \
 | Scenario | Winners | Losers | `StockQuantity` < 0? | Loser rejection in same cycle? |
 | --- | --- | --- | --- | --- |
 | A: POS + web (realistic) — 2026-05-30 | 1 (POS) | 1 (web) | ✅ No | ✅ Yes — "Out of stock" at product page level |
-| B: 5 concurrent POS (stress) — 2026-05-31 | 1 | 4 (deadlock) | ✅ No | ✅ Yes — rejected within same request cycle |
+| B: 5 concurrent POS (stress) — 2026-06-02 | 1 | 4 (HTTP 409) | ✅ No | ✅ Yes — rejected within same request cycle |
 
 ![Admin panel — HP Spectre XT Pro UltraBook StockQuantity set to 1](../imgs/m3-admin-stock-1.png)
 *Baseline: nopCommerce Admin showing HP Spectre XT Pro UltraBook (SKU: HP\_SPX\_UB) with StockQuantity = 1 before the test.*
@@ -348,16 +348,12 @@ docker exec nopcommerce_mssql_server \
 *Web channel blocked at the product page ("Out of stock") while the POS reservation is active. Effective availability = StockQuantity(1) − active\_reservations(1) = 0 propagates to the display layer.*
 
 ![Admin panel — HP Spectre XT Pro UltraBook StockQuantity still 1 after release](../imgs/m3-admin-stock-after-release.png)
-*After POS release: StockQuantity remains 1 in the database. Physical stock was never decremented — the gate prevents any decrement until `confirm` is called. Zero oversell confirmed.*
+*After POS release: StockQuantity restored to 1 in the database. Stock was decremented at reserve time and returned at release time — the reserve/release lifecycle completed correctly. Zero oversell confirmed.*
 
-![Terminal — 5 concurrent POS requests: 1 winner (200) and 4 deadlock victims (500)](../imgs/m3-stress-results.png)
-*Scenario B: 5 simultaneous POS reserve requests with StockQuantity = 1. Exactly 1 request wins (HTTP 200). The remaining 4 are rejected — 4 as SQL Server deadlock victims (HTTP 500) rather than clean 409s. StockQuantity never goes negative. This matches the documented known limitation: under ≥ 5 concurrent requests on the same row, SQL Server may deadlock instead of returning a structured 409.*
+![Terminal — 5 concurrent POS requests: 1 winner (200) and 4 clean 409s](../imgs/m3-test-results.png)
+*Scenario B: 5 simultaneous POS reserve requests with StockQuantity = 1. Exactly 1 request wins (HTTP 200). The remaining 4 return HTTP 409 `{"error":"insufficient-stock"}`. StockQuantity never goes negative.*
 
 **Note:** The rejection happens at the product listing level (before cart), not just at checkout confirm. The `AllocationGate` effective availability (`StockQuantity − SUM(active reservations)`) propagates to the product display, providing an earlier and more visible signal to the web customer than a late checkout failure.
-
-### Known limitation
-
-Under extreme concurrency (≥ 5 simultaneous requests against the same product row), SQL Server may choose some transactions as deadlock victims, returning HTTP 500 instead of a clean 409. Zero oversell is preserved in all cases — no stock goes negative — but the error type degrades from a structured `insufficient-stock` response to a deadlock exception. This is documented in `08-risk-and-validation-plan.md` §2. Scenario A is the representative test for QAS-2; Scenario B characterises the stress ceiling.
 
 ### Pass criteria
 

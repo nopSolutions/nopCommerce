@@ -49,22 +49,6 @@ These are absent features that would be needed to operate the system in producti
 
 These were not anticipated in the pre-test risk plan. They surfaced during the measurement runs; each subsection below names the measurement where the finding first appeared. Full measurement records are in `11-measurements.md`.
 
-### SQL deadlocks under extreme POS concurrency (M3 Scenario B)
-
-**Discovered during:** M3 Scenario B (5 concurrent POS reserve requests against StockQuantity = 1).
-
-**Finding:** When 5 simultaneous POS reserve requests target the same product row, SQL Server chose some transactions as deadlock victims and returned HTTP 500 instead of a structured 409. Zero oversell occurred in both runs — the core QAS-2 guarantee held — but the error type degraded from `{"error":"insufficient-stock"}` to an unhandled server error page.
-
-**Condition:** ≥ 5 simultaneous requests to `POST /api/inventory/reserve` for the same `productId`.
-
-**Root cause:** The pessimistic row lock (`SELECT ... FOR UPDATE`) on `ProductWarehouseInventory` creates a lock cycle under high concurrency. SQL Server resolves the deadlock by rolling back one or more transactions as victims.
-
-**QAS-2 impact:** Zero oversell is preserved — the invariant holds. The error *type* under extreme stress is not clean.
-
-**Realistic scenario:** The expected operational load is one POS terminal and web traffic competing for the same last unit. At that concurrency level (≤ 2 simultaneous requests), clean 409 rejections are produced consistently.
-
----
-
 ### Two-plugin dependency for POS API
 
 **Discovered during:** M3 setup (POS reserve calls required both plugins active).

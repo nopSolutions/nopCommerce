@@ -18,7 +18,10 @@ public class AllocationGateService : IAllocationGate
 
     public async Task<AllocationResult> ReserveAsync(int productId, int warehouseId, int quantity, string channelKey, string reservationKey, int ttlSeconds = 300)
     {
-        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        using var scope = new TransactionScope(
+            TransactionScopeOption.Required,
+            new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
+            TransactionScopeAsyncFlowOption.Enabled);
 
         var existing = await _reservationRepository.GetByKeyAsync(reservationKey);
         if (existing is not null)
