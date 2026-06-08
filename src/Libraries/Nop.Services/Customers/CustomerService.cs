@@ -747,12 +747,8 @@ public partial class CustomerService : ICustomerService
             guestIdsQuery = from id in guestIdsQuery
                             where !_orderRepository.Table.Any(o => o.CustomerId == id)
                                   && !_blogCommentRepository.Table.Any(bc => bc.CustomerId == id)
-                                  && !_newsCommentRepository.Table.Any(nc => nc.CustomerId == id)
                                   && !_productReviewRepository.Table.Any(pr => pr.CustomerId == id)
                                   && !_productReviewHelpfulnessRepository.Table.Any(prh => prh.CustomerId == id)
-                                  && !_pollVotingRecordRepository.Table.Any(pvr => pvr.CustomerId == id)
-                                  && !_forumTopicRepository.Table.Any(ft => ft.CustomerId == id)
-                                  && !_forumPostRepository.Table.Any(fp => fp.CustomerId == id)
                             select id;
 
             var guestIds = guestIdsQuery.Take(batchSize);
