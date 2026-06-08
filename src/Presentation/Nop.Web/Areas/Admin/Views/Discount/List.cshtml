@@ -141,13 +141,11 @@
                         {
                             new ColumnProperty(nameof(DiscountModel.Name))
                             {
-                                Title = T("Admin.Promotions.Discounts.Fields.Name").Text,
-                                Width = "350"
+                                Title = T("Admin.Promotions.Discounts.Fields.Name").Text
                             },
                             new ColumnProperty(nameof(DiscountModel.DiscountTypeName))
                             {
-                                Title = T("Admin.Promotions.Discounts.Fields.DiscountType").Text,
-                                Width = "250"
+                                Title = T("Admin.Promotions.Discounts.Fields.DiscountType").Text
                             },
                             new ColumnProperty(nameof(DiscountModel.DiscountAmount))
                             {
@@ -158,25 +156,24 @@
                             new ColumnProperty(nameof(DiscountModel.StartDateUtc))
                             {
                                 Title = T("Admin.Promotions.Discounts.Fields.StartDate").Text,
-                                Width = "200",
+                                Width = "180",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(DiscountModel.EndDateUtc))
                             {
                                 Title = T("Admin.Promotions.Discounts.Fields.EndDate").Text,
-                                Width = "200",
+                                Width = "180",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(DiscountModel.TimesUsed))
                             {
                                 Title = T("Admin.Promotions.Discounts.Fields.TimesUsed").Text,
-                                Width = "200",
                                 ClassName =  NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(DiscountModel.IsActive))
                             {
                                 Title = T("Admin.Promotions.Discounts.Fields.IsActive").Text,
-                                Width = "80",
+                                Width = "100",
                                 ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },

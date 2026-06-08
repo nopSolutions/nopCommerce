@@ -208,7 +208,7 @@ public partial interface IPictureService
     /// <param name="fileName">Name of file</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the picture binary or throws an exception
+    /// The task result contains the picture binary or throws a <see cref="NopException"/>
     /// </returns>
     Task<byte[]> ValidatePictureAsync(byte[] pictureBinary, string mimeType, string fileName);
 

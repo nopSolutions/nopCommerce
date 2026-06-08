@@ -1,4 +1,4 @@
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;

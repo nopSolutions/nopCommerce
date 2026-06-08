@@ -54,7 +54,6 @@
             <i class="far fa-trash-can"></i>
             @T("Admin.Common.Delete.Selected")
         </button>
-        <nop-action-confirmation asp-button-id="delete-selected" />
     </div>
 </div>
 
@@ -151,7 +150,6 @@
                             new ColumnProperty(nameof(ManufacturerModel.DisplayOrder))
                             {
                                 Title = T("Admin.Catalog.Manufacturers.Fields.DisplayOrder").Text,
-                                Width = "150",
                                 ClassName = NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(ManufacturerModel.Id))
@@ -194,8 +192,6 @@
                             });
                         });
                     </script>
-                    <nop-alert asp-alert-id="deleteSelectedFailed" />
-                    <nop-alert asp-alert-id="nothingSelectedAlert" />
                 </div>
             </div>
         </div>
@@ -243,3 +239,7 @@
         </div>
     </div>
 </div>
+
+<nop-alert asp-alert-id="deleteSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected" />

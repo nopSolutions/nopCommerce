@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Български" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email на администратора</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Въведете паролата на администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Набор символи</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Съпоставяне (collation)</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Съпоставяне е задължителна</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>Потребител '{0}' няма права за запис в папка '{1}'. Моля, настройте дадените права.</Value>

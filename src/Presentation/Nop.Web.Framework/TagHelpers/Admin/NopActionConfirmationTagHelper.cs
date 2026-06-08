@@ -64,6 +64,7 @@ public partial class NopActionConfirmationTagHelper : TagHelper
             ControllerName = _htmlHelper.ViewContext.RouteData.Values["controller"].ToString(),
             ActionName = Action,
             WindowId = modalId,
+            ButtonId = ButtonId,
             AdditonalConfirmText = ConfirmText
         };
 
@@ -79,18 +80,6 @@ public partial class NopActionConfirmationTagHelper : TagHelper
 
         var partialView = await _htmlHelper.PartialAsync("Confirm", actionConfirmationModel);
         output.Content.SetHtmlContent(partialView);
-
-        //modal script
-        var script = new TagBuilder("script");
-        script.InnerHtml.AppendHtml(
-            "$(function() {" +
-            $"$('#{ButtonId}').attr(\"data-toggle\", \"modal\").attr(\"data-target\", \"#{modalId}\");" +
-            $"$('#{modalId}-submit-button').attr(\"name\", $(\"#{ButtonId}\").attr(\"name\"));" +
-            $"$(\"#{ButtonId}\").attr(\"name\", \"\");" +
-            $"if($(\"#{ButtonId}\").attr(\"type\") == \"submit\")$(\"#{ButtonId}\").attr(\"type\", \"button\");" +
-            "});");
-        var scriptTag = await script.RenderHtmlContentAsync();
-        output.PostContent.SetHtmlContent(scriptTag);
     }
 
     #endregion

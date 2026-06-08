@@ -13,11 +13,11 @@ public class SchemaMigration : Migration
     /// </summary>
     public override void Up()
     {
-        Create.TableFor<RequestQuote>();
-        Create.TableFor<RequestQuoteItem>();
+        this.CreateTableIfNotExists<RequestQuote>();
+        this.CreateTableIfNotExists<RequestQuoteItem>();
 
-        Create.TableFor<Quote>();
-        Create.TableFor<QuoteItem>();
+        this.CreateTableIfNotExists<Quote>();
+        this.CreateTableIfNotExists<QuoteItem>();
     }
 
     /// <summary>
@@ -25,10 +25,10 @@ public class SchemaMigration : Migration
     /// </summary>
     public override void Down()
     {
-        Delete.Table(nameof(QuoteItem));
-        Delete.Table(nameof(Quote));
+        this.DeleteTableIfExists<QuoteItem>();
+        this.DeleteTableIfExists<Quote>();
 
-        Delete.Table(nameof(RequestQuoteItem));
-        Delete.Table(nameof(RequestQuote));
+        this.DeleteTableIfExists<RequestQuoteItem>();
+        this.DeleteTableIfExists<RequestQuote>();
     }
 }

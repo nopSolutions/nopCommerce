@@ -42,13 +42,13 @@ public partial class AppSettingsHelper
         fileProvider.CreateFile(filePath);
 
         //get raw configuration parameters
-        var configuration = JsonConvert.DeserializeObject<AppSettings>(fileProvider.ReadAllText(filePath, Encoding.UTF8))
-                                ?.Configuration
-                            ?? new();
+        var configuration = JsonConvert
+                .DeserializeObject<AppSettings>(fileProvider.ReadAllText(filePath, Encoding.UTF8))
+                ?.Configuration
+            ?? new();
+
         foreach (var config in configurations)
-        {
             configuration[config.Name] = JToken.FromObject(config);
-        }
 
         //sort configurations for display by order (e.g. data configuration with 0 will be the first)
         appSettings.Configuration = configuration

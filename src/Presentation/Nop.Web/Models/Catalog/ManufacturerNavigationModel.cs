@@ -21,4 +21,14 @@ public partial record ManufacturerBriefInfoModel : BaseNopEntityModel
     public string SeName { get; set; }
 
     public bool IsActive { get; set; }
+
+    public string PhysicalAddress { get; set; }
+
+    public string ElectronicAddress { get; set; }
+
+    public string ResponsiblePerson { get; set; }
+
+    public string ResponsiblePersonPhysicalAddress { get; set; }
+
+    public string ResponsiblePersonElectronicAddress { get; set; }
 }

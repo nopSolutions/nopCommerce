@@ -40,10 +40,8 @@ public partial class EngineContext
     {
         get
         {
-            if (Singleton<IEngine>.Instance == null)
-            {
+            if (Singleton<IEngine>.Instance == null) 
                 Create();
-            }
 
             return Singleton<IEngine>.Instance;
         }

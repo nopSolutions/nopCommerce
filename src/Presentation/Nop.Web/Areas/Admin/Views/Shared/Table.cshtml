@@ -283,7 +283,7 @@
                             }).formatToParts(value)
                                 .map(({ type, value: vpart }) => //for some locales dotnet accepts latin digits, but still requires localized signs and separators
                                 {
-                                    var parser = Globalize("@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName").numberParser();
+                                    var parser = Globalize("@CultureInfo.CurrentUICulture.Name.ToLowerInvariant()").numberParser();
 
                                     if (type == "integer")
                                         return parser(vpart);

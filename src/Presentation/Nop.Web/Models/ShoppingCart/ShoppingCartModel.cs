@@ -190,6 +190,8 @@ public partial record ShoppingCartModel : BaseNopModel
         public AddressModel PickupAddress { get; set; }
         public string ShippingMethod { get; set; }
 
+        public string DesiredDeliveryDate { get; set; }
+
         public string PaymentMethod { get; set; }
 
         public CustomValues CustomValues { get; set; }

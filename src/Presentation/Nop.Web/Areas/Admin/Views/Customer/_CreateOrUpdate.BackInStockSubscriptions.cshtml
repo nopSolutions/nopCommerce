@@ -14,19 +14,17 @@
             new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.StoreName))
             {
                 Title = T("Admin.Customers.Customers.BackInStockSubscriptions.Store").Text,
-                Width = "200",
                 Visible = (await storeService.GetAllStoresAsync()).Count > 1
             },
             new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.ProductName))
             {
                 Title = T("Admin.Customers.Customers.BackInStockSubscriptions.Product").Text,
-                Width = "300",
                 Render = new RenderLink(new DataUrl("~/Admin/Product/Edit/", nameof(CustomerBackInStockSubscriptionModel.ProductId)))
             },
             new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.CreatedOn))
             {
                 Title = T("Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn").Text,
-                Width = "200",
+                Width = "180",
                 Render = new RenderDate()
             }
         }

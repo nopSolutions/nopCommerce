@@ -237,6 +237,17 @@
                                     @Model.ShippingMethod
                                 </span>
                             </li>
+                            @if (!Model.PrintMode && !string.IsNullOrEmpty(Model.DesiredDeliveryDate))
+                            {
+                                <li class="desired-delivery-date">
+                                    <span class="label">
+                                        @T("Order.Shipping.DesiredDeliveryDate"):
+                                    </span>
+                                    <span class="value">
+                                        @Model.DesiredDeliveryDate
+                                    </span>
+                                </li>
+                            }
                             @if (!Model.PrintMode)
                             {
                                 <li class="shipping-status">
@@ -478,15 +489,15 @@
                                     @if (Model.ShowProductThumbnail)
                                     {
                                         <td class="picture">
-                                            <a href="@(Url.RouteUrl<Product>(new {SeName = item.ProductSeName}))">
-                                                <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.DefaultImageQuality" />
+                                            <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new {SeName = item.ProductSeName}))">
+                                                <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.OrderThumbPictureSize" />
                                             </a>
                                         </td>
                                     }
                                     <td class="product">
                                         @if (!Model.PrintMode)
                                         {
-                                            <em><a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a></em>
+                                            <em><a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a></em>
                                         }
                                         else
                                         {
@@ -548,7 +559,7 @@
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                     //of course, you can modify appropriate locales to include VAT info there
                     <div class="tax-shipping-info">
-                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", Url.RouteTopicUrl("shippinginfo"))
+                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", await NopUrl.RouteTopicUrlAsync("shippinginfo"))
                     </div>
                 }
             </div>

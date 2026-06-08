@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Services.Themes;
 using NUnit.Framework;
 
@@ -10,7 +10,7 @@ public class ThemeProviderTests : BaseNopTest
     private IThemeProvider _themeProvider;
 
     [OneTimeSetUp]
-    public void OneTimeSetUp()
+    public async Task OneTimeSetUpAsync()
     {
         _themeProvider = GetService<IThemeProvider>();
     }

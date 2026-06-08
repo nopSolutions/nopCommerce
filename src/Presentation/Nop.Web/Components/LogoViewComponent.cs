@@ -16,6 +16,6 @@ public partial class LogoViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var model = await _commonModelFactory.PrepareLogoModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

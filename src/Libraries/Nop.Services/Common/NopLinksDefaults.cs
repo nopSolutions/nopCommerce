@@ -16,6 +16,16 @@ public static partial class NopLinksDefaults
         public static string Main => "https://www.nopcommerce.com/";
 
         /// <summary>
+        /// Gets the download page
+        /// </summary>
+        public static string DownloadPage => "https://www.nopcommerce.com/download-nopcommerce";
+
+        /// <summary>
+        /// Gets the release-notes page
+        /// </summary>
+        public static string ReleaseNotesPage => "https://www.nopcommerce.com/release-notes";
+
+        /// <summary>
         /// Gets the boards page
         /// </summary>
         public static string Boards => "https://www.nopcommerce.com/boards/";
@@ -85,6 +95,16 @@ public static partial class NopLinksDefaults
         /// Gets a URL of the Categories docs page
         /// </summary>
         public static string Categories => "https://docs.nopcommerce.com/running-your-store/catalog/categories.html";
+
+        /// <summary>
+        /// Gets a URL of the Filter level values docs page
+        /// </summary>
+        public static string FilterLevels => "https://docs.nopcommerce.com/running-your-store/catalog/ymm.html";
+
+        /// <summary>
+        /// Gets a URL of the price lists docs page
+        /// </summary>
+        public static string PriceLists => "https://docs.nopcommerce.com/running-your-store/catalog/price-lists.html";
 
         /// <summary>
         /// Gets a URL of the manufacturers docs page
@@ -212,24 +232,9 @@ public static partial class NopLinksDefaults
         public static string MessageTemplates => "https://docs.nopcommerce.com/running-your-store/content-management/message-templates.html";
 
         /// <summary>
-        /// Gets a URL of the news docs page
-        /// </summary>
-        public static string News => "https://docs.nopcommerce.com/running-your-store/content-management/news.html";
-
-        /// <summary>
         /// Gets a URL of the blog docs page
         /// </summary>
         public static string Blog => "https://docs.nopcommerce.com/running-your-store/content-management/blog.html";
-
-        /// <summary>
-        /// Gets a URL of the polls docs page
-        /// </summary>
-        public static string Polls => "https://docs.nopcommerce.com/running-your-store/content-management/polls.html";
-
-        /// <summary>
-        /// Gets a URL of the forums docs page
-        /// </summary>
-        public static string Forums => "https://docs.nopcommerce.com/running-your-store/content-management/forums.html";
 
         /// <summary>
         /// Gets a URL of the email accounts docs page
@@ -275,6 +280,11 @@ public static partial class NopLinksDefaults
         /// Gets a URL of the shipping providers docs page
         /// </summary>
         public static string ShippingProviders => "https://docs.nopcommerce.com/getting-started/configure-shipping/shipping-providers/index.html";
+
+        /// <summary>
+        /// Gets a URL of the SMS providers docs page
+        /// </summary>
+        public static string SmsProviders => "https://docs.nopcommerce.com/en/getting-started/advanced-configuration/index.html";
 
         /// <summary>
         /// Gets a URL of the warehouses docs page

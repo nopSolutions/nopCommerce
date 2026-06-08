@@ -1,0 +1,34 @@
+﻿@model FilterLevelValueModel
+
+@{
+    var customer = await workContext.GetCurrentCustomerAsync();
+    const string hideInfoBlockAttributeName = "FilterLevelValuePage.HideInfoBlock";
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+    const string hideProductsBlockAttributeName = "FilterLevelValuePage.HideProductsBlock";
+    var hideProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductsBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-12 clearfix">
+                    <div class="float-left">
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "filter-level-value-advanced-mode" })
+                    </div>
+                </div>
+            </div>
+
+            <nop-cards id="filter-level-value-cards">
+                <nop-card asp-name="filter-level-value-info" asp-icon="fas fa-info" asp-title="@T("Admin.Catalog.FilterLevelValue.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+                <nop-card asp-name="filter-level-value-products" asp-icon="fas fa-table-list" asp-title="@T("Admin.Catalog.FilterLevelValue.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-card>
+
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.FilterLevelValueDetailsBlock, additionalData = Model })
+            </nop-cards>
+        </div>
+    </div>
+</section>

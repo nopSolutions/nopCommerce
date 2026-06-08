@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email администратора</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Введите пароль администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Кодировка</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Правила сортировки</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Правила сортировки обязательны для выбора</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>У системного пользователя '{0}' нет прав записи на папку '{1}'. Пожалуйста, настройте данные разрешения.</Value>

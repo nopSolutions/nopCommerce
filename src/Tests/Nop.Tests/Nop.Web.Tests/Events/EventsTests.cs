@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Events;
 using Nop.Services.Events;
 using NUnit.Framework;

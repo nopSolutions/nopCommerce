@@ -44,6 +44,7 @@ public partial record OrderDetailsModel : BaseNopEntityModel
     public string ShippingStatus { get; set; }
     public AddressModel ShippingAddress { get; set; }
     public string ShippingMethod { get; set; }
+    public string DesiredDeliveryDate { get; set; }
     public IList<ShipmentBriefModel> Shipments { get; set; }
 
     public AddressModel BillingAddress { get; set; }
@@ -90,7 +91,7 @@ public partial record OrderDetailsModel : BaseNopEntityModel
     public bool ShowVendorName { get; set; }
     public bool ShowProductThumbnail { get; set; }
     public bool CanCancelOrder { get; set; }
-    
+
     #region Nested Classes
 
     public partial record OrderItemModel : BaseNopEntityModel

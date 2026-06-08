@@ -1,8 +1,8 @@
 ﻿@model VendorModel
 
-@using Nop.Core
 @using Nop.Core.Domain.Seo
 @using Nop.Core.Domain.Vendors
+@using Nop.Services.Helpers
 
 @inject IWebHelper webHelper
 @inject SeoSettings seoSettings
@@ -20,7 +20,7 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var vendorUrl = Url.RouteUrl<Vendor>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+        var vendorUrl = (await NopUrl.RouteGenericUrlAsync<Vendor>(new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol())).ToLowerInvariant();
         NopHtml.AddCanonicalUrlParts(vendorUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 }

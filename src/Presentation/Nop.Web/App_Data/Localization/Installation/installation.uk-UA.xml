@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Українська" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Е-пошта адміністратора</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Введіть пароль адміністратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Набір символів</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Сортування</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Сортування потрібна</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>Системний користувач "{0}" не має дозволу на зміну папки "{1}". Налаштуйте ці дозволи.</Value>

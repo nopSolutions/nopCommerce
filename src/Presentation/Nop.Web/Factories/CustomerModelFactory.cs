@@ -4,9 +4,9 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
@@ -47,7 +47,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly CustomerSettings _customerSettings;
     protected readonly DateTimeSettings _dateTimeSettings;
     protected readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly GdprSettings _gdprSettings;
     protected readonly IAddressModelFactory _addressModelFactory;
     protected readonly IAttributeParser<CustomerAttribute, CustomerAttributeValue> _customerAttributeParser;
@@ -75,7 +74,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
+    protected readonly MessagesSettings _messagesSettings;
     protected readonly OrderSettings _orderSettings;
+    protected readonly OtpSettings _otpSettings;
     protected readonly RewardPointsSettings _rewardPointsSettings;
     protected readonly SecuritySettings _securitySettings;
     protected readonly TaxSettings _taxSettings;
@@ -92,7 +93,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         CustomerSettings customerSettings,
         DateTimeSettings dateTimeSettings,
         ExternalAuthenticationSettings externalAuthenticationSettings,
-        ForumSettings forumSettings,
         GdprSettings gdprSettings,
         IAddressModelFactory addressModelFactory,
         IAttributeParser<CustomerAttribute, CustomerAttributeValue> customerAttributeParser,
@@ -120,7 +120,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         IUrlRecordService urlRecordService,
         IWorkContext workContext,
         MediaSettings mediaSettings,
+        MessagesSettings messagesSettings,
         OrderSettings orderSettings,
+        OtpSettings otpSettings,
         RewardPointsSettings rewardPointsSettings,
         SecuritySettings securitySettings,
         TaxSettings taxSettings,
@@ -135,7 +137,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _externalAuthenticationModelFactory = externalAuthenticationModelFactory;
         _externalAuthenticationService = externalAuthenticationService;
         _externalAuthenticationSettings = externalAuthenticationSettings;
-        _forumSettings = forumSettings;
         _gdprSettings = gdprSettings;
         _addressModelFactory = addressModelFactory;
         _customerAttributeParser = customerAttributeParser;
@@ -161,7 +162,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _urlRecordService = urlRecordService;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
+        _messagesSettings = messagesSettings;
         _orderSettings = orderSettings;
+        _otpSettings = otpSettings;
         _rewardPointsSettings = rewardPointsSettings;
         _securitySettings = securitySettings;
         _taxSettings = taxSettings;
@@ -224,7 +227,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             var dateOfBirth = customer.DateOfBirth;
             if (dateOfBirth.HasValue)
             {
-                var currentCalendar = CultureInfo.CurrentCulture.Calendar;
+                var currentCalendar = CultureInfo.CurrentCulture.DateTimeFormat.Calendar;
 
                 model.DateOfBirthDay = currentCalendar.GetDayOfMonth(dateOfBirth.Value);
                 model.DateOfBirthMonth = currentCalendar.GetMonth(dateOfBirth.Value);
@@ -255,7 +258,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 model.NewsLetterSubscriptions.Add(nsModel);
             }
 
-            model.Signature = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute);
             model.Email = customer.Email;
             model.Username = customer.Username;
         }
@@ -295,9 +297,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                     model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
                     foreach (var s in states)
-                    {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
-                    }
                 }
                 else
                 {
@@ -342,13 +342,14 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.StateProvinceRequired = _customerSettings.StateProvinceRequired;
         model.PhoneEnabled = _customerSettings.PhoneEnabled;
         model.PhoneRequired = _customerSettings.PhoneRequired;
+        model.LoginByPhoneEnabled = _otpSettings.LoginByPhoneEnabled;
+        model.PhoneSmsVerified = customer.PhoneSmsVerified;
         model.FaxEnabled = _customerSettings.FaxEnabled;
         model.FaxRequired = _customerSettings.FaxRequired;
         model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
         model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
         model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
         model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
-        model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
 
         //external authentication
         var currentCustomer = await _workContext.GetCurrentCustomerAsync();
@@ -446,6 +447,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.StateProvinceRequired = _customerSettings.StateProvinceRequired;
         model.PhoneEnabled = _customerSettings.PhoneEnabled;
         model.PhoneRequired = _customerSettings.PhoneRequired;
+        model.LoginByPhoneEnabled = _otpSettings.LoginByPhoneEnabled;
         model.FaxEnabled = _customerSettings.FaxEnabled;
         model.FaxRequired = _customerSettings.FaxRequired;
         model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
@@ -498,9 +500,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                     model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
                     foreach (var s in states)
-                    {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
-                    }
                 }
                 else
                 {
@@ -526,9 +526,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         {
             var consents = (await _gdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayDuringRegistration).ToList();
             foreach (var consent in consents)
-            {
                 model.GdprConsents.Add(await PrepareGdprConsentModelAsync(consent, false));
-            }
         }
 
         return model;
@@ -547,6 +545,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         var model = new LoginModel
         {
             UsernamesEnabled = _customerSettings.UsernamesEnabled,
+            LoginByPhone = _otpSettings.LoginByPhoneEnabled,
             RegistrationType = _customerSettings.UserRegistrationType,
             CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault(),
             DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage
@@ -597,6 +596,42 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             Result = resultText,
             ReturnUrl = returnUrl
         };
+
+        return model;
+    }
+
+    /// <summary>
+    /// Prepare the phone verification model
+    /// </summary>
+    /// <param name="typeId">Value of phone verification flow enum</param>
+    /// <param name="returnUrl">URL to redirect</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the phone verification model
+    /// </returns>
+    public virtual async Task<PhoneVerificationModel> PreparePhoneVerificationModelAsync(int typeId, string returnUrl)
+    {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var model = new PhoneVerificationModel
+        {
+            ReturnUrl = returnUrl,
+            Phone = customer.Phone,
+            VerificationFlow = (PhoneVerificationFlowEnum)typeId,
+            UsePopupNotifications = _messagesSettings.UsePopupNotifications
+        };
+
+        switch (typeId)
+        {
+            case (int)PhoneVerificationFlowEnum.RegisterStandard:
+                model.Result = await _localizationService.GetResourceAsync("Account.Register.Result.Standard");
+                break;
+            case (int)PhoneVerificationFlowEnum.RegisterEmailValidation:
+                model.Result = await _localizationService.GetResourceAsync("Account.Register.Result.EmailValidation");
+                break;
+            case (int)PhoneVerificationFlowEnum.RegisterAdminApproval:
+                model.Result = await _localizationService.GetResourceAsync("Account.Register.Result.AdminApproval");
+                break;
+        }
 
         return model;
     }
@@ -713,16 +748,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             });
         }
 
-        if (_forumSettings.ForumsEnabled && _forumSettings.AllowCustomersToManageSubscriptions)
-        {
-            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
-            {
-                RouteName = NopRouteNames.Standard.CUSTOMER_FORUM_SUBSCRIPTIONS,
-                Title = await _localizationService.GetResourceAsync("Account.ForumSubscriptions"),
-                Tab = (int)CustomerNavigationEnum.ForumSubscriptions,
-                ItemClass = "forum-subscriptions"
-            });
-        }
         if (_catalogSettings.ShowProductReviewsTabOnAccountPage)
         {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
@@ -1053,41 +1078,43 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 case AttributeControlType.DropdownList:
                 case AttributeControlType.RadioList:
                 case AttributeControlType.Checkboxes:
-                {
-                    if (!string.IsNullOrEmpty(selectedAttributesXml))
                     {
-                        if (!_customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id).Any())
-                            break;
+                        if (!string.IsNullOrEmpty(selectedAttributesXml))
+                        {
+                            if (!_customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id).Any())
+                                break;
 
-                        //clear default selection                                
-                        foreach (var item in attributeModel.Values)
-                            item.IsPreSelected = false;
+                            //clear default selection                                
+                            foreach (var item in attributeModel.Values)
+                                item.IsPreSelected = false;
 
-                        //select new values
-                        var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedAttributesXml);
-                        foreach (var attributeValue in selectedValues)
-                        foreach (var item in attributeModel.Values)
-                            if (attributeValue.Id == item.Id)
-                                item.IsPreSelected = true;
+                            //select new values
+                            var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedAttributesXml);
+                            foreach (var attributeValue in selectedValues)
+                                foreach (var item in attributeModel.Values)
+                                {
+                                    if (attributeValue.Id == item.Id)
+                                        item.IsPreSelected = true;
+                                }
+                        }
                     }
-                }
                     break;
                 case AttributeControlType.ReadonlyCheckboxes:
-                {
-                    //do nothing
-                    //values are already pre-set
-                }
+                    {
+                        //do nothing
+                        //values are already pre-set
+                    }
                     break;
                 case AttributeControlType.TextBox:
                 case AttributeControlType.MultilineTextbox:
-                {
-                    if (!string.IsNullOrEmpty(selectedAttributesXml))
                     {
-                        var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
-                        if (enteredText.Any())
-                            attributeModel.DefaultValue = enteredText[0];
+                        if (!string.IsNullOrEmpty(selectedAttributesXml))
+                        {
+                            var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
+                            if (enteredText.Any())
+                                attributeModel.DefaultValue = enteredText[0];
+                        }
                     }
-                }
                     break;
                 case AttributeControlType.ColorSquares:
                 case AttributeControlType.ImageSquares:

@@ -151,14 +151,12 @@
                                     new ColumnProperty(nameof(NewsLetterSubscriptionModel.Email))
                                     {
                                         Title = T("Admin.Promotions.NewsLetterSubscription.Fields.Email").Text,
-                                        Width = "300",
                                         Editable = true,
                                         EditType = EditType.String
                                     },
                                     new ColumnProperty(nameof(NewsLetterSubscriptionModel.SubscriptionTypeName))
                                     {
-                                        Title = T("Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType").Text,
-                                        Width = "100"
+                                        Title = T("Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType").Text
                                     },
                                     new ColumnProperty(nameof(NewsLetterSubscriptionModel.Active))
                                     {
@@ -172,23 +170,21 @@
                                     new ColumnProperty(nameof(NewsLetterSubscriptionModel.StoreName))
                                     {
                                         Title = T("Admin.Promotions.NewsLetterSubscription.Fields.Store").Text,
-                                        Width = "150",
                                         Visible = (await storeService.GetAllStoresAsync()).Count > 1
                                     },
                                     new ColumnProperty(nameof(NewsLetterSubscriptionModel.LanguageName))
                                     {
-                                        Title = T("Admin.Promotions.NewsLetterSubscription.Fields.Language").Text,
-                                        Width = "150"
+                                        Title = T("Admin.Promotions.NewsLetterSubscription.Fields.Language").Text
                                     },
                                     new ColumnProperty(nameof(NewsLetterSubscriptionModel.CreatedOn))
                                     {
                                         Title = T("Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn").Text,
-                                        Width = "200"
+                                        Width = "180"
                                     },
                                     new ColumnProperty(nameof(NewsLetterSubscriptionModel.Id))
                                     {
                                         Title = T("Admin.Common.Edit").Text,
-                                        Width = "200",
+                                        Width = "100",
                                         ClassName =  NopColumnClassDefaults.Button,
                                         Render = new RenderButtonEdit(new DataUrl("~/Admin/NewsLetterSubscription/Edit/"))
                                     }                                    

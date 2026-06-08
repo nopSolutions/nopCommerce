@@ -61,7 +61,7 @@ public class WidgetsBrevoViewComponent : NopViewComponent
             .Replace(BrevoDefaults.TrackingScriptId, _brevoSettings.MarketingAutomationKey)
             .Replace(BrevoDefaults.TrackingScriptCustomerEmail, customerEmail);
 
-        return View("~/Plugins/Misc.Brevo/Views/PublicInfo.cshtml", trackingScript);
+        return await ViewAsync("~/Plugins/Misc.Brevo/Views/PublicInfo.cshtml", trackingScript);
     }
 
     #endregion

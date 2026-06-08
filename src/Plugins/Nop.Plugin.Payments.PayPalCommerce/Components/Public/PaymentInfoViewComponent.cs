@@ -19,9 +19,9 @@ public class PaymentInfoViewComponent : NopViewComponent
     /// A task that represents the asynchronous operation
     /// The task result contains the view component result
     /// </returns>
-    public IViewComponentResult Invoke(string widgetZone, object additionalData)
+    public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {
-        return View("~/Plugins/Payments.PayPalCommerce/Views/Public/PaymentInfo.cshtml");
+        return await ViewAsync("~/Plugins/Payments.PayPalCommerce/Views/Public/PaymentInfo.cshtml");
     }
 
     #endregion

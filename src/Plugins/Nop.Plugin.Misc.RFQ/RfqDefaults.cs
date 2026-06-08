@@ -75,6 +75,11 @@ public class RfqDefaults
     public static string CustomerQuoteRouteName => "Nop.Plugin.Misc.RFQ.CustomerQuote";
 
     /// <summary>
+    /// Gets the customer quote route name
+    /// </summary>
+    public static string CustomerQuotePdfRouteName => "Nop.Plugin.Misc.RFQ.CustomerQuotePdf";
+
+    /// <summary>
     /// Gets the requests administration menu system name
     /// </summary>
     public static string RequestsAdminMenuSystemName => "Nop.Plugin.Misc.RFQ.RequestsAdminMenu";

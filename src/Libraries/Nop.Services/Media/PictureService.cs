@@ -7,6 +7,7 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Logging;
 using Nop.Services.Seo;
 using SkiaSharp;
@@ -439,14 +440,13 @@ public partial class PictureService : IPictureService
 
         var defaultImageFileName = defaultPictureType switch
         {
-            PictureType.Avatar => await _settingService.GetSettingByKeyAsync("Media.Customer.DefaultAvatarImageName", NopMediaDefaults.DefaultAvatarFileName),
-            _ => await _settingService.GetSettingByKeyAsync("Media.DefaultImageName", NopMediaDefaults.DefaultImageFileName),
+            PictureType.Avatar => NopMediaDefaults.DefaultAvatarFileName,
+            PictureType.Object3d => NopMediaDefaults.Default3dPreviewFileName,
+            _ => NopMediaDefaults.DefaultImageFileName,
         };
         var filePath = await GetPictureLocalPathAsync(defaultImageFileName);
         if (!_fileProvider.FileExists(filePath))
-        {
             return string.Empty;
-        }
 
         if (targetSize == 0)
             return await GetImagesPathUrlAsync(storeLocation) + defaultImageFileName;
@@ -465,7 +465,7 @@ public partial class PictureService : IPictureService
             try
             {
                 using var image = SKBitmap.Decode(filePath);
-                var codec = SKCodec.Create(filePath);
+                using var codec = SKCodec.Create(filePath);
                 var format = codec.EncodedFormat;
                 var pictureBinary = ImageResize(image, format, targetSize);
                 var mimeType = GetMimeTypeFromFileName(thumbFileName);
@@ -999,9 +999,9 @@ public partial class PictureService : IPictureService
     /// <param name="fileName">Name of file</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the picture binary or throws an exception
+    /// The task result contains the picture binary or throws a <see cref="NopException"/>
     /// </returns>
-    public virtual async Task<byte[]> ValidatePictureAsync(byte[] pictureBinary, string mimeType, string fileName)
+    public virtual Task<byte[]> ValidatePictureAsync(byte[] pictureBinary, string mimeType, string fileName)
     {
         try
         {
@@ -1018,17 +1018,16 @@ public partial class PictureService : IPictureService
 
             //resize the image in accordance with the maximum size
             if (Math.Max(image.Height, image.Width) <= _mediaSettings.MaximumImageSize)
-                return pictureBinary;
+                return Task.FromResult(pictureBinary);
 
             var format = GetImageFormatByMimeType(mimeType);
             pictureBinary = ImageResize(image, format, _mediaSettings.MaximumImageSize);
 
-            return pictureBinary;
+            return Task.FromResult(pictureBinary);
         }
         catch (Exception exc)
         {
-            await _logger.ErrorAsync($"Cannot decode picture binary (file name: {fileName})", exc);
-            return pictureBinary;
+            throw new NopException($"Cannot decode picture binary (file name: {fileName})", exc);
         }
     }
 
@@ -1196,11 +1195,11 @@ public partial class PictureService : IPictureService
             _fileProvider.DeleteDirectory(oldPath);
         else
         {
-            foreach (var dir in directoriesToDelete.Where(_fileProvider.DirectoryExists)) 
+            foreach (var dir in directoriesToDelete.Where(_fileProvider.DirectoryExists))
                 _fileProvider.DeleteDirectory(dir);
         }
 
-        _mediaSettings.PicturePath= path;
+        _mediaSettings.PicturePath = path;
         await _settingService.SaveSettingAsync(_mediaSettings, settings => settings.PicturePath);
     }
 

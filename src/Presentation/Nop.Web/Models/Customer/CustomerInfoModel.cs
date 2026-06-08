@@ -107,6 +107,8 @@ public partial record CustomerInfoModel : BaseNopModel
     [DataType(DataType.PhoneNumber)]
     [NopResourceDisplayName("Account.Fields.Phone")]
     public string Phone { get; set; }
+    public bool LoginByPhoneEnabled { get; set; }
+    public bool PhoneSmsVerified { get; set; }
 
     public bool FaxEnabled { get; set; }
     public bool FaxRequired { get; set; }
@@ -117,11 +119,6 @@ public partial record CustomerInfoModel : BaseNopModel
     public bool NewsletterEnabled { get; set; }
 
     public IList<NewsLetterSubscriptionModel> NewsLetterSubscriptions { get; set; }
-
-    //preferences
-    public bool SignatureEnabled { get; set; }
-    [NopResourceDisplayName("Account.Fields.Signature")]
-    public string Signature { get; set; }
 
     //time zone
     [NopResourceDisplayName("Account.Fields.TimeZone")]

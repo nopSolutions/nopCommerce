@@ -8,14 +8,6 @@ namespace Nop.Services.Seo;
 public static partial class NopSeoDefaults
 {
     /// <summary>
-    /// Gets a max length of forum topic slug name
-    /// </summary>
-    /// <remarks>For long URLs we can get the following error: 
-    /// "the specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters", 
-    /// that's why we limit it to 100</remarks>
-    public static int ForumTopicLength => 100;
-
-    /// <summary>
     /// Gets a max length of search engine name
     /// </summary>
     /// <remarks>For long URLs we can get the following error: 
@@ -31,7 +23,6 @@ public static partial class NopSeoDefaults
     //routes that redirected customers to the specific actions
     "admin",
     "blog",
-    "boards",
     "cart",
     "checkout",
     "clearcomparelist",
@@ -43,7 +34,6 @@ public static partial class NopSeoDefaults
     "logout",
     "multi-factor-verification",
     "newproducts",
-    "news",
     "onepagecheckout",
     "page-not-found",
     "passwordrecovery",

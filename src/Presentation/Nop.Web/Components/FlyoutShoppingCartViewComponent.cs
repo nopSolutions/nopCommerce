@@ -30,6 +30,6 @@ public partial class FlyoutShoppingCartViewComponent : NopViewComponent
             return Content("");
 
         var model = await _shoppingCartModelFactory.PrepareMiniShoppingCartModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

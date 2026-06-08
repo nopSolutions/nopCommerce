@@ -33,7 +33,6 @@
                 new ColumnProperty(nameof(MeasureDimensionModel.DisplayOrder))
                 {
                     Title = T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder").Text,
-                    Width = "100",
                     Editable = true,
                     EditType = EditType.Number
                 },
@@ -56,7 +55,7 @@
                 new ColumnProperty(nameof(MeasureDimensionModel.Id))
                 {
                     Title = T("Admin.Common.Edit").Text,
-                    Width = "200",
+                    Width = "100",
                     ClassName =  NopColumnClassDefaults.Button,
                     Render = new RenderButtonsInlineEdit()
                 },

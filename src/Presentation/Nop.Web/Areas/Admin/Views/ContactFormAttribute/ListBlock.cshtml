@@ -1,0 +1,55 @@
+﻿@model ContactFormAttributeSearchModel
+
+<div class="card card-default">
+    <div class="card-header">
+        @T("Admin.Common.ContactFormAttributes")
+    </div>
+    <div class="card-body">
+        <p>
+            <em>@T("Admin.Common.ContactFormAttributes.Description")</em>
+        </p>
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "contact-form-attributes-grid",
+            UrlRead = new DataUrl("List", "ContactFormAttribute", null),
+            Length = Model.PageSize,
+            LengthMenu = Model.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ContactFormAttributeModel.Name))
+                {
+                    Title = T("Admin.Common.ContactFormAttributes.Fields.Name").Text
+                },
+                new ColumnProperty(nameof(ContactFormAttributeModel.AttributeControlTypeName))
+                {
+                    Title = T("Admin.Common.ContactFormAttributes.Fields.AttributeControlType").Text
+                },
+                new ColumnProperty(nameof(ContactFormAttributeModel.IsRequired))
+                {
+                    Title = T("Admin.Common.ContactFormAttributes.Fields.IsRequired").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(ContactFormAttributeModel.DisplayOrder))
+                {
+                    Title = T("Admin.Common.ContactFormAttributes.Fields.DisplayOrder").Text,
+                    ClassName =  NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(ContactFormAttributeModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/ContactFormAttribute/Edit/"))
+                }
+            }
+        })
+    </div>
+    <div class="card-footer">
+        <a class="btn btn-primary" href="@Url.Action("Create", "ContactFormAttribute")">
+            <i class="fas fa-square-plus"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>

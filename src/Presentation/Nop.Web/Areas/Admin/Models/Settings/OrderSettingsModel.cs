@@ -1,4 +1,5 @@
-﻿using Nop.Web.Areas.Admin.Models.Orders;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -15,6 +16,8 @@ public partial record OrderSettingsModel : BaseNopModel, ISettingsModel
     {
         ReturnRequestReasonSearchModel = new ReturnRequestReasonSearchModel();
         ReturnRequestActionSearchModel = new ReturnRequestActionSearchModel();
+        AutoCancelIgnoredPaymentMethods = new List<string>();
+        AvailablePaymentMethods = new List<SelectListItem>();
     }
 
     #endregion
@@ -151,6 +154,23 @@ public partial record OrderSettingsModel : BaseNopModel, ISettingsModel
     [NopResourceDisplayName("Admin.Configuration.Settings.Order.AllowCustomersCancelOrders")]
     public bool AllowCustomersCancelOrders { get; set; }
     public bool AllowCustomersCancelOrders_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.AutoCancelEnabled")]
+    public bool AutoCancelEnabled { get; set; }
+    public bool AutoCancelEnabled_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.AutoCancelDelay")]
+    public int AutoCancelDelay { get; set; }
+    public bool AutoCancelDelay_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.AutoCancelIgnoredPaymentMethods")]
+    public IList<string> AutoCancelIgnoredPaymentMethods { get; set; }
+    public bool AutoCancelIgnoredPaymentMethods_OverrideForStore { get; set; }
+    public List<SelectListItem> AvailablePaymentMethods { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.AutoCancelRestoreShoppingCart")]
+    public bool AutoCancelRestoreShoppingCart { get; set; }
+    public bool AutoCancelRestoreShoppingCart_OverrideForStore { get; set; }
 
     public ReturnRequestReasonSearchModel ReturnRequestReasonSearchModel { get; set; }
 

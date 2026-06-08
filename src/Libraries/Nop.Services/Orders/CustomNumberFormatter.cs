@@ -34,9 +34,7 @@ public partial class CustomNumberFormatter : ICustomNumberFormatter
         string customNumber;
 
         if (string.IsNullOrEmpty(_orderSettings.ReturnRequestNumberMask))
-        {
             customNumber = returnRequest.Id.ToString();
-        }
         else
         {
             customNumber = _orderSettings.ReturnRequestNumberMask

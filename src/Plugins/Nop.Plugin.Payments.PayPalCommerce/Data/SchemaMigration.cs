@@ -6,7 +6,7 @@ using Nop.Plugin.Payments.PayPalCommerce.Domain;
 namespace Nop.Plugin.Payments.PayPalCommerce.Data;
 
 [NopMigration("2024-06-06 00:00:00", "Payments.PayPalCommerce base schema", MigrationProcessType.Installation)]
-public class SchemaMigration : AutoReversingMigration
+public class SchemaMigration : Migration
 {
     #region Methods
 
@@ -15,7 +15,15 @@ public class SchemaMigration : AutoReversingMigration
     /// </summary>
     public override void Up()
     {
-        Create.TableFor<PayPalToken>();
+        this.CreateTableIfNotExists<PayPalToken>();
+    }
+
+    /// <summary>
+    /// Collects the DOWN migration expressions
+    /// </summary>
+    public override void Down()
+    {
+        this.DeleteTableIfExists<PayPalToken>();
     }
 
     #endregion

@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Domain.Shipping;
 using Nop.Data;
-using Nop.Services.Catalog;
 
 namespace Nop.Services.Shipping;
 

@@ -5,6 +5,7 @@ using Nop.Plugin.Misc.Omnisend.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
+using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -70,6 +71,7 @@ public class OmnisendAdminController : BasePluginController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> Configure()
     {
         var model = new ConfigurationModel
@@ -85,6 +87,7 @@ public class OmnisendAdminController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
         if (!ModelState.IsValid)
@@ -119,6 +122,7 @@ public class OmnisendAdminController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("sync-contacts")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SyncContacts()
     {
         if (!ModelState.IsValid || string.IsNullOrEmpty(_omnisendSettings.BrandId))
@@ -131,6 +135,7 @@ public class OmnisendAdminController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("sync-products")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SyncProducts()
     {
         if (!ModelState.IsValid || string.IsNullOrEmpty(_omnisendSettings.BrandId))
@@ -144,6 +149,7 @@ public class OmnisendAdminController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("sync-orders")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SyncOrders()
     {
         if (!ModelState.IsValid || string.IsNullOrEmpty(_omnisendSettings.BrandId))

@@ -316,7 +316,7 @@ public partial class CommonHelper
         DateTime? date = null;
         try
         {
-            date = new DateTime(year.Value, month.Value, day.Value, CultureInfo.CurrentCulture.Calendar);
+            date = new DateTime(year.Value, month.Value, day.Value, CultureInfo.CurrentCulture.DateTimeFormat.Calendar);
         }
         catch { }
         return date;

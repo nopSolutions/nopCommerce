@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Security;
 using Nop.Plugin.Misc.RFQ.Domains;
 using Nop.Plugin.Misc.RFQ.Models.Customer;
 using Nop.Plugin.Misc.RFQ.Services;
@@ -18,10 +19,12 @@ public class CustomerModelFactory
 {
     #region Fields
 
+    private readonly CaptchaSettings _captchaSettings;
     private readonly ICurrencyService _currencyService;
     private readonly IDateTimeHelper _dateTimeHelper;
     private readonly ILocalizationService _localizationService;
     private readonly IPictureService _pictureService;
+    private readonly IPriceCalculationService _priceCalculationService;
     private readonly IPriceFormatter _priceFormatter;
     private readonly IProductAttributeFormatter _productAttributeFormatter;
     private readonly IProductService _productService;
@@ -29,27 +32,33 @@ public class CustomerModelFactory
     private readonly IWorkContext _workContext;
     private readonly MediaSettings _mediaSettings;
     private readonly RfqService _rfqService;
+    private readonly RfqSettings _rfqSettings;
 
     #endregion
 
     #region Ctor
 
-    public CustomerModelFactory(ICurrencyService currencyService,
+    public CustomerModelFactory(CaptchaSettings captchaSettings,
+        ICurrencyService currencyService,
         IDateTimeHelper dateTimeHelper,
         ILocalizationService localizationService,
         IPictureService pictureService,
+        IPriceCalculationService priceCalculationService,
         IPriceFormatter priceFormatter,
         IProductAttributeFormatter productAttributeFormatter,
         IProductService productService,
         IUrlRecordService urlRecordService,
         IWorkContext workContext,
         MediaSettings mediaSettings,
-        RfqService rfqService)
+        RfqService rfqService,
+        RfqSettings rfqSettings)
     {
+        _captchaSettings = captchaSettings;
         _currencyService = currencyService;
         _dateTimeHelper = dateTimeHelper;
         _localizationService = localizationService;
         _pictureService = pictureService;
+        _priceCalculationService = priceCalculationService;
         _priceFormatter = priceFormatter;
         _productAttributeFormatter = productAttributeFormatter;
         _productService = productService;
@@ -57,6 +66,7 @@ public class CustomerModelFactory
         _workContext = workContext;
         _mediaSettings = mediaSettings;
         _rfqService = rfqService;
+        _rfqSettings = rfqSettings;
     }
 
     #endregion
@@ -131,6 +141,7 @@ public class CustomerModelFactory
         model.CustomerId = requestQuote.CustomerId;
         model.CustomerItems = modelItems;
         model.QuoteId = requestQuote.QuoteId;
+        model.DisplayCaptcha = _captchaSettings.Enabled && _rfqSettings.ShowCaptchaOnRequestPage;
 
         if (!requestQuote.QuoteId.HasValue)
             return model;
@@ -165,6 +176,7 @@ public class CustomerModelFactory
         model.Status = await _localizationService.GetLocalizedEnumAsync(quote.Status);
         model.Order = quote.OrderId;
         model.StatusType = quote.Status;
+        model.AllowCustomerGenerateQuotePdf = _rfqSettings.AllowCustomerGenerateQuotePdf;
         model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(quote.CreatedOnUtc, DateTimeKind.Utc);
         model.Id = quote.Id;
         model.CustomerId = quote.CustomerId;
@@ -191,6 +203,7 @@ public class CustomerModelFactory
         var product = await _productService.GetProductByIdAsync(item.ProductId);
 
         var unitPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(item.RequestedUnitPrice, currentCurrency);
+        unitPrice = _priceCalculationService.Round(unitPrice, currentCurrency.RoundingType);
 
         return new RequestQuoteItemModel
         {

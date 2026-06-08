@@ -85,7 +85,6 @@
                     <i class="far fa-trash-can"></i>
                     @T("Admin.Common.Delete.Selected")
                 </button>
-                <nop-action-confirmation asp-button-id="delete-selected" />
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductListButtons, additionalData = Model })
             </div>
         </div>
@@ -243,7 +242,6 @@
                                       new ColumnProperty(nameof(ProductModel.PictureThumbnailUrl))
                                       {
                                           Title = T("Admin.Catalog.Products.Fields.PictureThumbnailUrl").Text,
-                                          Width = "100",
                                           Render = new RenderPicture(width: 100)
                                       },
                                       new ColumnProperty(nameof(ProductModel.Name))
@@ -252,8 +250,7 @@
                                       },
                                       new ColumnProperty(nameof(ProductModel.Sku))
                                       {
-                                          Title = T("Admin.Catalog.Products.Fields.Sku").Text,
-                                          Width = "100"
+                                          Title = T("Admin.Catalog.Products.Fields.Sku").Text
                                       },
                                       new ColumnProperty(nameof(ProductModel.FormattedPrice))
                                       {
@@ -266,14 +263,14 @@
                                       new ColumnProperty(nameof(ProductModel.Published))
                                       {
                                           Title = T("Admin.Catalog.Products.Fields.Published").Text,
-                                          Width = "80",
+                                          Width = "100",
                                           ClassName = NopColumnClassDefaults.CenterAll,
                                           Render = new RenderBoolean()
                                       },
                                       new ColumnProperty(nameof(ProductModel.Id))
                                       {
                                           Title = T("Admin.Common.Edit").Text,
-                                          Width = "80",
+                                          Width = "100",
                                           ClassName =  NopColumnClassDefaults.Button,
                                           Render = new RenderButtonEdit(new DataUrl("~/Admin/Product/Edit"))
                                       }
@@ -311,8 +308,6 @@
                             });
 
                               </script>
-                              <nop-alert asp-alert-id="deleteSelectedFailed" />
-                              <nop-alert asp-alert-id="nothingSelectedAlert" />
                           </div>
                       </div>
                 </div>
@@ -438,7 +433,6 @@
         });
     });
 </script>
-<nop-alert asp-alert-id="exportXmlSelected" />
 
     @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
     <form asp-controller="Product" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
@@ -464,3 +458,7 @@
         });
     </script>
 <nop-alert asp-alert-id="exportExcelSelected" />
+<nop-alert asp-alert-id="exportXmlSelected" />
+<nop-alert asp-alert-id="deleteSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected" />

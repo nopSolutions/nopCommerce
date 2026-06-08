@@ -1,0 +1,56 @@
+﻿@model FilterLevelSettingsModel
+
+<div class="card-body">
+    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.FilterLevels", Docs.FilterLevels + Utm.OnAdmin)" />
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="FilterLevelEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="FilterLevelEnabled" />
+            <span asp-validation-for="FilterLevelEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="FilterLevelEnabled" disable-auto-generation="true">
+        <div class="form-group row" id="pnlDisplayOnHomePage">
+            <div class="col-md-3">
+                <nop-label asp-for="DisplayOnHomePage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DisplayOnHomePage" />
+                <span asp-validation-for="DisplayOnHomePage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="pnlDisplayOnProductDetailsPage">
+            <div class="col-md-3">
+                <nop-label asp-for="DisplayOnProductDetailsPage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DisplayOnProductDetailsPage" />
+                <span asp-validation-for="DisplayOnProductDetailsPage"></span>
+            </div>
+        </div>
+        
+    </nop-nested-setting>
+</div>
+<script>
+    $(function() {
+        $("#@Html.IdFor(model => model.FilterLevelEnabled)").click(toggleFilterLevelEnabled);
+
+        toggleFilterLevelEnabled();
+    });
+
+    function toggleFilterLevelEnabled() {
+        if ($('#@Html.IdFor(model => model.FilterLevelEnabled)').is(':checked')) {
+            $('#pnlDisplayOnHomePage').showElement();
+            $('#pnlDisplayOnProductDetailsPage').showElement();
+
+            $('[data-card-name=filterlevelsettings-levels]').showElement();
+            ensureDataTablesRendered();
+        } else {
+            $('#pnlDisplayOnHomePage').hideElement();
+            $('#pnlDisplayOnProductDetailsPage').hideElement();
+            $('[data-card-name=filterlevelsettings-levels]').hideElement();
+        }
+    }
+</script>

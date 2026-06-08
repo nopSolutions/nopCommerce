@@ -74,7 +74,7 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {
         var script = await GetScriptAsync();
-        return View("~/Plugins/Widgets.GoogleAnalytics/Views/PublicInfo.cshtml", script);
+        return await ViewAsync("~/Plugins/Widgets.GoogleAnalytics/Views/PublicInfo.cshtml", script);
     }
 
     #endregion

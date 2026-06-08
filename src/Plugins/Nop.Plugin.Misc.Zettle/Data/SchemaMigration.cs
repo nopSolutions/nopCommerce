@@ -6,7 +6,7 @@ using Nop.Plugin.Misc.Zettle.Domain;
 namespace Nop.Plugin.Misc.Zettle.Data;
 
 [NopMigration("2022/09/15 12:00:00", "Misc.Zettle base schema", MigrationProcessType.Installation)]
-public class SchemaMigration : AutoReversingMigration
+public class SchemaMigration : Migration
 {
     #region Methods
 
@@ -15,7 +15,15 @@ public class SchemaMigration : AutoReversingMigration
     /// </summary>
     public override void Up()
     {
-        Create.TableFor<ZettleRecord>();
+        this.CreateTableIfNotExists<ZettleRecord>();
+    }
+
+    /// <summary>
+    /// Collects the DOWN migration expressions
+    /// </summary>
+    public override void Down()
+    {
+        this.DeleteTableIfExists<ZettleRecord>();
     }
 
     #endregion

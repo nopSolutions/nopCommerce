@@ -189,6 +189,25 @@ public partial interface ICustomerService
     Task<Customer> GetCustomerByUsernameAsync(string username);
 
     /// <summary>
+    /// Get customer by their phone number.
+    /// </summary>
+    /// <param name="phone">The phone number of the customer
+    /// <returns>A task that represents the asynchronous operation
+    /// The task result contains the <see cref="Customer"/> 
+    /// </returns>
+    Task<Customer> GetCustomerByPhoneAsync(string phone);
+
+    /// <summary>
+    /// Determines whether a verified phone number is already associated with a customer other than the specified
+    /// customer.
+    /// </summary>
+    /// <param name="customer">The customer</param>
+    /// <param name="phone">The phone number</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains <see langword="true"/> if a
+    /// different customer with the specified verified phone number exists; otherwise, <see langword="false"/>.</returns>
+    Task<bool> IsAlreadyExistsVerifiedPhoneNumberAsync(Customer customer, string phone);
+
+    /// <summary>
     /// Insert a guest customer
     /// </summary>
     /// <returns>
@@ -268,6 +287,13 @@ public partial interface ICustomerService
     /// The task result contains the customer full name
     /// </returns>
     Task<string> GetCustomerFullNameAsync(Customer customer);
+
+    /// <summary>
+    /// Formats the private message text
+    /// </summary>
+    /// <param name="pm">Private message</param>
+    /// <returns>Formatted text</returns>
+    string FormatPrivateMessageText(PrivateMessage pm);
 
     /// <summary>
     /// Formats the customer name
@@ -464,17 +490,6 @@ public partial interface ICustomerService
     Task<bool> IsAdminAsync(Customer customer, bool onlyActiveCustomerRoles = true);
 
     /// <summary>
-    /// Gets a value indicating whether customer is a forum moderator
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the result
-    /// </returns>
-    Task<bool> IsForumModeratorAsync(Customer customer, bool onlyActiveCustomerRoles = true);
-
-    /// <summary>
     /// Gets a value indicating whether customer is registered
     /// </summary>
     /// <param name="customer">Customer</param>
@@ -646,6 +661,61 @@ public partial interface ICustomerService
     /// <param name="address">Address</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task InsertCustomerAddressAsync(Customer customer, Address address);
+
+    #endregion
+
+    #region Private message
+
+    /// <summary>
+    /// Deletes a private message
+    /// </summary>
+    /// <param name="privateMessage">Private message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task DeletePrivateMessageAsync(PrivateMessage privateMessage);
+
+    /// <summary>
+    /// Gets a private message
+    /// </summary>
+    /// <param name="privateMessageId">The private message identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the private message
+    /// </returns>
+    Task<PrivateMessage> GetPrivateMessageByIdAsync(int privateMessageId);
+
+    /// <summary>
+    /// Gets private messages
+    /// </summary>
+    /// <param name="storeId">The store identifier; pass 0 to load all messages</param>
+    /// <param name="fromCustomerId">The customer identifier who sent the message</param>
+    /// <param name="toCustomerId">The customer identifier who should receive the message</param>
+    /// <param name="isRead">A value indicating whether loaded messages are read. false - to load not read messages only, 1 to load read messages only, null to load all messages</param>
+    /// <param name="isDeletedByAuthor">A value indicating whether loaded messages are deleted by author. false - messages are not deleted by author, null to load all messages</param>
+    /// <param name="isDeletedByRecipient">A value indicating whether loaded messages are deleted by recipient. false - messages are not deleted by recipient, null to load all messages</param>
+    /// <param name="keywords">Keywords</param>
+    /// <param name="pageIndex">Page index</param>
+    /// <param name="pageSize">Page size</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the private messages
+    /// </returns>
+    Task<IPagedList<PrivateMessage>> GetAllPrivateMessagesAsync(int storeId, int fromCustomerId,
+        int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
+        string keywords, int pageIndex = 0, int pageSize = int.MaxValue);
+
+    /// <summary>
+    /// Inserts a private message
+    /// </summary>
+    /// <param name="privateMessage">Private message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task InsertPrivateMessageAsync(PrivateMessage privateMessage);
+
+    /// <summary>
+    /// Updates the private message
+    /// </summary>
+    /// <param name="privateMessage">Private message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task UpdatePrivateMessageAsync(PrivateMessage privateMessage);
 
     #endregion
 }

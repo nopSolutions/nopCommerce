@@ -19,6 +19,10 @@ public partial class ActionConfirmationModel
     /// </summary>
     public string WindowId { get; set; }
     /// <summary>
+    /// Button ID
+    /// </summary>
+    public string ButtonId { get; set; }
+    /// <summary>
     /// Additionl confirm text
     /// </summary>
     public string AdditonalConfirmText { get; set; }

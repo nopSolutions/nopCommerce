@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="ఆంగ్ల" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>నిర్వాహక వినియోగదారు ఇమెయిల్</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>నిర్వాహక పాస్‌వర్డ్‌ను నమోదు చేయండి</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>అక్షర సమితి</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>సమాకలనం</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>సేకరణ అవసరం</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>'{1}' ఫోల్డర్‌లో సవరించు అనుమతితో '{0}' ఖాతా మంజూరు చేయబడలేదు. దయచేసి ఈ అనుమతులను కాన్ఫిగర్ చేయండి.</Value>

@@ -5,12 +5,14 @@
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
 @inject AdminAreaSettings adminAreaSettings
-@inject Nop.Services.Localization.ILanguageService languageService
+@inject ILanguageService languageService
 
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
 @using Nop.Services.Customers
 @using Nop.Services.Helpers
+@using Nop.Services.Localization
+
 
 @{
     var returnUrl = webHelper.GetRawUrl(Context.Request);

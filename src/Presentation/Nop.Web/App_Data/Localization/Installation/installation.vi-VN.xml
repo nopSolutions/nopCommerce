@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Tiếng Việt" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email quản trị viên</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Hãy nhập mật khẩu tài khoản của quản trị viên</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Bộ ký tự</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Đối chiếu</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Cần phải đối chiếu</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>Tài khoản '{0}' chưa được cấp quyền Thay đổi trên thư mục '{1}'. Hãy cấu hình các quyền truy cập này.</Value>

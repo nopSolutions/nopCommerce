@@ -5,6 +5,7 @@
 @using Nop.Core.Domain.Media
 @using Nop.Core.Domain.Orders
 @using Nop.Core.Domain.Tax
+@using Nop.Services.Helpers
 
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
@@ -107,13 +108,13 @@
                                 @if (Model.ShowProductImages)
                                 {
                                     <td class="product-picture">
-                                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">
-                                            <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.DefaultImageQuality" />
+                                        <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">
+                                            <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.CartThumbPictureSize" />
                                         </a>
                                     </td>
                                 }
                                 <td class="product">
-                                    <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))" class="product-name">@item.ProductName</a>
+                                    <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))" class="product-name">@item.ProductName</a>
                                     @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                     {
                                         <div class="attributes">
@@ -134,7 +135,7 @@
                                     }
                                     @if (Model.IsEditable && item.AllowItemEditing)
                                     {
-                                        var editCartItemUrl = Url.RouteUrl<Product>(new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
+                                        var editCartItemUrl = await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
                                         editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid", item.Id.ToString());
                                         <div class="edit-item">
                                             <a href="@editCartItemUrl">@T("Common.Edit")</a>
@@ -185,15 +186,15 @@
                                             </div>
                                             <script asp-location="Footer">
                                                 $(function() {
-                                                    $('#quantity-up-@(item.Id)').on('click', () => changeQuantity(1, true));
-                                                    $('#quantity-down-@(item.Id)').on('click', () => changeQuantity(-1, true));
+                                                    $('#quantity-up-@(item.Id)').on('click', () => changeQuantity_@(item.Id)(1, true));
+                                                    $('#quantity-down-@(item.Id)').on('click', () => changeQuantity_@(item.Id)(-1, true));
                                                     $('#itemquantity@(item.Id)').on('keydown', (e) => {
                                                         switch (e.key) {
                                                             case 'ArrowUp':
-                                                                changeQuantity(1)
+                                                                changeQuantity_@(item.Id)(1)
                                                                 break;
                                                             case 'ArrowDown':
-                                                                changeQuantity(-1)
+                                                                changeQuantity_@(item.Id)(-1)
                                                                 break;
                                                             default:
                                                                 break;
@@ -202,7 +203,7 @@
 
                                                 });
 
-                                                function changeQuantity(amount, triggerChange) {
+                                                function changeQuantity_@(item.Id)(amount, triggerChange) {
                                                     var input = $(document).find('#itemquantity@(item.Id)');
                                                     var oldValue = parseInt(input.val());
                                                     var amountValue = parseInt(amount);
@@ -261,7 +262,7 @@
                 //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                 //of course, you can modify appropriate locales to include VAT info there
                 <div class="tax-shipping-info">
-                    @T(inclTax ? "ShoppingCart.TaxShipping.InclTax" : "ShoppingCart.TaxShipping.ExclTax", Url.RouteTopicUrl("shippinginfo"))
+                    @T(inclTax ? "ShoppingCart.TaxShipping.InclTax" : "ShoppingCart.TaxShipping.ExclTax", await NopUrl.RouteTopicUrlAsync("shippinginfo"))
                 </div>
             }
             <div class="cart-options">
@@ -335,7 +336,7 @@
                                 }
                                 else
                                 {
-                                    <a class="read" id="read-terms" href="@Url.RouteTopicUrl("conditionsofuse")" role="button" tabindex="0">@T("Checkout.TermsOfService.Read")</a>
+                                    <a class="read" id="read-terms" href="@await NopUrl.RouteTopicUrlAsync("conditionsofuse")" role="button" tabindex="0">@T("Checkout.TermsOfService.Read")</a>
                                 }
                             </div>
                         }

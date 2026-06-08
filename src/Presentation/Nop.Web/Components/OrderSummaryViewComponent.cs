@@ -30,7 +30,7 @@ public partial class OrderSummaryViewComponent : NopViewComponent
     {
         //use already prepared (shared) model
         if (overriddenModel != null)
-            return View(overriddenModel);
+            return await ViewAsync(overriddenModel);
 
         //if not passed, then create a new model
         var store = await _storeContext.GetCurrentStoreAsync();
@@ -40,6 +40,6 @@ public partial class OrderSummaryViewComponent : NopViewComponent
         model = await _shoppingCartModelFactory.PrepareShoppingCartModelAsync(model, cart,
             isEditable: false,
             prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault());
-        return View(model);
+        return await ViewAsync(model);
     }
 }

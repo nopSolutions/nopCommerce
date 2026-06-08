@@ -56,8 +56,10 @@ public partial class PluginsInfo : IPluginsInfo
             {
                 string pluginName;
                 while ((pluginName = reader.ReadLine()) != null)
+                {
                     if (!string.IsNullOrWhiteSpace(pluginName))
                         pluginSystemNames.Add(pluginName.Trim());
+                }
             }
 
             //and delete the old one
@@ -359,14 +361,18 @@ public partial class PluginsInfo : IPluginsInfo
                 return _installedPlugins;
 
             if (PluginDescriptors?.Any() ?? false)
+            {
                 _installedPlugins = PluginDescriptors
                     .Where(pd => _installedPluginNames.Any(pn =>
                         pn.Equals(pd.pluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase)))
                     .Select(pd => pd.pluginDescriptor as PluginDescriptorBaseInfo).ToList();
+            }
             else
+            {
                 return _installedPluginNames
                     .Where(name => !name.Equals(OBSOLETE_FIELD, StringComparison.InvariantCultureIgnoreCase))
                     .Select(systemName => new PluginDescriptorBaseInfo { SystemName = systemName }).ToList();
+            }
 
             return _installedPlugins;
         }

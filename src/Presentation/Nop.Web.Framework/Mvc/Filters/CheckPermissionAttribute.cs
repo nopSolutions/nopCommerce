@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Nop.Core;
 using Nop.Data;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 
@@ -115,8 +115,10 @@ public sealed class CheckPermissionAttribute : TypeFilterAttribute
 
             //authorize permission
             foreach (var permissionSystemName in _permissionSystemNames)
+            {
                 if (await _permissionService.AuthorizeAsync(permissionSystemName))
                     return;
+            }
 
             var resultType = _resultType;
 
@@ -126,12 +128,14 @@ public sealed class CheckPermissionAttribute : TypeFilterAttribute
                 return;
 
             if (resultType == CheckPermissionResultType.Default)
+            {
                 resultType = request.Method switch
                 {
                     WebRequestMethods.Http.Post => _webHelper.IsAjaxRequest(request) ? CheckPermissionResultType.Json : CheckPermissionResultType.Html,
                     WebRequestMethods.Http.Get => CheckPermissionResultType.Html,
                     _ => CheckPermissionResultType.Text,
                 };
+            }
 
             IActionResult html()
             {

@@ -17,6 +17,6 @@ public partial class CheckoutProgressViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync(CheckoutProgressStep step)
     {
         var model = await _checkoutModelFactory.PrepareCheckoutProgressModelAsync(step);
-        return View(model);
+        return await ViewAsync(model);
     }
 }

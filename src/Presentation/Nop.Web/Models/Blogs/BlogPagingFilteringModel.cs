@@ -13,9 +13,7 @@ public partial record BlogPagingFilteringModel : BasePageableModel
         {
             var tempDate = Month.Split(['-']);
             if (tempDate.Length == 2)
-            {
                 result = new DateTime(Convert.ToInt32(tempDate[0]), Convert.ToInt32(tempDate[1]), 1);
-            }
         }
         return result;
     }

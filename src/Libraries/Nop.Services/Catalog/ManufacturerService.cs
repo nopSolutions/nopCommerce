@@ -212,10 +212,12 @@ public partial class ManufacturerService : IManufacturerService
         var manufacturers = _manufacturerRepository.Table;
 
         if (discountId.HasValue)
+        {
             manufacturers = from manufacturer in manufacturers
                 join dmm in _discountManufacturerMappingRepository.Table on manufacturer.Id equals dmm.EntityId
                 where dmm.DiscountId == discountId.Value
                 select manufacturer;
+        }
 
         if (!showHidden)
             manufacturers = manufacturers.Where(manufacturer => !manufacturer.Deleted);

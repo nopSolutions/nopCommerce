@@ -327,8 +327,7 @@
                                         },
                                         new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
                                         {
-                                            Title = T("Admin.Orders.Fields.CustomOrderNumber").Text,
-                                            Width = "80"
+                                            Title = T("Admin.Orders.Fields.CustomOrderNumber").Text
                                         }
                                     };
                                     //a vendor does not have access to this functionality
@@ -343,16 +342,14 @@
                                     }
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.PaymentStatus))
                                     {
-                                        Title = T("Admin.Orders.Fields.PaymentStatus").Text,
-                                        Width = "150"
+                                        Title = T("Admin.Orders.Fields.PaymentStatus").Text
                                     });
                                     //a vendor does not have access to this functionality
                                     if (!Model.IsLoggedInAsVendor)
                                     {
                                         gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingStatus))
                                         {
-                                            Title = T("Admin.Orders.Fields.ShippingStatus").Text,
-                                            Width = "150"
+                                            Title = T("Admin.Orders.Fields.ShippingStatus").Text
                                         });
                                     }
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
@@ -363,13 +360,12 @@
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
                                     {
                                         Title = T("Admin.Orders.Fields.Store").Text,
-                                        Width = "100",
                                         Visible = (await storeService.GetAllStoresAsync()).Count > 1
                                     });
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
                                     {
                                         Title = T("Admin.Orders.Fields.CreatedOn").Text,
-                                        Width = "120",
+                                        Width = "180",
                                         Render = new RenderDate()
                                     });
                                     //a vendor does not have access to this functionality
@@ -377,14 +373,13 @@
                                     {
                                         gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
                                         {
-                                            Title = T("Admin.Orders.Fields.OrderTotal").Text,
-                                            Width = "100",
+                                            Title = T("Admin.Orders.Fields.OrderTotal").Text
                                         });
                                     }
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))
                                     {
                                         Title = T("Admin.Common.View").Text,
-                                        Width = "50",
+                                        Width = "100",
                                         ClassName = NopColumnClassDefaults.Button,
                                         Render = new RenderButtonView(new DataUrl("~/Admin/Order/Edit"))
                                     });

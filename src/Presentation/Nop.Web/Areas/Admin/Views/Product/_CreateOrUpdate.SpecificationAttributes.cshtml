@@ -21,18 +21,15 @@
                         {
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.AttributeTypeName))
                             {
-                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType").Text,
-                                Width = "150"
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType").Text
                             },
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.AttributeName))
                             {
-                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute").Text,
-                                Width = "200"
+                                Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute").Text
                             },
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.ValueRaw))
                             {
                                 Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.Value").Text,
-                                Width = "200",
                                 Encode = false
                             },
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.AllowFiltering))
@@ -52,7 +49,6 @@
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.DisplayOrder))
                             {
                                 Title = T("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder").Text,
-                                Width = "150",
                                 ClassName =  NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(ProductSpecificationAttributeModel.Id))

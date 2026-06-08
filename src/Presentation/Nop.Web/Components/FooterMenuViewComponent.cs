@@ -26,7 +26,7 @@ public partial class FooterMenuViewComponent : NopViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        return View(await _menuModelFactory.PrepareMenuModelsAsync(MenuType.Footer));
+        return await ViewAsync(await _menuModelFactory.PrepareMenuModelsAsync(MenuType.Footer));
     }
 
     #endregion

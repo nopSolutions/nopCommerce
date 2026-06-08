@@ -55,9 +55,7 @@ public partial class NopTextAreaTagHelper : TextAreaTagHelper
         if (htmlAttributesDictionary?.Count > 0)
         {
             foreach (var (key, value) in htmlAttributesDictionary)
-            {
                 output.Attributes.Add(key, value);
-            }
         }
 
         //additional parameters

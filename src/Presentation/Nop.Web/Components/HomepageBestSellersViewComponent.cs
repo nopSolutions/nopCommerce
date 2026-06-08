@@ -68,6 +68,6 @@ public partial class HomepageBestSellersViewComponent : NopViewComponent
 
         //prepare model
         var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

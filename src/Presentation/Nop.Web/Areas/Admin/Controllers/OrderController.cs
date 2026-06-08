@@ -266,9 +266,7 @@ public partial class OrderController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null)
-        {
             model.VendorId = currentVendor.Id;
-        }
 
         var orderStatusIds = model.OrderStatusIds != null && !model.OrderStatusIds.Contains(0)
             ? model.OrderStatusIds.ToList()
@@ -362,9 +360,7 @@ public partial class OrderController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null)
-        {
             model.VendorId = currentVendor.Id;
-        }
 
         var orderStatusIds = model.OrderStatusIds != null && !model.OrderStatusIds.Contains(0)
             ? model.OrderStatusIds.ToList()
@@ -904,9 +900,7 @@ public partial class OrderController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null)
-        {
             model.VendorId = currentVendor.Id;
-        }
 
         var startDateValue = model.StartDate == null ? null
             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
@@ -988,9 +982,7 @@ public partial class OrderController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null)
-        {
             orders = await orders.WhereAwait(HasAccessToOrderAsync).ToListAsync();
-        }
 
         try
         {
@@ -1189,8 +1181,10 @@ public partial class OrderController : BaseAdminController
         //get order item identifier
         var orderItemId = 0;
         foreach (var formValue in form.Keys)
+        {
             if (formValue.StartsWith("btnSaveOrderItem", StringComparison.InvariantCultureIgnoreCase))
                 orderItemId = Convert.ToInt32(formValue["btnSaveOrderItem".Length..]);
+        }
 
         var orderItem = await _orderService.GetOrderItemByIdAsync(orderItemId)
             ?? throw new ArgumentException("No order item found with the specified id");
@@ -1292,8 +1286,10 @@ public partial class OrderController : BaseAdminController
         //get order item identifier
         var orderItemId = 0;
         foreach (var formValue in form.Keys)
+        {
             if (formValue.StartsWith("btnDeleteOrderItem", StringComparison.InvariantCultureIgnoreCase))
                 orderItemId = Convert.ToInt32(formValue["btnDeleteOrderItem".Length..]);
+        }
 
         var orderItem = await _orderService.GetOrderItemByIdAsync(orderItemId)
             ?? throw new ArgumentException("No order item found with the specified id");
@@ -1354,8 +1350,10 @@ public partial class OrderController : BaseAdminController
         //get order item identifier
         var orderItemId = 0;
         foreach (var formValue in form.Keys)
+        {
             if (formValue.StartsWith("btnResetDownloadCount", StringComparison.InvariantCultureIgnoreCase))
                 orderItemId = Convert.ToInt32(formValue["btnResetDownloadCount".Length..]);
+        }
 
         var orderItem = await _orderService.GetOrderItemByIdAsync(orderItemId)
             ?? throw new ArgumentException("No order item found with the specified id");
@@ -1387,8 +1385,10 @@ public partial class OrderController : BaseAdminController
         //get order item identifier
         var orderItemId = 0;
         foreach (var formValue in form.Keys)
+        {
             if (formValue.StartsWith("btnPvActivateDownload", StringComparison.InvariantCultureIgnoreCase))
                 orderItemId = Convert.ToInt32(formValue["btnPvActivateDownload".Length..]);
+        }
 
         var orderItem = await _orderService.GetOrderItemByIdAsync(orderItemId)
             ?? throw new ArgumentException("No order item found with the specified id");
@@ -1743,9 +1743,7 @@ public partial class OrderController : BaseAdminController
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
         foreach (var error in customAttributeWarnings)
-        {
             ModelState.AddModelError(string.Empty, error);
-        }
 
         if (ModelState.IsValid)
         {
@@ -1881,9 +1879,7 @@ public partial class OrderController : BaseAdminController
         var orderItems = await _orderService.GetOrderItemsAsync(order.Id, isShipEnabled: true);
         //a vendor should have access only to his products
         if (currentVendor != null)
-        {
             orderItems = await orderItems.WhereAwait(HasAccessToProductAsync).ToListAsync();
-        }
 
         var shipment = new Shipment
         {
@@ -1909,11 +1905,13 @@ public partial class OrderController : BaseAdminController
 
             var qtyToAdd = 0; //parse quantity
             foreach (var formKey in form.Keys)
+            {
                 if (formKey.Equals($"qtyToAdd{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                 {
                     _ = int.TryParse(form[formKey], out qtyToAdd);
                     break;
                 }
+            }
 
             var warehouseId = 0;
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
@@ -1922,11 +1920,13 @@ public partial class OrderController : BaseAdminController
                 //multiple warehouses supported
                 //warehouse is chosen by a store owner
                 foreach (var formKey in form.Keys)
+                {
                     if (formKey.Equals($"warehouse_{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
                         _ = int.TryParse(form[formKey], out warehouseId);
                         break;
                     }
+                }
             }
             else
             {
@@ -2161,9 +2161,7 @@ public partial class OrderController : BaseAdminController
         try
         {
             if (!model.ShippedDateUtc.HasValue)
-            {
                 throw new Exception("Enter shipped date");
-            }
 
             shipment.ShippedDateUtc = model.ShippedDateUtc;
             await _shipmentService.UpdateShipmentAsync(shipment);
@@ -2280,9 +2278,7 @@ public partial class OrderController : BaseAdminController
         try
         {
             if (!model.DeliveryDateUtc.HasValue)
-            {
                 throw new Exception("Enter delivery date");
-            }
 
             shipment.DeliveryDateUtc = model.DeliveryDateUtc;
             await _shipmentService.UpdateShipmentAsync(shipment);
@@ -2388,9 +2384,7 @@ public partial class OrderController : BaseAdminController
         }
         //a vendor should have access only to his products
         if (await _workContext.GetCurrentVendorAsync() != null)
-        {
             shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
-        }
 
         try
         {
@@ -2421,9 +2415,7 @@ public partial class OrderController : BaseAdminController
 
         //a vendor should have access only to his products
         if (await _workContext.GetCurrentVendorAsync() != null)
-        {
             shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
-        }
 
         foreach (var shipment in shipments)
         {
@@ -2451,9 +2443,7 @@ public partial class OrderController : BaseAdminController
 
         //a vendor should have access only to his products
         if (await _workContext.GetCurrentVendorAsync() != null)
-        {
             shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
-        }
 
         foreach (var shipment in shipments)
         {
@@ -2481,9 +2471,7 @@ public partial class OrderController : BaseAdminController
 
         //a vendor should have access only to his products
         if (await _workContext.GetCurrentVendorAsync() != null)
-        {
             shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
-        }
 
         foreach (var shipment in shipments)
         {

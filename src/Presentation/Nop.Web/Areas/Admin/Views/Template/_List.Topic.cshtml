@@ -17,28 +17,25 @@
                 new ColumnProperty(nameof(TopicTemplateModel.Name))
                 {
                     Title = T("Admin.System.Templates.Topic.Name").Text,
-                    Width = "300",
                     Editable = true,
                     EditType = EditType.String
                 },
                 new ColumnProperty(nameof(TopicTemplateModel.ViewPath))
                 {
                     Title = T("Admin.System.Templates.Topic.ViewPath").Text,
-                    Width = "300",
                     Editable = true,
                     EditType = EditType.String
                 },
                 new ColumnProperty(nameof(TopicTemplateModel.DisplayOrder))
                 {
                     Title = T("Admin.System.Templates.Topic.DisplayOrder").Text,
-                    Width = "100",
                     Editable = true,
                     EditType = EditType.Number
                 },
                 new ColumnProperty(nameof(TopicTemplateModel.Id))
                 {
                     Title = T("Admin.Common.Edit").Text,
-                    Width = "200",
+                    Width = "100",
                     ClassName =  NopColumnClassDefaults.Button,
                     Render = new RenderButtonsInlineEdit()
                 },

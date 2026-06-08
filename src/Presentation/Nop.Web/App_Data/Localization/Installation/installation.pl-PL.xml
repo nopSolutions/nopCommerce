@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Polski" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email administratora</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Wprowadź hasło administratora</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Zestaw znaków</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Sortowanie</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Sortowanie jest wymagany</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>'{0}' konto nie posiada uprawnień do modyfikacji folderu '{1}'. Proszę zmienić uprawnienia.</Value>

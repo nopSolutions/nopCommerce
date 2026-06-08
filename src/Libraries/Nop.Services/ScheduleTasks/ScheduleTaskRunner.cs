@@ -126,7 +126,7 @@ public partial class ScheduleTaskRunner : IScheduleTaskRunner
                 return;
 
             //validation (so nobody else can invoke this method when he wants)
-            if (scheduleTask.LastStartUtc.HasValue && (DateTime.UtcNow - scheduleTask.LastStartUtc).Value.TotalSeconds < scheduleTask.Seconds)
+            if (scheduleTask.LastStartUtc.HasValue && Math.Round((DateTime.UtcNow - scheduleTask.LastStartUtc).Value.TotalSeconds, 0) < scheduleTask.Seconds)
                 //too early
                 return;
         }

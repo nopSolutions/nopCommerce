@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Gdpr;
+﻿using Nop.Core.Domain.FilterLevels;
+using Nop.Core.Domain.Gdpr;
 using Nop.Web.Areas.Admin.Models.Settings;
 
 namespace Nop.Web.Areas.Admin.Factories;
@@ -39,26 +40,6 @@ public partial interface ISettingModelFactory
     Task<VendorSettingsModel> PrepareVendorSettingsModelAsync(VendorSettingsModel model = null);
 
     /// <summary>
-    /// Prepare forum settings model
-    /// </summary>
-    /// <param name="model">Forum settings model</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the forum settings model
-    /// </returns>
-    Task<ForumSettingsModel> PrepareForumSettingsModelAsync(ForumSettingsModel model = null);
-
-    /// <summary>
-    /// Prepare news settings model
-    /// </summary>
-    /// <param name="model">News settings model</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the news settings model
-    /// </returns>
-    Task<NewsSettingsModel> PrepareNewsSettingsModelAsync(NewsSettingsModel model = null);
-
-    /// <summary>
     /// Prepare shipping settings model
     /// </summary>
     /// <param name="model">Shipping settings model</param>
@@ -87,6 +68,38 @@ public partial interface ISettingModelFactory
     /// The task result contains the catalog settings model
     /// </returns>
     Task<CatalogSettingsModel> PrepareCatalogSettingsModelAsync(CatalogSettingsModel model = null);
+
+    /// <summary>
+    /// Prepare filter level settings model
+    /// </summary>
+    /// <param name="model">Filter level settings model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the filter level settings model
+    /// </returns>
+    Task<FilterLevelSettingsModel> PrepareFilterLevelSettingsModelAsync(FilterLevelSettingsModel model = null);
+
+    /// <summary>
+    /// Prepare paged filter level list model
+    /// </summary>
+    /// <param name="searchModel">Filter level search model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the filter level list model
+    /// </returns>
+    Task<FilterLevelListModel> PrepareFilterLevelListModelAsync(FilterLevelSearchModel searchModel);
+
+    /// <summary>
+    /// Prepare filter level model
+    /// </summary>
+    /// <param name="model">Filter level model</param>
+    /// <param name="filterLevel">Filter level</param>
+    /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the filter level model
+    /// </returns>
+    Task<FilterLevelModel> PrepareFilterLevelModelAsync(FilterLevelModel model, FilterLevelEnum filterLevel, bool excludeProperties = false);
 
     /// <summary>
     /// Prepare paged sort option list model

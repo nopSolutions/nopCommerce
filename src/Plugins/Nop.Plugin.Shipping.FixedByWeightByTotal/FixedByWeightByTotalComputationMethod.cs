@@ -3,6 +3,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Services;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Plugins;
@@ -104,9 +105,7 @@ public class FixedByWeightByTotalComputationMethod : BasePlugin, IShippingRateCo
 
         //percentage rate of subtotal
         if (shippingByWeightByTotalRecord.PercentageRateOfSubtotal > decimal.Zero)
-        {
             shippingTotal += Math.Round((decimal)((((float)subTotal) * ((float)shippingByWeightByTotalRecord.PercentageRateOfSubtotal)) / 100f), 2);
-        }
 
         return Math.Max(shippingTotal, decimal.Zero);
     }

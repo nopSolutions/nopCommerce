@@ -101,9 +101,11 @@ public partial class CurrencyService : ICurrencyService
 
         //store mapping
         if (storeId > 0)
+        {
             currencies = await currencies
                 .WhereAwait(async c => await _storeMappingService.AuthorizeAsync(c, storeId))
                 .ToListAsync();
+        }
 
         return currencies;
     }

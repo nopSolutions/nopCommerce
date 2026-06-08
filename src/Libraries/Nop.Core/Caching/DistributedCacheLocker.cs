@@ -127,10 +127,12 @@ public partial class DistributedCacheLocker : ILocker
         var status = await _distributedCache.GetStringAsync(key);
         if (!string.IsNullOrEmpty(status) &&
             JsonConvert.DeserializeObject<TaskStatus>(status) != TaskStatus.Canceled)
+        {
             await _distributedCache.SetStringAsync(
                 key,
                 JsonConvert.SerializeObject(TaskStatus.Canceled),
                 new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expirationTime });
+        }
     }
 
     /// <summary>

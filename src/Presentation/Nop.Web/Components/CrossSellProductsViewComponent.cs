@@ -64,6 +64,6 @@ public partial class CrossSellProductsViewComponent : NopViewComponent
                 productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true))
             .ToList();
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Data.Extensions;
 using Nop.Data.Migrations;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
 
@@ -14,13 +15,11 @@ public class LonLatUpdateMigration : MigrationBase
     /// </summary>
     public override void Up()
     {
-        Alter.Table(nameof(StorePickupPoint))
-            .AlterColumn(nameof(StorePickupPoint.Latitude))
-                .AsDecimal(18, 8)
-                .Nullable();
+        this.AddOrAlterColumnFor<StorePickupPoint>(t => t.Latitude)
+                 .AsDecimal(18, 8)
+                 .Nullable();
 
-        Alter.Table(nameof(StorePickupPoint))
-            .AlterColumn(nameof(StorePickupPoint.Longitude))
+        this.AddOrAlterColumnFor<StorePickupPoint>(t => t.Longitude)
                 .AsDecimal(18, 8)
                 .Nullable();
     }

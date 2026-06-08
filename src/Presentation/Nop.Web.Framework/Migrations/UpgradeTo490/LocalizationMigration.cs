@@ -1,9 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo490;
@@ -17,14 +15,9 @@ public class LocalizationMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        //do not use DI, because it produces exception on the installation process
-        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-
-        var (languageId, languages) = this.GetLanguageData();
-
         #region Delete locales
 
-        localizationService.DeleteLocaleResources(new List<string>
+        this.DeleteLocaleResources(new List<string>
         {
             //#7569
             "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist",
@@ -121,9 +114,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required"] = "Admin.Promotions.NewsLetterSubscription.Fields.Email.Required",
             ["Admin.Promotions.NewsLetterSubscriptions.Fields.Language"] = "Admin.Promotions.NewsLetterSubscription.Fields.Language",
             ["Admin.Promotions.NewsLetterSubscriptions.Fields.Store"] = "Admin.Promotions.NewsLetterSubscription.Fields.Store",
-        }, languages, localizationService);
+        });
 
-        localizationService.DeleteLocaleResources(new[]
+        this.DeleteLocaleResources(new[]
         {
             "Admin.Configuration.AppSettings.AzureBlob",
             "Admin.Configuration.AppSettings.AzureBlob.ConnectionString",
@@ -148,7 +141,7 @@ public class LocalizationMigration : MigrationBase
 
         #region Add or update locales
 
-        localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
             //#4834
             ["Admin.Configuration.Settings.GeneralCommon.AdminArea.UseStickyHeaderLayout"] = "Use sticky header",
@@ -164,7 +157,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.Products.Fields.MinimumAgeToPurchase"] = "Minimum age to purchase",
             ["Admin.Catalog.Products.Fields.MinimumAgeToPurchase.Hint"] = "Enter the minimum age for purchasing this product.",
             ["Admin.Catalog.Products.Fields.MinimumAgeToPurchase.ShouldBeGreaterThanZero"] = "The minimum age for purchasing should be greater 0",
-            ["ShoppingCart.DateOfBirthRequired"] = "This product has age restrictions. Please specify your age in the account details",
+            ["ShoppingCart.DateOfBirthRequired"] = "This product has age restrictions. Please specify your age in the account details.",
             ["ShoppingCart.MinimumAgeToPurchase"] = "This product is available to customers who are {0} years of age or older",
             ["Admin.Configuration.Settings.ProductEditor.AgeVerification"] = "Age verification",
 
@@ -186,8 +179,8 @@ public class LocalizationMigration : MigrationBase
             ["ActivityLog.PublicStore.PasswordChanged"] = "Public store. Customer has changed the password",
 
             //#7498
-            ["Admin.Configuration.AppSettings.Common.PermitLimit.Hint"] = "Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the limitation is off.",
-            ["Admin.Configuration.AppSettings.Common.QueueCount.Hint"] = "Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0 then the Queue is off.",
+            ["Admin.Configuration.AppSettings.Common.PermitLimit.Hint"] = "Maximum number of permit counters that can be allowed in a window (1 minute). Must be set to a value > 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0, then the limitation is off.",
+            ["Admin.Configuration.AppSettings.Common.QueueCount.Hint"] = "Maximum cumulative permit count of queued acquisition requests. Must be set to a value >= 0 by the time these options are passed to the constructor of FixedWindowRateLimiter. If set to 0, then the Queue is off.",
 
             //#4170
             ["Admin.Promotions.Campaigns.Copy.Name"] = "New campaign name",
@@ -265,8 +258,8 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType.Hint"] = "Enter the type of subscription.",
             ["Admin.Promotions.NewsLetterSubscription.Fields.Active.Hint"] = "A value indicating whether the subscription is active.",
             ["Admin.Promotions.NewsLetterSubscription.Fields.Email.Hint"] = "Enter the email of subscription.",
-            ["Admin.Promotions.NewsLetterSubscription.Fields.Store.Hint"] = "Choose store to subscribe to newsletter.",
-            ["Admin.Promotions.NewsLetterSubscription.Fields.Language.Hint"] = "Choose language to subscribe to newsletter.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Store.Hint"] = "Choose the store to subscribe to newsletter.",
+            ["Admin.Promotions.NewsLetterSubscription.Fields.Language.Hint"] = "Choose the language to subscribe to newsletter.",
             ["Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn.Hint"] = "Date/Time the newsletter subscriptions entry was created.",
 
             //#820
@@ -314,7 +307,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Tax.HmrcApiUrl"] = "HMRC API URL",
             ["Admin.Configuration.Settings.Tax.HmrcApiUrl.Hint"] = "The base HMRC access API URL.",
             ["Admin.Configuration.Settings.Tax.HmrcClientId"] = "HMRC API client ID",
-            ["Admin.Configuration.Settings.Tax.HmrcClientId.Hint"] = "Your HMRC API client ID is a unique identifier which created when you added your application.",
+            ["Admin.Configuration.Settings.Tax.HmrcClientId.Hint"] = "Your HMRC API client ID is a unique identifier that was created when you added your application.",
             ["Admin.Configuration.Settings.Tax.HmrcClientSecret"] = "HMRC API client secret",
             ["Admin.Configuration.Settings.Tax.HmrcClientSecret.Hint"] = "Your client secret is a unique passphrase that you generate to authorise your application.",
 
@@ -324,7 +317,7 @@ public class LocalizationMigration : MigrationBase
             ["Account.EmailUsernameErrors.EmailTooLong"] = "Email address is too long",
             ["Account.ForumSubscriptions.Description"] = "You will receive an email when a new forum topic/post is created.",
             ["Admin.ContentManagement.MessageTemplates.Fields.BccEmailAddresses.Hint"] = "The blind carbon copy (BCC) recipients for this email message.",
-            ["BackInStockSubscriptions.Tooltip"] = "You'll receive a onetime email when this product is available for ordering again. We will not send you any other emails or add you to our newsletter; you will only be emailed about this product!",
+            ["BackInStockSubscriptions.Tooltip"] = "You'll receive a one-time email when this product is available for ordering again. We will not send you any other emails or add you to our newsletter; you will only be emailed about this product!",
 
             //#7390
             ["ActivityLog.AddNewMenu"] = "Added a new menu ('{0}')",
@@ -477,6 +470,7 @@ public class LocalizationMigration : MigrationBase
             ["Enums.Nop.Core.Domain.Translation.TranslationServiceType.DeepL"] = "DeepL",
             ["Admin.Translation.Translated.Success"] = "Pre-translation has been completed (all possible fields are pre-filled)",
             ["Admin.Translation.Translated.Warning"] = "Errors occurred during pre-translation, see details in the log",
+            ["Admin.Translation.Translated.NothingToTranslate"] = "Nothing to translate as all fields contain text",
 
             //#1921
             ["Admin.Configuration.Settings.ShoppingCart.AllowMultipleWishlist"] = "Allow multiple wishlists",
@@ -562,7 +556,7 @@ public class LocalizationMigration : MigrationBase
 
             //7807
             ["Forum.Post.Text"] = "Post",
-            
+
             //#7732
             ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery"] = "AI query to generate product description",
             ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.Info"] = "<p>Artificial intelligence functionality allows you to use third-party AI services such as <a href='https://www.deepseek.com/' target='_blank'>DeepSeek</a>, <a href='https://gemini.google.com/' target='_blank'>Gemini</a> or <a href='https://chatgpt.com/' target='_blank'>ChatGPT</a> to automatically generate content. This could be either product descriptions or meta tags for specific pages or entities.</p>",
@@ -610,7 +604,77 @@ public class LocalizationMigration : MigrationBase
 
             ["Admin.Documentation.Reference.RFQ"] = "Learn more about <a target=\"_blank\" href=\"{0}\">requests for quote</a>",
             ["Admin.Documentation.Reference.Menu"] = "Learn more about <a target=\"_blank\" href=\"{0}\">menus</a>",
-        }, languageId);
+
+            //#7411
+            ["Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel1"] = "Year",
+            ["Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel1.Hint"] = "Set the filter value.",
+            ["Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel2"] = "Make",
+            ["Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel2.Hint"] = "Set the filter value.",
+            ["Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel3"] = "Model",
+            ["Enums.Nop.Core.Domain.FilterLevels.FilterLevelEnum.FilterLevel3.Hint"] = "Set the filter value.",
+            ["Admin.Configuration.Settings.FilterLevel"] = "Filter (YMM) settings",
+            ["Admin.Documentation.Reference.FilterLevels"] = "Learn more about <a target=\"_blank\" href=\"{0}\">filter level values</a>",
+
+            ["Admin.Configuration.Settings.FilterLevel.Edit"] = "Edit filter level",
+            ["Admin.Configuration.Settings.FilterLevel.BackToList"] = "back to filter level list",
+            ["Admin.Configuration.Settings.FilterLevel.CannotDisableParent"] = "You cannot disable any parent level if one of the child levels is enabled.",
+            ["Admin.Configuration.Settings.FilterLevel.CannotEnableChild"] = "You cannot enable a child level if one of the parent levels is disabled.",
+
+            ["Admin.Configuration.Settings.FilterLevel.Name"] = "Name",
+            ["Admin.Configuration.Settings.FilterLevel.Name.Hint"] = "Enter the name of the filter level.",
+            ["Admin.Configuration.Settings.FilterLevel.Name.Required"] = "Please provide a name.",
+            ["Admin.Configuration.Settings.FilterLevel.Enabled"] = "Enabled",
+            ["Admin.Configuration.Settings.FilterLevel.Enabled.Hint"] = "Check to enable this filter level.",
+            ["Admin.Configuration.Settings.FilterLevel.Updated"] = "The filter level has been updated successfully.",
+
+            ["Admin.Configuration.Settings.FilterLevel.FilterLevelEnabled"] = "Filter level enabled",
+            ["Admin.Configuration.Settings.FilterLevel.FilterLevelEnabled.Hint"] = "Check to enable the filter level functionality.",
+            ["Admin.Configuration.Settings.FilterLevel.DisplayOnHomePage"] = "Display on home page",
+            ["Admin.Configuration.Settings.FilterLevel.DisplayOnHomePage.Hint"] = "Check to display filter levels on the home page.",
+            ["Admin.Configuration.Settings.FilterLevel.DisplayOnProductDetailsPage"] = "Display on product details page",
+            ["Admin.Configuration.Settings.FilterLevel.DisplayOnProductDetailsPage.Hint"] = "Check to display compatible items (filter levels) on the product details page.",
+
+            ["Admin.Configuration.Settings.FilterLevel.BlockTitle.Common"] = "Common",
+            ["Admin.Configuration.Settings.FilterLevel.BlockTitle.Levels"] = "Levels",
+
+            ["Admin.Catalog.FilterLevelValues"] = "Filter level values (YMM)",
+            ["Admin.Catalog.Products.List.SearchFilterValue1"] = "Year",
+            ["Admin.Catalog.Products.List.SearchFilterValue1.Hint"] = "Search by a specific filter level.",
+            ["Admin.Catalog.Products.List.SearchFilterValue2"] = "Make",
+            ["Admin.Catalog.Products.List.SearchFilterValue2.Hint"] = "Search by a specific filter level.",
+            ["Admin.Catalog.Products.List.SearchFilterValue3"] = "Model",
+            ["Admin.Catalog.Products.List.SearchFilterValue3.Hint"] = "Search by a specific filter level.",
+            ["Admin.Catalog.FilterLevelValue.List.ImportFromExcelTip"] = "Imported filter level values are distinguished by ID. If the ID already exists, then its corresponding filter level value will be updated. You should not specify ID (leave 0) for new filter level values.",
+            ["Admin.Catalog.FilterLevelValue.AddNew"] = "Add a new filter level value",
+            ["Admin.Catalog.FilterLevelValue.BackToList"] = "back to filter level value list",
+            ["Admin.Catalog.FilterLevelValue.Info"] = "Filter level value info",
+            ["Admin.Catalog.FilterLevelValue.Products"] = "Products",
+            ["Admin.Catalog.FilterLevelValue.EditFilterLevelValueDetails"] = "Edit filter level value details",
+            ["Admin.Catalog.FilterLevelValue.Products.AddNew"] = "Add a new product",
+            ["Admin.Catalog.FilterLevelValue.Products.SaveBeforeEdit"] = "You need to save the filter level value before you can add products for this page.",
+            ["Admin.Catalog.FilterLevelValue.Products.Fields.Product"] = "Product",
+
+            ["ActivityLog.AddNewFilterLevelValue"] = "Added a new filter level value (ID = {0})",
+            ["ActivityLog.EditFilterLevelValue"] = "Edited a filter level value (ID = {0})",
+            ["ActivityLog.DeleteFilterLevelValue"] = "Deleted a filter level value (ID = {0})",
+            ["ActivityLog.ExportFilterLevelValues"] = "{0} filter level values were exported",
+            ["ActivityLog.ImportFilterLevelValues"] = "{0} filter level values were imported",
+
+            ["Admin.Catalog.FilterLevelValues.Added"] = "The filter level value has been added successfully.",
+            ["Admin.Catalog.FilterLevelValues.Updated"] = "The filter level value has been updated successfully.",
+            ["Admin.Catalog.FilterLevelValues.Deleted"] = "The filter level value has been deleted successfully.",
+            ["Admin.Catalog.FilterLevelValues.Imported"] = "The filter level values have been imported successfully.",
+            ["Admin.Catalog.FilterLevelValues.Exist"] = "A filter level value with the same value already exists.",
+
+            ["Admin.Catalog.Products.FilterLevelValues"] = "Filter level values (YMM)",
+            ["Admin.Catalog.Products.FilterLevelValues.Hint"] = "Select filter level values for this product.",
+            ["Admin.Configuration.Settings.ProductEditor.FilterLevelValuesProducts"] = "Filter level values products",
+            ["Admin.Catalog.Products.FilterLevelValues.SaveBeforeEdit"] = "You need to save the product before you can add filter level values for this product page.",
+            ["Admin.Catalog.Products.FilterLevelValues.AddNew"] = "Add a new filter level value",
+            ["Products.CompatibleWith"] = "Compatible with",
+            ["Products.CompatibleWith.Items"] = "{0} items are compatible with this product",
+            ["Search.FilterLevelValues"] = "Search by Year Make Model",
+        });
 
         #endregion
     }

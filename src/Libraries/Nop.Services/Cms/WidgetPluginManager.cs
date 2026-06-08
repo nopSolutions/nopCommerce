@@ -45,8 +45,10 @@ public partial class WidgetPluginManager : PluginManager<IWidgetPlugin>, IWidget
 
         //filter by widget zone
         if (!string.IsNullOrEmpty(widgetZone))
+        {
             widgets = await widgets.WhereAwait(async widget =>
                 (await widget.GetWidgetZonesAsync()).Contains(widgetZone, StringComparer.InvariantCultureIgnoreCase)).ToListAsync();
+        }
 
         return widgets;
     }

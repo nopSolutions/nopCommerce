@@ -8,7 +8,7 @@
                     @T("Admin.System.Maintenance.DeleteMinificationFiles.Text")
                 </p>
             </div>
-            <button type="submit" name="delete-minification-files" class="btn btn-default">
+            <button type="submit" name="delete-minification-files" id="delete-minification-files" class="btn btn-default">
                 <i class="far fa-trash-can"></i>
                 @T("Admin.Common.Delete")
             </button>
@@ -26,3 +26,4 @@
         </div>
     }
 </div>
+<nop-action-confirmation asp-button-id="delete-minification-files" />

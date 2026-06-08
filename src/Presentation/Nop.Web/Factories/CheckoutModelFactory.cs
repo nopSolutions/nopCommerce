@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -10,6 +11,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -34,6 +36,7 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
     protected readonly ICountryService _countryService;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
+    protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IOrderProcessingService _orderProcessingService;
@@ -69,6 +72,7 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
         ICountryService countryService,
         ICurrencyService currencyService,
         ICustomerService customerService,
+        IDateTimeHelper dateTimeHelper,
         IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
         IOrderProcessingService orderProcessingService,
@@ -100,6 +104,7 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
         _countryService = countryService;
         _currencyService = currencyService;
         _customerService = customerService;
+        _dateTimeHelper = dateTimeHelper;
         _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
         _orderProcessingService = orderProcessingService;
@@ -191,9 +196,9 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
                         OpeningHours = point.OpeningHours,
                         IsPreSelected = selectedPickupPoint is not null && selectedPickupPoint.Id == point.Id,
                     };
-                    
+
                     var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
-                    
+
                     //adjust rate
                     var (shippingTotal, _) = await _orderTotalCalculationService.AdjustShippingRateAsync(point.PickupFee, cart, true);
                     var (rateBase, _) = await _taxService.GetShippingPriceAsync(shippingTotal, customer);
@@ -204,8 +209,10 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
                 }).ToListAsync();
             }
             else
+            {
                 foreach (var error in pickupPointsResponse.Errors)
                     model.Warnings.Add(error);
+            }
         }
 
         //only available pickup points
@@ -261,7 +268,7 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
         var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
             .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is
                 {
-                    Published: true, 
+                    Published: true,
                     AllowsBilling: true
                 } country
                 &&
@@ -316,7 +323,7 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
         var addresses = await (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
             .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is
                 {
-                    Published: true, 
+                    Published: true,
                     AllowsShipping: true
                 } country
                 &&
@@ -405,11 +412,13 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
 
             //sort shipping methods
             if (model.ShippingMethods.Count > 1)
+            {
                 model.ShippingMethods = (_shippingSettings.ShippingSorting switch
                 {
                     ShippingSortingEnum.ShippingCost => model.ShippingMethods.OrderBy(option => option.Rate),
                     _ => model.ShippingMethods.OrderBy(option => option.DisplayOrder)
                 }).ToList();
+            }
 
             //find a selected (previously) shipping method
             var selectedShippingOption = await _genericAttributeService.GetAttributeAsync<ShippingOption>(customer,
@@ -422,24 +431,63 @@ public partial class CheckoutModelFactory : ICheckoutModelFactory
                         so.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) &&
                         !string.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName) &&
                         so.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
-                if (shippingOptionToSelect != null) 
+                if (shippingOptionToSelect != null)
                     shippingOptionToSelect.Selected = true;
             }
             //if no option has been selected, let's do it for the first one
             if (model.ShippingMethods.FirstOrDefault(so => so.Selected) == null)
             {
                 var shippingOptionToSelect = model.ShippingMethods.FirstOrDefault();
-                if (shippingOptionToSelect != null) 
+                if (shippingOptionToSelect != null)
                     shippingOptionToSelect.Selected = true;
             }
 
             //notify about shipping from multiple locations
-            if (_shippingSettings.NotifyCustomerAboutShippingFromMultipleLocations) 
+            if (_shippingSettings.NotifyCustomerAboutShippingFromMultipleLocations)
                 model.NotifyCustomerAboutShippingFromMultipleLocations = getShippingOptionResponse.ShippingFromMultipleLocations;
+
+            var language = await _workContext.GetWorkingLanguageAsync();
+            foreach (var shippingMethod in model.ShippingMethods)
+            {
+                var transitDays = shippingMethod.ShippingOption.TransitDays;
+                var desiredDelivery = new DesiredDeliveryDateModel
+                {
+                    Enabled = _shippingSettings.AllowCustomerToChooseDeliveryDate && transitDays.HasValue
+                };
+
+                if (desiredDelivery.Enabled)
+                {
+                    var startDate = DateTime.UtcNow.Date.AddDays(transitDays.Value);
+
+                    // Build list of dates synchronously, convert each to user time asynchronously
+                    var dates = Enumerable.Range(0, _shippingSettings.DeliveryDateRangeDays)
+                        .Select(i => startDate.AddDays(i))
+                        .ToList();
+
+                    var availableDates = new List<SelectListItem>();
+                    foreach (var date in dates)
+                    {
+                        var userDate = await _dateTimeHelper.ConvertToUserTimeAsync(date, DateTimeKind.Utc);
+                        availableDates.Add(new SelectListItem
+                        {
+                            Value = date.ToString("yyyy-MM-dd"),
+                            Text = userDate.ToString("D")
+                        });
+                    }
+
+                    desiredDelivery.AvailableDates = availableDates;
+                    desiredDelivery.SelectedDate = desiredDelivery.AvailableDates.FirstOrDefault()?.Value ?? string.Empty;
+                }
+
+                shippingMethod.DesiredDeliveryDate = desiredDelivery;
+            }
+
         }
         else
+        {
             foreach (var error in getShippingOptionResponse.Errors)
                 model.Warnings.Add(error);
+        }
 
         return model;
     }

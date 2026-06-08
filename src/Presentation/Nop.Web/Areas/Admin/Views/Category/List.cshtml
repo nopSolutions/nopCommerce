@@ -54,7 +54,6 @@
             <i class="far fa-trash-can"></i>
             @T("Admin.Common.Delete.Selected")
         </button>
-        <nop-action-confirmation asp-button-id="delete-selected" />
     </div>
 </div>
 
@@ -150,7 +149,6 @@
                                 new ColumnProperty(nameof(CategoryModel.DisplayOrder))
                                 {
                                     Title = T("Admin.Catalog.Categories.Fields.DisplayOrder").Text,
-                                    Width = "150",
                                     ClassName =  NopColumnClassDefaults.CenterAll
                                 },
                                 new ColumnProperty(nameof(CategoryModel.Id))
@@ -243,3 +241,5 @@
         </div>
     </div>
 </div>
+
+<nop-action-confirmation asp-button-id="delete-selected" />

@@ -5,6 +5,7 @@
 @model Nop.Plugin.Misc.RFQ.Models.Customer.RequestQuoteModel
 @inject MediaSettings mediaSettings
 @inject Nop.Services.Html.IHtmlFormatter htmlFormatter
+@inject INopUrlHelper nopUrlHelper
 
 @{
 
@@ -72,7 +73,7 @@
                         {
                             <label>
                                 <div class="text-body">
-                                    @Html.Raw(htmlFormatter.FormatText(Model.CustomerNotes, false, true, false, false, false, false))
+                                    @Html.Raw(htmlFormatter.FormatText(Model.CustomerNotes))
                                 </div>
                             </label>
                         }
@@ -84,6 +85,9 @@
                 <h2 class="title">
                     @T("Plugins.Misc.RFQ.Products")
                 </h2>
+                <div class="notifications">
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                </div>
                 <div>
                     <table class="data-table">
                         <thead>
@@ -96,37 +100,46 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.CustomerItems)
+                            @for (var i = 0; i < Model.CustomerItems.Count; i++)
                             {
                                 <tr>
-                                    <td class="picture"><img src="@item.PictureUrl" /></td>
+                                    <td class="picture"><img src="@Model.CustomerItems[i].PictureUrl" alt="@Model.CustomerItems[i].ProductName" /></td>
                                     <td class="product">
-                                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">
-                                            @item.ProductName
+                                        <a href="@(await nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = Model.CustomerItems[i].ProductSeName }))">
+                                            @Model.CustomerItems[i].ProductName
                                         </a>
                                         <br />
-                                        @Html.Raw(item.AttributeInfo)
+                                        @Html.Raw(Model.CustomerItems[i].AttributeInfo)
                                     </td>
-                                    <td>@item.OriginalProductCost</td>
                                     <td>
-                                        @if (item.Editable)
+                                        <label>@T("Plugins.Misc.RFQ.OriginalProductPrice"):</label>
+                                        <span>@Model.CustomerItems[i].OriginalProductCost</span>
+                                    </td>
+                                    <td>
+                                        <label for="@Html.IdFor(m => m.CustomerItems[i].Quantity)">@T("Plugins.Misc.RFQ.CustomerRequest.RequestedQty"):</label>
+                                        <span>
+                                        @if (Model.CustomerItems[i].Editable)
                                         {
-                                            <input type="number" asp-for="@item.Quantity" name="@($"{RfqDefaults.QUANTITY_FORM_KEY}{item.Id}")" />
+                                            <input type="number" asp-for="@Model.CustomerItems[i].Quantity" name="@($"{RfqDefaults.QUANTITY_FORM_KEY}{Model.CustomerItems[i].Id}")" />
                                         }
                                         else
                                         {
-                                            @item.Quantity
+                                            @Model.CustomerItems[i].Quantity
                                         }
+                                        </span>
                                     </td>
                                     <td>
-                                        @if (item.Editable)
+                                        <label for="@Html.IdFor(m => m.CustomerItems[i].UnitPrice)">@T("Plugins.Misc.RFQ.CustomerRequest.RequestedUnitPrice"):</label>
+                                        <span>
+                                        @if (Model.CustomerItems[i].Editable)
                                         {
-                                            <input type="number" step=".01" asp-for="@item.UnitPrice" name="@($"{RfqDefaults.UNIT_PRICE_FORM_KEY}{item.Id}")" />
+                                            <input type="number" step=".01" asp-for="@Model.CustomerItems[i].UnitPrice" name="@($"{RfqDefaults.UNIT_PRICE_FORM_KEY}{Model.CustomerItems[i].Id}")" />
                                         }
                                         else
                                         {
-                                            @item.UnitPriceText
+                                            @Model.CustomerItems[i].UnitPriceText
                                         }
+                                        </span>
                                     </td>
                                 </tr>
                             }

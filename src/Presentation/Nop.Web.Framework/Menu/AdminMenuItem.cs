@@ -39,6 +39,7 @@ public partial class AdminMenuItem
         var inserted = false;
 
         foreach (var adminMenuItem in ChildNodes.ToList())
+        {
             if (!adminMenuItem.SystemName.Equals(itemSystemName))
                 position += 1;
             else
@@ -47,6 +48,7 @@ public partial class AdminMenuItem
                 inserted = true;
                 break;
             }
+        }
 
         if (inserted)
             return true;

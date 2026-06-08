@@ -35,6 +35,6 @@ public class CheckMoneyOrderViewComponent : NopViewComponent
                 x => x.DescriptionText, (await _workContext.GetWorkingLanguageAsync()).Id, store.Id)
         };
 
-        return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentInfo.cshtml", model);
+        return await ViewAsync("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentInfo.cshtml", model);
     }
 }

@@ -22,17 +22,14 @@
                 <i class="far fa-clone"></i>
                 @T("Admin.System.QueuedEmails.RequeueSelected")
             </button>
-            <nop-action-confirmation asp-button-id="requeue-selected" />
             <button type="button" id="delete-selected" class="btn btn-danger">
                 <i class="far fa-trash-can"></i>
                 @T("Admin.System.QueuedEmails.DeleteSelected")
             </button>
-            <nop-action-confirmation asp-button-id="delete-selected" />
             <button type="button" id="delete-all" name="delete-all" class="btn btn-danger">
                 <i class="far fa-trash-can"></i>
                 @T("Admin.System.QueuedEmails.DeleteAll")
             </button>
-            <nop-action-confirmation asp-button-id="delete-all" />
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.QueuedEmailListButtons, additionalData = Model })
         </div>
     </div>
@@ -164,8 +161,7 @@
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.Id))
                                 {
-                                    Title = T("Admin.System.QueuedEmails.Fields.Id").Text,
-                                    Width = "50",
+                                    Title = T("Admin.System.QueuedEmails.Fields.Id").Text
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.Subject))
                                 {
@@ -173,41 +169,38 @@
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.From))
                                 {
-                                    Title = T("Admin.System.QueuedEmails.Fields.From").Text,
-                                    Width = "100",
+                                    Title = T("Admin.System.QueuedEmails.Fields.From").Text
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.To))
                                 {
-                                    Title = T("Admin.System.QueuedEmails.Fields.To").Text,
-                                    Width = "100",
+                                    Title = T("Admin.System.QueuedEmails.Fields.To").Text
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.CreatedOn))
                                 {
                                     Title = T("Admin.System.QueuedEmails.Fields.CreatedOn").Text,
-                                    Width = "150",
+                                    Width = "180",
                                     Render = new RenderDate()
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.DontSendBeforeDate))
                                 {
                                     Title = T("Admin.System.QueuedEmails.Fields.DontSendBeforeDate").Text,
-                                    Width = "150",
+                                    Width = "180",
                                     Render = new RenderDate()
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.SentOn))
                                 {
                                     Title = T("Admin.System.QueuedEmails.Fields.SentOn").Text,
-                                    Width = "150",
+                                    Width = "180",
                                     Render = new RenderDate()
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.PriorityName))
                                 {
-                                    Title = T("Admin.System.QueuedEmails.Fields.Priority").Text,
-                                    Width = "120",
+                                    Title = T("Admin.System.QueuedEmails.Fields.Priority").Text
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.Id))
                                 {
                                     Title = T("Admin.Common.Edit").Text,
-                                    Width = "50",
+                                    Width = "100",
                                     ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonEdit(new DataUrl("~/Admin/QueuedEmail/Edit"))
                                 }
@@ -252,7 +245,7 @@
                                 });
 
                                 //"requeue selected" button
-                                $("#requeue-selected-action-confirmation").on("click", function () {
+                                $("#requeue-selected-action-confirmation-submit-button").on("click", function () {
                                     var postData = {
                                         selectedIds: selectedIds
                                     };
@@ -291,3 +284,7 @@
 <nop-alert asp-alert-id="requeueSelectedFailed" />
 <nop-alert asp-alert-id="deleteSelectedFailed" />
 <nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="requeue-selected" />
+<nop-action-confirmation asp-button-id="delete-selected" />
+<nop-action-confirmation asp-button-id="delete-all" />
+

@@ -1,7 +1,7 @@
-﻿using Nop.Core;
-using Nop.Plugin.Shipping.UPS.Domain;
+﻿using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Plugin.Shipping.UPS.Services;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Services.Shipping;

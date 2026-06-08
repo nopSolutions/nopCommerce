@@ -9,6 +9,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
@@ -110,18 +111,22 @@ public class MarketingAutomationManager
             return;
 
         var customer = await _customerService.GetCustomerByIdAsync(cartItem.CustomerId);
+        var email = customer.Email;
+
+        if (string.IsNullOrEmpty(email))
+            return;
 
         try
         {
             //first, try to identify current customer
-            await _marketingAutomationHttpClient.RequestAsync(new IdentifyRequest { Email = customer.Email });
+            await _marketingAutomationHttpClient.RequestAsync(new IdentifyRequest { Email = email });
 
             //get shopping cart GUID
             var shoppingCartGuid = await _genericAttributeService
                 .GetAttributeAsync<Guid?>(customer, BrevoDefaults.ShoppingCartGuidAttribute);
 
             //create track event object
-            var trackEvent = new TrackEventRequest { Email = customer.Email };
+            var trackEvent = new TrackEventRequest { Email = email };
 
             //get current customer's shopping cart
             var store = await _storeContext.GetCurrentStoreAsync();
@@ -235,11 +240,15 @@ public class MarketingAutomationManager
         var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
         var shippingAddress = await _addressService.GetAddressByIdAsync(order.ShippingAddressId ?? 0);
         var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+        var email = customer.Email ?? billingAddress?.Email;
+
+        if (string.IsNullOrEmpty(email))
+            return;
 
         try
         {
             //first, try to identify current customer
-            await _marketingAutomationHttpClient.RequestAsync(new IdentifyRequest { Email = customer.Email ?? billingAddress.Email });
+            await _marketingAutomationHttpClient.RequestAsync(new IdentifyRequest { Email = email });
 
             //get products data by order items
             var itemsData = await (await _orderService.GetOrderItemsAsync(order.Id)).SelectAwait(async item =>
@@ -330,7 +339,7 @@ public class MarketingAutomationManager
             //create track event object
             var trackEvent = new TrackEventRequest
             {
-                Email = customer.Email ?? billingAddress.Email,
+                Email = email,
                 EventName = BrevoDefaults.OrderCompletedEventName,
                 EventData = new { id = $"cart:{shoppingCartGuid}", data = cartData }
             };

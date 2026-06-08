@@ -33,8 +33,8 @@ public class NopGeneratorAccessor : IGeneratorAccessor
         Generator = dataSettings is null ? generators.FirstOrDefault() : dataSettings.DataProvider switch
         {
             DataProviderType.SqlServer => FindGenerator(generators, GeneratorIdConstants.SqlServer),
-            DataProviderType.MySql => FindGenerator(generators, GeneratorIdConstants.MySql5),
-            DataProviderType.PostgreSQL => FindGenerator(generators, GeneratorIdConstants.PostgreSQL9_2),
+            DataProviderType.MySql => FindGenerator(generators, GeneratorIdConstants.MySql8),
+            DataProviderType.PostgreSQL => FindGenerator(generators, GeneratorIdConstants.PostgreSQL15_0),
             _ => throw new InvalidOperationException(
                 $@"A migration generator for Data provider type {dataSettings.DataProvider} couldn't be found.")
         };

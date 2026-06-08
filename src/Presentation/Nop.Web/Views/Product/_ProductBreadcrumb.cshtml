@@ -26,7 +26,7 @@
             @foreach (var category in Model.CategoryBreadcrumb)
             {
                 <li>
-                    <a href="@(Url.RouteUrl<Category>(new { SeName = category.SeName }))">
+                    <a href="@(await NopUrl.RouteGenericUrlAsync<Category>(new { SeName = category.SeName }))">
                         <span>@category.Name</span>
                     </a>
                     <span class="delimiter">@breadcrumbDelimiter</span>
@@ -34,7 +34,7 @@
             }
             <li>
                 <strong class="current-item">@Model.ProductName</strong>
-                <span id="@(Url.RouteUrl<Product>(new { SeName = Model.ProductSeName }))"></span>              
+                <span id="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = Model.ProductSeName }))"></span>
                 @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductBreadcrumbAfter, additionalData = Model })
             </li>
         </ul>

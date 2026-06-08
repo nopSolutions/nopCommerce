@@ -1,10 +1,11 @@
-﻿using System.Data.Common;
+using System.Data.Common;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.SqlServer;
 using Microsoft.Data.SqlClient;
 using Nop.Core;
+using Nop.Data;
 using Nop.Data.Mapping;
 
 namespace Nop.Data.DataProviders;
@@ -34,7 +35,7 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
         ArgumentException.ThrowIfNullOrEmpty(connectionString);
 
-        return new SqlConnection(connectionString);
+        return new SqlConnection(connectionString){};
     }
 
     #endregion
@@ -145,7 +146,9 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
         var table = (ITable<TEntity>)base.GetTable<TEntity>();
 
-        return DataSettingsManager.UseNoLock() ? table.With("NOLOCK") : table;
+        return DataSettings.DataProvider == DataProviderType.SqlServer && DataSettings.WithNoLock
+            ? table.With("NOLOCK")
+            : table;
     }
 
     /// <summary>
@@ -262,6 +265,21 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     }
 
     /// <summary>
+    /// Gets the database size in Kb
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the database size
+    /// </returns>
+    public virtual async Task<long> GetDatabaseSizeAsync()
+    {
+        using var currentConnection = CreateDataConnection();
+        var result = await currentConnection.QueryToListAsync<long>("SELECT dbSize = SUM(size) * 8 FROM sys.master_files WITH(NOWAIT) WHERE database_id = DB_ID() GROUP BY database_id;");
+
+        return result.FirstOrDefault();
+    }
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>
@@ -310,41 +328,6 @@ public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     public virtual string GetIndexName(string targetTable, string targetColumn)
     {
         return $"IX_{targetTable}_{targetColumn}";
-    }
-
-    /// <summary>
-    /// Updates records in table, using values from entity parameter.
-    /// Records to update are identified by match on primary key value from obj value.
-    /// </summary>
-    /// <param name="entities">Entities with data to update</param>
-    /// <typeparam name="TEntity">Entity type</typeparam>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public override async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities)
-    {
-        using var dataContext = CreateDataConnection();
-        await dataContext.GetTable<TEntity>()
-            .Merge()
-            .Using(entities)
-            .OnTargetKey()
-            .UpdateWhenMatched()
-            .MergeAsync();
-    }
-
-    /// <summary>
-    /// Updates records in table, using values from entity parameter.
-    /// Records to update are identified by match on primary key value from obj value.
-    /// </summary>
-    /// <param name="entities">Entities with data to update</param>
-    /// <typeparam name="TEntity">Entity type</typeparam>
-    public override void UpdateEntities<TEntity>(IEnumerable<TEntity> entities)
-    {
-        using var dataContext = CreateDataConnection();
-        dataContext.GetTable<TEntity>()
-            .Merge()
-            .Using(entities)
-            .OnTargetKey()
-            .UpdateWhenMatched()
-            .Merge();
     }
     
     /// <summary>

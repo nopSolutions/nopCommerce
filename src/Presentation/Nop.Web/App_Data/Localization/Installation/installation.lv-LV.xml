@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Latvian" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Administratora lietotāja e-pasta adrese</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Administratora lietotāja parole ir obligāta</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Rakstzīmju kopa</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Kārtošanas kolāciju</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Kārtošanas kolāciju ir obligāta</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>Kontam '{0}' nav piešķirta atļauja modificēt mapi '{1}'. Lūdzu, konfigurējiet šīs atļaujas.</Value>

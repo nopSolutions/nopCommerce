@@ -64,6 +64,6 @@ public partial class ProductsAlsoPurchasedViewComponent : NopViewComponent
             return Content("");
 
         var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

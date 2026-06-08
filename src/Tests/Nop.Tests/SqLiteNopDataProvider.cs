@@ -274,6 +274,21 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
     }
 
     /// <summary>
+    /// Gets the database size in Kb
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the database size
+    /// </returns>
+    public virtual async Task<long> GetDatabaseSizeAsync()
+    {
+        using var currentConnection = CreateDataConnection();
+        var result = await currentConnection.QueryToListAsync<long>("SELECT page_count * page_size as size FROM pragma_page_count(), pragma_page_size()");
+
+        return result.FirstOrDefault();
+    }
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>
@@ -382,12 +397,17 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
     /// </summary>
     /// <param name="resetIdentity">Performs reset identity column</param>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public override Task TruncateAsync<TEntity>(bool resetIdentity = false)
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the number of records, affected by command execution.
+    /// </returns>
+    public override Task<int> TruncateAsync<TEntity>(bool resetIdentity = false)
     {
+        var affectedRows = 0;
         using (new ReaderWriteLockDisposable(_locker))
-            DataContext.GetTable<TEntity>().Truncate(resetIdentity);
+            affectedRows = DataContext.GetTable<TEntity>().Truncate(resetIdentity);
 
-        return Task.CompletedTask;
+        return Task.FromResult(affectedRows);
     }
 
     /// <summary>
@@ -411,7 +431,7 @@ public partial class SqLiteNopDataProvider : BaseDataProvider, INopDataProvider
     /// <summary>
     /// Linq2Db data provider
     /// </summary>
-    protected override IDataProvider LinqToDbDataProvider { get; } = SQLiteTools.GetDataProvider(ProviderName.SQLiteMS);
+    protected override IDataProvider LinqToDbDataProvider { get; } = SQLiteTools.GetDataProvider(SQLiteProvider.Microsoft);
 
     /// <summary>
     /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

@@ -1,31 +1,13 @@
 ﻿using FluentMigrator;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Configuration;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.ExchangeRate.EcbExchange.Data;
 
 [NopMigration("2021-09-16 00:00:00", "ExchangeRate.EcbExchange 1.30. Add setting for url for ECB", MigrationProcessType.Update)]
 public class ExchangeEcbMigration : MigrationBase
 {
-    #region Fields
-
-    protected readonly EcbExchangeRateSettings _ecbExchangeRateSettings;
-    protected readonly ISettingService _settingService;
-
-    #endregion
-
-    #region Ctor
-
-    public ExchangeEcbMigration(EcbExchangeRateSettings ecbExchangeRateSettings,
-        ISettingService settingService)
-    {
-        _ecbExchangeRateSettings = ecbExchangeRateSettings;
-        _settingService = settingService;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -37,10 +19,8 @@ public class ExchangeEcbMigration : MigrationBase
             return;
 
         //settings
-        if (!_settingService.SettingExists(_ecbExchangeRateSettings, settings => settings.EcbLink))
-            _ecbExchangeRateSettings.EcbLink = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
-
-        _settingService.SaveSetting(_ecbExchangeRateSettings);
+        this.SetSettingIfNotExists<EcbExchangeRateSettings, string>(settings => settings.EcbLink,
+            "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
     }
 
     /// <summary>

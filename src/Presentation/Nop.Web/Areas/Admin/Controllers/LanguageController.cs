@@ -281,9 +281,7 @@ public partial class LanguageController : BaseAdminController
     public virtual async Task<IActionResult> ResourceUpdate([Validate] LocaleResourceModel model)
     {
         if (!ModelState.IsValid)
-        {
             return ErrorJson(ModelState.SerializeErrors());
-        }
 
         var resource = await _localizationService.GetLocaleStringResourceByIdAsync(model.Id);
         // if the resourceName changed, ensure it isn't being used by another resource
@@ -291,9 +289,7 @@ public partial class LanguageController : BaseAdminController
         {
             var res = await _localizationService.GetLocaleStringResourceByNameAsync(model.ResourceName, model.LanguageId, false);
             if (res != null && res.Id != resource.Id)
-            {
                 return ErrorJson(string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName));
-            }
         }
 
         //fill entity from model
@@ -310,9 +306,7 @@ public partial class LanguageController : BaseAdminController
     public virtual async Task<IActionResult> ResourceAdd(int languageId, [Validate] LocaleResourceModel model)
     {
         if (!ModelState.IsValid)
-        {
             return ErrorJson(ModelState.SerializeErrors());
-        }
 
         var res = await _localizationService.GetLocaleStringResourceByNameAsync(model.ResourceName, model.LanguageId, false);
         if (res == null)

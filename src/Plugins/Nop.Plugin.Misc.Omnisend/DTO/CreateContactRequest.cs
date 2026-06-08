@@ -1,14 +1,13 @@
 ﻿using Newtonsoft.Json;
-using Nop.Core.Domain.Messages;
 
 namespace Nop.Plugin.Misc.Omnisend.DTO;
 
 public class CreateContactRequest : ContactInfoDto, IBatchSupport
 {
-    public CreateContactRequest(NewsLetterSubscription subscription, string inactiveStatus,
+    public CreateContactRequest(string email, bool isSubscriptionActive, DateTime createdOnUtc, string inactiveStatus,
         bool sendWelcomeMessage)
     {
-        Identifiers = new List<Identifier> { new(subscription, inactiveStatus, sendWelcomeMessage) { Type = "email" } };
+        Identifiers = [new Identifier(email, isSubscriptionActive, createdOnUtc, inactiveStatus, sendWelcomeMessage) { Type = "email" }];
         SendWelcomeEmail = sendWelcomeMessage;
     }
 

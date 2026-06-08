@@ -1,6 +1,7 @@
-﻿@model ProductModel
+﻿@using Nop.Services.Helpers
+@model ProductModel
 
-@inject Nop.Core.IWebHelper webHelper
+@inject IWebHelper webHelper
 
 <div id="productsettings-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="productsettings-window-title">
     <div class="modal-dialog editor-settings-modal-dialog">
@@ -619,6 +620,15 @@
                                             <div class="col-md-2">
                                                 <nop-editor asp-for="ProductEditorSettingsModel.CrossSellsProducts" />
                                                 <span asp-validation-for="ProductEditorSettingsModel.CrossSellsProducts"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.FilterLevelValuesProducts" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.FilterLevelValuesProducts" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.FilterLevelValuesProducts"></span>
                                             </div>
                                         </div>
 										<div class="form-group row">

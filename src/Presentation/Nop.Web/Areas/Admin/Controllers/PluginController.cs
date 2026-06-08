@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -51,10 +53,13 @@ public partial class PluginController : BaseAdminController
     protected readonly IPluginService _pluginService;
     protected readonly ISearchPluginManager _searchPluginManager;
     protected readonly ISettingService _settingService;
+    protected readonly ISmsPluginManager _smsPluginManager;
     protected readonly IShippingPluginManager _shippingPluginManager;
+    protected readonly ITaxPluginManager _taxPluginManager;
     protected readonly IUploadService _uploadService;
     protected readonly IWidgetPluginManager _widgetPluginManager;
     protected readonly IWorkContext _workContext;
+    protected readonly MessagesSettings _messagesSettings;
     protected readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
     protected readonly PaymentSettings _paymentSettings;
     protected readonly ShippingSettings _shippingSettings;
@@ -81,10 +86,13 @@ public partial class PluginController : BaseAdminController
         IPluginService pluginService,
         ISearchPluginManager searchPluginManager,
         ISettingService settingService,
+        ISmsPluginManager smsPluginManager,
         IShippingPluginManager shippingPluginManager,
+        ITaxPluginManager taxPluginManager,
         IUploadService uploadService,
         IWidgetPluginManager widgetPluginManager,
         IWorkContext workContext,
+        MessagesSettings messagesSettings,
         MultiFactorAuthenticationSettings multiFactorAuthenticationSettings,
         PaymentSettings paymentSettings,
         ShippingSettings shippingSettings,
@@ -107,15 +115,50 @@ public partial class PluginController : BaseAdminController
         _pluginService = pluginService;
         _searchPluginManager = searchPluginManager;
         _settingService = settingService;
+        _smsPluginManager = smsPluginManager;
         _shippingPluginManager = shippingPluginManager;
+        _taxPluginManager = taxPluginManager;
         _uploadService = uploadService;
         _widgetPluginManager = widgetPluginManager;
         _workContext = workContext;
+        _messagesSettings = messagesSettings;
         _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
         _paymentSettings = paymentSettings;
         _shippingSettings = shippingSettings;
         _taxSettings = taxSettings;
         _widgetSettings = widgetSettings;
+    }
+
+    #endregion
+
+    #region Utilities
+
+    /// <summary>
+    /// Updates the activation state of a plugin and persists the associated settings
+    /// </summary>
+    /// <typeparam name="TSettings">The type of settings to be saved</typeparam>
+    /// <param name="model">The plugin model</param>
+    /// <param name="pluginDescriptor">The descriptor containing metadata about the plugin</param>
+    /// <param name="pluginIsActive">A value indicating whether the plugin should be active. If true, the plugin will be enabled; otherwise, it will
+    /// be disabled.</param>
+    /// <param name="settings">The settings instance to be saved for the plugin</param>
+    /// <param name="activePluginList">A list of system names representing currently active plugins</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task ChangeSettingAsync<TSettings>(PluginModel model, PluginDescriptor pluginDescriptor, bool pluginIsActive, TSettings settings, List<string> activePluginList) where TSettings : ISettings, new()
+    {
+        switch (pluginIsActive)
+        {
+            case true when !model.IsEnabled:
+                //mark as disabled
+                activePluginList.Remove(pluginDescriptor.SystemName);
+                await _settingService.SaveSettingAsync(settings);
+                break;
+            case false when model.IsEnabled:
+                //mark as enabled
+                activePluginList.Add(pluginDescriptor.SystemName);
+                await _settingService.SaveSettingAsync(settings);
+                break;
+        }
     }
 
     #endregion
@@ -222,8 +265,10 @@ public partial class PluginController : BaseAdminController
             //get plugin system name
             string systemName = null;
             foreach (var formValue in form.Keys)
+            {
                 if (formValue.StartsWith("install-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                     systemName = formValue["install-plugin-link-".Length..];
+            }
 
             var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
@@ -256,8 +301,10 @@ public partial class PluginController : BaseAdminController
             //get plugin system name
             string systemName = null;
             foreach (var formValue in form.Keys)
+            {
                 if (formValue.StartsWith("uninstall-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                     systemName = formValue["uninstall-plugin-link-".Length..];
+            }
 
             var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
@@ -290,8 +337,10 @@ public partial class PluginController : BaseAdminController
             //get plugin system name
             string systemName = null;
             foreach (var formValue in form.Keys)
+            {
                 if (formValue.StartsWith("delete-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                     systemName = formValue["delete-plugin-link-".Length..];
+            }
 
             var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
 
@@ -398,153 +447,75 @@ public partial class PluginController : BaseAdminController
             //locales
             var pluginInstance = pluginDescriptor.Instance<IPlugin>();
             foreach (var localized in model.Locales)
-            {
                 await _localizationService.SaveLocalizedFriendlyNameAsync(pluginInstance, localized.LanguageId, localized.FriendlyName);
-            }
 
             //enabled/disabled
             if (!pluginDescriptor.Installed)
                 return View(model);
 
-            bool pluginIsActive;
-            switch (pluginInstance)
+            var interfaces = pluginInstance.GetType().GetInterfaces()
+                .Where(pluginInterface => pluginInterface != typeof(IPlugin)).Select(pluginInterface => pluginInterface.Name).ToList();
+
+            foreach (var pluginInterface in interfaces)
             {
-                case IPaymentMethod paymentMethod:
-                    pluginIsActive = _paymentPluginManager.IsPluginActive(paymentMethod);
-                    if (pluginIsActive && !model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _paymentSettings.ActivePaymentMethodSystemNames.Remove(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_paymentSettings);
+                bool pluginIsActive;
+                switch (pluginInterface)
+                {
+                    case nameof(IPaymentMethod):
+                        pluginIsActive = _paymentPluginManager.IsPluginActive(pluginInstance as IPaymentMethod);
+                        await ChangeSettingAsync(model, pluginDescriptor, pluginIsActive, _paymentSettings, _paymentSettings.ActivePaymentMethodSystemNames);
                         break;
-                    }
-
-                    if (!pluginIsActive && model.IsEnabled)
-                    {
-                        //mark as enabled
-                        _paymentSettings.ActivePaymentMethodSystemNames.Add(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_paymentSettings);
-                    }
-
-                    break;
-                case IShippingRateComputationMethod shippingRateComputationMethod:
-                    pluginIsActive = _shippingPluginManager.IsPluginActive(shippingRateComputationMethod);
-                    if (pluginIsActive && !model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Remove(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_shippingSettings);
+                    case nameof(IShippingRateComputationMethod):
+                        pluginIsActive = _shippingPluginManager.IsPluginActive(pluginInstance as IShippingRateComputationMethod);
+                        await ChangeSettingAsync(model, pluginDescriptor, pluginIsActive, _shippingSettings, _shippingSettings.ActiveShippingRateComputationMethodSystemNames);
                         break;
-                    }
-
-                    if (!pluginIsActive && model.IsEnabled)
-                    {
-                        //mark as enabled
-                        _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_shippingSettings);
-                    }
-
-                    break;
-                case IPickupPointProvider pickupPointProvider:
-                    pluginIsActive = _pickupPluginManager.IsPluginActive(pickupPointProvider);
-                    if (pluginIsActive && !model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _shippingSettings.ActivePickupPointProviderSystemNames.Remove(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_shippingSettings);
+                    case nameof(IPickupPointProvider):
+                        pluginIsActive = _pickupPluginManager.IsPluginActive(pluginInstance as IPickupPointProvider);
+                        await ChangeSettingAsync(model, pluginDescriptor, pluginIsActive, _shippingSettings, _shippingSettings.ActivePickupPointProviderSystemNames);
                         break;
-                    }
-
-                    if (!pluginIsActive && model.IsEnabled)
-                    {
-                        //mark as enabled
-                        _shippingSettings.ActivePickupPointProviderSystemNames.Add(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_shippingSettings);
-                    }
-
-                    break;
-                case ITaxProvider taxProvider:
-                    if (!model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _taxSettings.ActiveTaxProviderSystemName = string.Empty;
+                    case nameof(ITaxProvider):
+                        pluginIsActive = _taxPluginManager.IsPluginActive(pluginInstance as ITaxProvider);
+                        _taxSettings.ActiveTaxProviderSystemName = pluginIsActive switch
+                        {
+                            true when !model.IsEnabled => string.Empty,
+                            false when model.IsEnabled => model.SystemName,
+                            _ => _taxSettings.ActiveTaxProviderSystemName
+                        };
                         await _settingService.SaveSettingAsync(_taxSettings);
                         break;
-                    }
-
-                    //mark as enabled
-                    _taxSettings.ActiveTaxProviderSystemName = model.SystemName;
-                    await _settingService.SaveSettingAsync(_taxSettings);
-                    break;
-                case IExternalAuthenticationMethod externalAuthenticationMethod:
-                    pluginIsActive = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
-                    if (pluginIsActive && !model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_externalAuthenticationSettings);
+                    case nameof(IExternalAuthenticationMethod):
+                        pluginIsActive = _authenticationPluginManager.IsPluginActive(pluginInstance as IExternalAuthenticationMethod);
+                        await ChangeSettingAsync(model, pluginDescriptor, pluginIsActive, _externalAuthenticationSettings, _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames);
                         break;
-                    }
-
-                    if (!pluginIsActive && model.IsEnabled)
-                    {
-                        //mark as enabled
-                        _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_externalAuthenticationSettings);
-                    }
-
-                    break;
-                case IMultiFactorAuthenticationMethod multiFactorAuthenticationMethod:
-                    pluginIsActive = _multiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
-                    if (pluginIsActive && !model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_multiFactorAuthenticationSettings);
+                    case nameof(IMultiFactorAuthenticationMethod):
+                        pluginIsActive = _multiFactorAuthenticationPluginManager.IsPluginActive(pluginInstance as IMultiFactorAuthenticationMethod);
+                        await ChangeSettingAsync(model, pluginDescriptor, pluginIsActive, _multiFactorAuthenticationSettings, _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames);
                         break;
-                    }
-
-                    if (!pluginIsActive && model.IsEnabled)
-                    {
-                        //mark as enabled
-                        _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_multiFactorAuthenticationSettings);
-                    }
-
-                    break;
-
-                case ISearchProvider _:
-                    if (!model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _catalogSettings.ActiveSearchProviderSystemName = string.Empty;
+                    case nameof(ISearchProvider):
+                        pluginIsActive = _searchPluginManager.IsPluginActive(pluginInstance as ISearchProvider);
+                        _catalogSettings.ActiveSearchProviderSystemName = pluginIsActive switch
+                        {
+                            true when !model.IsEnabled => string.Empty,
+                            false when model.IsEnabled => model.SystemName,
+                            _ => _catalogSettings.ActiveSearchProviderSystemName
+                        };
                         await _settingService.SaveSettingAsync(_catalogSettings);
                         break;
-                    }
-
-                    //mark as enabled
-                    _catalogSettings.ActiveSearchProviderSystemName = model.SystemName;
-                    await _settingService.SaveSettingAsync(_catalogSettings);
-                    break;
-
-                case IWidgetPlugin widgetPlugin:
-                    pluginIsActive = _widgetPluginManager.IsPluginActive(widgetPlugin);
-                    if (pluginIsActive && !model.IsEnabled)
-                    {
-                        //mark as disabled
-                        _widgetSettings.ActiveWidgetSystemNames.Remove(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_widgetSettings);
+                    case nameof(ISmsProvider):
+                        pluginIsActive = _smsPluginManager.IsPluginActive(pluginInstance as ISmsProvider);
+                        _messagesSettings.ActiveSmsProviderSystemName = pluginIsActive switch
+                        {
+                            true when !model.IsEnabled => string.Empty,
+                            false when model.IsEnabled => model.SystemName,
+                            _ => _messagesSettings.ActiveSmsProviderSystemName
+                        };
+                        await _settingService.SaveSettingAsync(_messagesSettings);
                         break;
-                    }
-
-                    if (!pluginIsActive && model.IsEnabled)
-                    {
-                        //mark as enabled
-                        _widgetSettings.ActiveWidgetSystemNames.Add(pluginDescriptor.SystemName);
-                        await _settingService.SaveSettingAsync(_widgetSettings);
-                    }
-
-                    break;
+                    case nameof(IWidgetPlugin):
+                        pluginIsActive = _widgetPluginManager.IsPluginActive(pluginInstance as IWidgetPlugin);
+                        await ChangeSettingAsync(model, pluginDescriptor, pluginIsActive, _widgetSettings, _widgetSettings.ActiveWidgetSystemNames);
+                        break;
+                }
             }
 
             //activity log

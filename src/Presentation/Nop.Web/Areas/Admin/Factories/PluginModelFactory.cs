@@ -7,6 +7,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Plugins.Marketplace;
@@ -38,6 +39,7 @@ public partial class PluginModelFactory : IPluginModelFactory
     protected readonly IPluginService _pluginService;
     protected readonly ISearchPluginManager _searchPluginManager;
     protected readonly IShippingPluginManager _shippingPluginManager;
+    protected readonly ISmsPluginManager _smsPluginManager;
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
     protected readonly ITaxPluginManager _taxPluginManager;
@@ -59,6 +61,7 @@ public partial class PluginModelFactory : IPluginModelFactory
         IPluginService pluginService,
         ISearchPluginManager searchPluginManager,
         IShippingPluginManager shippingPluginManager,
+        ISmsPluginManager smsPluginManager,
         IStaticCacheManager staticCacheManager,
         IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
         ITaxPluginManager taxPluginManager,
@@ -76,6 +79,7 @@ public partial class PluginModelFactory : IPluginModelFactory
         _pluginService = pluginService;
         _searchPluginManager = searchPluginManager;
         _shippingPluginManager = shippingPluginManager;
+        _smsPluginManager = smsPluginManager;
         _staticCacheManager = staticCacheManager;
         _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         _taxPluginManager = taxPluginManager;
@@ -102,49 +106,40 @@ public partial class PluginModelFactory : IPluginModelFactory
         //prepare configuration URL
         model.ConfigurationUrl = plugin.GetConfigurationPageUrl();
 
-        //prepare enabled/disabled (only for some plugin types)
-        model.CanChangeEnabled = true;
-        switch (plugin)
+        var interfaces = plugin.GetType().GetInterfaces()
+            .Where(pluginInterface => pluginInterface != typeof(IPlugin)).ToList();
+
+        model.CanChangeEnabled = interfaces.Any() && (interfaces.Count != 1 || interfaces[0] != typeof(IMiscPlugin));
+        model.IsEnabled = true;
+
+        foreach (var pluginInterface in interfaces)
         {
-            case IMiscPlugin:
-                model.CanChangeEnabled = false;
-                break;
+            if (pluginInterface == typeof(IPaymentMethod))
+                model.IsEnabled = model.IsEnabled && _paymentPluginManager.IsPluginActive(plugin as IPaymentMethod);
 
-            case IPaymentMethod paymentMethod:
-                model.IsEnabled = _paymentPluginManager.IsPluginActive(paymentMethod);
-                break;
+            if (pluginInterface == typeof(IShippingRateComputationMethod))
+                model.IsEnabled = model.IsEnabled && _shippingPluginManager.IsPluginActive(plugin as IShippingRateComputationMethod);
 
-            case IShippingRateComputationMethod shippingRateComputationMethod:
-                model.IsEnabled = _shippingPluginManager.IsPluginActive(shippingRateComputationMethod);
-                break;
+            if (pluginInterface == typeof(IPickupPointProvider))
+                model.IsEnabled = model.IsEnabled && _pickupPluginManager.IsPluginActive(plugin as IPickupPointProvider);
 
-            case IPickupPointProvider pickupPointProvider:
-                model.IsEnabled = _pickupPluginManager.IsPluginActive(pickupPointProvider);
-                break;
+            if(pluginInterface == typeof(ITaxProvider))
+                model.IsEnabled = model.IsEnabled && _taxPluginManager.IsPluginActive(plugin as ITaxProvider);
 
-            case ITaxProvider taxProvider:
-                model.IsEnabled = _taxPluginManager.IsPluginActive(taxProvider);
-                break;
+            if (pluginInterface == typeof(IExternalAuthenticationMethod))
+                model.IsEnabled = model.IsEnabled && _authenticationPluginManager.IsPluginActive(plugin as IExternalAuthenticationMethod);
 
-            case IExternalAuthenticationMethod externalAuthenticationMethod:
-                model.IsEnabled = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
-                break;
+            if (pluginInterface == typeof(IMultiFactorAuthenticationMethod))
+                model.IsEnabled = model.IsEnabled && _multiFactorAuthenticationPluginManager.IsPluginActive(plugin as IMultiFactorAuthenticationMethod);
 
-            case IMultiFactorAuthenticationMethod multiFactorAuthenticationMethod:
-                model.IsEnabled = _multiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
-                break;
+            if (pluginInterface == typeof(ISearchProvider))
+                model.IsEnabled = model.IsEnabled && _searchPluginManager.IsPluginActive(plugin as ISearchProvider);
 
-            case ISearchProvider searchProvider:
-                model.IsEnabled = _searchPluginManager.IsPluginActive(searchProvider);
-                break;
+            if (pluginInterface == typeof(ISmsProvider))
+                model.IsEnabled = model.IsEnabled && _smsPluginManager.IsPluginActive(plugin as ISmsProvider);
 
-            case IWidgetPlugin widgetPlugin:
-                model.IsEnabled = _widgetPluginManager.IsPluginActive(widgetPlugin);
-                break;
-
-            default:
-                model.CanChangeEnabled = false;
-                break;
+            if (pluginInterface == typeof(IWidgetPlugin))
+                model.IsEnabled = model.IsEnabled && _widgetPluginManager.IsPluginActive(plugin as IWidgetPlugin);
         }
     }
 
@@ -389,13 +384,13 @@ public partial class PluginModelFactory : IPluginModelFactory
         return await _staticCacheManager.GetAsync(cacheKey, async () =>
         {
             //get installed plugins
-            return (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.InstalledOnly, customer))
+            return await (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.InstalledOnly, customer))
                 .Where(plugin => plugin.ShowInPluginsList)
                 .Select(plugin => new AdminNavigationPluginModel
                 {
                     FriendlyName = plugin.FriendlyName,
                     ConfigurationUrl = plugin.Instance<IPlugin>().GetConfigurationPageUrl()
-                }).Where(model => !string.IsNullOrEmpty(model.ConfigurationUrl)).ToList();
+                }).Where(model => !string.IsNullOrEmpty(model.ConfigurationUrl)).ToListAsync();
         });
     }
 

@@ -55,8 +55,10 @@ public class FixedRateTestTaxProvider : BasePlugin, ITaxProvider
 
         var paymentMethodSystemName = string.Empty;
         if (customer != null)
+        {
             paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, storeId);
+        }
 
         //order sub total (items + checkout attributes)
         var subTotalTaxTotal = decimal.Zero;

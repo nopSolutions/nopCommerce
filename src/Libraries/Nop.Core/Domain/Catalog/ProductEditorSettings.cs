@@ -273,6 +273,11 @@ public partial class ProductEditorSettings : ISettings
     public bool CrossSellsProducts { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether 'Filter level values products' block is shown
+    /// </summary>
+    public bool FilterLevelValuesProducts { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether 'SEO' tab is shown
     /// </summary>
     public bool Seo { get; set; }

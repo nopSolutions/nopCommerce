@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Services.Customers;
 using Nop.Services.Logging;
 using NUnit.Framework;

@@ -68,16 +68,6 @@ public static partial class NopPluginDefaults
     public static string UploadedItemsFileName => "uploadedItems.json";
 
     /// <summary>
-    /// Gets the path to themes folder
-    /// </summary>
-    public static string ThemesPath => "~/Themes";
-
-    /// <summary>
-    /// Gets the name of the theme description file
-    /// </summary>
-    public static string ThemeDescriptionFileName => "theme.json";
-
-    /// <summary>
     /// Gets a key for caching plugins for admin navigation
     /// </summary>
     /// <remarks>

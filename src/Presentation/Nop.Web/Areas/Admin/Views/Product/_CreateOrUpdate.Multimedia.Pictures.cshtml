@@ -15,13 +15,11 @@
                 {
                     Title = T("Admin.Catalog.Products.Multimedia.Pictures.Fields.Picture").Text,
                     Render = new RenderCustom("renderPicturesColumnProductPictureUrl"),
-                    ClassName = "text-center preview",
-                    Width = "150"
+                    ClassName = "text-center preview"
                 },
                 new ColumnProperty(nameof(ProductPictureModel.DisplayOrder))
                 {
                     Title = T("Admin.Catalog.Products.Multimedia.Pictures.Fields.DisplayOrder").Text,
-                    Width = "150",
                     ClassName = NopColumnClassDefaults.CenterAll,
                     Editable = true,
                     EditType = EditType.Number
@@ -29,21 +27,19 @@
                 new ColumnProperty(nameof(ProductPictureModel.OverrideAltAttribute))
                 {
                     Title = T("Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideAltAttribute").Text,
-                    Width = "200",
                     Editable = true,
                     EditType = EditType.String
                 },
                 new ColumnProperty(nameof(ProductPictureModel.OverrideTitleAttribute))
                 {
                     Title = T("Admin.Catalog.Products.Multimedia.Pictures.Fields.OverrideTitleAttribute").Text,
-                    Width = "200",
                     Editable = true,
                     EditType = EditType.String
                 },
                 new ColumnProperty(nameof(ProductPictureModel.Id))
                 {
                     Title = T("Admin.Common.Edit").Text,
-                    Width = "200",
+                    Width = "100",
                     ClassName =  NopColumnClassDefaults.Button,
                     Render = new RenderButtonsInlineEdit()
                 },
@@ -59,7 +55,7 @@
         
     <script>
         function renderPicturesColumnProductPictureUrl(data, type, row, meta) {
-            return '<a href="' + row.PictureUrl + '" target="_blank"><img alt="' + row.PictureId + '" src="' + row.PictureUrl + '" /></a>';
+            return '<a href="' + row.PictureUrl + '" target="_blank"><img alt="' + row.PictureId + '" src="' + row.PictureUrl + '" width="150" /></a>';
         }
     </script>
 

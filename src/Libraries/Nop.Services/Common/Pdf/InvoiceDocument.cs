@@ -139,7 +139,7 @@ public partial class InvoiceDocument : PdfDocument<ProductItem>
 
         notesTable.SetWidths([2, 5]);
 
-        var fontBold = PdfDocumentHelper.GetFont(Font, Font.Size, DocumentFontStyle.Bold);
+        var fontBold = PdfDocumentHelper.GetFont(FontName, FontSize, DocumentFontStyle.Bold);
         var label = LabelField<InvoiceDocument, List<(string, string)>>(invoice => invoice.OrderNotes, fontBold, Language);
 
         notesTable.AddCell(

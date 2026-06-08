@@ -11,4 +11,14 @@ public class RfqSettings : ISettings
     /// Gets or sets a value indicating whether RFQ functionality is enabled
     /// </summary>
     public bool Enabled { get; set; }
+
+    /// <summary>
+    /// A value indicating whether CAPTCHA should be displayed on the "Create Request" page
+    /// </summary>
+    public bool ShowCaptchaOnRequestPage { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether generation of quote pdf is allowed for customer
+    /// </summary>
+    public bool AllowCustomerGenerateQuotePdf { get; set; }
 }

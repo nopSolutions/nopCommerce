@@ -1,8 +1,6 @@
 ﻿using FluentMigrator;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo480;
@@ -16,14 +14,9 @@ public class LocalizationMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        //do not use DI, because it produces exception on the installation process
-        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-
-        var (languageId, _) = this.GetLanguageData();
-
         #region Delete locales
 
-        localizationService.DeleteLocaleResources(new List<string>
+        this.DeleteLocaleResources(new List<string>
         {
             //#6977
             "Common.FileUploader.Upload",
@@ -119,11 +112,11 @@ public class LocalizationMigration : MigrationBase
 
         #region Add or update locales
 
-        localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
             //#6977
             ["Common.FileUploader.Browse"] = "Browse",
-            ["Common.FileUploader.Processing"] = "Uploading...", 
+            ["Common.FileUploader.Processing"] = "Uploading...",
 
             //#7089
             ["Admin.ContentManagement.MessageTemplates.List.SearchEmailAccount"] = "Email account",
@@ -312,9 +305,9 @@ public class LocalizationMigration : MigrationBase
             ["Vendors.Reviews.All"] = "View all",
             ["Vendors.Reviews.BackTo"] = "Back to {0}",
             ["PageTitle.VendorReviews"] = "Reviews of the vendor's products",
-            
+
             ["Admin.ConfigurationSteps.PaymentMethods.Configure.Title"] = "Configure a payment method",
-    	    ["Admin.ConfigurationSteps.PaymentMethods.Configure.Text"] = "You can configure each payment method by clicking the appropriate <b>Configure</b> button.",
+            ["Admin.ConfigurationSteps.PaymentMethods.Configure.Text"] = "You can configure each payment method by clicking the appropriate <b>Configure</b> button.",
 
             ["Admin.ConfigurationSteps.PaymentMethods.PayPalCommerce.Configure.Text"] = "Now we’ll configure the PayPal Commerce payment method.",
             ["Admin.ConfigurationSteps.PaymentMethods.PayPalCommerce.Configure.Title"] = "Configure PayPal Commerce",
@@ -323,8 +316,7 @@ public class LocalizationMigration : MigrationBase
 
             //#7618
             ["Admin.Orders.Address.CustomAttributes"] = "Custom Attributes",
-
-        }, languageId);
+        });
 
         #endregion
     }

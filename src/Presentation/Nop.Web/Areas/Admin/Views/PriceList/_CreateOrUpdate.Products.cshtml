@@ -1,0 +1,84 @@
+﻿@model PriceListModel
+
+@if (Model.Id > 0)
+{
+    <div class="card-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "products-grid",
+            UrlRead = new DataUrl("ProductList", "PriceList", new RouteValueDictionary { [nameof(Model.PriceListItemSearchModel.PriceListId)] = Model.PriceListItemSearchModel.PriceListId }),
+            UrlDelete = new DataUrl("ProductDelete", "PriceList", null),
+            UrlUpdate = new DataUrl("ProductUpdate", "PriceList", null),
+            Length = Model.PriceListItemSearchModel.PageSize,
+            LengthMenu = Model.PriceListItemSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(PriceListItemModel.ProductName))
+                    {
+                        Title = T("Admin.Catalog.PriceList.Products.Fields.Product").Text
+                    },
+                    new ColumnProperty(nameof(PriceListItemModel.StandardPrice))
+                    {
+                        Title = T("Admin.Catalog.PriceList.Products.Fields.StandardPrice").Text
+                    },
+                    new ColumnProperty(nameof(PriceListItemModel.CalculatedPrice))
+                    {
+                        Title = T("Admin.Catalog.PriceList.Products.Fields.CalculatedPrice").Text
+                    },
+                    new ColumnProperty(nameof(PriceListItemModel.ManualPrice))
+                    {
+                        Title = T("Admin.Catalog.PriceList.Products.Fields.ManualPrice").Text,
+                        Editable = true,
+                        EditType = EditType.String
+                    },
+                    new ColumnProperty(nameof(PriceListItemModel.Id))
+                    {
+                        Title = T("Admin.Common.Edit").Text,
+                        Width = "100",
+                        ClassName =  NopColumnClassDefaults.Button,
+                        Render = new RenderButtonsInlineEdit()
+                    },
+                    new ColumnProperty(nameof(PriceListItemModel.ProductId))
+                    {
+                        Title = T("Admin.Common.View").Text,
+                        Width = "100",
+                        ClassName = NopColumnClassDefaults.Button,
+                        Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/", nameof(PriceListItemModel.ProductId)))
+                    },
+                    new ColumnProperty(nameof(PriceListItemModel.Id))
+                    {
+                        Title = T("Admin.Common.Delete").Text,
+                        Width = "100",
+                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                        ClassName = NopColumnClassDefaults.Button
+                    }
+                }
+        })        
+    </div>
+    <div class="card-footer">
+        <button type="submit" id="btnAddNewProduct"
+                onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "PriceList", new { priceListId = Model.Id, btnId = "btnRefreshProducts", formId = "price-list-form" }))', 800, 800, true); return false;"
+                class="btn btn-primary">
+            @T("Admin.Catalog.PriceList.Products.AddNew")
+        </button>
+        <button type="submit" id="btnRefreshProducts" style="display: none"></button>
+        <script>
+            $(function() {
+                $('#btnRefreshProducts').click(function () {
+                    //refresh grid
+                    updateTable('#products-grid');
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    </div>
+}
+else
+{
+    <div class="card-body">
+        @T("Admin.Catalog.PriceList.Products.SaveBeforeEdit")
+    </div>
+}
+

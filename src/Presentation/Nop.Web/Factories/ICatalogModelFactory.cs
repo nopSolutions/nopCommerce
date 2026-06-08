@@ -60,27 +60,7 @@ public partial interface ICatalogModelFactory
     /// The task result contains the category products model
     /// </returns>
     Task<CatalogProductsModel> PrepareCategoryProductsModelAsync(Category category, CatalogProductsCommand command);
-
-    /// <summary>
-    /// Prepare category (simple) models
-    /// </summary>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the list of category (simple) models
-    /// </returns>
-    Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync();
-
-    /// <summary>
-    /// Prepare category (simple) models
-    /// </summary>
-    /// <param name="rootCategoryId">Root category identifier</param>
-    /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the list of category (simple) models
-    /// </returns>
-    Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId, bool loadSubCategories = true);
-
+    
     #endregion
 
     #region Manufacturers
@@ -266,6 +246,17 @@ public partial interface ICatalogModelFactory
     /// The task result contains the search products model
     /// </returns>
     Task<CatalogProductsModel> PrepareSearchProductsModelAsync(SearchModel searchModel, CatalogProductsCommand command);
+
+    /// <summary>
+    /// Prepares the search products by filter level values model
+    /// </summary>
+    /// <param name="searchModel">Search filter level values model</param>
+    /// <param name="command">Model to get the catalog products</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the search products model
+    /// </returns>
+    Task<CatalogProductsModel> PrepareSearchProductsByFilterLevelValuesModelAsync(SearchFilterLevelValueModel searchModel, CatalogProductsCommand command);
 
     /// <summary>
     /// Prepare search box model

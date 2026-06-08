@@ -98,4 +98,54 @@
             <span asp-validation-for="ShowProductThumbnailInOrderDetailsPage"></span>
         </div>
     </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AutoCancelEnabled_OverrideForStore" asp-input="AutoCancelEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AutoCancelEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AutoCancelEnabled" />
+            <span asp-validation-for="AutoCancelEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="AutoCancelEnabled">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="AutoCancelDelay_OverrideForStore" asp-input="AutoCancelDelay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="AutoCancelDelay" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AutoCancelDelay" />
+                <span asp-validation-for="AutoCancelDelay"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="AutoCancelIgnoredPaymentMethods_OverrideForStore" asp-input="AutoCancelIgnoredPaymentMethods" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="AutoCancelIgnoredPaymentMethods" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="AutoCancelIgnoredPaymentMethods" asp-items="Model.AvailablePaymentMethods" asp-multiple="true" />
+                <span asp-validation-for="AutoCancelIgnoredPaymentMethods"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="AutoCancelRestoreShoppingCart_OverrideForStore" asp-input="AutoCancelRestoreShoppingCart" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="AutoCancelRestoreShoppingCart" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AutoCancelRestoreShoppingCart" />
+                <span asp-validation-for="AutoCancelRestoreShoppingCart"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
 </div>
+<script asp-location="Footer">
+    $(function() {
+        $('#@Html.IdFor(m => m.AutoCancelEnabled)').on('change', function() {
+            warningValidation('@Url.Action("AutoCancelOrdersTaskWarning", "Setting")', '@Html.NameFor(m => m.AutoCancelEnabled)', { enabled: this.checked });
+        });
+        $('#@Html.IdFor(m => m.AutoCancelEnabled)').change();
+    });
+</script>

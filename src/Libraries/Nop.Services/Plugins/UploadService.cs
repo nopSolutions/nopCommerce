@@ -49,7 +49,7 @@ public partial class UploadService : IUploadService
     /// </returns>
     protected virtual async Task<IList<UploadedItem>> GetUploadedItemsAsync(string archivePath)
     {
-        using var archive = ZipFile.OpenRead(archivePath);
+        await using var archive = await ZipFile.OpenReadAsync(archivePath);
         //try to get the entry containing information about the uploaded items 
         var uploadedItemsFileEntry = archive.Entries
             .FirstOrDefault(entry => entry.Name.Equals(NopPluginDefaults.UploadedItemsFileName, StringComparison.InvariantCultureIgnoreCase)
@@ -58,7 +58,7 @@ public partial class UploadService : IUploadService
             return null;
 
         //read the content of this entry if exists
-        await using var unzippedEntryStream = uploadedItemsFileEntry.Open();
+        await using var unzippedEntryStream = await uploadedItemsFileEntry.OpenAsync();
         using var reader = new StreamReader(unzippedEntryStream);
         var content = await reader.ReadToEndAsync();
 
@@ -83,12 +83,12 @@ public partial class UploadService : IUploadService
 
         //get path to the themes directory
         var themesDirectory = string.Empty;
-        if (!string.IsNullOrEmpty(NopPluginDefaults.ThemesPath))
-            themesDirectory = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
+        if (!string.IsNullOrEmpty(NopThemeDefaults.ThemesPath))
+            themesDirectory = _fileProvider.MapPath(NopThemeDefaults.ThemesPath);
 
         IDescriptor descriptor = null;
         string uploadedItemDirectoryName;
-        using (var archive = ZipFile.OpenRead(archivePath))
+        await using (var archive = await ZipFile.OpenReadAsync(archivePath))
         {
             //the archive should contain only one root directory (the plugin one or the theme one)
             var rootDirectories = archive.Entries.Select(p => p.FullName.Split('/')[0]).Distinct().ToList();
@@ -112,16 +112,16 @@ public partial class UploadService : IUploadService
 
                 //or whether it's a theme descriptor
                 var isThemeDescriptor = entry.FullName
-                    .Equals($"{uploadedItemDirectoryName}/{NopPluginDefaults.ThemeDescriptionFileName}", StringComparison.InvariantCultureIgnoreCase);
+                    .Equals($"{uploadedItemDirectoryName}/{NopThemeDefaults.ThemeDescriptionFileName}", StringComparison.InvariantCultureIgnoreCase);
 
                 if (!isPluginDescriptor && !isThemeDescriptor)
                     continue;
 
-                await using var unzippedEntryStream = entry.Open();
+                await using var unzippedEntryStream = await entry.OpenAsync();
                 using var reader = new StreamReader(unzippedEntryStream);
                 var content = await reader.ReadToEndAsync();
 
-                //whether a plugin is upload 
+                //whether a plugin is uploaded 
                 if (isPluginDescriptor)
                 {
                     descriptor = PluginDescriptor.GetPluginDescriptorFromText(content);
@@ -131,7 +131,7 @@ public partial class UploadService : IUploadService
                         throw new Exception($"This plugin doesn't support the current version - {NopVersion.CURRENT_VERSION}");
                 }
 
-                //or whether a theme is upload 
+                //or whether a theme is uploaded
                 if (isThemeDescriptor)
                     descriptor = _themeProvider.GetThemeDescriptorFromText(content);
 
@@ -151,12 +151,12 @@ public partial class UploadService : IUploadService
 
         //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin)
         //furthermore, zip extract functionality cannot override existing files
-        //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
+        //but there could deletion issues (related to file locking, etc.). In such cases the directory should be deleted manually
         if (_fileProvider.DirectoryExists(pathToUpload))
             _fileProvider.DeleteDirectory(pathToUpload);
 
         //unzip archive
-        ZipFile.ExtractToDirectory(archivePath, directoryPath);
+        await ZipFile.ExtractToDirectoryAsync(archivePath, directoryPath);
 
         return descriptor;
     }
@@ -180,101 +180,99 @@ public partial class UploadService : IUploadService
 
         //get path to the themes directory
         var themesDirectory = string.Empty;
-        if (!string.IsNullOrEmpty(NopPluginDefaults.ThemesPath))
-            themesDirectory = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
+        if (!string.IsNullOrEmpty(NopThemeDefaults.ThemesPath))
+            themesDirectory = _fileProvider.MapPath(NopThemeDefaults.ThemesPath);
 
         //get descriptors of items contained in the archive
         var descriptors = new List<IDescriptor>();
-        using (var archive = ZipFile.OpenRead(archivePath))
+        await using var archive = await ZipFile.OpenReadAsync(archivePath);
+        foreach (var item in uploadedItems)
         {
-            foreach (var item in uploadedItems)
+            if (!item.Type.HasValue)
+                continue;
+
+            //ensure that the current version of nopCommerce is supported
+            if (!item.SupportedVersions?.Contains(NopVersion.CURRENT_VERSION) ?? true)
+                continue;
+
+            //the item path should end with a slash
+            var itemPath = $"{item.DirectoryPath?.TrimEnd('/')}/";
+
+            //get path to the descriptor entry in the archive
+            var descriptorPath = string.Empty;
+            if (item.Type == UploadedItemType.Plugin)
+                descriptorPath = $"{itemPath}{NopPluginDefaults.DescriptionFileName}";
+
+            if (item.Type == UploadedItemType.Theme && !string.IsNullOrEmpty(NopThemeDefaults.ThemeDescriptionFileName))
+                descriptorPath = $"{itemPath}{NopThemeDefaults.ThemeDescriptionFileName}";
+
+            //try to get the descriptor entry
+            var descriptorEntry = archive.Entries.FirstOrDefault(entry => entry.FullName.Equals(descriptorPath, StringComparison.InvariantCultureIgnoreCase));
+            if (descriptorEntry == null)
+                continue;
+
+            //try to get descriptor of the uploaded item
+            IDescriptor descriptor = null;
+            await using var unzippedEntryStream = await descriptorEntry.OpenAsync();
+            using var reader = new StreamReader(unzippedEntryStream);
+            var content = await reader.ReadToEndAsync();
+
+            //whether a plugin is uploaded 
+            if (item.Type == UploadedItemType.Plugin)
+                descriptor = PluginDescriptor.GetPluginDescriptorFromText(content);
+
+            //or whether a theme is uploaded
+            if (item.Type == UploadedItemType.Theme)
+                descriptor = _themeProvider.GetThemeDescriptorFromText(content);
+
+            if (descriptor == null)
+                continue;
+
+            //ensure that the plugin current version is supported
+            if (descriptor is PluginDescriptor pluginDescriptor && !pluginDescriptor.SupportedVersions.Contains(NopVersion.CURRENT_VERSION))
+                continue;
+
+            //get path to upload
+            var uploadedItemDirectoryName = _fileProvider.GetFileName(itemPath.TrimEnd('/'));
+            var pathToUpload = _fileProvider.Combine(item.Type == UploadedItemType.Plugin ? pluginsDirectory : themesDirectory, uploadedItemDirectoryName);
+
+            //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin or a theme)
+            //furthermore, zip extract functionality cannot override existing files
+            //but there could deletion issues (related to file locking, etc.). In such cases the directory should be deleted manually
+            if (_fileProvider.DirectoryExists(pathToUpload))
+                _fileProvider.DeleteDirectory(pathToUpload);
+
+            //unzip entries into files
+            var entries = archive.Entries.Where(entry => entry.FullName.StartsWith(itemPath, StringComparison.InvariantCultureIgnoreCase));
+            foreach (var entry in entries)
             {
-                if (!item.Type.HasValue)
+                //get name of the file
+                var fileName = entry.FullName[itemPath.Length..];
+                if (string.IsNullOrEmpty(fileName))
                     continue;
 
-                //ensure that the current version of nopCommerce is supported
-                if (!item.SupportedVersions?.Contains(NopVersion.CURRENT_VERSION) ?? true)
-                    continue;
+                var filePath = _fileProvider.Combine(pathToUpload, fileName);
 
-                //the item path should end with a slash
-                var itemPath = $"{item.DirectoryPath?.TrimEnd('/')}/";
-
-                //get path to the descriptor entry in the archive
-                var descriptorPath = string.Empty;
-                if (item.Type == UploadedItemType.Plugin)
-                    descriptorPath = $"{itemPath}{NopPluginDefaults.DescriptionFileName}";
-
-                if (item.Type == UploadedItemType.Theme && !string.IsNullOrEmpty(NopPluginDefaults.ThemeDescriptionFileName))
-                    descriptorPath = $"{itemPath}{NopPluginDefaults.ThemeDescriptionFileName}";
-
-                //try to get the descriptor entry
-                var descriptorEntry = archive.Entries.FirstOrDefault(entry => entry.FullName.Equals(descriptorPath, StringComparison.InvariantCultureIgnoreCase));
-                if (descriptorEntry == null)
-                    continue;
-
-                //try to get descriptor of the uploaded item
-                IDescriptor descriptor = null;
-                await using var unzippedEntryStream = descriptorEntry.Open();
-                using var reader = new StreamReader(unzippedEntryStream);
-                var content = await reader.ReadToEndAsync();
-
-                //whether a plugin is upload 
-                if (item.Type == UploadedItemType.Plugin)
-                    descriptor = PluginDescriptor.GetPluginDescriptorFromText(content);
-
-                //or whether a theme is upload 
-                if (item.Type == UploadedItemType.Theme)
-                    descriptor = _themeProvider.GetThemeDescriptorFromText(content);
-
-                if (descriptor == null)
-                    continue;
-
-                //ensure that the plugin current version is supported
-                if (descriptor is PluginDescriptor pluginDescriptor && !pluginDescriptor.SupportedVersions.Contains(NopVersion.CURRENT_VERSION))
-                    continue;
-
-                //get path to upload
-                var uploadedItemDirectoryName = _fileProvider.GetFileName(itemPath.TrimEnd('/'));
-                var pathToUpload = _fileProvider.Combine(item.Type == UploadedItemType.Plugin ? pluginsDirectory : themesDirectory, uploadedItemDirectoryName);
-
-                //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin or a theme)
-                //furthermore, zip extract functionality cannot override existing files
-                //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
-                if (_fileProvider.DirectoryExists(pathToUpload))
-                    _fileProvider.DeleteDirectory(pathToUpload);
-
-                //unzip entries into files
-                var entries = archive.Entries.Where(entry => entry.FullName.StartsWith(itemPath, StringComparison.InvariantCultureIgnoreCase));
-                foreach (var entry in entries)
+                //if it's a folder, we need to create it
+                if (string.IsNullOrEmpty(entry.Name) && !_fileProvider.DirectoryExists(filePath))
                 {
-                    //get name of the file
-                    var fileName = entry.FullName[itemPath.Length..];
-                    if (string.IsNullOrEmpty(fileName))
-                        continue;
-
-                    var filePath = _fileProvider.Combine(pathToUpload, fileName);
-
-                    //if it's a folder, we need to create it
-                    if (string.IsNullOrEmpty(entry.Name) && !_fileProvider.DirectoryExists(filePath))
-                    {
-                        _fileProvider.CreateDirectory(filePath);
-                        continue;
-                    }
-
-                    var directoryPath = _fileProvider.GetDirectoryName(filePath);
-
-                    //whether the file directory is already exists, otherwise create the new one
-                    if (!_fileProvider.DirectoryExists(directoryPath))
-                        _fileProvider.CreateDirectory(directoryPath);
-
-                    //unzip entry to the file (ignore directory entries)
-                    if (!filePath.Equals($"{directoryPath}\\", StringComparison.InvariantCultureIgnoreCase))
-                        entry.ExtractToFile(filePath);
+                    _fileProvider.CreateDirectory(filePath);
+                    continue;
                 }
 
-                //item is uploaded
-                descriptors.Add(descriptor);
+                var directoryPath = _fileProvider.GetDirectoryName(filePath);
+
+                //whether the file directory is already exists, otherwise create the new one
+                if (!_fileProvider.DirectoryExists(directoryPath))
+                    _fileProvider.CreateDirectory(directoryPath);
+
+                //unzip entry to the file (ignore directory entries)
+                if (!filePath.Equals($"{directoryPath}\\", StringComparison.InvariantCultureIgnoreCase))
+                    await entry.ExtractToFileAsync(filePath);
             }
+
+            //item is uploaded
+            descriptors.Add(descriptor);
         }
 
         return descriptors;
@@ -378,7 +376,7 @@ public partial class UploadService : IUploadService
             await using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
                 await archivefile.CopyToAsync(fileStream);
 
-            ZipFile.ExtractToDirectory(zipFilePath, storeIconsPath);
+            await ZipFile.ExtractToDirectoryAsync(zipFilePath, storeIconsPath);
         }
         finally
         {
@@ -432,11 +430,11 @@ public partial class UploadService : IUploadService
         try
         {
             //1. check if the archive with localization of templates is in its place
-            var ziplocalePatternPath = getPath(NopCommonDefaults.LocalePatternPath, NopCommonDefaults.LocalePatternArchiveName);
-            if (!_fileProvider.GetFileExtension(ziplocalePatternPath)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
+            var zipLocalePatternPath = getPath(NopCommonDefaults.LocalePatternPath, NopCommonDefaults.LocalePatternArchiveName);
+            if (!_fileProvider.GetFileExtension(zipLocalePatternPath)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
                 throw new Exception($"Archive '{NopCommonDefaults.LocalePatternArchiveName}' to retrieve localization patterns not found.");
 
-            var currentCulture = (cultureInfo is not null) ? cultureInfo : CultureInfo.CurrentCulture;
+            var currentCulture = cultureInfo ?? CultureInfo.CurrentCulture;
 
             //2. Check if there is already an unpacked folder with locales for the current culture in the lib directory, if not then
             if (!(checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.Name) ||
@@ -445,32 +443,28 @@ public partial class UploadService : IUploadService
                 var cultureToUse = string.Empty;
 
                 //3. Unpack the archive into a temporary folder
-                ZipFile.ExtractToDirectory(ziplocalePatternPath, getPath(NopCommonDefaults.LocalePatternPath, tempFolder));
+                ZipFile.ExtractToDirectory(zipLocalePatternPath, getPath(NopCommonDefaults.LocalePatternPath, tempFolder));
 
                 //4. Search in the temp unpacked archive a folder with locales by culture
-                var sourcelocalePath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.Name);
-                if (_fileProvider.DirectoryExists(sourcelocalePath))
-                {
+                var sourceLocalePath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.Name);
+                if (_fileProvider.DirectoryExists(sourceLocalePath))
                     cultureToUse = currentCulture.Name;
-                }
 
-                var sourcelocaleISOPath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.TwoLetterISOLanguageName);
-                if (_fileProvider.DirectoryExists(sourcelocaleISOPath))
+                var sourceLocaleISOPath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.TwoLetterISOLanguageName);
+                if (_fileProvider.DirectoryExists(sourceLocaleISOPath))
                 {
                     cultureToUse = currentCulture.TwoLetterISOLanguageName;
-                    sourcelocalePath = sourcelocaleISOPath;
+                    sourceLocalePath = sourceLocaleISOPath;
                 }
 
                 //5. Copy locales to destination folder
                 if (!string.IsNullOrEmpty(cultureToUse))
                 {
-                    var destlocalePath = getPath(NopCommonDefaults.LocalePatternPath, cultureToUse);
-                    if (_fileProvider.DirectoryExists(destlocalePath))
-                    {
-                        _fileProvider.DeleteDirectory(destlocalePath);
-                    }
+                    var destLocalePath = getPath(NopCommonDefaults.LocalePatternPath, cultureToUse);
+                    if (_fileProvider.DirectoryExists(destLocalePath))
+                        _fileProvider.DeleteDirectory(destLocalePath);
 
-                    _fileProvider.DirectoryMove(sourcelocalePath, destlocalePath);
+                    _fileProvider.DirectoryMove(sourceLocalePath, destLocalePath);
                 }
             }
         }
@@ -494,7 +488,7 @@ public partial class UploadService : IUploadService
     public partial class UploadedItem
     {
         /// <summary>
-        /// Gets or sets the type of an uploaded item
+        /// Gets or sets the type of uploaded item
         /// </summary>
         [JsonProperty(PropertyName = "Type")]
         [JsonConverter(typeof(StringEnumConverter))]

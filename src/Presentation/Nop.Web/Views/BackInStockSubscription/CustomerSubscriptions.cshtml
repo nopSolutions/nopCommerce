@@ -66,7 +66,7 @@
                                         <input type="checkbox" name="biss@(item.Id)" class="rowcheckbox" />
                                     </td>
                                     <td class="product">
-                                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.SeName }))">@item.ProductName</a>
+                                            <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.SeName }))">@item.ProductName</a>
                                     </td>
                                 </tr>
                             }

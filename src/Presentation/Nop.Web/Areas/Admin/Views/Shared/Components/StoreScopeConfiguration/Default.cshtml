@@ -1,6 +1,7 @@
-﻿@model StoreScopeConfigurationModel
+﻿@using Nop.Services.Helpers
+@model StoreScopeConfigurationModel
 
-@inject Nop.Core.IWebHelper webHelper
+@inject IWebHelper webHelper
 
 @{
     var returnUrl = webHelper.GetRawUrl(Context.Request);

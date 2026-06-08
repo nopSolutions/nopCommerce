@@ -280,7 +280,9 @@ public class AvalaraTaxManager : IDisposable
             model.addresses.shipTo = shipToAddress;
         }
         else
+        {
             model.addresses.singleLocation = shipToAddress ?? shipFromAddress;
+        }
 
         return model;
     }
@@ -561,10 +563,14 @@ public class AvalaraTaxManager : IDisposable
     {
         //get checkout attributes values
         var attributeValues = _checkoutAttributeParser.ParseAttributeValues(order.CheckoutAttributesXml);
-        return await attributeValues.SelectManyAwait(async attributeWithValues =>
+        var result = attributeValues.SelectMany(asyncEnumerable);
+        
+        return await result.ToListAsync();
+
+        IAsyncEnumerable<LineItemModel> asyncEnumerable((CheckoutAttribute attribute, IAsyncEnumerable<CheckoutAttributeValue> values) attributeWithValues)
         {
             var attribute = attributeWithValues.attribute;
-            return (await attributeWithValues.values.SelectAwait(async value =>
+            var res = (attributeWithValues.values.Select(async (CheckoutAttributeValue value, CancellationToken _) =>
             {
                 //create line
                 var checkoutAttributeItem = new LineItemModel
@@ -585,7 +591,9 @@ public class AvalaraTaxManager : IDisposable
 
                 //whether checkout attribute is tax exempt
                 if (attribute.IsTaxExempt)
+                {
                     checkoutAttributeItem.exemptionCode = "Attribute-non-taxable";
+                }
                 else
                 {
                     //or try to get tax code
@@ -598,8 +606,10 @@ public class AvalaraTaxManager : IDisposable
                 checkoutAttributeItem.customerUsageType = CommonHelper.EnsureMaximumLength(entityUseCode, 25);
 
                 return checkoutAttributeItem;
-            }).ToListAsync()).ToAsyncEnumerable();
-        }).ToListAsync();
+            }));
+
+            return res;
+        }
     }
 
     /// <summary>
@@ -614,7 +624,9 @@ public class AvalaraTaxManager : IDisposable
     protected async Task<CreateTransactionModel> PrepareModelTaxExemptionAsync(CreateTransactionModel model, Customer customer)
     {
         if (customer.IsTaxExempt)
+        {
             model.exemptionNo = CommonHelper.EnsureMaximumLength($"Exempt-customer-#{customer.Id}", 25);
+        }
         else
         {
             var customerRole = (await _customerService.GetCustomerRolesAsync(customer)).FirstOrDefault(role => role.TaxExempt);
@@ -624,7 +636,9 @@ public class AvalaraTaxManager : IDisposable
 
         var entityUseCode = await _genericAttributeService.GetAttributeAsync<string>(customer, AvalaraTaxDefaults.EntityUseCodeAttribute);
         if (!string.IsNullOrEmpty(entityUseCode))
+        {
             model.customerUsageType = CommonHelper.EnsureMaximumLength(entityUseCode, 25);
+        }
         else
         {
             entityUseCode = await (await _customerService.GetCustomerRolesAsync(customer))
@@ -1779,9 +1793,7 @@ public class AvalaraTaxManager : IDisposable
             var stringBuilder = new StringBuilder();
             stringBuilder.Append(nameof(request.Headers));
             foreach (var header in request.Headers)
-            {
                 stringBuilder.AppendLine($"{header.Key}: {header.Value}");
-            }
             stringBuilder.AppendLine($"{nameof(request.Path)}: {request.Path}");
             stringBuilder.AppendLine($"{nameof(request.QueryString)}: {request.QueryString}");
             stringBuilder.AppendLine($"{nameof(request.Body)}: {requestContent}");

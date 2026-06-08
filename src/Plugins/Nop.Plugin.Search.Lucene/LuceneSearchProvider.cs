@@ -1,5 +1,5 @@
-﻿using Nop.Core;
-using Nop.Services.Common;
+﻿using Nop.Services.Common;
+using Nop.Services.Helpers;
 using Nop.Services.Plugins;
 
 namespace Nop.Plugin.Search.Lucene;

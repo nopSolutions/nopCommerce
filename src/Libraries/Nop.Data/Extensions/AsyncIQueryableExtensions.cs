@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using LinqToDB;
+using LinqToDB.Async;
 using Nop.Core;
 
 namespace System.Linq;
@@ -662,7 +662,7 @@ public static class AsyncIQueryableExtensions
 
         var data = new List<T>();
 
-        if (!getOnlyTotalCount)
+        if (!getOnlyTotalCount && count > 0)
             data.AddRange(await source.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync());
 
         return new PagedList<T>(data, pageIndex, pageSize, count);

@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Http.Extensions;
 using Nop.Data;
+using Nop.Services.Helpers;
 
 namespace Nop.Web.Framework.Mvc.Filters;
 
@@ -55,7 +56,8 @@ public sealed class WwwRequirementAttribute : TypeFilterAttribute
         /// </summary>
         /// <param name="context">Authorization filter context</param>
         /// <param name="withWww">Whether URL must start with WWW</param>
-        private void RedirectRequest(AuthorizationFilterContext context, bool withWww)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private Task RedirectRequestAsync(AuthorizationFilterContext context, bool withWww)
         {
             //get scheme depending on securing connection
             var urlScheme = $"{_webHelper.GetCurrentRequestProtocol()}{Uri.SchemeDelimiter}";
@@ -76,13 +78,16 @@ public sealed class WwwRequirementAttribute : TypeFilterAttribute
             //page shouldn't have WWW prefix, so set 301 (permanent) redirection to URL without WWW
             if (!withWww && urlStartsWith3W)
                 context.Result = new RedirectResult(currentUrl.Replace(urlWith3W, urlScheme), true);
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Called early in the filter pipeline to confirm request is authorized
         /// </summary>
         /// <param name="context">Authorization filter context</param>
-        private void CheckWwwRequirement(AuthorizationFilterContext context)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private async Task CheckWwwRequirementAsync(AuthorizationFilterContext context)
         {
             ArgumentNullException.ThrowIfNull(context);
 
@@ -101,12 +106,12 @@ public sealed class WwwRequirementAttribute : TypeFilterAttribute
             {
                 case WwwRequirement.WithWww:
                     //redirect to URL with starting WWW
-                    RedirectRequest(context, true);
+                    await RedirectRequestAsync(context, true);
                     break;
 
                 case WwwRequirement.WithoutWww:
                     //redirect to URL without starting WWW
-                    RedirectRequest(context, false);
+                    await RedirectRequestAsync(context, false);
                     break;
 
                 case WwwRequirement.NoMatter:
@@ -127,10 +132,9 @@ public sealed class WwwRequirementAttribute : TypeFilterAttribute
         /// </summary>
         /// <param name="context">Authorization filter context</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            CheckWwwRequirement(context);
-            return Task.CompletedTask;
+            await CheckWwwRequirementAsync(context);
         }
 
         #endregion

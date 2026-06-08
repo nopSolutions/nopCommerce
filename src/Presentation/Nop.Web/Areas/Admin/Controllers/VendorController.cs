@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Attributes;
 using Nop.Services.Common;
@@ -27,7 +27,6 @@ public partial class VendorController : BaseAdminController
 {
     #region Fields
 
-    protected readonly ForumSettings _forumSettings;
     protected readonly IAddressService _addressService;
     protected readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
     protected readonly IAttributeParser<VendorAttribute, VendorAttributeValue> _vendorAttributeParser;
@@ -43,14 +42,14 @@ public partial class VendorController : BaseAdminController
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVendorModelFactory _vendorModelFactory;
     protected readonly IVendorService _vendorService;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
     private static readonly char[] _separator = [','];
 
     #endregion
 
     #region Ctor
 
-    public VendorController(ForumSettings forumSettings,
-        IAddressService addressService,
+    public VendorController(IAddressService addressService,
         IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
         IAttributeParser<VendorAttribute, VendorAttributeValue> vendorAttributeParser,
         IAttributeService<VendorAttribute, VendorAttributeValue> vendorAttributeService,
@@ -64,9 +63,9 @@ public partial class VendorController : BaseAdminController
         IPictureService pictureService,
         IUrlRecordService urlRecordService,
         IVendorModelFactory vendorModelFactory,
-        IVendorService vendorService)
+        IVendorService vendorService,
+        PrivateMessageSettings privateMessageSettings)
     {
-        _forumSettings = forumSettings;
         _addressService = addressService;
         _addressAttributeParser = addressAttributeParser;
         _vendorAttributeParser = vendorAttributeParser;
@@ -82,6 +81,7 @@ public partial class VendorController : BaseAdminController
         _urlRecordService = urlRecordService;
         _vendorModelFactory = vendorModelFactory;
         _vendorService = vendorService;
+        _privateMessageSettings = privateMessageSettings;
     }
 
     #endregion
@@ -149,8 +149,10 @@ public partial class VendorController : BaseAdminController
                     {
                         var selectedAttributeId = int.Parse(ctrlAttributes);
                         if (selectedAttributeId > 0)
+                        {
                             attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                 attribute, selectedAttributeId.ToString());
+                        }
                     }
 
                     break;
@@ -162,8 +164,10 @@ public partial class VendorController : BaseAdminController
                         {
                             var selectedAttributeId = int.Parse(item);
                             if (selectedAttributeId > 0)
+                            {
                                 attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
+                            }
                         }
                     }
 
@@ -287,9 +291,7 @@ public partial class VendorController : BaseAdminController
         var vendorAttributesXml = await ParseVendorAttributesAsync(form);
         var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
         foreach (var warning in warnings)
-        {
             ModelState.AddModelError(string.Empty, warning);
-        }
 
         if (ModelState.IsValid)
         {
@@ -352,7 +354,7 @@ public partial class VendorController : BaseAdminController
         //prepare model
         var model = await _vendorModelFactory.PrepareVendorModelAsync(null, vendor);
 
-        if (!_forumSettings.AllowPrivateMessages && model.PmCustomerId > 0)
+        if (!_privateMessageSettings.AllowPrivateMessages && model.PmCustomerId > 0)
             _notificationService.WarningNotification("Private messages are disabled. Do not forget to enable them.");
 
         return View(model);
@@ -371,17 +373,13 @@ public partial class VendorController : BaseAdminController
         var vendorAttributesXml = await ParseVendorAttributesAsync(form);
         var warnings = (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList();
         foreach (var warning in warnings)
-        {
             ModelState.AddModelError(string.Empty, warning);
-        }
 
         //custom address attributes
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
         foreach (var error in customAttributeWarnings)
-        {
             ModelState.AddModelError(string.Empty, error);
-        }
 
         if (ModelState.IsValid)
         {

@@ -91,13 +91,11 @@
                         {
                             new ColumnProperty(nameof(VendorModel.Name))
                             {
-                                Title = T("Admin.Vendors.Fields.Name").Text,
-                                Width = "300"
+                                Title = T("Admin.Vendors.Fields.Name").Text
                             },
                             new ColumnProperty(nameof(VendorModel.Email))
                             {
-                                Title = T("Admin.Vendors.Fields.Email").Text,
-                                Width = "300"
+                                Title = T("Admin.Vendors.Fields.Email").Text
                             },
                             new ColumnProperty(nameof(VendorModel.Active))
                             {
@@ -109,7 +107,7 @@
                             new ColumnProperty(nameof(VendorModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
-                                Width = "50",
+                                Width = "100",
                                 ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("~/Admin/Vendor/Edit"))
                             }

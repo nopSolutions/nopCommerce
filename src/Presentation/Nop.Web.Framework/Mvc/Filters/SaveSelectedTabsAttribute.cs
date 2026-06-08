@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Nop.Core;
 using Nop.Core.Http.Extensions;
 using Nop.Data;
+using Nop.Services.Helpers;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Web.Framework.Mvc.Filters;

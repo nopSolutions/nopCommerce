@@ -84,10 +84,8 @@ public partial class CopyProductService : ICopyProductService
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task CopyDiscountsMappingAsync(Product product, Product productCopy)
     {
-        foreach (var discountMapping in await _productService.GetAllDiscountsAppliedToProductAsync(product.Id))
-        {
+        foreach (var discountMapping in await _productService.GetAllDiscountsAppliedToProductAsync(product.Id)) 
             await _productService.InsertDiscountProductMappingAsync(new DiscountProductMapping { EntityId = productCopy.Id, DiscountId = discountMapping.DiscountId });
-        }
     }
 
     /// <summary>
@@ -124,6 +122,7 @@ public partial class CopyProductService : ICopyProductService
     protected virtual async Task CopyTierPricesAsync(Product product, Product productCopy)
     {
         foreach (var tierPrice in await _productService.GetTierPricesByProductAsync(product.Id))
+        {
             await _productService.InsertTierPriceAsync(new TierPrice
             {
                 ProductId = productCopy.Id,
@@ -134,6 +133,7 @@ public partial class CopyProductService : ICopyProductService
                 StartDateTimeUtc = tierPrice.StartDateTimeUtc,
                 EndDateTimeUtc = tierPrice.EndDateTimeUtc
             });
+        }
     }
 
     /// <summary>
@@ -178,16 +178,16 @@ public partial class CopyProductService : ICopyProductService
             {
                 var textPrompt = await _localizationService.GetLocalizedAsync(productAttributeMapping, x => x.TextPrompt, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(textPrompt))
+                {
                     await _localizedEntityService.SaveLocalizedValueAsync(productAttributeMappingCopy, x => x.TextPrompt, textPrompt,
                         lang.Id);
+                }
             }
 
             productAttributeMappingCopies.Add(productAttributeMappingCopy.Id, productAttributeMappingCopy);
 
-            if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
-            {
+            if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml)) 
                 oldCopyWithConditionAttributes.Add(productAttributeMapping);
-            }
 
             //save associated value (used for combinations copying)
             associatedAttributes.Add(productAttributeMapping.Id, productAttributeMappingCopy.Id);
@@ -417,12 +417,14 @@ public partial class CopyProductService : ICopyProductService
     protected virtual async Task CopyCrossSellsMappingAsync(Product product, Product productCopy)
     {
         foreach (var csProduct in await _productService.GetCrossSellProductsByProductId1Async(product.Id, true))
+        {
             await _productService.InsertCrossSellProductAsync(
                 new CrossSellProduct
                 {
                     ProductId1 = productCopy.Id,
                     ProductId2 = csProduct.ProductId2
                 });
+        }
     }
 
     /// <summary>
@@ -434,6 +436,7 @@ public partial class CopyProductService : ICopyProductService
     protected virtual async Task CopyRelatedProductsMappingAsync(Product product, Product productCopy)
     {
         foreach (var relatedProduct in await _productService.GetRelatedProductsByProductId1Async(product.Id, true))
+        {
             await _productService.InsertRelatedProductAsync(
                 new RelatedProduct
                 {
@@ -441,6 +444,7 @@ public partial class CopyProductService : ICopyProductService
                     ProductId2 = relatedProduct.ProductId2,
                     DisplayOrder = relatedProduct.DisplayOrder
                 });
+        }
     }
 
     /// <summary>

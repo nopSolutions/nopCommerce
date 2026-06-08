@@ -166,9 +166,7 @@ public partial class NewsletterController : BasePublicController
                 var customer = await _workContext.GetCurrentCustomerAsync();
                 if (!await _customerService.IsRegisteredAsync(customer) &&
                     await _languageService.GetLanguageByIdAsync(subscription.LanguageId) is Language language)
-                {
                     await _workContext.SetWorkingLanguageAsync(language);
-                }
             }
             else
             {

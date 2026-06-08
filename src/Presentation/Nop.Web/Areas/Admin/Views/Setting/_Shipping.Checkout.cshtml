@@ -31,4 +31,26 @@
             <span asp-validation-for="BypassShippingMethodSelectionIfOnlyOne"></span>
         </div>
     </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowCustomerToChooseDeliveryDate_OverrideForStore" asp-input="AllowCustomerToChooseDeliveryDate" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowCustomerToChooseDeliveryDate" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowCustomerToChooseDeliveryDate" />
+            <span asp-validation-for="AllowCustomerToChooseDeliveryDate"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="AllowCustomerToChooseDeliveryDate">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="DeliveryDateRangeDays_OverrideForStore" asp-input="DeliveryDateRangeDays" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="DeliveryDateRangeDays" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DeliveryDateRangeDays" />
+                <span asp-validation-for="DeliveryDateRangeDays"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
 </div>

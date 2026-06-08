@@ -36,18 +36,15 @@
                                 {
                                     new ColumnProperty(nameof(ExternalAuthenticationMethodModel.FriendlyName))
                                     {
-                                        Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.FriendlyName").Text,
-                                        Width = "250"
+                                        Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.FriendlyName").Text
                                     },
                                     new ColumnProperty(nameof(ExternalAuthenticationMethodModel.SystemName))
                                     {
-                                        Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.SystemName").Text,
-                                        Width = "250"
+                                        Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.SystemName").Text
                                     },
                                     new ColumnProperty(nameof(ExternalAuthenticationMethodModel.DisplayOrder))
                                     {
                                         Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.DisplayOrder").Text,
-                                        Width = "100",
                                         ClassName = NopColumnClassDefaults.CenterAll,
                                         Editable = true,
                                         EditType = EditType.Number
@@ -55,7 +52,7 @@
                                     new ColumnProperty(nameof(ExternalAuthenticationMethodModel.IsActive))
                                     {
                                         Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.IsActive").Text,
-                                        Width = "100",
+                                        Width = "50",
                                         ClassName = NopColumnClassDefaults.CenterAll,
                                         Render = new RenderBoolean(),
                                         Editable = true,
@@ -71,7 +68,7 @@
                                     new ColumnProperty(nameof(ExternalAuthenticationMethodModel.SystemName))
                                     {
                                         Title = T("Admin.Common.Edit").Text,
-                                        Width = "200",
+                                        Width = "100",
                                         ClassName =  NopColumnClassDefaults.Button,
                                         Render = new RenderButtonsInlineEdit()
                                     }

@@ -25,6 +25,6 @@ public partial class PopularProductTagsViewComponent : NopViewComponent
         if (!model.Tags.Any())
             return Content("");
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

@@ -1,4 +1,6 @@
-﻿using Nop.Web.Areas.Admin.Models.Common;
+﻿using Nop.Core;
+using Nop.Core.Domain.Seo;
+using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Factories;
@@ -113,13 +115,25 @@ public partial interface ICommonModelFactory
     Task PreparePluginsWarningModelAsync(IList<SystemWarningModel> models);
 
     /// <summary>
-    /// Prepare multistore preview models
+    /// Prepare entity preview model
     /// </summary>
     /// <typeparam name="TModel">Model type</typeparam>
     /// <param name="model">Entity model</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the list of multistore preview models
+    /// The task result contains the entity preview model
     /// </returns>
-    Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsAsync<TModel>(TModel model) where TModel : BaseNopEntityModel;
+    Task<EntityPreviewModel> PrepareEntityPreviewModelAsync<TModel>(TModel model) where TModel : BaseNopEntityModel;
+
+    /// <summary>
+    /// Prepare multistore preview models for an entity
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <param name="entity">Entity</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of multistore preview models for an entity
+    /// </returns>
+    Task<IList<MultistorePreviewModel>> PrepareMultistorePreviewModelsAsync<TEntity>(TEntity entity)
+        where TEntity : BaseEntity, ISlugSupported;
 }

@@ -1,0 +1,38 @@
+﻿@model PriceListModel
+
+@{
+    var customer = await workContext.GetCurrentCustomerAsync();
+    const string hideInfoBlockAttributeName = "PriceListPage.HideInfoBlock";
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+    const string hideProductsBlockAttributeName = "PriceListPage.HideProductsBlock";
+    var hideProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductsBlockAttributeName, defaultValue: true);
+
+    const string hideCustomersBlockAttributeName = "PriceListPage.HideCustomersBlock";
+    var hideCustomersBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCustomersBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-12 clearfix">
+                    <div class="float-left">
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "price-list-advanced-mode" })
+                    </div>
+                </div>
+            </div>
+
+            <nop-cards id="price-list-cards">
+                <nop-card asp-name="price-list-info" asp-icon="fas fa-info" asp-title="@T("Admin.Catalog.PriceList.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+                <nop-card asp-name="price-list-products" asp-icon="fas fa-table-list" asp-title="@T("Admin.Catalog.PriceList.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-card>
+                <nop-card asp-name="price-list-customers" asp-icon="fas fa-user" asp-title="@T("Admin.Catalog.PriceList.Customers")" asp-hide-block-attribute-name="@hideCustomersBlockAttributeName" asp-hide="@hideCustomersBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Customers", Model)</nop-card>
+
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PriceListDetailsBlock, additionalData = Model })
+            </nop-cards>
+        </div>
+    </div>
+</section>

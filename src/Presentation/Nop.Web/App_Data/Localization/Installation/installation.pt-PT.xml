@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Português (Portugal)" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email de Admin</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Introduza senha de Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Conjunto de caracteres</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Colação</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Colação é obrigatório</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>A conta '{0}' não tem permissão de Modificação na pasta '{1}'. Por favor configure estas permissões.</Value>

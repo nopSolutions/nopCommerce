@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="हिंदी" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>व्यवस्थापक उपयोगकर्ता के ईमेल</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>व्यवस्थापक पासवर्ड दर्ज करें</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>अक्षर समूह</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>कॉलेटर</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>मिलान आवश्यक है</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>'{0}' खाता फ़ोल्डर '{1}' पर अनुमति संशोधित नहीं दी जाती है. इन अनुमतियों को कॉन्फ़िगर करें</Value>

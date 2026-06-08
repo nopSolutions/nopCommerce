@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="繁體中文" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>管理員電郵</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>請輸入管理員密碼</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>字元集</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>字元序</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>需要整理</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>帳號{0}沒有修改文件夾{1}的權限，請重新配置權限</Value>
@@ -133,7 +142,7 @@
     <Value>商店資訊</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>訂閱 nopCommerce 電子報</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce安裝</Value>

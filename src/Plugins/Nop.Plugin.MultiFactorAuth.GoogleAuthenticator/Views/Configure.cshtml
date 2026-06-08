@@ -1,5 +1,4 @@
 ﻿@model ConfigurationModel
-@inject Nop.Core.IWebHelper webHelper
 
 @{
     Layout = "_ConfigurePlugin";
@@ -12,7 +11,7 @@
             <div class="card card-default">
                 <div class="card-body">
                     <p>
-                        @Html.Raw(string.Format(T("Plugins.MultiFactorAuth.GoogleAuthenticator.Instructions").Text, webHelper.GetStoreLocation()))
+                        @Html.Raw(string.Format(T("Plugins.MultiFactorAuth.GoogleAuthenticator.Instructions").Text, await webHelper.GetStoreLocationAsync()))
                     </p>
                     <hr/>
                     <div class="form-group row">                    

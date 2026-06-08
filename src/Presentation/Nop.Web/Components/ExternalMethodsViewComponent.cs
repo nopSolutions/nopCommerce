@@ -27,7 +27,7 @@ public partial class ExternalMethodsViewComponent : NopViewComponent
     {
         var model = await _externalAuthenticationModelFactory.PrepareExternalMethodsModelAsync();
 
-        return View(model);
+        return await ViewAsync(model);
     }
 
     #endregion

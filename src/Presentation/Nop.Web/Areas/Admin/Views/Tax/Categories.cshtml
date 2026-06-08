@@ -35,14 +35,12 @@
                             new ColumnProperty(nameof(TaxCategoryModel.Name))
                             {
                                 Title = T("Admin.Configuration.Tax.Categories.Fields.Name").Text,
-                                Width = "300",
                                 Editable = true,
                                 EditType = EditType.String
                             },
                             new ColumnProperty(nameof(TaxCategoryModel.DisplayOrder))
                             {
                                 Title = T("Admin.Configuration.Tax.Categories.Fields.DisplayOrder").Text,
-                                Width = "100",
                                 ClassName = NopColumnClassDefaults.CenterAll,
                                 Editable = true,
                                 EditType = EditType.Number
@@ -50,7 +48,7 @@
                             new ColumnProperty(nameof(TaxCategoryModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
-                                Width = "200",
+                                Width = "100",
                                 ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonsInlineEdit()
                             },

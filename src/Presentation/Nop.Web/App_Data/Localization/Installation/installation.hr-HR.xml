@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Hrvatski" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Admin korisnički email</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Unesite lozinku administratora</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Skup znakova</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Uspoređivanje</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Uspoređivanje je obvezna</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>Račun '{0}' nije odobren s dopuštenjem Modify u mapi '{1}'. Konfigurirajte ta dopuštenja.</Value>

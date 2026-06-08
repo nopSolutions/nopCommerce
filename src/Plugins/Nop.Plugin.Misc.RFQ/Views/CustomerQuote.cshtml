@@ -1,9 +1,9 @@
-@using Nop.Web.Components
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Media
 
 @model Nop.Plugin.Misc.RFQ.Models.Customer.QuoteModel
 @inject MediaSettings mediaSettings
+@inject INopUrlHelper nopUrlHelper
 
 @{
 
@@ -37,6 +37,10 @@
         <div class="page-body">
             <div class="quote-options">
                 <div class="common-buttons">
+                    @if (Model.AllowCustomerGenerateQuotePdf)
+                    {
+                        <a href="@Url.RouteUrl(RfqDefaults.CustomerQuotePdfRouteName, new { quoteId = Model.Id })" class="rfq-button-2">@T("Plugins.Misc.RFQ.CreatePdf")</a>
+                    }
                     @if (Model.DisplayCreateOrderButton)
                     {
                         <button type="submit" name="createOrder" class="button-1">@T("Plugins.Misc.RFQ.CreateOrder")</button>
@@ -91,16 +95,22 @@
                             @foreach (var item in Model.CustomerItems)
                             {
                                 <tr>
-                                    <td class="picture"><img src="@item.PictureUrl" /></td>
+                                    <td class="picture"><img src="@item.PictureUrl" alt="@item.ProductName" /></td>
                                     <td class="product">
-                                        <a href="@(Url.RouteUrl<Product>(new { SeName = item.ProductSeName }))">
+                                        <a href="@(await nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">
                                             @item.ProductName
                                         </a>
                                         <br />
                                         @Html.Raw(item.AttributeInfo)
                                     </td>
-                                    <td>@item.Quantity</td>
-                                    <td>@item.UnitPrice</td>
+                                    <td>
+                                        <label>@T("Plugins.Misc.RFQ.OfferedQty"):</label>
+                                        <span>@item.Quantity</span>
+                                    </td>
+                                    <td>
+                                        <label>@T("Plugins.Misc.RFQ.OfferedUnitPrice"):</label>
+                                        <span>@item.UnitPrice</span>
+                                    </td>
                                 </tr>
                             }
                         </tbody>

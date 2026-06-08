@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using FluentAssertions;
+using AwesomeAssertions;
 using NUnit.Framework;
 using static Nop.Services.Common.NopLinksDefaults;
 
@@ -25,9 +25,7 @@ internal class NopLinksDefaultsTests : ServiceTest
 
             //validate that it's an HTTPS URL for security
             if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
-            {
                 uri.Scheme.Should().Be("https", $"URL '{url}' should use HTTPS for security");
-            }
         }
         await Task.CompletedTask;
     }

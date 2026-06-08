@@ -29,34 +29,29 @@
             new ColumnProperty(nameof(ShoppingCartItemModel.ProductName))
             {
                 Title = T("Admin.CurrentCarts.Product").Text,
-                Width = "500",
                 Render = new RenderCustom("renderProductName")
             },
             new ColumnProperty(nameof(ShoppingCartItemModel.Quantity))
             {
-                Title = T("Admin.CurrentCarts.Quantity").Text,
-                Width = "200"
+                Title = T("Admin.CurrentCarts.Quantity").Text
             },
             new ColumnProperty(nameof(ShoppingCartItemModel.UnitPrice))
             {
-                Title = T("Admin.CurrentCarts.UnitPrice").Text,
-                Width = "200"
+                Title = T("Admin.CurrentCarts.UnitPrice").Text
             },
             new ColumnProperty(nameof(ShoppingCartItemModel.Total))
             {
-                Title = T("Admin.CurrentCarts.Total").Text,
-                Width = "200"
+                Title = T("Admin.CurrentCarts.Total").Text
             },
             new ColumnProperty(nameof(ShoppingCartItemModel.Store))
             {
                 Title = T("Admin.CurrentCarts.Store").Text,
-                Width = "200",
                 Visible = (await storeService.GetAllStoresAsync()).Count > 1
             },
             new ColumnProperty(nameof(ShoppingCartItemModel.UpdatedOn))
             {
                 Title = T("Admin.CurrentCarts.UpdatedOn").Text,
-                Width = "200",
+                Width = "180",
                 Render = new RenderDate()
             }
         }

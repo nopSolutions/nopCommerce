@@ -40,8 +40,11 @@ public partial class GeoLookupService : IGeoLookupService
     /// Get information
     /// </summary>
     /// <param name="ipAddress">IP address</param>
-    /// <returns>Information</returns>
-    protected virtual CountryResponse GetInformation(string ipAddress)
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the country information
+    /// </returns>
+    protected virtual async Task<CountryResponse> GetInformationAsync(string ipAddress)
     {
         if (string.IsNullOrEmpty(ipAddress))
             return null;
@@ -54,7 +57,6 @@ public partial class GeoLookupService : IGeoLookupService
             var omni = reader.Country(ipAddress);
 
             return omni;
-                
         }
         //catch (AddressNotFoundException exc)
         catch (GeoIP2Exception)
@@ -66,7 +68,7 @@ public partial class GeoLookupService : IGeoLookupService
         catch (Exception exc)
         {
             //do not throw exceptions
-            _logger.Warning("Cannot load MaxMind record", exc);
+            await _logger.WarningAsync("Cannot load MaxMind record", exc);
             return null;
         }
     }
@@ -79,28 +81,30 @@ public partial class GeoLookupService : IGeoLookupService
     /// Get country ISO code
     /// </summary>
     /// <param name="ipAddress">IP address</param>
-    /// <returns>Country name</returns>
-    public virtual string LookupCountryIsoCode(string ipAddress)
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the country name
+    /// </returns>
+    public virtual async Task<string> LookupCountryIsoCodeAsync(string ipAddress)
     {
-        var response = GetInformation(ipAddress);
-        if (response?.Country != null)
-            return response.Country.IsoCode;
+        var response = await GetInformationAsync(ipAddress);
 
-        return string.Empty;
+        return response?.Country?.IsoCode ?? string.Empty;
     }
 
     /// <summary>
     /// Get country name
     /// </summary>
     /// <param name="ipAddress">IP address</param>
-    /// <returns>Country name</returns>
-    public virtual string LookupCountryName(string ipAddress)
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the country name
+    /// </returns>
+    public virtual async Task<string> LookupCountryNameAsync(string ipAddress)
     {
-        var response = GetInformation(ipAddress);
-        if (response?.Country != null)
-            return response.Country.Name;
+        var response = await GetInformationAsync(ipAddress);
 
-        return string.Empty;
+        return response?.Country?.Name ?? string.Empty;
     }
 
     #endregion

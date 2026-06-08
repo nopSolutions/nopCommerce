@@ -26,11 +26,10 @@
                 <i class="fas fa-plus-square"></i>
                 @T("Plugins.Misc.RFQ.CreateNew")
             </button>
-            <button type="button" id="delete-selected" name="delete-selected" class="btn btn-danger">
+            <button type="button" id="delete-selected" class="btn btn-danger">
                 <i class="far fa-trash-alt"></i>
                 @T("Plugins.Misc.RFQ.DeleteSelected")
             </button>
-            <nop-action-confirmation asp-button-id="delete-selected"/>
         </div>
     </div>
 
@@ -128,26 +127,25 @@
                                     new(nameof(QuoteModel.CreatedOn))
                                     {
                                         Title = T("Plugins.Misc.RFQ.Fields.Quote.CreatedOn").Text,
-                                        Width = "200",
+                                        Width = "180",
                                         Render = new RenderDate()
                                     },
                                     new(nameof(QuoteModel.ExpirationDateUtc))
                                     {
                                         Title = T("Plugins.Misc.RFQ.Fields.Quote.ExpirationDate").Text,
-                                        Width = "200",
+                                        Width = "180",
                                         Render = new RenderDate()
                                     },
                                     new(nameof(QuoteModel.Status))
                                     {
                                         Title = T("Plugins.Misc.RFQ.Fields.Quote.Status").Text,
                                         Encode = false,
-                                        Width = "200",
+                                        Width = "180",
                                     },
                                     new(nameof(QuoteModel.CustomerEmail))
                                     {
                                         Title = T("Plugins.Misc.RFQ.Fields.CustomerEmail").Text,
                                         Encode = true,
-                                        Width = "200",
                                     },
                                     new(nameof(QuoteModel.Id))
                                     {
@@ -198,3 +196,4 @@
 </form>
 <nop-alert asp-alert-id="deleteSelectedFailed" />
 <nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected" />

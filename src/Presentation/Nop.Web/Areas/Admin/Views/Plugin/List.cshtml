@@ -193,20 +193,17 @@
                             {
                                 new ColumnProperty(nameof(PluginModel.Group))
                                 {
-                                    Title = T("Admin.Configuration.Plugins.Fields.Group").Text,
-                                    Width = "150"
+                                    Title = T("Admin.Configuration.Plugins.Fields.Group").Text
                                 },
                                 new ColumnProperty(nameof(PluginModel.LogoUrl))
                                 {
-                                    Title = T("Admin.Configuration.Plugins.Fields.Logo").Text,
-                                    Width = "200",
+                                    Title = T("Admin.Configuration.Plugins.Fields.Logo").Text,                                    
                                     ClassName = NopColumnClassDefaults.CenterAll,
-                                    Render = new RenderPicture()
+                                    Render = new RenderPicture(width: 120)
                                 },
                                 new ColumnProperty(nameof(PluginModel.Description))
                                 {
                                     Title = T("Admin.Configuration.Plugins.Info").Text,
-                                    Width = "400",
                                     Render = new RenderCustom("renderColumnDescription")
                                 },
                                 new ColumnProperty(nameof(PluginModel.FriendlyName))
@@ -375,5 +372,12 @@
         </div>
     </div>
 </div>
-
+<nop-action-confirmation asp-button-id="delete-unused-plugins" />
+<script>
+    $(function() {
+        $("#delete-unused-plugins-action-confirmation-submit-button").on("click", function () {
+            window.location.href = $("#delete-unused-plugins").prop("href");
+        });
+    });
+</script>
 

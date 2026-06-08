@@ -21,7 +21,6 @@
             <i class="far fa-trash-can"></i>
             @T("Admin.Common.Delete.Selected")
         </button>
-        <nop-action-confirmation asp-button-id="delete-selected" />
     </div>
 </div>
 
@@ -56,8 +55,7 @@
                                 },
                                 new ColumnProperty(nameof(CheckoutAttributeModel.AttributeControlTypeName))
                                 {
-                                    Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType").Text,
-                                    Width = "200"
+                                    Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType").Text
                                 },
                                 new ColumnProperty(nameof(CheckoutAttributeModel.IsRequired))
                                 {
@@ -69,7 +67,6 @@
                                 new ColumnProperty(nameof(CheckoutAttributeModel.DisplayOrder))
                                 {
                                     Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder").Text,
-                                    Width = "100",
                                     ClassName = NopColumnClassDefaults.CenterAll
                                 },
                                 new ColumnProperty(nameof(CheckoutAttributeModel.Id))
@@ -111,11 +108,12 @@
                         });
                     });
                         </script>
-                        <nop-alert asp-alert-id="deleteSelectedFailed" />
-                        <nop-alert asp-alert-id="nothingSelectedAlert" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<nop-alert asp-alert-id="deleteSelectedFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected" />

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="日本語" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>管理者用Emailアドレス</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>管理者用パスワードを入力してください</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>文字セット</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>照合</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>照合が必要です</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>このアカウント('{0}')にはフォルダ('{1}')に対する書き込み権限がありません。書込み権限を設定してください。</Value>

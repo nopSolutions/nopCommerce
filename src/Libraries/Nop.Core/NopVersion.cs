@@ -8,7 +8,7 @@ public static class NopVersion
     /// <summary>
     /// Gets the major store version
     /// </summary>
-    public const string CURRENT_VERSION = "4.90";
+    public const string CURRENT_VERSION = "5.00";
 
     /// <summary>
     /// Gets the minor store version

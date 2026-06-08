@@ -1,0 +1,39 @@
+@model FilterLevelValueModel
+
+@using Nop.Core.Domain.Catalog
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.FilterLevelValue.EditFilterLevelValueDetails").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Filter level values");
+}
+
+<form asp-controller="FilterLevelValue" asp-action="Edit" method="post" id="filter-level-value-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Catalog.FilterLevelValue.EditFilterLevelValueDetails") - @Model.Id
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Catalog.FilterLevelValue.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="filter-level-value-delete" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.FilterLevelValueDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="filter-level-value-delete" />

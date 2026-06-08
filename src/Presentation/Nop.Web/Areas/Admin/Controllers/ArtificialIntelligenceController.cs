@@ -2,13 +2,11 @@
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
-using Nop.Services.News;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Models.Common;
@@ -23,7 +21,6 @@ public partial class ArtificialIntelligenceController : BaseAdminController
     protected readonly IBlogService _blogService;
     protected readonly ICategoryService _categoryService;
     protected readonly IManufacturerService _manufacturerService;
-    protected readonly INewsService _newsService;
     protected readonly IProductService _productService;
     protected readonly ITopicService _topicService;
     protected readonly IVendorService _vendorService;
@@ -36,7 +33,6 @@ public partial class ArtificialIntelligenceController : BaseAdminController
         IBlogService blogService,
         ICategoryService categoryService,
         IManufacturerService manufacturerService,
-        INewsService newsService,
         IProductService productService,
         ITopicService topicService,
         IVendorService vendorService)
@@ -45,7 +41,6 @@ public partial class ArtificialIntelligenceController : BaseAdminController
         _blogService = blogService;
         _categoryService = categoryService;
         _manufacturerService = manufacturerService;
-        _newsService = newsService;
         _productService = productService;
         _topicService = topicService;
         _vendorService = vendorService;
@@ -57,12 +52,12 @@ public partial class ArtificialIntelligenceController : BaseAdminController
 
     public virtual async Task<IActionResult> GenerateMetaTags(MetaTagsGeneratorModel metaTagsGeneratorModel)
     {
-        var metaTitle = string.Empty;
-        var metaKeywords = string.Empty;
-        var metaDescription = string.Empty;
-
         try
         {
+            string metaTitle;
+            string metaKeywords;
+            string metaDescription;
+
             switch (metaTagsGeneratorModel.EntityType)
             {
                 case nameof(Product):
@@ -81,10 +76,6 @@ public partial class ArtificialIntelligenceController : BaseAdminController
                     var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(metaTagsGeneratorModel.EntityId);
                     (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsForLocalizedEntityAsync(manufacturer, metaTagsGeneratorModel.LanguageId);
                     break;
-                case nameof(NewsItem):
-                    var newsItem = await _newsService.GetNewsByIdAsync(metaTagsGeneratorModel.EntityId);
-                    (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsAsync(newsItem, newsItem.LanguageId);
-                    break;
                 case nameof(Topic):
                     var topic = await _topicService.GetTopicByIdAsync(metaTagsGeneratorModel.EntityId);
                     (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsForLocalizedEntityAsync(topic, metaTagsGeneratorModel.LanguageId);
@@ -92,6 +83,9 @@ public partial class ArtificialIntelligenceController : BaseAdminController
                 case nameof(Vendor):
                     var vendor = await _vendorService.GetVendorByIdAsync(metaTagsGeneratorModel.EntityId);
                     (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsForLocalizedEntityAsync(vendor, metaTagsGeneratorModel.LanguageId);
+                    break;
+                default:
+                    (metaTitle, metaKeywords, metaDescription) = await _artificialIntelligenceService.CreateMetaTagsAsync(metaTagsGeneratorModel.EntityType, metaTagsGeneratorModel.EntityId, metaTagsGeneratorModel.LanguageId);
                     break;
             }
 

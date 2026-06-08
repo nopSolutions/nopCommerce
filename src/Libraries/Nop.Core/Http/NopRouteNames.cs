@@ -48,7 +48,7 @@ public static partial class NopRouteNames
         /// <summary>
         /// Gets the product search route name
         /// </summary>
-        public const string SEARCH = "ProductSearch";
+        public const string SEARCH = "ProductSearch";        
 
         /// <summary>
         /// Gets the compare products route name
@@ -64,16 +64,6 @@ public static partial class NopRouteNames
         /// Gets the blog route name
         /// </summary>
         public const string BLOG = "Blog";
-
-        /// <summary>
-        /// Gets the news route name
-        /// </summary>
-        public const string NEWS = "NewsArchive";
-
-        /// <summary>
-        /// Gets the forums route name
-        /// </summary>
-        public const string BOARDS = "Boards";
 
         /// <summary>
         /// Gets the product tags route name
@@ -135,6 +125,11 @@ public static partial class NopRouteNames
         /// Gets the checkout route name
         /// </summary>
         public const string CHECKOUT = "Checkout";
+
+        /// <summary>
+        /// Gets the customer shopping cart route name
+        /// </summary>
+        public const string CUSTOMER_CART = "CustomerCart";
 
         /// <summary>
         /// Gets the one page checkout route name
@@ -267,6 +262,11 @@ public static partial class NopRouteNames
         public const string REGISTER_RESULT = "RegisterResult";
 
         /// <summary>
+        /// Gets the OTP phone verification route name
+        /// </summary>
+        public const string OTP_PHONE_VERIFICATION = "OtpPhoneVerification";
+
+        /// <summary>
         /// Gets the password recovery route name
         /// </summary>
         public const string PASSWORD_RECOVERY = "PasswordRecovery";
@@ -290,11 +290,6 @@ public static partial class NopRouteNames
         /// Gets the blog RSS route name
         /// </summary>
         public const string BLOG_RSS = "BlogRSS";
-
-        /// <summary>
-        /// Gets the news RSS route name
-        /// </summary>
-        public const string NEWS_RSS = "NewsRSS";
 
         /// <summary>
         /// Gets the customer return request route name
@@ -340,11 +335,6 @@ public static partial class NopRouteNames
         /// Gets the email revalidation route name
         /// </summary>
         public const string EMAIL_REVALIDATION = "EmailRevalidation";
-
-        /// <summary>
-        /// Gets the customer forum subscriptions route name
-        /// </summary>
-        public const string CUSTOMER_FORUM_SUBSCRIPTIONS = "CustomerForumSubscriptions";
 
         /// <summary>
         /// Gets the customer address edit route name
@@ -462,97 +452,6 @@ public static partial class NopRouteNames
         public const string NEW_PRODUCTS_RSS = "NewProductsRSS";
 
         /// <summary>
-        /// Gets the active discussions route name
-        /// </summary>
-        //forums
-        public const string ACTIVE_DISCUSSIONS = "ActiveDiscussions";
-
-        /// <summary>
-        /// Gets the active discussions paged route name
-        /// </summary>
-        public const string ACTIVE_DISCUSSIONS_PAGED = "ActiveDiscussionsPaged";
-
-        /// <summary>
-        /// Gets the forums RSS (file result) route name
-        /// </summary>
-        public const string ACTIVE_DISCUSSIONS_RSS = "ActiveDiscussionsRSS";
-
-        /// <summary>
-        /// Gets the post edit route name
-        /// </summary>
-        public const string POST_EDIT = "PostEdit";
-
-        /// <summary>
-        /// Gets the post delete route name
-        /// </summary>
-        public const string POST_DELETE = "PostDelete";
-
-        /// <summary>
-        /// Gets the post create route name
-        /// </summary>
-        public const string POST_CREATE = "PostCreate";
-
-        /// <summary>
-        /// Gets the post create quote route name
-        /// </summary>
-        public const string POST_CREATE_QUOTE = "PostCreateQuote";
-
-        /// <summary>
-        /// Gets the topic edit route name
-        /// </summary>
-        public const string TOPIC_EDIT = "TopicEdit";
-
-        /// <summary>
-        /// Gets the topic delete route name
-        /// </summary>
-        public const string TOPIC_DELETE = "TopicDelete";
-
-        /// <summary>
-        /// Gets the topic create route name
-        /// </summary>
-        public const string TOPIC_CREATE = "TopicCreate";
-
-        /// <summary>
-        /// Gets the topic move route name
-        /// </summary>
-        public const string TOPIC_MOVE = "TopicMove";
-
-        /// <summary>
-        /// Gets the topic slug route name
-        /// </summary>
-        public const string TOPIC_SLUG = "TopicSlug";
-
-        /// <summary>
-        /// Gets the topic slug paged route name
-        /// </summary>
-        public const string TOPIC_SLUG_PAGED = "TopicSlugPaged";
-
-        /// <summary>
-        /// Gets the forums RSS (file result) route name
-        /// </summary>
-        public const string FORUM_RSS = "ForumRSS";
-
-        /// <summary>
-        /// Gets the forum slug route name
-        /// </summary>
-        public const string FORUM_SLUG = "ForumSlug";
-
-        /// <summary>
-        /// Gets the forum slug paged route name
-        /// </summary>
-        public const string FORUM_SLUG_PAGED = "ForumSlugPaged";
-
-        /// <summary>
-        /// Gets the forum group slug route name
-        /// </summary>
-        public const string FORUM_GROUP_SLUG = "ForumGroupSlug";
-
-        /// <summary>
-        /// Gets the forum search route name
-        /// </summary>
-        public const string BOARDS_SEARCH = "Search";
-
-        /// <summary>
         /// Gets the private messages route name
         /// </summary>
         public const string PRIVATE_MESSAGES = "PrivateMessages";
@@ -631,6 +530,11 @@ public static partial class NopRouteNames
         /// Gets the page not found route name
         /// </summary>
         public const string PAGE_NOT_FOUND = "PageNotFound";
+
+        /// <summary>
+        /// Gets the product search by filter level values route name
+        /// </summary>
+        public const string PRODUCT_SEARCH_BY_FILTER_LEVEL_VALUES = "ProductSearchByFilterLevelValues";
     }
 
     /// <summary>
@@ -657,6 +561,11 @@ public static partial class NopRouteNames
         /// Gets the add custom wishlist route name
         /// </summary>
         public const string ADD_WISHLIST = "AddWishlist";
+
+        /// <summary>
+        /// Gets the rename custom wishlist route name
+        /// </summary>
+        public const string RENAME_WISHLIST = "RenameWishlist";
 
         /// <summary>
         /// Gets the back in stock subscribe send route name
@@ -724,6 +633,16 @@ public static partial class NopRouteNames
         public const string PRODUCT_SEARCH_AUTOCOMPLETE = "ProductSearchAutoComplete";
 
         /// <summary>
+        /// Gets the product search history route name
+        /// </summary>
+        public const string PRODUCT_SEARCH_HISTORY_AUTOCOMPLETE = "ProductSearchHistoryAutoComplete";
+
+        /// <summary>
+        /// Gets the delete product search terms route name
+        /// </summary>
+        public const string DELETE_PRODUCT_SEARCH_TERMS = "DeleteProductSearchTerms";
+
+        /// <summary>
         /// Gets the set review helpfulness route name
         /// </summary>
         public const string SET_PRODUCT_REVIEW_HELPFULNESS = "SetProductReviewHelpfulness";
@@ -739,14 +658,14 @@ public static partial class NopRouteNames
         public const string TOPIC_POPUP = "TopicPopup";
 
         /// <summary>
-        /// Gets the poll vote route name
-        /// </summary>
-        public const string POLL_VOTE = "PollVote";
-
-        /// <summary>
         /// Gets the state list by country ID route name
         /// </summary>
         public const string GET_STATES_BY_COUNTRY_ID = "GetStatesByCountryId";
+
+        /// <summary>
+        /// Gets the filter level values route name
+        /// </summary>
+        public const string GET_FILTER_LEVEL_VALUES = "GetFilterLevelValues";
 
         /// <summary>
         /// Gets the EU Cookie law accept button handler route name
@@ -777,6 +696,11 @@ public static partial class NopRouteNames
         /// Gets the search products route name
         /// </summary>
         public const string SEARCH_PRODUCTS = "SearchProducts";
+
+        /// <summary>
+        /// Gets the search products by filter level values route name
+        /// </summary>
+        public const string SEARCH_PRODUCTS_BY_FILTER_LEVEL_VALUES = "SearchProductsByFilterLevelValues";
 
         /// <summary>
         /// Gets the vendor products route name
@@ -814,23 +738,18 @@ public static partial class NopRouteNames
         public const string INSTALLATION_RESTART_APPLICATION = "InstallationRestartApplication";
 
         /// <summary>
-        /// Gets the post vote route name
-        /// </summary>
-        public const string POST_VOTE = "PostVote";
-
-        /// <summary>
-        /// Gets the topic watch route name
-        /// </summary>
-        public const string TOPIC_WATCH = "TopicWatch";
-
-        /// <summary>
-        /// Gets the forum watch route name
-        /// </summary>
-        public const string FORUM_WATCH = "ForumWatch";
-
-        /// <summary>
         /// Gets the return request with "upload file" support route name
         /// </summary>
         public const string UPLOAD_FILE_RETURN_REQUEST = "UploadFileReturnRequest";
+
+        /// <summary>
+        /// Gets the send OTP route name
+        /// </summary>
+        public const string SEND_OTP = "SendOtp";
+
+        /// <summary>
+        /// Gets the common verification OTP route name
+        /// </summary>
+        public const string COMMON_VERIFICATION_OTP = "CommonVerificationOtp";
     }
 }

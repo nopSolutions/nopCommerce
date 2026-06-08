@@ -10,18 +10,16 @@
         {
             new ColumnProperty(nameof(AffiliatedCustomerModel.Id))
             {
-                Title = "ID",
-                Width = "50"
+                Title = "ID"
             },
             new ColumnProperty(nameof(AffiliatedCustomerModel.Name))
             {
-                Title = T("Admin.Affiliates.Customers.Name").Text,
-                Width = "200"
+                Title = T("Admin.Affiliates.Customers.Name").Text
             },
             new ColumnProperty(nameof(AffiliatedCustomerModel.Id))
             {
                 Title = T("Admin.Common.View").Text,
-                Width = "150",
+                Width = "100",
                 ClassName = NopColumnClassDefaults.Button,
                 Render = new RenderButtonView(new DataUrl("~/Admin/Customer/Edit/", nameof(AffiliatedCustomerModel.Id)))
             }

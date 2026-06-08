@@ -127,11 +127,14 @@ public partial class SecurityController : BaseAdminController
                 await _permissionService.DeletePermissionRecordCustomerRoleMappingAsync(model.Id, customerRoleId);
 
             foreach (var customerRoleId in rolesToAdd)
+            {
                 await _permissionService.InsertPermissionRecordCustomerRoleMappingAsync(new PermissionRecordCustomerRoleMapping
                 {
                     PermissionRecordId = model.Id,
                     CustomerRoleId = customerRoleId
                 });
+            }
+
             ViewBag.RefreshPage = true;
 
             var permissionRecord = await _permissionService.GetPermissionRecordByIdAsync(model.Id);

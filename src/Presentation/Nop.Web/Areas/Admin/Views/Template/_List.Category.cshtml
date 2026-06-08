@@ -17,28 +17,25 @@
             new ColumnProperty(nameof(CategoryTemplateModel.Name))
             {
                 Title = T("Admin.System.Templates.Category.Name").Text,
-                Width = "300",
                 Editable = true,
                 EditType = EditType.String
             },
             new ColumnProperty(nameof(CategoryTemplateModel.ViewPath))
             {
                 Title = T("Admin.System.Templates.Category.ViewPath").Text,
-                Width = "300",
                 Editable = true,
                 EditType = EditType.String
             },
             new ColumnProperty(nameof(CategoryTemplateModel.DisplayOrder))
             {
                 Title = T("Admin.System.Templates.Category.DisplayOrder").Text,
-                Width = "100",
                 Editable = true,
                 EditType = EditType.Number
             },
             new ColumnProperty(nameof(CategoryTemplateModel.Id))
             {
                 Title = T("Admin.Common.Edit").Text,
-                Width = "200",
+                Width = "100",
                 ClassName =  NopColumnClassDefaults.Button,
                 Render = new RenderButtonsInlineEdit()
             },

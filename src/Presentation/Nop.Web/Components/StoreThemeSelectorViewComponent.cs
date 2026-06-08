@@ -23,6 +23,6 @@ public partial class StoreThemeSelectorViewComponent : NopViewComponent
             return Content("");
 
         var model = await _commonModelFactory.PrepareStoreThemeSelectorModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

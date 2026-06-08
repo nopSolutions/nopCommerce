@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;

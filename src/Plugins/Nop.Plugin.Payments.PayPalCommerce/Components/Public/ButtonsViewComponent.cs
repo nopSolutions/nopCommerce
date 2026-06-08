@@ -89,9 +89,9 @@ public class ButtonsViewComponent : NopViewComponent
             return Content(string.Empty);
 
         if (model.Cart.IsRecurring == true)
-            return View("~/Plugins/Payments.PayPalCommerce/Views/Public/_Buttons.Recurring.cshtml", model);
+            return await ViewAsync("~/Plugins/Payments.PayPalCommerce/Views/Public/_Buttons.Recurring.cshtml", model);
 
-        return View("~/Plugins/Payments.PayPalCommerce/Views/Public/_Buttons.cshtml", model);
+        return await ViewAsync("~/Plugins/Payments.PayPalCommerce/Views/Public/_Buttons.cshtml", model);
     }
 
     #endregion

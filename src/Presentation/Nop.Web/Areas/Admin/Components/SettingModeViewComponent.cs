@@ -39,7 +39,7 @@ public partial class SettingModeViewComponent : NopViewComponent
         //prepare model
         var model = await _settingModelFactory.PrepareSettingModeModelAsync(modeName);
 
-        return View(model);
+        return await ViewAsync(model);
     }
 
     #endregion

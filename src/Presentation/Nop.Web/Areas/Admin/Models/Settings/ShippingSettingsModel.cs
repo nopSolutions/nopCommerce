@@ -91,6 +91,14 @@ public partial record ShippingSettingsModel : BaseNopModel, ISettingsModel
     public bool BypassShippingMethodSelectionIfOnlyOne { get; set; }
     public bool BypassShippingMethodSelectionIfOnlyOne_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.AllowCustomerToChooseDeliveryDate")]
+    public bool AllowCustomerToChooseDeliveryDate { get; set; }
+    public bool AllowCustomerToChooseDeliveryDate_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.DeliveryDateRangeDays")]
+    public int DeliveryDateRangeDays { get; set; }
+    public bool DeliveryDateRangeDays_OverrideForStore { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ConsiderAssociatedProductsDimensions")]
     public bool ConsiderAssociatedProductsDimensions { get; set; }
     public bool ConsiderAssociatedProductsDimensions_OverrideForStore { get; set; }

@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core;
@@ -95,11 +95,11 @@ public abstract class ServiceTest : BaseNopTest
         var settingsService = GetService<ISettingService>();
 
         taxSettings.ActiveTaxProviderSystemName = "FixedTaxRateTest";
-        settingsService.SaveSetting(taxSettings, settings => settings.ActiveTaxProviderSystemName);
+        settingsService.SaveSettingAsync(taxSettings, settings => settings.ActiveTaxProviderSystemName).Wait();
 
         var shippingSettings = GetService<ShippingSettings>();
         shippingSettings.ActivePickupPointProviderSystemNames.Add("PickupPoint.TestProvider");
-        settingsService.SaveSetting(shippingSettings, settings => settings.ActivePickupPointProviderSystemNames);
+        settingsService.SaveSettingAsync(shippingSettings, settings => settings.ActivePickupPointProviderSystemNames).Wait();
     }
 }
 

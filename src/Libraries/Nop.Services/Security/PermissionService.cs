@@ -309,9 +309,11 @@ public partial class PermissionService : IPermissionService
 
         var customerRoles = await _customerService.GetCustomerRolesAsync(customer);
         foreach (var role in customerRoles)
+        {
             if (await AuthorizeAsync(permissionRecordSystemName, role.Id))
                 //yes, we have such permission
                 return true;
+        }
 
         //no permission found
         return false;
@@ -337,8 +339,10 @@ public partial class PermissionService : IPermissionService
         {
             var permissions = await GetPermissionRecordsByCustomerRoleIdAsync(customerRoleId);
             foreach (var permission in permissions)
+            {
                 if (permission.SystemName.Equals(permissionRecordSystemName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
+            }
 
             return false;
         });

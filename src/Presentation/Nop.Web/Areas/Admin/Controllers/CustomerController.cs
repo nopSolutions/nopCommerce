@@ -6,7 +6,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Tax;
@@ -15,7 +14,6 @@ using Nop.Services.Attributes;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.ExportImport;
-using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -30,6 +28,7 @@ using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using PhoneNumbers;
 
 namespace Nop.Web.Areas.Admin.Controllers;
 
@@ -40,7 +39,6 @@ public partial class CustomerController : BaseAdminController
     protected readonly CustomerSettings _customerSettings;
     protected readonly DateTimeSettings _dateTimeSettings;
     protected readonly EmailAccountSettings _emailAccountSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly GdprSettings _gdprSettings;
     protected readonly IAddressService _addressService;
     protected readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
@@ -54,7 +52,6 @@ public partial class CustomerController : BaseAdminController
     protected readonly IEmailAccountService _emailAccountService;
     protected readonly IEventPublisher _eventPublisher;
     protected readonly IExportManager _exportManager;
-    protected readonly IForumService _forumService;
     protected readonly IGdprService _gdprService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IImportManager _importManager;
@@ -68,6 +65,8 @@ public partial class CustomerController : BaseAdminController
     protected readonly ITaxService _taxService;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
+    protected readonly OtpSettings _otpSettings;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
     protected readonly TaxSettings _taxSettings;
     private static readonly char[] _separator = [','];
 
@@ -78,7 +77,6 @@ public partial class CustomerController : BaseAdminController
     public CustomerController(CustomerSettings customerSettings,
         DateTimeSettings dateTimeSettings,
         EmailAccountSettings emailAccountSettings,
-        ForumSettings forumSettings,
         GdprSettings gdprSettings,
         IAddressService addressService,
         IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
@@ -92,7 +90,6 @@ public partial class CustomerController : BaseAdminController
         IEmailAccountService emailAccountService,
         IEventPublisher eventPublisher,
         IExportManager exportManager,
-        IForumService forumService,
         IGdprService gdprService,
         IGenericAttributeService genericAttributeService,
         IImportManager importManager,
@@ -106,12 +103,13 @@ public partial class CustomerController : BaseAdminController
         ITaxService taxService,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
+        OtpSettings otpSettings,
+        PrivateMessageSettings privateMessageSettings,
         TaxSettings taxSettings)
     {
         _customerSettings = customerSettings;
         _dateTimeSettings = dateTimeSettings;
         _emailAccountSettings = emailAccountSettings;
-        _forumSettings = forumSettings;
         _gdprSettings = gdprSettings;
         _addressService = addressService;
         _addressAttributeParser = addressAttributeParser;
@@ -125,7 +123,6 @@ public partial class CustomerController : BaseAdminController
         _emailAccountService = emailAccountService;
         _eventPublisher = eventPublisher;
         _exportManager = exportManager;
-        _forumService = forumService;
         _gdprService = gdprService;
         _genericAttributeService = genericAttributeService;
         _importManager = importManager;
@@ -139,6 +136,8 @@ public partial class CustomerController : BaseAdminController
         _taxService = taxService;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
+        _otpSettings = otpSettings;
+        _privateMessageSettings = privateMessageSettings;
         _taxSettings = taxSettings;
     }
 
@@ -194,8 +193,10 @@ public partial class CustomerController : BaseAdminController
                     {
                         var selectedAttributeId = int.Parse(ctrlAttributes);
                         if (selectedAttributeId > 0)
+                        {
                             attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                                 attribute, selectedAttributeId.ToString());
+                        }
                     }
 
                     break;
@@ -208,8 +209,10 @@ public partial class CustomerController : BaseAdminController
                         {
                             var selectedAttributeId = int.Parse(item);
                             if (selectedAttributeId > 0)
+                            {
                                 attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
+                            }
                         }
                     }
 
@@ -256,6 +259,25 @@ public partial class CustomerController : BaseAdminController
         var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: [(await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.AdministratorsRoleName)).Id]);
 
         return customers.Any(c => c.Active && c.Id != customer.Id);
+    }
+
+    protected virtual string FormatPhoneNumber(string phone)
+    {
+        if (string.IsNullOrEmpty(phone))
+            return phone;
+
+        try
+        {
+            var phoneNumberUtil = PhoneNumberUtil.GetInstance();
+            var regionCode = phoneNumberUtil.GetRegionCodeForNumber(phoneNumberUtil.Parse(phone, null));
+
+            var phoneNumber = phoneNumberUtil.Parse(phone, regionCode);
+            return phoneNumberUtil.Format(phoneNumber, PhoneNumberFormat.E164);
+        }
+        catch
+        {
+            return string.Empty;
+        }
     }
 
     #endregion
@@ -313,8 +335,11 @@ public partial class CustomerController : BaseAdminController
         var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
         var newCustomerRoles = new List<CustomerRole>();
         foreach (var customerRole in allCustomerRoles)
+        {
             if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 newCustomerRoles.Add(customerRole);
+        }
+
         var customerRolesError = await ValidateCustomerRolesAsync(newCustomerRoles, new List<CustomerRole>());
         if (!string.IsNullOrEmpty(customerRolesError))
         {
@@ -331,15 +356,23 @@ public partial class CustomerController : BaseAdminController
             _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
         }
 
+        //check is verified phone number
+        var phoneNumber = FormatPhoneNumber(model.Phone);
+        if (_otpSettings.LoginByPhoneEnabled && !string.IsNullOrEmpty(phoneNumber))
+        {
+            if (await _customerService.IsAlreadyExistsVerifiedPhoneNumberAsync(null, phoneNumber))
+            {
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.IsAlreadyExistsVerifiedPhoneNumber"));
+            }
+        }
+
         //custom customer attributes
         var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
         if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
         {
             var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
-            {
                 ModelState.AddModelError(string.Empty, error);
-            }
         }
 
         if (ModelState.IsValid)
@@ -381,7 +414,10 @@ public partial class CustomerController : BaseAdminController
             if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
                 customer.StateProvinceId = model.StateProvinceId;
             if (_customerSettings.PhoneEnabled)
+            {
                 customer.Phone = model.Phone;
+                customer.PhoneSmsVerified = model.PhoneSmsVerified;
+            }
             if (_customerSettings.FaxEnabled)
                 customer.Fax = model.Fax;
             customer.CustomCustomerAttributesXML = customerAttributesXml;
@@ -478,8 +514,10 @@ public partial class CustomerController : BaseAdminController
         var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
         var newCustomerRoles = new List<CustomerRole>();
         foreach (var customerRole in allCustomerRoles)
+        {
             if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 newCustomerRoles.Add(customerRole);
+        }
 
         var customerRolesError = await ValidateCustomerRolesAsync(newCustomerRoles, await _customerService.GetCustomerRolesAsync(customer));
 
@@ -497,15 +535,23 @@ public partial class CustomerController : BaseAdminController
             _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
         }
 
+        //check is verified phone number
+        var phoneNumber = FormatPhoneNumber(model.Phone);
+        if (_otpSettings.LoginByPhoneEnabled && !string.IsNullOrEmpty(phoneNumber))
+        {
+            if (await _customerService.IsAlreadyExistsVerifiedPhoneNumberAsync(customer, phoneNumber))
+            {
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.IsAlreadyExistsVerifiedPhoneNumber"));
+            }
+        }
+
         //custom customer attributes
         var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
         if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
         {
             var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
-            {
                 ModelState.AddModelError(string.Empty, error);
-            }
         }
 
         if (ModelState.IsValid)
@@ -547,9 +593,7 @@ public partial class CustomerController : BaseAdminController
                     if (!string.IsNullOrEmpty(model.VatNumber))
                     {
                         if (!model.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase))
-                        {
                             customer.VatNumberStatusId = (int)(await _taxService.GetVatNumberStatusAsync(model.VatNumber)).vatNumberStatus;
-                        }
                     }
                     else
                         customer.VatNumberStatusId = (int)VatNumberStatus.Empty;
@@ -586,7 +630,10 @@ public partial class CustomerController : BaseAdminController
                 if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
                     customer.StateProvinceId = model.StateProvinceId;
                 if (_customerSettings.PhoneEnabled)
+                {
                     customer.Phone = model.Phone;
+                    customer.PhoneSmsVerified = model.PhoneSmsVerified;
+                }
                 if (_customerSettings.FaxEnabled)
                     customer.Fax = model.Fax;
 
@@ -602,7 +649,9 @@ public partial class CustomerController : BaseAdminController
                     //if he's not an admin himself
                     if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName &&
                         !await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()))
+                    {
                         continue;
+                    }
 
                     if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     {
@@ -691,10 +740,14 @@ public partial class CustomerController : BaseAdminController
             false, _customerSettings.DefaultPasswordFormat, model.Password);
         var changePassResult = await _customerRegistrationService.ChangePasswordAsync(changePassRequest);
         if (changePassResult.Success)
+        {
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.PasswordChanged"));
+        }
         else
+        {
             foreach (var error in changePassResult.Errors)
                 _notificationService.ErrorNotification(error);
+        }
 
         return RedirectToAction("Edit", new { id = customer.Id });
     }
@@ -951,7 +1004,7 @@ public partial class CustomerController : BaseAdminController
 
         try
         {
-            if (!_forumSettings.AllowPrivateMessages)
+            if (!_privateMessageSettings.AllowPrivateMessages)
                 throw new NopException("Private messages are disabled");
             if (await _customerService.IsGuestAsync(customer))
                 throw new NopException("Customer should be registered");
@@ -976,7 +1029,17 @@ public partial class CustomerController : BaseAdminController
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            await _forumService.InsertPrivateMessageAsync(privateMessage);
+            await _customerService.InsertPrivateMessageAsync(privateMessage);
+
+            var customerTo = await _customerService.GetCustomerByIdAsync(privateMessage.ToCustomerId)
+                 ?? throw new NopException("Recipient could not be loaded");
+
+            //UI notification
+            await _genericAttributeService.SaveAttributeAsync(customerTo, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, false, privateMessage.StoreId);
+
+            //Email notification
+            if (_privateMessageSettings.NotifyAboutPrivateMessages)
+                await _workflowMessageService.SendPrivateMessageNotificationAsync(privateMessage, (await _workContext.GetWorkingLanguageAsync())?.Id ?? 0);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.SendPM.Sent"));
         }
@@ -1111,9 +1174,7 @@ public partial class CustomerController : BaseAdminController
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
         foreach (var error in customAttributeWarnings)
-        {
             ModelState.AddModelError(string.Empty, error);
-        }
 
         if (ModelState.IsValid)
         {
@@ -1180,9 +1241,7 @@ public partial class CustomerController : BaseAdminController
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
         foreach (var error in customAttributeWarnings)
-        {
             ModelState.AddModelError(string.Empty, error);
-        }
 
         if (ModelState.IsValid)
         {
@@ -1589,7 +1648,9 @@ public partial class CustomerController : BaseAdminController
         try
         {
             if ((importexcelfile?.Length ?? 0) > 0)
+            {
                 await _importManager.ImportCustomersFromXlsxAsync(importexcelfile.OpenReadStream());
+            }
             else
             {
                 _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));

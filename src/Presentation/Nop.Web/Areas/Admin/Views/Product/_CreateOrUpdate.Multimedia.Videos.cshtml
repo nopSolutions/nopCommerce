@@ -19,14 +19,12 @@
             new ColumnProperty(nameof(ProductVideoModel.VideoUrl))
             {
                 Title = T("Admin.Catalog.Products.Multimedia.Videos.Fields.VideoUrl").Text,
-                Width = "400",
                 Editable = true,
                 EditType = EditType.String
             },
             new ColumnProperty(nameof(ProductVideoModel.DisplayOrder))
             {
                 Title = T("Admin.Catalog.Products.Multimedia.Videos.Fields.DisplayOrder").Text,
-                Width = "150",
                 ClassName = NopColumnClassDefaults.CenterAll,
                 Editable = true,
                 EditType = EditType.Number
@@ -34,7 +32,7 @@
             new ColumnProperty(nameof(ProductVideoModel.Id))
             {
                 Title = T("Admin.Common.Edit").Text,
-                Width = "200",
+                Width = "100",
                 ClassName =  NopColumnClassDefaults.Button,
                 Render = new RenderButtonsInlineEdit()
             },

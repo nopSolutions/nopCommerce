@@ -107,12 +107,7 @@ public sealed class CheckAccessClosedStoreAttribute : TypeFilterAttribute
             var controllerName = actionDescriptor?.ControllerName;
 
             if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
-                return;
-
-            //two factor verification accessible when a store is closed
-            if (controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
-                actionName.Equals("MultiFactorVerification", StringComparison.InvariantCultureIgnoreCase))
-                return;
+                return;            
 
             //topics accessible when a store is closed
             if (controllerName.Equals("Topic", StringComparison.InvariantCultureIgnoreCase) &&

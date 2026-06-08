@@ -17,28 +17,25 @@
             new ColumnProperty(nameof(ManufacturerTemplateModel.Name))
             {
                 Title = T("Admin.System.Templates.Manufacturer.Name").Text,
-                Width = "300",
                 Editable = true,
                 EditType = EditType.String
             },
             new ColumnProperty(nameof(ManufacturerTemplateModel.ViewPath))
             {
                 Title = T("Admin.System.Templates.Manufacturer.ViewPath").Text,
-                Width = "300",
                 Editable = true,
                 EditType = EditType.String
             },
             new ColumnProperty(nameof(ManufacturerTemplateModel.DisplayOrder))
             {
                 Title = T("Admin.System.Templates.Manufacturer.DisplayOrder").Text,
-                Width = "100",
                 Editable = true,
                 EditType = EditType.Number
             },
             new ColumnProperty(nameof(ManufacturerTemplateModel.Id))
             {
                 Title = T("Admin.Common.Edit").Text,
-                Width = "200",
+                Width = "100",
                 ClassName =  NopColumnClassDefaults.Button,
                 Render = new RenderButtonsInlineEdit()
             },

@@ -1,17 +1,15 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Catalog;
-using Nop.Services.Configuration;
 using Nop.Services.Seo;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440;
 
@@ -24,164 +22,61 @@ public class SettingMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        //do not use DI, because it produces exception on the installation process
-        var settingRepository = EngineContext.Current.Resolve<IRepository<Setting>>();
-        var settingService = EngineContext.Current.Resolve<ISettingService>();
-
         //#4904 External authentication errors logging
-        var externalAuthenticationSettings = settingService.LoadSetting<ExternalAuthenticationSettings>();
-        if (!settingService.SettingExists(externalAuthenticationSettings, settings => settings.LogErrors))
-        {
-            externalAuthenticationSettings.LogErrors = false;
-            settingService.SaveSetting(externalAuthenticationSettings, settings => settings.LogErrors);
-        }
-
-        var multiFactorAuthenticationSettings = settingService.LoadSetting<MultiFactorAuthenticationSettings>();
-        if (!settingService.SettingExists(multiFactorAuthenticationSettings, settings => settings.ForceMultifactorAuthentication))
-        {
-            multiFactorAuthenticationSettings.ForceMultifactorAuthentication = false;
-
-            settingService.SaveSetting(multiFactorAuthenticationSettings, settings => settings.ForceMultifactorAuthentication);
-        }
+        this.SetSettingIfNotExists<ExternalAuthenticationSettings, bool>(settings => settings.LogErrors, false);
+        this.SetSettingIfNotExists<MultiFactorAuthenticationSettings, bool>(settings => settings.ForceMultifactorAuthentication, false);
 
         //#5102 Delete Full-text settings
-        settingRepository
-            .Delete(setting => setting.Name == "commonsettings.usefulltextsearch" || setting.Name == "commonsettings.fulltextmode");
+        this.DeleteSettingsByNames(["commonsettings.usefulltextsearch", "commonsettings.fulltextmode"]);
 
         //#4196
-        settingRepository
-            .Delete(setting => setting.Name == "commonsettings.scheduletaskruntimeout" ||
-                               setting.Name == "commonsettings.staticfilescachecontrol" ||
-                               setting.Name == "commonsettings.supportpreviousnopcommerceversions" ||
-                               setting.Name == "securitysettings.pluginstaticfileextensionsBlacklist");
+        this.DeleteSettingsByNames([
+            "commonsettings.scheduletaskruntimeout", "commonsettings.staticfilescachecontrol",
+            "commonsettings.supportpreviousnopcommerceversions", "securitysettings.pluginstaticfileextensionsBlacklist"
+        ]);
 
         //#5384
-        var seoSettings = settingService.LoadSetting<SeoSettings>();
-        foreach (var slug in NopSeoDefaults.ReservedUrlRecordSlugs)
+        this.SetSetting<SeoSettings, List<string>>(settings => settings.ReservedUrlRecordSlugs, setting =>
         {
-            if (!seoSettings.ReservedUrlRecordSlugs.Contains(slug))
-                seoSettings.ReservedUrlRecordSlugs.Add(slug);
-        }
-        settingService.SaveSetting(seoSettings, settings => seoSettings.ReservedUrlRecordSlugs);
+            foreach (var slug in NopSeoDefaults.ReservedUrlRecordSlugs.Where(slug => !setting.ReservedUrlRecordSlugs.Contains(slug)).ToList())
+                setting.ReservedUrlRecordSlugs.Add(slug);
+        });
 
         //#3015
-        var homepageTitleKey = $"{nameof(SeoSettings)}.HomepageTitle".ToLower();
-        if (settingService.GetSettingByKey<string>(homepageTitleKey) == null)
-            settingService.SetSetting(homepageTitleKey, settingService.GetSettingByKey<string>($"{nameof(SeoSettings)}.DefaultTitle"));
-
-        var homepageDescriptionKey = $"{nameof(SeoSettings)}.HomepageDescription".ToLower();
-        if (settingService.GetSettingByKey<string>(homepageDescriptionKey) == null)
-            settingService.SetSetting(homepageDescriptionKey, "Your home page description");
+        this.SetSettingIfNotExists($"{nameof(SeoSettings)}.HomepageTitle", this.GetSettingByKey<string>($"{nameof(SeoSettings)}.DefaultTitle"));
+        this.SetSettingIfNotExists($"{nameof(SeoSettings)}.HomepageDescription", "Your home page description");
 
         //#5210
-        var adminAreaSettings = settingService.LoadSetting<AdminAreaSettings>();
-        if (!settingService.SettingExists(adminAreaSettings, settings => settings.ShowDocumentationReferenceLinks))
-        {
-            adminAreaSettings.ShowDocumentationReferenceLinks = true;
-            settingService.SaveSetting(adminAreaSettings, settings => settings.ShowDocumentationReferenceLinks);
-        }
+        this.SetSettingIfNotExists<AdminAreaSettings, bool>(settings => settings.ShowDocumentationReferenceLinks, true);
 
         //#4944
-        var shippingSettings = settingService.LoadSetting<ShippingSettings>();
-        if (!settingService.SettingExists(shippingSettings, settings => settings.RequestDelay))
-        {
-            shippingSettings.RequestDelay = 300;
-            settingService.SaveSetting(shippingSettings, settings => settings.RequestDelay);
-        }
+        this.SetSettingIfNotExists<ShippingSettings, int>(settings => settings.RequestDelay, 300);
 
         //#276 AJAX filters
-        var catalogSettings = settingService.LoadSetting<CatalogSettings>();
-        if (!settingService.SettingExists(catalogSettings, settings => settings.UseAjaxCatalogProductsLoading))
-        {
-            catalogSettings.UseAjaxCatalogProductsLoading = true;
-            settingService.SaveSetting(catalogSettings, settings => settings.UseAjaxCatalogProductsLoading);
-        }
-
-        if (!settingService.SettingExists(catalogSettings, settings => settings.EnableManufacturerFiltering))
-        {
-            catalogSettings.EnableManufacturerFiltering = true;
-            settingService.SaveSetting(catalogSettings, settings => settings.EnableManufacturerFiltering);
-        }
-
-        if (!settingService.SettingExists(catalogSettings, settings => settings.EnablePriceRangeFiltering))
-        {
-            catalogSettings.EnablePriceRangeFiltering = true;
-            settingService.SaveSetting(catalogSettings, settings => settings.EnablePriceRangeFiltering);
-        }
-
-        if (!settingService.SettingExists(catalogSettings, settings => settings.SearchPagePriceRangeFiltering))
-        {
-            catalogSettings.SearchPagePriceRangeFiltering = true;
-            settingService.SaveSetting(catalogSettings, settings => settings.SearchPagePriceRangeFiltering);
-        }
-
-        if (!settingService.SettingExists(catalogSettings, settings => settings.SearchPagePriceFrom))
-        {
-            catalogSettings.SearchPagePriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
-            settingService.SaveSetting(catalogSettings, settings => settings.SearchPagePriceFrom);
-        }
-
-        if (!settingService.SettingExists(catalogSettings, settings => settings.SearchPagePriceTo))
-        {
-            catalogSettings.SearchPagePriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
-            settingService.SaveSetting(catalogSettings, settings => settings.SearchPagePriceTo);
-        }
-
-        if (!settingService.SettingExists(catalogSettings, settings => settings.SearchPageManuallyPriceRange))
-        {
-            catalogSettings.SearchPageManuallyPriceRange = false;
-            settingService.SaveSetting(catalogSettings, settings => settings.SearchPageManuallyPriceRange);
-        }
-
-        if (!settingService.SettingExists(catalogSettings, settings => settings.ProductsByTagPriceRangeFiltering))
-        {
-            catalogSettings.ProductsByTagPriceRangeFiltering = true;
-            settingService.SaveSetting(catalogSettings, settings => settings.ProductsByTagPriceRangeFiltering);
-        }
-
-        if (!settingService.SettingExists(catalogSettings, settings => settings.ProductsByTagPriceFrom))
-        {
-            catalogSettings.ProductsByTagPriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
-            settingService.SaveSetting(catalogSettings, settings => settings.ProductsByTagPriceFrom);
-        }
-
-        if (!settingService.SettingExists(catalogSettings, settings => settings.ProductsByTagPriceTo))
-        {
-            catalogSettings.ProductsByTagPriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
-            settingService.SaveSetting(catalogSettings, settings => settings.ProductsByTagPriceTo);
-        }
-
-        if (!settingService.SettingExists(catalogSettings, settings => settings.ProductsByTagManuallyPriceRange))
-        {
-            catalogSettings.ProductsByTagManuallyPriceRange = false;
-            settingService.SaveSetting(catalogSettings, settings => settings.ProductsByTagManuallyPriceRange);
-        }
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.UseAjaxCatalogProductsLoading, true);
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.EnableManufacturerFiltering, true);
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.EnablePriceRangeFiltering, true);
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.SearchPagePriceRangeFiltering, true);
+        this.SetSettingIfNotExists<CatalogSettings, decimal>(settings => settings.SearchPagePriceFrom, NopCatalogDefaults.DefaultPriceRangeFrom);
+        this.SetSettingIfNotExists<CatalogSettings, decimal>(settings => settings.SearchPagePriceTo, NopCatalogDefaults.DefaultPriceRangeTo);
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.SearchPageManuallyPriceRange, false);
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.ProductsByTagPriceRangeFiltering, true);
+        this.SetSettingIfNotExists<CatalogSettings, decimal>(settings => settings.ProductsByTagPriceFrom, NopCatalogDefaults.DefaultPriceRangeFrom);
+        this.SetSettingIfNotExists<CatalogSettings, decimal>(settings => settings.ProductsByTagPriceTo, NopCatalogDefaults.DefaultPriceRangeTo);
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.ProductsByTagManuallyPriceRange, false);
 
         //#4303
-        var orderSettings = settingService.LoadSetting<OrderSettings>();
-        if (!settingService.SettingExists(orderSettings, settings => settings.DisplayCustomerCurrencyOnOrders))
-        {
-            orderSettings.DisplayCustomerCurrencyOnOrders = false;
-            settingService.SaveSetting(orderSettings, settings => settings.DisplayCustomerCurrencyOnOrders);
-        }
+        this.SetSettingIfNotExists<OrderSettings, bool>(settings => settings.DisplayCustomerCurrencyOnOrders, false);
 
         //#16 #2909
-        if (!settingService.SettingExists(catalogSettings, settings => settings.AttributeValueOutOfStockDisplayType))
-        {
-            catalogSettings.AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay;
-            settingService.SaveSetting(catalogSettings, settings => settings.AttributeValueOutOfStockDisplayType);
-        }
+        this.SetSettingIfNotExists<CatalogSettings, AttributeValueOutOfStockDisplayType>(settings => settings.AttributeValueOutOfStockDisplayType, AttributeValueOutOfStockDisplayType.AlwaysDisplay);
 
         //#5482
-        settingService.SetSetting("avalarataxsettings.gettaxratebyaddressonly", true);
-        settingService.SetSetting("avalarataxsettings.taxratebyaddresscachetime", 480);
+        this.SetSettingIfNotExists("avalarataxsettings.gettaxratebyaddressonly", true);
+        this.SetSettingIfNotExists("avalarataxsettings.taxratebyaddresscachetime", 480);
 
         //#5349
-        if (!settingService.SettingExists(shippingSettings, settings => settings.EstimateShippingCityNameEnabled))
-        {
-            shippingSettings.EstimateShippingCityNameEnabled = false;
-            settingService.SaveSetting(shippingSettings, settings => settings.EstimateShippingCityNameEnabled);
-        }
+        this.SetSettingIfNotExists<ShippingSettings, bool>(settings => settings.EstimateShippingCityNameEnabled, false);
     }
 
     public override void Down()

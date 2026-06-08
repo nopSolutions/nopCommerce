@@ -275,8 +275,10 @@ public partial class AddressAttributeModelFactory : IAddressAttributeModelFactor
                         var selectedValues = await _addressAttributeParser.ParseAttributeValuesAsync(selectedAddressAttributes);
                         foreach (var attributeValue in selectedValues)
                         foreach (var item in attributeModel.Values)
+                        {
                             if (attributeValue.Id == item.Id)
                                 item.IsPreSelected = true;
+                        }
                     }
                 }
                     break;

@@ -36,8 +36,11 @@
                         displayBarNotification('@T("Admin.Translation.Translated.Success")', @((int)NotifyType.Success));
                     }
 
-                    if (!data.Translations || data.Translations.length == 0 || data.HasErrors) {
+                    if (data.HasErrors) {
                         displayBarNotification('@T("Admin.Translation.Translated.Warning")', @((int)NotifyType.Warning));
+                    }
+                    else{
+                        displayBarNotification('@T("Admin.Translation.Translated.NothingToTranslate")', @((int)NotifyType.Warning));
                     }
                 }
             });

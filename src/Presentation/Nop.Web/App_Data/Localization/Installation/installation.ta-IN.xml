@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="தமிழ்" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>நிர்வாக பயனர் மின்னஞ்சல்</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>நிர்வாக பயனர் கடவுச்சொல்லை உள்ளிடவும்</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>எழுத்தை அமை</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>தொகுப்பு</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>தொகுப்பு அவசியம்</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>'{1}' folder ஐ மாற்றியமைக்கும் அனுமதி '{0}' கணக்குக்கு வழங்கப்படவில்லை. இந்த அனுமதிகளை உள்ளமைக்கவும்.</Value>

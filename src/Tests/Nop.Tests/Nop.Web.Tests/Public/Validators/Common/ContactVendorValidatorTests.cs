@@ -93,4 +93,22 @@ public class ContactVendorValidatorTests : BaseNopTest
         };
         _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Enquiry);
     }
+
+    [Test]
+    public void ShouldHaveErrorWhenSubjectIsNullOrEmptyAnd()
+    {
+        var settings = GetService<CommonSettings>();
+        settings.SubjectFieldOnContactUsForm = true;
+        _validator = new ContactVendorValidator(GetService<ILocalizationService>(), settings);
+
+        var model = new ContactVendorModel
+        {
+            Subject = string.Empty
+        };
+        _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Subject);
+        model.Subject = null;
+        _validator.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Subject);
+        model.Subject = "Test subject";
+        _validator.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Subject);
+    }
 }

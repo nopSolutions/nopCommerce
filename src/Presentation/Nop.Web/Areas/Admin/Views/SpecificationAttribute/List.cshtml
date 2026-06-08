@@ -28,7 +28,6 @@
             <i class="far fa-trash-can"></i>
             @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.DeleteSelected")
         </button>
-        <nop-action-confirmation asp-button-id="delete-selected-specification-attributes" />
     </div>
 </div>
 
@@ -99,19 +98,17 @@
                                     },
                                     new ColumnProperty(nameof(SpecificationAttributeModel.Name))
                                     {
-                                        Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name").Text,
-                                            Width = "300"
+                                        Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name").Text
                                     },
                                     new ColumnProperty(nameof(SpecificationAttributeModel.DisplayOrder))
                                     {
                                         Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.DisplayOrder").Text,
-                                        Width = "150",
                                         ClassName =  NopColumnClassDefaults.CenterAll
                                     },
                                     new ColumnProperty(nameof(SpecificationAttributeModel.Id))
                                     {
                                         Title = T("Admin.Common.Edit").Text,
-                                        Width = "50",
+                                        Width = "100",
                                         ClassName = NopColumnClassDefaults.Button,
                                         Render = new RenderButtonEdit(new DataUrl("~/Admin/SpecificationAttribute/EditSpecificationAttribute"))
                                     }
@@ -144,7 +141,6 @@
                                     new ColumnProperty(nameof(SpecificationAttributeGroupModel.DisplayOrder))
                                     {
                                         Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.DisplayOrder").Text,
-                                        Width = "100",
                                         ClassName =  NopColumnClassDefaults.CenterAll
                                     }
                                 },
@@ -170,19 +166,17 @@
                                         },
                                         new ColumnProperty(nameof(SpecificationAttributeModel.Name))
                                         {
-                                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name").Text,
-                                                Width = "300"
+                                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name").Text
                                         },
                                         new ColumnProperty(nameof(SpecificationAttributeModel.DisplayOrder))
                                         {
                                             Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.DisplayOrder").Text,
-                                            Width = "150",
                                             ClassName =  NopColumnClassDefaults.CenterAll
                                         },
                                         new ColumnProperty(nameof(SpecificationAttributeModel.Id))
                                         {
                                             Title = T("Admin.Common.Edit").Text,
-                                            Width = "50",
+                                            Width = "100",
                                             ClassName = NopColumnClassDefaults.Button,
                                             Render = new RenderButtonEdit(new DataUrl("~/Admin/SpecificationAttribute/EditSpecificationAttribute"))
                                         }
@@ -234,11 +228,13 @@
                                 });
                             });
                         </script>
-                        <nop-alert asp-alert-id="delete-selected-specification-attributes-alert" />
-                        <nop-alert asp-alert-id="nothingSelectedAlert" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<nop-alert asp-alert-id="delete-selected-specification-attributes-alert" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected-specification-attributes" />

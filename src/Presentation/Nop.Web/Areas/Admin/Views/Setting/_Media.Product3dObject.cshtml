@@ -1,0 +1,54 @@
+@model MediaSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="Object3dCameraControlEnabled_OverrideForStore" asp-input="Object3dCameraControlEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="Object3dCameraControlEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Object3dCameraControlEnabled" />
+            <span asp-validation-for="Object3dCameraControlEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="Object3dZoomEnabled_OverrideForStore" asp-input="Object3dZoomEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="Object3dZoomEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Object3dZoomEnabled" />
+            <span asp-validation-for="Object3dZoomEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="Object3dAutoRotateEnabled_OverrideForStore" asp-input="Object3dAutoRotateEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="Object3dAutoRotateEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Object3dAutoRotateEnabled" />
+            <span asp-validation-for="Object3dAutoRotateEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="Object3dLazyLoadingEnabled_OverrideForStore" asp-input="Object3dLazyLoadingEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="Object3dLazyLoadingEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Object3dLazyLoadingEnabled" />
+            <span asp-validation-for="Object3dLazyLoadingEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="Object3dUploadSizeLimit_OverrideForStore" asp-input="Object3dUploadSizeLimit" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="Object3dUploadSizeLimit" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Object3dUploadSizeLimit" />
+            <span asp-validation-for="Object3dUploadSizeLimit"></span>
+        </div>
+    </div>
+</div>

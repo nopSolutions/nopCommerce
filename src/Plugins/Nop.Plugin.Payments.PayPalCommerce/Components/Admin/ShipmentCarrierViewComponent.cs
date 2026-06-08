@@ -73,7 +73,7 @@ public class ShipmentCarrierViewComponent : NopViewComponent
                 : null
         };
 
-        return View("~/Plugins/Payments.PayPalCommerce/Views/Admin/_ShipmentCarrier.cshtml", model);
+        return await ViewAsync("~/Plugins/Payments.PayPalCommerce/Views/Admin/_ShipmentCarrier.cshtml", model);
     }
 
     #endregion

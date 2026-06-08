@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
 using Nop.Core.Rss;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.FilterLevels;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
@@ -32,6 +34,8 @@ public partial class CatalogController : BasePublicController
     protected readonly ICatalogModelFactory _catalogModelFactory;
     protected readonly ICategoryService _categoryService;
     protected readonly ICustomerActivityService _customerActivityService;
+    protected readonly IFilterLevelValueModelFactory _filterLevelValueModelFactory;
+    protected readonly IFilterLevelValueService _filterLevelValueService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IManufacturerService _manufacturerService;
@@ -40,11 +44,13 @@ public partial class CatalogController : BasePublicController
     protected readonly IProductModelFactory _productModelFactory;
     protected readonly IProductService _productService;
     protected readonly IProductTagService _productTagService;
+    protected readonly ISearchTermService _searchTermService;
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly IVendorService _vendorService;
     protected readonly IWebHelper _webHelper;
     protected readonly IWorkContext _workContext;
+    protected readonly FilterLevelSettings _filterLevelSettings;
     protected readonly MediaSettings _mediaSettings;
     protected readonly VendorSettings _vendorSettings;
 
@@ -57,6 +63,8 @@ public partial class CatalogController : BasePublicController
         ICatalogModelFactory catalogModelFactory,
         ICategoryService categoryService,
         ICustomerActivityService customerActivityService,
+        IFilterLevelValueModelFactory filterLevelValueModelFactory,
+        IFilterLevelValueService filterLevelValueService,
         IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
         IManufacturerService manufacturerService,
@@ -65,11 +73,13 @@ public partial class CatalogController : BasePublicController
         IProductModelFactory productModelFactory,
         IProductService productService,
         IProductTagService productTagService,
+        ISearchTermService searchTermService,
         IStoreContext storeContext,
         IStoreMappingService storeMappingService,
         IVendorService vendorService,
         IWebHelper webHelper,
         IWorkContext workContext,
+        FilterLevelSettings filterLevelSettings,
         MediaSettings mediaSettings,
         VendorSettings vendorSettings)
     {
@@ -78,6 +88,8 @@ public partial class CatalogController : BasePublicController
         _catalogModelFactory = catalogModelFactory;
         _categoryService = categoryService;
         _customerActivityService = customerActivityService;
+        _filterLevelValueModelFactory = filterLevelValueModelFactory;
+        _filterLevelValueService = filterLevelValueService;
         _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
         _manufacturerService = manufacturerService;
@@ -86,11 +98,13 @@ public partial class CatalogController : BasePublicController
         _productModelFactory = productModelFactory;
         _productService = productService;
         _productTagService = productTagService;
+        _searchTermService = searchTermService;
         _storeContext = storeContext;
         _storeMappingService = storeMappingService;
         _vendorService = vendorService;
         _webHelper = webHelper;
         _workContext = workContext;
+        _filterLevelSettings = filterLevelSettings;
         _mediaSettings = mediaSettings;
         _vendorSettings = vendorSettings;
     }
@@ -99,20 +113,13 @@ public partial class CatalogController : BasePublicController
 
     #region Categories
 
+    [SaveLastContinueShoppingPage]
     public virtual async Task<IActionResult> Category(int categoryId, CatalogProductsCommand command)
     {
         var category = await _categoryService.GetCategoryByIdAsync(categoryId);
 
         if (!await CheckCategoryAvailabilityAsync(category))
             return InvokeHttp404();
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-
-        //'Continue shopping' URL
-        await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
-            NopCustomerDefaults.LastContinueShoppingPageAttribute,
-            _webHelper.GetThisPageUrl(false),
-            store.Id);
 
         //display "edit" (manage) link
         if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Catalog.CATEGORIES_VIEW))
@@ -147,20 +154,13 @@ public partial class CatalogController : BasePublicController
 
     #region Manufacturers
 
+    [SaveLastContinueShoppingPage]
     public virtual async Task<IActionResult> Manufacturer(int manufacturerId, CatalogProductsCommand command)
     {
         var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId);
 
         if (!await CheckManufacturerAvailabilityAsync(manufacturer))
             return InvokeHttp404();
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-
-        //'Continue shopping' URL
-        await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
-            NopCustomerDefaults.LastContinueShoppingPageAttribute,
-            _webHelper.GetThisPageUrl(false),
-            store.Id);
 
         //display "edit" (manage) link
         if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Catalog.MANUFACTURER_VIEW))
@@ -203,20 +203,13 @@ public partial class CatalogController : BasePublicController
 
     #region Vendors
 
+    [SaveLastContinueShoppingPage]
     public virtual async Task<IActionResult> Vendor(int vendorId, CatalogProductsCommand command)
     {
         var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
 
         if (!await CheckVendorAvailabilityAsync(vendor))
             return InvokeHttp404();
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-
-        //'Continue shopping' URL
-        await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
-            NopCustomerDefaults.LastContinueShoppingPageAttribute,
-            _webHelper.GetThisPageUrl(false),
-            store.Id);
 
         //display "edit" (manage) link
         if (await _permissionService.AuthorizeAsync(StandardPermission.Security.ACCESS_ADMIN_PANEL) && await _permissionService.AuthorizeAsync(StandardPermission.Customers.VENDORS_VIEW))
@@ -367,16 +360,9 @@ public partial class CatalogController : BasePublicController
 
     #region Searching
 
+    [SaveLastContinueShoppingPage]
     public virtual async Task<IActionResult> Search(SearchModel model, CatalogProductsCommand command)
     {
-        var store = await _storeContext.GetCurrentStoreAsync();
-
-        //'Continue shopping' URL
-        await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
-            NopCustomerDefaults.LastContinueShoppingPageAttribute,
-            _webHelper.GetThisPageUrl(true),
-            store.Id);
-
         if (model == null)
             model = new SearchModel();
 
@@ -416,16 +402,39 @@ public partial class CatalogController : BasePublicController
         var showLinkToResultSearch = _catalogSettings.ShowLinkToAllResultInSearchAutoComplete && (products.TotalCount > productNumber);
 
         var models = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize)).ToList();
-        var result = (from p in models
-                      select new
-                      {
-                          label = p.Name,
-                          producturl = Url.RouteUrl<Product>(new { SeName = p.SeName }),
-                          productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl,
-                          showlinktoresultsearch = showLinkToResultSearch
-                      })
-            .ToList();
+        var result = new List<object>();
+        foreach (var p in models)
+            result.Add(new { label = p.Name, producturl = await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { SeName = p.SeName }), productpictureurl = p.PictureModels.FirstOrDefault()?.ImageUrl, showlinktoresultsearch = showLinkToResultSearch });
+
         return Json(result);
+    }
+
+    [CheckLanguageSeoCode(ignore: true)]
+    public virtual async Task<IActionResult> SearchTermHistoryAutoComplete()
+    {
+        if (!_catalogSettings.ShowSearchTermHistory)
+            return Content("");
+
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+
+        var terms = await _searchTermService.SearchTermHistoryItemsAsync(currentCustomer.Id, store.Id);
+
+        return Json(terms.Select(t => new { label = t, IsKeyword = true }));
+    }
+
+    [HttpPost]
+    public virtual async Task<IActionResult> DeleteProductSearchTermItems(string term)
+    {
+        if (!_catalogSettings.ShowSearchTermHistory || string.IsNullOrEmpty(term))
+            return Content("");
+
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+
+        await _searchTermService.DeleteSearchTermsByKeywordAsync(term, currentCustomer.Id, store.Id);
+
+        return Json(new { Result = true });
     }
 
     [HttpPost]
@@ -435,6 +444,104 @@ public partial class CatalogController : BasePublicController
             searchModel = new SearchModel();
 
         var model = await _catalogModelFactory.PrepareSearchProductsModelAsync(searchModel, command);
+
+        return PartialView("_ProductsInGridOrLines", model);
+    }
+
+    #endregion
+
+    #region Filter level values
+
+    //available even when navigation is not allowed
+    [CheckAccessPublicStore(ignore: true)]
+    //ignore SEO friendly URLs checks
+    [CheckLanguageSeoCode(ignore: true)]
+    public virtual async Task<IActionResult> GetFilterLevelValues(string filterLevel1Value = "", string filterLevel2Value = "", string filterLevel3Value = "")
+    {
+        var values = await _filterLevelValueService.GetAllFilterLevelValuesAsync(
+            filterLevel1Value, filterLevel2Value, filterLevel3Value);
+
+        var defaultItemText = await _localizationService.GetResourceAsync("Admin.Common.Select");
+
+        if (string.IsNullOrEmpty(filterLevel1Value))
+        {
+            var result = values
+                .Select(f => new
+                {
+                    filterLevel1Value = f.FilterLevel1Value,
+                    defaultItemText = defaultItemText
+                })
+                .Distinct();
+            return Json(result);
+        }
+
+        if (string.IsNullOrEmpty(filterLevel2Value))
+        {
+            var result = values
+                .Where(f => f.FilterLevel1Value == filterLevel1Value)
+                .Select(f => new
+                {
+                    filterLevel1Value = f.FilterLevel1Value,
+                    filterLevel2Value = f.FilterLevel2Value,
+                    defaultItemText = defaultItemText
+                })
+                .Distinct();
+            return Json(result);
+        }
+
+        if (string.IsNullOrEmpty(filterLevel3Value))
+        {
+            var result = values
+                .Where(f => f.FilterLevel1Value == filterLevel1Value &&
+                            f.FilterLevel2Value == filterLevel2Value)
+                .Select(f => new
+                {
+                    filterLevel1Value = f.FilterLevel1Value,
+                    filterLevel2Value = f.FilterLevel2Value,
+                    filterLevel3Value = f.FilterLevel3Value,
+                    defaultItemText = defaultItemText
+                })
+                .Distinct();
+            return Json(result);
+        }
+
+        var finalResult = values
+            .Where(f => f.FilterLevel1Value == filterLevel1Value &&
+                        f.FilterLevel2Value == filterLevel2Value &&
+                        f.FilterLevel3Value == filterLevel3Value)
+            .Select(f => new
+            {
+                filterLevel1Value = f.FilterLevel1Value,
+                filterLevel2Value = f.FilterLevel2Value,
+                filterLevel3Value = f.FilterLevel3Value,
+                defaultItemText = defaultItemText
+            })
+            .Distinct();
+
+        return Json(finalResult);
+    }
+
+    [SaveLastContinueShoppingPage]
+    public virtual async Task<IActionResult> SearchByFilterLevelValues(SearchFilterLevelValueModel model, CatalogProductsCommand command)
+    {
+        if (!_filterLevelSettings.FilterLevelEnabled)
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
+
+        if (model == null)
+            model = new SearchFilterLevelValueModel();
+
+        model = await _filterLevelValueModelFactory.PrepareSearchFilterLevelValueModelAsync(model, command);
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public virtual async Task<IActionResult> SearchProductsByFilterLevelValues(SearchFilterLevelValueModel searchModel, CatalogProductsCommand command)
+    {
+        if (searchModel == null)
+            searchModel = new SearchFilterLevelValueModel();
+
+        var model = await _catalogModelFactory.PrepareSearchProductsByFilterLevelValuesModelAsync(searchModel, command);
 
         return PartialView("_ProductsInGridOrLines", model);
     }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="नेपाली" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>व्यवस्थापक प्रयोगकर्ता ईमेल</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>प्रशासक पासवर्ड उल्लेख गर्नुहोस्</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>क्यारेक्टर सेट</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>सङ्कलन</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>सङ्कलन आवश्यक छ</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>'{0}' खातालाई फोल्डर '{1}' परिमार्जन अनुमति प्रदान गरिएको छैन। कृपया यी अनुमतिहरू कन्फिगर गर्नुहोस्।</Value>
@@ -133,7 +142,7 @@
     <Value>स्टोरको जानकारी</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>nopCommerce न्यूजलेटरको सदस्यता लिनुहोस्</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce इन्स्टलेसन</Value>

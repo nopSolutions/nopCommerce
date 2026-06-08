@@ -14,8 +14,8 @@ public class FacebookAuthenticationViewComponent : NopViewComponent
     /// <param name="widgetZone">Widget zone name</param>
     /// <param name="additionalData">Additional data</param>
     /// <returns>View component result</returns>
-    public IViewComponentResult Invoke(string widgetZone, object additionalData)
+    public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {
-        return View("~/Plugins/ExternalAuth.Facebook/Views/PublicInfo.cshtml");
+        return await ViewAsync("~/Plugins/ExternalAuth.Facebook/Views/PublicInfo.cshtml");
     }
 }

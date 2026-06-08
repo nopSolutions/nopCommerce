@@ -103,6 +103,17 @@ public partial interface IProductModelFactory
     Task<CrossSellProductListModel> PrepareCrossSellProductListModelAsync(CrossSellProductSearchModel searchModel, Product product);
 
     /// <summary>
+    /// Prepare paged filter level value list model
+    /// </summary>
+    /// <param name="searchModel">Filter level value search model</param>
+    /// <param name="product">Product</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the filter level value list model
+    /// </returns>
+    Task<FilterLevelValueListModel> PrepareFilterLevelValueListModelAsync(FilterLevelValueSearchModel searchModel, Product product);
+
+    /// <summary>
     /// Prepare cross-sell product search model to add to the product
     /// </summary>
     /// <param name="searchModel">Cross-sell product search model to add to the product</param>

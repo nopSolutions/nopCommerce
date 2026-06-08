@@ -56,6 +56,10 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/cart/",
             defaults: new { controller = "ShoppingCart", action = "Cart" });
 
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CUSTOMER_CART,
+            pattern: $"{lang}/customercart/",
+            defaults: new { controller = "ShoppingCart", action = "CustomerCart" });
+
         //estimate shipping (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.ESTIMATE_SHIPPING,
             pattern: $"cart/estimateshipping",
@@ -117,10 +121,23 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/search/",
             defaults: new { controller = "Catalog", action = "Search" });
 
+        //product search by filter level values
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.PRODUCT_SEARCH_BY_FILTER_LEVEL_VALUES,
+            pattern: $"{lang}/search-ymm/",
+            defaults: new { controller = "Catalog", action = "SearchByFilterLevelValues" });
+
         //autocomplete search term (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.PRODUCT_SEARCH_AUTOCOMPLETE,
             pattern: $"catalog/searchtermautocomplete",
             defaults: new { controller = "Catalog", action = "SearchTermAutoComplete" });
+
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.PRODUCT_SEARCH_HISTORY_AUTOCOMPLETE,
+            pattern: $"catalog/searchtermhistoryautocomplete",
+            defaults: new { controller = "Catalog", action = "SearchTermHistoryAutoComplete" });
+
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.DELETE_PRODUCT_SEARCH_TERMS,
+            pattern: $"catalog/deleteproductsearchterms",
+            defaults: new { controller = "Catalog", action = "DeleteProductSearchTermItems" });
 
         //change currency
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CHANGE_CURRENCY,
@@ -156,16 +173,6 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.General.BLOG,
             pattern: $"{lang}/blog",
             defaults: new { controller = "Blog", action = "List" });
-
-        //news
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.General.NEWS,
-            pattern: $"{lang}/news",
-            defaults: new { controller = "News", action = "List" });
-
-        //forum
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.General.BOARDS,
-            pattern: $"{lang}/boards",
-            defaults: new { controller = "Boards", action = "Index" });
 
         //compare products
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.General.COMPARE_PRODUCTS,
@@ -220,6 +227,11 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.ADD_WISHLIST,
             pattern: $"addcustomwishlist",
             defaults: new { controller = "ShoppingCart", action = "AddWishlist" });
+
+        // rename custom wishlist. (AJAX)
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.RENAME_WISHLIST,
+            pattern: $"renamecustomwishlist",
+            defaults: new { controller = "ShoppingCart", action = "RenameWishlist" });
 
         //comparing products (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.ADD_PRODUCT_TO_COMPARE,
@@ -329,6 +341,21 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/registerresult/{{resultId:min(0)}}",
             defaults: new { controller = "Customer", action = "RegisterResult" });
 
+        //otp phone verification page
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.OTP_PHONE_VERIFICATION,
+            pattern: $"{lang}/otpphoneverification/{{typeId:min(0)}}",
+            defaults: new { controller = "Customer", action = "OtpPhoneVerification" });
+
+        //send otp code to phone number (AJAX)
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.SEND_OTP,
+            pattern: $"sendotp",
+            defaults: new { controller = "Customer", action = "SendOtp" });
+
+        //otp code to phone number (AJAX)
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.COMMON_VERIFICATION_OTP,
+            pattern: $"commonverificationotp",
+            defaults: new { controller = "Customer", action = "CommonVerificationOtp" });
+
         //check username availability (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.CHECK_USERNAME_AVAILABILITY,
             pattern: $"customer/checkusernameavailability",
@@ -362,11 +389,6 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.BLOG_RSS,
             pattern: $"blog/rss/{{languageId:min(0)}}",
             defaults: new { controller = "Blog", action = "ListRss" });
-
-        //news RSS (file result)
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.NEWS_RSS,
-            pattern: $"news/rss/{{languageId:min(0)}}",
-            defaults: new { controller = "News", action = "ListRss" });
 
         //set review helpfulness (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.SET_PRODUCT_REVIEW_HELPFULNESS,
@@ -409,10 +431,6 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.EMAIL_REVALIDATION,
             pattern: $"{lang}/customer/revalidateemail",
             defaults: new { controller = "Customer", action = "EmailRevalidation" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CUSTOMER_FORUM_SUBSCRIPTIONS,
-            pattern: $"{lang}/boards/forumsubscriptions/{{pageNumber:int?}}",
-            defaults: new { controller = "Boards", action = "CustomerForumSubscriptions" });
 
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CUSTOMER_ADDRESS_EDIT,
             pattern: $"{lang}/customer/addressedit/{{addressId:min(0)}}",
@@ -513,11 +531,6 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/customer/multifactorauthentication",
             defaults: new { controller = "Customer", action = "MultiFactorAuthentication" });
 
-        //poll vote (AJAX)
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.POLL_VOTE,
-            pattern: $"poll/vote",
-            defaults: new { controller = "Poll", action = "Vote" });
-
         //comparing products
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.REMOVE_PRODUCT_FROM_COMPARE_LIST,
             pattern: $"{lang}/compareproducts/remove/{{productId}}",
@@ -536,6 +549,11 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.GET_STATES_BY_COUNTRY_ID,
             pattern: $"country/getstatesbycountryid/",
             defaults: new { controller = "Country", action = "GetStatesByCountryId" });
+
+        //get filter level value list by parent ID (AJAX)
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.GET_FILTER_LEVEL_VALUES,
+            pattern: $"catalog/getfilterlevelvalues/",
+            defaults: new { controller = "Catalog", action = "GetFilterLevelValues" });
 
         //EU Cookie law accept button handler (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.EU_COOKIE_LAW_ACCEPT,
@@ -563,6 +581,10 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.SEARCH_PRODUCTS,
             pattern: "product/search",
             defaults: new { controller = "Catalog", action = "SearchProducts" });
+
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.SEARCH_PRODUCTS_BY_FILTER_LEVEL_VALUES,
+            pattern: "product/searchbyflv",
+            defaults: new { controller = "Catalog", action = "SearchProductsByFilterLevelValues" });
 
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.GET_VENDOR_PRODUCTS,
             pattern: $"vendor/products",
@@ -596,96 +618,6 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.UPLOAD_FILE_RETURN_REQUEST,
             pattern: $"uploadfilereturnrequest",
             defaults: new { controller = "ReturnRequest", action = "UploadFileReturnRequest" });
-
-        //forums
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.ACTIVE_DISCUSSIONS,
-            pattern: $"{lang}/boards/activediscussions",
-            defaults: new { controller = "Boards", action = "ActiveDiscussions" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.ACTIVE_DISCUSSIONS_PAGED,
-            pattern: $"{lang}/boards/activediscussions/page/{{pageNumber:int}}",
-            defaults: new { controller = "Boards", action = "ActiveDiscussions" });
-
-        //forums RSS (file result)
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.ACTIVE_DISCUSSIONS_RSS,
-            pattern: $"boards/activediscussionsrss",
-            defaults: new { controller = "Boards", action = "ActiveDiscussionsRSS" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.POST_EDIT,
-            pattern: $"{lang}/boards/postedit/{{id:min(0)}}",
-            defaults: new { controller = "Boards", action = "PostEdit" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.POST_DELETE,
-            pattern: $"{lang}/boards/postdelete/{{id:int?}}",
-            defaults: new { controller = "Boards", action = "PostDelete" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.POST_CREATE,
-            pattern: $"{lang}/boards/postcreate/{{id:min(0)}}",
-            defaults: new { controller = "Boards", action = "PostCreate" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.POST_CREATE_QUOTE,
-            pattern: $"{lang}/boards/postcreate/{{id:min(0)}}/{{quote:min(0)}}",
-            defaults: new { controller = "Boards", action = "PostCreate" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.TOPIC_EDIT,
-            pattern: $"{lang}/boards/topicedit/{{id:min(0)}}",
-            defaults: new { controller = "Boards", action = "TopicEdit" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.TOPIC_DELETE,
-            pattern: $"{lang}/boards/topicdelete/{{id:int?}}",
-            defaults: new { controller = "Boards", action = "TopicDelete" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.TOPIC_CREATE,
-            pattern: $"{lang}/boards/topiccreate/{{id:min(0)}}",
-            defaults: new { controller = "Boards", action = "TopicCreate" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.TOPIC_MOVE,
-            pattern: $"{lang}/boards/topicmove/{{id:min(0)}}",
-            defaults: new { controller = "Boards", action = "TopicMove" });
-
-        //topic watch (AJAX)
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.TOPIC_WATCH,
-            pattern: $"boards/topicwatch/{{id:min(0)}}",
-            defaults: new { controller = "Boards", action = "TopicWatch" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.TOPIC_SLUG,
-            pattern: $"{lang}/boards/topic/{{id:min(0)}}/{{slug?}}",
-            defaults: new { controller = "Boards", action = "Topic" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.TOPIC_SLUG_PAGED,
-            pattern: $"{lang}/boards/topic/{{id:min(0)}}/{{slug?}}/page/{{pageNumber:int}}",
-            defaults: new { controller = "Boards", action = "Topic" });
-
-        //forum watch (AJAX)
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.FORUM_WATCH,
-            pattern: $"boards/forumwatch/{{id:min(0)}}",
-            defaults: new { controller = "Boards", action = "ForumWatch" });
-
-        //forums RSS (file result)
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.FORUM_RSS,
-            pattern: $"boards/forumrss/{{id:min(0)}}",
-            defaults: new { controller = "Boards", action = "ForumRSS" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.FORUM_SLUG,
-            pattern: $"{lang}/boards/forum/{{id:min(0)}}/{{slug?}}",
-            defaults: new { controller = "Boards", action = "Forum" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.FORUM_SLUG_PAGED,
-            pattern: $"{lang}/boards/forum/{{id:min(0)}}/{{slug?}}/page/{{pageNumber:int}}",
-            defaults: new { controller = "Boards", action = "Forum" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.FORUM_GROUP_SLUG,
-            pattern: $"{lang}/boards/forumgroup/{{id:min(0)}}/{{slug?}}",
-            defaults: new { controller = "Boards", action = "ForumGroup" });
-
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.BOARDS_SEARCH,
-            pattern: $"{lang}/boards/search",
-            defaults: new { controller = "Boards", action = "Search" });
-
-        //post vote (AJAX)
-        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.POST_VOTE,
-            pattern: "boards/postvote",
-            defaults: new { controller = "Boards", action = "PostVote" });
 
         //private messages
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.PRIVATE_MESSAGES,

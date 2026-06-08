@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Shqip" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email i përdoruesit të administratorit.</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Fjalëkalimi i përdoruesit të administratorit.</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Grup karakteresh</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Krahasim</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Kërkohet krahasim</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>{0}' llogaria nuk jepet me Modifikimin e lejes në dosje '{1}'. Ju lutemi konfiguroni këto leje.</Value>

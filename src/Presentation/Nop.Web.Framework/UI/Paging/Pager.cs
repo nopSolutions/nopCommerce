@@ -5,8 +5,8 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
-using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Extensions;
 
@@ -556,8 +556,10 @@ public partial class Pager : IHtmlContent
             url = webHelper.ModifyQueryString(url, routeValue.Key, routeValue.Value?.ToString());
 
         if (_renderEmptyParameters && parametersWithEmptyValues.Any())
+        {
             foreach (var key in parametersWithEmptyValues)
                 url = webHelper.ModifyQueryString(url, key);
+        }
 
         return url;
     }

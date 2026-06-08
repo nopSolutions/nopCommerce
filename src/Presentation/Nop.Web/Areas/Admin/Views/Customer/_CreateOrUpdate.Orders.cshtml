@@ -12,40 +12,34 @@
         {
             new ColumnProperty(nameof(CustomerOrderModel.CustomOrderNumber))
             {
-                Title = T("Admin.Customers.Customers.Orders.CustomOrderNumber").Text,
-                Width = "200"
+                Title = T("Admin.Customers.Customers.Orders.CustomOrderNumber").Text
             },
             new ColumnProperty(nameof(CustomerOrderModel.OrderTotal))
             {
-                Title = T("Admin.Customers.Customers.Orders.OrderTotal").Text,
-                Width = "200"
+                Title = T("Admin.Customers.Customers.Orders.OrderTotal").Text
             },
             new ColumnProperty(nameof(CustomerOrderModel.OrderStatus))
             {
                 Title = T("Admin.Customers.Customers.Orders.OrderStatus").Text,
-                Width = "200",
                 Render = new RenderCustom("renderColumnOrderStatus")
             },
             new ColumnProperty(nameof(CustomerOrderModel.PaymentStatus))
             {
-                Title = T("Admin.Orders.Fields.PaymentStatus").Text,
-                Width = "200"
+                Title = T("Admin.Orders.Fields.PaymentStatus").Text
             },
             new ColumnProperty(nameof(CustomerOrderModel.ShippingStatus))
             {
-                Title = T("Admin.Orders.Fields.ShippingStatus").Text,
-                Width = "200"
+                Title = T("Admin.Orders.Fields.ShippingStatus").Text
             },
             new ColumnProperty(nameof(CustomerOrderModel.StoreName))
             {
                 Title = T("Admin.Orders.Fields.Store").Text,
-                Width = "200",
                 Visible = (await storeService.GetAllStoresAsync()).Count > 1
             },
             new ColumnProperty(nameof(CustomerOrderModel.CreatedOn))
             {
                 Title = T("Admin.System.Log.Fields.CreatedOn").Text,
-                Width = "200",
+                Width = "180",
                 Render = new RenderDate()
             },
             new ColumnProperty(nameof(CustomerOrderModel.Id))

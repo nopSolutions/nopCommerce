@@ -21,11 +21,10 @@
             @T("Plugins.Misc.RFQ.RequestsQuote")
         </h1>
         <div class="float-right">
-            <button type="button" id="delete-selected" name="delete-selected" class="btn btn-danger">
+            <button type="button" id="delete-selected" class="btn btn-danger">
                 <i class="far fa-trash-alt"></i>
                 @T("Plugins.Misc.RFQ.DeleteSelected")
             </button>
-            <nop-action-confirmation asp-button-id="delete-selected"/>
         </div>
     </div>
 
@@ -123,20 +122,18 @@
                                     new(nameof(RequestQuoteModel.CreatedOnUtc))
                                     {
                                         Title = T("Plugins.Misc.RFQ.Fields.RequestQuote.CreatedOn").Text,
-                                        Width = "200",
+                                        Width = "180",
                                         Render = new RenderDate()
                                     },
                                     new(nameof(RequestQuoteModel.Status))
                                     {
                                         Title = T("Plugins.Misc.RFQ.Fields.RequestQuote.Status").Text,
-                                        Encode = false,
-                                        Width = "200",
+                                        Encode = false
                                     },
                                     new(nameof(RequestQuoteModel.CustomerEmail))
                                     {
                                         Title = T("Plugins.Misc.RFQ.Fields.CustomerEmail").Text,
-                                        Encode = true,
-                                        Width = "200",
+                                        Encode = true
                                     },
                                     new(nameof(RequestQuoteModel.CustomerNotes))
                                     {
@@ -193,3 +190,4 @@
 </form>
 <nop-alert asp-alert-id="deleteSelectedFailed" />
 <nop-alert asp-alert-id="nothingSelectedAlert" />
+<nop-action-confirmation asp-button-id="delete-selected" />

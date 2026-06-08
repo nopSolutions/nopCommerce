@@ -4,7 +4,7 @@
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
-    <Version>4.90</Version>
+    <Version>5.00</Version>
     <Description>This project contains a set of core services, business logic, validations or calculations related with the data, if needed. Some people call it Business Access Layer (BAL).</Description>
     <PackageLicenseUrl>https://www.nopcommerce.com/license</PackageLicenseUrl>
     <PackageProjectUrl>https://www.nopcommerce.com/</PackageProjectUrl>
@@ -13,16 +13,17 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="elFinder.NetCore" Version="1.6.0" />
     <PackageReference Include="Google.Apis.Auth" Version="1.70.0" />
     <!--Do not remove this reference. HarfBuzzSharp.NativeAssets.Linux library need for properly work SkiaSharp.HarfBuzz on the UNIX system-->
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.1" />
     <PackageReference Include="MailKit" Version="4.13.0" />
     <PackageReference Include="Markdig" Version="0.42.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="5.3.0" />
-    <PackageReference Include="PdfRpt.Core" Version="1.5.16" />
+    <PackageReference Include="PdfRpt.Core" Version="1.5.15" />
     <PackageReference Include="System.ServiceModel.Http" Version="8.1.2" />
-    <PackageReference Include="SkiaSharp" Version="3.119.0" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp" Version="3.119.4" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1" />
     <PackageReference Include="Svg.Skia" Version="3.0.6" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.7" />
   </ItemGroup>

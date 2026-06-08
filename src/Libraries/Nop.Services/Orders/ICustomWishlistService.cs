@@ -29,6 +29,13 @@ public partial interface ICustomWishlistService
     Task RemoveCustomWishlistAsync(int itemId);
 
     /// <summary>
+    /// Updates an existing custom wishlist in the data store if it exists.
+    /// </summary>
+    /// <param name="item">The custom wishlist to update. The wishlist must have a valid identifier corresponding to an existing entry.</param>
+    /// <returns>A task that represents the asynchronous update operation.</returns>
+    Task UpdateCustomWishlistAsync(CustomWishlist item);
+
+    /// <summary>
     /// Retrieves a custom wishlist by its unique identifier.
     /// </summary>
     /// <param name="itemId">The unique identifier of the custom wishlist to retrieve. Must be a positive integer.</param>

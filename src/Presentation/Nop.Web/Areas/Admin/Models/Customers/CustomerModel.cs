@@ -133,6 +133,9 @@ public partial record CustomerModel : BaseNopEntityModel, IAclSupportedModel
     [NopResourceDisplayName("Admin.Customers.Customers.Fields.Phone")]
     public string Phone { get; set; }
 
+    [NopResourceDisplayName("Admin.Customers.Customers.Fields.PhoneSmsVerified")]
+    public bool PhoneSmsVerified { get; set; }
+
     public bool FaxEnabled { get; set; }
 
     [DataType(DataType.PhoneNumber)]

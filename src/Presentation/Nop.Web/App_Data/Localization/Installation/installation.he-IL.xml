@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="עברית" IsDefault="false" IsRightToLeft="true">
   <LocaleResource Name="AdminEmail">
     <Value>אימיל מנהל החנות</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>הזן סיסמת אימייל החנות</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>סט תווים</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>איסוף</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>נדרש איסוף</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>למשתמש '{0}' אין הרשאות כתיבה על התיקיה '{1}'. נא להגדיר הרשאות אלה.</Value>

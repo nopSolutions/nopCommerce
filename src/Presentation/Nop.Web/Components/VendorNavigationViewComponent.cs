@@ -26,6 +26,6 @@ public partial class VendorNavigationViewComponent : NopViewComponent
         if (!model.Vendors.Any())
             return Content("");
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

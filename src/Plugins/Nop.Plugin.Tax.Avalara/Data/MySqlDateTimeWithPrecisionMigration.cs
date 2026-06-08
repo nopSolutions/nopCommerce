@@ -1,6 +1,6 @@
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Data;
-using Nop.Data.Mapping;
+using Nop.Data.Extensions;
 using Nop.Data.Migrations;
 using Nop.Plugin.Tax.Avalara.Domain;
 
@@ -21,9 +21,8 @@ public class MySqlDateTimeWithPrecisionMigration : Migration
         if (dataSettings.DataProvider != DataProviderType.MySql)
             return;
 
-        Alter.Table(NameCompatibilityManager.GetTableName(typeof(TaxTransactionLog)))
-            .AlterColumn(NameCompatibilityManager.GetColumnName(typeof(TaxTransactionLog), nameof(TaxTransactionLog.CreatedDateUtc)))
-            .AsCustom("datetime(6)");
+        this.AddOrAlterColumnFor<TaxTransactionLog>(t => t.CreatedDateUtc)
+        .AsCustom("datetime(6)");
     }
 
     /// <summary>

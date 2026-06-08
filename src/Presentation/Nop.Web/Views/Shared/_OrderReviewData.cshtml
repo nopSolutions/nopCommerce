@@ -139,6 +139,17 @@
                                 @Model.ShippingMethod
                             </span>
                         </li>
+                        @if (!string.IsNullOrEmpty(Model.DesiredDeliveryDate))
+                        {
+                            <li class="desired-delivery-date">
+                                <span class="label">
+                                    @T("Order.Shipping.DesiredDeliveryDate"):
+                                </span>
+                                <span class="value">
+                                    @Model.DesiredDeliveryDate
+                                </span>
+                            </li>
+                        }
                         @await Html.PartialAsync("_OrderCustomValues", Model.CustomValues?.GetValuesByDisplayLocation(CustomValueDisplayLocation.Shipping))
                         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OrderSummaryShippingMethodInfo, additionalData = Model })
                     </ul>
