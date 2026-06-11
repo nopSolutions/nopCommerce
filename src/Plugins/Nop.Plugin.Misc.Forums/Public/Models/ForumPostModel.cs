@@ -11,7 +11,7 @@ public record ForumPostModel : BaseNopEntityModel
     public string FormattedText { get; set; }
     public bool IsCurrentCustomerAllowedToEditPost { get; set; }
     public bool IsCurrentCustomerAllowedToDeletePost { get; set; }
-    public int CustomerId { get; set; }
+    public int? CustomerId { get; set; }
     public bool AllowViewingProfiles { get; set; }
     public string CustomerAvatarUrl { get; set; }
     public string CustomerName { get; set; }

@@ -23,7 +23,7 @@ public class ForumPostBuilder : NopEntityBuilder<ForumPost>
         table
             .WithColumn(nameof(ForumPost.Text)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(ForumPost.IPAddress)).AsString(100).Nullable()
-            .WithColumn(nameof(ForumPost.CustomerId)).AsInt32().ForeignKey<Customer>().OnDelete(Rule.None)
+            .WithColumn(nameof(ForumPost.CustomerId)).AsInt32().Nullable().ForeignKey<Customer>().OnDelete(Rule.SetNull)
             .WithColumn(nameof(ForumPost.TopicId)).AsInt32().ForeignKey<ForumTopic>();
     }
 

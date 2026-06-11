@@ -1320,8 +1320,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task AddCustomerTokensAsync(IList<Token> tokens, int customerId)
     {
-        if (customerId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(customerId));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(customerId);
 
         var customer = await _customerService.GetCustomerByIdAsync(customerId);
 

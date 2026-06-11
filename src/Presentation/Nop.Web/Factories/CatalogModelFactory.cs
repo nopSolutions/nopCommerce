@@ -1281,7 +1281,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
             return await vendorReviews.SelectAwait(async pr =>
             {
-                var customer = await _customerService.GetCustomerByIdAsync(pr.CustomerId);
+                var customer = await _customerService.GetCustomerByIdAsync(pr.CustomerId ?? 0);
                 var product = await _productService.GetProductByIdAsync(pr.ProductId);
 
                 var model = new VendorProductReviewModel
@@ -1306,7 +1306,9 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
                 if (_customerSettings.AllowCustomersToUploadAvatars)
                 {
-                    model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
+                    model.CustomerAvatarUrl = customer is null ?
+                    await _pictureService.GetDefaultPictureUrlAsync(_mediaSettings.AvatarPictureSize, PictureType.Avatar) :
+                    await _pictureService.GetPictureUrlAsync(
                         await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                         _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
                 }
@@ -1785,7 +1787,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                     {
                         Keyword = searchTerms,
                         StoreId = currentStore.Id,
-                        CustomerId = customer.Id,
+                        CustomerId = await _customerService.IsGuestAsync(customer) ? null : customer.Id,
                         CreatedOnUtc = DateTime.UtcNow
                     });
                 }

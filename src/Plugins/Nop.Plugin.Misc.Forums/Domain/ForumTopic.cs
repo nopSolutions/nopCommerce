@@ -15,7 +15,7 @@ public class ForumTopic : BaseEntity
     /// <summary>
     /// Gets or sets the customer identifier
     /// </summary>
-    public int CustomerId { get; set; }
+    public int? CustomerId { get; set; }
 
     /// <summary>
     /// Gets or sets the topic type identifier

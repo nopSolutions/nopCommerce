@@ -20,12 +20,14 @@ public class ForumInstallService
 {
     #region Fields
 
+    private const int PAGE_SIZE = 500;
     private readonly EmailAccountSettings _emailAccountSettings;
     private readonly ForumService _forumService;
     private readonly ICustomerService _customerService;
     private readonly IEmailAccountService _emailAccountService;
     private readonly ILocalizationService _localizationService;
     private readonly IMessageTemplateService _messageTemplateService;
+    private readonly INopDataProvider _dataProvider;
     private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
     private readonly IRepository<PermissionRecord> _permissionRepository;
     private readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionMappingRepository;
@@ -41,6 +43,7 @@ public class ForumInstallService
         IEmailAccountService emailAccountService,
         ILocalizationService localizationService,
         IMessageTemplateService messageTemplateService,
+        INopDataProvider dataProvider,
         IRepository<ActivityLogType> activityLogTypeRepository,
         IRepository<PermissionRecord> permissionRepository,
         IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository,
@@ -52,6 +55,7 @@ public class ForumInstallService
         _emailAccountService = emailAccountService;
         _localizationService = localizationService;
         _messageTemplateService = messageTemplateService;
+        _dataProvider = dataProvider;
         _activityLogTypeRepository = activityLogTypeRepository;
         _permissionRepository = permissionRepository;
         _permissionMappingRepository = permissionRecordCustomerRoleMappingRepository;
@@ -586,6 +590,48 @@ public class ForumInstallService
         }
     }
 
+    /// <summary>
+    /// Updates guest data
+    /// </summary>
+    private async Task UpdateGuestDataAsync()
+    {
+        var ftPageIndex = 0;
+        while (true)
+        {
+            var topics = (from ft in _dataProvider.GetTable<ForumTopic>()
+                          join c in _dataProvider.GetTable<Customer>() on ft.CustomerId equals c.Id
+                          where string.IsNullOrEmpty(c.Email)
+                          select ft).Skip(ftPageIndex++ * PAGE_SIZE).Take(PAGE_SIZE).ToList();
+
+            if (!topics.Any())
+                break;
+
+            foreach (var topic in topics)
+            {
+                topic.CustomerId = null;
+                await _dataProvider.UpdateEntityAsync(topic);
+            }
+        }
+
+        var fpPageIndex = 0;
+        while (true)
+        {
+            var posts = (from fp in _dataProvider.GetTable<ForumPost>()
+                         join c in _dataProvider.GetTable<Customer>() on fp.CustomerId equals c.Id
+                         where string.IsNullOrEmpty(c.Email)
+                         select fp).Skip(fpPageIndex++ * PAGE_SIZE).Take(PAGE_SIZE).ToList();
+
+            if (!posts.Any())
+                break;
+
+            foreach (var post in posts)
+            {
+                post.CustomerId = null;
+                await _dataProvider.UpdateEntityAsync(post);
+            }
+        }
+    }
+
     #endregion
 
     #region Methods
@@ -607,6 +653,8 @@ public class ForumInstallService
         await InsertActivityLogTypesAsync();
 
         await PreparePermissionMappingsAsync();
+
+        await UpdateGuestDataAsync();
     }
 
     /// <summary>

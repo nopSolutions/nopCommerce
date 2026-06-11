@@ -143,7 +143,7 @@ public partial class ProductReviewController : BaseAdminController
                 !string.IsNullOrEmpty(productReview.ReplyText) &&
                 _catalogSettings.NotifyCustomerAboutProductReviewReply && !productReview.CustomerNotifiedOfReply)
             {
-                var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId);
+                var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId ?? 0);
                 var customerLanguageId = customer?.LanguageId ?? 0;
 
                 var queuedEmailIds = await _workflowMessageService.SendProductReviewReplyCustomerNotificationMessageAsync(productReview, customerLanguageId);

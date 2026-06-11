@@ -1782,7 +1782,7 @@ public partial class ProductModelFactory : IProductModelFactory
         //filling data from db
         foreach (var pr in productReviews)
         {
-            var customer = await _customerService.GetCustomerByIdAsync(pr.CustomerId);
+            var customer = await _customerService.GetCustomerByIdAsync(pr.CustomerId ?? 0);
 
             var writeOn = await _dateTimeHelper.ConvertToUserTimeAsync(pr.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -1790,7 +1790,7 @@ public partial class ProductModelFactory : IProductModelFactory
             {
                 Id = pr.Id,
                 CustomerId = pr.CustomerId,
-                CustomerName = await _customerService.FormatUsernameAsync(customer),
+                CustomerName = customer != null ? await _customerService.FormatUsernameAsync(customer) : await _localizationService.GetResourceAsync("Customer.Guest"),
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer),
                 Title = pr.Title,
                 ReviewText = pr.ReviewText,
@@ -1808,7 +1808,9 @@ public partial class ProductModelFactory : IProductModelFactory
 
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
-                productReviewModel.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
+                productReviewModel.CustomerAvatarUrl = customer is null ?
+                    await _pictureService.GetDefaultPictureUrlAsync(_mediaSettings.AvatarPictureSize, PictureType.Avatar) :
+                    await _pictureService.GetPictureUrlAsync(
                     await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }

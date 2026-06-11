@@ -10,7 +10,7 @@ using Nop.Plugin.Misc.News.Domain;
 
 namespace Nop.Plugin.Misc.News.Data.Migrations;
 
-[NopMigration("2025-03-06 00:00:00", "Misc.News schema", MigrationProcessType.Installation)]
+[NopMigration("2025-03-06 00:00:01", "Misc.News schema", MigrationProcessType.Installation)]
 public class SchemaMigration : Migration
 {
     #region Fields
@@ -56,7 +56,12 @@ public class SchemaMigration : Migration
             if (Schema.Table(newsCommentTableName).Constraint(constraintName).Exists())
                 Delete.UniqueConstraint(constraintName).FromTable(newsCommentTableName);
 
-            this.AddOrAlterForeignKeyColumnFor<NewsComment, Customer>(t => t.CustomerId, Rule.SetNull).Nullable();
+            Alter.Table(newsCommentTableName)
+                .AlterColumn(newsCommentCustomerIdColumnName)
+                .AsInt32()
+                .Nullable()
+                .ForeignKey(customerTableName, customerIdColumnName)
+                .OnDelete(Rule.SetNull);
         }
         else
         {

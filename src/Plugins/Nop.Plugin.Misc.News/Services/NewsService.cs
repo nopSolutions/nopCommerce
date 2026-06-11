@@ -112,7 +112,7 @@ public class NewsService
     /// </returns>
     private async Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Customer customer)
     {
-        if (!messageTemplate.AllowDirectReply)
+        if (!messageTemplate.AllowDirectReply || customer is null)
             return (null, null);
 
         var replyToEmail = await _customerService.IsGuestAsync(customer)
@@ -419,12 +419,14 @@ public class NewsService
         if (!messageTemplates.Any())
             return [];
 
-        var customer = await _customerService.GetCustomerByIdAsync(newsComment.CustomerId);
+        var customer = await _customerService.GetCustomerByIdAsync(newsComment.CustomerId ?? 0);
 
         //tokens
         var commonTokens = new List<Token>();
         await AddNewsCommentTokensAsync(commonTokens, newsComment);
-        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, newsComment.CustomerId);
+
+        if (customer is not null)
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
         return await messageTemplates.SelectAwait(async messageTemplate =>
         {

@@ -60,7 +60,7 @@ public partial record ProductReviewModel : BaseNopEntityModel
         AdditionalProductReviewList = new List<ProductReviewReviewTypeMappingModel>();
     }
 
-    public int CustomerId { get; set; }
+    public int? CustomerId { get; set; }
 
     public string CustomerAvatarUrl { get; set; }
 

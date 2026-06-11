@@ -300,7 +300,12 @@ public class NewsModelFactory
             .ToDictionary(store => store.Id, store => store.Name);
 
         var news = await _newsService.GetNewsByIdsAsync(comments.Select(comment => comment.NewsItemId).Distinct().ToArray());
-        var customers = await _customerService.GetCustomersByIdsAsync(comments.Select(comment => comment.CustomerId).Distinct().ToArray());
+
+        var customerIds = comments
+            .Where(comment => comment.CustomerId != null)
+            .Select(comment => comment.CustomerId.Value).Distinct().ToArray();
+
+        var customers = await _customerService.GetCustomersByIdsAsync(customerIds);
 
         //prepare list model
         var model = await new NewsCommentListModel().PrepareToGridAsync(searchModel, comments, () =>
@@ -316,12 +321,10 @@ public class NewsModelFactory
                 //fill in additional values (not existing in the entity)
                 commentModel.NewsItemTitle = news.FirstOrDefault(item => item.Id == newsComment.NewsItemId)?.Title;
 
-                if (customers.FirstOrDefault(customer => customer.Id == newsComment.CustomerId) is Customer author)
-                {
-                    commentModel.CustomerInfo = await _customerService.IsRegisteredAsync(author)
-                        ? author.Email
-                        : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
-                }
+                var author = customers.FirstOrDefault(customer => customer.Id == newsComment.CustomerId);
+
+                commentModel.CustomerInfo = author is null || string.IsNullOrEmpty(author.Email) ?
+                        await _localizationService.GetResourceAsync("Admin.Customers.Guest") : author.Email;
 
                 commentModel.CommentText = _htmlFormatter.FormatText(newsComment.CommentText);
                 commentModel.StoreName = storeNames.TryGetValue(newsComment.StoreId, out var value) ? value : "Deleted";

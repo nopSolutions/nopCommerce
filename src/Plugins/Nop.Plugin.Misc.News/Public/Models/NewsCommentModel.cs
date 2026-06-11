@@ -9,7 +9,7 @@ public record NewsCommentModel : BaseNopEntityModel
 {
     #region Properties
 
-    public int CustomerId { get; set; }
+    public int? CustomerId { get; set; }
     public string CustomerName { get; set; }
     public string CustomerAvatarUrl { get; set; }
     public string CommentTitle { get; set; }

@@ -8,6 +8,7 @@ using Nop.Services.Blogs;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Seo;
 using Nop.Web.Infrastructure.Cache;
@@ -29,6 +30,7 @@ public partial class BlogModelFactory : IBlogModelFactory
     protected readonly ICustomerService _customerService;
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IGenericAttributeService _genericAttributeService;
+    protected readonly ILocalizationService _localizationService;
     protected readonly IPictureService _pictureService;
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreContext _storeContext;
@@ -47,6 +49,7 @@ public partial class BlogModelFactory : IBlogModelFactory
         ICustomerService customerService,
         IDateTimeHelper dateTimeHelper,
         IGenericAttributeService genericAttributeService,
+        ILocalizationService localizationService,
         IPictureService pictureService,
         IStaticCacheManager staticCacheManager,
         IStoreContext storeContext,
@@ -61,6 +64,7 @@ public partial class BlogModelFactory : IBlogModelFactory
         _customerService = customerService;
         _dateTimeHelper = dateTimeHelper;
         _genericAttributeService = genericAttributeService;
+        _localizationService = localizationService;
         _pictureService = pictureService;
         _staticCacheManager = staticCacheManager;
         _storeContext = storeContext;
@@ -277,13 +281,13 @@ public partial class BlogModelFactory : IBlogModelFactory
     {
         ArgumentNullException.ThrowIfNull(blogComment);
 
-        var customer = await _customerService.GetCustomerByIdAsync(blogComment.CustomerId);
+        var customer = await _customerService.GetCustomerByIdAsync(blogComment.CustomerId ?? 0);
 
         var model = new BlogCommentModel
         {
             Id = blogComment.Id,
             CustomerId = blogComment.CustomerId,
-            CustomerName = await _customerService.FormatUsernameAsync(customer),
+            CustomerName = customer is null ? await _localizationService.GetResourceAsync("Customer.Guest") : await _customerService.FormatUsernameAsync(customer),
             CommentText = blogComment.CommentText,
             CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc),
             AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer)

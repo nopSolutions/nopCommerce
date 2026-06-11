@@ -776,7 +776,7 @@ public partial class BrevoManager
             ArgumentNullException.ThrowIfNull(order);
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-            if (customer.Email is null)
+            if (string.IsNullOrEmpty(customer?.Email))
                 return;
 
             //create API client

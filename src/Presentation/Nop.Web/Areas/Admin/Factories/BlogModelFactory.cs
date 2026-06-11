@@ -275,12 +275,11 @@ public partial class BlogModelFactory : IBlogModelFactory
                 //set title from linked blog post
                 commentModel.BlogPostTitle = (await _blogService.GetBlogPostByIdAsync(blogComment.BlogPostId))?.Title;
 
-                if ((await _customerService.GetCustomerByIdAsync(blogComment.CustomerId)) is Customer customer)
-                {
-                    commentModel.CustomerInfo = (await _customerService.IsRegisteredAsync(customer))
-                        ? customer.Email
-                        : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
-                }
+                var commentCustomer = await _customerService.GetCustomerByIdAsync(blogComment.CustomerId ?? 0);
+
+                commentModel.CustomerInfo = commentCustomer is null || string.IsNullOrEmpty(commentCustomer.Email) ?
+                    await _localizationService.GetResourceAsync("Admin.Customers.Guest") : commentCustomer.Email;
+
                 //fill in additional values (not existing in the entity)
                 commentModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc);
                 commentModel.Comment = _htmlFormatter.FormatText(blogComment.CommentText);

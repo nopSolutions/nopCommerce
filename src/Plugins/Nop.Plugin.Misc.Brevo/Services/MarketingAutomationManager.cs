@@ -111,7 +111,7 @@ public class MarketingAutomationManager
             return;
 
         var customer = await _customerService.GetCustomerByIdAsync(cartItem.CustomerId);
-        var email = customer.Email;
+        var email = customer?.Email;
 
         if (string.IsNullOrEmpty(email))
             return;
@@ -240,7 +240,7 @@ public class MarketingAutomationManager
         var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
         var shippingAddress = await _addressService.GetAddressByIdAsync(order.ShippingAddressId ?? 0);
         var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
-        var email = customer.Email ?? billingAddress?.Email;
+        var email = customer?.Email ?? billingAddress?.Email;
 
         if (string.IsNullOrEmpty(email))
             return;

@@ -25,7 +25,7 @@ public class NewsComment : BaseEntity
     /// <summary>
     /// Gets or sets the customer identifier
     /// </summary>
-    public int CustomerId { get; set; }
+    public int? CustomerId { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the comment is approved

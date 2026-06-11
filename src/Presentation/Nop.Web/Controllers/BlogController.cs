@@ -181,7 +181,8 @@ public partial class BlogController : BasePublicController
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var customer = await _workContext.GetCurrentCustomerAsync();
-        if (await _customerService.IsGuestAsync(customer) && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
+        var isGuest = await _customerService.IsGuestAsync(customer);
+        if (isGuest && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Blog.Comments.OnlyRegisteredUsersLeaveComments"));
 
         //validate CAPTCHA
@@ -194,7 +195,7 @@ public partial class BlogController : BasePublicController
             var comment = new BlogComment
             {
                 BlogPostId = blogPost.Id,
-                CustomerId = customer.Id,
+                CustomerId = !isGuest ? customer.Id : null,
                 CommentText = model.AddNewComment.CommentText,
                 IsApproved = !_blogSettings.BlogCommentsMustBeApproved,
                 StoreId = store.Id,

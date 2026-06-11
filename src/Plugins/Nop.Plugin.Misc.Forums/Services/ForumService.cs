@@ -9,6 +9,7 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Html;
+using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Mvc.Routing;
@@ -27,6 +28,7 @@ public class ForumService
     private readonly ICustomerService _customerService;
     private readonly IGenericAttributeService _genericAttributeService;
     private readonly IHtmlFormatter _htmlFormatter;
+    private readonly ILocalizationService _localizationService;
     private readonly IMessageTokenProvider _messageTokenProvider;
     private readonly INopUrlHelper _nopUrlHelper;
     private readonly IRepository<Customer> _customerRepository;
@@ -53,6 +55,7 @@ public class ForumService
         ICustomerService customerService,
         IGenericAttributeService genericAttributeService,
         IHtmlFormatter htmlFormatter,
+        ILocalizationService localizationService,
         IMessageTokenProvider messageTokenProvider,
         INopUrlHelper nopUrlHelper,
         IRepository<Customer> customerRepository,
@@ -75,6 +78,7 @@ public class ForumService
         _customerService = customerService;
         _genericAttributeService = genericAttributeService;
         _htmlFormatter = htmlFormatter;
+        _localizationService = localizationService;
         _messageTokenProvider = messageTokenProvider;
         _nopUrlHelper = nopUrlHelper;
         _customerRepository = customerRepository;
@@ -169,9 +173,10 @@ public class ForumService
     /// <returns>A task that represents the asynchronous operation</returns>
     private async Task AddForumPostTokensAsync(List<Token> tokens, ForumPost forumPost)
     {
-        var customer = await _customerService.GetCustomerByIdAsync(forumPost.CustomerId);
+        var customer = await _customerService.GetCustomerByIdAsync(forumPost.CustomerId ?? 0);
 
-        tokens.Add(new("Forums.PostAuthor", await _customerService.FormatUsernameAsync(customer)));
+        tokens.Add(new("Forums.PostAuthor", customer == null ? 
+            await _localizationService.GetResourceAsync("Customer.Guest") : await _customerService.FormatUsernameAsync(customer)));
         tokens.Add(new("Forums.PostBody", FormatPostText(forumPost), true));
     }
 
@@ -223,7 +228,7 @@ public class ForumService
         {
             lastTopicId = lastValues.LastTopicId;
             lastPostId = lastValues.LastPostId;
-            lastPostCustomerId = lastValues.LastPostCustomerId;
+            lastPostCustomerId = lastValues.LastPostCustomerId ?? 0;
             lastPostTime = lastValues.LastPostTime;
         }
 
@@ -273,7 +278,7 @@ public class ForumService
         if (lastValues != null)
         {
             lastPostId = lastValues.LastPostId;
-            lastPostCustomerId = lastValues.LastPostCustomerId;
+            lastPostCustomerId = lastValues.LastPostCustomerId ?? 0;
             lastPostTime = lastValues.LastPostTime;
         }
 
@@ -771,7 +776,9 @@ public class ForumService
         //update stats
         await UpdateForumTopicStatsAsync(forumTopicId);
         await UpdateForumStatsAsync(forumId);
-        await UpdateCustomerStatsAsync(customerId);
+
+        if (customerId.HasValue)
+            await UpdateCustomerStatsAsync(customerId.Value);
     }
 
     /// <summary>
@@ -861,7 +868,9 @@ public class ForumService
 
         await UpdateForumTopicStatsAsync(forumPost.TopicId);
         await UpdateForumStatsAsync(forumId);
-        await UpdateCustomerStatsAsync(customerId);
+
+        if (customerId.HasValue)
+            await UpdateCustomerStatsAsync(customerId.Value);
 
         //notifications
         if (!sendNotifications)
