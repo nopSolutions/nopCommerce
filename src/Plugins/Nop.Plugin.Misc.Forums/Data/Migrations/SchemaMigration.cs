@@ -1,4 +1,6 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
+using Nop.Core.Domain.Customers;
 using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
@@ -84,8 +86,33 @@ public class SchemaMigration : Migration
     {
         this.CreateTableIfNotExists<ForumGroup>();
         this.CreateTableIfNotExists<Forum>();
-        this.CreateTableIfNotExists<ForumTopic>();
-        this.CreateTableIfNotExists<ForumPost>();
+
+        var forumTopicTableName = NameCompatibilityManager.GetTableName(typeof(ForumTopic));
+        var forumTopicCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(ForumTopic), nameof(ForumTopic.CustomerId));
+        if (Schema.Table(forumTopicTableName).Column(forumTopicCustomerIdColumnName).Exists())
+        {
+            this.AddOrAlterForeignKeyColumnFor<ForumTopic, Customer>(record => record.CustomerId)
+                .OnDelete(Rule.SetNull)
+                .Nullable();
+        }
+        else
+        {
+            this.CreateTableIfNotExists<ForumTopic>();
+        }
+
+        var forumPostTableName = NameCompatibilityManager.GetTableName(typeof(ForumPost));
+        var forumPostCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(ForumPost), nameof(ForumPost.CustomerId));
+        if (Schema.Table(forumPostTableName).Column(forumPostCustomerIdColumnName).Exists())
+        {
+            this.AddOrAlterForeignKeyColumnFor<ForumPost, Customer>(record => record.CustomerId)
+                .OnDelete(Rule.SetNull)
+                .Nullable();
+        }
+        else
+        {
+            this.CreateTableIfNotExists<ForumPost>();
+        }
+
         this.CreateTableIfNotExists<ForumPostVote>();
         this.CreateTableIfNotExists<ForumSubscription>();
 

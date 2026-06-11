@@ -1965,8 +1965,8 @@ public partial class ImportManager : IImportManager
             manager.ReadDefaultFromXlsx(defaultWorksheet, iRow);
 
             var customerGuid = manager.GetDefaultProperty("CustomerGuid").GuidValue;
-            var customer = await _customerService.GetCustomerByGuidAsync(customerGuid) ??
-                           await _customerService.GetCustomerByEmailAsync(manager.GetDefaultProperty("Email").StringValue);
+            var customer = await _customerService.GetCustomerByGuidAsync(customerGuid)
+                ?? await _customerService.GetCustomerByEmailAsync(manager.GetDefaultProperty("Email").StringValue);
 
             int? avatarPictureId = null;
             string password = null;
@@ -3327,7 +3327,9 @@ public partial class ImportManager : IImportManager
         var allOrdersByGuids = await _orderService.GetOrdersByGuidsAsync(metadata.AllOrderGuids.ToArray());
 
         //performance optimization, load all customers by guid in one SQL request
-        var allCustomersByGuids = await _customerService.GetCustomersByGuidsAsync(metadata.AllCustomerGuids.ToArray());
+        var allCustomersByGuids = (await _customerService.GetCustomersByGuidsAsync(metadata.AllCustomerGuids.ToArray()))
+            .Where(customer => customer is not null)
+            .ToList();
 
         Order lastLoadedOrder = null;
 

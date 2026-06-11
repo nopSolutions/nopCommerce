@@ -141,7 +141,7 @@
                                     new ColumnProperty(nameof(BlogCommentModel.CustomerInfo))
                                     {
                                         Title = T("Admin.ContentManagement.Blog.Comments.Fields.Customer").Text,
-                                        Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit/", nameof(BlogCommentModel.CustomerId)))
+                                        Render = new RenderCustom("renderColumnCustomerInfo")
                                     },
                                     new ColumnProperty(nameof(BlogCommentModel.Comment))
                                     {
@@ -182,94 +182,103 @@
                             })
 
                             <script>
-                        $(function() {
-                            //"delete selected" button
-                            $("#delete-selected-action-confirmation-submit-button").on("click", function () {
-                                var postData = {
-                                    selectedIds: selectedIds
-                                };
-                                addAntiForgeryToken(postData);
-                                $.ajax({
-                                    cache: false,
-                                    type: "POST",
-                                    url: "@(Url.Action("DeleteSelectedComments", "Blog"))",
-                                    data: postData,
-                                    error: function (jqXHR, textStatus, errorThrown) {
-                                        showAlert('deleteSelectedCommentsFailed', errorThrown);
-                                    },
-                                    complete: function (jqXHR, textStatus) {
-                                        if (jqXHR.status === 204)
-                                        {
-                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
-                                            return;
-                                        }
-                                        updateTable('#comments-grid');
+                                function renderColumnCustomerInfo(data, type, row, meta) {
+                                    if (row.CustomerId) {
+                                        return `<a href="@Url.Content("~/Admin/Customer/Edit/")${row.CustomerId}">${row.CustomerInfo}</a>`;
                                     }
-                                });
-                                $('#delete-selected-action-confirmation').modal('toggle');
-                                return false;
-                            });
+                                    else {
+                                        return `<span>${row.CustomerInfo}</span>`;
+                                    }
+                                } 
 
-                            //"approve selected" button
-                            $('#approve-selected').click(function(e) {
-                                    e.preventDefault();
-
-                                    var postData = {
-                                        selectedIds: selectedIds
-                                    };
-                                    addAntiForgeryToken(postData);
-
-                                    $.ajax({
-                                        cache: false,
-                                        type: "POST",
-                                        url: "@(Url.Action("ApproveSelected", "Blog"))",
-                                        data: postData,
-                                        traditional: true,
-                                        error: function (jqXHR, textStatus, errorThrown) {
-                                            showAlert('approveSelectedFailed', errorThrown);
-                                        },
-                                        complete: function (jqXHR, textStatus) {
-                                            if (jqXHR.status === 204)
-                                            {
-                                                showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
-                                                return;
+                                $(function() {
+                                    //"delete selected" button
+                                    $("#delete-selected-action-confirmation-submit-button").on("click", function () {
+                                        var postData = {
+                                            selectedIds: selectedIds
+                                        };
+                                        addAntiForgeryToken(postData);
+                                        $.ajax({
+                                            cache: false,
+                                            type: "POST",
+                                            url: "@(Url.Action("DeleteSelectedComments", "Blog"))",
+                                            data: postData,
+                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                showAlert('deleteSelectedCommentsFailed', errorThrown);
+                                            },
+                                            complete: function (jqXHR, textStatus) {
+                                                if (jqXHR.status === 204)
+                                                {
+                                                    showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                    return;
+                                                }
+                                                updateTable('#comments-grid');
                                             }
-                                            updateTable('#comments-grid');
-                                        }
+                                        });
+                                        $('#delete-selected-action-confirmation').modal('toggle');
+                                        return false;
                                     });
-                                    return false;
+
+                                    //"approve selected" button
+                                    $('#approve-selected').click(function(e) {
+                                            e.preventDefault();
+
+                                            var postData = {
+                                                selectedIds: selectedIds
+                                            };
+                                            addAntiForgeryToken(postData);
+
+                                            $.ajax({
+                                                cache: false,
+                                                type: "POST",
+                                                url: "@(Url.Action("ApproveSelected", "Blog"))",
+                                                data: postData,
+                                                traditional: true,
+                                                error: function (jqXHR, textStatus, errorThrown) {
+                                                    showAlert('approveSelectedFailed', errorThrown);
+                                                },
+                                                complete: function (jqXHR, textStatus) {
+                                                    if (jqXHR.status === 204)
+                                                    {
+                                                        showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                        return;
+                                                    }
+                                                    updateTable('#comments-grid');
+                                                }
+                                            });
+                                            return false;
+                                        });
+
+                                    //"disapprove selected" button
+                                    $('#disapprove-selected').click(function(e) {
+                                            e.preventDefault();
+
+                                            var postData = {
+                                                selectedIds: selectedIds
+                                            };
+                                            addAntiForgeryToken(postData);
+
+                                            $.ajax({
+                                                cache: false,
+                                                type: "POST",
+                                                url: "@(Url.Action("DisapproveSelected", "Blog"))",
+                                                data: postData,
+                                                traditional: true,
+                                                error: function (jqXHR, textStatus, errorThrown) {
+                                                    showAlert('disapproveSelectedFailed', errorThrown);
+                                                },
+                                                complete: function (jqXHR, textStatus) {
+                                                    if (jqXHR.status === 204)
+                                                    {
+                                                        showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                                        return;
+                                                    }
+                                                    updateTable('#comments-grid');
+                                                }
+                                            });
+                                            return false;
+                                        });
                                 });
-
-                            //"disapprove selected" button
-                            $('#disapprove-selected').click(function(e) {
-                                    e.preventDefault();
-
-                                    var postData = {
-                                        selectedIds: selectedIds
-                                    };
-                                    addAntiForgeryToken(postData);
-
-                                    $.ajax({
-                                        cache: false,
-                                        type: "POST",
-                                        url: "@(Url.Action("DisapproveSelected", "Blog"))",
-                                        data: postData,
-                                        traditional: true,
-                                        error: function (jqXHR, textStatus, errorThrown) {
-                                            showAlert('disapproveSelectedFailed', errorThrown);
-                                        },
-                                        complete: function (jqXHR, textStatus) {
-                                            if (jqXHR.status === 204)
-                                            {
-                                                showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
-                                                return;
-                                            }
-                                            updateTable('#comments-grid');
-                                        }
-                                    });
-                                    return false;
-                                });
-                        });
                             </script>
                         </div>
                     </div>

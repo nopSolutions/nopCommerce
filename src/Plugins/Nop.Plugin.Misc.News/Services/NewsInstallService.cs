@@ -22,12 +22,15 @@ public class NewsInstallService
 {
     #region Fields
 
+    private const int PAGE_SIZE = 500;
     private readonly EmailAccountSettings _emailAccountSettings;
     private readonly ICustomerService _customerService;
     private readonly IEmailAccountService _emailAccountService;
     private readonly ILocalizationService _localizationService;
     private readonly IMessageTemplateService _messageTemplateService;
     private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
+    private readonly IRepository<Customer> _customerRepository;
+    private readonly IRepository<NewsComment> _newsCommentRepository;
     private readonly IRepository<PermissionRecord> _permissionRepository;
     private readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionMappingRepository;
     private readonly ISettingService _settingService;
@@ -45,6 +48,8 @@ public class NewsInstallService
         ILocalizationService localizationService,
         IMessageTemplateService messageTemplateService,
         IRepository<ActivityLogType> activityLogTypeRepository,
+        IRepository<Customer> customerRepository,
+        IRepository<NewsComment> newsCommentRepository,
         IRepository<PermissionRecord> permissionRepository,
         IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository,
         ISettingService settingService,
@@ -58,6 +63,8 @@ public class NewsInstallService
         _localizationService = localizationService;
         _messageTemplateService = messageTemplateService;
         _activityLogTypeRepository = activityLogTypeRepository;
+        _customerRepository = customerRepository;
+        _newsCommentRepository = newsCommentRepository;
         _permissionRepository = permissionRepository;
         _permissionMappingRepository = permissionRecordCustomerRoleMappingRepository;
         _settingService = settingService;
@@ -425,6 +432,32 @@ public class NewsInstallService
         await UpdatePermissionMappingsAsync("ContentManagement.NewsCommentsCreateEditDelete", NewsDefaults.Permissions.NEWS_COMMENTS_MANAGE);
     }
 
+    /// <summary>
+    /// Updates guest data
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    private async Task UpdateGuestDataAsync()
+    {
+        var commentPageIndex = 0;
+        while (true)
+        {
+            var comments =
+                (from comment in _newsCommentRepository.Table
+                 join c in _customerRepository.Table on comment.CustomerId equals c.Id
+                 where string.IsNullOrEmpty(c.Email)
+                 select comment).Skip(commentPageIndex++ * PAGE_SIZE).Take(PAGE_SIZE).ToList();
+
+            if (!comments.Any())
+                break;
+
+            foreach (var comment in comments)
+            {
+                comment.CustomerId = null;
+            }
+            await _newsCommentRepository.UpdateAsync(comments);
+        }
+    }
+
     #endregion
 
     #region Methods
@@ -444,6 +477,8 @@ public class NewsInstallService
         await InserActivityLogTypesAsync();
 
         await PreparePermissionMappingsAsync();
+
+        await UpdateGuestDataAsync();
     }
 
     /// <summary>

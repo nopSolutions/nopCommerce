@@ -22,7 +22,7 @@ public class ForumTopicBuilder : NopEntityBuilder<ForumTopic>
     {
         table
             .WithColumn(nameof(ForumTopic.Subject)).AsString(450).NotNullable()
-            .WithColumn(nameof(ForumTopic.CustomerId)).AsInt32().ForeignKey<Customer>(onDelete: Rule.None)
+            .WithColumn(nameof(ForumTopic.CustomerId)).AsInt32().Nullable().ForeignKey<Customer>(onDelete: Rule.SetNull)
             .WithColumn(nameof(ForumTopic.ForumId)).AsInt32().ForeignKey<Forum>();
     }
 
