@@ -270,8 +270,8 @@
                 if (element.Editable == true) {
                     var input = $($($(currentCells).children("[data-columnname='" + element.Data + "']")).children('input')[0]);
                     var value = input.val();
-                    if (input.attr('type') == 'number') { 
-                        value = new Intl.NumberFormat("@CultureInfo.CurrentUICulture.Name", { 
+                    if (input.attr('type') == 'number') {
+                        value = new Intl.NumberFormat("@CultureInfo.CurrentUICulture.Name", {
                             useGrouping: false,
                             maximumFractionDigits: 8
                         }).formatToParts(value)
@@ -282,8 +282,8 @@
                                 if (type == "integer")
                                     return parser(vpart);
 
-                                    if (type == "fraction") //to keep leading zeros, we process each digit
-                                        return [...vpart].map(c => parser(c)).join('');
+                                if (type == "fraction") //to keep leading zeros, we process each digit
+                                    return [...vpart].map(c => parser(c)).join('');
 
                                 return vpart;
                             })
@@ -313,7 +313,7 @@
                         display_nop_error(data);
                     }
                     //refresh grid
-                        $('#@Model.Name').DataTable().draw(false);
+                    $('#@Model.Name').DataTable().draw(false);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert(errorThrown);
