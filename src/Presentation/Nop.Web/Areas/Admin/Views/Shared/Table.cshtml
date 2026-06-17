@@ -123,7 +123,7 @@
                     addAntiForgeryToken(postData);
 
                     $.ajax({
-                        url: "@Html.Raw(GetUrl((Model.ChildTable?.UrlDelete != null) ? Model.ChildTable?.UrlDelete : Model.UrlDelete))",
+                        url: "@Html.Raw(GetUrl(curModel.UrlDelete))",
                         type: "POST",
                         dataType: "json",
                         data: postData,
@@ -309,7 +309,7 @@
                 addAntiForgeryToken(postData);
 
                 $.ajax({
-                    url: "@Html.Raw(GetUrl((Model.ChildTable?.UrlUpdate != null) ? Model.ChildTable?.UrlUpdate : Model.UrlUpdate))",
+                    url: "@Html.Raw(GetUrl(curModel.UrlUpdate))",
                     type: "POST",
                     dataType: "json",
                     data: postData,
