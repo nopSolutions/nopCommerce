@@ -157,7 +157,6 @@
 
 @if (Model.UrlUpdate != null || Model.ChildTable?.UrlUpdate != null)
 {
-    var currentCulture = CultureInfo.CurrentCulture.Name;
     foreach (var curModel in listOfTables)
     {
         var tableName = ReplaceName(curModel.Name);
