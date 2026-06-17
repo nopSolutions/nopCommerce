@@ -97,7 +97,7 @@
     });
 </script>
 
-@foreach (var curModel in listOfTables.Where(x => x.UrlUpdate != null))
+@foreach (var curModel in listOfTables.Where(x => x.UrlDelete != null))
 {
     var tableName = ReplaceName(curModel.Name);
     <text>
