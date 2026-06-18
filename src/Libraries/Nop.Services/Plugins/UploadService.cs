@@ -234,7 +234,7 @@ public partial class UploadService : IUploadService
 
             //get path to upload
             var uploadedItemDirectoryName = _fileProvider.GetFileName(itemPath.TrimEnd('/'));
-            var pathToUpload = _fileProvider.Combine(item.Type == UploadedItemType.Plugin ? pluginsDirectory : themesDirectory, uploadedItemDirectoryName);
+            var pathToUpload = _fileProvider.GetFullPath(_fileProvider.Combine(item.Type == UploadedItemType.Plugin ? pluginsDirectory : themesDirectory, uploadedItemDirectoryName)) + _fileProvider.DirectorySeparatorChar;
 
             //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin or a theme)
             //furthermore, zip extract functionality cannot override existing files
@@ -251,7 +251,10 @@ public partial class UploadService : IUploadService
                 if (string.IsNullOrEmpty(fileName))
                     continue;
 
-                var filePath = _fileProvider.Combine(pathToUpload, fileName);
+                var filePath = _fileProvider.GetFullPath(_fileProvider.Combine(pathToUpload, fileName));
+
+                if (!filePath.StartsWith(pathToUpload))
+                    throw new NopException("An illegal file path was founded in the archive");
 
                 //if it's a folder, we need to create it
                 if (string.IsNullOrEmpty(entry.Name) && !_fileProvider.DirectoryExists(filePath))

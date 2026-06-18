@@ -50,10 +50,11 @@ public partial class CustomerCacheEventConsumer : CacheEventConsumer<Customer>, 
         await RemoveByPrefixAsync(NopOrderDefaults.ShoppingCartItemsByCustomerPrefix, entity);
         await RemoveAsync(NopCustomerServicesDefaults.CustomerByGuidCacheKey, entity.CustomerGuid);
 
-        if (string.IsNullOrEmpty(entity.SystemName))
-            return;
+        if (!string.IsNullOrEmpty(entity.Phone))
+            await RemoveAsync(NopCustomerServicesDefaults.CustomerByPhoneCacheKey, entity.Phone);
 
-        await RemoveAsync(NopCustomerServicesDefaults.CustomerBySystemNameCacheKey, entity.SystemName);
+        if (!string.IsNullOrEmpty(entity.SystemName))
+            await RemoveAsync(NopCustomerServicesDefaults.CustomerBySystemNameCacheKey, entity.SystemName);
     }
 
     #endregion

@@ -4,6 +4,7 @@ using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -52,11 +53,13 @@ public partial class PluginController : BaseAdminController
     protected readonly IPluginService _pluginService;
     protected readonly ISearchPluginManager _searchPluginManager;
     protected readonly ISettingService _settingService;
+    protected readonly ISmsPluginManager _smsPluginManager;
     protected readonly IShippingPluginManager _shippingPluginManager;
     protected readonly ITaxPluginManager _taxPluginManager;
     protected readonly IUploadService _uploadService;
     protected readonly IWidgetPluginManager _widgetPluginManager;
     protected readonly IWorkContext _workContext;
+    protected readonly MessagesSettings _messagesSettings;
     protected readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
     protected readonly PaymentSettings _paymentSettings;
     protected readonly ShippingSettings _shippingSettings;
@@ -83,11 +86,13 @@ public partial class PluginController : BaseAdminController
         IPluginService pluginService,
         ISearchPluginManager searchPluginManager,
         ISettingService settingService,
+        ISmsPluginManager smsPluginManager,
         IShippingPluginManager shippingPluginManager,
         ITaxPluginManager taxPluginManager,
         IUploadService uploadService,
         IWidgetPluginManager widgetPluginManager,
         IWorkContext workContext,
+        MessagesSettings messagesSettings,
         MultiFactorAuthenticationSettings multiFactorAuthenticationSettings,
         PaymentSettings paymentSettings,
         ShippingSettings shippingSettings,
@@ -110,11 +115,13 @@ public partial class PluginController : BaseAdminController
         _pluginService = pluginService;
         _searchPluginManager = searchPluginManager;
         _settingService = settingService;
+        _smsPluginManager = smsPluginManager;
         _shippingPluginManager = shippingPluginManager;
         _taxPluginManager = taxPluginManager;
         _uploadService = uploadService;
         _widgetPluginManager = widgetPluginManager;
         _workContext = workContext;
+        _messagesSettings = messagesSettings;
         _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
         _paymentSettings = paymentSettings;
         _shippingSettings = shippingSettings;
@@ -493,6 +500,16 @@ public partial class PluginController : BaseAdminController
                             _ => _catalogSettings.ActiveSearchProviderSystemName
                         };
                         await _settingService.SaveSettingAsync(_catalogSettings);
+                        break;
+                    case nameof(ISmsProvider):
+                        pluginIsActive = _smsPluginManager.IsPluginActive(pluginInstance as ISmsProvider);
+                        _messagesSettings.ActiveSmsProviderSystemName = pluginIsActive switch
+                        {
+                            true when !model.IsEnabled => string.Empty,
+                            false when model.IsEnabled => model.SystemName,
+                            _ => _messagesSettings.ActiveSmsProviderSystemName
+                        };
+                        await _settingService.SaveSettingAsync(_messagesSettings);
                         break;
                     case nameof(IWidgetPlugin):
                         pluginIsActive = _widgetPluginManager.IsPluginActive(pluginInstance as IWidgetPlugin);

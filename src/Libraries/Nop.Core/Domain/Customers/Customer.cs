@@ -94,6 +94,11 @@ public partial class Customer : BaseEntity, ISoftDeletedEntity
     public string Phone { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the user's phone number has been verified
+    /// </summary>
+    public bool PhoneSmsVerified { get; set; }
+
+    /// <summary>
     /// Gets or sets the fax
     /// </summary>
     public string Fax { get; set; }

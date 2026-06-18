@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
+using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
@@ -14,6 +15,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
+using Nop.Services.Attributes;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -23,7 +25,6 @@ using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Themes;
-using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Common;
@@ -42,6 +43,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly CommonSettings _commonSettings;
     protected readonly CurrencySettings _currencySettings;
     protected readonly CustomerSettings _customerSettings;
+    protected readonly IAttributeService<ContactFormAttribute, ContactFormAttributeValue> _contactFormAttributeService;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
     protected readonly IGenericAttributeService _genericAttributeService;
@@ -76,6 +78,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         CommonSettings commonSettings,
         CurrencySettings currencySettings,
         CustomerSettings customerSettings,
+        IAttributeService<ContactFormAttribute, ContactFormAttributeValue> contactFormAttributeService,
         ICurrencyService currencyService,
         ICustomerService customerService,
         IGenericAttributeService genericAttributeService,
@@ -106,6 +109,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _commonSettings = commonSettings;
         _currencySettings = currencySettings;
         _customerSettings = customerSettings;
+        _contactFormAttributeService = contactFormAttributeService;
         _currencyService = currencyService;
         _customerService = customerService;
         _genericAttributeService = genericAttributeService;
@@ -168,6 +172,98 @@ public partial class CommonModelFactory : ICommonModelFactory
 
             if (privateMessages.TotalCount > 0)
                 result = privateMessages.TotalCount;
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Prepare the contact form attribute models
+    /// </summary>
+    /// <param name="form">Form values</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of the contact form attribute model
+    /// </returns>
+    protected virtual async Task<IList<ContactFormAttributeModel>> PrepareContactFormAttributesAsync(IFormCollection form = null)
+    {
+        var result = new List<ContactFormAttributeModel>();
+
+        var attributes = await _contactFormAttributeService.GetAllAttributesAsync();
+        foreach (var attribute in attributes)
+        {
+            var attributeModel = new ContactFormAttributeModel
+            {
+                Id = attribute.Id,
+                Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name),
+                IsRequired = attribute.IsRequired,
+                AttributeControlType = attribute.AttributeControlType,
+            };
+
+            if (attribute.ShouldHaveValues)
+            {
+                //values
+                var attributeValues = await _contactFormAttributeService.GetAttributeValuesAsync(attribute.Id);
+                foreach (var attributeValue in attributeValues)
+                {
+                    var valueModel = new ContactFormAttributeValueModel
+                    {
+                        Id = attributeValue.Id,
+                        Name = await _localizationService.GetLocalizedAsync(attributeValue, x => x.Name),
+                        IsPreSelected = attributeValue.IsPreSelected
+                    };
+
+                    attributeModel.Values.Add(valueModel);
+                }
+            }
+
+            if (form is not null)
+            {
+                var controlId = string.Format(NopCommonDefaults.ContactFormAttributeControlName, attributeModel.Id);
+
+                switch (attributeModel.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.Checkboxes:
+                    {
+                        var ctrlAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                        {
+                            foreach (var attributeId in ctrlAttributes)
+                            {
+                                var selectedAttributeId = int.Parse(attributeId);
+                                if (selectedAttributeId == 0)
+                                    continue;
+
+                                foreach (var item in attributeModel.Values)
+                                {
+                                    if (selectedAttributeId == item.Id)
+                                        item.IsPreSelected = true;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                    {
+                        var ctrlAttributes = form[controlId];
+                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                            attributeModel.DefaultValue = string.Join(", ", ctrlAttributes.ToString().Trim());
+                    }
+                    break;
+                    //not supported customer attributes
+                    case AttributeControlType.ReadonlyCheckboxes:
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                    case AttributeControlType.FileUpload:
+                    default:
+                        break;
+                }
+            }
+            result.Add(attributeModel);
         }
 
         return result;
@@ -342,7 +438,7 @@ public partial class CommonModelFactory : ICommonModelFactory
             UnreadPrivateMessages = unreadMessage,
             AlertMessage = alertMessage,
         };
-        
+
         //performance optimization (use "HasShoppingCartItems" property)
         if (customer.HasShoppingCartItems)
         {
@@ -426,11 +522,12 @@ public partial class CommonModelFactory : ICommonModelFactory
     /// </summary>
     /// <param name="model">Contact us model</param>
     /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
+    /// <param name="form">Form values</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the contact us model
     /// </returns>
-    public virtual async Task<ContactUsModel> PrepareContactUsModelAsync(ContactUsModel model, bool excludeProperties)
+    public virtual async Task<ContactUsModel> PrepareContactUsModelAsync(ContactUsModel model, bool excludeProperties, IFormCollection form = null)
     {
         ArgumentNullException.ThrowIfNull(model);
 
@@ -443,6 +540,7 @@ public partial class CommonModelFactory : ICommonModelFactory
 
         model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
         model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
+        model.ContactFormAttributes = await PrepareContactFormAttributesAsync(form);
 
         return model;
     }

@@ -447,7 +447,7 @@ public class WorkflowMessageServiceTests : ServiceTest
     public async Task CanSendContactUsMessage()
     {
         await CheckData(async () =>
-            await _workflowMessageService.SendContactUsMessageAsync(1, NopTestsDefaults.AdminEmail, "sender name", "subject", "body"));
+            await _workflowMessageService.SendContactUsMessageAsync(1, NopTestsDefaults.AdminEmail, "sender name", "subject", "body", null));
     }
 
     [Test]

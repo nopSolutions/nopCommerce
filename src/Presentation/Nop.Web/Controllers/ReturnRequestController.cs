@@ -3,15 +3,18 @@ using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Http;
 using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers;
@@ -21,9 +24,12 @@ public partial class ReturnRequestController : BasePublicController
 {
     #region Fields
 
+    protected readonly CaptchaSettings _captchaSettings;
+    protected readonly IAddressService _addressService;
     protected readonly ICustomerService _customerService;
     protected readonly ICustomNumberFormatter _customNumberFormatter;
     protected readonly IDownloadService _downloadService;
+    protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILocalizationService _localizationService;
     protected readonly INopFileProvider _fileProvider;
     protected readonly IOrderProcessingService _orderProcessingService;
@@ -34,15 +40,18 @@ public partial class ReturnRequestController : BasePublicController
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
     protected readonly LocalizationSettings _localizationSettings;
-    protected readonly OrderSettings _orderSettings;
+    protected readonly ReturnRequestSettings _returnRequestSettings;
 
     #endregion
 
     #region Ctor
 
-    public ReturnRequestController(ICustomerService customerService,
+    public ReturnRequestController(CaptchaSettings captchaSettings,
+        IAddressService addressService,
+        ICustomerService customerService,
         ICustomNumberFormatter customNumberFormatter,
         IDownloadService downloadService,
+        IGenericAttributeService genericAttributeService,
         ILocalizationService localizationService,
         INopFileProvider fileProvider,
         IOrderProcessingService orderProcessingService,
@@ -53,11 +62,14 @@ public partial class ReturnRequestController : BasePublicController
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
         LocalizationSettings localizationSettings,
-        OrderSettings orderSettings)
+        ReturnRequestSettings returnRequestSettings)
     {
+        _captchaSettings = captchaSettings;
+        _addressService = addressService;
         _customerService = customerService;
         _customNumberFormatter = customNumberFormatter;
         _downloadService = downloadService;
+        _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
         _fileProvider = fileProvider;
         _orderProcessingService = orderProcessingService;
@@ -68,7 +80,28 @@ public partial class ReturnRequestController : BasePublicController
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
         _localizationSettings = localizationSettings;
-        _orderSettings = orderSettings;
+        _returnRequestSettings = returnRequestSettings;
+    }
+
+    #endregion
+
+    #region Utilities
+
+    protected virtual async Task<bool> ValidateWithdrawalTokenAsync(Order order, string token)
+    {
+        if (string.IsNullOrEmpty(token))
+            return false;
+
+        var orderCustomer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+
+        //order has been created by registered customer
+        if (orderCustomer != null && !await _customerService.IsGuestAsync(orderCustomer))
+            return false;
+
+        var existedToken = await _genericAttributeService.GetAttributeAsync<string>(order, NopOrderDefaults.WithdrawalTokenAttribute);
+        var existedTokenGeneratedDate = await _genericAttributeService.GetAttributeAsync<DateTime>(order, NopOrderDefaults.WithdrawalTokenDateGeneratedAttribute);
+
+        return string.Equals(token, existedToken, StringComparison.OrdinalIgnoreCase) && existedTokenGeneratedDate > DateTime.UtcNow.AddDays(-_returnRequestSettings.WithdrawalLinkDaysValid);
     }
 
     #endregion
@@ -84,18 +117,91 @@ public partial class ReturnRequestController : BasePublicController
         return View(model);
     }
 
-    public virtual async Task<IActionResult> ReturnRequest(int orderId)
+    public virtual async Task<IActionResult> Find()
     {
-        var order = await _orderService.GetOrderByIdAsync(orderId);
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        if (order == null || order.Deleted || customer.Id != order.CustomerId)
+        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+
+        if (await _customerService.IsRegisteredAsync(currentCustomer))
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_ORDERS);
+
+        if (!_returnRequestSettings.GuestReturnRequestsAllowed)
             return Challenge();
+
+        return View(await _returnRequestModelFactory.PrepareWithdrawalFormModelAsync(null));
+    }
+
+    [HttpPost]
+    [ValidateCaptcha]
+    public virtual async Task<IActionResult> Find(WithdrawalFormModel model, bool captchaValid)
+    {
+        //validate CAPTCHA
+        if (_captchaSettings.Enabled && _captchaSettings.ShowOnWithdrawalForm && !captchaValid)
+            ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+
+        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+
+        if (await _customerService.IsRegisteredAsync(currentCustomer))
+            return RedirectToRoute(NopRouteNames.General.CUSTOMER_ORDERS);
+
+        if (!ModelState.IsValid)
+            return View(await _returnRequestModelFactory.PrepareWithdrawalFormModelAsync(model));
+
+        var order = int.TryParse(model.OrderNumber, out var orderNumber)
+            ? await _orderService.GetOrderByIdAsync(orderNumber) :
+            await _orderService.GetOrderByCustomOrderNumberAsync(model.OrderNumber);
+
+        var resultText = await _localizationService.GetResourceAsync("ReturnRequests.WithdrawalForm.ConfirnationText");
+        var store = await _storeContext.GetCurrentStoreAsync();
+
+        model = await _returnRequestModelFactory.PrepareWithdrawalFormModelAsync(model);
+
+        if (order is null || order.StoreId != store.Id)
+            return View(model with { Result = resultText });
+
+        if (!await _orderProcessingService.IsReturnRequestAllowedAsync(order))
+            return View(model with { Result = resultText });
+
+        var address = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+
+        if (!string.Equals(address?.Email, model.EmailAddress, StringComparison.OrdinalIgnoreCase))
+            return View(model with { Result = resultText });
+
+        //save token and current date
+        await _genericAttributeService.SaveAttributeAsync(order, NopOrderDefaults.WithdrawalTokenAttribute, Guid.NewGuid().ToString());
+        await _genericAttributeService.SaveAttributeAsync(order, NopOrderDefaults.WithdrawalTokenDateGeneratedAttribute, DateTime.UtcNow);
+
+        //send email
+        await _workflowMessageService.SendWithdrawalRequestConfirmationNotificationAsync(order);
+
+        return View(model with { Result = resultText });
+    }
+
+    public virtual async Task<IActionResult> ReturnRequest(int orderId, string token)
+    {
+
+        var order = await _orderService.GetOrderByIdAsync(orderId);
+
+        if (order == null || order.Deleted)
+            return Challenge();
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            if (!await ValidateWithdrawalTokenAsync(order, token))
+                return RedirectToRoute(NopRouteNames.Standard.RETURN_REQUEST);
+        }
+        else
+        {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (customer.Id != order.CustomerId)
+                return Challenge();
+        }
 
         if (!await _orderProcessingService.IsReturnRequestAllowedAsync(order))
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
-        var model = new SubmitReturnRequestModel();
+        var model = new SubmitReturnRequestModel() { WithdrawalToken = token };
         model = await _returnRequestModelFactory.PrepareSubmitReturnRequestModelAsync(model, order);
+
         return View(model);
     }
 
@@ -103,9 +209,21 @@ public partial class ReturnRequestController : BasePublicController
     public virtual async Task<IActionResult> ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, IFormCollection form)
     {
         var order = await _orderService.GetOrderByIdAsync(orderId);
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        if (order == null || order.Deleted || customer.Id != order.CustomerId)
+        if (order == null || order.Deleted)
             return Challenge();
+
+        var customer = await _workContext.GetCurrentCustomerAsync();
+
+        if (!string.IsNullOrEmpty(model.WithdrawalToken))
+        {
+            if (!await ValidateWithdrawalTokenAsync(order, model.WithdrawalToken))
+                return Challenge();
+        }
+        else
+        {
+            if (customer.Id != order.CustomerId)
+                return Challenge();
+        }
 
         if (!await _orderProcessingService.IsReturnRequestAllowedAsync(order))
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
@@ -113,7 +231,7 @@ public partial class ReturnRequestController : BasePublicController
         var count = 0;
 
         var downloadId = 0;
-        if (_orderSettings.ReturnRequestsAllowFiles)
+        if (_returnRequestSettings.ReturnRequestsAllowFiles)
         {
             var download = await _downloadService.GetDownloadByGuidAsync(model.UploadedFileGuid);
             if (download != null)
@@ -136,9 +254,10 @@ public partial class ReturnRequestController : BasePublicController
 
             if (quantity > 0)
             {
+                var store = await _storeContext.GetCurrentStoreAsync();
+
                 var rrr = await _returnRequestService.GetReturnRequestReasonByIdAsync(model.ReturnRequestReasonId);
                 var rra = await _returnRequestService.GetReturnRequestActionByIdAsync(model.ReturnRequestActionId);
-                var store = await _storeContext.GetCurrentStoreAsync();
 
                 var rr = new ReturnRequest
                 {
@@ -147,11 +266,11 @@ public partial class ReturnRequestController : BasePublicController
                     OrderItemId = orderItem.Id,
                     Quantity = quantity,
                     CustomerId = customer.Id,
-                    ReasonForReturn = rrr != null ? await _localizationService.GetLocalizedAsync(rrr, x => x.Name) : "not available",
-                    RequestedAction = rra != null ? await _localizationService.GetLocalizedAsync(rra, x => x.Name) : "not available",
                     CustomerComments = model.Comments,
                     UploadedFileId = downloadId,
                     StaffNotes = string.Empty,
+                    ReasonForReturn = _returnRequestSettings.ReturnReasonsEnabled && rrr != null ? await _localizationService.GetLocalizedAsync(rrr, x => x.Name) : "not available",
+                    RequestedAction = _returnRequestSettings.ReturnActionsEnabled && rra != null ? await _localizationService.GetLocalizedAsync(rra, x => x.Name) : "not available",
                     ReturnRequestStatus = ReturnRequestStatus.Pending,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow
@@ -175,7 +294,8 @@ public partial class ReturnRequestController : BasePublicController
 
         model = await _returnRequestModelFactory.PrepareSubmitReturnRequestModelAsync(model, order);
         if (count > 0)
-            model.Result = await _localizationService.GetResourceAsync("ReturnRequests.Submitted");
+            model.Result = _returnRequestSettings.UseEuWithdrawalLocales ? await _localizationService.GetResourceAsync("ReturnRequests.Withdrawal.Submitted") :
+                await _localizationService.GetResourceAsync("ReturnRequests.Submitted");
         else
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("ReturnRequests.NoItemsSubmitted"));
 
@@ -186,7 +306,7 @@ public partial class ReturnRequestController : BasePublicController
     [IgnoreAntiforgeryToken]
     public virtual async Task<IActionResult> UploadFileReturnRequest()
     {
-        if (!_orderSettings.ReturnRequestsEnabled || !_orderSettings.ReturnRequestsAllowFiles)
+        if (!_returnRequestSettings.ReturnRequestsEnabled || !_returnRequestSettings.ReturnRequestsAllowFiles)
         {
             return Json(new
             {
@@ -219,7 +339,7 @@ public partial class ReturnRequestController : BasePublicController
         if (!string.IsNullOrEmpty(fileExtension))
             fileExtension = fileExtension.ToLowerInvariant();
 
-        var validationFileMaximumSize = _orderSettings.ReturnRequestsFileMaximumSize;
+        var validationFileMaximumSize = _returnRequestSettings.ReturnRequestsFileMaximumSize;
         if (validationFileMaximumSize > 0)
         {
             //compare in bytes

@@ -41,6 +41,7 @@ public partial class ProductService : IProductService
     protected readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
     protected readonly IRepository<Manufacturer> _manufacturerRepository;
     protected readonly IRepository<Product> _productRepository;
+    protected readonly IRepository<Product3dObject> _product3dObjectRepository;
     protected readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
     protected readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
     protected readonly IRepository<ProductCategory> _productCategoryRepository;
@@ -81,6 +82,7 @@ public partial class ProductService : IProductService
         IRepository<LocalizedProperty> localizedPropertyRepository,
         IRepository<Manufacturer> manufacturerRepository,
         IRepository<Product> productRepository,
+        IRepository<Product3dObject> product3dObjectRepository,
         IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
         IRepository<ProductAttributeMapping> productAttributeMappingRepository,
         IRepository<ProductCategory> productCategoryRepository,
@@ -116,6 +118,7 @@ public partial class ProductService : IProductService
         _localizedPropertyRepository = localizedPropertyRepository;
         _manufacturerRepository = manufacturerRepository;
         _productRepository = productRepository;
+        _product3dObjectRepository = product3dObjectRepository;
         _productAttributeCombinationRepository = productAttributeCombinationRepository;
         _productAttributeMappingRepository = productAttributeMappingRepository;
         _productCategoryRepository = productCategoryRepository;
@@ -2509,6 +2512,52 @@ public partial class ProductService : IProductService
     public virtual async Task DeleteDiscountProductMappingAsync(DiscountProductMapping discountProductMapping)
     {
         await _discountProductMappingRepository.DeleteAsync(discountProductMapping);
+    }
+
+    #endregion
+
+    #region Product 3D objects
+
+    /// <summary>
+    /// Gets the 3D object associated with the product
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <returns>The task result contains the associated 3D object, or <c>null</c> if the 3D object is not found</returns>
+    public virtual async Task<Product3dObject> GetProduct3dObjectAsync(Product product)
+    {
+        ArgumentNullException.ThrowIfNull(product);
+
+        return await _product3dObjectRepository.Table.FirstOrDefaultAsync(x => x.ProductId == product.Id);
+    }
+
+    /// <summary>
+    /// Deletes the 3D object
+    /// </summary>
+    /// <param name="product3dObject">The 3D object</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteProduct3dObjectAsync(Product3dObject product3dObject)
+    {
+        await _product3dObjectRepository.DeleteAsync(product3dObject);
+    }
+
+    /// <summary>
+    /// Inserts the 3D object
+    /// </summary>
+    /// <param name="product3dObject">The 3D object</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertProduct3dObjectAsync(Product3dObject product3dObject)
+    {
+        await _product3dObjectRepository.InsertAsync(product3dObject);
+    }
+
+    /// <summary>
+    /// Updates the 3D object
+    /// </summary>
+    /// <param name="product3dObject">The 3D object</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task UpdateProduct3dObjectAsync(Product3dObject product3dObject)
+    {
+        await _product3dObjectRepository.UpdateAsync(product3dObject);
     }
 
     #endregion

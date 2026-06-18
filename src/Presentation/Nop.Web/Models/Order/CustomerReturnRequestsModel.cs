@@ -11,6 +11,9 @@ public partial record CustomerReturnRequestsModel : BaseNopModel
 
     public IList<ReturnRequestModel> Items { get; set; }
 
+    public string ReturnRequestsTitle { get; set; }
+    public string ReturnRequestTitlePattern { get; set; }
+
     #region Nested classes
 
     public partial record ReturnRequestModel : BaseNopEntityModel

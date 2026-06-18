@@ -24,4 +24,6 @@ public partial record ContactUsModel : BaseNopModel
     public string Result { get; set; }
 
     public bool DisplayCaptcha { get; set; }
+
+    public IList<ContactFormAttributeModel> ContactFormAttributes { get; set; }
 }

@@ -6,6 +6,7 @@
 		<nop-tabs id="productmultimedia-edit" asp-tab-name-to-select="tab-pictures" asp-render-selected-tab-input="false">
 			<nop-tab asp-name="tab-pictures" asp-title="@T("Admin.Catalog.Products.Multimedia.Pictures")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Multimedia.Pictures", Model)</nop-tab>
 			<nop-tab asp-name="tab-videos" asp-title="@T("Admin.Catalog.Products.Multimedia.Videos")">@await Html.PartialAsync("_CreateOrUpdate.Multimedia.Videos", Model)</nop-tab>
+            <nop-tab asp-name="tab-3dmodel" asp-title="@T("Admin.Catalog.Products.Multimedia.Object3d")">@await Html.PartialAsync("_CreateOrUpdate.Multimedia.Object3d", Model)</nop-tab>
 		</nop-tabs>
     }
     else

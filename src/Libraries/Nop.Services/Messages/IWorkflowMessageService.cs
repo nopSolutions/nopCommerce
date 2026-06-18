@@ -366,6 +366,18 @@ public partial interface IWorkflowMessageService
     /// </returns>
     Task<IList<int>> SendRecurringPaymentFailedCustomerNotificationAsync(RecurringPayment recurringPayment, int languageId);
 
+    /// <summary>
+    /// Sends a "Next recurring payment notification" message to a customer
+    /// </summary>
+    /// <param name="recurringPayment">Recurring payment</param>
+    /// <param name="delayBeforeSend">Delay before send</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    Task<IList<int>> SendNextRecurringPaymentNotificationCustomerMessageAsync(RecurringPayment recurringPayment, int delayBeforeSend, int languageId);
+
     #endregion
 
     #region Newsletter workflow
@@ -467,6 +479,16 @@ public partial interface IWorkflowMessageService
     /// </returns>
     Task<IList<int>> SendReturnRequestStatusChangedCustomerNotificationAsync(ReturnRequest returnRequest, OrderItem orderItem, Order order);
 
+    /// <summary>
+    /// Sends 'Withdrawal request confirmation' message to a customer
+    /// </summary>
+    /// <param name="order">Order</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    Task<IList<int>> SendWithdrawalRequestConfirmationNotificationAsync(Order order);
+    
     #endregion
 
     #region Messages
@@ -631,11 +653,12 @@ public partial interface IWorkflowMessageService
     /// <param name="senderName">Sender name</param>
     /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
     /// <param name="body">Email body</param>
+    /// <param name="customAttributes">Custom attributes</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
-    Task<IList<int>> SendContactUsMessageAsync(int languageId, string senderEmail, string senderName, string subject, string body);
+    Task<IList<int>> SendContactUsMessageAsync(int languageId, string senderEmail, string senderName, string subject, string body, IDictionary<string, string> customAttributes);
 
     /// <summary>
     /// Sends "contact vendor" message

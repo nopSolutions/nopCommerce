@@ -65,6 +65,10 @@ public partial record CaptchaSettingsModel : BaseNopModel, ISettingsModel
     public bool ShowOnCheckGiftCardBalance { get; set; }
     public bool ShowOnCheckGiftCardBalance_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnWithdrawalForm")]
+    public bool ShowOnWithdrawalForm { get; set; }
+    public bool ShowOnWithdrawalForm_OverrideForStore { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey")]
     public string ReCaptchaPublicKey { get; set; }
     public bool ReCaptchaPublicKey_OverrideForStore { get; set; }

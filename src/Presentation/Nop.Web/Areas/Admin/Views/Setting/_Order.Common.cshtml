@@ -140,6 +140,16 @@
             </div>
         </div>
     </nop-nested-setting>
+	<div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="NextRecurringPaymentNotificationDays_OverrideForStore" asp-input="NextRecurringPaymentNotificationDays" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="NextRecurringPaymentNotificationDays" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="NextRecurringPaymentNotificationDays" />
+            <span asp-validation-for="NextRecurringPaymentNotificationDays"></span>
+        </div>
+    </div>
 </div>
 <script asp-location="Footer">
     $(function() {

@@ -84,6 +84,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     protected readonly IWorkContext _workContext;
     protected readonly LinkGenerator _linkGenerator;
     protected readonly MessageTemplatesSettings _templatesSettings;
+    protected readonly OrderSettings _orderSettings;
     protected readonly PaymentSettings _paymentSettings;
     protected readonly StoreInformationSettings _storeInformationSettings;
     protected readonly TaxSettings _taxSettings;
@@ -130,6 +131,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         IWorkContext workContext,
         LinkGenerator linkGenerator,
         MessageTemplatesSettings templatesSettings,
+        OrderSettings orderSettings,
         PaymentSettings paymentSettings,
         StoreInformationSettings storeInformationSettings,
         TaxSettings taxSettings)
@@ -170,6 +172,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         _workContext = workContext;
         _linkGenerator = linkGenerator;
         _templatesSettings = templatesSettings;
+        _orderSettings = orderSettings;
         _paymentSettings = paymentSettings;
         _storeInformationSettings = storeInformationSettings;
         _taxSettings = taxSettings;
@@ -341,7 +344,8 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                     {
                         "%RecurringPayment.ID%",
                         "%RecurringPayment.CancelAfterFailedPayment%",
-                        "%RecurringPayment.RecurringPaymentType%"
+                        "%RecurringPayment.RecurringPaymentType%",
+                        "%RecurringPayment.NextRecurringPaymentDelay%"
                     }
                 },
 
@@ -383,7 +387,8 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                         "%ReturnRequest.RequestedAction%",
                         "%ReturnRequest.CustomerComment%",
                         "%ReturnRequest.StaffNotes%",
-                        "%ReturnRequest.Status%"
+                        "%ReturnRequest.Status%",
+                        "%ReturnRequest.WithdrawalUrl%"
                     }
                 },
 
@@ -503,7 +508,8 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                     {
                         "%ContactUs.SenderEmail%",
                         "%ContactUs.SenderName%",
-                        "%ContactUs.Body%"
+                        "%ContactUs.Body%",
+                        "%ContactUs.CustomFields%"
                     }
                 },
 
@@ -987,6 +993,35 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     #region Methods
 
     /// <summary>
+    /// Add contact form tokens
+    /// </summary>
+    /// <param name="tokens">List of already added tokens</param>
+    /// <param name="senderEmail">Sender email</param>
+    /// <param name="senderName">Sender name</param>
+    /// <param name="body">Email body</param>
+    /// <param name="customAttributes">Custom attributes</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual Task AddContactFormTokensAsync(IList<Token> tokens, string senderEmail, string senderName, string body, IDictionary<string, string> customAttributes)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(body);
+
+        tokens.Add(new Token("ContactUs.SenderEmail", senderEmail));
+        tokens.Add(new Token("ContactUs.SenderName", senderName));
+        tokens.Add(new Token("ContactUs.Body", body, true));
+
+        if (customAttributes?.Any() == true)
+        {
+            var fieldsHtml = new StringBuilder();
+            foreach (var (name, value) in customAttributes)
+                fieldsHtml.AppendLine($"<p><strong>{name}</strong>: {value}</p>");
+
+            tokens.Add(new Token("ContactUs.CustomFields", fieldsHtml, true));
+        }
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
     /// Add store tokens
     /// </summary>
     /// <param name="tokens">List of already added tokens</param>
@@ -1204,6 +1239,8 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         if (await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId) is Order order)
             tokens.Add(new Token("RecurringPayment.RecurringPaymentType", (await _paymentService.GetRecurringPaymentTypeAsync(order.PaymentMethodSystemName)).ToString()));
 
+        tokens.Add(new Token("RecurringPayment.NextRecurringPaymentDelay", _orderSettings.NextRecurringPaymentNotificationDays.ToString()));
+
         //event notification
         await _eventPublisher.EntityTokensAddedAsync(recurringPayment, tokens);
     }
@@ -1213,23 +1250,37 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     /// </summary>
     /// <param name="tokens">List of already added tokens</param>
     /// <param name="returnRequest">Return request</param>
+    /// <param name="order">Order</param>
     /// <param name="orderItem">Order item</param>
     /// <param name="languageId">Language identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task AddReturnRequestTokensAsync(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem, int languageId)
+    public virtual async Task AddReturnRequestTokensAsync(IList<Token> tokens, ReturnRequest returnRequest, Order order, OrderItem orderItem, int languageId)
     {
-        var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+        if (orderItem != null)
+        { 
+            var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+            tokens.Add(new Token("ReturnRequest.OrderId", orderItem.OrderId));
+            tokens.Add(new Token("ReturnRequest.Product.Name", await _localizationService.GetLocalizedAsync(product, x => x.Name, languageId)));
+        }
 
-        tokens.Add(new Token("ReturnRequest.CustomNumber", returnRequest.CustomNumber));
-        tokens.Add(new Token("ReturnRequest.OrderId", orderItem.OrderId));
-        tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity));
-        tokens.Add(new Token("ReturnRequest.Product.Name", await _localizationService.GetLocalizedAsync(product, x => x.Name, languageId)));
-        tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
-        tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
-        tokens.Add(new Token("ReturnRequest.CustomerComment", _htmlFormatter.FormatText(returnRequest.CustomerComments), true));
-        tokens.Add(new Token("ReturnRequest.StaffNotes", _htmlFormatter.FormatText(returnRequest.StaffNotes), true));
-        tokens.Add(new Token("ReturnRequest.Status", await _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus, languageId)));
+        if (returnRequest != null)
+        {
+            tokens.Add(new Token("ReturnRequest.CustomNumber", returnRequest.CustomNumber));
+            tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity));
+            tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
+            tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
+            tokens.Add(new Token("ReturnRequest.CustomerComment", _htmlFormatter.FormatText(returnRequest.CustomerComments), true));
+            tokens.Add(new Token("ReturnRequest.StaffNotes", _htmlFormatter.FormatText(returnRequest.StaffNotes), true));
+            tokens.Add(new Token("ReturnRequest.Status", await _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus, languageId)));
+        }
 
+        if (order != null)
+        { 
+            var withdrawalUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.RETURN_REQUEST,
+                routeValues: new { orderId = order.Id, token = await _genericAttributeService.GetAttributeAsync<string>(order, NopOrderDefaults.WithdrawalTokenAttribute) });
+
+            tokens.Add(new Token("ReturnRequest.WithdrawalUrl", withdrawalUrl, true));
+        }
         //event notification
         await _eventPublisher.EntityTokensAddedAsync(returnRequest, tokens);
     }
@@ -1638,7 +1689,8 @@ public partial class MessageTokenProvider : IMessageTokenProvider
 
             MessageTemplateSystemNames.RECURRING_PAYMENT_CANCELLED_STORE_OWNER_NOTIFICATION or
             MessageTemplateSystemNames.RECURRING_PAYMENT_CANCELLED_CUSTOMER_NOTIFICATION or
-            MessageTemplateSystemNames.RECURRING_PAYMENT_FAILED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.RecurringPaymentTokens],
+            MessageTemplateSystemNames.RECURRING_PAYMENT_FAILED_CUSTOMER_NOTIFICATION or
+            MessageTemplateSystemNames.NEXT_RECURRING_PAYMENT_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.RecurringPaymentTokens],
 
             MessageTemplateSystemNames.NEWSLETTER_SUBSCRIPTION_ACTIVATION_MESSAGE or
             MessageTemplateSystemNames.NEWSLETTER_SUBSCRIPTION_DEACTIVATION_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens],
@@ -1649,6 +1701,8 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             MessageTemplateSystemNames.NEW_RETURN_REQUEST_STORE_OWNER_NOTIFICATION or
             MessageTemplateSystemNames.NEW_RETURN_REQUEST_CUSTOMER_NOTIFICATION or
             MessageTemplateSystemNames.RETURN_REQUEST_STATUS_CHANGED_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ReturnRequestTokens],
+
+            MessageTemplateSystemNames.RETURN_REQUEST_WITHDRAWAL_LINK_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.ReturnRequestTokens],
 
             MessageTemplateSystemNames.PRIVATE_MESSAGE_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.PrivateMessageTokens, TokenGroupNames.CustomerTokens],
             MessageTemplateSystemNames.NEW_VENDOR_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VendorTokens],

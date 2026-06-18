@@ -19,7 +19,7 @@
 }
 <div class="page account-page return-request-list-page">
     <div class="page-title">
-        <h1>@T("Account.MyAccount") - @T("Account.CustomerReturnRequests")</h1>
+        <h1>@T("Account.MyAccount") - @Model.ReturnRequestsTitle</h1>
     </div>
     <div class="page-body">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CustomerReturnRequestsTop, additionalData = Model })
@@ -27,7 +27,7 @@
         {
             <div class="section request-item">
                 <h2 class="title">
-                    @string.Format(T("Account.CustomerReturnRequests.Title").Text, item.CustomNumber, item.ReturnRequestStatus)
+                    @string.Format(Model.ReturnRequestTitlePattern, item.CustomNumber, item.ReturnRequestStatus)
                 </h2>
                 <ul class="details">
                     <li class="product">
@@ -35,14 +35,20 @@
                         <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new { SeName = item.ProductSeName }))">@item.ProductName</a>
                         <span>x @item.Quantity</span>
                     </li>
+                    @if (!string.IsNullOrEmpty(item.ReturnReason))
+                    {
                     <li class="reason">
                         <label>@T("Account.CustomerReturnRequests.Reason")</label>
                         <span>@item.ReturnReason</span>
                     </li>
+                    }
+                    @if (!string.IsNullOrEmpty(item.ReturnAction))
+                    {
                     <li class="action">
                         <label>@T("Account.CustomerReturnRequests.Action")</label>
                         <span>@item.ReturnAction</span>
                     </li>
+                    }
                     <li class="date">
                         <label>@T("Account.CustomerReturnRequests.Date")</label>
                         <span>@item.CreatedOn.ToString()</span>

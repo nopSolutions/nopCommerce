@@ -6,6 +6,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
@@ -73,7 +74,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
-    protected readonly OrderSettings _orderSettings;
+    protected readonly MessagesSettings _messagesSettings;
+    protected readonly OtpSettings _otpSettings;
+    protected readonly ReturnRequestSettings _returnRequestSettings;
     protected readonly RewardPointsSettings _rewardPointsSettings;
     protected readonly SecuritySettings _securitySettings;
     protected readonly TaxSettings _taxSettings;
@@ -117,7 +120,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         IUrlRecordService urlRecordService,
         IWorkContext workContext,
         MediaSettings mediaSettings,
-        OrderSettings orderSettings,
+        MessagesSettings messagesSettings,
+        OtpSettings otpSettings,
+        ReturnRequestSettings returnRequestSettings,
         RewardPointsSettings rewardPointsSettings,
         SecuritySettings securitySettings,
         TaxSettings taxSettings,
@@ -157,7 +162,9 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _urlRecordService = urlRecordService;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
-        _orderSettings = orderSettings;
+        _messagesSettings = messagesSettings;
+        _otpSettings = otpSettings;
+        _returnRequestSettings = returnRequestSettings;
         _rewardPointsSettings = rewardPointsSettings;
         _securitySettings = securitySettings;
         _taxSettings = taxSettings;
@@ -335,6 +342,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.StateProvinceRequired = _customerSettings.StateProvinceRequired;
         model.PhoneEnabled = _customerSettings.PhoneEnabled;
         model.PhoneRequired = _customerSettings.PhoneRequired;
+        model.LoginByPhoneEnabled = _otpSettings.LoginByPhoneEnabled;
+        model.PhoneSmsVerified = customer.PhoneSmsVerified;
         model.FaxEnabled = _customerSettings.FaxEnabled;
         model.FaxRequired = _customerSettings.FaxRequired;
         model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
@@ -438,6 +447,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.StateProvinceRequired = _customerSettings.StateProvinceRequired;
         model.PhoneEnabled = _customerSettings.PhoneEnabled;
         model.PhoneRequired = _customerSettings.PhoneRequired;
+        model.LoginByPhoneEnabled = _otpSettings.LoginByPhoneEnabled;
         model.FaxEnabled = _customerSettings.FaxEnabled;
         model.FaxRequired = _customerSettings.FaxRequired;
         model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
@@ -535,6 +545,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         var model = new LoginModel
         {
             UsernamesEnabled = _customerSettings.UsernamesEnabled,
+            LoginByPhone = _otpSettings.LoginByPhoneEnabled,
             RegistrationType = _customerSettings.UserRegistrationType,
             CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault(),
             DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage
@@ -590,6 +601,42 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     }
 
     /// <summary>
+    /// Prepare the phone verification model
+    /// </summary>
+    /// <param name="typeId">Value of phone verification flow enum</param>
+    /// <param name="returnUrl">URL to redirect</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the phone verification model
+    /// </returns>
+    public virtual async Task<PhoneVerificationModel> PreparePhoneVerificationModelAsync(int typeId, string returnUrl)
+    {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var model = new PhoneVerificationModel
+        {
+            ReturnUrl = returnUrl,
+            Phone = customer.Phone,
+            VerificationFlow = (PhoneVerificationFlowEnum)typeId,
+            UsePopupNotifications = _messagesSettings.UsePopupNotifications
+        };
+
+        switch (typeId)
+        {
+            case (int)PhoneVerificationFlowEnum.RegisterStandard:
+                model.Result = await _localizationService.GetResourceAsync("Account.Register.Result.Standard");
+                break;
+            case (int)PhoneVerificationFlowEnum.RegisterEmailValidation:
+                model.Result = await _localizationService.GetResourceAsync("Account.Register.Result.EmailValidation");
+                break;
+            case (int)PhoneVerificationFlowEnum.RegisterAdminApproval:
+                model.Result = await _localizationService.GetResourceAsync("Account.Register.Result.AdminApproval");
+                break;
+        }
+
+        return model;
+    }
+
+    /// <summary>
     /// Prepare the customer navigation model
     /// </summary>
     /// <param name="selectedTabId">Identifier of the selected tab</param>
@@ -636,14 +683,16 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();
 
-        if (_orderSettings.ReturnRequestsEnabled &&
+        if (_returnRequestSettings.ReturnRequestsEnabled &&
             (await _returnRequestService.SearchReturnRequestsAsync(store.Id,
                 customer.Id, pageIndex: 0, pageSize: 1)).Any())
         {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = NopRouteNames.Standard.CUSTOMER_RETURN_REQUESTS,
-                Title = await _localizationService.GetResourceAsync("Account.CustomerReturnRequests"),
+                Title = _returnRequestSettings.UseEuWithdrawalLocales ?
+                    await _localizationService.GetResourceAsync("Account.CustomerReturnRequests.Withdrawals") :
+                    await _localizationService.GetResourceAsync("Account.CustomerReturnRequests"),
                 Tab = (int)CustomerNavigationEnum.ReturnRequests,
                 ItemClass = "return-requests"
             });
@@ -1031,43 +1080,43 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 case AttributeControlType.DropdownList:
                 case AttributeControlType.RadioList:
                 case AttributeControlType.Checkboxes:
-                {
-                    if (!string.IsNullOrEmpty(selectedAttributesXml))
                     {
-                        if (!_customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id).Any())
-                            break;
-
-                        //clear default selection                                
-                        foreach (var item in attributeModel.Values)
-                            item.IsPreSelected = false;
-
-                        //select new values
-                        var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedAttributesXml);
-                        foreach (var attributeValue in selectedValues)
-                        foreach (var item in attributeModel.Values)
+                        if (!string.IsNullOrEmpty(selectedAttributesXml))
                         {
-                            if (attributeValue.Id == item.Id)
-                                item.IsPreSelected = true;
+                            if (!_customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id).Any())
+                                break;
+
+                            //clear default selection                                
+                            foreach (var item in attributeModel.Values)
+                                item.IsPreSelected = false;
+
+                            //select new values
+                            var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedAttributesXml);
+                            foreach (var attributeValue in selectedValues)
+                                foreach (var item in attributeModel.Values)
+                                {
+                                    if (attributeValue.Id == item.Id)
+                                        item.IsPreSelected = true;
+                                }
                         }
                     }
-                }
                     break;
                 case AttributeControlType.ReadonlyCheckboxes:
-                {
-                    //do nothing
-                    //values are already pre-set
-                }
+                    {
+                        //do nothing
+                        //values are already pre-set
+                    }
                     break;
                 case AttributeControlType.TextBox:
                 case AttributeControlType.MultilineTextbox:
-                {
-                    if (!string.IsNullOrEmpty(selectedAttributesXml))
                     {
-                        var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
-                        if (enteredText.Any())
-                            attributeModel.DefaultValue = enteredText[0];
+                        if (!string.IsNullOrEmpty(selectedAttributesXml))
+                        {
+                            var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
+                            if (enteredText.Any())
+                                attributeModel.DefaultValue = enteredText[0];
+                        }
                     }
-                }
                     break;
                 case AttributeControlType.ColorSquares:
                 case AttributeControlType.ImageSquares:

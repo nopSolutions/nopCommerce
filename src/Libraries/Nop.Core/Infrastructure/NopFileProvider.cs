@@ -507,7 +507,7 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
         path = path.Replace("~/", string.Empty).TrimStart('/');
 
         //if virtual path has slash on the end, it should be after transform the virtual path to physical path too
-        var pathEnd = path.EndsWith('/') ? Path.DirectorySeparatorChar.ToString() : string.Empty;
+        var pathEnd = path.EndsWith('/') ? DirectorySeparatorChar : string.Empty;
 
         return Combine(Root ?? string.Empty, path) + pathEnd;
     }
@@ -613,6 +613,16 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
         return !string.IsNullOrEmpty(path) && Path.IsPathRooted(path);
     }
 
+    /// <summary>
+    /// Returns the absolute path for the specified path string.
+    /// </summary>
+    /// <param name="path">The file or directory for which to obtain absolute path information.</param>
+    /// <returns>The fully qualified location of <paramref name="path" />, such as "C:\MyFile.txt".</returns>
+    public virtual string GetFullPath(string path)
+    {
+        return Path.GetFullPath(path);
+    }
+
     #endregion
 
     #region Properties
@@ -621,6 +631,11 @@ public partial class NopFileProvider : PhysicalFileProvider, INopFileProvider
     /// Gets or sets the absolute path to the directory that contains the web-servable application content files.
     /// </summary>
     public string WebRootPath { get; }
+
+    /// <summary>
+    /// Provides a platform-specific character used to separate directory levels in a path string that reflects a hierarchical file system organization.
+    /// </summary>
+    public string DirectorySeparatorChar => Path.DirectorySeparatorChar.ToString();
 
     #endregion
 }

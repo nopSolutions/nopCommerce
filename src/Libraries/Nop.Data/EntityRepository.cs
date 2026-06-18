@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using System.Transactions;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -359,7 +358,7 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     {
         ArgumentNullException.ThrowIfNull(entities);
 
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        using var transaction = _dataProvider.CreateTransactionScope();
         await _dataProvider.BulkInsertEntitiesAsync(entities);
         transaction.Complete();
 
@@ -465,7 +464,7 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
         if (!entities.Any())
             return;
 
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        using var transaction = _dataProvider.CreateTransactionScope();
 
         if (typeof(TEntity).GetInterface(nameof(ISoftDeletedEntity)) == null)
             await _dataProvider.BulkDeleteEntitiesAsync(entities);
@@ -499,7 +498,7 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     {
         ArgumentNullException.ThrowIfNull(predicate);
 
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        using var transaction = _dataProvider.CreateTransactionScope();
         var countDeletedRecords = await _dataProvider.BulkDeleteEntitiesAsync(predicate);
         transaction.Complete();
 

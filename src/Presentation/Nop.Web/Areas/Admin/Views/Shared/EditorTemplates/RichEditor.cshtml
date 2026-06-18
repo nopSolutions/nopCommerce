@@ -19,6 +19,7 @@
 }
 <script src="~/lib_npm/summernote/summernote-bs4.min.js" asp-location="Head"></script>
 <script src="~/lib_npm/elfinder/js/elfinder.min.js" asp-location="Head"></script>
+<script src="~/lib/summernote/summernote-image-attributes.js" asp-location="Head"></script>
 
 <link href="~/lib_npm/summernote/summernote-bs4.min.css" rel="stylesheet" />
 <link href="~/lib_npm/elfinder/css/elfinder.min.css" rel="stylesheet" />
@@ -112,6 +113,18 @@
                         elfinder: ElFinderImageButton,
                     </text>
                 }
+            },
+            popover: {
+                image: [
+                    ['custom', ['imageAttributes']],
+                    ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                    ['remove', ['removeMedia']]
+                ],
+            },
+            imageAttributes:{
+                icon: '<i class="note-icon-pencil"/>',
+                removeEmpty: true,
+                disableUpload: true
             },
             spellCheck: true,
             maxHeight: 800,

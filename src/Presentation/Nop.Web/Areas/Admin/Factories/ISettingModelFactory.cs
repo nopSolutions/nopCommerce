@@ -132,6 +132,16 @@ public partial interface ISettingModelFactory
     Task<OrderSettingsModel> PrepareOrderSettingsModelAsync(OrderSettingsModel model = null);
 
     /// <summary>
+    /// Prepare return request settings model
+    /// </summary>
+    /// <param name="model">Return request settings model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the return request settings model
+    /// </returns>
+    Task<ReturnRequestSettingsModel> PrepareReturnRequestSettingsModelAsync(ReturnRequestSettingsModel model = null);
+
+    /// <summary>
     /// Prepare shopping cart settings model
     /// </summary>
     /// <param name="model">Shopping cart settings model</param>

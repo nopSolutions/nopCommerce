@@ -102,6 +102,11 @@ public static partial class NopLinksDefaults
         public static string FilterLevels => "https://docs.nopcommerce.com/running-your-store/catalog/ymm.html";
 
         /// <summary>
+        /// Gets a URL of the price lists docs page
+        /// </summary>
+        public static string PriceLists => "https://docs.nopcommerce.com/running-your-store/catalog/price-lists.html";
+
+        /// <summary>
         /// Gets a URL of the manufacturers docs page
         /// </summary>
         public static string Manufacturers => "https://docs.nopcommerce.com/running-your-store/catalog/manufacturers.html";
@@ -275,6 +280,11 @@ public static partial class NopLinksDefaults
         /// Gets a URL of the shipping providers docs page
         /// </summary>
         public static string ShippingProviders => "https://docs.nopcommerce.com/getting-started/configure-shipping/shipping-providers/index.html";
+
+        /// <summary>
+        /// Gets a URL of the SMS providers docs page
+        /// </summary>
+        public static string SmsProviders => "https://docs.nopcommerce.com/en/getting-started/advanced-configuration/index.html";
 
         /// <summary>
         /// Gets a URL of the warehouses docs page

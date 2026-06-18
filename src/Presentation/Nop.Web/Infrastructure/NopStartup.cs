@@ -38,6 +38,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<ICategoryModelFactory, CategoryModelFactory>();
         services.AddScoped<ICheckoutAttributeModelFactory, CheckoutAttributeModelFactory>();
         services.AddScoped<ICommonModelFactory, CommonModelFactory>();
+        services.AddScoped<IContactFormAttributeModelFactory, ContactFormAttributeModelFactory>();
         services.AddScoped<ICountryModelFactory, CountryModelFactory>();
         services.AddScoped<ICurrencyModelFactory, CurrencyModelFactory>();
         services.AddScoped<ICustomerAttributeModelFactory, CustomerAttributeModelFactory>();
@@ -60,6 +61,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IOrderModelFactory, OrderModelFactory>();
         services.AddScoped<IPaymentModelFactory, PaymentModelFactory>();
         services.AddScoped<IPluginModelFactory, PluginModelFactory>();
+        services.AddScoped<IPriceListModelFactory, PriceListModelFactory>();
         services.AddScoped<IProductModelFactory, ProductModelFactory>();
         services.AddScoped<IProductAttributeModelFactory, ProductAttributeModelFactory>();
         services.AddScoped<IProductReviewModelFactory, ProductReviewModelFactory>();
@@ -73,6 +75,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<ISettingModelFactory, SettingModelFactory>();
         services.AddScoped<IShippingModelFactory, ShippingModelFactory>();
         services.AddScoped<IShoppingCartModelFactory, ShoppingCartModelFactory>();
+        services.AddScoped<ISmsModelFactory, SmsModelFactory>();
         services.AddScoped<ISpecificationAttributeModelFactory, SpecificationAttributeModelFactory>();
         services.AddScoped<IStoreModelFactory, StoreModelFactory>();
         services.AddScoped<ITaxModelFactory, TaxModelFactory>();

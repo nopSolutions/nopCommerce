@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -19,7 +20,7 @@ public partial class WebAppTypeFinder : ITypeFinder
 
     #region Fields
 
-    protected static readonly Dictionary<string, Assembly> _assemblies = new(StringComparer.InvariantCultureIgnoreCase);
+    protected static readonly ConcurrentDictionary<string, Assembly> _assemblies = new(StringComparer.InvariantCultureIgnoreCase);
 
     protected static bool _loaded;
     protected static readonly object _locker = new();
@@ -184,40 +185,37 @@ public partial class WebAppTypeFinder : ITypeFinder
                 _assemblies.TryAdd(assembly.FullName, assembly);
             }
 
-            foreach (var directoriesToLoadAssembly in DirectoriesToLoadAssemblies)
+            foreach (var dllPath in DirectoriesToLoadAssemblies
+                         .Where(directoriesToLoadAssembly => _fileProvider.DirectoryExists(directoriesToLoadAssembly))
+                         .SelectMany(directoriesToLoadAssembly =>
+                             _fileProvider.GetFiles(directoriesToLoadAssembly, "*.dll")))
             {
-                if (!_fileProvider.DirectoryExists(directoriesToLoadAssembly))
-                    continue;
-
-                foreach (var dllPath in _fileProvider.GetFiles(directoriesToLoadAssembly, "*.dll"))
+                try
                 {
+                    var an = AssemblyName.GetAssemblyName(dllPath);
+
+                    if (_assemblies.ContainsKey(an.FullName))
+                        continue;
+
+                    if (!Matches(an.FullName))
+                        continue;
+
+                    Assembly assembly;
+
                     try
                     {
-                        var an = AssemblyName.GetAssemblyName(dllPath);
-
-                        if (_assemblies.ContainsKey(an.FullName))
-                            continue;
-
-                        if (!Matches(an.FullName))
-                            continue;
-
-                        Assembly assembly;
-
-                        try
-                        {
-                            assembly = AppDomain.CurrentDomain.Load(an);
-                        }
-                        catch
-                        {
-                            assembly = Assembly.LoadFrom(dllPath);
-                        }
-
-                        _assemblies.TryAdd(assembly.FullName, assembly);
+                        assembly = AppDomain.CurrentDomain.Load(an);
                     }
-                    catch (BadImageFormatException ex)
+                    catch
                     {
-                        Trace.TraceError(ex.ToString());
+                        assembly = Assembly.LoadFrom(dllPath);
                     }
+
+                    _assemblies.TryAdd(assembly.FullName, assembly);
+                }
+                catch (BadImageFormatException ex)
+                {
+                    Trace.TraceError(ex.ToString());
                 }
             }
 

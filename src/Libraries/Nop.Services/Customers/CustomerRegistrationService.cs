@@ -193,6 +193,40 @@ public partial class CustomerRegistrationService : ICustomerRegistrationService
         return CustomerLoginResults.Successful;
     }
 
+
+    /// <summary>
+    /// Validate a customer by phone number
+    /// </summary>
+    /// <param name="phone">The phone number associated with the customer to be validated</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result
+    /// </returns>
+    public virtual async Task<CustomerLoginResults> ValidateCustomerByPhoneAsync(string phone)
+    {
+        var customer = await _customerService.GetCustomerByPhoneAsync(phone);
+
+        if (customer == null)
+            return CustomerLoginResults.CustomerNotExist;
+        if (customer.Deleted)
+            return CustomerLoginResults.Deleted;
+        if (!customer.Active)
+            return CustomerLoginResults.NotActive;
+        //only registered can login
+        if (!await _customerService.IsRegisteredAsync(customer))
+            return CustomerLoginResults.NotRegistered;
+
+        // Clear OTP context after successful verification
+        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.OtpContextAttribute, (string)null);
+
+        //update login details
+        customer.LastLoginDateUtc = DateTime.UtcNow;
+        customer.PhoneSmsVerified = true;
+        await _customerService.UpdateCustomerAsync(customer);
+
+        return CustomerLoginResults.Successful;
+    }
+
     /// <summary>
     /// Register customer
     /// </summary>

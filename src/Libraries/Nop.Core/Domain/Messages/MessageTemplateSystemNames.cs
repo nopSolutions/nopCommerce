@@ -166,6 +166,11 @@ public static partial class MessageTemplateSystemNames
     /// </summary>
     public const string RECURRING_PAYMENT_FAILED_CUSTOMER_NOTIFICATION = "RecurringPaymentFailed.CustomerNotification";
 
+    /// <summary>
+    /// Represents system name of notification customer about the next recurring payments
+    /// </summary>
+    public const string NEXT_RECURRING_PAYMENT_CUSTOMER_NOTIFICATION = "NextRecurringPaymentNotification.CustomerNotification";
+
     #endregion
 
     #region Newsletter
@@ -212,6 +217,11 @@ public static partial class MessageTemplateSystemNames
     /// Represents system name of notification customer about changing return request status
     /// </summary>
     public const string RETURN_REQUEST_STATUS_CHANGED_CUSTOMER_NOTIFICATION = "ReturnRequestStatusChanged.CustomerNotification";
+
+    /// <summary>
+    /// Represents system name of withdrawal link message
+    /// </summary>
+    public const string RETURN_REQUEST_WITHDRAWAL_LINK_MESSAGE = "ReturnRequest.WithdrawalLinkMessage";
 
     #endregion
 

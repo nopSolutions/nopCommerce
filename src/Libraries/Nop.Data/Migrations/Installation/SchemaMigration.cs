@@ -15,6 +15,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.PriceLists;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
@@ -76,6 +77,10 @@ public class SchemaMigration : ForwardOnlyMigration
         this.CreateTableIfNotExists<ReviewType>();
         this.CreateTableIfNotExists<SpecificationAttributeGroup>();
         this.CreateTableIfNotExists<SpecificationAttribute>();
+        this.CreateTableIfNotExists<PriceList>();
+        this.CreateTableIfNotExists<PriceListItem>();
+        this.CreateTableIfNotExists<PriceListCustomer>();
+        this.CreateTableIfNotExists<PriceListCustomerRole>();
         this.CreateTableIfNotExists<ProductAttributeCombination>();
         this.CreateTableIfNotExists<ProductAttributeCombinationPicture>();
         this.CreateTableIfNotExists<ProductAttributeMapping>();
@@ -159,5 +164,8 @@ public class SchemaMigration : ForwardOnlyMigration
         this.CreateTableIfNotExists<VendorNote>();
         this.CreateTableIfNotExists<Menu>();
         this.CreateTableIfNotExists<MenuItem>();
+        this.CreateTableIfNotExists<ContactFormAttribute>();
+        this.CreateTableIfNotExists<ContactFormAttributeValue>();
+        this.CreateTableIfNotExists<Product3dObject>();
     }
 }

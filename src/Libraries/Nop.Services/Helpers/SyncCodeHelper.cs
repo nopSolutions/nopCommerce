@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using System.Transactions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
@@ -101,7 +100,7 @@ public partial class SyncCodeHelper : ISyncCodeHelper
     {
         ArgumentNullException.ThrowIfNull(entities);
 
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        using var transaction = _dataProvider.CreateTransactionScope();
         _dataProvider.BulkInsertEntities(entities);
         transaction.Complete();
     }
@@ -117,7 +116,7 @@ public partial class SyncCodeHelper : ISyncCodeHelper
     {
         ArgumentNullException.ThrowIfNull(predicate);
 
-        using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        using var transaction = _dataProvider.CreateTransactionScope();
         var countDeletedRecords = _dataProvider.BulkDeleteEntities(predicate);
         transaction.Complete();
 

@@ -28,6 +28,7 @@ using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using PhoneNumbers;
 
 namespace Nop.Web.Areas.Admin.Controllers;
 
@@ -64,6 +65,7 @@ public partial class CustomerController : BaseAdminController
     protected readonly ITaxService _taxService;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
+    protected readonly OtpSettings _otpSettings;
     protected readonly PrivateMessageSettings _privateMessageSettings;
     protected readonly TaxSettings _taxSettings;
     private static readonly char[] _separator = [','];
@@ -101,6 +103,7 @@ public partial class CustomerController : BaseAdminController
         ITaxService taxService,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
+        OtpSettings otpSettings,
         PrivateMessageSettings privateMessageSettings,
         TaxSettings taxSettings)
     {
@@ -133,6 +136,7 @@ public partial class CustomerController : BaseAdminController
         _taxService = taxService;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
+        _otpSettings = otpSettings;
         _privateMessageSettings = privateMessageSettings;
         _taxSettings = taxSettings;
     }
@@ -257,6 +261,25 @@ public partial class CustomerController : BaseAdminController
         return customers.Any(c => c.Active && c.Id != customer.Id);
     }
 
+    protected virtual string FormatPhoneNumber(string phone)
+    {
+        if (string.IsNullOrEmpty(phone))
+            return phone;
+
+        try
+        {
+            var phoneNumberUtil = PhoneNumberUtil.GetInstance();
+            var regionCode = phoneNumberUtil.GetRegionCodeForNumber(phoneNumberUtil.Parse(phone, null));
+
+            var phoneNumber = phoneNumberUtil.Parse(phone, regionCode);
+            return phoneNumberUtil.Format(phoneNumber, PhoneNumberFormat.E164);
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
     #endregion
 
     #region Customers
@@ -333,6 +356,16 @@ public partial class CustomerController : BaseAdminController
             _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
         }
 
+        //check is verified phone number
+        var phoneNumber = FormatPhoneNumber(model.Phone);
+        if (_otpSettings.LoginByPhoneEnabled && !string.IsNullOrEmpty(phoneNumber))
+        {
+            if (await _customerService.IsAlreadyExistsVerifiedPhoneNumberAsync(null, phoneNumber))
+            {
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.IsAlreadyExistsVerifiedPhoneNumber"));
+            }
+        }
+
         //custom customer attributes
         var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
         if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
@@ -381,7 +414,10 @@ public partial class CustomerController : BaseAdminController
             if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
                 customer.StateProvinceId = model.StateProvinceId;
             if (_customerSettings.PhoneEnabled)
+            {
                 customer.Phone = model.Phone;
+                customer.PhoneSmsVerified = model.PhoneSmsVerified;
+            }
             if (_customerSettings.FaxEnabled)
                 customer.Fax = model.Fax;
             customer.CustomCustomerAttributesXML = customerAttributesXml;
@@ -499,6 +535,16 @@ public partial class CustomerController : BaseAdminController
             _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.ValidEmailRequiredRegisteredRole"));
         }
 
+        //check is verified phone number
+        var phoneNumber = FormatPhoneNumber(model.Phone);
+        if (_otpSettings.LoginByPhoneEnabled && !string.IsNullOrEmpty(phoneNumber))
+        {
+            if (await _customerService.IsAlreadyExistsVerifiedPhoneNumberAsync(customer, phoneNumber))
+            {
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.IsAlreadyExistsVerifiedPhoneNumber"));
+            }
+        }
+
         //custom customer attributes
         var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
         if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
@@ -584,7 +630,10 @@ public partial class CustomerController : BaseAdminController
                 if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
                     customer.StateProvinceId = model.StateProvinceId;
                 if (_customerSettings.PhoneEnabled)
+                {
                     customer.Phone = model.Phone;
+                    customer.PhoneSmsVerified = model.PhoneSmsVerified;
+                }
                 if (_customerSettings.FaxEnabled)
                     customer.Fax = model.Fax;
 

@@ -6,27 +6,60 @@
             @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription1")
         </li>
         <li>
+            @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription.Withdrawal")
+        </li>
+        <li>
             @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription2")
         </li>
     </ul>
     <div class="form-group row">
         <div class="col-md-3">
-            <nop-override-store-checkbox asp-for="ReturnRequestsEnabled_OverrideForStore" asp-input="ReturnRequestsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-            <nop-label asp-for="ReturnRequestsEnabled" />
+            <nop-override-store-checkbox asp-for="ReturnRequestSettings.ReturnRequestsEnabled_OverrideForStore" asp-input="ReturnRequestSettings.ReturnRequestsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ReturnRequestSettings.ReturnRequestsEnabled" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="ReturnRequestsEnabled" />
-            <span asp-validation-for="ReturnRequestsEnabled"></span>
+            <nop-editor asp-for="ReturnRequestSettings.ReturnRequestsEnabled" />
+            <span asp-validation-for="ReturnRequestSettings.ReturnRequestsEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ReturnRequestSettings.UseEuWithdrawalLocales_OverrideForStore" asp-input="ReturnRequestSettings.UseEuWithdrawalLocales" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ReturnRequestSettings.UseEuWithdrawalLocales" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ReturnRequestSettings.UseEuWithdrawalLocales" />
+            <span asp-validation-for="ReturnRequestSettings.UseEuWithdrawalLocales"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ReturnRequestSettings.WithdrawalLinkDaysValid_OverrideForStore" asp-input="ReturnRequestSettings.WithdrawalLinkDaysValid" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ReturnRequestSettings.WithdrawalLinkDaysValid" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ReturnRequestSettings.WithdrawalLinkDaysValid" />
+            <span asp-validation-for="ReturnRequestSettings.WithdrawalLinkDaysValid"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ReturnRequestSettings.GuestReturnRequestsAllowed_OverrideForStore" asp-input="ReturnRequestSettings.GuestReturnRequestsAllowed" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ReturnRequestSettings.GuestReturnRequestsAllowed" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ReturnRequestSettings.GuestReturnRequestsAllowed" />
+            <span asp-validation-for="ReturnRequestSettings.GuestReturnRequestsAllowed"></span>
         </div>
     </div>
     <div class="form-group row advanced-setting">
         <div class="col-md-3">
-            <nop-override-store-checkbox asp-for="ReturnRequestNumberMask_OverrideForStore" asp-input="ReturnRequestNumberMask" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-            <nop-label asp-for="ReturnRequestNumberMask" />
+            <nop-override-store-checkbox asp-for="ReturnRequestSettings.ReturnRequestNumberMask_OverrideForStore" asp-input="ReturnRequestSettings.ReturnRequestNumberMask" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ReturnRequestSettings.ReturnRequestNumberMask" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="ReturnRequestNumberMask" />
-            <span asp-validation-for="ReturnRequestNumberMask"></span>
+            <nop-editor asp-for="ReturnRequestSettings.ReturnRequestNumberMask" />
+            <span asp-validation-for="ReturnRequestSettings.ReturnRequestNumberMask"></span>
             <ul class="common-list">
                 <li>
                     @T("Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.ID")
@@ -48,27 +81,70 @@
     </div>
     <div class="form-group row advanced-setting">
         <div class="col-md-3">
-            <nop-override-store-checkbox asp-for="NumberOfDaysReturnRequestAvailable_OverrideForStore" asp-input="NumberOfDaysReturnRequestAvailable" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-            <nop-label asp-for="NumberOfDaysReturnRequestAvailable" />
+            <nop-override-store-checkbox asp-for="ReturnRequestSettings.NumberOfDaysReturnRequestAvailable_OverrideForStore" asp-input="ReturnRequestSettings.NumberOfDaysReturnRequestAvailable" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ReturnRequestSettings.NumberOfDaysReturnRequestAvailable" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="NumberOfDaysReturnRequestAvailable" />
-            <span asp-validation-for="NumberOfDaysReturnRequestAvailable"></span>
+            <nop-editor asp-for="ReturnRequestSettings.NumberOfDaysReturnRequestAvailable" />
+            <span asp-validation-for="ReturnRequestSettings.NumberOfDaysReturnRequestAvailable"></span>
         </div>
     </div>
     <div class="form-group row advanced-setting">
         <div class="col-md-3">
-            <nop-override-store-checkbox asp-for="ReturnRequestsAllowFiles_OverrideForStore" asp-input="ReturnRequestsAllowFiles" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-            <nop-label asp-for="ReturnRequestsAllowFiles" />
+            <nop-override-store-checkbox asp-for="ReturnRequestSettings.ReturnRequestsAllowFiles_OverrideForStore" asp-input="ReturnRequestSettings.ReturnRequestsAllowFiles" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ReturnRequestSettings.ReturnRequestsAllowFiles" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="ReturnRequestsAllowFiles" />
-            <span asp-validation-for="ReturnRequestsAllowFiles"></span>
+            <nop-editor asp-for="ReturnRequestSettings.ReturnRequestsAllowFiles" />
+            <span asp-validation-for="ReturnRequestSettings.ReturnRequestsAllowFiles"></span>
         </div>
     </div>
-</div>
-<div class="card-body">
-    @await Html.PartialAsync("../ReturnRequest/_ReturnRequestReasons.cshtml", Model.ReturnRequestReasonSearchModel)
-    @await Html.PartialAsync("../ReturnRequest/_ReturnRequestActions.cshtml", Model.ReturnRequestActionSearchModel)
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ReturnRequestSettings.ReturnReasonsEnabled_OverrideForStore" asp-input="ReturnRequestSettings.ReturnReasonsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ReturnRequestSettings.ReturnReasonsEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ReturnRequestSettings.ReturnReasonsEnabled" />
+            <span asp-validation-for="ReturnRequestSettings.ReturnReasonsEnabled"></span>
+        </div>
+    </div>
+    <div id="return-request-reasons-container">
+        @await Html.PartialAsync("../ReturnRequest/_ReturnRequestReasons.cshtml", Model.ReturnRequestSettings.ReturnRequestReasonSearchModel)
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ReturnRequestSettings.ReturnActionsEnabled_OverrideForStore" asp-input="ReturnRequestSettings.ReturnActionsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ReturnRequestSettings.ReturnActionsEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ReturnRequestSettings.ReturnActionsEnabled" />
+            <span asp-validation-for="ReturnRequestSettings.ReturnActionsEnabled"></span>
+        </div>
+    </div>
+    <div id="return-request-actions-container">
+        @await Html.PartialAsync("../ReturnRequest/_ReturnRequestActions.cshtml", Model.ReturnRequestSettings.ReturnRequestActionSearchModel)
+    </div>
     @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderSettingsReturnRequestSettingsBottom, additionalData = Model })
 </div>
+<script asp-location="Footer">
+    $(function() {
+        const $returnReasonsEl = $('#@Html.IdFor(m => m.ReturnRequestSettings.ReturnReasonsEnabled)');
+        const $returnActionsEl = $('#@Html.IdFor(m => m.ReturnRequestSettings.ReturnActionsEnabled)');
+
+        toggleReasons();
+        toggleActions();
+
+        $returnReasonsEl.on('click', toggleReasons)
+        $returnActionsEl.on('click', toggleActions)
+
+        function toggleReasons() {
+            $('#return-request-reasons-container').toggle($returnReasonsEl.is(':checked'));
+        }
+
+        function toggleActions() {
+            $('#return-request-actions-container').toggle($returnActionsEl.is(':checked'));
+        }
+    });
+</script>

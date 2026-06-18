@@ -64,6 +64,7 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
+using Nop.Services.PriceLists;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -349,6 +350,7 @@ public partial class BaseNopTest
         services.AddTransient<IPermissionService, PermissionService>();
         services.AddTransient<IAclService, AclService>();
         services.AddTransient<IPriceCalculationService, PriceCalculationService>();
+        services.AddTransient<IPriceListService, PriceListService>();
         services.AddTransient<IGeoLookupService, GeoLookupService>();
         services.AddTransient<ICountryService, CountryService>();
         services.AddTransient<ICurrencyService, CurrencyService>();
@@ -433,6 +435,7 @@ public partial class BaseNopTest
         services.AddTransient<IPickupPluginManager, PickupPluginManager>();
         services.AddTransient<IShippingPluginManager, ShippingPluginManager>();
         services.AddTransient<ITaxPluginManager, TaxPluginManager>();
+        services.AddTransient<ISmsPluginManager, SmsPluginManager>();
         services.AddScoped<ISearchPluginManager, SearchPluginManager>();
 
         //picture thumb service

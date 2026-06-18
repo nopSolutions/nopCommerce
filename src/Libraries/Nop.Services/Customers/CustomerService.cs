@@ -214,7 +214,7 @@ public partial class CustomerService : ICustomerService
                 query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Month == monthOfBirth);
 
             //search by IpAddress
-            if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress)) 
+            if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
                 query = query.Where(w => w.LastIpAddress == ipAddress);
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
@@ -567,6 +567,52 @@ public partial class CustomerService : ICustomerService
     }
 
     /// <summary>
+    /// Get customer by their phone number
+    /// </summary>
+    /// <param name="phone">The phone number of the customer
+    /// <returns>A task that represents the asynchronous operation
+    /// The task result contains the <see cref="Customer"/> 
+    /// </returns>
+    public virtual async Task<Customer> GetCustomerByPhoneAsync(string phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone))
+            return null;
+
+        return await _shortTermCacheManager.GetAsync(async () =>
+        {
+            var query =
+                from c in _customerRepository.Table
+                where c.Active && !c.Deleted && c.Phone == phone
+                orderby c.Id
+                select c;
+
+            var customers = await query.ToListAsync();
+
+            return customers.FirstOrDefault(customer => customer.PhoneSmsVerified) ?? customers.FirstOrDefault();
+        }, NopCustomerServicesDefaults.CustomerByPhoneCacheKey, phone);
+    }
+
+    /// <summary>
+    /// Determines whether a verified phone number is already associated with a customer other than the specified
+    /// customer.
+    /// </summary>
+    /// <param name="customer">The customer</param>
+    /// <param name="phone">The phone number</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains <see langword="true"/> if a
+    /// different customer with the specified verified phone number exists; otherwise, <see langword="false"/>.</returns>
+    public virtual async Task<bool> IsAlreadyExistsVerifiedPhoneNumberAsync(Customer customer, string phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone))
+            return false;
+
+        var customerByPhone = await GetCustomerByPhoneAsync(phone);
+        if (customerByPhone == null)
+            return false;
+
+        return (customer?.Id != customerByPhone.Id) && customerByPhone.PhoneSmsVerified;
+    }
+
+    /// <summary>
     /// Insert a guest customer
     /// </summary>
     /// <returns>
@@ -689,10 +735,10 @@ public partial class CustomerService : ICustomerService
             from productReview in _productReviewRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             from productReviewHelpfulness in _productReviewHelpfulnessRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             where (!onlyWithoutShoppingCart || sCart == null) &&
-                  order == null && blogComment == null && productReview == null && productReviewHelpfulness == null &&
-                  !guest.IsSystemAccount &&
-                  (createdFromUtc == null || guest.CreatedOnUtc > createdFromUtc) &&
-                  (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
+                order == null && blogComment == null && productReview == null && productReviewHelpfulness == null &&
+                !guest.IsSystemAccount &&
+                (createdFromUtc == null || guest.CreatedOnUtc > createdFromUtc) &&
+                (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
             select new { CustomerId = guest.Id };
 
         await using var tmpGuests = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsToDelete", guestsToDelete);

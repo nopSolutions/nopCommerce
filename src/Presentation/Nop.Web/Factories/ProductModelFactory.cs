@@ -55,6 +55,7 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IDownloadService _downloadService;
     protected readonly IGenericAttributeService _genericAttributeService;
+    protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly IJsonLdModelFactory _jsonLdModelFactory;
     protected readonly ILocalizationService _localizationService;
     protected readonly IManufacturerService _manufacturerService;
@@ -104,6 +105,7 @@ public partial class ProductModelFactory : IProductModelFactory
         IDateTimeHelper dateTimeHelper,
         IDownloadService downloadService,
         IGenericAttributeService genericAttributeService,
+        IHttpContextAccessor httpContextAccessor,
         IJsonLdModelFactory jsonLdModelFactory,
         ILocalizationService localizationService,
         IManufacturerService manufacturerService,
@@ -148,6 +150,7 @@ public partial class ProductModelFactory : IProductModelFactory
         _dateTimeHelper = dateTimeHelper;
         _downloadService = downloadService;
         _genericAttributeService = genericAttributeService;
+        _httpContextAccessor = httpContextAccessor;
         _jsonLdModelFactory = jsonLdModelFactory;
         _localizationService = localizationService;
         _manufacturerService = manufacturerService;
@@ -309,7 +312,7 @@ public partial class ProductModelFactory : IProductModelFactory
                     //or check for attribute price adjustment, in this case we should add it to the base product price
                     var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml);
 
-                    var additionalCharge = decimal.Zero; 
+                    var additionalCharge = decimal.Zero;
                     foreach (var attributeValue in attributeValues)
                         additionalCharge += await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store);
 
@@ -1292,6 +1295,50 @@ public partial class ProductModelFactory : IProductModelFactory
         return (cachedPictures.DefaultPictureModel, allPictureModels, allvideoModels);
     }
 
+    /// <summary>
+    /// Prepare product 3D object model
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the product 3D object model
+    /// </returns>
+    protected virtual async Task<Product3dObjectModel> PrepareProduct3dObjectModelAsync(Product product)
+    {
+        var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.Product3dObjectModelKey,
+            product, _mediaSettings.ProductDetailsPictureSize, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage);
+
+        return await _staticCacheManager.GetAsync(cacheKey, async () =>
+        {
+            var product3dObject = await _productService.GetProduct3dObjectAsync(product);
+            if (product3dObject is null)
+                return new Product3dObjectModel();
+
+            var picture3dPreview = await _pictureService.GetPictureByIdAsync(product3dObject.PreviewPictureId ?? 0);
+
+            (var imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture3dPreview, _mediaSettings.ProductDetailsPictureSize, true);
+            (var thumbImageUrl, _) = await _pictureService.GetPictureUrlAsync(picture3dPreview, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage, true, defaultPictureType: PictureType.Object3d);
+
+            var path = _mediaSettings.UseAbsoluteImagePath
+                ? _webHelper.GetStoreLocation()
+                : $"{_httpContextAccessor.HttpContext?.Request.PathBase.Value}/";
+            var url = $"{path}{NopMediaDefaults.DefaultImagesPath}/{NopMediaDefaults.Default3dObjectsDirectoryName}/{product3dObject.FileName}";
+
+            return new Product3dObjectModel
+            {
+                Id = product3dObject.Id,
+                AlternateText = product3dObject.AltAttribute,
+                ObjectUrl = url,
+                PosterImageUrl = imageUrl,
+                ThumbImageUrl = thumbImageUrl,
+                AutoRotateEnabled = _mediaSettings.Object3dAutoRotateEnabled,
+                ZoomEnabled = _mediaSettings.Object3dZoomEnabled,
+                CameraControlEnabled = _mediaSettings.Object3dCameraControlEnabled,
+                LazyLoadEnabled = _mediaSettings.Object3dLazyLoadingEnabled
+            };
+        });
+    }
+
     #endregion
 
     #region Methods
@@ -1567,6 +1614,7 @@ public partial class ProductModelFactory : IProductModelFactory
         (model.DefaultPictureModel, allPictureModels, allVideoModels) = await PrepareProductDetailsPictureModelAsync(product, isAssociatedProduct);
         model.PictureModels = allPictureModels;
         model.VideoModels = allVideoModels;
+        model.Product3dObjectModel = await PrepareProduct3dObjectModelAsync(product);
 
         //price
         model.ProductPrice = await PrepareProductPriceModelAsync(product);

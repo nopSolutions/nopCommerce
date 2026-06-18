@@ -104,6 +104,11 @@ public static partial class NopRouteNames
         /// Gets the gift card balance route name
         /// </summary>
         public const string CHECK_GIFT_CARD_BALANCE = "CheckGiftCardBalance";
+
+        /// <summary>
+        /// Gets the return request find route name
+        /// </summary>
+        public const string WITHDRAWAL_REQUEST_FORM = "WithdrawalRequestForm";
     }
 
     /// <summary>
@@ -260,6 +265,11 @@ public static partial class NopRouteNames
         /// Gets the register result page route name
         /// </summary>
         public const string REGISTER_RESULT = "RegisterResult";
+
+        /// <summary>
+        /// Gets the OTP phone verification route name
+        /// </summary>
+        public const string OTP_PHONE_VERIFICATION = "OtpPhoneVerification";
 
         /// <summary>
         /// Gets the password recovery route name
@@ -736,5 +746,15 @@ public static partial class NopRouteNames
         /// Gets the return request with "upload file" support route name
         /// </summary>
         public const string UPLOAD_FILE_RETURN_REQUEST = "UploadFileReturnRequest";
+
+        /// <summary>
+        /// Gets the send OTP route name
+        /// </summary>
+        public const string SEND_OTP = "SendOtp";
+
+        /// <summary>
+        /// Gets the common verification OTP route name
+        /// </summary>
+        public const string COMMON_VERIFICATION_OTP = "CommonVerificationOtp";
     }
 }

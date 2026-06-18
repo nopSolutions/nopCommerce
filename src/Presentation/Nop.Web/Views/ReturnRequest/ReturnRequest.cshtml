@@ -6,13 +6,13 @@
     Layout = "_ColumnsOne";
 
     //title
-    NopHtml.AddTitleParts(T("PageTitle.ReturnItems").Text);
+    NopHtml.AddTitleParts(Model.ReturnRequestPageTitle);
     //page class
     NopHtml.AppendPageCssClassParts("html-return-request-page");
 }
 <div class="page return-request-page">
     <div class="page-title">
-        <h1>@Html.Raw(string.Format(T("ReturnRequests.Title").Text, Url.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = Model.OrderId }), Model.CustomOrderNumber))</h1>
+        <h1>@Html.Raw(Model.ReturnRequestTitle)</h1>
     </div>
     <div class="page-body">
         @if (!string.IsNullOrEmpty(Model.Result))
@@ -23,7 +23,8 @@
         }
         else
         {
-            <form asp-route="@NopRouteNames.Standard.RETURN_REQUEST" method="post">                
+            <form asp-route="@NopRouteNames.Standard.RETURN_REQUEST" method="post">
+                <input type="hidden" asp-for="WithdrawalToken" />
                 <section class="section">
                     <h2 class="title">
                         @T("ReturnRequests.SelectProduct(s)")
@@ -84,6 +85,8 @@
                         @T("ReturnRequests.WhyReturning")
                     </h2>
                     <div class="form-fields">
+                        @if (Model.ReturnReasonsEnabled)
+                        {
                         <div class="inputs">
                             @{
                                 var reasonsSelectList = Model.AvailableReturnReasons.Select(x => new SelectListItem
@@ -95,6 +98,9 @@
                             <label asp-for="ReturnRequestReasonId" asp-postfix=":"></label>
                             <select asp-for="ReturnRequestReasonId" asp-items="@reasonsSelectList" class="return-reasons"></select>
                         </div>
+                        }
+                        @if (Model.ReturnActionsEnabled)
+                        {
                         <div class="inputs">
                             @{
                                 var actionsSelectList = Model.AvailableReturnActions.Select(x => new SelectListItem
@@ -105,7 +111,8 @@
                             }
                             <label asp-for="ReturnRequestActionId" asp-postfix=":"></label>
                             <select asp-for="ReturnRequestActionId" asp-items="@actionsSelectList" class="return-actions"></select>
-                        </div>                        
+                        </div>  
+                        }
                         <div class="inputs">
                             <label asp-for="Comments" asp-postfix=":"></label>
                             <textarea asp-for="Comments" class="comment"></textarea>
@@ -178,7 +185,7 @@
                     </div>
                 </section>
                 <section class="buttons">
-                    <button type="submit" name="submit-return-request" class="button-1 submit-return-request-button">@T("ReturnRequests.Submit")</button>
+                    <button type="submit" name="submit-return-request" class="button-1 submit-return-request-button">@Model.ReturnRequestSubmitText</button>
                 </section>
             </form>
         }

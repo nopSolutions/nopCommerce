@@ -10,14 +10,16 @@ public partial class CustomNumberFormatter : ICustomNumberFormatter
     #region Fields
 
     protected readonly OrderSettings _orderSettings;
+    protected readonly ReturnRequestSettings _returnRequestSettings;
 
     #endregion
 
     #region Ctor
 
-    public CustomNumberFormatter(OrderSettings orderSettings)
+    public CustomNumberFormatter(OrderSettings orderSettings, ReturnRequestSettings returnRequestSettings)
     {
         _orderSettings = orderSettings;
+        _returnRequestSettings = returnRequestSettings;
     }
 
     #endregion
@@ -33,11 +35,11 @@ public partial class CustomNumberFormatter : ICustomNumberFormatter
     {
         string customNumber;
 
-        if (string.IsNullOrEmpty(_orderSettings.ReturnRequestNumberMask))
+        if (string.IsNullOrEmpty(_returnRequestSettings.ReturnRequestNumberMask))
             customNumber = returnRequest.Id.ToString();
         else
         {
-            customNumber = _orderSettings.ReturnRequestNumberMask
+            customNumber = _returnRequestSettings.ReturnRequestNumberMask
                 .Replace("{ID}", returnRequest.Id.ToString())
                 .Replace("{YYYY}", returnRequest.CreatedOnUtc.ToString("yyyy"))
                 .Replace("{YY}", returnRequest.CreatedOnUtc.ToString("yy"))

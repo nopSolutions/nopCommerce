@@ -107,6 +107,8 @@ public partial record CustomerInfoModel : BaseNopModel
     [DataType(DataType.PhoneNumber)]
     [NopResourceDisplayName("Account.Fields.Phone")]
     public string Phone { get; set; }
+    public bool LoginByPhoneEnabled { get; set; }
+    public bool PhoneSmsVerified { get; set; }
 
     public bool FaxEnabled { get; set; }
     public bool FaxRequired { get; set; }

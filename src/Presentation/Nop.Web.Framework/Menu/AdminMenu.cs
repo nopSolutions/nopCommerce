@@ -176,7 +176,15 @@ public partial class AdminMenu : IAdminMenu
                                     IconClass = "far fa-circle"
                                 }
                             }
-                        }
+                        },
+                        new()
+                        {
+                            SystemName = "Price lists",
+                            Title = await _localizationService.GetResourceAsync("Admin.Catalog.PriceLists"),
+                            PermissionNames = new List<string> { StandardPermission.Catalog.PRICE_LISTS_VIEW },
+                            Url = GetMenuItemUrl("PriceList", "List"),
+                            IconClass = "far fa-dot-circle"
+                        },
                     }
                 },
                 //sales
@@ -614,6 +622,14 @@ public partial class AdminMenu : IAdminMenu
                                     StandardPermission.Configuration.MANAGE_PAYMENT_METHODS
                                 },
                             Url = GetMenuItemUrl("Payment", "MethodRestrictions"),
+                            IconClass = "far fa-dot-circle"
+                        },
+                        new()
+                        {
+                            SystemName = "Sms providers",
+                            Title = await _localizationService.GetResourceAsync("Admin.Configuration.Sms.Providers"),
+                            PermissionNames = new List<string> { StandardPermission.Configuration.MANAGE_SMS_SETTINGS },
+                            Url = GetMenuItemUrl("Sms", "Providers"),
                             IconClass = "far fa-dot-circle"
                         },
                         new()

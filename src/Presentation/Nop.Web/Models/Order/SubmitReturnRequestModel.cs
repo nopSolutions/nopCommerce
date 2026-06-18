@@ -34,6 +34,15 @@ public partial record SubmitReturnRequestModel : BaseNopModel
 
     public string Result { get; set; }
 
+    public bool ReturnReasonsEnabled { get; set; }
+    public bool ReturnActionsEnabled { get; set; }
+
+    public string WithdrawalToken { get; set; }
+
+    public string ReturnRequestPageTitle { get; set; }
+    public string ReturnRequestTitle { get; set; }
+    public string ReturnRequestSubmitText { get; set; }
+
     #region Nested classes
 
     public partial record OrderItemModel : BaseNopEntityModel

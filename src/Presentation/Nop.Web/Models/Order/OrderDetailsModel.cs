@@ -37,6 +37,7 @@ public partial record OrderDetailsModel : BaseNopEntityModel
     public bool IsReOrderAllowed { get; set; }
 
     public bool IsReturnRequestAllowed { get; set; }
+    public string ReturnRequestText { get; set; }
 
     public bool IsShippable { get; set; }
     public bool PickupInStore { get; set; }

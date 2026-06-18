@@ -78,6 +78,11 @@ public partial class CaptchaSettings : ISettings
     public bool ShowOnCheckGiftCardBalance { get; set; }
 
     /// <summary>
+    /// A value indicating whether CAPTCHA should be displayed on the Withdrawal form
+    /// </summary>
+    public bool ShowOnWithdrawalForm { get; set; }
+
+    /// <summary>
     /// The base reCAPTCHA API URL
     /// </summary>
     public string ReCaptchaApiUrl { get; set; }

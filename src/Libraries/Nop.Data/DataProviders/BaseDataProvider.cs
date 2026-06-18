@@ -1,6 +1,7 @@
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Transactions;
 using FluentMigrator;
 using LinqToDB;
 using LinqToDB.Data;
@@ -493,6 +494,43 @@ public abstract partial class BaseDataProvider
     {
         using var dataContext = CreateDataConnection(LinqToDbDataProvider);
         return await dataContext.GetTable<TEntity>().TruncateAsync(resetIdentity);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="TransactionScope"/> with appropriate options for bulk database operations
+    /// </summary>
+    /// <returns>The created transaction scope</returns>
+    public virtual TransactionScope CreateTransactionScope()
+    {
+        var dataSettings = DataSettingsManager.LoadSettings();
+
+        //try to use the SQL command timeout value as the transaction scope timeout
+        var timeout = dataSettings.SQLCommandTimeout is > 0
+            ? TimeSpan.FromSeconds(dataSettings.SQLCommandTimeout.Value)
+            : TransactionManager.DefaultTimeout;
+
+        //the default new TransactionScope(...) constructor uses IsolationLevel.Serializable.
+        //Which holds range locks (RangeS-S / RangeI-N on SQL Server) for the duration of bulk insert/update/delete.
+        //This isolation level may cause the deadlocks on SQL Server reported in #6482 and #6681.
+        //See David Browne (Microsoft), "Using New TransactionScope() Considered Harmful" article for more details.
+        //https://learn.microsoft.com/en-us/archive/blogs/dbrowne/using-new-transactionscope-considered-harmful
+
+        //But, while Serializable is the most "limiting" isolation level(concerning locking, deadlocks, etc.),
+        //It is also the most "safe" isolation level (concerning consistency of data).
+
+        //also important to note that nopCommerce can work with other DBMSs that do not have such restrictions.
+
+        //So, we will use the Serializable isolation level to ensure data consistency and avoid potential issues with other DBMSs.
+        //but if you are using only SQL Server and understand the possible issues and still want to avoid potential deadlocks,
+        //You can set a lower isolation level(e.g., ReadCommitted) in your custom repository implementation by overriding or changing this method.
+
+        var transactionOptions = new TransactionOptions
+        {
+            IsolationLevel = IsolationLevel.Serializable,
+            Timeout = timeout
+        };
+
+        return new TransactionScope(TransactionScopeOption.Required, transactionOptions, TransactionScopeAsyncFlowOption.Enabled);
     }
 
     #endregion

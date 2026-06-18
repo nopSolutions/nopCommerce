@@ -490,7 +490,7 @@
                                     {
                                         <td class="picture">
                                             <a href="@(await NopUrl.RouteGenericUrlAsync<Product>(new {SeName = item.ProductSeName}))">
-                                                <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.DefaultImageQuality" />
+                                                <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" width="@mediaSettings.OrderThumbPictureSize" />
                                             </a>
                                         </td>
                                     }
@@ -698,7 +698,7 @@
                         }
                         @if (Model.IsReturnRequestAllowed)
                         {
-                            <button type="button" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.RETURN_REQUEST, new { orderId = Model.Id })')">@T("Order.ReturnItems")</button>
+                            <button type="button" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.RETURN_REQUEST, new { orderId = Model.Id })')">@Model.ReturnRequestText</button>
                         }
                     </div>
                 }

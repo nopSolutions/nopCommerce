@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Configuration;
+using Nop.Core.Domain.PriceLists;
 
 namespace Nop.Core.Domain.Catalog;
 
@@ -12,6 +13,11 @@ public partial class CatalogSettings : ISettings
         ProductSortingEnumDisabled = new List<int>();
         ProductSortingEnumDisplayOrder = new Dictionary<int, int>();
     }
+
+    /// <summary>
+    /// Gets or sets a price list strategy
+    /// </summary>
+    public PriceListStrategy PriceListStrategy { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating details pages of unpublished product details pages could be open (for SEO optimization)

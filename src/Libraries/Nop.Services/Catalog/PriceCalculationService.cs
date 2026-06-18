@@ -3,10 +3,12 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.PriceLists;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.PriceLists;
 
 namespace Nop.Services.Catalog;
 
@@ -24,6 +26,7 @@ public partial class PriceCalculationService : IPriceCalculationService
     protected readonly ICustomerService _customerService;
     protected readonly IDiscountService _discountService;
     protected readonly IManufacturerService _manufacturerService;
+    protected readonly IPriceListService _priceListService;
     protected readonly IProductAttributeParser _productAttributeParser;
     protected readonly IProductService _productService;
     protected readonly IStaticCacheManager _staticCacheManager;
@@ -39,6 +42,7 @@ public partial class PriceCalculationService : IPriceCalculationService
         ICustomerService customerService,
         IDiscountService discountService,
         IManufacturerService manufacturerService,
+        IPriceListService priceListService,
         IProductAttributeParser productAttributeParser,
         IProductService productService,
         IStaticCacheManager staticCacheManager)
@@ -50,6 +54,7 @@ public partial class PriceCalculationService : IPriceCalculationService
         _customerService = customerService;
         _discountService = discountService;
         _manufacturerService = manufacturerService;
+        _priceListService = priceListService;
         _productAttributeParser = productAttributeParser;
         _productService = productService;
         _staticCacheManager = staticCacheManager;
@@ -58,6 +63,82 @@ public partial class PriceCalculationService : IPriceCalculationService
     #endregion
 
     #region Utilities
+
+    /// <summary>
+    /// Gets price from applicable price lists
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <param name="customer">Customer</param>
+    /// <param name="basePrice">Base product price</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the price from price lists (null if no applicable price lists found)
+    /// </returns>
+    protected virtual async Task<decimal?> GetPriceListPriceAsync(Product product, Customer customer, decimal basePrice)
+    {
+        ArgumentNullException.ThrowIfNull(product);
+        ArgumentNullException.ThrowIfNull(customer);
+
+        var now = DateTime.UtcNow;
+        var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+
+        //get all active price lists for customer
+        var priceLists = await _priceListService.GetAllPriceListsAsync(customerRoleIds: customerRoleIds, customerIds: [customer.Id], isActive: true);
+
+        //filter by date
+        var applicablePriceLists = new Dictionary<PriceList, decimal?>();
+        foreach (var priceList in priceLists)
+        {
+            var isApplicable = (priceList.StartDateUtc == null || priceList.StartDateUtc <= now)
+                && (priceList.EndDateUtc == null || priceList.EndDateUtc >= now);
+
+            if (!isApplicable)
+                continue;
+
+            //check if product is in this price list
+            var priceListItem = (await _priceListService.GetPriceListItemsByPriceListIdAsync(priceList.Id, pageSize: int.MaxValue))
+                .FirstOrDefault(x => x.ProductId == product.Id);
+
+            if (priceListItem != null)
+                applicablePriceLists.Add(priceList, priceListItem.ManualPrice);
+        }
+
+        //no applicable price lists
+        if (!applicablePriceLists.Any())
+            return null;
+
+        //apply strategy
+        switch (_catalogSettings.PriceListStrategy)
+        {
+            case PriceListStrategy.MinimalPrice:
+                {
+                    //calculate prices for all applicable price lists and get minimum
+                    var priceListPrices = new List<decimal>();
+                    foreach (var priceList in applicablePriceLists)
+                    {
+                        var price = priceList.Value ?? _priceListService.ApplyAdjustmentPrice(product, priceList.Key);
+                        priceListPrices.Add(price);
+                    }
+
+                    return priceListPrices.Any() ? priceListPrices.Min() : null;
+                }
+
+            case PriceListStrategy.UseByPriority:
+                {
+                    //get price from highest priority price list
+                    var priceList = applicablePriceLists.OrderBy(x => x.Key.Priority).FirstOrDefault();
+                    if (priceList.Key != null)
+                    {
+                        var price = priceList.Value ?? _priceListService.ApplyAdjustmentPrice(product, priceList.Key);
+                        return price;
+                    }
+
+                    break;
+                }
+        }
+
+        return null;
+    }
 
     /// <summary>
     /// Gets allowed discounts applied to product
@@ -368,6 +449,11 @@ public partial class PriceCalculationService : IPriceCalculationService
 
             //initial price
             var price = overriddenProductPrice ?? product.Price;
+
+            //get price from price list
+            var priceListPrice = await GetPriceListPriceAsync(product, customer, price);
+            if (priceListPrice.HasValue)
+                price = priceListPrice.Value;
 
             //tier prices
             var tierPrice = await _productService.GetPreferredTierPriceAsync(product, customer, store, quantity);

@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -8,6 +11,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
+using Nop.Services.Attributes;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Html;
@@ -30,6 +34,7 @@ public partial class CommonController : BasePublicController
 
     protected readonly CaptchaSettings _captchaSettings;
     protected readonly CommonSettings _commonSettings;
+    protected readonly IAttributeService<ContactFormAttribute, ContactFormAttributeValue> _contactFormAttributeService;
     protected readonly ICommonModelFactory _commonModelFactory;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerActivityService _customerActivityService;
@@ -55,6 +60,7 @@ public partial class CommonController : BasePublicController
 
     public CommonController(CaptchaSettings captchaSettings,
         CommonSettings commonSettings,
+        IAttributeService<ContactFormAttribute, ContactFormAttributeValue> contactFormAttributeService,
         ICommonModelFactory commonModelFactory,
         ICurrencyService currencyService,
         ICustomerActivityService customerActivityService,
@@ -76,6 +82,7 @@ public partial class CommonController : BasePublicController
     {
         _captchaSettings = captchaSettings;
         _commonSettings = commonSettings;
+        _contactFormAttributeService = contactFormAttributeService;
         _commonModelFactory = commonModelFactory;
         _currencyService = currencyService;
         _customerActivityService = customerActivityService;
@@ -94,6 +101,81 @@ public partial class CommonController : BasePublicController
         _sitemapXmlSettings = sitemapXmlSettings;
         _storeInformationSettings = storeInformationSettings;
         _vendorSettings = vendorSettings;
+    }
+
+    #endregion
+
+    #region Utilities
+
+    protected virtual async IAsyncEnumerable<(string Name, string Value, string Error)> ParseCustomContactFormAttributesAsync(IFormCollection form)
+    {
+        ArgumentNullException.ThrowIfNull(form);
+
+        var attributes = await _contactFormAttributeService.GetAllAttributesAsync();
+        foreach (var attribute in attributes)
+        {
+            var controlId = string.Format(NopCommonDefaults.ContactFormAttributeControlName, attribute.Id);
+            var inputValue = "";
+
+            switch (attribute.AttributeControlType)
+            {
+                case AttributeControlType.DropdownList:
+                case AttributeControlType.RadioList:
+                {
+                    var ctrlAttributes = form[controlId];
+                    if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                    {
+                        var selectedAttributeId = int.Parse(ctrlAttributes);
+                        if (selectedAttributeId > 0)
+                        {
+                            var selectedVal = await _contactFormAttributeService.GetAttributeValueByIdAsync(selectedAttributeId);
+                            inputValue = selectedVal.Name;
+                        }
+                    }
+                }
+                break;
+                case AttributeControlType.Checkboxes:
+                {
+                    var cblAttributes = form[controlId];
+                    if (StringValues.IsNullOrEmpty(cblAttributes))
+                        break;
+
+                    var attrValues = await cblAttributes
+                        .Select(int.Parse)
+                        .Where(id => id > 0)
+                        .SelectAwait(async id =>
+                        {
+                            var selectedVal = await _contactFormAttributeService.GetAttributeValueByIdAsync(id);
+                            return selectedVal.Name;
+                        }).ToListAsync();
+
+                    inputValue = string.Join(", ", attrValues);
+                }
+                break;
+                case AttributeControlType.TextBox:
+                case AttributeControlType.MultilineTextbox:
+                {
+                    var ctrlAttributes = form[controlId];
+                    if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                        inputValue = WebUtility.HtmlEncode(string.Join(", ", ctrlAttributes.ToString().Trim()));
+                }
+                break;
+                //not supported customer attributes
+                case AttributeControlType.ReadonlyCheckboxes:
+                case AttributeControlType.Datepicker:
+                case AttributeControlType.ColorSquares:
+                case AttributeControlType.ImageSquares:
+                case AttributeControlType.FileUpload:
+                default:
+                    continue;
+            }
+
+            var notFoundWarning = "";
+            if (attribute.IsRequired && string.IsNullOrEmpty(inputValue))
+                notFoundWarning = string.Format(await _localizationService.GetResourceAsync("ContactUs.SelectAttribute"), await _localizationService.GetLocalizedAsync(attribute, a => a.Name));
+
+            yield return (attribute.Name, inputValue, notFoundWarning);
+        }
     }
 
     #endregion
@@ -191,13 +273,16 @@ public partial class CommonController : BasePublicController
     [ValidateCaptcha]
     //available even when a store is closed
     [CheckAccessClosedStore(ignore: true)]
-    public virtual async Task<IActionResult> ContactUsSend(ContactUsModel model, bool captchaValid)
+    public virtual async Task<IActionResult> ContactUsSend(ContactUsModel model, bool captchaValid, IFormCollection form)
     {
         //validate CAPTCHA
         if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
 
-        model = await _commonModelFactory.PrepareContactUsModelAsync(model, true);
+        var customFields = await ParseCustomContactFormAttributesAsync(form).ToListAsync();
+
+        foreach (var (_, _, error) in customFields.Where(x => !string.IsNullOrEmpty(x.Error)).ToList())
+            ModelState.AddModelError("", error);
 
         if (ModelState.IsValid)
         {
@@ -205,7 +290,7 @@ public partial class CommonController : BasePublicController
             var body = _htmlFormatter.FormatText(model.Enquiry);
 
             await _workflowMessageService.SendContactUsMessageAsync((await _workContext.GetWorkingLanguageAsync()).Id,
-                model.Email, model.FullName, subject, body);
+                model.Email, model.FullName, subject, body, customFields.ToDictionary(k => k.Name, v => v.Value));
 
             model.SuccessfullySent = true;
             model.Result = await _localizationService.GetResourceAsync("ContactUs.YourEnquiryHasBeenSent");
@@ -216,6 +301,8 @@ public partial class CommonController : BasePublicController
 
             return View(model);
         }
+
+        model = await _commonModelFactory.PrepareContactUsModelAsync(model, true, form);
 
         return View(model);
     }

@@ -61,4 +61,18 @@ public static partial class NopOrderDefaults
     #endregion
 
     #endregion
+
+    #region Return requests
+
+    /// <summary>
+    /// Gets a name of generic attribute to store the value of 'WithdrawalToken'
+    /// </summary>
+    public static string WithdrawalTokenAttribute => "WithdrawalToken";
+
+    /// <summary>
+    /// Gets a name of generic attribute to store the value of 'WithdrawalTokenDateGenerated'
+    /// </summary>
+    public static string WithdrawalTokenDateGeneratedAttribute => "WithdrawalTokenDateGenerated";
+
+    #endregion
 }

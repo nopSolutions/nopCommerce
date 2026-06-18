@@ -853,4 +853,36 @@ public partial interface IProductService
     Task DeleteDiscountProductMappingAsync(DiscountProductMapping discountProductMapping);
 
     #endregion
+
+    #region Product 3D objects
+
+    /// <summary>
+    /// Gets the 3D object associated with the product
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <returns>The task result contains the associated 3D object, or <c>null</c> if the 3D object is not found</returns>
+    Task<Product3dObject> GetProduct3dObjectAsync(Product product);
+
+    /// <summary>
+    /// Deletes the 3D object
+    /// </summary>
+    /// <param name="product3dObject">The 3D object</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task DeleteProduct3dObjectAsync(Product3dObject product3dObject);
+
+    /// <summary>
+    /// Inserts the 3D object
+    /// </summary>
+    /// <param name="product3dObject">The 3D object</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task InsertProduct3dObjectAsync(Product3dObject product3dObject);
+
+    /// <summary>
+    /// Updates the 3D object
+    /// </summary>
+    /// <param name="product3dObject">The 3D object</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task UpdateProduct3dObjectAsync(Product3dObject product3dObject);
+
+    #endregion
 }

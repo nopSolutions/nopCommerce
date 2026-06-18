@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings;
 
@@ -23,6 +24,7 @@ public partial record GeneralCommonSettingsModel : BaseNopModel, ISettingsModel
         MinificationSettings = new MinificationSettingsModel();
         CustomHtmlSettings = new CustomHtmlSettingsModel();
         RobotsTxtSettings = new RobotsTxtSettingsModel();
+        ContactFormAttributeSearchModel = new ContactFormAttributeSearchModel();
     }
 
     #endregion
@@ -54,6 +56,8 @@ public partial record GeneralCommonSettingsModel : BaseNopModel, ISettingsModel
     public CustomHtmlSettingsModel CustomHtmlSettings { get; set; }
 
     public RobotsTxtSettingsModel RobotsTxtSettings { get; set; }
+
+    public ContactFormAttributeSearchModel ContactFormAttributeSearchModel { get; set; }
 
     #endregion
 }

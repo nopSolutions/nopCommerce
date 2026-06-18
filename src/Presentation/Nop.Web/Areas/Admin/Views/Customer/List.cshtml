@@ -350,6 +350,13 @@
                                     {
                                         Title = T("Admin.Customers.Customers.Fields.Phone").Text
                                     });
+
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.PhoneSmsVerified))
+                                    {
+                                        Title = T("Admin.Customers.Customers.Fields.PhoneSmsVerified").Text,
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderBoolean()
+                                    });
                                 }
                                 if (Model.ZipPostalCodeEnabled)
                                 {

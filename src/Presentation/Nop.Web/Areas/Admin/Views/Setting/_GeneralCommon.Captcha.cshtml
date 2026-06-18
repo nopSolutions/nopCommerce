@@ -154,6 +154,16 @@
                 <span asp-validation-for="CaptchaSettings.ShowOnCheckGiftCardBalance"></span>
             </div>
         </div>
+        <div class="form-group row" id="ssCaptchaShowOnWithdrawalForm">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnWithdrawalForm_OverrideForStore" asp-input="CaptchaSettings.ShowOnWithdrawalForm" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnWithdrawalForm" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnWithdrawalForm" />
+                <span asp-validation-for="CaptchaSettings.ShowOnWithdrawalForm"></span>
+            </div>
+        </div>
         <div class="form-group row" id="ssReCaptchaPublicKeypnl">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPublicKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPublicKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

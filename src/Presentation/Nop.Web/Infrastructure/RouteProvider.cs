@@ -341,6 +341,21 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/registerresult/{{resultId:min(0)}}",
             defaults: new { controller = "Customer", action = "RegisterResult" });
 
+        //otp phone verification page
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.OTP_PHONE_VERIFICATION,
+            pattern: $"{lang}/otpphoneverification/{{typeId:min(0)}}",
+            defaults: new { controller = "Customer", action = "OtpPhoneVerification" });
+
+        //send otp code to phone number (AJAX)
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.SEND_OTP,
+            pattern: $"sendotp",
+            defaults: new { controller = "Customer", action = "SendOtp" });
+
+        //otp code to phone number (AJAX)
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.COMMON_VERIFICATION_OTP,
+            pattern: $"commonverificationotp",
+            defaults: new { controller = "Customer", action = "CommonVerificationOtp" });
+
         //check username availability (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Ajax.CHECK_USERNAME_AVAILABILITY,
             pattern: $"customer/checkusernameavailability",
@@ -450,6 +465,10 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.RETURN_REQUEST,
             pattern: $"{lang}/returnrequest/{{orderId:min(0)}}",
             defaults: new { controller = "ReturnRequest", action = "ReturnRequest" });
+
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.General.WITHDRAWAL_REQUEST_FORM,
+            pattern: $"{lang}/returnrequest/find",
+            defaults: new { controller = "ReturnRequest", action = "Find" });
 
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.RE_ORDER,
             pattern: $"{lang}/reorder/{{orderId:min(0)}}",

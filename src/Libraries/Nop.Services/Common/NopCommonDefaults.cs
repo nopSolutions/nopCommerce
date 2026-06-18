@@ -24,6 +24,18 @@ public static partial class NopCommonDefaults
 
     #endregion
 
+    #region Contact form attributes
+
+    /// <summary>
+    /// Gets a name of the contact form attribute control
+    /// </summary>
+    /// <remarks>
+    /// {0} : contact form attribute id
+    /// </remarks>
+    public static string ContactFormAttributeControlName => "contact_form_attribute_{0}";
+
+    #endregion
+
     #region Maintenance
 
     /// <summary>

@@ -270,13 +270,18 @@
                         {
                             <div class="inputs">
                                 <label asp-for="Phone" asp-postfix=":"></label>
-                                <input asp-for="Phone" />
+                                <input asp-for="Phone" placeholder="@T("PhoneVerification.Placeholder")" />
                                 @if (Model.PhoneRequired)
                                 {
                                     <nop-required />
                                 }
                                 <span asp-validation-for="Phone"></span>
+                                
                             </div>
+                            @if (Model.LoginByPhoneEnabled)
+                            {
+                                <span class="phone-info" style="color: var(--gray-color);">@T("Account.Register.OtpRegisterSmsText")</span>
+                            }
                         }
                         @if (Model.FaxEnabled)
                         {

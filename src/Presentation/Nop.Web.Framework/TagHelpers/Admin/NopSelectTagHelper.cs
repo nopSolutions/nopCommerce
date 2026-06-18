@@ -96,11 +96,11 @@ public partial class NopSelectTagHelper : TagHelper
             var modelType = For?.ModelExplorer.ModelType;
             var additionalData = new { htmlAttributes, SelectList = Items, MinimumItemsForSearch = _adminAreaSettings.MinimumDropdownItemsForSearch };
 
-            if (modelType is null || new[] { typeof(List<string>), typeof(string) }.Contains(modelType))
+            if(modelType is null || modelType == typeof(string) || typeof(IEnumerable<string>).IsAssignableFrom(modelType))
             {
                 selectList = _htmlHelper.Editor(tagName, $"{templateName}String", additionalData);
             }
-            else if (new[] { typeof(List<int>), typeof(int) }.Contains(modelType))
+            else if (modelType == typeof(int) || typeof(IEnumerable<int>).IsAssignableFrom(modelType))
             {
                 selectList = _htmlHelper.Editor(tagName, templateName, additionalData);
             }

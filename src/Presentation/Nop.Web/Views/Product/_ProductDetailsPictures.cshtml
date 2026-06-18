@@ -1,12 +1,19 @@
 ﻿@model ProductDetailsModel
 
+@{
+    var galeryThumbsCount = Model.PictureModels.Count;
+
+    if (Model.Product3dObjectModel?.Id > 0)
+        galeryThumbsCount++;
+}
+
 <link rel="stylesheet" href="~/lib_npm/magnific-popup/magnific-popup.css" />
 <script asp-exclude-from-bundle="true" src="~/lib_npm/magnific-popup/jquery.magnific-popup.min.js" asp-location="Footer"></script>
 
 <div class="picture-gallery">
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsBeforePictures, additionalData = Model })
     <div class="picture">
-        @if (Model.DefaultPictureZoomEnabled && Model.PictureModels.Count == 1)
+        @if (Model.DefaultPictureZoomEnabled && galeryThumbsCount == 1)
         {
             <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
                 <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
@@ -21,8 +28,10 @@
         {
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
         }
+
+        @await Html.PartialAsync("_ProductDetails3dObject", Model.Product3dObjectModel)
     </div>
-    @if (Model.PictureModels.Count > 1 && Model.DefaultPictureZoomEnabled)
+    @if (galeryThumbsCount > 1 && Model.DefaultPictureZoomEnabled)
     {
         <div class="picture-thumbs">
             @foreach (var picture in Model.PictureModels)
@@ -31,12 +40,31 @@
                     <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
                 </a>
             }
+
+            @if (Model.Product3dObjectModel?.Id > 0)
+            {
+                <a class="thumb-item" data-is3d="true">
+                    <img src="@Model.Product3dObjectModel.ThumbImageUrl" alt="@Model.Product3dObjectModel.AlternateText" data-model-viewer="1" />
+                </a>
+            }
         </div>
         <script asp-location="Footer">
             $(function() {
                 $('.picture-thumbs').magnificPopup(
                     {
                         type: 'image',
+                        callbacks: {
+                          elementParse: function(item) {
+                            var pic = item.el.data()
+
+                            if (pic.is3d)
+                            {
+                                item.type = 'inline';
+                                item.src = $('model-viewer');
+                                $('model-viewer').show();
+                            }
+                          }
+                        },
                         delegate: 'a',
                         removalDelay: 300,
                         gallery: {
@@ -67,7 +95,7 @@
     }
     else
     {
-        if (Model.PictureModels.Count > 1)
+        if (galeryThumbsCount > 1)
         {
             <div class="picture-thumbs">
                 @foreach (var picture in Model.PictureModels)
@@ -76,17 +104,34 @@
                         <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
                     </div>
                 }
+                @if (Model.Product3dObjectModel?.Id > 0)
+                {
+                    <div class="thumb-item">
+                        <img src="@Model.Product3dObjectModel.ThumbImageUrl" alt="@Model.Product3dObjectModel.AlternateText" data-model-viewer="1" />
+                    </div>
+                }
             </div>
             <script asp-location="Footer">
                 $(function() {
                     $('.thumb-item img').on('click',
                         function() {
-                            $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
-                            $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
-                            $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
-                            $('#main-product-img-lightbox-anchor-@Model.Id')
-                                .attr('href', $(this).attr('data-fullsize'));
-                            $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
+
+                            if($(this).data("model-viewer"))
+                            {
+                                $('#main-product-img-@Model.Id').hide();
+                                $('.model-3d-viewer').show();
+                            }
+                            else
+                            {
+                                $('#main-product-img-@Model.Id').show();
+                                $('.model-3d-viewer').hide();
+                                $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
+                                $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
+                                $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
+                                $('#main-product-img-lightbox-anchor-@Model.Id')
+                                    .attr('href', $(this).attr('data-fullsize'));
+                                $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
+                            }
                         });
                 });
             </script>
@@ -94,3 +139,11 @@
     }
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsAfterPictures, additionalData = Model })
 </div>
+@if (galeryThumbsCount > 1)
+{
+    <script asp-location="Footer">
+        $(function() {
+            $('.model-3d-viewer').hide()
+        });
+    </script>
+}
