@@ -139,7 +139,6 @@ public class ExportManagerTests : ServiceTest
                     propertyValue = property.StringValue;
                     break;
                 case DateTime time:
-                    ;
                     objectPropertyValue = new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second);
                     if (DateTime.TryParse(property.StringValue, out var date))
                         propertyValue = date;
