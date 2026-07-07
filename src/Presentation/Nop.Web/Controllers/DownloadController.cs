@@ -163,6 +163,8 @@ public partial class DownloadController : BasePublicController
         return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
     }
 
+    //ignore SEO friendly URLs checks
+    [CheckLanguageSeoCode(ignore: true)]
     public virtual async Task<IActionResult> GetFileUpload(Guid downloadId)
     {
         var download = await _downloadService.GetDownloadByGuidAsync(downloadId);
