@@ -439,7 +439,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.ProductSortingEnumDisplayOrder, options => options.Ignore())
             .ForMember(settings => settings.PublishBackProductWhenCancellingOrders, options => options.Ignore())
             .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore())
-            .ForMember(settings => settings.UseStandardSearchWhenSearchProviderThrowsException, options => options.Ignore())
+            .ForMember(settings => settings.UseStandardSearchWhenNoResults, options => options.Ignore())
             .ForMember(settings => settings.ActiveSearchProviderSystemName, options => options.Ignore())
             .ForMember(settings => settings.VendorProductReviewsPageSize, options => options.Ignore());
 

@@ -612,9 +612,9 @@ public partial class CatalogSettings : ISettings
     public string ActiveSearchProviderSystemName { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether standard search will be used when the search provider throws an exception
+    /// Gets or sets a value indicating whether the standard search will be used if the search provider returns no results
     /// </summary>
-    public bool UseStandardSearchWhenSearchProviderThrowsException { get; set; }
+    public bool UseStandardSearchWhenNoResults { get; set; }
 
     /// <summary>
     /// Gets or sets a number of reviews per page on vendor reviews page

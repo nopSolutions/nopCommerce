@@ -16,6 +16,7 @@ using Nop.Core.Events;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Blogs;
@@ -62,6 +63,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly AppSettings _appSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly CurrencySettings _currencySettings;
+    protected readonly IAiRecommendationPluginManager _aiRecommendationPluginManager;
     protected readonly IAuthenticationPluginManager _authenticationPluginManager;
     protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly IBlogService _blogService;
@@ -87,7 +89,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     protected readonly IPaymentPluginManager _paymentPluginManager;
     protected readonly IPickupPluginManager _pickupPluginManager;
     protected readonly IPluginService _pluginService;
-    protected readonly IProductService _productService;    
+    protected readonly IProductService _productService;
     protected readonly IReturnRequestService _returnRequestService;
     protected readonly ISearchTermService _searchTermService;
     protected readonly IServiceCollection _serviceCollection;
@@ -115,6 +117,7 @@ public partial class CommonModelFactory : ICommonModelFactory
     public CommonModelFactory(AppSettings appSettings,
         CatalogSettings catalogSettings,
         CurrencySettings currencySettings,
+        IAiRecommendationPluginManager aiRecommendationPluginManager,
         IAuthenticationPluginManager authenticationPluginManager,
         IBaseAdminModelFactory baseAdminModelFactory,
         IBlogService blogService,
@@ -164,6 +167,7 @@ public partial class CommonModelFactory : ICommonModelFactory
         _appSettings = appSettings;
         _catalogSettings = catalogSettings;
         _currencySettings = currencySettings;
+        _aiRecommendationPluginManager = aiRecommendationPluginManager;
         _authenticationPluginManager = authenticationPluginManager;
         _baseAdminModelFactory = baseAdminModelFactory;
         _blogService = blogService;
@@ -743,9 +747,13 @@ public partial class CommonModelFactory : ICommonModelFactory
                 case IExchangeRateProvider exchangeRateProvider:
                     isEnabled = _exchangeRatePluginManager.IsPluginActive(exchangeRateProvider);
                     break;
-                
+
                 case ISmsProvider smsProvider:
                     isEnabled = _smsPluginManager.IsPluginActive(smsProvider);
+                    break;
+
+                case IAiRecommendationPlugin aiRecommendationPlugin:
+                    isEnabled = _aiRecommendationPluginManager.IsPluginActive(aiRecommendationPlugin);
                     break;
             }
 

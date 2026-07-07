@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Configuration;
+using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
@@ -9,6 +10,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
+using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Catalog;
@@ -37,8 +39,10 @@ public partial class PluginController : BaseAdminController
 {
     #region Fields
 
+    protected readonly ArtificialIntelligenceSettings _artificialIntelligenceSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+    protected readonly IAiRecommendationPluginManager _aiRecommendationPluginManager;
     protected readonly IAuthenticationPluginManager _authenticationPluginManager;
     protected readonly ICommonModelFactory _commonModelFactory;
     protected readonly ICustomerActivityService _customerActivityService;
@@ -70,8 +74,10 @@ public partial class PluginController : BaseAdminController
 
     #region Ctor
 
-    public PluginController(CatalogSettings catalogSettings,
+    public PluginController(ArtificialIntelligenceSettings artificialIntelligenceSettings,
+        CatalogSettings catalogSettings,
         ExternalAuthenticationSettings externalAuthenticationSettings,
+        IAiRecommendationPluginManager aiRecommendationPluginManager,
         IAuthenticationPluginManager authenticationPluginManager,
         ICommonModelFactory commonModelFactory,
         ICustomerActivityService customerActivityService,
@@ -99,8 +105,10 @@ public partial class PluginController : BaseAdminController
         TaxSettings taxSettings,
         WidgetSettings widgetSettings)
     {
+        _artificialIntelligenceSettings = artificialIntelligenceSettings;
         _catalogSettings = catalogSettings;
         _externalAuthenticationSettings = externalAuthenticationSettings;
+        _aiRecommendationPluginManager = aiRecommendationPluginManager;
         _authenticationPluginManager = authenticationPluginManager;
         _commonModelFactory = commonModelFactory;
         _customerActivityService = customerActivityService;
@@ -514,6 +522,16 @@ public partial class PluginController : BaseAdminController
                     case nameof(IWidgetPlugin):
                         pluginIsActive = _widgetPluginManager.IsPluginActive(pluginInstance as IWidgetPlugin);
                         await ChangeSettingAsync(model, pluginDescriptor, pluginIsActive, _widgetSettings, _widgetSettings.ActiveWidgetSystemNames);
+                        break;
+                    case nameof(IAiRecommendationPlugin):
+                        pluginIsActive = _aiRecommendationPluginManager.IsPluginActive(pluginInstance as IAiRecommendationPlugin);
+                        _artificialIntelligenceSettings.ActiveAIRecommendationProviderSystemName = pluginIsActive switch
+                        {
+                            true when !model.IsEnabled => string.Empty,
+                            false when model.IsEnabled => model.SystemName,
+                            _ => _artificialIntelligenceSettings.ActiveAIRecommendationProviderSystemName
+                        };
+                        await _settingService.SaveSettingAsync(_artificialIntelligenceSettings);
                         break;
                 }
             }

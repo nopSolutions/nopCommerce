@@ -266,6 +266,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<ITaxPluginManager, TaxPluginManager>();
         services.AddScoped<ISearchPluginManager, SearchPluginManager>();
         services.AddScoped<ISmsPluginManager, SmsPluginManager>();
+        services.AddScoped<IAiRecommendationPluginManager, AiRecommendationPluginManager>();
 
         //register all settings
         var typeFinder = Singleton<ITypeFinder>.Instance;

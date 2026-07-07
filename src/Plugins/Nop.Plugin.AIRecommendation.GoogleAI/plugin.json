@@ -1,0 +1,12 @@
+﻿{
+  "Group": "AI-powered recommendation",
+  "FriendlyName": "Google AI Commerce Search",
+  "SystemName": "AIRecommendation.GoogleAI",
+  "Version": "5.00.01",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.AIRecommendation.GoogleAI.dll",
+  "Description": "This plugin provides product search and recommendation using the Google AI Commerce Search engine",
+  "DependsOn": ["Widgets.GoogleAnalytics"]
+}

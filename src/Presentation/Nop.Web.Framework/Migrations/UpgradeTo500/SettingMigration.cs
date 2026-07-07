@@ -141,6 +141,12 @@ public class SettingMigration : MigrationBase
             $"{nameof(CustomerSettings)}.PhoneNumberValidationUseRegex",
             $"{nameof(CustomerSettings)}.PhoneNumberValidationRule"
         ]);
+
+        //#7734
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.UseStandardSearchWhenNoResults,
+            this.GetSettingByKey($"{nameof(CatalogSettings)}.UseStandardSearchWhenSearchProviderThrowsException", true));
+        this.SetSettingIfNotExists<ArtificialIntelligenceSettings, string>(settings => settings.ActiveAIRecommendationProviderSystemName, "");
+        this.SetSettingIfNotExists<ArtificialIntelligenceSettings, bool>(settings => settings.UseStandardSearchWhenNoResults, true);
     }
 
     public override void Down()

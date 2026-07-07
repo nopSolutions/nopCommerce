@@ -186,7 +186,7 @@ public partial class InstallationService
     protected virtual async Task ImportResourcesFromXmlAsync(Language language, StreamReader xmlStreamReader, bool updateExistingResources = true)
     {
         var parsedResources = loadLocaleResourcesFromStream();
-        
+
         if (!parsedResources.Any())
             return;
 
@@ -1325,7 +1325,7 @@ public partial class InstallationService
                 StoreId = s.StoreId
             };
             if (!dictionary.TryGetValue(resourceName, out var value))
-                //first setting
+            //first setting
             {
                 dictionary.Add(resourceName, new List<Setting>
                 {
@@ -1562,7 +1562,7 @@ public partial class InstallationService
             DisplayAllPicturesOnCatalogPages = false,
             ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product,
             ActiveSearchProviderSystemName = string.Empty,
-            UseStandardSearchWhenSearchProviderThrowsException = true,
+            UseStandardSearchWhenNoResults = true,
             ShowSearchTermHistory = true,
             NumberOfSearchTermHistoryItems = 10
         });
@@ -1583,7 +1583,9 @@ public partial class InstallationService
             MetaKeywordsQuery = ArtificialIntelligenceDefaults.MetaKeywordsQuery,
             AllowMetaDescriptionGeneration = true,
             MetaDescriptionQuery = ArtificialIntelligenceDefaults.MetaDescriptionQuery,
-            LogRequests = false
+            LogRequests = false,
+            ActiveAIRecommendationProviderSystemName = "AIRecommendation.GoogleAI",
+            UseStandardSearchWhenNoResults = true
         });
 
         await SaveSettingAsync(dictionary, new LocalizationSettings

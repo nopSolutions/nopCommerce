@@ -81,4 +81,14 @@ public partial class ArtificialIntelligenceSettings : ISettings
     /// Gets or sets a value indicating whether to log requests
     /// </summary>
     public bool LogRequests { get; set; }
+
+    /// <summary>
+    /// Gets or sets the system name of the active AI-powered recommendation provider
+    /// </summary>
+    public string ActiveAIRecommendationProviderSystemName { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the standard search will be used if the AI-powered recommendation provider returns no results
+    /// </summary>
+    public bool UseStandardSearchWhenNoResults { get; set; }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Catalog;
@@ -29,6 +30,7 @@ public partial class PluginModelFactory : IPluginModelFactory
 {
     #region Fields
 
+    protected readonly IAiRecommendationPluginManager _aiRecommendationPluginManager;
     protected readonly IAuthenticationPluginManager _authenticationPluginManager;
     protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly ILocalizationService _localizationService;
@@ -51,7 +53,8 @@ public partial class PluginModelFactory : IPluginModelFactory
 
     #region Ctor
 
-    public PluginModelFactory(IAuthenticationPluginManager authenticationPluginManager,
+    public PluginModelFactory(IAiRecommendationPluginManager aiRecommendationPluginManager,
+        IAuthenticationPluginManager authenticationPluginManager,
         IBaseAdminModelFactory baseAdminModelFactory,
         ILocalizationService localizationService,
         IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
@@ -69,6 +72,7 @@ public partial class PluginModelFactory : IPluginModelFactory
         IWorkContext workContext,
         OfficialFeedManager officialFeedManager)
     {
+        _aiRecommendationPluginManager = aiRecommendationPluginManager;
         _authenticationPluginManager = authenticationPluginManager;
         _baseAdminModelFactory = baseAdminModelFactory;
         _localizationService = localizationService;
@@ -123,7 +127,7 @@ public partial class PluginModelFactory : IPluginModelFactory
             if (pluginInterface == typeof(IPickupPointProvider))
                 model.IsEnabled = model.IsEnabled && _pickupPluginManager.IsPluginActive(plugin as IPickupPointProvider);
 
-            if(pluginInterface == typeof(ITaxProvider))
+            if (pluginInterface == typeof(ITaxProvider))
                 model.IsEnabled = model.IsEnabled && _taxPluginManager.IsPluginActive(plugin as ITaxProvider);
 
             if (pluginInterface == typeof(IExternalAuthenticationMethod))
@@ -134,6 +138,9 @@ public partial class PluginModelFactory : IPluginModelFactory
 
             if (pluginInterface == typeof(ISearchProvider))
                 model.IsEnabled = model.IsEnabled && _searchPluginManager.IsPluginActive(plugin as ISearchProvider);
+
+            if (pluginInterface == typeof(IAiRecommendationPlugin))
+                model.IsEnabled = model.IsEnabled && _aiRecommendationPluginManager.IsPluginActive(plugin as IAiRecommendationPlugin);
 
             if (pluginInterface == typeof(ISmsProvider))
                 model.IsEnabled = model.IsEnabled && _smsPluginManager.IsPluginActive(plugin as ISmsProvider);
@@ -254,7 +261,7 @@ public partial class PluginModelFactory : IPluginModelFactory
         //prepare localized models
         if (!excludeProperties)
             model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
-        
+
         //prepare available stores
         await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model);
 
