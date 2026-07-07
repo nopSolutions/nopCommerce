@@ -64,9 +64,6 @@ public class SettingMigration : MigrationBase
 
         //#6891
         this.SetSettingIfNotExists<CustomerSettings, bool>(settings => settings.RequiredReLoginAfterPasswordChange, false);
-
-        //#7064
-        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.UseStandardSearchWhenSearchProviderThrowsException, true);
     }
 
     public override void Down()

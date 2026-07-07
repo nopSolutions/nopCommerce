@@ -1,0 +1,107 @@
+@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<form asp-controller="GoogleAi" asp-action="Configure" method="post">
+    <nop-cards id="google-ai">
+        <nop-card asp-name="google-ai-config" asp-icon="fas fa-gears"
+                  asp-title="@T("Plugin.AIRecommendation.GoogleAI.Title")"
+                  asp-hide-block-attribute-name="google-ai-general" asp-hide="false" asp-advanced="false">
+            <div class="card-body">
+                @Html.Raw(T("Plugin.AIRecommendation.GoogleAI.Description"))
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Enabled" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Enabled" />
+                        <span asp-validation-for="Enabled"></span>
+                    </div>
+                </div>
+                <nop-nested-setting asp-for="Enabled">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ProjectId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ProjectId" />
+                            <span asp-validation-for="ProjectId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="LocationId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="LocationId" />
+                            <span asp-validation-for="LocationId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CatalogId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="CatalogId" />
+                            <span asp-validation-for="CatalogId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="BranchId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="BranchId" />
+                            <span asp-validation-for="BranchId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SyncAllowed" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SyncAllowed" />
+                            <span asp-validation-for="SyncAllowed"></span>
+                        </div>
+                    </div>
+                    <nop-nested-setting asp-for="SyncAllowed">
+                        <div class="form-group row">
+                            <div class="col-md-9 offset-md-3">
+                                <button type="submit" name="sync-catalog" id="sync-catalog" class="btn btn-primary">
+                                    @T("Plugin.AIRecommendation.GoogleAI.SyncCatalog")
+                                </button>
+                            </div>
+                        </div>
+                    </nop-nested-setting>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SearchAllowed" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SearchAllowed" />
+                            <span asp-validation-for="SearchAllowed"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="LogRequests" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="LogRequests" />
+                            <span asp-validation-for="LogRequests"></span>
+                        </div>
+                    </div>
+                </nop-nested-setting>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                    </div>
+                </div>
+            </div>
+        </nop-card>
+    </nop-cards>
+</form>
+
+<nop-action-confirmation asp-button-id="sync-catalog" />

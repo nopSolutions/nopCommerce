@@ -51,7 +51,10 @@ public class GoogleAnalyticsPlugin : BasePlugin, IWidgetPlugin
     {
         return Task.FromResult<IList<string>>(new List<string>
         {
-            PublicWidgetZones.HeadHtmlTag
+            PublicWidgetZones.HeadHtmlTag,
+            PublicWidgetZones.ProductDetailsTop,
+            PublicWidgetZones.ProductBoxAddinfoAfter,
+            PublicWidgetZones.Footer
         });
     }
 
@@ -72,8 +75,13 @@ public class GoogleAnalyticsPlugin : BasePlugin, IWidgetPlugin
     {
         ArgumentNullException.ThrowIfNull(widgetZone);
 
-        if (widgetZone.Equals(PublicWidgetZones.HeadHtmlTag))
+        if (widgetZone.Equals(PublicWidgetZones.HeadHtmlTag)
+            || widgetZone.Equals(PublicWidgetZones.ProductDetailsTop)
+            || widgetZone.Equals(PublicWidgetZones.ProductBoxAddinfoAfter)
+            || widgetZone.Equals(PublicWidgetZones.Footer))
+        {
             return typeof(WidgetsGoogleAnalyticsViewComponent);
+        }
 
         return null;
     }
@@ -140,6 +148,7 @@ public class GoogleAnalyticsPlugin : BasePlugin, IWidgetPlugin
             _widgetSettings.ActiveWidgetSystemNames.Remove(GoogleAnalyticsDefaults.SystemName);
             await _settingService.SaveSettingAsync(_widgetSettings);
         }
+
         await _settingService.DeleteSettingAsync<GoogleAnalyticsSettings>();
 
         //locales

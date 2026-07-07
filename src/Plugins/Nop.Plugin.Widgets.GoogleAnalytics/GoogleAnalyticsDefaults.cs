@@ -55,4 +55,23 @@ public static class GoogleAnalyticsDefaults
     /// </summary>
     public static string SessionIdAttribute => "GoogleAnalytics.SessionId";
 
+    /// <summary>
+    /// Gets a name of the add to cart event
+    /// </summary>
+    public static string AddToCartEventName => "add_to_cart";
+
+    /// <summary>
+    /// Gets a name of the remove from cart event
+    /// </summary>
+    public static string RemoveFromCartEventName => "remove_from_cart";
+
+    /// <summary>
+    /// Gets a name of the add to cart event
+    /// </summary>
+    public static string AddToWishlistEventName => "add_to_wishlist";
+
+    /// <summary>
+    /// Gets a name of the remove from cart event
+    /// </summary>
+    public static string RemoveFromWishlistEventName => "remove_from_wishlist";
 }
