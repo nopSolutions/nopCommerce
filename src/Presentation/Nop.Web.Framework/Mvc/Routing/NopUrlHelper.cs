@@ -208,6 +208,9 @@ public partial class NopUrlHelper : INopUrlHelper
         if (httpContext is null)
             return string.Empty;
 
+        if (!string.IsNullOrWhiteSpace(fragment) && !fragment.StartsWith('#'))
+            fragment = String.Concat("#", fragment);
+        
         if (!string.IsNullOrEmpty(protocol) || !string.IsNullOrEmpty(host))
         {
             //return URI with an absolute path
