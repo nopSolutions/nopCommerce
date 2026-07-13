@@ -1569,6 +1569,9 @@
   <LocaleResource Name="Admin.Address.Fields.PhoneNumber.Hint">
     <Value>Enter phone number.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Address.Fields.PhoneNumber.NotValid">
+    <Value>Phone number is not valid.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Address.Fields.PhoneNumber.Required">
     <Value>Phone number is required.</Value>
   </LocaleResource>
@@ -7149,9 +7152,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.UseAjaxCatalogProductsLoading.Hint">
     <Value>Check to load products asynchronously (applicable to 'paging', 'filtering', 'view modes') on catalog pages.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error">
-    <Value>The regular expression for phone number validation is incorrect</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error">
     <Value>The regular expression for username validation is incorrect</Value>
   </LocaleResource>
@@ -7667,18 +7667,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationEnabled.Hint">
     <Value>Check to enable phone number validation (when registering or changing on the "My Account" page)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule">
-    <Value>Phone number validation rule</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule.Hint">
-    <Value>Set the validation rule for phone number. You can specify a list of allowed characters or a regular expression. If you use a regular expression check the "Use regex for phone number validation" setting.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex">
-    <Value>Use regex for phone number validation</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex.Hint">
-    <Value>Check to use a regular expression for phone number validation (when registering or changing on the "My Account" page)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneRequired">
     <Value>'Phone number' required</Value>
@@ -12610,6 +12598,9 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.Phone.Hint">
     <Value>The phone.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Phone.NotValid">
+    <Value>Phone is not valid</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Phone.Required">
     <Value>Phone is required</Value>
   </LocaleResource>
@@ -13620,43 +13611,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.CaptureTransactionID.Hint">
     <Value>Capture transaction identifier received from your payment gateway.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CardCVV2">
-    <Value>Card CVV2</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CardCVV2.Hint">
-    <Value>The card security code of the card used in the transaction.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CardExpirationMonth">
-    <Value>Card expiry month</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CardExpirationMonth.Hint">
-    <Value>The expiry month of the card used in the transaction.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CardExpirationYear">
-    <Value>Card expiry year</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CardExpirationYear.Hint">
-    <Value>The expiry year of the card used in the transaction.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CardName">
-    <Value>Card name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CardName.Hint">
-    <Value>The name on the card used in the transaction.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CardNumber">
-    <Value>Card number</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CardNumber.Hint">
-    <Value>The number of the card used in the transaction.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CardType">
-    <Value>Card type</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.CardType.Hint">
-    <Value>The type of a card used in the transaction.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Orders.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
@@ -19317,46 +19272,7 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.WishlistEmailAFriend">
     <Value>Email wishlist to a friend</Value>
-  </LocaleResource>
-  <LocaleResource Name="Payment.CardCode">
-    <Value>Card code</Value>
-  </LocaleResource>
-  <LocaleResource Name="Payment.CardCode.Required">
-    <Value>Enter card code</Value>
-  </LocaleResource>
-  <LocaleResource Name="Payment.CardCode.Wrong">
-    <Value>Wrong card code</Value>
-  </LocaleResource>
-  <LocaleResource Name="Payment.CardholderName">
-    <Value>Cardholder name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Payment.CardholderName.Required">
-    <Value>Enter cardholder name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Payment.CardNumber">
-    <Value>Card number</Value>
-  </LocaleResource>
-  <LocaleResource Name="Payment.CardNumber.Required">
-    <Value>Enter card number</Value>
-  </LocaleResource>
-  <LocaleResource Name="Payment.CardNumber.Wrong">
-    <Value>Wrong card number</Value>
-  </LocaleResource>
-  <LocaleResource Name="Payment.ExpirationDate">
-    <Value>Expiration date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Payment.ExpirationDate.Expired">
-    <Value>Card is expired</Value>
-  </LocaleResource>
-  <LocaleResource Name="Payment.ExpireMonth.Required">
-    <Value>Expire month is required</Value>
-  </LocaleResource>
-  <LocaleResource Name="Payment.ExpireYear.Required">
-    <Value>Expire year is required</Value>
-  </LocaleResource>
-  <LocaleResource Name="Payment.SelectCreditCard">
-    <Value>Select credit card</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="PaymentMethod.NotAvailableMethodsError">
     <Value>Your order cannot be completed at this time as there is no payment methods available for it.</Value>
   </LocaleResource>

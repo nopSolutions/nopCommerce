@@ -139,7 +139,6 @@ public class ExportManagerTests : ServiceTest
                     propertyValue = property.StringValue;
                     break;
                 case DateTime time:
-                    ;
                     objectPropertyValue = new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second);
                     if (DateTime.TryParse(property.StringValue, out var date))
                         propertyValue = date;
@@ -289,7 +288,7 @@ public class ExportManagerTests : ServiceTest
 
         const string shippingPattern = "Shipping";
         replacePairs = addressFields.ToDictionary(p => shippingPattern + p, p => p);
-        var testShippingAddress = await _addressService.GetAddressByIdAsync(order.ShippingAddressId ?? 0);
+        var testShippingAddress = await _addressService.GetAddressByIdAsync((order.PickupInStore ? order.PickupAddressId : order.ShippingAddressId) ?? 0);
         PropertiesShouldEqual(testShippingAddress, manager, replacePairs, "CreatedOnUtc", "ShippingCountry");
         country = await _countryService.GetCountryByAddressAsync(testShippingAddress);
         manager.GetDefaultProperties.First(p => p.PropertyName == "ShippingCountry").StringValue.Should().Be(country.Name);

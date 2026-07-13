@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Nop.Services.Helpers;
 
 namespace Nop.Web.Framework;
@@ -18,12 +19,7 @@ public partial class RemotePost
     /// Gets or sets a remote URL
     /// </summary>
     public string Url { get; set; }
-
-    /// <summary>
-    /// Gets or sets a method
-    /// </summary>
-    public string Method { get; set; }
-
+    
     /// <summary>
     /// Gets or sets a form name
     /// </summary>
@@ -40,7 +36,7 @@ public partial class RemotePost
     public bool NewInputForEachValue { get; set; }
 
     /// <summary>
-    /// Parames
+    /// Params
     /// </summary>
     public NameValueCollection Params { get; }
 
@@ -53,7 +49,6 @@ public partial class RemotePost
     {
         Params = new NameValueCollection();
         Url = "http://www.someurl.com";
-        Method = "post";
         FormName = "formName";
 
         _httpContextAccessor = httpContextAccessor;
@@ -73,35 +68,38 @@ public partial class RemotePost
     /// <summary>
     /// Post
     /// </summary>
-    public virtual void Post()
+    public virtual async Task PostAsync()
     {
         //text
         var sb = new StringBuilder();
         sb.Append("<html><head>");
         sb.Append($"</head><body onload=\"document.{FormName}.submit()\">");
+        
         if (!string.IsNullOrEmpty(AcceptCharset))
         {
             //AcceptCharset specified
             sb.Append(
-                $"<form name=\"{FormName}\" method=\"{Method}\" action=\"{Url}\" accept-charset=\"{AcceptCharset}\">");
+                $"<form name=\"{FormName}\" method=\"{HttpMethod.Post}\" action=\"{Url}\" accept-charset=\"{AcceptCharset}\">");
         }
         else
         {
             //no AcceptCharset specified
-            sb.Append($"<form name=\"{FormName}\" method=\"{Method}\" action=\"{Url}\" >");
+            sb.Append($"<form name=\"{FormName}\" method=\"{HttpMethod.Post}\" action=\"{Url}\" >");
         }
+
         if (NewInputForEachValue)
         {
             foreach (string key in Params.Keys)
             {
                 var values = Params.GetValues(key);
-                if (values != null)
+
+                if (values == null)
+                    continue;
+
+                foreach (var value in values)
                 {
-                    foreach (var value in values)
-                    {
-                        sb.Append(
-                            $"<input name=\"{WebUtility.HtmlEncode(key)}\" type=\"hidden\" value=\"{WebUtility.HtmlEncode(value)}\">");
-                    }
+                    sb.Append(
+                        $"<input name=\"{WebUtility.HtmlEncode(key)}\" type=\"hidden\" value=\"{WebUtility.HtmlEncode(value)}\">");
                 }
             }
         }
@@ -120,14 +118,23 @@ public partial class RemotePost
 
         //modify the response
         var httpContext = _httpContextAccessor.HttpContext;
-        var response = httpContext.Response;
+        var response = httpContext?.Response ?? throw new NullReferenceException("Can't access response");
+        
+        //We do not use the response.Clear() method because it deletes the .NopCustomer cookie, which is important for guest orders.
+        //This behavior leads to the problem of a new guest user getting created after returning from the payment gateway.
+        //So we manually clear only the body and status.
+        //If some problem will start with this approach in the future,
+        //we can check the changes on the response.Clear() method and then use it in our code.
+        response.StatusCode = 200;
+        response.HttpContext.Features.GetRequiredFeature<IHttpResponseFeature>().ReasonPhrase = null;
 
-        //post
-        response.Clear();
+        if (response.Body.CanSeek)
+            response.Body.SetLength(0);
+
         response.ContentType = "text/html; charset=utf-8";
         response.ContentLength = data.Length;
 
-        response.Body.Write(data, 0, data.Length);
+        await response.Body.WriteAsync(data, 0, data.Length);
 
         //store a value indicating whether POST has been done
         _webHelper.IsPostBeingDone = true;

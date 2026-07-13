@@ -3597,21 +3597,13 @@ public partial class ImportManager : IImportManager
                 order.CustomerTaxDisplayType = _taxSettings.TaxDisplayType;
 
                 //set other default values
-                order.AllowStoringCreditCardNumber = false;
                 order.AuthorizationTransactionCode = string.Empty;
                 order.AuthorizationTransactionId = string.Empty;
                 order.AuthorizationTransactionResult = string.Empty;
                 order.CaptureTransactionId = string.Empty;
                 order.CaptureTransactionResult = string.Empty;
-                order.CardCvv2 = string.Empty;
-                order.CardExpirationMonth = string.Empty;
-                order.CardExpirationYear = string.Empty;
-                order.CardName = string.Empty;
-                order.CardNumber = string.Empty;
-                order.CardType = string.Empty;
                 order.CustomerIp = string.Empty;
                 order.CustomOrderNumber = string.Empty;
-                order.MaskedCreditCardNumber = string.Empty;
                 order.RefundedAmount = decimal.Zero;
                 order.SubscriptionTransactionId = string.Empty;
 

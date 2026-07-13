@@ -48,6 +48,18 @@ public static partial class NopOrderDefaults
 
     #endregion
 
+    #region Wishlist
+
+    /// <summary>
+    /// Gets a key for caching
+    /// </summary>
+    /// <remarks>
+    /// {0} : customer ID
+    /// </remarks>
+    public static CacheKey CustomWishlistCacheKey => new("Nop.customwishlist.{0}");
+
+    #endregion
+
     #region Perform order with lock
 
     /// <summary>

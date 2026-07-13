@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.Internal;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -72,9 +70,9 @@ using Nop.Web.Framework.WebOptimizer;
 namespace Nop.Web.Areas.Admin.Infrastructure.Mapper;
 
 /// <summary>
-/// AutoMapper configuration for admin area models
+/// Mapper configuration for admin area models
 /// </summary>
-public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
+public partial class AdminMapperConfiguration : BaseMapperProfile
 {
     #region Ctor
 
@@ -115,7 +113,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateMenuMaps();
 
         //add some generic mapping rules
-        this.Internal().ForAllMaps((mapConfiguration, map) =>
+        ForAllMaps((mapConfiguration, map) =>
         {
             //exclude Form and CustomProperties from mapping BaseNopModel
             if (typeof(BaseNopModel).IsAssignableFrom(mapConfiguration.DestinationType))
@@ -1346,6 +1344,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(model => model.AutoCancelDelay_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.AutoCancelIgnoredPaymentMethods_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.AutoCancelRestoreShoppingCart_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.NextRecurringPaymentNotificationDays_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.AvailablePaymentMethods, options => options.Ignore())
             .ForMember(model => model.ReturnRequestSettings, options => options.Ignore());
         CreateMap<OrderSettingsModel, OrderSettings>()
@@ -1828,15 +1827,6 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(entity => entity.Template, options => options.Ignore())
             .ForMember(entity => entity.EntityId, options => options.Ignore());
     }
-
-    #endregion
-
-    #region Properties
-
-    /// <summary>
-    /// Order of this mapper implementation
-    /// </summary>
-    public int Order => 0;
 
     #endregion
 }

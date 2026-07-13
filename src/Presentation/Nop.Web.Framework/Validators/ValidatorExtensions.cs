@@ -10,17 +10,6 @@ namespace Nop.Web.Framework.Validators;
 public static class ValidatorExtensions
 {
     /// <summary>
-    /// Set credit card validator
-    /// </summary>
-    /// <typeparam name="TModel">Type of model being validated</typeparam>
-    /// <param name="ruleBuilder">Rule builder</param>
-    /// <returns>Result</returns>
-    public static IRuleBuilderOptions<TModel, string> IsCreditCard<TModel>(this IRuleBuilder<TModel, string> ruleBuilder)
-    {
-        return ruleBuilder.SetValidator(new CreditCardPropertyValidator<TModel, string>());
-    }
-
-    /// <summary>
     /// Set decimal validator
     /// </summary>
     /// <typeparam name="TModel">Type of model being validated</typeparam>

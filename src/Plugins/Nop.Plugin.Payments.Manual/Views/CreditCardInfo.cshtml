@@ -1,0 +1,171 @@
+﻿@using Nop.Services.Messages
+@model Nop.Plugin.Payments.Manual.Models.CreditCardInfoModel
+
+<script>
+    $(function () {
+        toggleCC(false);
+    });
+
+    function saveCardInfo() {
+
+        var postData = {
+                orderId: '@Model.OrderId',
+                cardType: $('#@Html.IdFor(model => model.CardType)').val(),
+                cardName: $('#@Html.IdFor(model => model.CardName)').val(),
+                cardNumber: $('#@Html.IdFor(model => model.CardNumber)').val(),
+                cardCvv2: $('#@Html.IdFor(model => model.CardCvv2)').val(),
+                cardExpirationMonth: $('#@Html.IdFor(model => model.CardExpirationMonth)').val(),
+                cardExpirationYear: $('#@Html.IdFor(model => model.CardExpirationYear)').val()
+            };
+			
+        addAntiForgeryToken(postData);
+
+        $.ajax({
+            url: '@Url.Action("SaveCreditCardInfo", "PaymentManual")',
+            type: 'POST',
+            data: postData,
+            success: function () {                
+                //update labels with new values
+                $('#lblCardType .form-text-row').text(postData.cardType);
+                $('#lblCardName .form-text-row').text(postData.cardName);
+                $('#lblCardNumber .form-text-row').text(postData.cardNumber);
+                $('#lblCardCvv2 .form-text-row').text(postData.cardCvv2);
+                $('#lblCardExpirationMonth .form-text-row').text(postData.cardExpirationMonth);
+                $('#lblCardExpirationYear .form-text-row').text(postData.cardExpirationYear);
+            },
+            error: function () {
+                displayBarNotification('@T("Plugins.Payments.Manual.SaveCCError")', @((int)NotifyType.Error);
+            }
+        });
+		
+		toggleCC(false);
+		return false;
+    }
+
+    function toggleCC(editmode) {
+        if (editmode) {
+            $('#lblCardType').hideElement();
+            $('#@Html.IdFor(model => model.CardType)').showElement();
+            $('#lblCardName').hideElement();
+            $('#@Html.IdFor(model => model.CardName)').showElement();
+            $('#lblCardNumber').hideElement();
+            $('#@Html.IdFor(model => model.CardNumber)').showElement();
+            $('#lblCardCvv2').hideElement();
+            $('#@Html.IdFor(model => model.CardCvv2)').showElement();
+            $('#lblCardExpirationMonth').hideElement();
+            $('#@Html.IdFor(model => model.CardExpirationMonth)').showElement();
+            $('#lblCardExpirationYear').hideElement();
+            $('#@Html.IdFor(model => model.CardExpirationYear)').showElement();
+            $('#btnEditCC').hideElement();
+            $('#btnSaveCC').showElement();
+            $('#btnCancelCC').showElement();
+        } else {
+            $('#lblCardType').showElement();
+            $('#@Html.IdFor(model => model.CardType)').hideElement();
+            $('#lblCardName').showElement();
+            $('#@Html.IdFor(model => model.CardName)').hideElement();
+            $('#lblCardNumber').showElement();
+            $('#@Html.IdFor(model => model.CardNumber)').hideElement();
+            $('#lblCardCvv2').showElement();
+            $('#@Html.IdFor(model => model.CardCvv2)').hideElement();
+            $('#lblCardExpirationMonth').showElement();
+            $('#@Html.IdFor(model => model.CardExpirationMonth)').hideElement();
+            $('#lblCardExpirationYear').showElement();
+            $('#@Html.IdFor(model => model.CardExpirationYear)').hideElement();
+            $('#btnEditCC').showElement();
+            $('#btnSaveCC').hideElement();
+            $('#btnCancelCC').hideElement();
+        }
+    }
+</script>
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="CardType" />
+    </div>
+    <div class="col-md-9">
+        <div id="lblCardType">
+            <div class="form-text-row">@Model.CardType</div>
+        </div>
+        <nop-editor asp-for="CardType" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="CardName" />
+    </div>
+    <div class="col-md-9">
+        <div id="lblCardName">
+            <div class="form-text-row">@Model.CardName</div>
+        </div>
+        <nop-editor asp-for="CardName" />
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.CardNumber))
+{
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CardNumber" />
+        </div>
+        <div class="col-md-9">
+            <div id="lblCardNumber">
+                <div class="form-text-row">@Model.CardNumber</div>
+            </div>
+            <nop-editor asp-for="CardNumber" />
+        </div>
+    </div>
+}
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="CardCvv2" />
+    </div>
+    <div class="col-md-9">
+        <div id="lblCardCvv2">
+            <div class="form-text-row">@Model.CardCvv2</div>
+        </div>
+        <nop-editor asp-for="CardCvv2" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="CardExpirationMonth" />
+    </div>
+    <div class="col-md-9">
+        <div id="lblCardExpirationMonth">
+            <div class="form-text-row">@Model.CardExpirationMonth</div>
+        </div>
+        <nop-editor asp-for="CardExpirationMonth" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="CardExpirationYear" />
+    </div>
+    <div class="col-md-9">
+        <div id="lblCardExpirationYear">
+            <div class="form-text-row">@Model.CardExpirationYear</div>
+        </div>
+        <nop-editor asp-for="CardExpirationYear" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-md-9 offset-md-3">
+        <button type="submit" name="btnEditCC" onclick="toggleCC(true);return false;" id="btnEditCC" class="btn btn-primary">
+            @T("Plugins.Payments.Manual.EditCC")
+        </button>
+
+        <button type="button" name="btnSaveCC" id="btnSaveCC" class="btn btn-primary" onclick="saveCardInfo();">
+            @T("Plugins.Payments.Manual.SaveCC")
+        </button>
+
+        <button type="submit" name="btnCancelCC" onclick="toggleCC(false);return false;" id="btnCancelCC" class="btn btn-success">
+            @T("Admin.Common.Cancel")
+        </button>
+    </div>
+</div>

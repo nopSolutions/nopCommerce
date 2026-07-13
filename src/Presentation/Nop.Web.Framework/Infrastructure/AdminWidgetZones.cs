@@ -150,6 +150,7 @@ public static partial class AdminWidgetZones
     public static string OrderAddressDetailsTop => "admin_order_address_details_top";
     public static string OrderBillingAddressDetailsBottom => "order_billing_address_details_bottom";
     public static string OrderDetailsBlock => "admin_order_details_block";
+    public static string OrderDetailsInfoPaymentMethodAdditionalData => "admin_order_details_info_payment_method_additional_data";
     public static string OrderDetailsButtons => "admin_order_details_buttons";
     public static string OrderListButtons => "admin_order_list_buttons";
     public static string OrderPartiallyRefundButtons => "admin_order_partially_refund_buttons";

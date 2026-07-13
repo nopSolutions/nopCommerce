@@ -564,33 +564,6 @@ public partial class OrderModelFactory : IOrderModelFactory
         await _addressModelFactory.PrepareAddressModelAsync(model.BillingAddress, billingAddress);
         SetAddressFieldsAsRequired(model.BillingAddress);
 
-        if (order.AllowStoringCreditCardNumber)
-        {
-            //card type
-            model.CardType = _encryptionService.DecryptText(order.CardType);
-            //cardholder name
-            model.CardName = _encryptionService.DecryptText(order.CardName);
-            //card number
-            model.CardNumber = _encryptionService.DecryptText(order.CardNumber);
-            //cvv
-            model.CardCvv2 = _encryptionService.DecryptText(order.CardCvv2);
-            //expiry date
-            var cardExpirationMonthDecrypted = _encryptionService.DecryptText(order.CardExpirationMonth);
-            if (!string.IsNullOrEmpty(cardExpirationMonthDecrypted) && cardExpirationMonthDecrypted != "0")
-                model.CardExpirationMonth = cardExpirationMonthDecrypted;
-            var cardExpirationYearDecrypted = _encryptionService.DecryptText(order.CardExpirationYear);
-            if (!string.IsNullOrEmpty(cardExpirationYearDecrypted) && cardExpirationYearDecrypted != "0")
-                model.CardExpirationYear = cardExpirationYearDecrypted;
-
-            model.AllowStoringCreditCardNumber = true;
-        }
-        else
-        {
-            var maskedCreditCardNumberDecrypted = _encryptionService.DecryptText(order.MaskedCreditCardNumber);
-            if (!string.IsNullOrEmpty(maskedCreditCardNumberDecrypted))
-                model.CardNumber = maskedCreditCardNumberDecrypted;
-        }
-
         //payment transaction info
         model.AuthorizationTransactionId = order.AuthorizationTransactionId;
         model.CaptureTransactionId = order.CaptureTransactionId;

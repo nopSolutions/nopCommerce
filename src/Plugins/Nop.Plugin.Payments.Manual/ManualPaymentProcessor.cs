@@ -1,46 +1,66 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Nop.Core;
+using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.Manual.Components;
 using Nop.Plugin.Payments.Manual.Models;
+using Nop.Plugin.Payments.Manual.Services;
 using Nop.Plugin.Payments.Manual.Validators;
+using Nop.Services.Cms;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
+using Nop.Services.Security;
+using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Payments.Manual;
 
 /// <summary>
 /// Manual payment processor
 /// </summary>
-public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
+public class ManualPaymentProcessor : BasePlugin, IPaymentMethod, IWidgetPlugin
 {
     #region Fields
 
+    protected readonly IEncryptionService _encryptionService;
+    protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly ILocalizationService _localizationService;
     protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
     protected readonly ISettingService _settingService;
     protected readonly IWebHelper _webHelper;
+    protected readonly IWorkContext _workContext;
     protected readonly ManualPaymentSettings _manualPaymentSettings;
+    protected readonly WidgetSettings _widgetSettings;
 
     #endregion
 
     #region Ctor
 
-    public ManualPaymentProcessor(ILocalizationService localizationService,
+    public ManualPaymentProcessor(IEncryptionService encryptionService,
+        IGenericAttributeService genericAttributeService,
+        ILocalizationService localizationService,
         IOrderTotalCalculationService orderTotalCalculationService,
         ISettingService settingService,
         IWebHelper webHelper,
-        ManualPaymentSettings manualPaymentSettings)
+        IWorkContext workContext,
+        ManualPaymentSettings manualPaymentSettings,
+        WidgetSettings widgetSettings)
     {
+        _encryptionService = encryptionService;
+        _genericAttributeService = genericAttributeService;
         _localizationService = localizationService;
         _orderTotalCalculationService = orderTotalCalculationService;
         _settingService = settingService;
         _webHelper = webHelper;
+        _workContext = workContext;
         _manualPaymentSettings = manualPaymentSettings;
+        _widgetSettings = widgetSettings;
     }
 
     #endregion
@@ -57,10 +77,8 @@ public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
     /// </returns>
     public Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
     {
-        var result = new ProcessPaymentResult
-        {
-            AllowStoringCreditCardNumber = true
-        };
+        var result = new ProcessPaymentResult();
+
         switch (_manualPaymentSettings.TransactMode)
         {
             case TransactMode.Pending:
@@ -169,10 +187,8 @@ public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
     /// </returns>
     public Task<ProcessPaymentResult> ProcessRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest)
     {
-        var result = new ProcessPaymentResult
-        {
-            AllowStoringCreditCardNumber = true
-        };
+        var result = new ProcessPaymentResult();
+
         switch (_manualPaymentSettings.TransactMode)
         {
             case TransactMode.Pending:
@@ -230,7 +246,7 @@ public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
     /// A task that represents the asynchronous operation
     /// The task result contains the list of validating errors
     /// </returns>
-    public Task<IList<string>> ValidatePaymentFormAsync(IFormCollection form)
+    public async Task<IList<string>> ValidatePaymentFormAsync(IFormCollection form)
     {
         var warnings = new List<string>();
 
@@ -244,11 +260,13 @@ public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
             ExpireMonth = form["ExpireMonth"],
             ExpireYear = form["ExpireYear"]
         };
-        var validationResult = validator.Validate(model);
+
+        var validationResult = await validator.ValidateAsync(model);
+
         if (!validationResult.IsValid)
             warnings.AddRange(validationResult.Errors.Select(error => error.ErrorMessage));
 
-        return Task.FromResult<IList<string>>(warnings);
+        return warnings;
     }
 
     /// <summary>
@@ -259,17 +277,26 @@ public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
     /// A task that represents the asynchronous operation
     /// The task result contains the payment info holder
     /// </returns>
-    public Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
+    public async Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
     {
-        return Task.FromResult(new ProcessPaymentRequest
+        var cardNumber = form["CardNumber"].ToString().Replace(" ", string.Empty).Replace("-", string.Empty);
+
+        var creditCardInfo = new CreditCardInfo
         {
-            CreditCardType = form["CreditCardType"],
-            CreditCardName = form["CardholderName"],
-            CreditCardNumber = form["CardNumber"],
-            CreditCardExpireMonth = int.Parse(form["ExpireMonth"]),
-            CreditCardExpireYear = int.Parse(form["ExpireYear"]),
-            CreditCardCvv2 = form["CardCode"]
-        });
+            CardType = _encryptionService.EncryptText(form["CreditCardType"]),
+            CardName = _encryptionService.EncryptText(form["CardholderName"]),
+            CardNumber = _encryptionService.EncryptText(cardNumber),
+            CardExpirationMonth = _encryptionService.EncryptText(int.Parse(form["ExpireMonth"]).ToString()),
+            CardExpirationYear = _encryptionService.EncryptText(int.Parse(form["ExpireYear"]).ToString()),
+            CardCvv2 = _encryptionService.EncryptText(form["CardCode"]),
+            MaskedCreditCardNumber = _encryptionService.EncryptText(PaymentsManualHelper.GetMaskedCreditCardNumber(cardNumber))
+        };
+
+        var json = JsonConvert.SerializeObject(creditCardInfo);
+
+        await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), nameof(CreditCardInfo), json);
+
+        return new ProcessPaymentRequest();
     }
 
     /// <summary>
@@ -281,7 +308,7 @@ public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
     }
 
     /// <summary>
-    /// Gets a type of a view component for displaying plugin in public store ("payment info" checkout step)
+    /// Gets a type of view component for displaying plugin in public store ("payment info" checkout step)
     /// </summary>
     /// <returns>View component type</returns>
     public Type GetPublicViewComponent()
@@ -302,6 +329,12 @@ public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
         };
         await _settingService.SaveSettingAsync(settings);
 
+        if (!_widgetSettings.ActiveWidgetSystemNames.Contains(PaymentsManualDefaults.SystemName))
+        {
+            _widgetSettings.ActiveWidgetSystemNames.Add(PaymentsManualDefaults.SystemName);
+            await _settingService.SaveSettingAsync(_widgetSettings);
+        }
+
         //locales
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
@@ -312,7 +345,33 @@ public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
             ["Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint"] = "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.",
             ["Plugins.Payments.Manual.Fields.TransactMode"] = "After checkout mark payment as",
             ["Plugins.Payments.Manual.Fields.TransactMode.Hint"] = "Specify transaction mode.",
-            ["Plugins.Payments.Manual.PaymentMethodDescription"] = "Pay by credit / debit card"
+            ["Plugins.Payments.Manual.PaymentMethodDescription"] = "Pay by credit / debit card",
+            ["Plugins.Payments.Manual.SaveCCError"] = "An error occurred while saving credit card info. Please try again or check the logs for more details about a problem.",
+            ["Plugins.Payments.Manual.CardType"] = "Card type",
+            ["Plugins.Payments.Manual.CardType.Hint"] = "The type of a card used in the transaction.",
+            ["Plugins.Payments.Manual.CardName"] = "Card name",
+            ["Plugins.Payments.Manual.CardName.Hint"] = "The name on the card used in the transaction.",
+            ["Plugins.Payments.Manual.CardNumber"] = "Card number",
+            ["Plugins.Payments.Manual.CardNumber.Hint"] = "The number of the card used in the transaction.",
+            ["Plugins.Payments.Manual.CardCVV2"] = "Card CVV2",
+            ["Plugins.Payments.Manual.CardCVV2.Hint"] = "The card security code of the card used in the transaction.",
+            ["Plugins.Payments.Manual.CardExpirationMonth"] = "Card expiry month",
+            ["Plugins.Payments.Manual.CardExpirationMonth.Hint"] = "The expiry month of the card used in the transaction.",
+            ["Plugins.Payments.Manual.CardExpirationYear"] = "Card expiry year",
+            ["Plugins.Payments.Manual.CardExpirationYear.Hint"] = "The expiry year of the card used in the transaction.",
+            ["Plugins.Payments.Manual.Public.SelectCreditCard"] = "Select credit card",
+            ["Plugins.Payments.Manual.Public.CardholderName"] = "Cardholder name",
+            ["Plugins.Payments.Manual.Public.CardholderName.Required"] = "Enter cardholder name",
+            ["Plugins.Payments.Manual.Public.CardNumber"] = "Card number",
+            ["Plugins.Payments.Manual.Public.CardNumber.Required"] = "Enter card number",
+            ["Plugins.Payments.Manual.Public.ExpirationDate"] = "Expiration date",
+            ["Plugins.Payments.Manual.Public.ExpirationDate.Expired"] = "Card is expired",
+            ["Plugins.Payments.Manual.Public.ExpireMonth.Required"] = "Expire month is required",
+            ["Plugins.Payments.Manual.Public.ExpireYear.Required"] = "Expire year is required",
+            ["Plugins.Payments.Manual.Public.CardCode"] = "Card code",
+            ["Plugins.Payments.Manual.Public.CardCode.Required"] = "Enter card code",
+            ["Plugins.Payments.Manual.Public.CardCode.Wrong"] = "Wrong card code",
+            ["Plugins.Payments.Manual.Public.CardNumber.Wrong"] = "Wrong card number"
         });
 
         await base.InstallAsync();
@@ -326,6 +385,12 @@ public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
     {
         //settings
         await _settingService.DeleteSettingAsync<ManualPaymentSettings>();
+
+        if (_widgetSettings.ActiveWidgetSystemNames.Contains(PaymentsManualDefaults.SystemName))
+        {
+            _widgetSettings.ActiveWidgetSystemNames.Remove(PaymentsManualDefaults.SystemName);
+            await _settingService.SaveSettingAsync(_widgetSettings);
+        }
 
         //locales
         await _localizationService.DeleteLocaleResourcesAsync("Plugins.Payments.Manual");
@@ -344,6 +409,22 @@ public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
     public async Task<string> GetPaymentMethodDescriptionAsync()
     {
         return await _localizationService.GetResourceAsync("Plugins.Payments.Manual.PaymentMethodDescription");
+    }
+
+    public Task<IList<string>> GetWidgetZonesAsync()
+    {
+        return Task.FromResult<IList<string>>(new List<string>
+        {
+            AdminWidgetZones.OrderDetailsInfoPaymentMethodAdditionalData
+        });
+    }
+
+    public Type GetWidgetViewComponent(string widgetZone)
+    {
+        if (!widgetZone.Equals(AdminWidgetZones.OrderDetailsInfoPaymentMethodAdditionalData))
+            return null;
+
+        return typeof(CreditCardInfoViewComponent);
     }
 
     #endregion
@@ -384,6 +465,11 @@ public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
     /// Gets a value indicating whether we should display a payment information page for this plugin
     /// </summary>
     public bool SkipPaymentInfo => false;
+
+    /// <summary>
+    /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
+    /// </summary>
+    public bool HideInWidgetList => true;
 
     #endregion
 }

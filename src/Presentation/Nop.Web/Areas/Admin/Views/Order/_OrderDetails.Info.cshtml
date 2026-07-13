@@ -10,7 +10,6 @@
         $(function() {
             toggleChangeOrderStatus(false);
             toggleOrderTotals(false);
-            toggleCC(false);
         });
 
         function toggleChangeOrderStatus(editmode) {
@@ -35,43 +34,7 @@
                 $('#btnSaveOrderTotals').hideElement();
                 $('#btnCancelOrderTotals').hideElement();
             }
-        }
-
-        function toggleCC(editmode) {
-            if (editmode) {
-                $('#lblCardType').hideElement();
-                $('#@Html.IdFor(model => model.CardType)').showElement();
-                $('#lblCardName').hideElement();
-                $('#@Html.IdFor(model => model.CardName)').showElement();
-                $('#lblCardNumber').hideElement();
-                $('#@Html.IdFor(model => model.CardNumber)').showElement();
-                $('#lblCardCvv2').hideElement();
-                $('#@Html.IdFor(model => model.CardCvv2)').showElement();
-                $('#lblCardExpirationMonth').hideElement();
-                $('#@Html.IdFor(model => model.CardExpirationMonth)').showElement();
-                $('#lblCardExpirationYear').hideElement();
-                $('#@Html.IdFor(model => model.CardExpirationYear)').showElement();
-                $('#btnEditCC').hideElement();
-                $('#btnSaveCC').showElement();
-                $('#btnCancelCC').showElement();
-            } else {
-                $('#lblCardType').showElement();
-                $('#@Html.IdFor(model => model.CardType)').hideElement();
-                $('#lblCardName').showElement();
-                $('#@Html.IdFor(model => model.CardName)').hideElement();
-                $('#lblCardNumber').showElement();
-                $('#@Html.IdFor(model => model.CardNumber)').hideElement();
-                $('#lblCardCvv2').showElement();
-                $('#@Html.IdFor(model => model.CardCvv2)').hideElement();
-                $('#lblCardExpirationMonth').showElement();
-                $('#@Html.IdFor(model => model.CardExpirationMonth)').hideElement();
-                $('#lblCardExpirationYear').showElement();
-                $('#@Html.IdFor(model => model.CardExpirationYear)').hideElement();
-                $('#btnEditCC').showElement();
-                $('#btnSaveCC').hideElement();
-                $('#btnCancelCC').hideElement();
-            }
-        }
+        }        
     </script>
 }
 <div class="card-body">
@@ -507,109 +470,6 @@
                     </button>                    
                 </div>
             </div>
-            @if (Model.AllowStoringCreditCardNumber)
-            {
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-label asp-for="CardType" />
-                    </div>
-                    <div class="col-md-9">
-                        <div id="lblCardType">
-                            <div class="form-text-row">@Model.CardType</div>
-                        </div>
-                        <nop-editor asp-for="CardType" />
-                    </div>
-                </div>
-            }
-            @if (Model.AllowStoringCreditCardNumber)
-            {
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-label asp-for="CardName" />
-                    </div>
-                    <div class="col-md-9">
-                        <div id="lblCardName">
-                            <div class="form-text-row">@Model.CardName</div>
-                        </div>
-                        <nop-editor asp-for="CardName" />
-                    </div>
-                </div>
-            }
-            @if (Model.AllowStoringCreditCardNumber || !string.IsNullOrEmpty(Model.CardNumber))
-            {
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-label asp-for="CardNumber" />
-                    </div>
-                    <div class="col-md-9">
-                        <div id="lblCardNumber">
-                            <div class="form-text-row">@Model.CardNumber</div>
-                        </div>
-                        <nop-editor asp-for="CardNumber" />
-                    </div>
-                </div>
-            }
-            @if (Model.AllowStoringCreditCardNumber)
-            {
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-label asp-for="CardCvv2" />
-                    </div>
-                    <div class="col-md-9">
-                        <div id="lblCardCvv2">
-                            <div class="form-text-row">@Model.CardCvv2</div>
-                        </div>
-                        <nop-editor asp-for="CardCvv2" />
-                    </div>
-                </div>
-            }
-            @if (Model.AllowStoringCreditCardNumber)
-            {
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-label asp-for="CardExpirationMonth" />
-                    </div>
-                    <div class="col-md-9">
-                        <div id="lblCardExpirationMonth">
-                            <div class="form-text-row">@Model.CardExpirationMonth</div>
-                        </div>
-                        <nop-editor asp-for="CardExpirationMonth" />
-                    </div>
-                </div>
-            }
-            @if (Model.AllowStoringCreditCardNumber)
-            {
-                <div class="form-group row">
-                    <div class="col-md-3">
-                        <nop-label asp-for="CardExpirationYear" />
-                    </div>
-                    <div class="col-md-9">
-                        <div id="lblCardExpirationYear">
-                            <div class="form-text-row">@Model.CardExpirationYear</div>
-                        </div>
-                        <nop-editor asp-for="CardExpirationYear" />
-                    </div>
-                </div>
-            }
-            @if (Model.AllowStoringCreditCardNumber)
-            {
-                <div class="form-group row">
-                    <div class="col-md-9 offset-md-3">
-                        <button type="submit" name="btnEditCC" onclick="toggleCC(true);return false;" id="btnEditCC" class="btn btn-primary">
-                            @T("Admin.Orders.Fields.EditCC")
-                        </button>
-
-                        <button type="submit" name="btnSaveCC" id="btnSaveCC" class="btn btn-primary">
-                            @T("Admin.Orders.Fields.SaveCC")
-                        </button>
-                        <nop-action-confirmation asp-button-id="btnSaveCC" />
-
-                        <button type="submit" name="btnCancelCC" onclick="toggleCC(false);return false;" id="btnCancelCC" class="btn btn-success">
-                            @T("Admin.Common.Cancel")
-                        </button>
-                    </div>
-                </div>
-            }
             @if (!string.IsNullOrEmpty(Model.AuthorizationTransactionId))
             {
                 <div class="form-group row">
@@ -650,7 +510,9 @@
                 <div class="col-md-9">
                     <div class="form-text-row">@Model.PaymentMethod</div>
                 </div>
-            </div>
+            </div> 
+            
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderDetailsInfoPaymentMethodAdditionalData, additionalData = Model })
 
             <div class="form-group row">
                 <div class="col-md-3">

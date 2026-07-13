@@ -149,21 +149,6 @@ public partial record OrderModel : BaseNopEntityModel
     [NopResourceDisplayName("Admin.Orders.Fields.PaymentMethod")]
     public string PaymentMethod { get; set; }
 
-    //credit card info
-    public bool AllowStoringCreditCardNumber { get; set; }
-    [NopResourceDisplayName("Admin.Orders.Fields.CardType")]
-    public string CardType { get; set; }
-    [NopResourceDisplayName("Admin.Orders.Fields.CardName")]
-    public string CardName { get; set; }
-    [NopResourceDisplayName("Admin.Orders.Fields.CardNumber")]
-    public string CardNumber { get; set; }
-    [NopResourceDisplayName("Admin.Orders.Fields.CardCVV2")]
-    public string CardCvv2 { get; set; }
-    [NopResourceDisplayName("Admin.Orders.Fields.CardExpirationMonth")]
-    public string CardExpirationMonth { get; set; }
-    [NopResourceDisplayName("Admin.Orders.Fields.CardExpirationYear")]
-    public string CardExpirationYear { get; set; }
-
     //misc payment info
     [NopResourceDisplayName("Admin.Orders.Fields.AuthorizationTransactionID")]
     public string AuthorizationTransactionId { get; set; }

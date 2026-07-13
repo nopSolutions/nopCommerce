@@ -1676,8 +1676,6 @@ public partial class InstallationService
             AllowCustomersToCheckGiftCardBalance = false,
             DeleteGuestTaskOlderThanMinutes = 1440,
             PhoneNumberValidationEnabled = false,
-            PhoneNumberValidationUseRegex = false,
-            PhoneNumberValidationRule = "^[0-9]{1,14}?$",
             DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == _installationSettings.RegionInfo.ThreeLetterISORegionName),
         });
 

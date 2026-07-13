@@ -1,14 +1,13 @@
-﻿using AutoMapper;
-using Nop.Core.Infrastructure.Mapper;
+﻿using Nop.Core.Infrastructure.Mapper;
 using Nop.Plugin.Widgets.FacebookPixel.Domain;
 using Nop.Plugin.Widgets.FacebookPixel.Models;
 
 namespace Nop.Plugin.Widgets.FacebookPixel.Infrastructure.Mapper;
 
 /// <summary>
-/// Represents AutoMapper configuration for plugin models
+/// Represents mapper configuration for plugin models
 /// </summary>
-public class MapperConfiguration : Profile, IOrderedMapperProfile
+public class MapperConfiguration : BaseMapperProfile
 {
     #region Ctor
 
@@ -24,15 +23,6 @@ public class MapperConfiguration : Profile, IOrderedMapperProfile
         CreateMap<FacebookPixelModel, FacebookPixelConfiguration>()
             .ForMember(entity => entity.CustomEvents, options => options.Ignore());
     }
-
-    #endregion
-
-    #region Properties
-
-    /// <summary>
-    /// Order of this mapper implementation
-    /// </summary>
-    public int Order => 1;
 
     #endregion
 }

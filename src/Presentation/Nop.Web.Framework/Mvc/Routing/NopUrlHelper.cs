@@ -215,7 +215,7 @@ public partial class NopUrlHelper : INopUrlHelper
                 routeName: routeName,
                 values: values,
                 scheme: protocol,
-                host: new HostString(host),
+                host: !string.IsNullOrEmpty(host) ? new HostString(host) : null,
                 fragment: new FragmentString(fragment)) ?? string.Empty;
         }
 

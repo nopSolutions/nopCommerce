@@ -16,9 +16,7 @@ public class PhoneNumberValidatorTests
     {
         _customerSettings = new CustomerSettings
         {
-            PhoneNumberValidationRule = "^[0-9]{1,14}?$",
-            PhoneNumberValidationEnabled = true,
-            PhoneNumberValidationUseRegex = false
+            PhoneNumberValidationEnabled = true
         };
 
         _validator = new TestValidator { v => v.RuleFor(x => x.PhoneNumber).IsPhoneNumber(_customerSettings) };
@@ -33,27 +31,12 @@ public class PhoneNumberValidatorTests
         result.IsValid.Should().BeFalse();
         result = await _validator.ValidateAsync(new Person { PhoneNumber = string.Empty });
         result.IsValid.Should().BeFalse();
-
-        //validation without regex
         result = await _validator.ValidateAsync(new Person { PhoneNumber = "test_phone_number" });
-        result.IsValid.Should().BeFalse();
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = string.Empty });
         result.IsValid.Should().BeFalse();
         result = await _validator.ValidateAsync(new Person { PhoneNumber = "123" });
         result.IsValid.Should().BeFalse();
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = "[0-9]{1,14}^" });
+        
+        result = await _validator.ValidateAsync(new Person { PhoneNumber = "+14156667777" });
         result.IsValid.Should().BeTrue();
-
-        //validation with regex
-        _customerSettings.PhoneNumberValidationUseRegex = true;
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = "test_phone_number" });
-        result.IsValid.Should().BeFalse();
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = "123456789" });
-        result.IsValid.Should().BeTrue();
-        _customerSettings.PhoneRequired = false;
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = string.Empty });
-        result.IsValid.Should().BeTrue();
-        result = await _validator.ValidateAsync(new Person { PhoneNumber = "+123456789" });
-        result.IsValid.Should().BeFalse();
     }
 }

@@ -1841,14 +1841,6 @@ public partial class ExportManager : IExportManager
             await xmlWriter.WriteStringAsync("CurrencyRate", order.CurrencyRate);
             await xmlWriter.WriteStringAsync("CustomerCurrencyCode", order.CustomerCurrencyCode);
             await xmlWriter.WriteStringAsync("AffiliateId", order.AffiliateId, ignore);
-            await xmlWriter.WriteStringAsync("AllowStoringCreditCardNumber", order.AllowStoringCreditCardNumber, ignore);
-            await xmlWriter.WriteStringAsync("CardType", order.CardType, ignore);
-            await xmlWriter.WriteStringAsync("CardName", order.CardName, ignore);
-            await xmlWriter.WriteStringAsync("CardNumber", order.CardNumber, ignore);
-            await xmlWriter.WriteStringAsync("MaskedCreditCardNumber", order.MaskedCreditCardNumber, ignore);
-            await xmlWriter.WriteStringAsync("CardCvv2", order.CardCvv2, ignore);
-            await xmlWriter.WriteStringAsync("CardExpirationMonth", order.CardExpirationMonth, ignore);
-            await xmlWriter.WriteStringAsync("CardExpirationYear", order.CardExpirationYear, ignore);
             await xmlWriter.WriteStringAsync("PaymentMethodSystemName", order.PaymentMethodSystemName, ignore);
             await xmlWriter.WriteStringAsync("AuthorizationTransactionId", order.AuthorizationTransactionId, ignore);
             await xmlWriter.WriteStringAsync("AuthorizationTransactionCode", order.AuthorizationTransactionCode, ignore);

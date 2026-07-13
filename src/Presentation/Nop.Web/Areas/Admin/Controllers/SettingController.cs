@@ -1237,11 +1237,6 @@ public partial class SettingController : BaseAdminController
             var lastUsernameValidationEnabledValue = customerSettings.UsernameValidationEnabled;
             var lastUsernameValidationUseRegexValue = customerSettings.UsernameValidationUseRegex;
 
-            //Phone number validation settings
-            var lastPhoneNumberValidationRule = customerSettings.PhoneNumberValidationRule;
-            var lastPhoneNumberValidationEnabledValue = customerSettings.PhoneNumberValidationEnabled;
-            var lastPhoneNumberValidationUseRegexValue = customerSettings.PhoneNumberValidationUseRegex;
-
             var addressSettings = await _settingService.LoadSettingAsync<AddressSettings>(storeScope);
             var dateTimeSettings = await _settingService.LoadSettingAsync<DateTimeSettings>(storeScope);
             var externalAuthenticationSettings = await _settingService.LoadSettingAsync<ExternalAuthenticationSettings>(storeScope);
@@ -1282,24 +1277,6 @@ public partial class SettingController : BaseAdminController
                     customerSettings.UsernameValidationUseRegex = lastUsernameValidationUseRegexValue;
 
                     _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error"));
-                }
-            }
-
-            if (customerSettings.PhoneNumberValidationEnabled && customerSettings.PhoneNumberValidationUseRegex)
-            {
-                try
-                {
-                    //validate regex rule
-                    var unused = Regex.IsMatch("123456789", customerSettings.PhoneNumberValidationRule);
-                }
-                catch (ArgumentException)
-                {
-                    //restoring previous settings
-                    customerSettings.PhoneNumberValidationRule = lastPhoneNumberValidationRule;
-                    customerSettings.PhoneNumberValidationEnabled = lastPhoneNumberValidationEnabledValue;
-                    customerSettings.PhoneNumberValidationUseRegex = lastPhoneNumberValidationUseRegexValue;
-
-                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error"));
                 }
             }
 
@@ -1801,36 +1778,6 @@ public partial class SettingController : BaseAdminController
             var oldEncryptionPrivateKey = securitySettings.EncryptionKey;
             if (oldEncryptionPrivateKey == newEncryptionPrivateKey)
                 throw new NopException(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TheSame"));
-
-            //update encrypted order info
-            var orders = await _orderService.SearchOrdersAsync();
-            foreach (var order in orders)
-            {
-                var decryptedCardType = _encryptionService.DecryptText(order.CardType, oldEncryptionPrivateKey);
-                var decryptedCardName = _encryptionService.DecryptText(order.CardName, oldEncryptionPrivateKey);
-                var decryptedCardNumber = _encryptionService.DecryptText(order.CardNumber, oldEncryptionPrivateKey);
-                var decryptedMaskedCreditCardNumber = _encryptionService.DecryptText(order.MaskedCreditCardNumber, oldEncryptionPrivateKey);
-                var decryptedCardCvv2 = _encryptionService.DecryptText(order.CardCvv2, oldEncryptionPrivateKey);
-                var decryptedCardExpirationMonth = _encryptionService.DecryptText(order.CardExpirationMonth, oldEncryptionPrivateKey);
-                var decryptedCardExpirationYear = _encryptionService.DecryptText(order.CardExpirationYear, oldEncryptionPrivateKey);
-
-                var encryptedCardType = _encryptionService.EncryptText(decryptedCardType, newEncryptionPrivateKey);
-                var encryptedCardName = _encryptionService.EncryptText(decryptedCardName, newEncryptionPrivateKey);
-                var encryptedCardNumber = _encryptionService.EncryptText(decryptedCardNumber, newEncryptionPrivateKey);
-                var encryptedMaskedCreditCardNumber = _encryptionService.EncryptText(decryptedMaskedCreditCardNumber, newEncryptionPrivateKey);
-                var encryptedCardCvv2 = _encryptionService.EncryptText(decryptedCardCvv2, newEncryptionPrivateKey);
-                var encryptedCardExpirationMonth = _encryptionService.EncryptText(decryptedCardExpirationMonth, newEncryptionPrivateKey);
-                var encryptedCardExpirationYear = _encryptionService.EncryptText(decryptedCardExpirationYear, newEncryptionPrivateKey);
-
-                order.CardType = encryptedCardType;
-                order.CardName = encryptedCardName;
-                order.CardNumber = encryptedCardNumber;
-                order.MaskedCreditCardNumber = encryptedMaskedCreditCardNumber;
-                order.CardCvv2 = encryptedCardCvv2;
-                order.CardExpirationMonth = encryptedCardExpirationMonth;
-                order.CardExpirationYear = encryptedCardExpirationYear;
-                await _orderService.UpdateOrderAsync(order);
-            }
 
             //update password information
             //optimization - load only passwords with PasswordFormat.Encrypted

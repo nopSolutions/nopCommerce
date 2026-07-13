@@ -185,4 +185,13 @@
                 </div>
             </div>
         </nop-nested-setting>
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerSettings.PhoneNumberValidationEnabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomerSettings.PhoneNumberValidationEnabled" />
+                <span asp-validation-for="CustomerSettings.PhoneNumberValidationEnabled"></span>
+            </div>
+        </div>
     </div>

@@ -1,12 +1,12 @@
-﻿using System.Text.RegularExpressions;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Validators;
 using Nop.Core.Domain.Customers;
+using PhoneNumbers;
 
 namespace Nop.Web.Framework.Validators;
 
 /// <summary>
-/// Phohe number validator
+/// Phone number validator
 /// </summary>
 public partial class PhoneNumberPropertyValidator<T, TProperty> : PropertyValidator<T, TProperty>
 {
@@ -40,15 +40,24 @@ public partial class PhoneNumberPropertyValidator<T, TProperty> : PropertyValida
     /// <returns>Result</returns>
     public static bool IsValid(string phoneNumber, CustomerSettings customerSettings)
     {
-        if (!customerSettings.PhoneNumberValidationEnabled || string.IsNullOrEmpty(customerSettings.PhoneNumberValidationRule))
+        if (!customerSettings.PhoneNumberValidationEnabled)
             return true;
 
         if (string.IsNullOrEmpty(phoneNumber))
             return !customerSettings.PhoneRequired;
 
-        return customerSettings.PhoneNumberValidationUseRegex
-            ? Regex.IsMatch(phoneNumber, customerSettings.PhoneNumberValidationRule, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
-            : phoneNumber.All(l => customerSettings.PhoneNumberValidationRule.Contains(l));
+        try
+        {
+            var phoneNumberUtil = PhoneNumberUtil.GetInstance();
+            var regionCode = phoneNumberUtil.GetRegionCodeForNumber(phoneNumberUtil.Parse(phoneNumber, null));
+            var parsedPhoneNumber = phoneNumberUtil.Parse(phoneNumber, regionCode);
+
+            return phoneNumberUtil.IsValidNumber(parsedPhoneNumber);
+        }
+        catch (NumberParseException)
+        {
+            return false;
+        }
     }
 
     protected override string GetDefaultMessageTemplate(string errorCode) => "Phone number is not valid";

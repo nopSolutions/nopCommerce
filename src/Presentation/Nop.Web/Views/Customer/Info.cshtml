@@ -297,7 +297,7 @@
                                     <nop-required />
                                 }
                                 <span asp-validation-for="Phone"></span>
-                                @if (!Model.PhoneSmsVerified)
+                                @if (Model.LoginByPhoneEnabled && !Model.PhoneSmsVerified)
                                 {
                                     <span class="phone-status" style="color: var(--error-red-color);">@T("Account.Fields.Phone.Status.NotVerified")</span>
                                 }

@@ -750,14 +750,6 @@ public partial class OrderProcessingService : IOrderProcessingService
             CurrencyRate = details.CustomerCurrencyRate,
             AffiliateId = details.AffiliateId,
             OrderStatus = OrderStatus.Pending,
-            AllowStoringCreditCardNumber = processPaymentResult.AllowStoringCreditCardNumber,
-            CardType = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardType) : string.Empty,
-            CardName = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardName) : string.Empty,
-            CardNumber = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardNumber) : string.Empty,
-            MaskedCreditCardNumber = _encryptionService.EncryptText(_paymentService.GetMaskedCreditCardNumber(processPaymentRequest.CreditCardNumber)),
-            CardCvv2 = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardCvv2) : string.Empty,
-            CardExpirationMonth = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardExpireMonth.ToString()) : string.Empty,
-            CardExpirationYear = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardExpireYear.ToString()) : string.Empty,
             PaymentMethodSystemName = processPaymentRequest.PaymentMethodSystemName,
             AuthorizationTransactionId = processPaymentResult.AuthorizationTransactionId,
             AuthorizationTransactionCode = processPaymentResult.AuthorizationTransactionCode,
@@ -1941,24 +1933,6 @@ public partial class OrderProcessingService : IOrderProcessingService
 
                 if (!_paymentPluginManager.IsPluginActive(paymentMethod))
                     throw new NopException("Payment method is not active");
-
-                //old credit card info
-                if (details.InitialOrder.AllowStoringCreditCardNumber)
-                {
-                    processPaymentRequest.CreditCardType = _encryptionService.DecryptText(details.InitialOrder.CardType);
-                    processPaymentRequest.CreditCardName = _encryptionService.DecryptText(details.InitialOrder.CardName);
-                    processPaymentRequest.CreditCardNumber = _encryptionService.DecryptText(details.InitialOrder.CardNumber);
-                    processPaymentRequest.CreditCardCvv2 = _encryptionService.DecryptText(details.InitialOrder.CardCvv2);
-                    try
-                    {
-                        processPaymentRequest.CreditCardExpireMonth = Convert.ToInt32(_encryptionService.DecryptText(details.InitialOrder.CardExpirationMonth));
-                        processPaymentRequest.CreditCardExpireYear = Convert.ToInt32(_encryptionService.DecryptText(details.InitialOrder.CardExpirationYear));
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
 
                 //payment type
                 processPaymentResult = (await _paymentService.GetRecurringPaymentTypeAsync(processPaymentRequest.PaymentMethodSystemName)) switch

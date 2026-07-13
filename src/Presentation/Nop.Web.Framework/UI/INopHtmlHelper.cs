@@ -228,4 +228,12 @@ public partial interface INopHtmlHelper
     /// </summary>
     /// <param name="jsonLd">The JSON-LD serialized model></param>
     void AddJsonLdParts(string jsonLd);
+
+    /// <summary>
+    /// Get the culture name to use on the client side
+    /// </summary>
+    /// <returns>
+    /// The culture name if it exists; otherwise, <see cref="NopCommonDefaults.DefaultLocalePattern"/>
+    /// </returns>
+    string GetDefaultJavaScriptCulture();
 }

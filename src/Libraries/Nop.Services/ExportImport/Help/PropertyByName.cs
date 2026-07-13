@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Services.ExportImport.Help;
@@ -120,7 +121,7 @@ public partial class PropertyByName<T>
     {
         get
         {
-            if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out var rez))
+            if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var rez))
                 return default;
             return rez;
         }
@@ -133,7 +134,7 @@ public partial class PropertyByName<T>
     {
         get
         {
-            if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out var rez))
+            if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var rez))
                 return null;
             return rez;
         }

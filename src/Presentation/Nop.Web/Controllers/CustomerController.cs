@@ -468,69 +468,83 @@ public partial class CustomerController : BasePublicController
 
         if (ModelState.IsValid)
         {
-            //login by phone (sms)
-            if (_otpSettings.LoginByPhoneEnabled && model.LoginByPhone)
+            try
             {
-                var phoneNumber = FormatPhoneNumber(model.Phone);
-                return RedirectToRoute(NopRouteNames.Standard.OTP_PHONE_VERIFICATION, new { typeId = (int)PhoneVerificationFlowEnum.Login, returnUrl, phone = phoneNumber });
-            }
+                //login by phone (sms)
+                if (_otpSettings.LoginByPhoneEnabled && model.LoginByPhone)
+                {
+                    var phoneNumber = FormatPhoneNumber(model.Phone);
+                    return RedirectToRoute(NopRouteNames.Standard.OTP_PHONE_VERIFICATION,
+                        new { typeId = (int)PhoneVerificationFlowEnum.Login, returnUrl, phone = phoneNumber });
+                }
 
-            var customerUserName = model.Username;
-            var customerEmail = model.Email;
-            var userNameOrEmail = _customerSettings.UsernamesEnabled ? customerUserName : customerEmail;
+                var customerUserName = model.Username;
+                var customerEmail = model.Email;
+                var userNameOrEmail = _customerSettings.UsernamesEnabled ? customerUserName : customerEmail;
 
-            var loginResult = await _customerRegistrationService.ValidateCustomerAsync(userNameOrEmail, model.Password);
-            switch (loginResult)
-            {
-                case CustomerLoginResults.Successful:
+                var loginResult =
+                    await _customerRegistrationService.ValidateCustomerAsync(userNameOrEmail, model.Password);
+                switch (loginResult)
+                {
+                    case CustomerLoginResults.Successful:
+                    {
+                        var customer = _customerSettings.UsernamesEnabled
+                            ? await _customerService.GetCustomerByUsernameAsync(customerUserName)
+                            : await _customerService.GetCustomerByEmailAsync(customerEmail);
+
+                        return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl,
+                            model.RememberMe);
+                    }
+                    case CustomerLoginResults.MultiFactorAuthenticationRequired:
+                    {
+                        var customerMultiFactorAuthenticationInfo = new CustomerMultiFactorAuthenticationInfo
+                        {
+                            UserName = userNameOrEmail, RememberMe = model.RememberMe, ReturnUrl = returnUrl
+                        };
+                        await HttpContext.Session.SetAsync(
+                            NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo,
+                            customerMultiFactorAuthenticationInfo);
+                        return RedirectToRoute(NopRouteNames.Standard.MULTIFACTOR_VERIFICATION);
+                    }
+                    case CustomerLoginResults.Deleted:
+                        ModelState.AddModelError("",
+                            await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.Deleted"));
+                        break;
+                    case CustomerLoginResults.NotActive:
+                        ModelState.AddModelError("",
+                            await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.NotActive"));
+                        break;
+                    case CustomerLoginResults.LockedOut:
+                        ModelState.AddModelError("",
+                            await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.LockedOut"));
+                        break;
+                    case CustomerLoginResults.CustomerNotExist:
+                    case CustomerLoginResults.NotRegistered:
+                    case CustomerLoginResults.WrongPassword:
+                    default:
+                        ModelState.AddModelError("",
+                            await _localizationService.GetResourceAsync("Account.Login.WrongCredentials"));
+                        break;
+                }
+
+                if (loginResult == CustomerLoginResults.WrongPassword && _customerSettings.NotifyFailedLoginAttempt)
                 {
                     var customer = _customerSettings.UsernamesEnabled
                         ? await _customerService.GetCustomerByUsernameAsync(customerUserName)
                         : await _customerService.GetCustomerByEmailAsync(customerEmail);
 
-                    return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, model.RememberMe);
+                    await _workflowMessageService.SendCustomerFailedLoginAttemptNotificationAsync(customer,
+                        customer.LanguageId ?? 0);
                 }
-                case CustomerLoginResults.MultiFactorAuthenticationRequired:
-                {
-                    var customerMultiFactorAuthenticationInfo = new CustomerMultiFactorAuthenticationInfo
-                    {
-                        UserName = userNameOrEmail,
-                        RememberMe = model.RememberMe,
-                        ReturnUrl = returnUrl
-                    };
-                    await HttpContext.Session.SetAsync(
-                        NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo,
-                        customerMultiFactorAuthenticationInfo);
-                    return RedirectToRoute(NopRouteNames.Standard.MULTIFACTOR_VERIFICATION);
-                }
-                case CustomerLoginResults.Deleted:
-                    ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.Deleted"));
-                    break;
-                case CustomerLoginResults.NotActive:
-                    ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.NotActive"));
-                    break;
-                case CustomerLoginResults.LockedOut:
-                    ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.LockedOut"));
-                    break;
-                case CustomerLoginResults.CustomerNotExist:
-                case CustomerLoginResults.NotRegistered:
-                case CustomerLoginResults.WrongPassword:
-                default:
-                    ModelState.AddModelError("", await _localizationService.GetResourceAsync("Account.Login.WrongCredentials"));
-                    break;
-            }
 
-            if (loginResult == CustomerLoginResults.WrongPassword && _customerSettings.NotifyFailedLoginAttempt)
+                await _customerActivityService.InsertActivityAsync("PublicStore.FailedLogin",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login.Fail"),
+                        _customerSettings.UsernamesEnabled ? customerUserName : customerEmail));
+            }
+            catch (Exception exc)
             {
-                var customer = _customerSettings.UsernamesEnabled
-                        ? await _customerService.GetCustomerByUsernameAsync(customerUserName)
-                        : await _customerService.GetCustomerByEmailAsync(customerEmail);
-
-                await _workflowMessageService.SendCustomerFailedLoginAttemptNotificationAsync(customer, customer.LanguageId ?? 0);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
-
-            await _customerActivityService.InsertActivityAsync("PublicStore.FailedLogin",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login.Fail"), _customerSettings.UsernamesEnabled ? customerUserName : customerEmail));
         }
 
         //If we got this far, something failed, redisplay form
@@ -929,11 +943,20 @@ public partial class CustomerController : BasePublicController
         if (!ModelState.IsValid)
             return View(model);
 
-        var response = await _customerRegistrationService
-            .ChangePasswordAsync(new ChangePasswordRequest(customer.Email, false, _customerSettings.DefaultPasswordFormat, model.NewPassword));
-        if (!response.Success)
+        try
         {
-            model.Result = string.Join(';', response.Errors);
+            var response = await _customerRegistrationService
+                .ChangePasswordAsync(new ChangePasswordRequest(customer.Email, false,
+                    _customerSettings.DefaultPasswordFormat, model.NewPassword));
+            if (!response.Success)
+            {
+                model.Result = string.Join(';', response.Errors);
+                return View(model);
+            }
+        }
+        catch (Exception ex)
+        {
+            model.Result = ex.Message;
             return View(model);
         }
 
@@ -1030,95 +1053,121 @@ public partial class CustomerController : BasePublicController
 
         if (ModelState.IsValid)
         {
-            var customerUserName = model.Username;
-            var customerEmail = model.Email;
-
-            var isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
-            var registrationRequest = new CustomerRegistrationRequest(customer,
-                customerEmail,
-                _customerSettings.UsernamesEnabled ? customerUserName : customerEmail,
-                model.Password,
-                _customerSettings.DefaultPasswordFormat,
-                store.Id,
-                isApproved);
-            var registrationResult = await _customerRegistrationService.RegisterCustomerAsync(registrationRequest);
-            if (registrationResult.Success)
+            try
             {
-                //properties
-                if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-                    customer.TimeZoneId = model.TimeZoneId;
+                var customerUserName = model.Username;
+                var customerEmail = model.Email;
 
-                //VAT number
-                if (_taxSettings.EuVatEnabled)
+                var isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
+                var registrationRequest = new CustomerRegistrationRequest(customer,
+                    customerEmail,
+                    _customerSettings.UsernamesEnabled ? customerUserName : customerEmail,
+                    model.Password,
+                    _customerSettings.DefaultPasswordFormat,
+                    store.Id,
+                    isApproved);
+                var registrationResult = await _customerRegistrationService.RegisterCustomerAsync(registrationRequest);
+                if (registrationResult.Success)
                 {
-                    customer.VatNumber = model.VatNumber;
+                    //properties
+                    if (_dateTimeSettings.AllowCustomersToSetTimeZone)
+                        customer.TimeZoneId = model.TimeZoneId;
 
-                    var (vatNumberStatus, _, vatAddress) = await _taxService.GetVatNumberStatusAsync(model.VatNumber);
-                    customer.VatNumberStatusId = (int)vatNumberStatus;
-                    //send VAT number admin notification
-                    if (!string.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
-                        await _workflowMessageService.SendNewVatSubmittedStoreOwnerNotificationAsync(customer, model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
-                }
-
-                //form fields
-                if (_customerSettings.GenderEnabled)
-                    customer.Gender = model.Gender;
-                if (_customerSettings.FirstNameEnabled)
-                    customer.FirstName = model.FirstName;
-                if (_customerSettings.LastNameEnabled)
-                    customer.LastName = model.LastName;
-                if (_customerSettings.DateOfBirthEnabled)
-                    customer.DateOfBirth = model.ParseDateOfBirth();
-                if (_customerSettings.CompanyEnabled)
-                    customer.Company = model.Company;
-                if (_customerSettings.StreetAddressEnabled)
-                    customer.StreetAddress = model.StreetAddress;
-                if (_customerSettings.StreetAddress2Enabled)
-                    customer.StreetAddress2 = model.StreetAddress2;
-                if (_customerSettings.ZipPostalCodeEnabled)
-                    customer.ZipPostalCode = model.ZipPostalCode;
-                if (_customerSettings.CityEnabled)
-                    customer.City = model.City;
-                if (_customerSettings.CountyEnabled)
-                    customer.County = model.County;
-                if (_customerSettings.CountryEnabled)
-                    customer.CountryId = model.CountryId;
-                if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
-                    customer.StateProvinceId = model.StateProvinceId;
-                if (_customerSettings.PhoneEnabled)
-                    customer.Phone = phoneNumber;
-                if (_customerSettings.FaxEnabled)
-                    customer.Fax = model.Fax;
-
-                //save customer attributes
-                customer.CustomCustomerAttributesXML = customerAttributesXml;
-                await _customerService.UpdateCustomerAsync(customer);
-
-                //newsletter subscriptions
-                if (_customerSettings.NewsletterEnabled)
-                {
-                    var anyNewSubscriptions = false;
-                    var isNewsletterActive = _customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation;
-                    var activeSubscriptions = model.NewsLetterSubscriptions.Where(subscriptionModel => subscriptionModel.IsActive);
-                    var currentSubscriptions = await _newsLetterSubscriptionService
-                        .GetNewsLetterSubscriptionsByEmailAsync(customerEmail, storeId: store.Id);
-                    if (currentSubscriptions.Any())
+                    //VAT number
+                    if (_taxSettings.EuVatEnabled)
                     {
-                        var subscriptionGuid = currentSubscriptions.FirstOrDefault().NewsLetterSubscriptionGuid;
-                        foreach (var activeSubscription in activeSubscriptions)
+                        customer.VatNumber = model.VatNumber;
+
+                        var (vatNumberStatus, _, vatAddress) =
+                            await _taxService.GetVatNumberStatusAsync(model.VatNumber);
+                        customer.VatNumberStatusId = (int)vatNumberStatus;
+                        //send VAT number admin notification
+                        if (!string.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
+                            await _workflowMessageService.SendNewVatSubmittedStoreOwnerNotificationAsync(customer,
+                                model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
+                    }
+
+                    //form fields
+                    if (_customerSettings.GenderEnabled)
+                        customer.Gender = model.Gender;
+                    if (_customerSettings.FirstNameEnabled)
+                        customer.FirstName = model.FirstName;
+                    if (_customerSettings.LastNameEnabled)
+                        customer.LastName = model.LastName;
+                    if (_customerSettings.DateOfBirthEnabled)
+                        customer.DateOfBirth = model.ParseDateOfBirth();
+                    if (_customerSettings.CompanyEnabled)
+                        customer.Company = model.Company;
+                    if (_customerSettings.StreetAddressEnabled)
+                        customer.StreetAddress = model.StreetAddress;
+                    if (_customerSettings.StreetAddress2Enabled)
+                        customer.StreetAddress2 = model.StreetAddress2;
+                    if (_customerSettings.ZipPostalCodeEnabled)
+                        customer.ZipPostalCode = model.ZipPostalCode;
+                    if (_customerSettings.CityEnabled)
+                        customer.City = model.City;
+                    if (_customerSettings.CountyEnabled)
+                        customer.County = model.County;
+                    if (_customerSettings.CountryEnabled)
+                        customer.CountryId = model.CountryId;
+                    if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
+                        customer.StateProvinceId = model.StateProvinceId;
+                    if (_customerSettings.PhoneEnabled)
+                        customer.Phone = phoneNumber;
+                    if (_customerSettings.FaxEnabled)
+                        customer.Fax = model.Fax;
+
+                    //save customer attributes
+                    customer.CustomCustomerAttributesXML = customerAttributesXml;
+                    await _customerService.UpdateCustomerAsync(customer);
+
+                    //newsletter subscriptions
+                    if (_customerSettings.NewsletterEnabled)
+                    {
+                        var anyNewSubscriptions = false;
+                        var isNewsletterActive = _customerSettings.UserRegistrationType !=
+                            UserRegistrationType.EmailValidation;
+                        var activeSubscriptions =
+                            model.NewsLetterSubscriptions.Where(subscriptionModel => subscriptionModel.IsActive);
+                        var currentSubscriptions = await _newsLetterSubscriptionService
+                            .GetNewsLetterSubscriptionsByEmailAsync(customerEmail, storeId: store.Id);
+                        if (currentSubscriptions.Any())
                         {
-                            var existingSubscription = currentSubscriptions
-                                ?.FirstOrDefault(subscription => subscription.TypeId == activeSubscription.TypeId);
-                            if (existingSubscription is not null)
+                            var subscriptionGuid = currentSubscriptions.FirstOrDefault().NewsLetterSubscriptionGuid;
+                            foreach (var activeSubscription in activeSubscriptions)
                             {
-                                if (!existingSubscription.Active && isNewsletterActive)
+                                var existingSubscription = currentSubscriptions
+                                    ?.FirstOrDefault(subscription => subscription.TypeId == activeSubscription.TypeId);
+                                if (existingSubscription is not null)
                                 {
-                                    existingSubscription.Active = true;
-                                    existingSubscription.LanguageId = customer.LanguageId ?? language.Id;
-                                    await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(existingSubscription);
+                                    if (!existingSubscription.Active && isNewsletterActive)
+                                    {
+                                        existingSubscription.Active = true;
+                                        existingSubscription.LanguageId = customer.LanguageId ?? language.Id;
+                                        await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(
+                                            existingSubscription);
+                                    }
+                                }
+                                else
+                                {
+                                    await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
+                                    {
+                                        NewsLetterSubscriptionGuid = subscriptionGuid,
+                                        Email = customer.Email,
+                                        Active = isNewsletterActive,
+                                        TypeId = activeSubscription.TypeId,
+                                        StoreId = store.Id,
+                                        LanguageId = customer.LanguageId ?? language.Id,
+                                        CreatedOnUtc = DateTime.UtcNow
+                                    });
+                                    anyNewSubscriptions = true;
                                 }
                             }
-                            else
+                        }
+                        else
+                        {
+                            var subscriptionGuid = Guid.NewGuid();
+                            foreach (var activeSubscription in activeSubscriptions)
                             {
                                 await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
                                 {
@@ -1133,155 +1182,154 @@ public partial class CustomerController : BasePublicController
                                 anyNewSubscriptions = true;
                             }
                         }
-                    }
-                    else
-                    {
-                        var subscriptionGuid = Guid.NewGuid();
-                        foreach (var activeSubscription in activeSubscriptions)
+
+                        //GDPR
+                        if (anyNewSubscriptions && _gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
                         {
-                            await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new()
+                            var consentMessage = await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter");
+                            await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree,
+                                consentMessage);
+                        }
+                    }
+
+                    if (_customerSettings.AcceptPrivacyPolicyEnabled)
+                    {
+                        //privacy policy is required
+                        //GDPR
+                        if (_gdprSettings.GdprEnabled && _gdprSettings.LogPrivacyPolicyConsent)
+                            await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree,
+                                await _localizationService.GetResourceAsync("Gdpr.Consent.PrivacyPolicy"));
+                    }
+
+                    //GDPR
+                    if (_gdprSettings.GdprEnabled)
+                    {
+                        var consents = (await _gdprService.GetAllConsentsAsync())
+                            .Where(consent => consent.DisplayDuringRegistration).ToList();
+                        foreach (var consent in consents)
+                        {
+                            var controlId = $"consent{consent.Id}";
+                            var cbConsent = form[controlId];
+                            if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
                             {
-                                NewsLetterSubscriptionGuid = subscriptionGuid,
-                                Email = customer.Email,
-                                Active = isNewsletterActive,
-                                TypeId = activeSubscription.TypeId,
-                                StoreId = store.Id,
-                                LanguageId = customer.LanguageId ?? language.Id,
-                                CreatedOnUtc = DateTime.UtcNow
-                            });
-                            anyNewSubscriptions = true;
+                                //agree
+                                await _gdprService.InsertLogAsync(customer, consent.Id, GdprRequestType.ConsentAgree,
+                                    consent.Message);
+                            }
+                            else
+                            {
+                                //disagree
+                                await _gdprService.InsertLogAsync(customer, consent.Id, GdprRequestType.ConsentDisagree,
+                                    consent.Message);
+                            }
                         }
                     }
 
-                    //GDPR
-                    if (anyNewSubscriptions && _gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
+                    //insert default address (if possible)
+                    var defaultAddress = new Address
                     {
-                        var consentMessage = await _localizationService.GetResourceAsync("Gdpr.Consent.Newsletter");
-                        await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, consentMessage);
-                    }
-                }
-
-                if (_customerSettings.AcceptPrivacyPolicyEnabled)
-                {
-                    //privacy policy is required
-                    //GDPR
-                    if (_gdprSettings.GdprEnabled && _gdprSettings.LogPrivacyPolicyConsent)
-                        await _gdprService.InsertLogAsync(customer, 0, GdprRequestType.ConsentAgree, await _localizationService.GetResourceAsync("Gdpr.Consent.PrivacyPolicy"));
-                }
-
-                //GDPR
-                if (_gdprSettings.GdprEnabled)
-                {
-                    var consents = (await _gdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayDuringRegistration).ToList();
-                    foreach (var consent in consents)
+                        FirstName = customer.FirstName,
+                        LastName = customer.LastName,
+                        Email = customer.Email,
+                        Company = customer.Company,
+                        CountryId = customer.CountryId > 0
+                            ? (int?)customer.CountryId
+                            : null,
+                        StateProvinceId = customer.StateProvinceId > 0
+                            ? (int?)customer.StateProvinceId
+                            : null,
+                        County = customer.County,
+                        City = customer.City,
+                        Address1 = customer.StreetAddress,
+                        Address2 = customer.StreetAddress2,
+                        ZipPostalCode = customer.ZipPostalCode,
+                        PhoneNumber = customer.Phone,
+                        FaxNumber = customer.Fax,
+                        CreatedOnUtc = customer.CreatedOnUtc
+                    };
+                    if (await _addressService.IsAddressValidAsync(defaultAddress))
                     {
-                        var controlId = $"consent{consent.Id}";
-                        var cbConsent = form[controlId];
-                        if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
-                        {
-                            //agree
-                            await _gdprService.InsertLogAsync(customer, consent.Id, GdprRequestType.ConsentAgree, consent.Message);
-                        }
-                        else
-                        {
-                            //disagree
-                            await _gdprService.InsertLogAsync(customer, consent.Id, GdprRequestType.ConsentDisagree, consent.Message);
-                        }
+                        //some validation
+                        if (defaultAddress.CountryId == 0)
+                            defaultAddress.CountryId = null;
+                        if (defaultAddress.StateProvinceId == 0)
+                            defaultAddress.StateProvinceId = null;
+                        //set default address
+                        //customer.Addresses.Add(defaultAddress);
+
+                        await _addressService.InsertAddressAsync(defaultAddress);
+
+                        await _customerService.InsertCustomerAddressAsync(customer, defaultAddress);
+
+                        customer.BillingAddressId = defaultAddress.Id;
+                        customer.ShippingAddressId = defaultAddress.Id;
+
+                        await _customerService.UpdateCustomerAsync(customer);
+                    }
+
+                    //notifications
+                    if (_customerSettings.NotifyNewCustomerRegistration)
+                    {
+                        await _workflowMessageService.SendCustomerRegisteredStoreOwnerNotificationMessageAsync(customer,
+                            _localizationSettings.DefaultAdminLanguageId);
+                    }
+
+                    //raise event       
+                    await _eventPublisher.PublishAsync(new CustomerRegisteredEvent(customer));
+
+                    switch (_customerSettings.UserRegistrationType)
+                    {
+                        case UserRegistrationType.EmailValidation:
+                            //email validation message
+                            await _genericAttributeService.SaveAttributeAsync(customer,
+                                NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
+                            await _workflowMessageService
+                                .SendCustomerEmailValidationMessageAsync(customer, language.Id);
+
+                            if (_otpSettings.LoginByPhoneEnabled)
+                                return RedirectToRoute(NopRouteNames.Standard.OTP_PHONE_VERIFICATION,
+                                    new { typeId = (int)PhoneVerificationFlowEnum.RegisterEmailValidation, returnUrl });
+                            else
+                                return RedirectToRoute(NopRouteNames.Standard.REGISTER_RESULT,
+                                    new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
+
+                        case UserRegistrationType.AdminApproval:
+                            if (_otpSettings.LoginByPhoneEnabled)
+                                return RedirectToRoute(NopRouteNames.Standard.OTP_PHONE_VERIFICATION,
+                                    new { typeId = (int)PhoneVerificationFlowEnum.RegisterAdminApproval, returnUrl });
+                            else
+                                return RedirectToRoute(NopRouteNames.Standard.REGISTER_RESULT,
+                                    new { resultId = (int)UserRegistrationType.AdminApproval, returnUrl });
+
+                        case UserRegistrationType.Standard:
+                            //send customer welcome message
+                            await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, language.Id);
+
+                            //raise event       
+                            await _eventPublisher.PublishAsync(new CustomerActivatedEvent(customer));
+
+                            if (_otpSettings.LoginByPhoneEnabled)
+                                returnUrl = Url.RouteUrl(NopRouteNames.Standard.OTP_PHONE_VERIFICATION,
+                                    new { typeId = (int)PhoneVerificationFlowEnum.RegisterStandard, returnUrl });
+                            else
+                                returnUrl = Url.RouteUrl(NopRouteNames.Standard.REGISTER_RESULT,
+                                    new { resultId = (int)UserRegistrationType.Standard, returnUrl });
+
+                            return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, true);
+
+                        default:
+                            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
                     }
                 }
 
-                //insert default address (if possible)
-                var defaultAddress = new Address
-                {
-                    FirstName = customer.FirstName,
-                    LastName = customer.LastName,
-                    Email = customer.Email,
-                    Company = customer.Company,
-                    CountryId = customer.CountryId > 0
-                        ? (int?)customer.CountryId
-                        : null,
-                    StateProvinceId = customer.StateProvinceId > 0
-                        ? (int?)customer.StateProvinceId
-                        : null,
-                    County = customer.County,
-                    City = customer.City,
-                    Address1 = customer.StreetAddress,
-                    Address2 = customer.StreetAddress2,
-                    ZipPostalCode = customer.ZipPostalCode,
-                    PhoneNumber = customer.Phone,
-                    FaxNumber = customer.Fax,
-                    CreatedOnUtc = customer.CreatedOnUtc
-                };
-                if (await _addressService.IsAddressValidAsync(defaultAddress))
-                {
-                    //some validation
-                    if (defaultAddress.CountryId == 0)
-                        defaultAddress.CountryId = null;
-                    if (defaultAddress.StateProvinceId == 0)
-                        defaultAddress.StateProvinceId = null;
-                    //set default address
-                    //customer.Addresses.Add(defaultAddress);
-
-                    await _addressService.InsertAddressAsync(defaultAddress);
-
-                    await _customerService.InsertCustomerAddressAsync(customer, defaultAddress);
-
-                    customer.BillingAddressId = defaultAddress.Id;
-                    customer.ShippingAddressId = defaultAddress.Id;
-
-                    await _customerService.UpdateCustomerAsync(customer);
-                }
-
-                //notifications
-                if (_customerSettings.NotifyNewCustomerRegistration)
-                {
-                    await _workflowMessageService.SendCustomerRegisteredStoreOwnerNotificationMessageAsync(customer,
-                        _localizationSettings.DefaultAdminLanguageId);
-                }
-
-                //raise event       
-                await _eventPublisher.PublishAsync(new CustomerRegisteredEvent(customer));
-
-                switch (_customerSettings.UserRegistrationType)
-                {
-                    case UserRegistrationType.EmailValidation:
-                        //email validation message
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
-                        await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, language.Id);
-
-                        if (_otpSettings.LoginByPhoneEnabled)
-                            return RedirectToRoute(NopRouteNames.Standard.OTP_PHONE_VERIFICATION, new { typeId = (int)PhoneVerificationFlowEnum.RegisterEmailValidation, returnUrl });
-                        else
-                            return RedirectToRoute(NopRouteNames.Standard.REGISTER_RESULT, new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
-
-                    case UserRegistrationType.AdminApproval:
-                        if (_otpSettings.LoginByPhoneEnabled)
-                            return RedirectToRoute(NopRouteNames.Standard.OTP_PHONE_VERIFICATION, new { typeId = (int)PhoneVerificationFlowEnum.RegisterAdminApproval, returnUrl });
-                        else
-                            return RedirectToRoute(NopRouteNames.Standard.REGISTER_RESULT, new { resultId = (int)UserRegistrationType.AdminApproval, returnUrl });
-
-                    case UserRegistrationType.Standard:
-                        //send customer welcome message
-                        await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, language.Id);
-
-                        //raise event       
-                        await _eventPublisher.PublishAsync(new CustomerActivatedEvent(customer));
-
-                        if (_otpSettings.LoginByPhoneEnabled)
-                            returnUrl = Url.RouteUrl(NopRouteNames.Standard.OTP_PHONE_VERIFICATION, new { typeId = (int)PhoneVerificationFlowEnum.RegisterStandard, returnUrl });
-                        else
-                            returnUrl = Url.RouteUrl(NopRouteNames.Standard.REGISTER_RESULT, new { resultId = (int)UserRegistrationType.Standard, returnUrl });
-
-                        return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, true);
-
-                    default:
-                        return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
-                }
+                //errors
+                foreach (var error in registrationResult.Errors)
+                    ModelState.AddModelError("", error);
             }
-
-            //errors
-            foreach (var error in registrationResult.Errors)
-                ModelState.AddModelError("", error);
+            catch (Exception exc)
+            {
+                await _notificationService.ErrorNotificationAsync(exc);
+            }
         }
 
         //If we got this far, something failed, redisplay form
@@ -1942,32 +1990,41 @@ public partial class CustomerController : BasePublicController
 
         if (ModelState.IsValid)
         {
-            var changePasswordRequest = new ChangePasswordRequest(customer.Email,
-                true, _customerSettings.DefaultPasswordFormat, model.NewPassword, model.OldPassword);
-            var changePasswordResult = await _customerRegistrationService.ChangePasswordAsync(changePasswordRequest);
-            if (changePasswordResult.Success)
+            try
             {
-                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
+                var changePasswordRequest = new ChangePasswordRequest(customer.Email,
+                    true, _customerSettings.DefaultPasswordFormat, model.NewPassword, model.OldPassword);
+                var changePasswordResult =
+                    await _customerRegistrationService.ChangePasswordAsync(changePasswordRequest);
+                if (changePasswordResult.Success)
+                {
+                    _notificationService.SuccessNotification(
+                        await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
 
-                await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await
-                    _localizationService.GetResourceAsync("ActivityLog.PublicStore.PasswordChanged"));
+                    await _customerActivityService.InsertActivityAsync(customer, "PublicStore.PasswordChanged", await
+                        _localizationService.GetResourceAsync("ActivityLog.PublicStore.PasswordChanged"));
 
-                //authenticate customer after changing password
-                await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
+                    //authenticate customer after changing password
+                    await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
 
-                if (string.IsNullOrEmpty(returnUrl))
-                    return View(model);
+                    if (string.IsNullOrEmpty(returnUrl))
+                        return View(model);
 
-                //prevent open redirection attack
-                if (!Url.IsLocalUrl(returnUrl))
-                    returnUrl = Url.RouteUrl(NopRouteNames.General.HOMEPAGE);
+                    //prevent open redirection attack
+                    if (!Url.IsLocalUrl(returnUrl))
+                        returnUrl = Url.RouteUrl(NopRouteNames.General.HOMEPAGE);
 
-                return new RedirectResult(returnUrl);
+                    return new RedirectResult(returnUrl);
+                }
+
+                //errors
+                foreach (var error in changePasswordResult.Errors)
+                    ModelState.AddModelError("", error);
             }
-
-            //errors
-            foreach (var error in changePasswordResult.Errors)
-                ModelState.AddModelError("", error);
+            catch (Exception exc)
+            {
+                await _notificationService.ErrorNotificationAsync(exc);
+            }
         }
 
         //If we got this far, something failed, redisplay form

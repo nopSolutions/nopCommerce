@@ -15,6 +15,8 @@ using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Infrastructure;
+using Nop.Services.Common;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Mvc.Routing;
@@ -34,6 +36,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
     protected readonly IHtmlHelper _htmlHelper;
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly INopAssetHelper _bundleHelper;
+    protected readonly INopFileProvider _fileProvider; 
     protected readonly Lazy<ILocalizationService> _localizationService;
     protected readonly IStoreContext _storeContext;
     protected readonly IWebHelper _webHelper;
@@ -63,6 +66,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
         IHtmlHelper htmlHelper,
         IHttpContextAccessor httpContextAccessor,
         INopAssetHelper bundleHelper,
+        INopFileProvider fileProvider,
         Lazy<ILocalizationService> localizationService,
         IStoreContext storeContext,
         IWebHelper webHelper,
@@ -74,6 +78,7 @@ public partial class NopHtmlHelper : INopHtmlHelper
         _htmlHelper = htmlHelper;
         _httpContextAccessor = httpContextAccessor;
         _bundleHelper = bundleHelper;
+        _fileProvider = fileProvider;
         _localizationService = localizationService;
         _storeContext = storeContext;
         _webHelper = webHelper;
@@ -771,6 +776,24 @@ public partial class NopHtmlHelper : INopHtmlHelper
     {
         if (_seoSettings.MicrodataEnabled)
             AddHeadCustomParts("<script type=\"application/ld+json\">" + _htmlHelper.Raw(jsonLd) + "</script>");
+    }
+
+    /// <summary>
+    /// Get the culture name to use on the client side
+    /// </summary>
+    /// <returns>
+    /// The culture name if it exists; otherwise, <see cref="NopCommonDefaults.DefaultLocalePattern"/>
+    /// </returns>
+    public virtual string GetDefaultJavaScriptCulture()
+    {
+        var cultureToUse = NopCommonDefaults.DefaultLocalePattern;
+
+        if (_fileProvider.DirectoryExists(_fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.LocalePatternPath, CultureInfo.CurrentCulture.Name))))
+            cultureToUse = CultureInfo.CurrentCulture.Name;
+        else if (_fileProvider.DirectoryExists(_fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.LocalePatternPath, CultureInfo.CurrentCulture.TwoLetterISOLanguageName))))
+            cultureToUse = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+        return cultureToUse;
     }
 
     #endregion

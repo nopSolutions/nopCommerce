@@ -59,13 +59,6 @@ public partial class PaymentService : IPaymentService
             return result;
         }
 
-        //We should strip out any white space or dash in the CC number entered.
-        if (!string.IsNullOrWhiteSpace(processPaymentRequest.CreditCardNumber))
-        {
-            processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace(" ", string.Empty);
-            processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace("-", string.Empty);
-        }
-
         var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
         var paymentMethod = await _paymentPluginManager
                                 .LoadPluginBySystemNameAsync(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
@@ -332,27 +325,6 @@ public partial class PaymentService : IPaymentService
                             ?? throw new NopException("Payment method couldn't be loaded");
 
         return await paymentMethod.CancelRecurringPaymentAsync(cancelPaymentRequest);
-    }
-
-    /// <summary>
-    /// Gets masked credit card number
-    /// </summary>
-    /// <param name="creditCardNumber">Credit card number</param>
-    /// <returns>Masked credit card number</returns>
-    public virtual string GetMaskedCreditCardNumber(string creditCardNumber)
-    {
-        if (string.IsNullOrEmpty(creditCardNumber))
-            return string.Empty;
-
-        if (creditCardNumber.Length <= 4)
-            return creditCardNumber;
-
-        var last4 = creditCardNumber[(creditCardNumber.Length - 4)..creditCardNumber.Length];
-        var maskedChars = string.Empty;
-        for (var i = 0; i < creditCardNumber.Length - 4; i++)
-            maskedChars += "*";
-
-        return maskedChars + last4;
     }
 
     #endregion

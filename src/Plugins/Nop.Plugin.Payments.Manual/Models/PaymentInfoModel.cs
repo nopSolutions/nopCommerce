@@ -13,28 +13,28 @@ public record PaymentInfoModel : BaseNopModel
         ExpireYears = new List<SelectListItem>();
     }
 
-    [NopResourceDisplayName("Payment.SelectCreditCard")]
+    [NopResourceDisplayName("Plugins.Payments.Manual.Public.SelectCreditCard")]
     public string CreditCardType { get; set; }
 
-    [NopResourceDisplayName("Payment.SelectCreditCard")]
+    [NopResourceDisplayName("Plugins.Payments.Manual.Public.SelectCreditCard")]
     public IList<SelectListItem> CreditCardTypes { get; set; }
 
-    [NopResourceDisplayName("Payment.CardholderName")]
+    [NopResourceDisplayName("Plugins.Payments.Manual.Public.CardholderName")]
     public string CardholderName { get; set; }
 
-    [NopResourceDisplayName("Payment.CardNumber")]
+    [NopResourceDisplayName("Plugins.Payments.Manual.Public.CardNumber")]
     public string CardNumber { get; set; }
 
-    [NopResourceDisplayName("Payment.ExpirationDate")]
+    [NopResourceDisplayName("Plugins.Payments.Manual.Public.ExpirationDate")]
     public string ExpireMonth { get; set; }
 
-    [NopResourceDisplayName("Payment.ExpirationDate")]
+    [NopResourceDisplayName("Plugins.Payments.Manual.Public.ExpirationDate")]
     public string ExpireYear { get; set; }
 
     public IList<SelectListItem> ExpireMonths { get; set; }
 
     public IList<SelectListItem> ExpireYears { get; set; }
 
-    [NopResourceDisplayName("Payment.CardCode")]
+    [NopResourceDisplayName("Plugins.Payments.Manual.Public.CardCode")]
     public string CardCode { get; set; }
 }

@@ -24,10 +24,12 @@ public partial class InstallController : Controller
 {
     #region Fields
 
+    private static InstallProgressInfoModel _installProgressInfoModel;
+
     protected readonly AppSettings _appSettings;
+    protected readonly INopFileProvider _fileProvider;
     protected readonly Lazy<IInstallationLocalizationService> _locService;
     protected readonly Lazy<IInstallationService> _installationService;
-    protected readonly INopFileProvider _fileProvider;
     protected readonly Lazy<IPermissionService> _permissionService;
     protected readonly Lazy<IPluginService> _pluginService;
     protected readonly Lazy<IStaticCacheManager> _staticCacheManager;
@@ -121,6 +123,11 @@ public partial class InstallController : Controller
         return model;
     }
 
+    protected virtual void SetProgressMessage(string message)
+    {
+        _installProgressInfoModel = new InstallProgressInfoModel { IsActive = true, ProgressMessage = message };
+    }
+
     #endregion
 
     #region Methods
@@ -150,6 +157,15 @@ public partial class InstallController : Controller
     }
 
     [HttpPost]
+    public virtual async Task<IActionResult> Progress()
+    {
+        if (_installProgressInfoModel is null)
+            return Json(new InstallProgressInfoModel { IsActive = false, ProgressMessage = "Not started" });
+
+        return Json(_installProgressInfoModel);
+    }
+
+    [HttpPost]
     public virtual async Task<IActionResult> Index(InstallModel model)
     {
         if (DataSettingsManager.IsDatabaseInstalled())
@@ -169,6 +185,7 @@ public partial class InstallController : Controller
         //If the application is impersonating via <identity impersonate="true"/>, 
         //the identity will be the anonymous user (typically IUSR_MACHINENAME) or the authenticated request user.
 
+        SetProgressMessage(_locService.Value.GetResource("Progress.CheckPermissions"));
         //validate permissions
         var dirsToCheck = _fileProvider.GetDirectoriesWrite();
         foreach (var dir in dirsToCheck)
@@ -211,6 +228,7 @@ public partial class InstallController : Controller
             {
                 try
                 {
+                    SetProgressMessage(_locService.Value.GetResource("Progress.CreateDatabase"));
                     dataProvider.CreateDatabase();
                 }
                 catch (Exception ex)
@@ -225,6 +243,7 @@ public partial class InstallController : Controller
                     throw new Exception(_locService.Value.GetResource("DatabaseNotExists"));
             }
 
+            SetProgressMessage(_locService.Value.GetResource("Progress.InitializeDatabase"));
             dataProvider.InitializeDatabase();
 
             var cultureInfo = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture);
@@ -233,6 +252,8 @@ public partial class InstallController : Controller
             var languagePackInfo = (DownloadUrl: string.Empty, Progress: 0);
             if (model.InstallRegionalResources)
             {
+                SetProgressMessage(_locService.Value.GetResource("Progress.RegionalResources"));
+
                 //try to get CultureInfo and RegionInfo
                 if (model.Country != null)
                 {
@@ -285,6 +306,7 @@ public partial class InstallController : Controller
                 }
             }
 
+            SetProgressMessage(_locService.Value.GetResource("Progress.InsertData"));
             //now resolve installation service and install nopCommerce
             await _installationService.Value.InstallAsync(new InstallationSettings
             {
@@ -312,6 +334,7 @@ public partial class InstallController : Controller
                 .OrderBy(pluginDescriptor => pluginDescriptor.Group).ThenBy(pluginDescriptor => pluginDescriptor.DisplayOrder)
                 .ToList();
 
+            SetProgressMessage(_locService.Value.GetResource("Progress.PreparePlugins"));
             foreach (var plugin in plugins)
                 await _pluginService.Value.PreparePluginToInstallAsync(plugin.SystemName, checkDependencies: false);
 
@@ -326,6 +349,10 @@ public partial class InstallController : Controller
             DataSettingsManager.SaveSettings(new DataConfig(), _fileProvider);
 
             ModelState.AddModelError(string.Empty, string.Format(_locService.Value.GetResource("SetupFailed"), exception.Message));
+        }
+        finally
+        {
+            _installProgressInfoModel = null;
         }
 
         return View(model);

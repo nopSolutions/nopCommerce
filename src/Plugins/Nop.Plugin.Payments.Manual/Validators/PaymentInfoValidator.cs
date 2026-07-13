@@ -13,11 +13,11 @@ public class PaymentInfoValidator : BaseNopValidator<PaymentInfoModel>
         //http://fluentvalidation.codeplex.com/wikipage?title=Custom&referringTitle=Documentation&ANCHOR#CustomValidator
         //http://benjii.me/2010/11/credit-card-validator-attribute-for-asp-net-mvc-3/
 
-        RuleFor(x => x.CardholderName).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Payment.CardholderName.Required"));
-        RuleFor(x => x.CardNumber).IsCreditCard().WithMessageAwait(localizationService.GetResourceAsync("Payment.CardNumber.Wrong"));
-        RuleFor(x => x.CardCode).Matches(@"^[0-9]{3,4}$").WithMessageAwait(localizationService.GetResourceAsync("Payment.CardCode.Wrong"));
-        RuleFor(x => x.ExpireMonth).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Payment.ExpireMonth.Required"));
-        RuleFor(x => x.ExpireYear).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Payment.ExpireYear.Required"));
+        RuleFor(x => x.CardholderName).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Plugins.Payments.Manual.Public.CardholderName.Required"));
+        RuleFor(x => x.CardNumber).SetValidator(new CreditCardPropertyValidator<PaymentInfoModel, string>()).WithMessageAwait(localizationService.GetResourceAsync("Plugins.Payments.Manual.Public.CardNumber.Wrong"));
+        RuleFor(x => x.CardCode).Matches(@"^[0-9]{3,4}$").WithMessageAwait(localizationService.GetResourceAsync("Plugins.Payments.Manual.Public.CardCode.Wrong"));
+        RuleFor(x => x.ExpireMonth).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Plugins.Payments.Manual.Public.ExpireMonth.Required"));
+        RuleFor(x => x.ExpireYear).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Plugins.Payments.Manual.Public.ExpireYear.Required"));
         RuleFor(x => x.ExpireMonth).Must((x, context) =>
         {
             //not specified yet
@@ -32,6 +32,6 @@ public class PaymentInfoValidator : BaseNopValidator<PaymentInfoModel>
                 return false;
 
             return true;
-        }).WithMessageAwait(localizationService.GetResourceAsync("Payment.ExpirationDate.Expired"));
+        }).WithMessageAwait(localizationService.GetResourceAsync("Plugins.Payments.Manual.Public.ExpirationDate.Expired"));
     }
 }

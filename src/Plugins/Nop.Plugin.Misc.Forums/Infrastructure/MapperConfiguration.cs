@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Nop.Core.Infrastructure.Mapper;
+﻿using Nop.Core.Infrastructure.Mapper;
 using Nop.Plugin.Misc.Forums.Admin.Models;
 using Nop.Plugin.Misc.Forums.Domain;
 
@@ -8,11 +7,11 @@ namespace Nop.Plugin.Misc.Forums.Infrastructure;
 /// <summary>
 /// Represents mapping configuration for plugin models
 /// </summary>
-public class AutoMapperConfiguration : Profile, IOrderedMapperProfile
+public class MapperConfiguration : BaseMapperProfile
 {
     #region Ctor
 
-    public AutoMapperConfiguration()
+    public MapperConfiguration()
     {
         //Create forum maps
         CreateMap<Forum, ForumModel>()
@@ -67,15 +66,6 @@ public class AutoMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.TopicMetaDescriptionLength, options => options.Ignore())
             .ForMember(settings => settings.BbcodeEditorOpenLinksInNewWindow, options => options.Ignore());
     }
-
-    #endregion
-
-    #region Properties
-
-    /// <summary>
-    /// Order of this mapper implementation
-    /// </summary>
-    public int Order => 0;
-
+    
     #endregion
 }

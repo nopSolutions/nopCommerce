@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Orders;
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Orders;
 using Nop.Data;
 
 namespace Nop.Services.Orders;
@@ -10,6 +11,7 @@ public partial class CustomWishlistService : ICustomWishlistService
 {
     #region Fields
 
+    protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IRepository<CustomWishlist> _customWishlistRepository;
     protected readonly ShoppingCartSettings _shoppingCartSettings;
 
@@ -17,9 +19,11 @@ public partial class CustomWishlistService : ICustomWishlistService
 
     #region Ctor
 
-    public CustomWishlistService(IRepository<CustomWishlist> customWishlistRepository, 
+    public CustomWishlistService(IStaticCacheManager staticCacheManager,
+        IRepository<CustomWishlist> customWishlistRepository, 
         ShoppingCartSettings shoppingCartSettings)
     {
+        _staticCacheManager = staticCacheManager;
         _customWishlistRepository = customWishlistRepository;
         _shoppingCartSettings = shoppingCartSettings;
     }
@@ -40,10 +44,14 @@ public partial class CustomWishlistService : ICustomWishlistService
         if (!_shoppingCartSettings.AllowMultipleWishlist)
             return new List<CustomWishlist>();
 
-        var query = _customWishlistRepository.Table
-            .Where(w => w.CustomerId == customerId)
-            .OrderByDescending(w => w.CreatedOnUtc);
-        return await query.ToListAsync();
+        var key = _staticCacheManager.PrepareKeyForDefaultCache(NopOrderDefaults.CustomWishlistCacheKey, customerId);
+        
+        var customWishlists = await _staticCacheManager.GetAsync(key, async ()=>
+                await _customWishlistRepository.Table
+                    .Where(w => w.CustomerId == customerId)
+                    .OrderByDescending(w => w.CreatedOnUtc).ToListAsync());
+
+        return customWishlists;
     }
 
     /// <summary>

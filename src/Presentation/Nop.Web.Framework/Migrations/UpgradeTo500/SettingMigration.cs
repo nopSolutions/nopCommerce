@@ -135,6 +135,12 @@ public class SettingMigration : MigrationBase
 
         //#309
         this.SetSettingIfNotExists<OrderSettings, int>(settings => settings.NextRecurringPaymentNotificationDays, 1);
+
+        //#8093
+        this.DeleteSettingsByNames([
+            $"{nameof(CustomerSettings)}.PhoneNumberValidationUseRegex",
+            $"{nameof(CustomerSettings)}.PhoneNumberValidationRule"
+        ]);
     }
 
     public override void Down()
@@ -142,4 +148,3 @@ public class SettingMigration : MigrationBase
         //add the downgrade logic if necessary 
     }
 }
-    

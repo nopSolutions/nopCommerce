@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
 using FluentValidation.Internal;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Nop.Web.Framework.ClientsideFluentValidation.Validators;
 
-namespace Nop.Web.Framework.ClientsideFluentValidation.Validators;
+namespace Nop.Plugin.Payments.Manual.Validators;
 
 /// <summary>
 /// Represent the credit card client validator

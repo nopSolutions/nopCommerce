@@ -411,7 +411,41 @@ public class LocalizationMigration : MigrationBase
             "Account.Login.WrongCredentials.CustomerNotExist",
             "Account.Login.WrongCredentials.NotRegistered",
             "Account.PasswordRecovery.EmailHasBeenSent",
-            "Account.PasswordRecovery.EmailNotFound"
+            "Account.PasswordRecovery.EmailNotFound",
+
+            //#8093
+            "Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error",
+            "Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule",
+            "Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule.Hint",
+            "Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex",
+            "Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex.Hint",
+
+            //#8169
+            "Admin.Orders.Fields.CardCVV2",
+            "Admin.Orders.Fields.CardCVV2.Hint",
+            "Admin.Orders.Fields.CardExpirationMonth",
+            "Admin.Orders.Fields.CardExpirationMonth.Hint",
+            "Admin.Orders.Fields.CardExpirationYear",
+            "Admin.Orders.Fields.CardExpirationYear.Hint",
+            "Admin.Orders.Fields.CardName",
+            "Admin.Orders.Fields.CardName.Hint",
+            "Admin.Orders.Fields.CardNumber",
+            "Admin.Orders.Fields.CardNumber.Hint",
+            "Admin.Orders.Fields.CardType",
+            "Admin.Orders.Fields.CardType.Hint",
+            "Payment.CardCode",
+            "Payment.CardCode.Required",
+            "Payment.CardCode.Wrong",
+            "Payment.CardholderName",
+            "Payment.CardholderName.Required",
+            "Payment.CardNumber",
+            "Payment.CardNumber.Required",
+            "Payment.CardNumber.Wrong",
+            "Payment.ExpirationDate",
+            "Payment.ExpirationDate.Expired",
+            "Payment.ExpireMonth.Required",
+            "Payment.ExpireYear.Required",
+            "Payment.SelectCreditCard",
         });
 
         #endregion
@@ -656,7 +690,7 @@ public class LocalizationMigration : MigrationBase
             //customer info
             ["Account.CustomerInfo.VerifyPhoneNumber"] = "Verify phone number",
             ["Account.Fields.Phone.Status.NotVerified"] = "Phone number is not verified",
-            
+
             //#4279
             ["Admin.Catalog.Products.Multimedia.Object3d"] = "3D model",
             ["Admin.Catalog.Products.Multimedia.Object3d.Fields.FileName"] = "3D model file",
@@ -787,6 +821,10 @@ public class LocalizationMigration : MigrationBase
             //#309
             ["Admin.Configuration.Settings.Order.NextRecurringPaymentNotificationDays"] = "Next Recurring Payment Notification Days",
             ["Admin.Configuration.Settings.Order.NextRecurringPaymentNotificationDays.Hint"] = "Number of days before the next recurring payment when customers should receive a notification email. Set to 0 to disable this notification.",
+
+            //#8093
+            ["Admin.Address.Fields.PhoneNumber.NotValid"] = "Phone number is not valid.",
+            ["Admin.Customers.Customers.Fields.Phone.NotValid"] = "Phone number is not valid.",
         });
 
         #endregion

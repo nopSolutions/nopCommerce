@@ -238,6 +238,8 @@ public partial class ReturnRequestController : BasePublicController
                 downloadId = download.Id;
         }
 
+        var store = await _storeContext.GetCurrentStoreAsync();
+
         //returnable products
         var orderItems = await _orderService.GetOrderItemsAsync(order.Id, isNotReturnable: false);
         foreach (var orderItem in orderItems)
@@ -254,8 +256,6 @@ public partial class ReturnRequestController : BasePublicController
 
             if (quantity > 0)
             {
-                var store = await _storeContext.GetCurrentStoreAsync();
-
                 var rrr = await _returnRequestService.GetReturnRequestReasonByIdAsync(model.ReturnRequestReasonId);
                 var rra = await _returnRequestService.GetReturnRequestActionByIdAsync(model.ReturnRequestActionId);
 
@@ -293,11 +293,17 @@ public partial class ReturnRequestController : BasePublicController
         }
 
         model = await _returnRequestModelFactory.PrepareSubmitReturnRequestModelAsync(model, order);
+
         if (count > 0)
-            model.Result = _returnRequestSettings.UseEuWithdrawalLocales ? await _localizationService.GetResourceAsync("ReturnRequests.Withdrawal.Submitted") :
-                await _localizationService.GetResourceAsync("ReturnRequests.Submitted");
+        {
+            model.Result = _returnRequestSettings.UseEuWithdrawalLocales
+                ? await _localizationService.GetResourceAsync("ReturnRequests.Withdrawal.Submitted")
+                : await _localizationService.GetResourceAsync("ReturnRequests.Submitted");
+        }
         else
+        {
             ModelState.AddModelError("", await _localizationService.GetResourceAsync("ReturnRequests.NoItemsSubmitted"));
+        }
 
         return View(model);
     }

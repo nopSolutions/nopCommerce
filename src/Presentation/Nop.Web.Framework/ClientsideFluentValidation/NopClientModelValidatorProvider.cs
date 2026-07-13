@@ -46,8 +46,7 @@ public class NopClientModelValidatorProvider : IClientModelValidatorProvider
             { typeof(IInclusiveBetweenValidator), new RangeClientValidator(validationRule, ruleComponent) },
             { typeof(IGreaterThanOrEqualValidator), new RangeMinClientValidator(validationRule, ruleComponent) },
             { typeof(ILessThanOrEqualValidator), new RangeMaxClientValidator(validationRule, ruleComponent) },
-            { typeof(IEqualValidator), new EqualToClientValidator(validationRule, ruleComponent) },
-            { typeof(ICreditCardValidator), new CreditCardClientValidator(validationRule, ruleComponent) },
+            { typeof(IEqualValidator), new EqualToClientValidator(validationRule, ruleComponent) }
         };
 
         //allow third-party handlers to associate custom validators

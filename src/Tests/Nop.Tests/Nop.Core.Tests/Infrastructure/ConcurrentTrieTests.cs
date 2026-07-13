@@ -9,21 +9,7 @@ namespace Nop.Tests.Nop.Core.Tests.Infrastructure;
 [TestFixture]
 public class ConcurrentTrieTests
 {
-    private IConcurrentCollection<int> _sut;
-
-    private static void Profile(Action action)
-    {
-        var sw = new Stopwatch();
-        var memory = GC.GetTotalMemory(true) / 1024.0 / 1024.0;
-        sw.Start();
-
-        action.Invoke();
-
-        sw.Stop();
-        var delta = GC.GetTotalMemory(true) / 1024.0 / 1024.0 - memory;
-        Console.WriteLine("Elapsed time: {0:F} s", sw.ElapsedMilliseconds / 1000.0);
-        Console.WriteLine("Memory usage: {0:F} MB", delta);
-    }
+    private IConcurrentCollection<int> _sut;    
 
     [SetUp]
     public void SetUp()
@@ -174,7 +160,7 @@ public class ConcurrentTrieTests
         var sut = Activator.CreateInstance(oType) as IConcurrentCollection<byte>;
         sut.Should().NotBeNull();
 
-        Profile(() =>
+        TestHelper.ProfileAction(() =>
         {
             for (var i = 0; i < 1000000; i++)
                 sut.Add(Guid.NewGuid().ToString(), 0);
@@ -190,7 +176,7 @@ public class ConcurrentTrieTests
         var sut = Activator.CreateInstance(oType) as IConcurrentCollection<int>;
         sut.Should().NotBeNull();
 
-        Profile(() =>
+        TestHelper.ProfileAction(() =>
         {
             Parallel.For(0, 1000, new ParallelOptions { MaxDegreeOfParallelism = 8 }, j =>
             {
@@ -218,7 +204,7 @@ public class ConcurrentTrieTests
         var sut = Activator.CreateInstance(oType) as IConcurrentCollection<int>;
         sut.Should().NotBeNull();
 
-        Profile(() =>
+        TestHelper.ProfileAction(() =>
         {
             Parallel.For(0, 1000, new ParallelOptions { MaxDegreeOfParallelism = 8 }, j =>
             {
@@ -247,7 +233,7 @@ public class ConcurrentTrieTests
         for (var i = 0; i < 10000; i++)
             sut.Add(Guid.NewGuid().ToString(), 0);
 
-        Profile(() =>
+        TestHelper.ProfileAction(() =>
         {
             Parallel.For(0, 1000, new ParallelOptions { MaxDegreeOfParallelism = 8 }, j =>
             {

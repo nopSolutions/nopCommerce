@@ -223,12 +223,6 @@ public partial record CustomerSettingsModel : BaseNopModel, ISettingsModel
     [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationEnabled")]
     public bool PhoneNumberValidationEnabled { get; set; }
 
-    [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex")]
-    public bool PhoneNumberValidationUseRegex { get; set; }
-
-    [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule")]
-    public string PhoneNumberValidationRule { get; set; }
-
     [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FaxEnabled")]
     public bool FaxEnabled { get; set; }
 

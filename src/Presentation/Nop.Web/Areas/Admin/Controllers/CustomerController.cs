@@ -377,106 +377,123 @@ public partial class CustomerController : BaseAdminController
 
         if (ModelState.IsValid)
         {
-            //fill entity from model
-            var customer = model.ToEntity<Customer>();
-            var currentStore = await _storeContext.GetCurrentStoreAsync();
-
-            customer.CustomerGuid = Guid.NewGuid();
-            customer.CreatedOnUtc = DateTime.UtcNow;
-            customer.LastActivityDateUtc = DateTime.UtcNow;
-            customer.RegisteredInStoreId = currentStore.Id;
-
-            //form fields
-            if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-                customer.TimeZoneId = model.TimeZoneId;
-            if (_customerSettings.GenderEnabled)
-                customer.Gender = model.Gender;
-            if (_customerSettings.FirstNameEnabled)
-                customer.FirstName = model.FirstName;
-            if (_customerSettings.LastNameEnabled)
-                customer.LastName = model.LastName;
-            if (_customerSettings.DateOfBirthEnabled)
-                customer.DateOfBirth = model.DateOfBirth;
-            if (_customerSettings.CompanyEnabled)
-                customer.Company = model.Company;
-            if (_customerSettings.StreetAddressEnabled)
-                customer.StreetAddress = model.StreetAddress;
-            if (_customerSettings.StreetAddress2Enabled)
-                customer.StreetAddress2 = model.StreetAddress2;
-            if (_customerSettings.ZipPostalCodeEnabled)
-                customer.ZipPostalCode = model.ZipPostalCode;
-            if (_customerSettings.CityEnabled)
-                customer.City = model.City;
-            if (_customerSettings.CountyEnabled)
-                customer.County = model.County;
-            if (_customerSettings.CountryEnabled)
-                customer.CountryId = model.CountryId;
-            if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
-                customer.StateProvinceId = model.StateProvinceId;
-            if (_customerSettings.PhoneEnabled)
+            try
             {
-                customer.Phone = model.Phone;
-                customer.PhoneSmsVerified = model.PhoneSmsVerified;
-            }
-            if (_customerSettings.FaxEnabled)
-                customer.Fax = model.Fax;
-            customer.CustomCustomerAttributesXML = customerAttributesXml;
+                //fill entity from model
+                var customer = model.ToEntity<Customer>();
+                var currentStore = await _storeContext.GetCurrentStoreAsync();
 
-            await _customerService.InsertCustomerAsync(customer);
+                customer.CustomerGuid = Guid.NewGuid();
+                customer.CreatedOnUtc = DateTime.UtcNow;
+                customer.LastActivityDateUtc = DateTime.UtcNow;
+                customer.RegisteredInStoreId = currentStore.Id;
 
-            //password
-            if (!string.IsNullOrWhiteSpace(model.Password))
-            {
-                var changePassRequest = new ChangePasswordRequest(model.Email, false, _customerSettings.DefaultPasswordFormat, model.Password);
-                var changePassResult = await _customerRegistrationService.ChangePasswordAsync(changePassRequest);
-                if (!changePassResult.Success)
+                //form fields
+                if (_dateTimeSettings.AllowCustomersToSetTimeZone)
+                    customer.TimeZoneId = model.TimeZoneId;
+                if (_customerSettings.GenderEnabled)
+                    customer.Gender = model.Gender;
+                if (_customerSettings.FirstNameEnabled)
+                    customer.FirstName = model.FirstName;
+                if (_customerSettings.LastNameEnabled)
+                    customer.LastName = model.LastName;
+                if (_customerSettings.DateOfBirthEnabled)
+                    customer.DateOfBirth = model.DateOfBirth;
+                if (_customerSettings.CompanyEnabled)
+                    customer.Company = model.Company;
+                if (_customerSettings.StreetAddressEnabled)
+                    customer.StreetAddress = model.StreetAddress;
+                if (_customerSettings.StreetAddress2Enabled)
+                    customer.StreetAddress2 = model.StreetAddress2;
+                if (_customerSettings.ZipPostalCodeEnabled)
+                    customer.ZipPostalCode = model.ZipPostalCode;
+                if (_customerSettings.CityEnabled)
+                    customer.City = model.City;
+                if (_customerSettings.CountyEnabled)
+                    customer.County = model.County;
+                if (_customerSettings.CountryEnabled)
+                    customer.CountryId = model.CountryId;
+                if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
+                    customer.StateProvinceId = model.StateProvinceId;
+                if (_customerSettings.PhoneEnabled)
                 {
-                    foreach (var changePassError in changePassResult.Errors)
-                        _notificationService.ErrorNotification(changePassError);
+                    customer.Phone = model.Phone;
+                    customer.PhoneSmsVerified = model.PhoneSmsVerified;
                 }
-            }
 
-            //customer roles
-            foreach (var customerRole in newCustomerRoles)
-            {
-                //ensure that the current customer cannot add to "Administrators" system role if he's not an admin himself
-                if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName && !await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()))
-                    continue;
+                if (_customerSettings.FaxEnabled)
+                    customer.Fax = model.Fax;
+                customer.CustomCustomerAttributesXML = customerAttributesXml;
 
-                await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
-            }
+                await _customerService.InsertCustomerAsync(customer);
 
-            await _customerService.UpdateCustomerAsync(customer);
+                //password
+                if (!string.IsNullOrWhiteSpace(model.Password))
+                {
+                    var changePassRequest = new ChangePasswordRequest(model.Email, false,
+                        _customerSettings.DefaultPasswordFormat, model.Password);
+                    var changePassResult = await _customerRegistrationService.ChangePasswordAsync(changePassRequest);
+                    if (!changePassResult.Success)
+                    {
+                        foreach (var changePassError in changePassResult.Errors)
+                            _notificationService.ErrorNotification(changePassError);
+                    }
+                }
 
-            //ensure that a customer with a vendor associated is not in "Administrators" role
-            //otherwise, he won't have access to other functionality in admin area
-            if (await _customerService.IsAdminAsync(customer) && customer.VendorId > 0)
-            {
-                customer.VendorId = 0;
+                //customer roles
+                foreach (var customerRole in newCustomerRoles)
+                {
+                    //ensure that the current customer cannot add to "Administrators" system role if he's not an admin himself
+                    if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName &&
+                        !await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()))
+                        continue;
+
+                    await _customerService.AddCustomerRoleMappingAsync(
+                        new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
+                }
+
                 await _customerService.UpdateCustomerAsync(customer);
 
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.AdminCouldNotbeVendor"));
-            }
+                //ensure that a customer with a vendor associated is not in "Administrators" role
+                //otherwise, he won't have access to other functionality in admin area
+                if (await _customerService.IsAdminAsync(customer) && customer.VendorId > 0)
+                {
+                    customer.VendorId = 0;
+                    await _customerService.UpdateCustomerAsync(customer);
 
-            //ensure that a customer in the Vendors role has a vendor account associated.
-            //otherwise, he will have access to ALL products
-            if (await _customerService.IsVendorAsync(customer) && customer.VendorId == 0)
+                    _notificationService.ErrorNotification(
+                        await _localizationService.GetResourceAsync("Admin.Customers.Customers.AdminCouldNotbeVendor"));
+                }
+
+                //ensure that a customer in the Vendors role has a vendor account associated.
+                //otherwise, he will have access to ALL products
+                if (await _customerService.IsVendorAsync(customer) && customer.VendorId == 0)
+                {
+                    var vendorRole =
+                        await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.VendorsRoleName);
+                    await _customerService.RemoveCustomerRoleMappingAsync(customer, vendorRole);
+
+                    _notificationService.ErrorNotification(
+                        await _localizationService.GetResourceAsync(
+                            "Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
+                }
+
+                //activity log
+                await _customerActivityService.InsertActivityAsync("AddNewCustomer",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewCustomer"),
+                        customer.Id), customer);
+                _notificationService.SuccessNotification(
+                    await _localizationService.GetResourceAsync("Admin.Customers.Customers.Added"));
+
+                if (!continueEditing)
+                    return RedirectToAction("List");
+
+                return RedirectToAction("Edit", new { id = customer.Id });
+            }
+            catch (Exception exc)
             {
-                var vendorRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.VendorsRoleName);
-                await _customerService.RemoveCustomerRoleMappingAsync(customer, vendorRole);
-
-                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
+                await _notificationService.ErrorNotificationAsync(exc);
             }
-
-            //activity log
-            await _customerActivityService.InsertActivityAsync("AddNewCustomer",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewCustomer"), customer.Id), customer);
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.Added"));
-
-            if (!continueEditing)
-                return RedirectToAction("List");
-
-            return RedirectToAction("Edit", new { id = customer.Id });
         }
 
         //prepare model
@@ -736,17 +753,25 @@ public partial class CustomerController : BaseAdminController
             return RedirectToAction("Edit", new { id = customer.Id });
         }
 
-        var changePassRequest = new ChangePasswordRequest(customer.Email,
-            false, _customerSettings.DefaultPasswordFormat, model.Password);
-        var changePassResult = await _customerRegistrationService.ChangePasswordAsync(changePassRequest);
-        if (changePassResult.Success)
+        try
         {
-            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.PasswordChanged"));
+            var changePassRequest = new ChangePasswordRequest(customer.Email,
+                false, _customerSettings.DefaultPasswordFormat, model.Password);
+            var changePassResult = await _customerRegistrationService.ChangePasswordAsync(changePassRequest);
+            if (changePassResult.Success)
+            {
+                _notificationService.SuccessNotification(
+                    await _localizationService.GetResourceAsync("Admin.Customers.Customers.PasswordChanged"));
+            }
+            else
+            {
+                foreach (var error in changePassResult.Errors)
+                    _notificationService.ErrorNotification(error);
+            }
         }
-        else
+        catch (Exception exc)
         {
-            foreach (var error in changePassResult.Errors)
-                _notificationService.ErrorNotification(error);
+            await _notificationService.ErrorNotificationAsync(exc);
         }
 
         return RedirectToAction("Edit", new { id = customer.Id });

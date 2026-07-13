@@ -20,6 +20,7 @@ public class AddRfqComponent : NopViewComponent
     private readonly IStoreContext _storeContext;
     private readonly IWorkContext _workContext;
     private readonly RfqService _rfqService;
+    private readonly RfqSettings _rfqSettings;
 
     #endregion
 
@@ -29,13 +30,15 @@ public class AddRfqComponent : NopViewComponent
         IShoppingCartService shoppingCartService,
         IStoreContext storeContext,
         IWorkContext workContext,
-        RfqService rfqService)
+        RfqService rfqService,
+        RfqSettings rfqSettings)
     {
         _productService = productService;
         _shoppingCartService = shoppingCartService;
         _storeContext = storeContext;
         _workContext = workContext;
         _rfqService = rfqService;
+        _rfqSettings = rfqSettings;
     }
 
     #endregion
@@ -53,6 +56,9 @@ public class AddRfqComponent : NopViewComponent
     /// </returns>
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {
+        if (!_rfqSettings.Enabled)
+            return Content(string.Empty);
+
         var customer = await _workContext.GetCurrentCustomerAsync();
         var store = await _storeContext.GetCurrentStoreAsync();
         var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);

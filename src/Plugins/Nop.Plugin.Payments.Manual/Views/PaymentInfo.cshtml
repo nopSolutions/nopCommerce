@@ -5,7 +5,7 @@
 <table width="100%" cellspacing="2" cellpadding="1" border="0">
     <tr>
         <td>
-            <label asp-for="CreditCardTypes">@T("Payment.SelectCreditCard"):</label>
+            <label asp-for="CreditCardTypes">@T("Plugins.Payments.Manual.Public.SelectCreditCard"):</label>
         </td>
         <td>
             <select asp-for="CreditCardType" asp-items="Model.CreditCardTypes" class="dropdownlists"></select>
@@ -13,7 +13,7 @@
     </tr>
     <tr>
         <td>
-            <label asp-for="CardholderName">@T("Payment.CardholderName"):</label>
+            <label asp-for="CardholderName">@T("Plugins.Payments.Manual.Public.CardholderName"):</label>
         </td>
         <td>
             <input type="text" asp-for="CardholderName" style="width:165px;" autocomplete="off" />
@@ -22,7 +22,7 @@
     </tr>
     <tr>
         <td>
-            <label asp-for="CardNumber">@T("Payment.CardNumber"):</label>
+            <label asp-for="CardNumber">@T("Plugins.Payments.Manual.Public.CardNumber"):</label>
         </td>
         <td>
             <input type="text" asp-for="CardNumber" style="width:165px;" autocomplete="off" maxlength="22" />
@@ -31,7 +31,7 @@
     </tr>
     <tr>
         <td>
-            <label asp-for="ExpireMonth">@T("Payment.ExpirationDate"):</label>
+            <label asp-for="ExpireMonth">@T("Plugins.Payments.Manual.Public.ExpirationDate"):</label>
         </td>
         <td>
             <select asp-for="ExpireMonth" asp-items="Model.ExpireMonths"></select>
@@ -41,7 +41,7 @@
     </tr>
     <tr>
         <td>
-            <label asp-for="CardCode">@T("Payment.CardCode"):</label>
+            <label asp-for="CardCode">@T("Plugins.Payments.Manual.Public.CardCode"):</label>
         </td>
         <td>
             <input type="text" asp-for="CardCode" style="width:60px;" autocomplete="off" maxlength="4" />

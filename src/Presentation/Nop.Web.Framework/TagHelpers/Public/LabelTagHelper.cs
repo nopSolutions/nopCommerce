@@ -52,16 +52,26 @@ public partial class LabelTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.LabelT
         var type = For.Metadata.ContainerType;
         var propertyName = For.Metadata.Name;
 
-        if (type != null && !string.IsNullOrEmpty(propertyName))
+        var childContent = await output.GetChildContentAsync();
+        if (!childContent.IsEmptyOrWhiteSpace)
         {
-            var resourceName = type.GetProperty(propertyName)
+            resourceValue = childContent.GetContent();
+        }
+        else if (type != null && !string.IsNullOrEmpty(propertyName))
+        {
+            var attribute = type.GetProperty(propertyName)
                 ?.GetCustomAttributes(typeof(NopResourceDisplayNameAttribute), true)
                 .OfType<NopResourceDisplayNameAttribute>()
-                .FirstOrDefault()?.ResourceKey;
+                .FirstOrDefault();
 
-            if (!string.IsNullOrEmpty(resourceName))
-                //get locale resource value
-                resourceValue = await _localizationService.GetResourceAsync(resourceName);
+            if (attribute != null)
+            {
+                var resourceName = attribute.ResourceKey;
+
+                if (!string.IsNullOrEmpty(resourceName))
+                    //get locale resource value
+                    resourceValue = await _localizationService.GetResourceAsync(resourceName);
+            }
         }
 
         if (!string.IsNullOrEmpty(resourceValue))

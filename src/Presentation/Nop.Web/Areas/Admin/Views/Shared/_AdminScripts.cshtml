@@ -1,30 +1,9 @@
-@inject INopFileProvider fileProvider;
-@inject IWebHelper webHelper
 @inject LocalizationSettings localizationSettings
-@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
 @using Nop.Core.Domain.Localization
 @using Nop.Services.Helpers
 
 @{
     var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
-
-    var culture = CultureInfo.CurrentCulture;
-    var uiCulture = CultureInfo.CurrentUICulture;
-
-    //Code to get check if current cultures scripts are exists. If not, select parent cultures scripts
-    string GetDefaultCulture()
-    {
-        var localePattern = NopCommonDefaults.LocalePatternPath;
-
-        var cultureToUse = NopCommonDefaults.DefaultLocalePattern; //Default regionalisation to use
-
-        if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, culture.Name))))
-            cultureToUse = culture.Name;
-        else if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, culture.TwoLetterISOLanguageName))))
-            cultureToUse = culture.TwoLetterISOLanguageName;
-
-        return cultureToUse;
-    }
 }
 
 @*Google Font*@
@@ -89,7 +68,7 @@ else
 <script src="~/lib_npm/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
 <script asp-location="Footer">
         var rootAppPath = '@(Url.Content("~/"))';
-        var culture = "@GetDefaultCulture()";
+        var culture = "@NopHtml.GetDefaultJavaScriptCulture()";
 
         //load cldr for current culture
         $.when(
