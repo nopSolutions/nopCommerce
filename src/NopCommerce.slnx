@@ -1,7 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Solution>
   <Configurations>
     <Platform Name="Any CPU" />
     <Platform Name="Mixed Platforms" />
+    <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
   <Folder Name="/Libraries/">
