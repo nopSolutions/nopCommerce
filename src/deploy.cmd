@@ -67,7 +67,7 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 echo Handling ASP.NET Core Web Application deployment.
 
 :: 1. Restore nuget packages
-call :ExecuteCmd dotnet restore "%DEPLOYMENT_SOURCE%\NopCommerce.sln"
+call :ExecuteCmd dotnet restore "%DEPLOYMENT_SOURCE%\NopCommerce.slnx"
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 2. Build and publish

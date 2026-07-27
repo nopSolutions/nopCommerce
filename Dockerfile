@@ -8,7 +8,7 @@ WORKDIR /src
 COPY ./src ./
 
 # build solution   
-RUN dotnet build NopCommerce.sln --no-incremental -c Release
+RUN dotnet build NopCommerce.slnx --no-incremental -c Release
 
 # publish project
 WORKDIR /src/Presentation/Nop.Web   

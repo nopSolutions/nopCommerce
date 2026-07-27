@@ -1,0 +1,78 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="Mixed Platforms" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Libraries/">
+    <Project Path="Libraries/Nop.Core/Nop.Core.csproj">
+      <Build Solution="*|x86" Project="false" />
+    </Project>
+    <Project Path="Libraries/Nop.Data/Nop.Data.csproj">
+      <Build Solution="*|x86" Project="false" />
+    </Project>
+    <Project Path="Libraries/Nop.Services/Nop.Services.csproj">
+      <Build Solution="*|x86" Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/Plugins/">
+    <Project Path="Plugins/Nop.Plugin.DiscountRules.CustomerRoles/Nop.Plugin.DiscountRules.CustomerRoles.csproj" />
+    <Project Path="Plugins/Nop.Plugin.ExchangeRate.EcbExchange/Nop.Plugin.ExchangeRate.EcbExchange.csproj" />
+    <Project Path="Plugins/Nop.Plugin.ExternalAuth.Facebook/Nop.Plugin.ExternalAuth.Facebook.csproj">
+      <Build Solution="*|x86" Project="false" />
+    </Project>
+    <Project Path="Plugins/Nop.Plugin.Misc.AzureBlob/Nop.Plugin.Misc.AzureBlob.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Misc.Brevo/Nop.Plugin.Misc.Brevo.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Misc.CloudflareImages/Nop.Plugin.Misc.CloudflareImages.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Misc.Dynamics365/Nop.Plugin.Misc.Dynamics365.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Misc.Forums/Nop.Plugin.Misc.Forums.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Misc.News/Nop.Plugin.Misc.News.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Misc.NopMobileApp/Nop.Plugin.Misc.NopMobileApp.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Misc.OmnibusDirective/Nop.Plugin.Misc.OmnibusDirective.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Misc.Omnisend/Nop.Plugin.Misc.Omnisend.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Misc.Polls/Nop.Plugin.Misc.Polls.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Misc.PowerBI/Nop.Plugin.Misc.PowerBI.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Misc.RFQ/Nop.Plugin.Misc.RFQ.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Misc.WebApi.Frontend/Nop.Plugin.Misc.WebApi.Frontend.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Misc.Zettle/Nop.Plugin.Misc.Zettle.csproj" />
+    <Project Path="Plugins/Nop.Plugin.MultiFactorAuth.GoogleAuthenticator/Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Payments.CheckMoneyOrder/Nop.Plugin.Payments.CheckMoneyOrder.csproj">
+      <Build Solution="*|x86" Project="false" />
+    </Project>
+    <Project Path="Plugins/Nop.Plugin.Payments.Manual/Nop.Plugin.Payments.Manual.csproj">
+      <Build Solution="*|x86" Project="false" />
+    </Project>
+    <Project Path="Plugins/Nop.Plugin.Payments.PayPalCommerce/Nop.Plugin.Payments.PayPalCommerce.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Pickup.PickupInStore/Nop.Plugin.Pickup.PickupInStore.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Search.Lucene/Nop.Plugin.Search.Lucene.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Shipping.FixedByWeightByTotal/Nop.Plugin.Shipping.FixedByWeightByTotal.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Shipping.UPS/Nop.Plugin.Shipping.UPS.csproj">
+      <Build Solution="*|x86" Project="false" />
+    </Project>
+    <Project Path="Plugins/Nop.Plugin.Sms.Twilio/Nop.Plugin.Sms.Twilio.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Tax.Avalara/Nop.Plugin.Tax.Avalara.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Tax.FixedOrByCountryStateZip/Nop.Plugin.Tax.FixedOrByCountryStateZip.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Widgets.FacebookPixel/Nop.Plugin.Widgets.FacebookPixel.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Widgets.GoogleAnalytics/Nop.Plugin.Widgets.GoogleAnalytics.csproj">
+      <Build Solution="*|x86" Project="false" />
+    </Project>
+    <Project Path="Plugins/Nop.Plugin.Widgets.Jotform/Nop.Plugin.Widgets.Jotform.csproj" />
+    <Project Path="Plugins/Nop.Plugin.Widgets.Swiper/Nop.Plugin.Widgets.Swiper.csproj">
+      <Build Solution="*|x86" Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/Presentation/">
+    <Project Path="Presentation/Nop.Web.Framework/Nop.Web.Framework.csproj">
+      <Build Solution="*|x86" Project="false" />
+    </Project>
+    <Project Path="Presentation/Nop.Web/Nop.Web.csproj">
+      <Build Solution="*|x86" Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/Nop.Tests/Nop.Tests.csproj" />
+  </Folder>
+  <Properties Name="NDepend">
+    <Property Name="Project" Value="&quot;.\NopCommerce.ndproj&quot;" />
+  </Properties>
+</Solution>
