@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Promotion feeds",
+  "FriendlyName": "ChatGPT Shopping",
+  "SystemName": "Feed.ChatGptShopping",
+  "Version": "5.00.1",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Feed.ChatGptShopping.dll",
+  "Description": "This plugin enables integration with ChatGPT Shopping"
+}
