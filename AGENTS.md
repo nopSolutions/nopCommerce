@@ -1,28 +1,55 @@
 # Repository Guidelines
 
-nopCommerce is an open-source ASP.NET Core e-commerce platform written in C# targeting .NET 10. The solution is `src/NopCommerce.sln`; the runnable web app is `Nop.Web`. Deeper, project-specific documentation lives under `@src/context/`.
+nopCommerce is an open-source ASP.NET Core e-commerce platform written in C# and targeting .NET 10. The main solution is `src/NopCommerce.sln`; the runnable web application is `src/Presentation/Nop.Web`.
+
+Deeper project documentation lives under `context/`. Read `context/map/repo-map.md` before making changes that cross multiple modules.
 
 ## Build, Test, and Development Commands
-- `./run.ps1` — primary local entrypoint. Starts the PostgreSQL 16 Docker container and runs `Nop.Web` at `http://localhost:5000`. Flags: `-Port <n>`, `-SkipDb`.
-- `dotnet build src/NopCommerce.sln` — build the full solution. Requires the .NET 10 SDK pinned in `@global.json`.
-- `dotnet test src/Tests/Nop.Tests` — run the test suite (NUnit).
-- `dotnet run --project src/Presentation/Nop.Web` — run the app directly, without the `run.ps1` wrapper (bring your own database).
 
-On first run the app serves a web installer; point it at the running Postgres instance to seed the schema and sample data.
+- `dotnet restore src/NopCommerce.sln` — restore the full solution.
+- `dotnet build src/NopCommerce.sln --no-restore` — build the full solution.
+- `dotnet test src/Tests/Nop.Tests/Nop.Tests.csproj --no-build` — run the NUnit test suite.
+- `dotnet run --project src/Presentation/Nop.Web/Nop.Web.csproj --urls http://localhost:5000` — run the web application; a configured database must already be available.
 
-## Project Structure & Module Organization
-- `src/Libraries/` — `Nop.Core` (domain, infrastructure), `Nop.Data` (data access, FluentMigrator migrations), `Nop.Services` (business logic).
-- `src/Presentation/` — `Nop.Web` (MVC store + admin) and `Nop.Web.Framework` (shared web infrastructure).
-- `src/Plugins/` — 32 `Nop.Plugin.<Group>.<Name>` projects; keep feature-specific integrations here, never in the core libraries.
-- `src/Tests/Nop.Tests` — the single test project.
+The current local baseline has one deterministic failing test: `ProductModelFactoryTests.CanPreparePriceModel`. Treat it as an observed baseline failure until its cause is investigated.
 
-Project references flow one way: `Nop.Web` → `Nop.Services` → `Nop.Data` → `Nop.Core`. Do not add a reference in the reverse direction.
+## Project Structure
 
-## Coding Style & Naming Conventions
-Style is enforced by `@src/.editorconfig`; do not override it per file. Async methods end in `Async`. New plugins use the `Nop.Plugin.<Group>.<Name>` folder and assembly name.
+- `src/Libraries/Nop.Core` — shared domain entities, abstractions, and core infrastructure concepts.
+- `src/Libraries/Nop.Data` — data access, data providers, and database migrations.
+- `src/Libraries/Nop.Services` — application and business services.
+- `src/Presentation/Nop.Web.Framework` — shared ASP.NET Core web infrastructure.
+- `src/Presentation/Nop.Web` — storefront and administration web application.
+- `src/Plugins` — optional features and external integrations.
+- `src/Tests/Nop.Tests` — automated tests.
+
+The main intended dependency direction is: `Nop.Web` → `Nop.Services` → `Nop.Data` → `Nop.Core`.
+
+Verify actual project references, plugin loading, and runtime dependency injection before making architectural changes. Do not introduce reverse project references without explicit justification.
+
+## Coding Conventions
+
+- Follow `.editorconfig`.
+- Preserve the conventions used by neighboring code.
+- Async methods use the `Async` suffix.
+- New plugins follow the `Nop.Plugin.<Group>.<Name>` naming convention.
+- Do not move integration-specific logic into core libraries without an explicit architectural reason.
 
 ## Testing Guidelines
-Tests use NUnit in `src/Tests/Nop.Tests`, organized to mirror the namespace of the code under test. Run one class with `dotnet test src/Tests/Nop.Tests --filter <ClassName>`.
 
-## Commit & Pull Request Guidelines
-Prefix each commit subject with its GitHub issue number, e.g. `#8247 <summary>` (see `git log`). Create one branch per issue as `issue-<n>-<slug>` and open pull requests against `develop`. Reference the issue in the PR description; see `@CONTRIBUTING.md`.
+- Tests use NUnit and live under `src/Tests/Nop.Tests`.
+- Run focused tests while developing and the relevant broader suite before finishing.
+- Do not describe the complete suite as green while the documented baseline failure remains unresolved.
+- Add characterization tests before changing behavior that is poorly covered or difficult to infer.
+
+## Working with the Repository
+
+1. Read `context/map/repo-map.md`.
+2. Identify the affected module and likely blast radius.
+3. Inspect existing tests and relevant Git history.
+4. Record unknowns instead of treating assumptions as facts.
+5. Propose a small, verifiable plan before modifying cross-module behavior.
+
+## Commit and Pull Request Guidelines
+
+Follow `CONTRIBUTING.md` and current repository history for branch, commit, issue, and pull-request conventions. Pull requests target `develop`.
