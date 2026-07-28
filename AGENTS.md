@@ -13,6 +13,16 @@ Deeper project documentation lives under `context/`. Read `context/map/repo-map.
 
 The current local baseline has one deterministic failing test: `ProductModelFactoryTests.CanPreparePriceModel`. Treat it as an observed baseline failure until its cause is investigated.
 
+## Local Development Notes
+
+- Local development requires a configured database; PostgreSQL 16 in Docker is a verified setup.
+- For PostgreSQL, the target database must have the `citext` and `pgcrypto` extensions enabled before nopCommerce migrations run.
+- If the database was created externally rather than by the nopCommerce installer, verify the required extensions manually.
+- Local database settings are stored in `src/Presentation/Nop.Web/App_Data/dataSettings.json`; this file is ignored by Git and must not be committed.
+- Plugin state is stored in `src/Presentation/Nop.Web/App_Data/plugins.json`; this file is also local and ignored by Git.
+- Windows Smart App Control may block locally built plugin assemblies. Do not disable system-wide security controls as a default fix; disable only the affected local plugin when necessary.
+- See `context/foundation/local-development.md` for the complete setup and troubleshooting guide.
+
 ## Project Structure
 
 - `src/Libraries/Nop.Core` — shared domain entities, abstractions, and core infrastructure concepts.
