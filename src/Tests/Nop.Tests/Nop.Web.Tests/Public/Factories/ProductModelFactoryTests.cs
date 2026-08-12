@@ -33,6 +33,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories;
 [TestFixture]
 public class ProductModelFactoryTests : WebTest
 {
+    private IPriceFormatter _priceFormatter;
     private IProductModelFactory _productModelFactory;
     private IProductReviewService _productReviewService;
     private IProductService _productService;
@@ -43,6 +44,7 @@ public class ProductModelFactoryTests : WebTest
     [OneTimeSetUp]
     public void SetUp()
     {
+        _priceFormatter = GetService<IPriceFormatter>();
         _productModelFactory = GetService<IProductModelFactory>();
         _productReviewService = GetService<IProductReviewService>();
         _productService = GetService<IProductService>();
@@ -149,6 +151,89 @@ public class ProductModelFactoryTests : WebTest
         var group = model.Groups.FirstOrDefault();
 
         group.Should().NotBe(null);
+    }
+
+    [Test]
+    public async Task GroupedProductWithSinglePriceIsNotPrefixedWithPriceRange()
+    {
+        var (grouped, associated) = await CreateGroupedProductAsync([10M, 10M]);
+
+        try
+        {
+            var model = await _productModelFactoryForTest.NewPrepareProductPriceModelAsync(grouped, true);
+
+            //every associated product costs the same - there is no range to speak of, so the price
+            //is rendered exactly as formatted, without the "from" prefix wrapped around it
+            model.Price.Should().Be(await _priceFormatter.FormatPriceAsync(model.PriceValue.Value));
+        }
+        finally
+        {
+            await DeleteProductsAsync(grouped, associated);
+        }
+    }
+
+    [Test]
+    public async Task GroupedProductWithDifferentPricesKeepsPriceRangePrefix()
+    {
+        var (grouped, associated) = await CreateGroupedProductAsync([10M, 20M]);
+
+        try
+        {
+            var model = await _productModelFactoryForTest.NewPrepareProductPriceModelAsync(grouped, true);
+
+            //cheapest associated product wins the value, but the label says it is a starting point
+            var formattedPrice = await _priceFormatter.FormatPriceAsync(model.PriceValue.Value);
+            model.Price.Should().NotBe(formattedPrice);
+            model.Price.Should().Contain(formattedPrice);
+        }
+        finally
+        {
+            await DeleteProductsAsync(grouped, associated);
+        }
+    }
+
+    /// <summary>
+    /// Creates a grouped product with one associated product per given price
+    /// </summary>
+    private async Task<(Product Grouped, IList<Product> Associated)> CreateGroupedProductAsync(decimal[] prices)
+    {
+        var grouped = new Product
+        {
+            Name = "Grouped price range test",
+            ProductType = ProductType.GroupedProduct,
+            VisibleIndividually = true,
+            Published = true,
+            CreatedOnUtc = DateTime.UtcNow,
+            UpdatedOnUtc = DateTime.UtcNow
+        };
+        await _productService.InsertProductAsync(grouped);
+
+        var associated = new List<Product>();
+        foreach (var price in prices)
+        {
+            var product = new Product
+            {
+                Name = $"Associated {price}",
+                ProductType = ProductType.SimpleProduct,
+                ParentGroupedProductId = grouped.Id,
+                Price = price,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            await _productService.InsertProductAsync(product);
+            associated.Add(product);
+        }
+
+        return (grouped, associated);
+    }
+
+    private async Task DeleteProductsAsync(Product grouped, IList<Product> associated)
+    {
+        foreach (var product in associated)
+            await _productService.DeleteProductAsync(product);
+
+        await _productService.DeleteProductAsync(grouped);
     }
 
     #region Nested class

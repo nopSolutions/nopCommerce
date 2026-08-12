@@ -246,8 +246,10 @@ public partial class ProductModelFactory : IProductModelFactory
             return;
 
         //we have at least one associated product
-        //find a minimum possible price
+        //find a minimum possible price, and track the maximum one to tell a real range apart
+        //from a single price shared by every associated product
         decimal? minPossiblePrice = null;
+        decimal? maxPossiblePrice = null;
         Product minPriceProduct = null;
         var customer = await _workContext.GetCurrentCustomerAsync();
         foreach (var associatedProduct in associatedProducts)
@@ -257,6 +259,9 @@ public partial class ProductModelFactory : IProductModelFactory
             //calculate price for the maximum quantity if we have tier prices, and choose minimal
             tmpMinPossiblePrice = Math.Min(tmpMinPossiblePrice,
                 (await _priceCalculationService.GetFinalPriceAsync(associatedProduct, customer, store, quantity: int.MaxValue)).finalPrice);
+
+            if (!maxPossiblePrice.HasValue || tmpMinPossiblePrice > maxPossiblePrice.Value)
+                maxPossiblePrice = tmpMinPossiblePrice;
 
             if (minPossiblePrice.HasValue && tmpMinPossiblePrice >= minPossiblePrice.Value)
                 continue;
@@ -284,9 +289,20 @@ public partial class ProductModelFactory : IProductModelFactory
             var (finalPriceBase, _) = await _taxService.GetProductPriceAsync(minPriceProduct, minPossiblePrice.Value);
             var finalPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceBase, await _workContext.GetWorkingCurrencyAsync());
 
+            var formattedPrice = await _priceFormatter.FormatPriceAsync(finalPrice);
+
+            //"from" only makes sense for an actual range; when every associated product costs
+            //the same (a grouped product with a single associated product, most of all) it is
+            //one exact price and the prefix would be misleading. Compared before tax and
+            //currency conversion - both are applied per product and comparing after them
+            //would require pricing every associated product again.
+            var hasPriceRange = maxPossiblePrice > minPossiblePrice;
+
             priceModel.OldPrice = null;
             priceModel.OldPriceValue = null;
-            priceModel.Price = string.Format(await _localizationService.GetResourceAsync("Products.PriceRangeFrom"), await _priceFormatter.FormatPriceAsync(finalPrice));
+            priceModel.Price = hasPriceRange
+                ? string.Format(await _localizationService.GetResourceAsync("Products.PriceRangeFrom"), formattedPrice)
+                : formattedPrice;
             priceModel.PriceValue = finalPrice;
 
             //PAngV default baseprice (used in Germany)
