@@ -369,7 +369,7 @@ public class ProductModelFactoryTests : WebTest
 
                         //PAngV default baseprice (used in Germany)
                         priceModel.BasePricePAngV = await _priceFormatter.FormatBasePriceAsync(product, finalPriceWithDiscount);
-                        priceModel.BasePricePAngVValue = finalPriceWithDiscount;
+                        priceModel.BasePricePAngVValue = await GetBaseProductPriceAsync(product, finalPriceWithDiscount);
                     }
                 }
                 else
@@ -453,7 +453,7 @@ public class ProductModelFactoryTests : WebTest
 
                         //PAngV default baseprice (used in Germany)
                         priceModel.BasePricePAngV = await _priceFormatter.FormatBasePriceAsync(product, finalPriceBase);
-                        priceModel.BasePricePAngVValue = finalPriceBase;
+                        priceModel.BasePricePAngVValue = await GetBaseProductPriceAsync(product, finalPriceBase);
                     }
                 }
                 else
@@ -565,7 +565,7 @@ public class ProductModelFactoryTests : WebTest
 
                         //PAngV baseprice (used in Germany)
                         model.BasePricePAngV = await _priceFormatter.FormatBasePriceAsync(product, finalPriceWithDiscountBase);
-                        model.BasePricePAngVValue = finalPriceWithDiscountBase;
+                        model.BasePricePAngVValue = await GetBaseProductPriceAsync(product, finalPriceWithDiscountBase);
 
                         //rental
                         if (product.IsRental)
