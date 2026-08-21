@@ -5,7 +5,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.Misc.RFQ.Data.Migrations;
 
-[NopMigration("2026/01/13 18:41:53:1677556", "Misc.RFQ add the locale")]
+[NopMigration("2026-01-13 18:41:53", "Misc.RFQ add the locale")]
 public class UpdateDateTimeLocales : Migration
 {
     /// <summary>Collect the UP migration expressions</summary>

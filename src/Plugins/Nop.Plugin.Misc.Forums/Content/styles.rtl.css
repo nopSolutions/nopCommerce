@@ -348,11 +348,11 @@
 }
 
 .topic-actions .edit-topic-button {
-  background: #eee url('./images/edit_.png') right center no-repeat;
+  background: #eee url('./images/edit.png') right center no-repeat;
 }
 
 .topic-actions .delete-topic-button {
-  background: #eee url('./images/remove_.png') right center no-repeat;
+  background: #eee url('./images/remove.png') right center no-repeat;
 }
 
 .topic-actions.lower .actions {

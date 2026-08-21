@@ -5,7 +5,7 @@ using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Domains;
 
 namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Migrations;
 
-[NopMigration("2020/07/30 12:00:00", "Nop.Plugin.MultiFactorAuth.GoogleAuthenticator schema", MigrationProcessType.Installation)]
+[NopMigration("2020-07-30 12:00:00", "Nop.Plugin.MultiFactorAuth.GoogleAuthenticator schema", MigrationProcessType.Installation)]
 public class GoogleAuthenticatorSchemaMigration : Migration
 {
     /// <summary>

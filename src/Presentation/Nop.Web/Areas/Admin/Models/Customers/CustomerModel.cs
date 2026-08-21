@@ -22,6 +22,9 @@ public partial record CustomerModel : BaseNopEntityModel, IAclSupportedModel
         SelectedCustomerRoleIds = new List<int>();
         AvailableCustomerRoles = new List<SelectListItem>();
 
+        SelectedPriceListIds = new List<int>();
+        AvailablePriceLists = new List<SelectListItem>();
+
         AvailableCountries = new List<SelectListItem>();
         AvailableStates = new List<SelectListItem>();
         AvailableVendors = new List<SelectListItem>();
@@ -198,17 +201,23 @@ public partial record CustomerModel : BaseNopEntityModel, IAclSupportedModel
     [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
     public string CustomerRoleNames { get; set; }
 
+    public IList<SelectListItem> AvailableCustomerRoles { get; set; }
+
+    [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
+    public IList<int> SelectedCustomerRoleIds { get; set; }
+
+    //price lists
+    public IList<SelectListItem> AvailablePriceLists { get; set; }
+
+    [NopResourceDisplayName("Admin.Customers.Customers.Fields.PriceLists")]
+    public IList<int> SelectedPriceListIds { get; set; }
+
     //binding with multi-factor authentication provider
     [NopResourceDisplayName("Admin.Customers.Customers.Fields.MultiFactorAuthenticationProvider")]
     public string MultiFactorAuthenticationProvider { get; set; }
 
     [NopResourceDisplayName("Admin.Customers.Customers.Fields.MustChangePassword")]
-    public bool MustChangePassword { get; set; }
-
-    public IList<SelectListItem> AvailableCustomerRoles { get; set; }
-
-    [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
-    public IList<int> SelectedCustomerRoleIds { get; set; }
+    public bool MustChangePassword { get; set; }    
 
     //reward points history
     public bool DisplayRewardPointsHistory { get; set; }

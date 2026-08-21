@@ -11,6 +11,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
@@ -33,6 +34,7 @@ public partial class ProductService : IProductService
     protected readonly IDateRangeService _dateRangeService;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
+    protected readonly IMeasureService _measureService;
     protected readonly IProductAttributeParser _productAttributeParser;
     protected readonly IProductAttributeService _productAttributeService;
     protected readonly IRepository<Category> _categoryRepository;
@@ -74,6 +76,7 @@ public partial class ProductService : IProductService
         IDateRangeService dateRangeService,
         ILanguageService languageService,
         ILocalizationService localizationService,
+        IMeasureService measureService,
         IProductAttributeParser productAttributeParser,
         IProductAttributeService productAttributeService,
         IRepository<Category> categoryRepository,
@@ -110,6 +113,7 @@ public partial class ProductService : IProductService
         _dateRangeService = dateRangeService;
         _languageService = languageService;
         _localizationService = localizationService;
+        _measureService = measureService;
         _productAttributeParser = productAttributeParser;
         _productAttributeService = productAttributeService;
         _categoryRepository = categoryRepository;
@@ -1685,6 +1689,52 @@ public partial class ProductService : IProductService
             .ToListAsync();
 
         return queryFilter.Except(filter).ToArray();
+    }
+
+    /// <summary>
+    /// Get base price (PAngV)
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <param name="productPrice">Product price (in primary currency). Pass null if you want to use a default produce price</param>
+    /// <param name="totalWeight">Total weight of product (with attribute weight adjustment). Pass null if you want to use a default produce weight</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the base price
+    /// </returns>
+    public virtual async Task<decimal?> GetBaseProductPriceAsync(Product product, decimal? productPrice, decimal? totalWeight = null)
+    {
+        ArgumentNullException.ThrowIfNull(product);
+
+        if (!product.BasepriceEnabled)
+            return null;
+
+        var productAmount = totalWeight.HasValue && totalWeight.Value > decimal.Zero ? totalWeight.Value : product.BasepriceAmount;
+
+        //amount in product cannot be 0
+        if (productAmount == 0)
+            return null;
+        
+        var referenceAmount = product.BasepriceBaseAmount;
+        var productUnit = await _measureService.GetMeasureWeightByIdAsync(product.BasepriceUnitId);
+
+        //measure weight cannot be loaded
+        if (productUnit == null)
+            return null;
+
+        var referenceUnit = await _measureService.GetMeasureWeightByIdAsync(product.BasepriceBaseUnitId);
+
+        //measure weight cannot be loaded
+        if (referenceUnit == null)
+            return null;
+
+        productPrice ??= product.Price;
+
+        var basePrice = productPrice.Value /
+                        //do not round. otherwise, it can cause issues
+                        await _measureService.ConvertWeightAsync(productAmount, productUnit, referenceUnit, false) *
+                        referenceAmount;
+        
+        return basePrice;
     }
 
     #endregion

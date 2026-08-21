@@ -226,11 +226,10 @@ public partial interface IPriceFormatter
     /// Format base price (PAngV)
     /// </summary>
     /// <param name="product">Product</param>
-    /// <param name="productPrice">Product price (in primary currency). Pass null if you want to use a default produce price</param>
-    /// <param name="totalWeight">Total weight of product (with attribute weight adjustment). Pass null if you want to use a default produce weight</param>
+    /// <param name="basePrice">base price (PAngV)</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the base price
     /// </returns>
-    Task<string> FormatBasePriceAsync(Product product, decimal? productPrice, decimal? totalWeight = null);
+    Task<string> FormatBasePriceAsync(Product product, decimal? basePrice);
 }

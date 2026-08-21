@@ -116,23 +116,27 @@ public static class ServiceCollectionExtensions
         //create engine and configure service provider
         var engine = EngineContext.Create();
 
-        builder.Services.AddRateLimiter(options =>
+        var commonConfig = Singleton<AppSettings>.Instance.Get<CommonConfig>();
+
+        //add rate limiting if enabled and configured correctly
+        if (commonConfig.PermitLimit > 0)
         {
-            var settings = Singleton<AppSettings>.Instance.Get<CommonConfig>();
+            builder.Services.AddRateLimiter(options =>
+            {
+                options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
+                        factory: partition => new FixedWindowRateLimiterOptions
+                        {
+                            AutoReplenishment = true,
+                            PermitLimit = commonConfig.PermitLimit,
+                            QueueLimit = commonConfig.QueueCount,
+                            Window = TimeSpan.FromMinutes(1)
+                        }));
 
-            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-                RateLimitPartition.GetFixedWindowLimiter(
-                    partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
-                    factory: partition => new FixedWindowRateLimiterOptions
-                    {
-                        AutoReplenishment = true,
-                        PermitLimit = settings.PermitLimit,
-                        QueueLimit = settings.QueueCount,
-                        Window = TimeSpan.FromMinutes(1)
-                    }));
-
-            options.RejectionStatusCode = settings.RejectionStatusCode;
-        });
+                options.RejectionStatusCode = commonConfig.RejectionStatusCode;
+            });
+        }
 
         engine.ConfigureServices(services, builder.Configuration);
     }

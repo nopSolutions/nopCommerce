@@ -3161,7 +3161,7 @@ public partial class OrderProcessingService : IOrderProcessingService
             return false;
 
         //status should be complete
-        if (order.OrderStatus != OrderStatus.Complete)
+        if (_returnRequestSettings.ReturnRequestsForCompletedOrdersOnly && order.OrderStatus != OrderStatus.Complete)
             return false;
 
         //validate allowed number of days

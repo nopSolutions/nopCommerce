@@ -44,6 +44,14 @@ public partial record ReturnRequestSettingsModel : BaseNopModel, ISettingsModel
     public bool ReturnActionsEnabled { get; set; }
     public bool ReturnActionsEnabled_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestsForCompletedOrdersOnly")]
+    public bool ReturnRequestsForCompletedOrdersOnly { get; set; }
+    public bool ReturnRequestsForCompletedOrdersOnly_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.DownloadableProductsReturnRequestsAllowed")]
+    public bool DownloadableProductsReturnRequestsAllowed { get; set; }
+    public bool DownloadableProductsReturnRequestsAllowed_OverrideForStore { get; set; }
+
     public ReturnRequestReasonSearchModel ReturnRequestReasonSearchModel { get; set; } = new();
     public ReturnRequestActionSearchModel ReturnRequestActionSearchModel { get; set; } = new();
 }

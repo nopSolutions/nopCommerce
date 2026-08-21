@@ -13,6 +13,7 @@ using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.PriceLists;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
@@ -33,6 +34,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.PriceLists;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
@@ -81,6 +83,7 @@ public partial class ProductController : BaseAdminController
     protected readonly IPdfService _pdfService;
     protected readonly IPermissionService _permissionService;
     protected readonly IPictureService _pictureService;
+    protected readonly IPriceListService _priceListService;
     protected readonly IProductAttributeFormatter _productAttributeFormatter;
     protected readonly IProductAttributeParser _productAttributeParser;
     protected readonly IProductAttributeService _productAttributeService;
@@ -136,6 +139,7 @@ public partial class ProductController : BaseAdminController
         IPdfService pdfService,
         IPermissionService permissionService,
         IPictureService pictureService,
+        IPriceListService priceListService,
         IProductAttributeFormatter productAttributeFormatter,
         IProductAttributeParser productAttributeParser,
         IProductAttributeService productAttributeService,
@@ -186,6 +190,7 @@ public partial class ProductController : BaseAdminController
         _pdfService = pdfService;
         _permissionService = permissionService;
         _pictureService = pictureService;
+        _priceListService = priceListService;
         _productAttributeFormatter = productAttributeFormatter;
         _productAttributeParser = productAttributeParser;
         _productAttributeService = productAttributeService;
@@ -1074,6 +1079,15 @@ public partial class ProductController : BaseAdminController
             return RedirectToAction("List");
         }
 
+        //validate product price lists
+        var allProductPriceLists = await _priceListService.GetAllPriceListsAsync();
+        var newProductPriceLists = new List<PriceList>();
+        foreach (var productPriceList in allProductPriceLists)
+        {
+            if (model.SelectedPriceListIds.Contains(productPriceList.Id))
+                newProductPriceLists.Add(productPriceList);
+        }
+
         if (ModelState.IsValid)
         {
             //a vendor should have access only to his products
@@ -1093,6 +1107,13 @@ public partial class ProductController : BaseAdminController
             //search engine name
             model.SeName = await _urlRecordService.ValidateSeNameAsync(product, model.SeName, product.Name, true);
             await _urlRecordService.SaveSlugAsync(product, model.SeName, 0);
+
+            //product price lists
+            foreach (var productPriceList in newProductPriceLists)
+            {
+                await _priceListService.InsertPriceListItemAsync(
+                    new PriceListItem { ProductId = product.Id, PriceListId = productPriceList.Id });
+            }
 
             //locales
             await UpdateLocalesAsync(product, model);
@@ -1264,6 +1285,28 @@ public partial class ProductController : BaseAdminController
                 {
                     associatedProduct.ParentGroupedProductId = 0;
                     await _productService.UpdateProductAsync(associatedProduct);
+                }
+            }
+
+            //product price lists
+            var allPriceLists = await _priceListService.GetAllPriceListsAsync();
+            var allProductPriceLists = await _priceListService.GetPriceListsByProductAsync(product);
+            var currentProductPriceListIds = allProductPriceLists.Select(priceList => priceList.Id).ToList();
+
+            //product price lists
+            foreach (var productPriceList in allPriceLists)
+            {
+                if (model.SelectedPriceListIds.Contains(productPriceList.Id))
+                {
+                    //new price list
+                    if (currentProductPriceListIds.All(priceListId => priceListId != productPriceList.Id))
+                        await _priceListService.InsertPriceListItemAsync(new PriceListItem { PriceListId = productPriceList.Id, ProductId = product.Id });
+                }
+                else
+                {
+                    //remove price list
+                    if (currentProductPriceListIds.Any(priceListId => priceListId == productPriceList.Id))
+                        await _priceListService.RemovePriceListItemMappingAsync(product, productPriceList);
                 }
             }
 
@@ -4153,6 +4196,7 @@ public partial class ProductController : BaseAdminController
     [HttpPost]
     //do not validate request token (XSRF)
     [IgnoreAntiforgeryToken]
+    [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Upload3dObject(int productId)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(productId);
@@ -4160,15 +4204,13 @@ public partial class ProductController : BaseAdminController
         var product = await _productService.GetProductByIdAsync(productId)
             ?? throw new ArgumentException("No product found with the specified id");
 
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && (!_vendorSettings.AllowVendorsToUpload3dObjects || product.VendorId != currentVendor.Id))
+            return Json(new { success = false, message = "You cannot upload files" });
+
         var httpPostedFile = await Request.GetFirstOrDefaultFileAsync();
         if (httpPostedFile == null)
-        {
-            return Json(new
-            {
-                success = false,
-                message = "No file uploaded"
-            });
-        }
+            return Json(new { success = false, message = "No file uploaded" });
 
         //remove path (passed in IE)
         var fileName = _fileProvider.GetFileName(httpPostedFile.FileName);

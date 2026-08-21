@@ -16,14 +16,19 @@
 
     //is java-script supported?
     var allowJavaScript = adminAreaSettings.RichEditorAllowJavaScript;
+
+    // Url connector
+    var connectorUrl = Url.Action("Connector", "ElFinder");
 }
 <script src="~/lib_npm/summernote/summernote-bs4.min.js" asp-location="Head"></script>
 <script src="~/lib_npm/elfinder/js/elfinder.min.js" asp-location="Head"></script>
 <script src="~/lib/summernote/summernote-image-attributes.js" asp-location="Head"></script>
+<script src="~/lib/summernote/summernote-link-browse.js" asp-location="Head"></script>
 
 <link href="~/lib_npm/summernote/summernote-bs4.min.css" rel="stylesheet" />
 <link href="~/lib_npm/elfinder/css/elfinder.min.css" rel="stylesheet" />
 <link href="~/lib_npm/elfinder/css/theme.css" rel="stylesheet" />
+<link href="~/lib/summernote/summernote-link-button.css" rel="stylesheet" />
 
 @if (!string.IsNullOrEmpty(language))
 {
@@ -31,13 +36,55 @@
 }
 
 <script asp-location="Head">
-    $(function () {
-        // Summernote
-        function openElFinderDialog(context) {
-            var myCommands = elFinder.prototype._options.commands;
+    const ELFINDER_COMMANDS = elFinder.prototype._options.commands;
+    const ELFINDER_TOOLBAR = [
+        ['back', 'forward'],
+        ['reload'],
+        ['home', 'up'],
+        ['mkdir', 'upload'],
+        ['open', 'download'],
+        ['undo', 'redo'],
+        ['info'],
+        ['quicklook'],
+        ['copy', 'cut', 'paste'],
+        ['rm'],
+        ['duplicate', 'rename', 'edit'],
+        ['selectall', 'selectnone', 'selectinvert'],
+        ['view', 'sort'],
+        ['search']
+    ];
 
+    // ElFinder dialog for link browse button
+    function openElFinderDialogForLink(fileSelectedCallback) {
+        $('<div/>').dialogelfinder({
+            url: '@connectorUrl',
+            lang: '@language',
+            destroyOnClose: true,
+            getFileCallback: function(files, fm) {
+                // If we have a callback from the link dialog button, use it
+                if (fileSelectedCallback && typeof fileSelectedCallback === 'function') {
+                    fileSelectedCallback(files);
+                }
+            },
+            commandsOptions: {
+                getfile: {
+                    oncomplete: 'close',
+                    folders: false
+                }
+            },
+            resizable: false,
+            commands: ELFINDER_COMMANDS,
+            uiOptions: {
+                toolbar: ELFINDER_TOOLBAR
+            }
+        }).dialogelfinder('instance');
+    };
+
+    $(function () {
+        // Summernote - Image insertion via elFinder
+        function openElFinderDialog() {
             $('<div/>').dialogelfinder({
-                url: '@Url.Action("Connector", "ElFinder")',
+                url: '@connectorUrl',
                 lang: '@language',
                 destroyOnClose : true,
                 getFileCallback : function(files, fm) {
@@ -50,31 +97,15 @@
                     }
                 },
                 resizable: false,
-                commands: myCommands,
+                commands: ELFINDER_COMMANDS,
                 uiOptions: {
-                    // toolbar configuration
-                    toolbar: [
-                        ['back', 'forward'],
-                        ['reload'],
-                        ['home', 'up'],
-                        ['mkdir', 'upload'],
-                        ['open', 'download'],
-                        ['undo', 'redo'],
-                        ['info'],
-                        ['quicklook'],
-                        ['copy', 'cut', 'paste'],
-                        ['rm'],
-                        ['duplicate', 'rename', 'edit'],
-                        ['selectall', 'selectnone', 'selectinvert'],
-                        ['view', 'sort'],
-                        ['search']
-                    ]
+                    toolbar: ELFINDER_TOOLBAR
                 }
             }).dialogelfinder('instance');
         }
 
         //Image button for elFinder
-        var ElFinderImageButton = function (context) {
+        var ElFinderImageButton = function () {
             var ui = $.summernote.ui;
 
             // create button
@@ -82,7 +113,7 @@
                 contents: '<i class="fa fa-image"/>',
                 tooltip: 'Insert image',
                 click: function () {
-                    openElFinderDialog(context);
+                    openElFinderDialog();
                 }
             }).render();
         };
@@ -98,6 +129,7 @@
                 ['view', ['undo', 'redo']],
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']],
                 ['fontsize', ['fontsize']],
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],

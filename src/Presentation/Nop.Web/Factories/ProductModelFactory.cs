@@ -14,6 +14,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -248,8 +249,9 @@ public partial class ProductModelFactory : IProductModelFactory
             priceModel.PriceValue = finalPrice;
 
             //PAngV default baseprice (used in Germany)
-            priceModel.BasePricePAngV = await _priceFormatter.FormatBasePriceAsync(product, finalPriceBase);
-            priceModel.BasePricePAngVValue = finalPriceBase;
+            var basePrice = await _productService.GetBaseProductPriceAsync(product, finalPrice);
+            priceModel.BasePricePAngV = await _priceFormatter.FormatBasePriceAsync(product, basePrice);
+            priceModel.BasePricePAngVValue = basePrice;
         }
     }
 
@@ -532,8 +534,9 @@ public partial class ProductModelFactory : IProductModelFactory
         }
 
         //PAngV default base price (used in Germany)
-        model.BasePricePAngV = await _priceFormatter.FormatBasePriceAsync(product, finalPriceWithDiscountBase);
-        model.BasePricePAngVValue = finalPriceWithDiscountBase;
+        var basePrice = await _productService.GetBaseProductPriceAsync(product, finalPriceWithDiscount);
+        model.BasePricePAngV = await _priceFormatter.FormatBasePriceAsync(product, basePrice);
+        model.BasePricePAngVValue = basePrice;
 
         return model;
     }

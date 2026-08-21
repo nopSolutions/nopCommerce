@@ -338,6 +338,47 @@ public partial class PriceListService : IPriceListService
     }
 
     /// <summary>
+    /// Gets list of product price lists
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the price lists of product
+    /// </returns>
+    public virtual async Task<IList<PriceList>> GetPriceListsByProductAsync(Product product)
+    {
+        ArgumentNullException.ThrowIfNull(product);
+
+        var query =
+            from plc in _priceListItemRepository.Table
+            join pl in _priceListRepository.Table on plc.PriceListId equals pl.Id
+            where plc.ProductId == product.Id
+            orderby pl.Id
+            select pl;
+
+        return await query.ToListAsync();
+    }
+
+    /// <summary>
+    /// Remove a product-price list mapping
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <param name="priceList">Price list</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task RemovePriceListItemMappingAsync(Product product, PriceList priceList)
+    {
+        ArgumentNullException.ThrowIfNull(product);
+
+        ArgumentNullException.ThrowIfNull(priceList);
+
+        var mapping = await _priceListItemRepository.Table
+            .SingleOrDefaultAsync(plc => plc.ProductId == product.Id && plc.PriceListId == priceList.Id);
+
+        if (mapping != null)
+            await _priceListItemRepository.DeleteAsync(mapping);
+    }
+
+    /// <summary>
     /// Deletes a price list item
     /// </summary>
     /// <param name="priceListItem">Price list item</param>
@@ -408,6 +449,47 @@ public partial class PriceListService : IPriceListService
     public virtual async Task<PriceListCustomer> GetPriceListCustomerByIdAsync(int priceListCustomerId)
     {
         return await _priceListCustomerRepository.GetByIdAsync(priceListCustomerId);
+    }
+
+    /// <summary>
+    /// Gets list of customer price lists
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the price lists of customer
+    /// </returns>
+    public virtual async Task<IList<PriceList>> GetPriceListsByCustomerAsync(Customer customer)
+    {
+        ArgumentNullException.ThrowIfNull(customer);
+
+        var query =
+            from plc in _priceListCustomerRepository.Table
+            join pl in _priceListRepository.Table on plc.PriceListId equals pl.Id
+            where plc.CustomerId == customer.Id
+            orderby pl.Id
+            select pl;
+
+        return await query.ToListAsync();
+    }
+
+    /// <summary>
+    /// Remove a customer-price list mapping
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="priceList">Price list</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task RemoveCustomerPriceListMappingAsync(Customer customer, PriceList priceList)
+    {
+        ArgumentNullException.ThrowIfNull(customer);
+
+        ArgumentNullException.ThrowIfNull(priceList);
+
+        var mapping = await _priceListCustomerRepository.Table
+            .SingleOrDefaultAsync(plc => plc.CustomerId == customer.Id && plc.PriceListId == priceList.Id);
+
+        if (mapping != null)
+            await _priceListCustomerRepository.DeleteAsync(mapping);
     }
 
     /// <summary>

@@ -5,7 +5,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.Misc.RFQ.Data.Migrations;
 
-[NopMigration("2025/11/01 18:41:53:1677556", "Misc.RFQ add the settings")]
+[NopMigration("2025-11-01 18:41:53", "Misc.RFQ add the settings")]
 public class AddSettings : Migration
 {
     /// <summary>Collect the UP migration expressions</summary>

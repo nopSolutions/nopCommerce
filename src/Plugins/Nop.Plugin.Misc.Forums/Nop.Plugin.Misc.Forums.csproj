@@ -36,7 +36,6 @@
     <None Remove="Content\images\edit_.png" />
     <None Remove="Content\images\move.png" />
     <None Remove="Content\images\new.png" />
-    <None Remove="Content\images\remove_.png" />
     <None Remove="Content\images\reply.png" />
     <None Remove="Content\images\topic-type1.png" />
     <None Remove="Content\images\topic-type2.png" />
@@ -47,6 +46,7 @@
     <None Remove="Content\images\vote-up.png" />
     <None Remove="Content\images\watch.png" />
     <None Remove="Content\js\marked.umd.js" />
+    <None Remove="Content\js\purify.js" />
     <None Remove="Content\js\mdeditor\icons\bold.svg" />
     <None Remove="Content\js\mdeditor\icons\code-block.svg" />
     <None Remove="Content\js\mdeditor\icons\code.svg" />
@@ -137,16 +137,13 @@
     <Content Include="Admin\Views\_ViewStart.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\images\edit_.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\images\move.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\images\new.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\images\remove_.png">
+    <Content Include="Content\images\remove.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\images\reply.png">
@@ -232,6 +229,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\js\marked.umd.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\purify.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\js\mdeditor\icons\bold.svg">

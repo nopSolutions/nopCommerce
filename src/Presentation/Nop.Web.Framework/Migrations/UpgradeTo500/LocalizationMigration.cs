@@ -446,6 +446,10 @@ public class LocalizationMigration : MigrationBase
             "Payment.ExpireMonth.Required",
             "Payment.ExpireYear.Required",
             "Payment.SelectCreditCard",
+
+            //#8170
+            "Admin.ConfigurationSteps.PaymentMethods.Manual.Title",
+            "Admin.ConfigurationSteps.PaymentMethods.Manual.Text",
         });
 
         #endregion
@@ -700,6 +704,8 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.Products.Multimedia.Object3d.Fields.AltAttribute"] = "Alternative text",
             ["Admin.Catalog.Products.Multimedia.Object3d.Fields.AltAttribute.Hint"] = "The \"alt\" attribute for the \"model-viewer\" HTML element.",
             ["Admin.Catalog.Products.Multimedia.Object3d.Save"] = "Save",
+            ["Admin.Configuration.Settings.Vendor.AllowVendorsToUpload3dObjects"] = "Allow vendors to upload 3D models",
+            ["Admin.Configuration.Settings.Vendor.AllowVendorsToUpload3dObjects.Hint"] = "Check to allow vendors to upload product 3D models.",
 
             ["Admin.Configuration.Settings.Media.BlockTitle.Product3dObject"] = "Product 3D models",
             ["Admin.Configuration.Settings.Media.Object3dAutoRotateEnabled"] = "Auto-rotate",
@@ -825,6 +831,24 @@ public class LocalizationMigration : MigrationBase
             //#8093
             ["Admin.Address.Fields.PhoneNumber.NotValid"] = "Phone number is not valid.",
             ["Admin.Customers.Customers.Fields.Phone.NotValid"] = "Phone number is not valid.",
+
+            //#3456
+            ["Admin.Configuration.Settings.Order.ReturnRequestsForCompletedOrdersOnly"] = "Allow return requests only for completed orders",
+            ["Admin.Configuration.Settings.Order.ReturnRequestsForCompletedOrdersOnly.Hint"] = "Check this option to allow return requests only for completed orders.",
+
+            //#8229
+            ["Admin.Configuration.Settings.Order.DownloadableProductsReturnRequestsAllowed"] = "Allow return requests for downloadable products",
+            ["Admin.Configuration.Settings.Order.DownloadableProductsReturnRequestsAllowed.Hint"] = "Check this option to allow return requests for downloadable products.",
+
+            //#8247
+            ["Admin.Customers.Customers.Fields.PriceLists"] = "Price lists",
+            ["Admin.Customers.Customers.Fields.PriceLists.Hint"] = "Choose price lists of this user.",
+            ["Admin.Customers.Customers.Fields.PriceLists.NoPriceList"] = "No price lists available. Create at least one price list before mapping.",
+
+            //#8248
+            ["Admin.Catalog.Products.Fields.PriceLists"] = "Price lists",
+            ["Admin.Catalog.Products.Fields.PriceLists.Hint"] = "Choose price lists of this product.",
+            ["Admin.Catalog.Products.Fields.PriceLists.NoPriceList"] = "No price lists available. Create at least one price list before mapping.",
         });
 
         #endregion

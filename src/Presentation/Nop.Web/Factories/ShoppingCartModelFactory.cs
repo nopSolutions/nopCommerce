@@ -87,6 +87,7 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
     protected readonly OrderSettings _orderSettings;
+    protected readonly ReturnRequestSettings _returnRequestSettings;
     protected readonly RewardPointsSettings _rewardPointsSettings;
     protected readonly ShippingSettings _shippingSettings;
     protected readonly ShoppingCartSettings _shoppingCartSettings;
@@ -142,6 +143,7 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
         IWorkContext workContext,
         MediaSettings mediaSettings,
         OrderSettings orderSettings,
+        ReturnRequestSettings returnRequestSettings,
         RewardPointsSettings rewardPointsSettings,
         ShippingSettings shippingSettings,
         ShoppingCartSettings shoppingCartSettings,
@@ -192,6 +194,7 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
         _workContext = workContext;
         _mediaSettings = mediaSettings;
         _orderSettings = orderSettings;
+        _returnRequestSettings = returnRequestSettings;
         _rewardPointsSettings = rewardPointsSettings;
         _shippingSettings = shippingSettings;
         _shoppingCartSettings = shoppingCartSettings;
@@ -902,7 +905,10 @@ public partial class ShoppingCartModelFactory : IShoppingCartModelFactory
             model.MinOrderSubtotalWarning = string.Format(await _localizationService.GetResourceAsync("Checkout.MinOrderSubtotalAmount"), await _priceFormatter.FormatPriceAsync(minOrderSubtotalAmount, true, false));
         }
 
-        model.TermsOfServiceOnShoppingCartPage = _orderSettings.TermsOfServiceOnShoppingCartPage;
+        var termsForDownloadableProducts = !_returnRequestSettings.DownloadableProductsReturnRequestsAllowed &&
+            await _productService.HasAnyDownloadableProductAsync(cart.Select(ci => ci.ProductId).ToArray());
+
+        model.TermsOfServiceOnShoppingCartPage = termsForDownloadableProducts || _orderSettings.TermsOfServiceOnShoppingCartPage;
         model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;
         model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
         model.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoShoppingCart;

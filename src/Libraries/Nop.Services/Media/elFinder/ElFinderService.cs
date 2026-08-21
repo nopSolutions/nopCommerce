@@ -65,6 +65,9 @@ public partial class ElFinderService : IElFinderService
 
         var driver = new FileSystemDriver();
 
+        var uploadAllow = new[] { "image", "text/plain", "application/pdf" };
+        var uploadDeny = new[] { "text/csv" };
+
         // Get root volume configuration
         var root = new RootVolume(
             rootPath,
@@ -77,8 +80,8 @@ public partial class ElFinderService : IElFinderService
             Alias = NopElFinderDefaults.DefaultRootDirectory,
             MaxUploadSizeInMb = NopElFinderDefaults.MaxUploadFileSize,
             // Upload file type constraints
-            UploadAllow = new[] { "image" },
-            UploadDeny = new[] { "text/csv" },
+            UploadAllow = uploadAllow,
+            UploadDeny = uploadDeny,
             UploadOrder = new[] { "allow", "deny" }
         };
 

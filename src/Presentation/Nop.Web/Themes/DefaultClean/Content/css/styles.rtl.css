@@ -542,7 +542,7 @@ label, label + * {
 }
 
 .cart .product-quantity div.up {
-  background: url('../images/vote-up.png') no-repeat 50% 50%;
+  background: url('../images/up.png') no-repeat 50% 50%;
   width: 50px;
   height: 25px;
   border: 0;
@@ -550,7 +550,7 @@ label, label + * {
 }
 
 .cart .product-quantity div.down {
-  background: url('../images/vote-down.png') no-repeat 50% 50%;
+  background: url('../images/down.png') no-repeat 50% 50%;
   width: 50px;
   height: 25px;
   border: 0;
@@ -1748,12 +1748,17 @@ label, label + * {
   padding-right: 8px;
   flex-grow: 1;
 }
-
+  
 .price-range-filter .selected-price-range {
   padding: 5px 0;
+  overflow: hidden;
 }
 
 .price-range-filter .selected-price-range .from {
+  float: right;
+}
+
+.price-range-filter .selected-price-range .to {
   float: left;
 }
 

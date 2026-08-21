@@ -5,7 +5,7 @@ using Nop.Plugin.Misc.RFQ.Domains;
 
 namespace Nop.Plugin.Misc.RFQ.Data.Migrations;
 
-[NopMigration("2024/07/03 10:30:08:1687554", "Nop.Plugin.Misc.RFQ schema", MigrationProcessType.Installation)]
+[NopMigration("2024-07-03 10:30:08", "Nop.Plugin.Misc.RFQ schema", MigrationProcessType.Installation)]
 public class SchemaMigration : Migration
 {
     /// <summary>

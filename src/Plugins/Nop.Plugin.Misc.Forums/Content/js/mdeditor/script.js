@@ -50,7 +50,7 @@ function initializeMarkdownEditor(textareaId, iconsPath) {
     // Use marked.parse() for conversion
     // Add GFM (GitHub Flavored Markdown) option for better compatibility
     // and breaks option to treat newlines as <br>
-    htmlOutput.innerHTML = marked.parse(markdownText, { gfm: true, breaks: true });
+    htmlOutput.innerHTML = DOMPurify.sanitize(marked.parse(markdownText, { gfm: true, breaks: true }));
   }
 
   // Helper to insert text into textarea

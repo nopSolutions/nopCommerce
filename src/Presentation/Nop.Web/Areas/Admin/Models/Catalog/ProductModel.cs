@@ -58,6 +58,9 @@ public partial record ProductModel : BaseNopEntityModel,
         AvailableProductTags = new List<SelectListItem>();
         SelectedProductTags = new List<string>();
 
+        SelectedPriceListIds = new List<int>();
+        AvailablePriceLists = new List<SelectListItem>();
+
         RelatedProductSearchModel = new RelatedProductSearchModel();
         CrossSellProductSearchModel = new CrossSellProductSearchModel();
         FilterLevelValueSearchModel = new FilterLevelValueSearchModel();
@@ -435,6 +438,12 @@ public partial record ProductModel : BaseNopEntityModel,
     [NopResourceDisplayName("Admin.Catalog.Products.Fields.Discounts")]
     public IList<int> SelectedDiscountIds { get; set; }
     public IList<SelectListItem> AvailableDiscounts { get; set; }
+
+    //price lists
+    public IList<SelectListItem> AvailablePriceLists { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Products.Fields.PriceLists")]
+    public IList<int> SelectedPriceListIds { get; set; }
 
     //vendor
     public bool IsLoggedInAsVendor { get; set; }

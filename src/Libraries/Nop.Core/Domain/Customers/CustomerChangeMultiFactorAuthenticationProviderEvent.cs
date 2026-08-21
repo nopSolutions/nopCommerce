@@ -14,7 +14,7 @@ public partial class CustomerChangeMultiFactorAuthenticationProviderEvent
         Customer = customer;
     }
 
-    // <summary>
+    /// <summary>
     /// Get or set the customer
     /// </summary>
     public Customer Customer { get; }

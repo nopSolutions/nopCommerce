@@ -56,4 +56,14 @@ public partial class ReturnRequestSettings : ISettings
     /// Gets or sets a number of days for withdrawal link. Set to 0 if it doesn't expire.
     /// </summary>
     public int WithdrawalLinkDaysValid { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether return requests are available only for completed orders
+    /// </summary>
+    public bool ReturnRequestsForCompletedOrdersOnly { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether return requests are allowed for downloadable products
+    /// </summary>
+    public bool DownloadableProductsReturnRequestsAllowed { get; set; }
 }

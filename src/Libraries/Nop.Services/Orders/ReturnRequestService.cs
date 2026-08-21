@@ -17,6 +17,7 @@ public partial class ReturnRequestService : IReturnRequestService
     protected readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
     protected readonly IRepository<OrderItem> _orderItemRepository;
     protected readonly IRepository<Product> _productRepository;
+    protected readonly ReturnRequestSettings _returnRequestSettings;
 
     #endregion
 
@@ -26,13 +27,15 @@ public partial class ReturnRequestService : IReturnRequestService
         IRepository<ReturnRequestAction> returnRequestActionRepository,
         IRepository<ReturnRequestReason> returnRequestReasonRepository,
         IRepository<OrderItem> orderItemRepository,
-        IRepository<Product> productRepository)
+        IRepository<Product> productRepository,
+        ReturnRequestSettings returnRequestSettings)
     {
         _returnRequestRepository = returnRequestRepository;
         _returnRequestActionRepository = returnRequestActionRepository;
         _returnRequestReasonRepository = returnRequestReasonRepository;
         _orderItemRepository = orderItemRepository;
         _productRepository = productRepository;
+        _returnRequestSettings = returnRequestSettings;
     }
 
     #endregion
@@ -144,7 +147,7 @@ public partial class ReturnRequestService : IReturnRequestService
                 from aroi in alreadyRequestedForReturn.DefaultIfEmpty()
                 join p in _productRepository.Table
                     on oi.ProductId equals p.Id
-                where !p.NotReturnable && oi.OrderId == orderId
+                where !p.NotReturnable && oi.OrderId == orderId && (_returnRequestSettings.DownloadableProductsReturnRequestsAllowed || !p.IsDownload)
                 select new ReturnableOrderItem
                 {
                     AvailableQuantityForReturn = aroi != null

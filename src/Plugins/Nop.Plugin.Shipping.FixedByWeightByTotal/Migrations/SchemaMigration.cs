@@ -5,7 +5,7 @@ using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Migrations;
 
-[NopMigration("2020/02/03 08:40:55:1687541", "Shipping.FixedByWeightByTotal base schema", MigrationProcessType.Installation)]
+[NopMigration("2020-02-03 08:40:55", "Shipping.FixedByWeightByTotal base schema", MigrationProcessType.Installation)]
 public class SchemaMigration : Migration
 {
     /// <summary>

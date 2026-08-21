@@ -208,6 +208,8 @@ public partial class NopUrlHelper : INopUrlHelper
         if (httpContext is null)
             return string.Empty;
 
+        var fragmentString = string.IsNullOrEmpty(fragment) ? FragmentString.Empty : new FragmentString(fragment[0] != '#' ? $"#{fragment}" : fragment);
+
         if (!string.IsNullOrEmpty(protocol) || !string.IsNullOrEmpty(host))
         {
             //return URI with an absolute path
@@ -216,14 +218,14 @@ public partial class NopUrlHelper : INopUrlHelper
                 values: values,
                 scheme: protocol,
                 host: !string.IsNullOrEmpty(host) ? new HostString(host) : null,
-                fragment: new FragmentString(fragment)) ?? string.Empty;
+                fragment: fragmentString) ?? string.Empty;
         }
 
         //or return path
         return _linkGenerator.GetPathByRouteValues(httpContext,
             routeName: routeName,
             values: values,
-            fragment: new FragmentString(fragment)) ?? string.Empty;
+            fragment: fragmentString) ?? string.Empty;
     }
 
     #endregion

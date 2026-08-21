@@ -21,6 +21,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
+using Nop.Services.PriceLists;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -64,6 +65,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly IOrderService _orderService;
     protected readonly IPictureService _pictureService;
     protected readonly IPriceFormatter _priceFormatter;
+    protected readonly IPriceListService _priceListService;
     protected readonly IProductAttributeFormatter _productAttributeFormatter;
     protected readonly IProductService _productService;
     protected readonly IRewardPointService _rewardPointService;
@@ -108,6 +110,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         IOrderService orderService,
         IPictureService pictureService,
         IPriceFormatter priceFormatter,
+        IPriceListService priceListService,
         IProductAttributeFormatter productAttributeFormatter,
         IProductService productService,
         IRewardPointService rewardPointService,
@@ -148,6 +151,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _orderService = orderService;
         _pictureService = pictureService;
         _priceFormatter = priceFormatter;
+        _priceListService = priceListService;
         _productAttributeFormatter = productAttributeFormatter;
         _productService = productService;
         _rewardPointService = rewardPointService;
@@ -692,6 +696,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 model.VatNumber = customer.VatNumber;
                 model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync(customer.VatNumberStatus);
                 model.SelectedCustomerRoleIds = (await _customerService.GetCustomerRoleIdsAsync(customer)).ToList();
+                model.SelectedPriceListIds = (await _priceListService.GetPriceListsByCustomerAsync(customer)).Select(pl => pl.Id).ToList();
                 model.MustChangePassword = customer.MustChangePassword;
 
                 //prepare model affiliate
@@ -779,6 +784,15 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             Text = role.Name,
             Value = role.Id.ToString(),
             Selected = model.SelectedCustomerRoleIds.Contains(role.Id)
+        }).ToList();
+
+        //prepare available price lists
+        var availablePriceLists = await _priceListService.GetAllPriceListsAsync();
+        model.AvailablePriceLists = availablePriceLists.Select(priceList => new SelectListItem
+        {
+            Text = priceList.Name,
+            Value = priceList.Id.ToString(),
+            Selected = model.SelectedPriceListIds.Contains(priceList.Id)
         }).ToList();
 
         //prepare available time zones

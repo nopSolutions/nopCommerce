@@ -34,10 +34,15 @@ public partial class EventPublisher : IEventPublisher
             }
             catch (Exception exception)
             {
+                //we should throw exception on AppStartedEvent, otherwise it will be swallowed and the app will start in not configured properly
+                if (@event is AppStartedEvent)
+                    throw;
+
                 //log error, we put in to nested try-catch to prevent possible cyclic (if some error occurs)
                 try
                 {
                     var logger = EngineContext.Current.Resolve<ILogger>();
+
                     if (logger == null)
                         return;
 

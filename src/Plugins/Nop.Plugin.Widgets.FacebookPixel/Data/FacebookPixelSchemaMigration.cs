@@ -5,7 +5,7 @@ using Nop.Plugin.Widgets.FacebookPixel.Domain;
 
 namespace Nop.Plugin.Widgets.FacebookPixel.Data;
 
-[NopMigration("2020/03/25 12:00:00", "Widgets.FacebookPixel base schema", MigrationProcessType.Installation)]
+[NopMigration("2020-03-25 12:00:00", "Widgets.FacebookPixel base schema", MigrationProcessType.Installation)]
 public class FacebookPixelSchemaMigration : Migration
 {
 

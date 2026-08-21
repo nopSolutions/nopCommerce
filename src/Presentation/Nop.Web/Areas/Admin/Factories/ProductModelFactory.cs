@@ -24,6 +24,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
+using Nop.Services.PriceLists;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
@@ -64,6 +65,7 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly IOrderService _orderService;
     protected readonly IPictureService _pictureService;
     protected readonly IPriceFormatter _priceFormatter;
+    protected readonly IPriceListService _priceListService;
     protected readonly IProductAttributeFormatter _productAttributeFormatter;
     protected readonly IProductAttributeParser _productAttributeParser;
     protected readonly IProductAttributeService _productAttributeService;
@@ -113,6 +115,7 @@ public partial class ProductModelFactory : IProductModelFactory
         IOrderService orderService,
         IPictureService pictureService,
         IPriceFormatter priceFormatter,
+        IPriceListService priceListService,
         IProductAttributeFormatter productAttributeFormatter,
         IProductAttributeParser productAttributeParser,
         IProductAttributeService productAttributeService,
@@ -158,6 +161,7 @@ public partial class ProductModelFactory : IProductModelFactory
         _orderService = orderService;
         _pictureService = pictureService;
         _priceFormatter = priceFormatter;
+        _priceListService = priceListService;
         _productAttributeFormatter = productAttributeFormatter;
         _productAttributeParser = productAttributeParser;
         _productAttributeService = productAttributeService;
@@ -920,6 +924,7 @@ public partial class ProductModelFactory : IProductModelFactory
                     .Select(productCategory => productCategory.CategoryId).ToList();
                 model.SelectedManufacturerIds = (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id, true))
                     .Select(productManufacturer => productManufacturer.ManufacturerId).ToList();
+                model.SelectedPriceListIds = (await _priceListService.GetPriceListsByProductAsync(product)).Select(pl => pl.Id).ToList();
             }
 
             //prepare copy product model
@@ -1037,6 +1042,15 @@ public partial class ProductModelFactory : IProductModelFactory
             .Select(weight => new SelectListItem { Text = weight.Name, Value = weight.Id.ToString() }).ToList();
         model.AvailableBasepriceUnits = availableMeasureWeights;
         model.AvailableBasepriceBaseUnits = availableMeasureWeights;
+
+        //prepare available price lists
+        var availablePriceLists = await _priceListService.GetAllPriceListsAsync();
+        model.AvailablePriceLists = availablePriceLists.Select(priceList => new SelectListItem
+        {
+            Text = priceList.Name,
+            Value = priceList.Id.ToString(),
+            Selected = model.SelectedPriceListIds.Contains(priceList.Id)
+        }).ToList();
 
         //prepare model categories
         await _baseAdminModelFactory.PrepareCategoriesAsync(model.AvailableCategories, false);

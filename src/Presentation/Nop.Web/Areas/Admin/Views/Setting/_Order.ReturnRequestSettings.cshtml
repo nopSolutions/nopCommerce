@@ -24,6 +24,16 @@
     </div>
     <div class="form-group row">
         <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ReturnRequestSettings.DownloadableProductsReturnRequestsAllowed_OverrideForStore" asp-input="ReturnRequestSettings.DownloadableProductsReturnRequestsAllowed" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ReturnRequestSettings.DownloadableProductsReturnRequestsAllowed" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ReturnRequestSettings.DownloadableProductsReturnRequestsAllowed" />
+            <span asp-validation-for="ReturnRequestSettings.DownloadableProductsReturnRequestsAllowed"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ReturnRequestSettings.UseEuWithdrawalLocales_OverrideForStore" asp-input="ReturnRequestSettings.UseEuWithdrawalLocales" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ReturnRequestSettings.UseEuWithdrawalLocales" />
         </div>
@@ -50,6 +60,16 @@
         <div class="col-md-9">
             <nop-editor asp-for="ReturnRequestSettings.GuestReturnRequestsAllowed" />
             <span asp-validation-for="ReturnRequestSettings.GuestReturnRequestsAllowed"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ReturnRequestSettings.ReturnRequestsForCompletedOrdersOnly_OverrideForStore" asp-input="ReturnRequestSettings.ReturnRequestsForCompletedOrdersOnly" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ReturnRequestSettings.ReturnRequestsForCompletedOrdersOnly" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ReturnRequestSettings.ReturnRequestsForCompletedOrdersOnly" />
+            <span asp-validation-for="ReturnRequestSettings.ReturnRequestsForCompletedOrdersOnly"></span>
         </div>
     </div>
     <div class="form-group row advanced-setting">

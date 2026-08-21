@@ -132,6 +132,24 @@ public partial interface IPriceListService
     Task<PriceListItem> GetPriceListItemByIdAsync(int priceListItemId);
 
     /// <summary>
+    /// Gets list of product price lists
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the price lists of product
+    /// </returns>
+    Task<IList<PriceList>> GetPriceListsByProductAsync(Product product);
+
+    /// <summary>
+    /// Remove a product-price list mapping
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <param name="priceList">Price list</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task RemovePriceListItemMappingAsync(Product product, PriceList priceList);
+
+    /// <summary>
     /// Deletes a price list item
     /// </summary>
     /// <param name="priceListItem">Price list item</param>
@@ -174,6 +192,24 @@ public partial interface IPriceListService
     /// The task result contains the price list item
     /// </returns>
     Task<PriceListCustomer> GetPriceListCustomerByIdAsync(int priceListCustomerId);
+
+    /// <summary>
+    /// Gets list of customer price lists
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the price lists of customer
+    /// </returns>
+    Task<IList<PriceList>> GetPriceListsByCustomerAsync(Customer customer);
+
+    /// <summary>
+    /// Remove a customer-price list mapping
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="priceList">Price list</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task RemoveCustomerPriceListMappingAsync(Customer customer, PriceList priceList);
 
     /// <summary>
     /// Deletes a price list customer mapping

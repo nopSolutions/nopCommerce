@@ -3660,6 +3660,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Price.Hint">
     <Value>The price of the product. You can manage currency by selecting Configuration &gt; Currencies.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.PriceLists">
+    <Value>Price lists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.PriceLists.Hint">
+    <Value>Choose price lists for this product.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductAvailabilityRange">
     <Value>Product availability range</Value>
   </LocaleResource>
@@ -8924,6 +8930,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisplayPickupInStoreOnShippingMethodPage.Hint">
     <Value>Display "Pickup in store" options on "Shipping method" page; otherwise display on the "Shipping address" page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DownloadableProductsReturnRequestsAllowed">
+    <Value>Allow return requests for downloadable products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DownloadableProductsReturnRequestsAllowed.Hint">
+    <Value>Check this option to allow return requests for downloadable products.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ExportWithProducts">
     <Value>Export orders with products</Value>
   </LocaleResource>
@@ -9121,6 +9133,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestsEnabled.Hint">
     <Value>Check if you want to allow customers to submit return requests for items they've previously purchased.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestsForCompletedOrdersOnly">
+    <Value>Allow return requests only for completed orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestsForCompletedOrdersOnly.Hint">
+    <Value>Check this option to allow return requests only for completed orders.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestSettings">
     <Value>Return request (withdrawal button) settings</Value>
@@ -10013,6 +10031,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToImportProducts.Hint">
     <Value>Check if vendors are allowed to import products.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToUpload3dObjects">
+    <Value>Allow vendors to upload 3D models</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToUpload3dObjects.Hint">
+    <Value>Check to allow vendors to upload product 3D models.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.BlockTitle.Catalog">
     <Value>Catalog</Value>
   </LocaleResource>
@@ -10752,13 +10776,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.Configure.Title">
     <Value>Configure a payment method</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.Manual.Text">
-    <Value><![CDATA[This is a special payment plugin that allows all orders to be successfully entered on the website, but it does NOT really charge a customer or make any calls to any live payment gateway. This payment method is recommended if you want to perform one of the following: <ul><li>Process all orders offline</li><li>Process them manually via another back-office system</li><li>Test the site end-to-end before going live</li></ul>]]></Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.Manual.Title">
-    <Value>Credit card (manual)</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.PayPalCommerce.Configure.Text">
     <Value>Now we’ll configure the PayPal Commerce payment method.</Value>
   </LocaleResource>
@@ -12609,6 +12627,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.PhoneSmsVerified.Hint">
     <Value>Indicates whether the customer's phone number has been verified via SMS.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.PriceLists">
+    <Value>Price lists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.PriceLists.Hint">
+    <Value>Choose price lists of this user.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.PriceLists.NoPriceList">
+    <Value>No price lists available. Create at least one price list before mapping.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.RegisteredInStore">
     <Value>Registered in the store</Value>

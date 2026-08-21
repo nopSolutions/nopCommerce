@@ -937,7 +937,8 @@ public partial class ShoppingCartController : BasePublicController
             var (finalPriceWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, finalPrice);
             var finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithDiscountBase, await _workContext.GetWorkingCurrencyAsync());
             price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
-            basepricepangv = await _priceFormatter.FormatBasePriceAsync(product, finalPriceWithDiscountBase, totalWeight);
+            var basePrice = await _productService.GetBaseProductPriceAsync(product, finalPriceWithDiscount, totalWeight);
+            basepricepangv = await _priceFormatter.FormatBasePriceAsync(product, basePrice);
         }
 
         //stock

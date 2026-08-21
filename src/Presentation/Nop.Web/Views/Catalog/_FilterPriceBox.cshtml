@@ -12,19 +12,41 @@
             <span class="to"></span>
         </div>
         <div id="price-range-slider"></div>
+
         <script asp-location="Footer">
             $(function() {
                 var $priceRangeEl = $("#price-range-slider");
+                var isRtl = document.documentElement.dir === "rtl";
+                var rangeMin = @Model.AvailablePriceRange.From;
+                var rangeMax = @Model.AvailablePriceRange.To;
+
+                // In RTL we mirror the *value domain* (not the visual layout) so that
+                // the handle physically on the right always represents the minimum price
+                // and the handle physically on the left always represents the maximum price.
+                // This keeps jQuery UI's native mouse/drag math completely untouched.
+                function toInternal(realValue) {
+                    return isRtl ? (rangeMin + rangeMax - realValue) : realValue;
+                }
+                function toReal(internalValue) {
+                    return isRtl ? (rangeMin + rangeMax - internalValue) : internalValue;
+                }
+
+                var selectedFrom = @Model.SelectedPriceRange.From;
+                var selectedTo = @Model.SelectedPriceRange.To;
+
+                var initialValues = isRtl
+                    ? [toInternal(selectedTo), toInternal(selectedFrom)]
+                    : [selectedFrom, selectedTo];
+
                 $priceRangeEl.slider({
                     range: true,
-                    min: @Model.AvailablePriceRange.From,
-                    max: @Model.AvailablePriceRange.To,
-                    values: [
-                        @Model.SelectedPriceRange.From,
-                        @Model.SelectedPriceRange.To
-                    ],
+                    min: rangeMin,
+                    max: rangeMax,
+                    values: initialValues,
                     slide: function (event, ui) {
-                        setSelectedPriceRange(ui.values[0], ui.values[1]);
+                        var from = isRtl ? toReal(ui.values[1]) : ui.values[0];
+                        var to = isRtl ? toReal(ui.values[0]) : ui.values[1];
+                        setSelectedPriceRange(from, to);
                     },
                     stop: function () {
                         CatalogProducts.getProducts();
@@ -32,15 +54,17 @@
                 });
 
                 setSelectedPriceRange(
-                    $priceRangeEl.slider("values", 0),
-                    $priceRangeEl.slider("values", 1)
+                    isRtl ? toReal($priceRangeEl.slider("values", 1)) : $priceRangeEl.slider("values", 0),
+                    isRtl ? toReal($priceRangeEl.slider("values", 0)) : $priceRangeEl.slider("values", 1)
                 );
 
                 $(CatalogProducts).on('before', function (e) {
                     var priceRange = $priceRangeEl.slider('values');
                     if (priceRange && priceRange.length > 0) {
+                        var from = isRtl ? toReal(priceRange[1]) : priceRange[0];
+                        var to = isRtl ? toReal(priceRange[0]) : priceRange[1];
                         e.payload.urlBuilder
-                            .addParameter('price', priceRange.join('-'));
+                            .addParameter('price', from + '-' + to);
                     }
                 });
             });

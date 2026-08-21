@@ -13,8 +13,15 @@ public partial class NopModelBinderProvider : IModelBinderProvider
         if (context.Metadata.PropertyName == nameof(BaseNopModel.CustomProperties) && context.Metadata.ModelType == typeof(Dictionary<string, string>))
             return new CustomPropertiesModelBinder();
 
-        if (!context.Metadata.IsComplexType && context.Metadata.ModelType == typeof(string)) 
-            return new StringModelBinder();
+        if (!context.Metadata.IsComplexType && context.Metadata.ModelType == typeof(string))
+        {
+            //only handle strings bound from value providers (query/route/form). A string with an explicit
+            //non-value-provider source ([FromHeader], [FromBody], [FromServices], ...) has to be left to the
+            //built-in binders; StringModelBinder reads value providers only and would bind it to null
+            var bindingSource = context.BindingInfo?.BindingSource;
+            if (bindingSource == null || BindingSource.ModelBinding.CanAcceptDataFrom(bindingSource))
+                return new StringModelBinder();
+        }
 
         return null;
     }

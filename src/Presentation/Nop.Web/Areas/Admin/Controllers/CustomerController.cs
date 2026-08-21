@@ -8,6 +8,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.PriceLists;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
 using Nop.Services.Attributes;
@@ -20,6 +21,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.PriceLists;
 using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Factories;
@@ -59,6 +61,7 @@ public partial class CustomerController : BaseAdminController
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
     protected readonly INotificationService _notificationService;
     protected readonly IPermissionService _permissionService;
+    protected readonly IPriceListService _priceListService;
     protected readonly IQueuedEmailService _queuedEmailService;
     protected readonly IRewardPointService _rewardPointService;
     protected readonly IStoreContext _storeContext;
@@ -97,6 +100,7 @@ public partial class CustomerController : BaseAdminController
         INewsLetterSubscriptionService newsLetterSubscriptionService,
         INotificationService notificationService,
         IPermissionService permissionService,
+        IPriceListService priceListService,
         IQueuedEmailService queuedEmailService,
         IRewardPointService rewardPointService,
         IStoreContext storeContext,
@@ -130,6 +134,7 @@ public partial class CustomerController : BaseAdminController
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
         _notificationService = notificationService;
         _permissionService = permissionService;
+        _priceListService = priceListService;
         _queuedEmailService = queuedEmailService;
         _rewardPointService = rewardPointService;
         _storeContext = storeContext;
@@ -375,6 +380,15 @@ public partial class CustomerController : BaseAdminController
                 ModelState.AddModelError(string.Empty, error);
         }
 
+        //validate customer price lists
+        var allCustomerPriceLists = await _priceListService.GetAllPriceListsAsync();
+        var newCustomerPriceLists = new List<PriceList>();
+        foreach (var customerPriceList in allCustomerPriceLists)
+        {
+            if (model.SelectedPriceListIds.Contains(customerPriceList.Id))
+                newCustomerPriceLists.Add(customerPriceList);
+        }
+
         if (ModelState.IsValid)
         {
             try
@@ -453,6 +467,13 @@ public partial class CustomerController : BaseAdminController
                 }
 
                 await _customerService.UpdateCustomerAsync(customer);
+
+                //customer price lists
+                foreach (var customerPriceList in newCustomerPriceLists)
+                {
+                    await _priceListService.InsertPriceListCustomerAsync(
+                        new PriceListCustomer { CustomerId = customer.Id, PriceListId = customerPriceList.Id });
+                }
 
                 //ensure that a customer with a vendor associated is not in "Administrators" role
                 //otherwise, he won't have access to other functionality in admin area
@@ -569,7 +590,7 @@ public partial class CustomerController : BaseAdminController
             var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarningsAsync(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
                 ModelState.AddModelError(string.Empty, error);
-        }
+        }        
 
         if (ModelState.IsValid)
         {
@@ -692,6 +713,28 @@ public partial class CustomerController : BaseAdminController
                 }
 
                 await _customerService.UpdateCustomerAsync(customer);
+
+                //customer price lists
+                var allPriceLists = await _priceListService.GetAllPriceListsAsync();
+                var allCustomerPriceLists = await _priceListService.GetPriceListsByCustomerAsync(customer);
+                var currentCustomerPriceListIds = allCustomerPriceLists.Select(priceList => priceList.Id).ToList();
+
+                //customer price lists
+                foreach (var customerPriceList in allPriceLists)
+                {
+                    if (model.SelectedPriceListIds.Contains(customerPriceList.Id))
+                    {
+                        //new price list
+                        if (currentCustomerPriceListIds.All(priceListId => priceListId != customerPriceList.Id))
+                            await _priceListService.InsertPriceListCustomerAsync(new PriceListCustomer { PriceListId = customerPriceList.Id, CustomerId = customer.Id });
+                    }
+                    else
+                    {
+                        //remove price list
+                        if (currentCustomerPriceListIds.Any(priceListId => priceListId == customerPriceList.Id))
+                            await _priceListService.RemoveCustomerPriceListMappingAsync(customer, customerPriceList);
+                    }
+                }
 
                 //ensure that a customer with a vendor associated is not in "Administrators" role
                 //otherwise, he won't have access to the other functionality in admin area
@@ -1530,7 +1573,7 @@ public partial class CustomerController : BaseAdminController
         {
             //log
             //_gdprService.InsertLog(customer, 0, GdprRequestType.ExportData, await _localizationService.GetResource("Gdpr.Exported"));
-            
+
             //export
             var store = await _storeContext.GetCurrentStoreAsync();
             var bytes = await _exportManager.ExportCustomerGdprInfoToXlsxAsync(customer, store.Id);
