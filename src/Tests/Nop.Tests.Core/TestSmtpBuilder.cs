@@ -10,7 +10,7 @@ namespace Nop.Tests;
 
 public class TestSmtpBuilder : SmtpBuilder
 {
-    public TestSmtpBuilder(EmailAccountSettings emailAccountSettings, 
+    public TestSmtpBuilder(EmailAccountSettings emailAccountSettings,
         IEmailAccountService emailAccountService,
         ILocalizationService localizationService,
         INopFileProvider fileProvider) : base(emailAccountSettings, emailAccountService, localizationService, fileProvider)
