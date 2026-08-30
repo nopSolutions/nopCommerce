@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
@@ -20,6 +21,18 @@ public class NopStartup : INopStartup
     /// <param name="configuration">Configuration of the application</param>
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
+        //remove the PayPal SDK assembly from MVC application parts to prevent
+        //Autofac from trying to register SDK internal "Controller" types (e.g. BaseController)
+        //which have no public constructors and are not MVC controllers
+        var partManager = services
+            .FirstOrDefault(d => d.ServiceType == typeof(ApplicationPartManager))
+            ?.ImplementationInstance as ApplicationPartManager;
+        var sdkPart = partManager?.ApplicationParts
+            .FirstOrDefault(p => p.Name.Equals("PayPalServerSDK", StringComparison.OrdinalIgnoreCase));
+        if (sdkPart != null)
+            partManager.ApplicationParts.Remove(sdkPart);
+
+        services.AddSingleton<PayPalSdkClientFactory>();
         services.AddHttpClient<OnboardingHttpClient>().WithProxy();
         services.AddHttpClient<PayPalCommerceHttpClient>().WithProxy();
         services.AddScoped<PayPalCommerceModelFactory>();
