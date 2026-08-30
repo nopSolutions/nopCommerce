@@ -53,7 +53,7 @@
         </div>
         <script asp-location="Footer">
             $(function() {
-                var $orderByEl = $('#products-orderby');
+                const $orderByEl = $('#products-orderby');
                 $orderByEl.on('change', function () {
                     CatalogProducts.getProducts();
                 });
