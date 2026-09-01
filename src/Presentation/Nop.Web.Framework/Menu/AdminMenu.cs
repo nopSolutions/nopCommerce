@@ -536,6 +536,13 @@ public partial class AdminMenu : IAdminMenu
                                 },
                                 new()
                                 {
+                                    SystemName = "Affiliate settings",
+                                    Title = await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Affiliate"),
+                                    Url = GetMenuItemUrl("Setting", "Affiliate"),
+                                    IconClass = "far fa-circle"
+                                },
+                                new()
+                                {
                                     SystemName = "App settings",
                                     Title = await _localizationService.GetResourceAsync("Admin.Configuration.AppSettings"),
                                     PermissionNames =

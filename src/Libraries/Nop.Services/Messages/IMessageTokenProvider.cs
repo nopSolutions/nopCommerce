@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Blogs;
+﻿using Nop.Core.Domain.Affiliates;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
@@ -122,6 +123,14 @@ public partial interface IMessageTokenProvider
     /// <param name="vendor">Vendor</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task AddVendorTokensAsync(IList<Token> tokens, Vendor vendor);
+
+    /// <summary>
+    /// Add affiliate tokens
+    /// </summary>
+    /// <param name="tokens">List of already added tokens</param>
+    /// <param name="affiliate">Affiliate</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task AddAffiliateTokensAsync(IList<Token> tokens, Affiliate affiliate);
 
     /// <summary>
     /// Add newsletter subscription tokens

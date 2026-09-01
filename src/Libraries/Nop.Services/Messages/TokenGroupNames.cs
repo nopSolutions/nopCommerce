@@ -71,6 +71,11 @@ public static partial class TokenGroupNames
     public static string VendorTokens => "Vendor tokens";
 
     /// <summary>
+    /// Represents tokens with information about the affiliate
+    /// </summary>
+    public static string AffiliateTokens => "Affiliate tokens";
+
+    /// <summary>
     /// Represents tokens with information about the gift card
     /// </summary>
     public static string GiftCardTokens => "Gift card tokens";

@@ -90,6 +90,7 @@ public partial class NopStartup : INopStartup
 
         //factories
         services.AddScoped<Factories.IAddressModelFactory, Factories.AddressModelFactory>();
+        services.AddScoped<Factories.IAffiliateModelFactory, Factories.AffiliateModelFactory>();
         services.AddScoped<Factories.IBlogModelFactory, Factories.BlogModelFactory>();
         services.AddScoped<Factories.ICatalogModelFactory, Factories.CatalogModelFactory>();
         services.AddScoped<Factories.ICheckoutModelFactory, Factories.CheckoutModelFactory>();

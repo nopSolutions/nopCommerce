@@ -40,6 +40,9 @@
     const string hideRecurringBlockAttributeName = "ProductPage.HideRecurringBlock";
     var hideRecurringBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideRecurringBlockAttributeName, defaultValue: true);
 
+    const string hideAffiliateAttributeName = "ProductPage.HideAffiliateBlock";
+    var hideAffiliateBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAffiliateAttributeName, defaultValue: true);
+
     const string hideSeoBlockAttributeName = "ProductPage.HideSEOBlock";
     var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideSeoBlockAttributeName, defaultValue: true);
 
@@ -95,6 +98,7 @@
                 <nop-card asp-name="product-downloadable" asp-icon="fas fa-download" asp-title="@T("Admin.Catalog.Products.DownloadableProduct")" asp-hide-block-attribute-name="@hideDownloadableBlockAttributeName" asp-hide="@hideDownloadableBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.DownloadableProduct)">@await Html.PartialAsync("_CreateOrUpdate.DownloadableProduct", Model)</nop-card>
                 <nop-card asp-name="product-rental" asp-icon="far fa-calendar-days" asp-title="@T("Admin.Catalog.Products.Rental")" asp-hide-block-attribute-name="@hideRentalBlockAttributeName" asp-hide="@hideRentalBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.IsRental)">@await Html.PartialAsync("_CreateOrUpdate.Rental", Model)</nop-card>
                 <nop-card asp-name="product-recurring" asp-icon="fas fa-rotate-right" asp-title="@T("Admin.Catalog.Products.RecurringProduct")" asp-hide-block-attribute-name="@hideRecurringBlockAttributeName" asp-hide="@hideRecurringBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.RecurringProduct)">@await Html.PartialAsync("_CreateOrUpdate.Recurring", Model)</nop-card>
+                <nop-card asp-name="product-affiliate" asp-icon="fas fa-hand-holding-dollar" asp-title="@T("Admin.Catalog.Products.Affiliate")" asp-hide-block-attribute-name="@hideAffiliateAttributeName" asp-hide="@hideAffiliateBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.Affiliate)">@await Html.PartialAsync("_CreateOrUpdate.Affiliate", Model)</nop-card>
                 <nop-card asp-name="product-seo" asp-icon="fas fa-magnifying-glass-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.Seo)">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card>
                 <nop-card asp-name="product-related-products" asp-icon="fas fa-object-group" asp-title="@T("Admin.Catalog.Products.RelatedProducts")" asp-hide-block-attribute-name="@hideRelatedProductsBlockAttributeName" asp-hide="@hideRelatedProductsBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.RelatedProducts)">@await Html.PartialAsync("_CreateOrUpdate.RelatedProducts", Model)</nop-card>
                 <nop-card asp-name="product-crosssells-products" asp-icon="fas fa-shuffle" asp-title="@T("Admin.Catalog.Products.CrossSells")" asp-hide-block-attribute-name="@hideCrossSellsProductsBlockAttributeName" asp-hide="@hideCrossSellsProductsBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.CrossSellsProducts)">@await Html.PartialAsync("_CreateOrUpdate.CrossSellsProducts", Model)</nop-card>

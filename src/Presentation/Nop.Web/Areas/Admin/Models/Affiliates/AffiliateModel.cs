@@ -9,17 +9,6 @@ namespace Nop.Web.Areas.Admin.Models.Affiliates;
 /// </summary>
 public partial record AffiliateModel : BaseNopEntityModel
 {
-    #region Ctor
-
-    public AffiliateModel()
-    {
-        Address = new AddressModel();
-        AffiliatedOrderSearchModel = new AffiliatedOrderSearchModel();
-        AffiliatedCustomerSearchModel = new AffiliatedCustomerSearchModel();
-    }
-
-    #endregion
-
     #region Properties
 
     [NopResourceDisplayName("Admin.Affiliates.Fields.URL")]
@@ -34,11 +23,32 @@ public partial record AffiliateModel : BaseNopEntityModel
     [NopResourceDisplayName("Admin.Affiliates.Fields.Active")]
     public bool Active { get; set; }
 
-    public AddressModel Address { get; set; }
+    [NopResourceDisplayName("Admin.Affiliates.Fields.AssociatedCustomerId")]
+    public int? AssociatedCustomerId { get; set; }
+    public string CustomerInfo { get; set; }
 
-    public AffiliatedOrderSearchModel AffiliatedOrderSearchModel { get; set; }
+    public AddressModel Address { get; set; } = new();
 
-    public AffiliatedCustomerSearchModel AffiliatedCustomerSearchModel { get; set; }
+    public AffiliatedOrderSearchModel AffiliatedOrderSearchModel { get; set; } = new();
+
+    public AffiliateCommissionSearchModel AffiliateCommissionSearchModel { get; set; } = new();
+
+    public AffiliatedCustomerSearchModel AffiliatedCustomerSearchModel { get; set; } = new();
+
+    #endregion
+}
+
+
+/// <summary>
+/// Represents an affiliate commission model to add new one
+/// </summary>
+public partial record AffiliateCommissionEditModel : AffiliateCommissionModel
+{
+    #region Properties
+
+    public int AffiliateId { get; set; }
+
+    public AffiliatedOrderSearchModel AffiliatedOrderSearchModel { get; set; } = new();
 
     #endregion
 }

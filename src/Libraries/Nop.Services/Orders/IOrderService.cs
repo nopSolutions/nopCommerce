@@ -81,11 +81,12 @@ public partial interface IOrderService
     /// <summary>
     /// Search orders
     /// </summary>
-    /// <param name="storeId">Store identifier; null to load all orders</param>
+    /// <param name="storeId">Store identifier; 0 to load all orders</param>
     /// <param name="vendorId">Vendor identifier; null to load all orders</param>
-    /// <param name="customerId">Customer identifier; null to load all orders</param>
+    /// <param name="customerId">Customer identifier; 0 to load all orders</param>
     /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
     /// <param name="affiliateId">Affiliate identifier; 0 to load all orders</param>
+    /// <param name="affiliateCommissionId">Affiliate commission identifier; 0 to load all orders;null to load orders which not included in the affiliate commission</param>
     /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
     /// <param name="warehouseId">Warehouse identifier, only orders with products from a specified warehouse will be loaded; 0 to load all orders</param>
     /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
@@ -107,7 +108,8 @@ public partial interface IOrderService
     /// </returns>
     Task<IPagedList<Order>> SearchOrdersAsync(int storeId = 0,
         int vendorId = 0, int customerId = 0,
-        int productId = 0, int affiliateId = 0, int warehouseId = 0,
+        int productId = 0, int affiliateId = 0,
+        int? affiliateCommissionId = 0, int warehouseId = 0,
         int billingCountryId = 0, string paymentMethodSystemName = null,
         DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
         List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,

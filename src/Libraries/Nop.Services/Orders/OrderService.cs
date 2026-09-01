@@ -231,6 +231,7 @@ public partial class OrderService : IOrderService
     /// <param name="customerId">Customer identifier; 0 to load all orders</param>
     /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
     /// <param name="affiliateId">Affiliate identifier; 0 to load all orders</param>
+    /// <param name="affiliateCommissionId">Affiliate commission identifier; 0 to load all orders;null to load orders which not included in the affiliate commission</param>
     /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
     /// <param name="warehouseId">Warehouse identifier, only orders with products from a specified warehouse will be loaded; 0 to load all orders</param>
     /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
@@ -252,7 +253,8 @@ public partial class OrderService : IOrderService
     /// </returns>
     public virtual async Task<IPagedList<Order>> SearchOrdersAsync(int storeId = 0,
         int vendorId = 0, int customerId = 0,
-        int productId = 0, int affiliateId = 0, int warehouseId = 0,
+        int productId = 0, int affiliateId = 0, 
+        int? affiliateCommissionId = 0, int warehouseId = 0,
         int billingCountryId = 0, string paymentMethodSystemName = null,
         DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
         List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
@@ -314,6 +316,11 @@ public partial class OrderService : IOrderService
 
         if (affiliateId > 0)
             query = query.Where(o => o.AffiliateId == affiliateId);
+
+        if (affiliateCommissionId > 0)
+            query = query.Where(o => o.AffiliateCommissionId == affiliateCommissionId);
+        else if(affiliateCommissionId == null)
+            query = query.Where(o => o.AffiliateCommissionId == null);
 
         if (createdFromUtc.HasValue)
             query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);

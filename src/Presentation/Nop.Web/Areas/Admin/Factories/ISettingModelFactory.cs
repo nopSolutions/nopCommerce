@@ -10,6 +10,16 @@ namespace Nop.Web.Areas.Admin.Factories;
 public partial interface ISettingModelFactory
 {
     /// <summary>
+    /// Prepare affiliate settings model
+    /// </summary>
+    /// <param name="model">Affiliate settings model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the affiliate settings model
+    /// </returns>
+    Task<AffiliateSettingsModel> PrepareAffiliateSettingsModelAsync(AffiliateSettingsModel model = null);
+
+    /// <summary>
     /// Prepare app settings model
     /// </summary>
     /// <param name="model">AppSettings model</param>

@@ -32,5 +32,14 @@ public partial record AffiliatedOrderModel : BaseNopEntityModel
     [NopResourceDisplayName("Admin.Affiliates.Orders.CreatedOn")]
     public DateTime CreatedOn { get; set; }
 
+    [NopResourceDisplayName("Admin.Affiliates.Orders.AffiliateCommission")]
+    public string AffiliateCommission { get; set; }
+
+    [NopResourceDisplayName("Admin.Affiliates.Orders.CommissionStatus")]
+    public string CommissionStatus { get; set; }
+
+    [NopResourceDisplayName("Admin.Affiliates.Orders.CommissionPaidOn")]
+    public DateTime? PaidOn { get; set; }
+
     #endregion
 }

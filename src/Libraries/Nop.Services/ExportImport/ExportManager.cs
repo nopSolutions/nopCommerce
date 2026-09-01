@@ -1309,6 +1309,10 @@ public partial class ExportManager : IExportManager
             await xmlWriter.WriteStringAsync("RecurringCycleLength", product.RecurringCycleLength, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct));
             await xmlWriter.WriteStringAsync("RecurringCyclePeriodId", product.RecurringCyclePeriodId, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct));
             await xmlWriter.WriteStringAsync("RecurringTotalCycles", product.RecurringTotalCycles, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct));
+            await xmlWriter.WriteStringAsync("SpecifyAffiliateCommission", product.SpecifyAffiliateCommission, await IgnoreExportProductPropertyAsync(p => p.Affiliate));
+            await xmlWriter.WriteStringAsync("AffiliateUsePercentage", product.AffiliateUsePercentage, await IgnoreExportProductPropertyAsync(p => p.Affiliate));
+            await xmlWriter.WriteStringAsync("AffiliateCommissionAmount", product.AffiliateCommissionAmount, await IgnoreExportProductPropertyAsync(p => p.Affiliate));
+            await xmlWriter.WriteStringAsync("AffiliateCommissionPercentage", product.AffiliateCommissionPercentage, await IgnoreExportProductPropertyAsync(p => p.Affiliate));
             await xmlWriter.WriteStringAsync("IsRental", product.IsRental, await IgnoreExportProductPropertyAsync(p => p.IsRental));
             await xmlWriter.WriteStringAsync("RentalPriceLength", product.RentalPriceLength, await IgnoreExportProductPropertyAsync(p => p.IsRental));
             await xmlWriter.WriteStringAsync("RentalPricePeriodId", product.RentalPricePeriodId, await IgnoreExportProductPropertyAsync(p => p.IsRental));
@@ -1673,6 +1677,10 @@ public partial class ExportManager : IExportManager
                 AllowBlank = true
             },
             new PropertyByName<Product>("RecurringTotalCycles", (p, _) => p.RecurringTotalCycles, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct)),
+            new PropertyByName<Product>("SpecifyAffiliateCommission", (p, _) => p.SpecifyAffiliateCommission, await IgnoreExportProductPropertyAsync(p => p.Affiliate)),
+            new PropertyByName<Product>("AffiliateUsePercentage", (p, _) => p.AffiliateUsePercentage, await IgnoreExportProductPropertyAsync(p => p.Affiliate)),
+            new PropertyByName<Product>("AffiliateCommissionAmount", (p, _) => p.AffiliateCommissionAmount, await IgnoreExportProductPropertyAsync(p => p.Affiliate)),
+            new PropertyByName<Product>("AffiliateCommissionPercentage", (p, _) => p.AffiliateCommissionPercentage, await IgnoreExportProductPropertyAsync(p => p.Affiliate)),
             new PropertyByName<Product>("IsRental", (p, _) => p.IsRental, await IgnoreExportProductPropertyAsync(p => p.IsRental)),
             new PropertyByName<Product>("RentalPriceLength", (p, _) => p.RentalPriceLength, await IgnoreExportProductPropertyAsync(p => p.IsRental)),
             new PropertyByName<Product>("RentalPricePeriod", (p, _) => p.RentalPricePeriodId, await IgnoreExportProductPropertyAsync(p => p.IsRental))

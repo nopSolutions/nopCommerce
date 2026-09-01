@@ -472,6 +472,19 @@ public partial record ProductModel : BaseNopEntityModel,
 
     public bool PreTranslationAvailable { get; set; }
 
+    //affiliate
+    [NopResourceDisplayName("Admin.Catalog.Products.SpecifyAffiliateCommission")]
+    public bool SpecifyAffiliateCommission { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Products.AffiliateCommissionAmount")]
+    public decimal? AffiliateCommissionAmount { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Products.AffiliateCommissionPercentage")]
+    public decimal? AffiliateCommissionPercentage { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Products.AffiliateUsePercentage")]
+    public bool AffiliateUsePercentage { get; set; }
+
     //copy product
     public CopyProductModel CopyProductModel { get; set; }
 
