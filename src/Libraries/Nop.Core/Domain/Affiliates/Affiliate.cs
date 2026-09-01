@@ -31,4 +31,14 @@ public partial class Affiliate : BaseEntity, ISoftDeletedEntity
     /// Gets or sets a value indicating whether the entity is active
     /// </summary>
     public bool Active { get; set; }
+
+    /// <summary>
+    /// Gets or sets the customer identifier who has applied for the affiliate partner account in public store
+    /// </summary>
+    public int? AssociatedCustomerId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the created on date and time
+    /// </summary>
+    public DateTime? CreatedOnUtc { get; set; }
 }

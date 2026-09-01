@@ -2428,6 +2428,18 @@ public partial class ImportManager : IImportManager
                     case "RecurringTotalCycles":
                         product.RecurringTotalCycles = property.IntValue;
                         break;
+                    case "SpecifyAffiliateCommission":
+                        product.SpecifyAffiliateCommission = property.BooleanValue;
+                        break;
+                    case "AffiliateUsePercentage":
+                        product.AffiliateUsePercentage = property.BooleanValue;
+                        break;
+                    case "AffiliateCommissionAmount":
+                        product.AffiliateCommissionAmount = property.DecimalValueNullable;
+                        break;
+                    case "AffiliateCommissionPercentage":
+                        product.AffiliateCommissionPercentage = property.DecimalValueNullable;
+                        break;
                     case "IsRental":
                         product.IsRental = property.BooleanValue;
                         break;

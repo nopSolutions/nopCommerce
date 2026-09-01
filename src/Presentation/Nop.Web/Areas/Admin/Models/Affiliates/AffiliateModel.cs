@@ -15,6 +15,7 @@ public partial record AffiliateModel : BaseNopEntityModel
     {
         Address = new AddressModel();
         AffiliatedOrderSearchModel = new AffiliatedOrderSearchModel();
+        AffiliateCommissionSearchModel = new AffiliateCommissionSearchModel();
         AffiliatedCustomerSearchModel = new AffiliatedCustomerSearchModel();
     }
 
@@ -34,11 +35,41 @@ public partial record AffiliateModel : BaseNopEntityModel
     [NopResourceDisplayName("Admin.Affiliates.Fields.Active")]
     public bool Active { get; set; }
 
+    [NopResourceDisplayName("Admin.Affiliates.Fields.AssociatedCustomerId")]
+    public int? AssociatedCustomerId { get; set; }
+    public string CustomerInfo { get; set; }
+
     public AddressModel Address { get; set; }
 
     public AffiliatedOrderSearchModel AffiliatedOrderSearchModel { get; set; }
 
+    public AffiliateCommissionSearchModel AffiliateCommissionSearchModel { get; set; }
+
     public AffiliatedCustomerSearchModel AffiliatedCustomerSearchModel { get; set; }
+
+    #endregion
+}
+
+
+/// <summary>
+/// Represents an affiliate commission model to add new one
+/// </summary>
+public partial record AffiliateCommissionEditModel : AffiliateCommissionModel
+{
+    #region Ctor
+
+    public AffiliateCommissionEditModel()
+    {
+        AffiliatedOrderSearchModel = new AffiliatedOrderSearchModel();
+    }
+
+    #endregion
+
+    #region Properties
+
+    public int AffiliateId { get; set; }
+
+    public AffiliatedOrderSearchModel AffiliatedOrderSearchModel { get; set; }
 
     #endregion
 }

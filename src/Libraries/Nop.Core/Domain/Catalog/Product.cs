@@ -533,6 +533,27 @@ public partial class Product : BaseEntity, ILocalizedEntity, ISlugSupported, IAc
     public int MinimumAgeToPurchase { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether to specify affiliate commission for this product (if not specified, then default commission will be used)
+    /// </summary>
+    public bool SpecifyAffiliateCommission { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default affiliate commission amount (if not specified on catalog)
+    /// </summary>
+    public decimal? AffiliateCommissionAmount { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default affiliate commission percentage (if not specified on catalog)
+    /// </summary>
+    public decimal? AffiliateCommissionPercentage { get; set; }
+
+    /// <summary>
+    /// Gets or sets the default affiliate commission type (percentage or amount). 
+    /// If true, then percentage is used. If false, then amount is used.
+    /// </summary>
+    public bool AffiliateUsePercentage { get; set; }
+
+    /// <summary>
     /// Gets or sets the product type
     /// </summary>
     public ProductType ProductType

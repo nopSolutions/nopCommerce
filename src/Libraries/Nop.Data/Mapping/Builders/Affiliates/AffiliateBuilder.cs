@@ -2,6 +2,7 @@
 using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Builders.Affiliates;
@@ -20,7 +21,8 @@ public partial class AffiliateBuilder : NopEntityBuilder<Affiliate>
     public override void MapEntity(CreateTableExpressionBuilder table)
     {
         table
-            .WithColumn(nameof(Affiliate.AddressId)).AsInt32().ForeignKey<Address>().OnDelete(Rule.None);
+            .WithColumn(nameof(Affiliate.AddressId)).AsInt32().ForeignKey<Address>().OnDelete(Rule.None)
+            .WithColumn(nameof(Affiliate.AssociatedCustomerId)).AsInt32().Nullable().ForeignKey<Customer>().OnDelete(Rule.SetNull);
     }
 
     #endregion

@@ -1,0 +1,115 @@
+@model AffiliateModel
+
+<div class="card-body">
+    <div class="card card-search">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="form-group row">
+                        <div class="col-md-5">
+                            <nop-label asp-for="AffiliateCommissionSearchModel.StartDate" />
+                        </div>
+                        <div class="col-md-5">
+                            <nop-editor asp-for="AffiliateCommissionSearchModel.StartDate" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-5">
+                            <nop-label asp-for="AffiliateCommissionSearchModel.EndDate" />
+                        </div>
+                        <div class="col-md-5">
+                            <nop-editor asp-for="AffiliateCommissionSearchModel.EndDate" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-5">
+                            <nop-label asp-for="AffiliateCommissionSearchModel.CommissionStatusId" />
+                        </div>
+                        <div class="col-md-5">
+                            <nop-select asp-for="AffiliateCommissionSearchModel.CommissionStatusId" asp-items="Model.AffiliateCommissionSearchModel.AvailableCommissionStatus" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 offset-md-5">
+                    <button type="button" id="search-orders" class="btn btn-primary btn-search">
+                        <i class="fas fa-magnifying-glass"></i>
+                        @T("Admin.Common.Search")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+                Name = "commission-grid",
+                UrlRead = new DataUrl("AffiliateCommissionListGrid", "Affiliate", new RouteValueDictionary { [nameof(Model.AffiliateCommissionSearchModel.AffliateId)] = Model.AffiliateCommissionSearchModel.AffliateId }),
+                SearchButtonId = "search-commission",
+                Length = Model.AffiliateCommissionSearchModel.PageSize,
+                LengthMenu = Model.AffiliateCommissionSearchModel.AvailablePageSizes,
+                Filters = new List<FilterParameter>
+                {
+                    new FilterParameter(nameof(Model.AffiliateCommissionSearchModel.StartDate), nameof(AffiliatedOrderSearchModel)),
+                    new FilterParameter(nameof(Model.AffiliateCommissionSearchModel.EndDate), nameof(AffiliatedOrderSearchModel)),
+                    new FilterParameter(nameof(Model.AffiliateCommissionSearchModel.CommissionStatusId), nameof(AffiliatedOrderSearchModel)),
+                },
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(AffiliateCommissionModel.Id))
+                    {
+                        Title = T("Admin.Affiliates.Commission.CommissionId").Text
+                    },
+                    new ColumnProperty(nameof(AffiliateCommissionModel.CommissionStatus))
+                    {
+                        Title = T("Admin.Affiliates.Commission.CommissionStatus").Text,
+                        Render = new RenderCustom("renderCommissionStatus")
+                    },                    
+                    new ColumnProperty(nameof(AffiliateCommissionModel.TotalCommissionAmount))
+                    {
+                        Title = T("Admin.Affiliates.Commission.TotalCommissionAmount").Text
+                    },
+                    new ColumnProperty(nameof(AffiliateCommissionModel.CreateOn))
+                    {
+                        Title = T("Admin.Affiliates.Commission.CreateOn").Text,
+                        Render = new RenderDate()
+                    },
+                    new ColumnProperty(nameof(AffiliateCommissionModel.PaidOn))
+                    {
+                        Title = T("Admin.Affiliates.Commission.PaidOn").Text,
+                        Render = new RenderDate()
+                    },
+                    new ColumnProperty(nameof(AffiliateCommissionModel.Id))
+                    {
+                        Title = T("Admin.Common.View").Text,
+                        Width = "100",
+                        ClassName = NopColumnClassDefaults.Button,
+                        Render = new RenderButtonView(new DataUrl("~/Admin/Affiliate/EditCommission/", nameof(AffiliateCommissionModel.Id)))
+                    }
+                }
+            })
+ 
+            <script>
+                function renderCommissionStatus(data, type, row, meta) {
+
+                    var color;
+                    switch (row.CommissionStatusId) {
+                        case 10: color = 'yellow'; break;
+                        case 20: color = 'green'; break;
+                    }
+
+                    return '<span class="grid-report-item ' + color + '">' + data + '</span >';
+                }                
+            </script>
+            <div class="card-footer">
+                <a asp-action="CreateCommission" asp-route-id="@Model.Id" class="btn btn-primary">
+                    <i class="fas fa-square-plus"></i>
+                    @T("Admin.Affiliates.Commission.AddNew")
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+﻿@model Nop.Web.Models.Affiliate.ApplyAffiliateModel
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Affiliate.Apply").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-apply-affiliate-page");
+}
+<div class="page apply-affiliate-page">
+    <div class="page-title">
+        <h1>@T("PageTitle.Affiliate.Apply")</h1>
+    </div>
+    <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ApplyAffiliateTop, additionalData = Model })
+        @if (Model.DisableFormInput)
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            <form asp-route="@NopRouteNames.General.APPLY_AFFILIATE_ACCOUNT" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <section class="fieldset">
+                    <div class="form-fields">
+                        <div class="inputs">
+                            <label asp-for="FriendlyUrlName" asp-postfix=":"></label>
+                            <input asp-for="FriendlyUrlName" class="name" placeholder="@T("Affiliate.ApplyAccount.FriendlyUrlName.Hint")" />
+                            <nop-required />
+                            <span asp-validation-for="FriendlyUrlName"></span>
+                        </div>
+                        <div class="inputs">
+                            <label asp-for="ExistingAddresses" asp-postfix=":"></label>
+                            <select name="address-select" id="address-select" class="address-select">
+                                @foreach (var address in Model.ExistingAddresses)
+                                {
+                                    var addressLine = "";
+                                    addressLine += address.FirstName;
+                                    addressLine += " " + address.LastName;
+                                    addressLine += ", " + address.AddressLine;
+                                    <option value="@(address.Id)">@(addressLine)</option>
+                                }
+                            </select>
+
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <nop-captcha />
+                        }
+                    </div>
+                </section>
+                <section class="buttons">
+                    <button type="submit" id="apply-affiliate" name="apply-affiliate" class="button-1 apply-affiliate-button">@T("Affiliate.ApplyAccount.Button")</button>
+                </section>
+            </form>
+        }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ApplyAffiliateBottom, additionalData = Model })
+    </div>
+</div>

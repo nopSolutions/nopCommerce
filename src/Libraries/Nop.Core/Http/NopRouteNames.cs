@@ -16,6 +16,11 @@ public static partial class NopRouteNames
         public const string APPLY_VENDOR_ACCOUNT = "ApplyVendorAccount";
 
         /// <summary>
+        /// Gets the Apply for affiliate account route name
+        /// </summary>
+        public const string APPLY_AFFILIATE_ACCOUNT = "ApplyAffiliateAccount";
+
+        /// <summary>
         /// Gets the login route name
         /// </summary>
         public const string LOGIN = "Login";
@@ -430,6 +435,16 @@ public static partial class NopRouteNames
         /// Gets the vendor info route name
         /// </summary>
         public const string CUSTOMER_VENDOR_INFO = "CustomerVendorInfo";
+
+        /// <summary>
+        /// Gets the affiliate info route name
+        /// </summary>
+        public const string CUSTOMER_AFFILIATES_INFO = "CustomerAffiliatesInfo";
+
+        /// <summary>
+        /// Gets the affiliate info paged route name
+        /// </summary>
+        public const string CUSTOMER_AFFILIATES_INFO_PAGED = "CustomerAffiliatesInfoPaged";
 
         /// <summary>
         /// Gets the customer GDPR tools route name

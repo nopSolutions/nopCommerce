@@ -3724,6 +3724,7 @@ label, label + * {
 
 .contact-page .button-1,
 .email-a-friend-page .button-1,
+.apply-affiliate-page .button-1,
 .apply-vendor-page .button-1 {
   min-width: 140px;
   border: none;
@@ -3735,14 +3736,16 @@ label, label + * {
   text-transform: uppercase;
 }
 
-.contact-page .button-1:hover,
-.contact-page .button-1:focus,
-.email-a-friend-page .button-1:hover,
-.email-a-friend-page .button-1:focus,
-.apply-vendor-page .button-1:hover,
-.apply-vendor-page .button-1:focus {
-  background-color: var(--accent-blue-active-color);
-}
+  .contact-page .button-1:hover,
+  .contact-page .button-1:focus,
+  .email-a-friend-page .button-1:hover,
+  .email-a-friend-page .button-1:focus,
+  .apply-affiliate-page .button-1:hover,
+  .apply-affiliate-page .button-1:focus,
+  .apply-vendor-page .button-1:hover,
+  .apply-vendor-page .button-1:focus {
+    background-color: var(--accent-blue-active-color);
+  }
 
 .contact-page .topic-block,
 .email-a-friend-page .title,

@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -41,6 +42,7 @@ public partial class OrderProcessingService : IOrderProcessingService
 {
     #region Fields
 
+    protected readonly AffiliateSettings _affiliateSettings;
     protected readonly CurrencySettings _currencySettings;
     protected readonly IAddressService _addressService;
     protected readonly IAffiliateService _affiliateService;
@@ -96,7 +98,8 @@ public partial class OrderProcessingService : IOrderProcessingService
 
     #region Ctor
 
-    public OrderProcessingService(CurrencySettings currencySettings,
+    public OrderProcessingService(AffiliateSettings affiliateSettings,
+        CurrencySettings currencySettings,
         IAddressService addressService,
         IAffiliateService affiliateService,
         ICheckoutAttributeFormatter checkoutAttributeFormatter,
@@ -147,6 +150,7 @@ public partial class OrderProcessingService : IOrderProcessingService
         ShippingSettings shippingSettings,
         TaxSettings taxSettings)
     {
+        _affiliateSettings = affiliateSettings;
         _currencySettings = currencySettings;
         _addressService = addressService;
         _affiliateService = affiliateService;
@@ -1280,8 +1284,10 @@ public partial class OrderProcessingService : IOrderProcessingService
     /// <param name="details">Place order container</param>
     /// <param name="order">Order</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task MoveShoppingCartItemsToOrderItemsAsync(PlaceOrderContainer details, Order order)
+    protected virtual async Task<IList<OrderItem>> MoveShoppingCartItemsToOrderItemsAsync(PlaceOrderContainer details, Order order)
     {
+        var orderItems = new List<OrderItem>();
+
         foreach (var sc in details.Cart)
         {
             var product = await _productService.GetProductByIdAsync(sc.ProductId);
@@ -1332,6 +1338,7 @@ public partial class OrderProcessingService : IOrderProcessingService
             };
 
             await _orderService.InsertOrderItemAsync(orderItem);
+            orderItems.Add(orderItem);
 
             //gift cards
             await AddGiftCardsAsync(product, sc.AttributesXml, sc.Quantity, orderItem, scUnitPriceExclTax.price);
@@ -1344,6 +1351,8 @@ public partial class OrderProcessingService : IOrderProcessingService
         }
 
         await _shoppingCartService.ClearShoppingCartAsync(details.Customer, order.StoreId);
+        
+        return orderItems;
     }
 
     /// <summary>
@@ -1569,6 +1578,48 @@ public partial class OrderProcessingService : IOrderProcessingService
         return delay;
     }
 
+    /// <summary>
+    /// Saves affiliate commission
+    /// </summary>
+    /// <param name="order">The order to save commission</param>
+    /// <param name="orderItems">The list of order items</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task<decimal?> GetAffiliateCommissionAsync(Order order, IList<OrderItem> orderItems)
+    {
+        if (order.AffiliateId <= 0)
+            return null;
+
+        var commission = 0M;
+
+        var products = (await _productService.GetProductsByIdsAsync(orderItems.Select(oi => oi.ProductId).ToArray()))
+            .GroupBy(p => p.Id).ToDictionary(p => p.Key, p => p.First());
+
+        foreach (var orderItem in orderItems)
+        {
+            if (!products.TryGetValue(orderItem.ProductId, out var product))
+                continue;
+
+            var itemCommission = 0M;
+
+            if (product.SpecifyAffiliateCommission)
+            {
+                itemCommission = product.AffiliateUsePercentage
+                    ? orderItem.UnitPriceExclTax * (product.AffiliateCommissionPercentage ?? 0) / 100
+                    : product.AffiliateCommissionAmount ?? 0;
+            }
+            else if (_affiliateSettings.UseDefaultCommissionIfNotSetOnCatalog)
+            {
+                itemCommission = _affiliateSettings.UsePercentage
+                    ? orderItem.UnitPriceExclTax * _affiliateSettings.CommissionPercentage / 100
+                    : _affiliateSettings.CommissionAmount;
+            }
+
+            commission += itemCommission * orderItem.Quantity;
+        }
+
+        return commission > 0M ? commission : null;
+    }
+
     #endregion
 
     #region Methods
@@ -1618,7 +1669,7 @@ public partial class OrderProcessingService : IOrderProcessingService
                     result.PlacedOrder = order;
 
                     //move shopping cart items to order items
-                    await MoveShoppingCartItemsToOrderItemsAsync(placeOrderContainer, order);
+                    var orderItems = await MoveShoppingCartItemsToOrderItemsAsync(placeOrderContainer, order);
 
                     //discount usage history
                     await SaveDiscountUsageHistoryAsync(placeOrderContainer, order);
@@ -1629,6 +1680,9 @@ public partial class OrderProcessingService : IOrderProcessingService
                     //recurring orders
                     if (placeOrderContainer.IsRecurringShoppingCart)
                         await CreateFirstRecurringPaymentAsync(processPaymentRequest, order);
+
+                    //affiliate commission
+                    order.AffiliateCommissionAmount = await GetAffiliateCommissionAsync(order, orderItems);
 
                     //notifications
                     await SendNotificationsAndSaveNotesAsync(order);

@@ -515,11 +515,25 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/vendor/apply",
             defaults: new { controller = "Vendor", action = "ApplyVendor" });
 
+        //apply for vendor account
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.General.APPLY_AFFILIATE_ACCOUNT,
+            pattern: $"{lang}/affiliate/apply",
+            defaults: new { controller = "Affiliate", action = "ApplyAffiliate" });
+
         //vendor info
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CUSTOMER_VENDOR_INFO,
             pattern: $"{lang}/customer/vendorinfo",
             defaults: new { controller = "Vendor", action = "Info" });
 
+        //affiliates info
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CUSTOMER_AFFILIATES_INFO,
+            pattern: $"{lang}/customer/affiliates/{{limit?}}",
+            defaults: new { controller = "Affiliate", action = "Info" });
+
+        endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.CUSTOMER_AFFILIATES_INFO_PAGED,
+            pattern: $"{lang}/customer/affiliates/{{limit?}}/page/{{pageNumber:min(0)}}",
+            defaults: new { controller = "Affiliate", action = "Info" });
+        
         //customer GDPR
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.Standard.GDPR_TOOLS,
             pattern: $"{lang}/customer/gdpr",

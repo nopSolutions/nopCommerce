@@ -1,0 +1,114 @@
+@using Nop.Core.Domain.Affiliates
+@using Nop.Services
+@model AffiliateSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowCustomersToApplyForAffiliateAccount_OverrideForStore"
+                                         asp-input="AllowCustomersToApplyForAffiliateAccount"
+                                         asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowCustomersToApplyForAffiliateAccount" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowCustomersToApplyForAffiliateAccount" />
+            <span asp-validation-for="AllowCustomersToApplyForAffiliateAccount"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="UseDefaultCommissionIfNotSetOnCatalog_OverrideForStore"
+                                         asp-input="UseDefaultCommissionIfNotSetOnCatalog"
+                                         asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="UseDefaultCommissionIfNotSetOnCatalog" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="UseDefaultCommissionIfNotSetOnCatalog" />
+            <span asp-validation-for="UseDefaultCommissionIfNotSetOnCatalog"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="UseDefaultCommissionIfNotSetOnCatalog">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="UsePercentage_OverrideForStore" asp-input="UsePercentage"
+                                             asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="UsePercentage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="UsePercentage" />
+                <span asp-validation-for="UsePercentage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="pnlCommissionPercentage">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CommissionPercentage_OverrideForStore"
+                                             asp-input="CommissionPercentage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CommissionPercentage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CommissionPercentage" />
+                <span asp-validation-for="CommissionPercentage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="pnlCommissionAmount">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CommissionAmount_OverrideForStore" asp-input="CommissionAmount"
+                                             asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CommissionAmount" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CommissionAmount" />
+                <span asp-validation-for="CommissionAmount"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="HoldingPeriodInDays_OverrideForStore" asp-input="HoldingPeriodInDays"
+                                         asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="HoldingPeriodInDays" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="HoldingPeriodInDays" />
+            <span asp-validation-for="HoldingPeriodInDays"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AffiliateStorageStrategy_OverrideForStore"
+                                         asp-input="AffiliateStorageStrategy" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AffiliateStorageStrategy" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="AffiliateStorageStrategy"
+                        asp-items="@(await ((AffiliateStorageStrategyType)Model.AffiliateStorageStrategy).ToSelectListAsync())" />
+            <span asp-validation-for="AffiliateStorageStrategy"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="CustomerAffiliatePageSize_OverrideForStore" asp-input="CustomerAffiliatePageSize"
+                                         asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="CustomerAffiliatePageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomerAffiliatePageSize" />
+            <span asp-validation-for="CustomerAffiliatePageSize"></span>
+        </div>
+    </div>
+
+</div>
+<script asp-location="Footer">
+    $("#@Html.IdFor(model => model.UsePercentage)").change(toggleUsePercentage);
+    toggleUsePercentage();
+
+    function toggleUsePercentage() {
+        if ($('#@Html.IdFor(model => model.UsePercentage)').is(':checked')) {
+            $('#pnlCommissionAmount').hideElement();
+            $('#pnlCommissionPercentage').showElement();
+        } else {
+            $('#pnlCommissionAmount').showElement();
+            $('#pnlCommissionPercentage').hideElement();
+        }
+    }
+</script>

@@ -1,0 +1,118 @@
+﻿@model Nop.Web.Models.Affiliate.AffiliateModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.AffiliateInfo").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-affiliate-page");
+}
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.AffiliateInfo })
+}
+
+<div class="page account-page affiliate-info-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.Affiliates")</h1>
+    </div>
+    <div class="page-body">
+        <form asp-route="@NopRouteNames.Standard.CUSTOMER_AFFILIATES_INFO" method="post">
+            <div class="order-filters">
+                <div class="order-filters__row">
+                    <label>@T("Account.Affiliates.Period")</label>
+                    <select id="periodSelector" asp-items="@Model.AvailableLimits"></select>
+                </div>
+            </div>
+        </form>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AffiliatesInfoTop, additionalData = Model })
+        <section class="fieldset">
+            <div class="form-fields">
+                <div>
+                    <label asp-for="Status" asp-postfix=":"></label>
+                    <label>@Model.Status</label>
+                </div>
+                <div>
+                    <label asp-for="TotalAffiliatedCustomers" asp-postfix=":"></label>
+                    <label>@Model.TotalAffiliatedCustomers</label>
+                </div>
+                <div>
+                    <label asp-for="TotalOrders" asp-postfix=":"></label>
+                    <label>@Model.TotalOrders</label>
+                </div>
+                <br/>
+                <br/>
+                
+                @if (Model.Orders.Count > 0)
+                {
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                            <tr>
+                                <th>@T("Account.Affiliates.Orders.CustomOrderNumber")</th>
+                                <th>@T("Account.Affiliates.Orders.OrderTotal")</th>
+                                <th>@T("Account.Affiliates.Orders.OrderStatus")</th>
+                                <th>@T("Account.Affiliates.Orders.PaymentStatus")</th>
+                                <th>@T("Account.Affiliates.Orders.CreatedOn")</th>
+                                <th>@T("Account.Affiliates.Orders.AffiliateCommission")</th>
+                                <th>@T("Account.Affiliates.Orders.CommissionStatus")</th>
+                                <th>@T("Account.Affiliates.Orders.CommissionPaidOn")</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var order in Model.Orders)
+                            {
+                                <tr>
+                                    <td>@order.CustomOrderNumber</td>
+                                    <td>@order.OrderTotal</td>
+                                    <td>@order.OrderStatus</td>
+                                    <td>@order.PaymentStatus</td>
+                                    <td>@order.CreatedOn</td>
+                                    <td>@order.AffiliateCommission</td>
+                                    <td>@order.CommissionStatus</td>
+                                    <td>@order.CommissionPaidOn</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    var pager = await Html.PagerAsync(Model.PagerModel);
+                    if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+                    {
+                        <div class="pager">
+                            @pager
+                        </div>
+                    }
+                }
+                
+                <div>
+                    <label asp-for="OrdersCount" asp-postfix=":"></label>
+                    <label>@Model.OrdersCount</label>
+                </div>
+                <div>
+                    <label asp-for="OrdersAmount" asp-postfix=":"></label>
+                    <label>@Model.OrdersAmount</label>
+                </div>
+                <div>
+                    <label asp-for="TotalCommission" asp-postfix=":"></label>
+                    <label>@Model.TotalCommission</label>
+                </div>
+                <div>
+                    <label asp-for="PaidCommission" asp-postfix=":"></label>
+                    <label>@Model.PaidCommission</label>
+                </div>
+            </div>
+        </section>
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AffiliatesInfoBottom, additionalData = Model })
+    </div>
+</div>
+
+<script asp-location="Footer">
+    $(function() {
+        $('#periodSelector').on('change', function() {
+            window.location.href = '@Url.RouteUrl(NopRouteNames.Standard.CUSTOMER_AFFILIATES_INFO, new { limit = (object)null })/' + $(this).val();
+        });
+    })
+</script>

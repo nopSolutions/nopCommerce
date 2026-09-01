@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -150,6 +151,17 @@ public class SettingMigration : MigrationBase
 
         //#8229
         this.SetSettingIfNotExists<ReturnRequestSettings, bool>(settings => settings.DownloadableProductsReturnRequestsAllowed, false);
+
+        //#8273
+        this.SetSettingIfNotExists<AffiliateSettings, bool>(settings => settings.AllowCustomersToApplyForAffiliateAccount, false);
+        this.SetSettingIfNotExists<AffiliateSettings, bool>(settings => settings.UseDefaultCommissionIfNotSetOnCatalog, false);
+        this.SetSettingIfNotExists<AffiliateSettings, decimal>(settings => settings.CommissionAmount, 0M);
+        this.SetSettingIfNotExists<AffiliateSettings, decimal>(settings => settings.CommissionPercentage, 0M);
+        this.SetSettingIfNotExists<AffiliateSettings, bool>(settings => settings.UsePercentage, true);
+        this.SetSettingIfNotExists<AffiliateSettings, int>(settings => settings.HoldingPeriodInDays, 0);
+        this.SetSettingIfNotExists<AffiliateSettings, AffiliateStorageStrategyType>(settings => settings.AffiliateStorageStrategy, AffiliateStorageStrategyType.NoOverwrites);
+        this.SetSettingIfNotExists<AffiliateSettings, int>(settings => settings.CustomerAffiliatePageSize, 10);
+        this.SetSettingIfNotExists<ProductEditorSettings, bool>(settings => settings.Affiliate, false);
     }
 
     public override void Down()

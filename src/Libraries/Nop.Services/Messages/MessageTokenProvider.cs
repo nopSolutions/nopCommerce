@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -410,6 +411,15 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                         "%Vendor.Name%",
                         "%Vendor.Email%",
                         "%Vendor.VendorAttributes%"
+                    }
+                },
+                //affiliate tokens
+                {
+                    TokenGroupNames.AffiliateTokens,
+                    new[]
+                    {
+                        "%Affiliate.Email%",
+                        "%Affiliate.FriendlyUrlName%"
                     }
                 },
 
@@ -1380,6 +1390,23 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     }
 
     /// <summary>
+    /// Add affiliate tokens
+    /// </summary>
+    /// <param name="tokens">List of already added tokens</param>
+    /// <param name="affiliate">Affiliate</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task AddAffiliateTokensAsync(IList<Token> tokens, Affiliate affiliate)
+    {
+        var affiliateAddress = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
+
+        tokens.Add(new Token("Affiliate.Email", affiliateAddress.Email));
+        tokens.Add(new Token("Affiliate.FriendlyUrlName", affiliate.FriendlyUrlName));
+
+        //event notification
+        await _eventPublisher.EntityTokensAddedAsync(affiliate, tokens);
+    }
+
+    /// <summary>
     /// Add newsletter subscription tokens
     /// </summary>
     /// <param name="tokens">List of already added tokens</param>
@@ -1706,6 +1733,8 @@ public partial class MessageTokenProvider : IMessageTokenProvider
 
             MessageTemplateSystemNames.PRIVATE_MESSAGE_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.PrivateMessageTokens, TokenGroupNames.CustomerTokens],
             MessageTemplateSystemNames.NEW_VENDOR_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VendorTokens],
+            MessageTemplateSystemNames.NEW_AFFILIATE_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.AffiliateTokens],
+            MessageTemplateSystemNames.AFFILIATE_ACCOUNT_ACTIVE_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.AffiliateTokens],
             MessageTemplateSystemNames.VENDOR_INFORMATION_CHANGE_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.VendorTokens],
             MessageTemplateSystemNames.GIFT_CARD_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.GiftCardTokens],
 

@@ -12,6 +12,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
+using Nop.Services.Affiliates;
 using Nop.Services.Attributes;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
@@ -49,6 +50,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
     protected readonly GdprSettings _gdprSettings;
     protected readonly IAddressModelFactory _addressModelFactory;
+    protected readonly IAffiliateService _affiliateService;
     protected readonly IAttributeParser<CustomerAttribute, CustomerAttributeValue> _customerAttributeParser;
     protected readonly IAttributeService<CustomerAttribute, CustomerAttributeValue> _customerAttributeService;
     protected readonly IAuthenticationPluginManager _authenticationPluginManager;
@@ -95,6 +97,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         ExternalAuthenticationSettings externalAuthenticationSettings,
         GdprSettings gdprSettings,
         IAddressModelFactory addressModelFactory,
+        IAffiliateService affiliateService,
         IAttributeParser<CustomerAttribute, CustomerAttributeValue> customerAttributeParser,
         IAttributeService<CustomerAttribute, CustomerAttributeValue> customerAttributeService,
         IAuthenticationPluginManager authenticationPluginManager,
@@ -139,6 +142,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _externalAuthenticationSettings = externalAuthenticationSettings;
         _gdprSettings = gdprSettings;
         _addressModelFactory = addressModelFactory;
+        _affiliateService = affiliateService;
         _customerAttributeParser = customerAttributeParser;
         _customerAttributeService = customerAttributeService;
         _authenticationPluginManager = authenticationPluginManager;
@@ -770,6 +774,20 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 ItemClass = "customer-vendor-info"
             });
         }
+
+        var affiliate = await _affiliateService.GetAffiliateByCustomerIdAsync(customer.Id);
+
+        if (affiliate != null)
+        {
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = NopRouteNames.Standard.CUSTOMER_AFFILIATES_INFO,
+                Title = await _localizationService.GetResourceAsync("Account.Affiliates"),
+                Tab = (int)CustomerNavigationEnum.AffiliateInfo,
+                ItemClass = "customer-affiliate-info"
+            });
+        }
+
         if (_gdprSettings.GdprEnabled)
         {
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel

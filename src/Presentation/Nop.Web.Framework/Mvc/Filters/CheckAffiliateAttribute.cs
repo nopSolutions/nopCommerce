@@ -6,6 +6,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Customers;
+using Nop.Services.Orders;
 
 namespace Nop.Web.Framework.Mvc.Filters;
 
@@ -41,20 +42,26 @@ public sealed class CheckAffiliateAttribute : TypeFilterAttribute
 
         #region Fields
 
+        protected readonly AffiliateSettings _affiliateSettings;
         protected readonly IAffiliateService _affiliateService;
         protected readonly ICustomerService _customerService;
+        protected readonly IOrderService _orderService;
         protected readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public CheckAffiliateFilter(IAffiliateService affiliateService,
+        public CheckAffiliateFilter(AffiliateSettings affiliateSettings,
+            IAffiliateService affiliateService,
             ICustomerService customerService,
+            IOrderService orderService,
             IWorkContext workContext)
         {
+            _affiliateSettings = affiliateSettings;
             _affiliateService = affiliateService;
             _customerService = customerService;
+            _orderService = orderService;
             _workContext = workContext;
         }
 
@@ -80,8 +87,32 @@ public sealed class CheckAffiliateAttribute : TypeFilterAttribute
             if (customer.IsSystemAccount)
                 return;
 
+            if (customer.AffiliateId == 0)
+            {
+                customer.AffiliateId = affiliate.Id;
+            }
+            else
+            {
+                switch (_affiliateSettings.AffiliateStorageStrategy)
+                {
+                    case AffiliateStorageStrategyType.NoOverwrites:
+                        //ignore if the customer already has an affiliate
+                        return;
+                    case AffiliateStorageStrategyType.AlwaysOverwrite:
+                        customer.AffiliateId = affiliate.Id;
+                        break;
+                    case AffiliateStorageStrategyType.OverwriteAfterOrder:
+                        var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id,
+                            affiliateId: customer.AffiliateId, getOnlyTotalCount: true);
+
+                        if(orders.TotalCount > 0) 
+                            customer.AffiliateId = affiliate.Id;
+
+                        break;
+                }
+            }
+
             //update affiliate identifier
-            customer.AffiliateId = affiliate.Id;
             await _customerService.UpdateCustomerAsync(customer);
         }
 

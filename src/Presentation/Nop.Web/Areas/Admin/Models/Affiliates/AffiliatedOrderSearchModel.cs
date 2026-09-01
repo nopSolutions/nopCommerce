@@ -23,7 +23,9 @@ public partial record AffiliatedOrderSearchModel : BaseSearchModel
 
     #region Properties
 
-    public int AffliateId { get; set; }
+    public int AffiliateId { get; set; }
+    public bool IsCommissionPage { get; set; }
+    public int AffiliateCommissionId { get; set; }
 
     [NopResourceDisplayName("Admin.Affiliates.Orders.StartDate")]
     [UIHint("DateNullable")]

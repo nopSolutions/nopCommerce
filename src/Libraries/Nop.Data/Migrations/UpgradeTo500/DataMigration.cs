@@ -198,6 +198,35 @@ public class DataMigration : Migration
                 EmailAccountId = eaGeneral.Id
             });
         }
+
+        //#8273
+        if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.NEW_AFFILIATE_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
+            _dataProvider.InsertEntity(new MessageTemplate
+            {
+                Name = MessageTemplateSystemNames.NEW_AFFILIATE_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION,
+                Subject = "%Store.Name%. New affiliate account submitted.",
+                Body =
+                    $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Customer.FullName% (%Customer.Email%) has just submitted for an affiliate account. Details are below:{Environment.NewLine}<br />{Environment.NewLine}Affiliate friendly URL name: %Affiliate.FriendlyUrlName%{Environment.NewLine}<br />{Environment.NewLine}Affiliate email: %Affiliate.Email%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}You can activate it in admin area.{Environment.NewLine}</p>{Environment.NewLine}",
+                IsActive = true,
+                EmailAccountId = eaGeneral.Id
+            });
+        }
+
+        if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name, MessageTemplateSystemNames.AFFILIATE_ACCOUNT_ACTIVE_CUSTOMER_NOTIFICATION, StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
+            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ?? throw new Exception("Default email account cannot be loaded");
+            _dataProvider.InsertEntity(new MessageTemplate
+            {
+                Name = MessageTemplateSystemNames.AFFILIATE_ACCOUNT_ACTIVE_CUSTOMER_NOTIFICATION,
+                Subject = "%Store.Name%. Affiliate account activated.",
+                Body =
+                    $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Your affiliate account has just been activated. Details are below:{Environment.NewLine}<br />{Environment.NewLine}Affiliate friendly URL name: %Affiliate.FriendlyUrlName%",
+                IsActive = true,
+                EmailAccountId = eaGeneral.Id
+            });
+        }
     }
 
     /// <summary>Collects the DOWN migration expressions</summary>

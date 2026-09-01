@@ -7,6 +7,7 @@ using System.Xml;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -186,7 +187,7 @@ public partial class InstallationService
     protected virtual async Task ImportResourcesFromXmlAsync(Language language, StreamReader xmlStreamReader, bool updateExistingResources = true)
     {
         var parsedResources = loadLocaleResourcesFromStream();
-        
+
         if (!parsedResources.Any())
             return;
 
@@ -1102,6 +1103,22 @@ public partial class InstallationService
                     EmailAccountId = eaGeneral.Id
                 },
                 new() {
+                    Name = MessageTemplateSystemNames.NEW_AFFILIATE_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION,
+                    Subject = "%Store.Name%. New affiliate account submitted.",
+                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Customer.FullName% (%Customer.Email%) has just submitted for an affiliate account. Details are below:{Environment.NewLine}<br />{Environment.NewLine}Affiliate friendly URL name: %Affiliate.FriendlyUrlName%{Environment.NewLine}<br />{Environment.NewLine}Affiliate email: %Affiliate.Email%{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}You can activate it in admin area.{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id
+                },
+                new()
+                {
+                    Name = MessageTemplateSystemNames.AFFILIATE_ACCOUNT_ACTIVE_CUSTOMER_NOTIFICATION,
+                    Subject = "%Store.Name%. Affiliate account activated.",
+                    Body =
+                        $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Your affiliate account has just been activated. Details are below:{Environment.NewLine}<br />{Environment.NewLine}Affiliate friendly URL name: %Affiliate.FriendlyUrlName%",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id
+                },
+                new() {
                     Name = MessageTemplateSystemNames.VENDOR_INFORMATION_CHANGE_STORE_OWNER_NOTIFICATION,
                     Subject = "%Store.Name%. Vendor information change.",
                     Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Vendor %Vendor.Name% (%Vendor.Email%) has just changed information about itself.{Environment.NewLine}</p>{Environment.NewLine}",
@@ -1325,7 +1342,7 @@ public partial class InstallationService
                 StoreId = s.StoreId
             };
             if (!dictionary.TryGetValue(resourceName, out var value))
-                //first setting
+            //first setting
             {
                 dictionary.Add(resourceName, new List<Setting>
                 {
@@ -2048,6 +2065,7 @@ public partial class InstallationService
             CaptchaType = CaptchaType.CheckBoxReCaptchaV2,
             ReCaptchaV3ScoreThreshold = 0.5M,
             ShowOnApplyVendorPage = false,
+            ShowOnApplyAffiliatePage = false,
             ShowOnBlogCommentPage = false,
             ShowOnContactUsPage = false,
             ShowOnEmailProductToFriendPage = false,
@@ -2202,6 +2220,18 @@ public partial class InstallationService
             PendingOrdersEnabled = true,
             IncompleteRegistrationEnabled = true,
             ProcessingStartDateUtc = DateTime.UtcNow,
+        });
+
+        await SaveSettingAsync(dictionary, new AffiliateSettings
+        {
+            AllowCustomersToApplyForAffiliateAccount = false,
+            UseDefaultCommissionIfNotSetOnCatalog = false,
+            CommissionAmount = 0M,
+            CommissionPercentage = 0M,
+            UsePercentage = true,
+            HoldingPeriodInDays = 0,
+            AffiliateStorageStrategy = AffiliateStorageStrategyType.NoOverwrites,
+            CustomerAffiliatePageSize = 10
         });
     }
 
@@ -3886,6 +3916,14 @@ public partial class InstallationService
                 MenuItemType = MenuItemType.StandardPage,
                 RouteName = NopRouteNames.General.APPLY_VENDOR_ACCOUNT,
                 Title = "Apply for vendor account",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerMyAccount.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopRouteNames.General.APPLY_AFFILIATE_ACCOUNT,
+                Title = "Apply for affiliate account",
                 Published = true
             },
         ]);

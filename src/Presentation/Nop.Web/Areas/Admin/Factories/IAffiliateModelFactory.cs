@@ -9,6 +9,16 @@ namespace Nop.Web.Areas.Admin.Factories;
 public partial interface IAffiliateModelFactory
 {
     /// <summary>
+    /// Prepare affiliate customer search model
+    /// </summary>
+    /// <param name="searchModel">Affiliate customer search model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the affiliate customer search model
+    /// </returns>
+    Task<AffiliateCustomerSearchModel> PrepareAffiliateCustomerSearchModelAsync(AffiliateCustomerSearchModel searchModel);
+
+    /// <summary>
     /// Prepare affiliate search model
     /// </summary>
     /// <param name="searchModel">Affiliate search model</param>
@@ -52,6 +62,17 @@ public partial interface IAffiliateModelFactory
     Task<AffiliatedOrderListModel> PrepareAffiliatedOrderListModelAsync(AffiliatedOrderSearchModel searchModel, Affiliate affiliate);
 
     /// <summary>
+    /// Prepare affiliate commission list model
+    /// </summary>
+    /// <param name="searchModel">Affiliated commission search model</param>
+    /// <param name="affiliate">Affiliate</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the affiliate commission list model
+    /// </returns>
+    Task<AffiliateCommissionListModel> PrepareAffiliateCommissionListModelAsync(AffiliateCommissionSearchModel searchModel, Affiliate affiliate);
+    
+    /// <summary>
     /// Prepare paged affiliated customer list model
     /// </summary>
     /// <param name="searchModel">Affiliated customer search model</param>
@@ -62,4 +83,24 @@ public partial interface IAffiliateModelFactory
     /// </returns>
     Task<AffiliatedCustomerListModel> PrepareAffiliatedCustomerListModelAsync(AffiliatedCustomerSearchModel searchModel,
         Affiliate affiliate);
+
+    /// <summary>
+    /// Prepare paged affiliate customer list model
+    /// </summary>
+    /// <param name="searchModel">Affiliate customer search model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the affiliate customer list model
+    /// </returns>
+    Task<AffiliateCustomerListModel> PrepareAffiliateCustomerListModelAsync(AffiliateCustomerSearchModel searchModel);
+
+    /// <summary>
+    /// Prepare affiliate commission editor model
+    /// </summary>
+    /// <param name="affiliateCommissionEditModel">Affiliate commission editor model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the affiliate commission editor model
+    /// </returns>
+    Task<AffiliateCommissionEditModel> PrepareAffiliateCommissionEditModelAsync(AffiliateCommissionEditModel affiliateCommissionEditModel);
 }

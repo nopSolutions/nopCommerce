@@ -6,6 +6,10 @@ public static partial class PublicWidgetZones
     public static string AccountNavigationBefore => "account_navigation_before";
     public static string AddressBottom => "address_bottom";
     public static string AdminHeaderLinksAfter => "admin_header_links_after";
+    public static string AffiliatesInfoBottom => "affiliates_info_bottom";
+    public static string AffiliatesInfoTop => "affiliates_info_top";
+    public static string ApplyAffiliateTop => "apply_affiliate_top";
+    public static string ApplyAffiliateBottom => "apply_affiliate_bottom";
     public static string ApplyVendorBottom => "applyvendor_bottom";
     public static string ApplyVendorTop => "applyvendor_top";
     public static string BlogListPageAfterPost => "bloglist_page_after_post";

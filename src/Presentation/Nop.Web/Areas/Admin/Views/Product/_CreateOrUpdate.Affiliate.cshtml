@@ -1,0 +1,58 @@
+﻿@model ProductModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="SpecifyAffiliateCommission" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SpecifyAffiliateCommission" />
+            <span asp-validation-for="SpecifyAffiliateCommission"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="SpecifyAffiliateCommission">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="AffiliateUsePercentage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AffiliateUsePercentage" />
+                <span asp-validation-for="AffiliateUsePercentage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="pnlCommissionPercentage">
+            <div class="col-md-3">
+               
+                <nop-label asp-for="AffiliateCommissionPercentage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AffiliateCommissionPercentage" />
+                <span asp-validation-for="AffiliateCommissionPercentage"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="pnlCommissionAmount">
+            <div class="col-md-3">
+                <nop-label asp-for="AffiliateCommissionAmount" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AffiliateCommissionAmount" />
+                <span asp-validation-for="AffiliateCommissionAmount"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>
+
+<script asp-location="Footer">
+    $("#@Html.IdFor(model => model.AffiliateUsePercentage)").change(toggleUsePercentage);
+    toggleUsePercentage();
+
+    function toggleUsePercentage() {
+        if ($('#@Html.IdFor(model => model.AffiliateUsePercentage)').is(':checked')) {
+            $('#pnlCommissionAmount').hideElement();
+            $('#pnlCommissionPercentage').showElement();
+        } else {
+            $('#pnlCommissionAmount').showElement();
+            $('#pnlCommissionPercentage').hideElement();
+        }
+    }
+</script>

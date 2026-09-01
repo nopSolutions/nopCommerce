@@ -9,9 +9,12 @@ public static partial class AdminWidgetZones
     public static string AddressAttributeValueDetailsBottom => "admin_address_attribute_value_details_bottom";
     public static string AddressAttributeValueDetailsButtons => "admin_address_attribute_value_details_buttons";
     public static string AddressAttributeValueDetailsTop => "admin_address_attribute_value_details_top";
+    public static string AffiliateCommissionDetailsButtons => "aadmin_affiliate_details_buttons";
     public static string AffiliateDetailsBlock => "admin_affiliate_details_block";
     public static string AffiliateDetailsButtons => "admin_affiliate_details_buttons";
     public static string AffiliateListButtons => "admin_affiliate_list_buttons";
+    public static string AffiliateSettingsButtons => "admin_affiliate_settings_buttons";
+    public static string AffiliateSettingsDetailsBlock => "admin_affiliate_settings_details_block";
     public static string AllSettingListButtons => "admin_all_setting_list_buttons";
     public static string AllSettingsBottom => "admin_all_settings_bottom";
     public static string AllSettingsTop => "admin_all_settings_top";

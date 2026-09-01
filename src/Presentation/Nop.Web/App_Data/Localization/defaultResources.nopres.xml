@@ -12,6 +12,63 @@
   <LocaleResource Name="Account.Administration">
     <Value>Administration</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Affiliates">
+    <Value>Affiliates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.Orders.AffiliateCommission">
+    <Value>Commission</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.Orders.CommissionPaidOn">
+    <Value>Paid on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.Orders.CommissionStatus">
+    <Value>Commission status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.Orders.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.Orders.CustomOrderNumber">
+    <Value>Order #</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.Orders.OrderStatus">
+    <Value>Order status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.Orders.OrderTotal">
+    <Value>Order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.Orders.PaymentStatus">
+    <Value>Payment status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.OrdersAmount">
+    <Value>Orders amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.OrdersCount">
+    <Value>Orders count</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.PaidCommission">
+    <Value>Paid commission</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.Period">
+    <Value>Reports from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.Status">
+    <Value>Affiliate status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.Status.Active">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.Status.Disabled">
+    <Value>Disabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.TotalAffiliatedCustomers">
+    <Value>Total number of affiliated customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.TotalCommission">
+    <Value>Total commission</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Affiliates.TotalOrders">
+    <Value>Total number of orders</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.AssociatedExternalAuth">
     <Value>External authentication</Value>
   </LocaleResource>
@@ -1608,8 +1665,77 @@
   <LocaleResource Name="Admin.Affiliates.AddNew">
     <Value>Add a new affiliate</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.AssociatedCustomer.Choose">
+    <Value>Choose the customer to associate with this affiliate</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.BackToList">
     <Value>back to affiliate list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.AddNew">
+    <Value>Add new affiliate commission</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.AddSelectedOrders">
+    <Value>Add selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.AdminComment">
+    <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.AdminComment.Hint">
+    <Value>Admin comment. For internal use.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.CommissionId">
+    <Value>#</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.CommissionStatus">
+    <Value>Commission status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.CreateOn">
+    <Value>Create on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.CreateOrUpdate.AvailableOrders">
+    <Value>List of available orders to add into the commission</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.CreateOrUpdate.BackToAffiliate">
+    <Value>Back to affiliate page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.CreateOrUpdate.IncludedOrders">
+    <Value>List of orders which included into the commission</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.Edit">
+    <Value>Edit affiliate commission</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.PaidOn">
+    <Value>Paid on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.RemoveOrderFromCommission">
+    <Value>Remove order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.SaveForEdit">
+    <Value>Save commission before edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.TotalCommissionAmount">
+    <Value>Total commission amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commissions">
+    <Value>Affiliate commissions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commissions.CommissionStatus">
+    <Value>Commission status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commissions.CommissionStatus.Hint">
+    <Value>Commission status for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commissions.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commissions.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commissions.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commissions.StartDate.Hint">
+    <Value>The start date for the search.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Customers">
     <Value>Affiliated customers</Value>
@@ -1637,6 +1763,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Fields.AdminComment.Hint">
     <Value>Admin comment. For internal use.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.AssociatedCustomerId">
+    <Value>Associated Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.AssociatedCustomerId.Choose">
+    <Value>Choose customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.AssociatedCustomerId.Hint">
+    <Value>Select the customer associated with this affiliate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.AssociatedCustomerId.Remove">
+    <Value>Remove customer</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Fields.FriendlyUrlName">
     <Value>Friendly URL name</Value>
@@ -1692,6 +1830,15 @@
   <LocaleResource Name="Admin.Affiliates.Orders">
     <Value>Affiliated orders</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.AffiliateCommission">
+    <Value>Commission</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.CommissionPaidOn">
+    <Value>Paid on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.CommissionStatus">
+    <Value>Commission status</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Orders.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
@@ -1712,6 +1859,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Orders.OrderTotal">
     <Value>Order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.MarkPaid">
+    <Value>Mark as paid</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Orders.PaymentStatus">
     <Value>Payment status</Value>
@@ -3062,6 +3212,27 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.AddNew">
     <Value>Add a new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Affiliate">
+    <Value>Affiliate commission</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AffiliateCommissionAmount">
+    <Value>Commission amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AffiliateCommissionAmount.Hint">
+    <Value>Enter the affiliate commission amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AffiliateCommissionPercentage">
+    <Value>Commission percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AffiliateCommissionPercentage.Hint">
+    <Value>Enter the affiliate commission percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AffiliateUsePercentage">
+    <Value>Use percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AffiliateUsePercentage.Hint">
+    <Value>Check to use percentage instead of amount for affiliate commission</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.AiFullDescription.Copied">
     <Value>Generated description has been copied into the clipboard.</Value>
@@ -4604,6 +4775,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit">
     <Value>You need to save the product before you can add product specification attributes for this product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecifyAffiliateCommission">
+    <Value>Specify affiliate commission</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecifyAffiliateCommission.Hint">
+    <Value>Check to specify affiliate commission for this product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.StockQuantityHistory">
     <Value>Stock quantity history</Value>
@@ -6287,6 +6464,60 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings">
     <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate">
+    <Value>Affiliate settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.AffiliateStorageStrategy">
+    <Value>Affiliate storage strategy</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.AffiliateStorageStrategy.Hint">
+    <Value>Select the affiliate storage strategy</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.AllowCustomersToApplyForAffiliateAccount">
+    <Value>Allow customers to apply affiliate account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.AllowCustomersToApplyForAffiliateAccount.Hint">
+    <Value>Check to allow customers users to fill a form to become an affiliate partner. Then a store owner will have to manually approve it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.CommissionAmount">
+    <Value>Commission amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.CommissionAmount.Hint">
+    <Value>Set the default commission amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.CommissionPercentage">
+    <Value>Commission percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.CommissionPercentage.Hint">
+    <Value>Set the default commission percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.CustomerAffiliatePageSize">
+    <Value>Page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.CustomerAffiliatePageSize.Hint">
+    <Value>Set the page size for customer affiliates e.g. '4' affiliates per page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.HoldingPeriodInDays">
+    <Value>Holding period in days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.HoldingPeriodInDays.Hint">
+    <Value>Set the holding period in days; use 0 to disable the holding period</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.UseDefaultCommissionIfNotSetOnCatalog">
+    <Value>Use default commission if not set on catalog</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.UseDefaultCommissionIfNotSetOnCatalog.Hint">
+    <Value>Check to use the default commission if not set on catalog</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.UsePercentage">
+    <Value>Use percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Affiliate.UsePercentage.Hint">
+    <Value>Check to use percentage instead of amount for default commission</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.AllSettings">
     <Value>All settings (advanced)</Value>
@@ -8058,6 +8289,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaEnabled.Hint">
     <Value>Check to enable CAPTCHA.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnApplyAffiliatePage">
+    <Value>Show on apply for affiliate account page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnApplyAffiliatePage.Hint">
+    <Value>Check to show CAPTCHA on apply for affiliate account page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnApplyVendorPage">
     <Value>Show on apply for vendor account page</Value>
   </LocaleResource>
@@ -9187,6 +9424,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AdminComment">
     <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Affiliate">
+    <Value>Affiliate commission</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.AgeVerification">
     <Value>Age verification</Value>
@@ -17380,6 +17620,33 @@
   <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.Note.Validation">
     <Value>Vendor note can not be empty.</Value>
   </LocaleResource>
+  <LocaleResource Name="Affiliate.ApplyAccount.AlreadyApplied">
+    <Value>You already applied for a affiliate account. Please register as a new customer in order to apply for one more affiliate account.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Affiliate.ApplyAccount.Button">
+    <Value>Submit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Affiliate.ApplyAccount.ExistingAddresses">
+    <Value>Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Affiliate.ApplyAccount.Fields.FriendlyUrlName.Length">
+    <Value>Friendly URL name must be between 3 and 100 characters long.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Affiliate.ApplyAccount.Fields.FriendlyUrlName.Required">
+    <Value>Friendly URL name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Affiliate.ApplyAccount.Fields.FriendlyUrlName.Unique">
+    <Value>Friendly URL name must be unique.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Affiliate.ApplyAccount.FriendlyUrlName">
+    <Value>Friendly URL name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Affiliate.ApplyAccount.FriendlyUrlName.Hint">
+    <Value>Enter a friendly name for your affiliate URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Affiliate.ApplyAccount.Submitted">
+    <Value>Your application has been submitted successfully. You will be notified via email once your application is reviewed.</Value>
+  </LocaleResource>
   <LocaleResource Name="AjaxCart.Failure">
     <Value>Failed to add the product. Please refresh the page and try one more time.</Value>
   </LocaleResource>
@@ -17991,6 +18258,21 @@
   </LocaleResource>
   <LocaleResource Name="DownloadableProducts.UserAgreement">
     <Value>User agreement</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Affiliates.AffiliateStorageStrategyType.NoOverwrites">
+    <Value>No overwrites</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Affiliates.AffiliateStorageStrategyType.AlwaysOverwrite">
+    <Value>Always overwrite</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Affiliates.AffiliateStorageStrategyType.OverwriteAfterOrder">
+    <Value>Overwrite after order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Affiliates.CommissionStatus.Paid">
+    <Value>Paid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Affiliates.CommissionStatus.Pending">
+    <Value>Pending</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.ArtificialIntelligence.ArtificialIntelligenceProviderType.ChatGpt">
     <Value>ChatGPT (OpenAI)</Value>
@@ -19170,6 +19452,12 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.AccountActivation">
     <Value>Account Activation</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Affiliate.Apply">
+    <Value>Apply for Affiliate Account</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.AffiliateInfo">
+    <Value>Affiliate Info</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.AllProductTags">
     <Value>All product tags</Value>

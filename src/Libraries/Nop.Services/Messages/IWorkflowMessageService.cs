@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Blogs;
+﻿using Nop.Core.Domain.Affiliates;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
@@ -507,6 +508,30 @@ public partial interface IWorkflowMessageService
     #endregion
 
     #region Misc
+
+    /// <summary>
+    /// Sends 'New vendor account submitted' message to a store owner
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="affiliate">Affiliate</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    Task<IList<int>> SendNewAffiliateAccountApplyStoreOwnerNotificationAsync(Customer customer, Affiliate affiliate, int languageId);
+
+    /// <summary>
+    /// Sends 'Affiliate account active' message to a customer
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="affiliate">Affiliate</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    Task<IList<int>> SendAffiliateAccountActiveCustomerNotificationAsync(Customer customer, Affiliate affiliate, int languageId);
 
     /// <summary>
     /// Sends 'New vendor account submitted' message to a store owner

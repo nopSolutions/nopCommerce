@@ -10,6 +10,9 @@
 
     const string hideOrdersBlockAttributeName = "AffiliatePage.HideOrdersBlock";
     var hideOrdersBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideOrdersBlockAttributeName, defaultValue: true);
+
+    const string hideAffiliateAttributeName = "AffiliatePage.HideAffiliateBlock";
+    var hideAffiliateBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAffiliateAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>
@@ -24,8 +27,8 @@
                 {
                     <nop-card asp-name="affiliate-customers" asp-icon="fas fa-user" asp-title="@T("Admin.Affiliates.Customers")" asp-hide-block-attribute-name="@hideCustomersBlockAttributeName" asp-hide="@hideCustomersBlock">@await Html.PartialAsync("_CreateOrUpdate.Customers", Model)</nop-card>
                     <nop-card asp-name="affiliate-orders" asp-icon="fas fa-cart-plus" asp-title="@T("Admin.Affiliates.Orders")" asp-hide-block-attribute-name="@hideOrdersBlockAttributeName" asp-hide="@hideOrdersBlock">@await Html.PartialAsync("_CreateOrUpdate.Orders", Model)</nop-card>
+                    <nop-card asp-name="affiliate-affiliate-commission" asp-icon="fas fa-hand-holding-dollar" asp-title="@T("Admin.Affiliates.Commissions")" asp-hide-block-attribute-name="@hideAffiliateAttributeName" asp-hide="@hideAffiliateBlock">@await Html.PartialAsync("_CreateOrUpdate.AffiliateCommisions", Model)</nop-card>
                 }
-
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AffiliateDetailsBlock, additionalData = Model })
             </nop-cards>
         </div>

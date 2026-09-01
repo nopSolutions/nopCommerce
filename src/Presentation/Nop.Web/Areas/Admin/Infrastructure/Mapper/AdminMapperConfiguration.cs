@@ -244,11 +244,30 @@ public partial class AdminMapperConfiguration : BaseMapperProfile
             .ForMember(model => model.PaymentStatus, options => options.Ignore())
             .ForMember(model => model.ShippingStatus, options => options.Ignore())
             .ForMember(model => model.OrderTotal, options => options.Ignore())
-            .ForMember(model => model.CreatedOn, options => options.Ignore());
+            .ForMember(model => model.CreatedOn, options => options.Ignore())
+            .ForMember(model => model.AffiliateCommission, options => options.Ignore())
+            .ForMember(model => model.PaidOn, options => options.Ignore())
+            .ForMember(model => model.CommissionStatus, options => options.Ignore());
 
+        CreateMap<AffiliateCommission, AffiliateCommissionModel>()
+            .ForMember(model => model.CommissionStatus, options => options.Ignore())
+            .ForMember(model => model.TotalCommissionAmount, options => options.Ignore());
+        
         CreateMap<Customer, AffiliatedCustomerModel>()
             .ForMember(model => model.Name, options => options.Ignore());
 
+        CreateMap<AffiliateSettings, AffiliateSettingsModel>()
+            .ForMember(model => model.AffiliateStorageStrategy_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.AllowCustomersToApplyForAffiliateAccount_OverrideForStore,
+                options => options.Ignore())
+            .ForMember(model => model.CommissionAmount_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.CommissionPercentage_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.CustomerAffiliatePageSize_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.HoldingPeriodInDays_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.UseDefaultCommissionIfNotSetOnCatalog_OverrideForStore,
+                options => options.Ignore())
+            .ForMember(model => model.UsePercentage_OverrideForStore, options => options.Ignore());
+        CreateMap<AffiliateSettingsModel, AffiliateSettings>();
     }
 
     /// <summary>

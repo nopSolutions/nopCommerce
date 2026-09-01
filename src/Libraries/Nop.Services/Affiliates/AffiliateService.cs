@@ -20,6 +20,7 @@ public partial class AffiliateService : IAffiliateService
     protected readonly IAddressService _addressService;
     protected readonly IRepository<Address> _addressRepository;
     protected readonly IRepository<Affiliate> _affiliateRepository;
+    protected readonly IRepository<AffiliateCommission> _affiliateCommissionRepository;
     protected readonly IRepository<Order> _orderRepository;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWebHelper _webHelper;
@@ -32,6 +33,7 @@ public partial class AffiliateService : IAffiliateService
     public AffiliateService(IAddressService addressService,
         IRepository<Address> addressRepository,
         IRepository<Affiliate> affiliateRepository,
+        IRepository<AffiliateCommission> affiliateCommissionRepository,
         IRepository<Order> orderRepository,
         IUrlRecordService urlRecordService,
         IWebHelper webHelper,
@@ -40,6 +42,7 @@ public partial class AffiliateService : IAffiliateService
         _addressService = addressService;
         _addressRepository = addressRepository;
         _affiliateRepository = affiliateRepository;
+        _affiliateCommissionRepository = affiliateCommissionRepository;
         _orderRepository = orderRepository;
         _urlRecordService = urlRecordService;
         _webHelper = webHelper;
@@ -61,6 +64,19 @@ public partial class AffiliateService : IAffiliateService
     public virtual async Task<Affiliate> GetAffiliateByIdAsync(int affiliateId)
     {
         return await _affiliateRepository.GetByIdAsync(affiliateId, cache => default, useShortTermCache: true);
+    }
+
+    /// <summary>
+    /// Gets an affiliate by customer identifier
+    /// </summary>
+    /// <param name="customerId">Customer identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the affiliate
+    /// </returns>
+    public virtual async Task<Affiliate> GetAffiliateByCustomerIdAsync(int customerId)
+    {
+        return await _affiliateRepository.Table.FirstOrDefaultAsync(a=>a.AssociatedCustomerId == customerId);
     }
 
     /// <summary>
@@ -268,6 +284,109 @@ public partial class AffiliateService : IAffiliateService
         friendlyUrlName = tempName;
 
         return friendlyUrlName;
+    }
+
+    /// <summary>
+    /// Inserts an affiliate commission
+    /// </summary>
+    /// <param name="commission">Affiliate commission</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertAffiliateCommission(AffiliateCommission commission)
+    {
+        await _affiliateCommissionRepository.InsertAsync(commission);
+    }
+
+    /// <summary>
+    /// Gets the affiliate commission by order identifiers
+    /// </summary>
+    /// <param name="commissionIds">The list of affiliate commission identifiers</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of affiliate commissions
+    /// </returns>
+    public virtual async Task<IList<AffiliateCommission>> GetAffiliateCommissionsByIdsAsync(int[] commissionIds)
+    {
+        if (!commissionIds.Any())
+            return new List<AffiliateCommission>();
+
+        return await _affiliateCommissionRepository.Table.Where(ac => commissionIds.Contains(ac.Id)).ToListAsync();
+    }
+
+    /// <summary>
+    /// Gets an affiliate commission by affiliate identifier
+    /// </summary>
+    /// <param name="commissionId">Affiliate commission identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the affiliate commission
+    /// </returns>
+    public virtual async Task<AffiliateCommission> GetAffiliateCommissionByIdAsync(int commissionId)
+    {
+        return await _affiliateCommissionRepository.GetByIdAsync(commissionId, cache => default, useShortTermCache: true);
+    }
+
+    /// <summary>
+    /// Updates the affiliate commission
+    /// </summary>
+    /// <param name="commission">Affiliate commission</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task UpdateAffiliateCommissionAsync(AffiliateCommission commission)
+    {
+        await _affiliateCommissionRepository.UpdateAsync(commission);
+    }
+    
+    /// <summary>
+    /// Gets all affiliate commissions
+    /// </summary>
+    /// <param name="affiliateId">Affiliate identifier</param>
+    /// <param name="createdFromUtc">Created from UTC</param>
+    /// <param name="createdToUtc">Created to UTC</param>
+    /// <param name="commissionStatus">Commission status identifier</param>
+    /// <param name="pageIndex">Page index</param>
+    /// <param name="pageSize">Page size</param>
+    /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the affiliate commissions
+    /// </returns>
+    public virtual async Task<IPagedList<AffiliateCommission>> GetAllCommissionsAsync(int affiliateId,
+        DateTime? createdFromUtc = null,
+        DateTime? createdToUtc = null,
+        int? commissionStatus = null,
+        int pageIndex = 0,
+        int pageSize = int.MaxValue,
+        bool getOnlyTotalCount = false)
+    {
+        var query = _affiliateCommissionRepository.Table.Where(ac=>ac.AffiliateId == affiliateId);
+
+        if (createdFromUtc.HasValue)
+            query = query.Where(c => c.CreateOn >= createdFromUtc.Value);
+
+        if (createdToUtc.HasValue)
+            query = query.Where(c => c.CreateOn <= createdToUtc.Value);
+
+        if (commissionStatus.HasValue)
+            query = query.Where(c => c.CommissionStatusId == commissionStatus.Value);
+
+        return await query.ToPagedListAsync(pageIndex, pageSize, getOnlyTotalCount);
+    }
+
+
+    /// <summary>
+    /// Delete affiliate commissions
+    /// </summary>
+    /// <param name="commission">Commission to delete</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteAffiliateCommissionAsync(AffiliateCommission commission)
+    {
+        var orders = await _orderRepository.Table.Where(o => o.AffiliateCommissionId == commission.Id).ToListAsync();
+        
+        foreach (var order in orders) 
+            order.AffiliateCommissionId = null;
+
+        await _orderRepository.UpdateAsync(orders);
+
+        await _affiliateCommissionRepository.DeleteAsync(commission);
     }
 
     #endregion

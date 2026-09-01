@@ -268,6 +268,16 @@ public partial class Order : BaseEntity, ISoftDeletedEntity
     /// </summary>
     public DateTime? LastPendingOrderFollowUpDateUtc { get; set; }
 
+    /// <summary>
+    /// Gets or sets the affiliate commission amount (in primary store currency)
+    /// </summary>
+    public decimal? AffiliateCommissionAmount { get; set; }
+
+    /// <summary>
+    /// Gets or sets the affiliate commission identifier
+    /// </summary>
+    public int? AffiliateCommissionId { get; set; }
+
     #endregion
 
     #region Custom properties

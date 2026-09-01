@@ -228,6 +228,16 @@ public static partial class MessageTemplateSystemNames
     #region Misc
 
     /// <summary>
+    /// Represents system name of notification store owner about applying new affiliate account
+    /// </summary>
+    public const string NEW_AFFILIATE_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION = "AffiliateAccountApply.StoreOwnerNotification";
+
+    /// <summary>
+    /// Represents system name of notification store owner about applying new affiliate account
+    /// </summary>
+    public const string AFFILIATE_ACCOUNT_ACTIVE_CUSTOMER_NOTIFICATION = "AffiliateAccountActive.CustomerNotification";
+
+    /// <summary>
     /// Represents system name of notification store owner about applying new vendor account
     /// </summary>
     public const string NEW_VENDOR_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION = "VendorAccountApply.StoreOwnerNotification";

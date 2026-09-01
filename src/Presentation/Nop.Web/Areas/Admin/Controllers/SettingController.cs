@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -197,6 +198,56 @@ public partial class SettingController : BaseAdminController
             return RedirectToAction("Index", "Home", new { area = AreaNames.ADMIN });
 
         return Redirect(returnUrl);
+    }
+
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual async Task<IActionResult> Affiliate()
+    {
+        //prepare model
+        var model = await _settingModelFactory.PrepareAffiliateSettingsModelAsync();
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual async Task<IActionResult> Affiliate(AffiliateSettingsModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            //load settings for a chosen store scope
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var affiliateSettings = await _settingService.LoadSettingAsync<AffiliateSettings>(storeScope);
+            affiliateSettings = model.ToSettings(affiliateSettings);
+
+            //we do not clear cache after each setting update.
+            //this behavior can increase performance because cached settings will not be cleared 
+            //and loaded from database after each update
+            await _settingService.SaveSettingOverridablePerStoreAsync(affiliateSettings, x => x.AllowCustomersToApplyForAffiliateAccount, model.AllowCustomersToApplyForAffiliateAccount_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(affiliateSettings, x => x.UseDefaultCommissionIfNotSetOnCatalog, model.UseDefaultCommissionIfNotSetOnCatalog_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(affiliateSettings, x => x.UsePercentage, model.UsePercentage_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(affiliateSettings, x => x.CommissionAmount, model.CommissionAmount_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(affiliateSettings, x => x.CommissionPercentage, model.CommissionPercentage_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(affiliateSettings, x => x.HoldingPeriodInDays, model.HoldingPeriodInDays_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(affiliateSettings, x => x.AffiliateStorageStrategy, model.AffiliateStorageStrategy_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(affiliateSettings, x => x.CustomerAffiliatePageSize, model.CustomerAffiliatePageSize_OverrideForStore, storeScope, false);
+
+            //now clear settings cache
+            await _settingService.ClearCacheAsync();
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("EditSettings", await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Updated"));
+
+            return RedirectToAction("Affiliate");
+        }
+
+        //prepare model
+        model = await _settingModelFactory.PrepareAffiliateSettingsModelAsync(model);
+
+        //if we got this far, something failed, redisplay form
+        return View(model);
     }
 
     [CheckPermission(StandardPermission.System.MANAGE_APP_SETTINGS)]
@@ -1649,6 +1700,7 @@ public partial class SettingController : BaseAdminController
             captchaSettings.ShowOnProductReviewPage = model.CaptchaSettings.ShowOnProductReviewPage;
             captchaSettings.ShowOnForgotPasswordPage = model.CaptchaSettings.ShowOnForgotPasswordPage;
             captchaSettings.ShowOnApplyVendorPage = model.CaptchaSettings.ShowOnApplyVendorPage;
+            captchaSettings.ShowOnApplyAffiliatePage = model.CaptchaSettings.ShowOnApplyAffiliatePage;
             captchaSettings.ShowOnCheckoutPageForGuests = model.CaptchaSettings.ShowOnCheckoutPageForGuests;
             captchaSettings.ShowOnCheckGiftCardBalance = model.CaptchaSettings.ShowOnCheckGiftCardBalance;
             captchaSettings.ShowOnWithdrawalForm = model.CaptchaSettings.ShowOnWithdrawalForm;
@@ -1670,6 +1722,7 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnNewsletterPage, model.CaptchaSettings.ShowOnNewsLetterPage_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnProductReviewPage, model.CaptchaSettings.ShowOnProductReviewPage_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnApplyVendorPage, model.CaptchaSettings.ShowOnApplyVendorPage_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnApplyAffiliatePage, model.CaptchaSettings.ShowOnApplyAffiliatePage_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnForgotPasswordPage, model.CaptchaSettings.ShowOnForgotPasswordPage_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnCheckoutPageForGuests, model.CaptchaSettings.ShowOnCheckoutPageForGuests_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(captchaSettings, x => x.ShowOnCheckGiftCardBalance, model.CaptchaSettings.ShowOnCheckGiftCardBalance_OverrideForStore, storeScope, false);

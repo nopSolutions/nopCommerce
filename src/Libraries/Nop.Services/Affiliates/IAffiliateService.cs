@@ -19,6 +19,16 @@ public partial interface IAffiliateService
     Task<Affiliate> GetAffiliateByIdAsync(int affiliateId);
 
     /// <summary>
+    /// Gets an affiliate by customer identifier
+    /// </summary>
+    /// <param name="customerId">Customer identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the affiliate
+    /// </returns>
+    Task<Affiliate> GetAffiliateByCustomerIdAsync(int customerId);
+
+    /// <summary>
     /// Gets an affiliate by friendly URL name
     /// </summary>
     /// <param name="friendlyUrlName">Friendly URL name</param>
@@ -102,4 +112,67 @@ public partial interface IAffiliateService
     /// The task result contains the valid friendly name
     /// </returns>
     Task<string> ValidateFriendlyUrlNameAsync(Affiliate affiliate, string friendlyUrlName);
+
+    /// <summary>
+    /// Inserts an affiliate commission
+    /// </summary>
+    /// <param name="commission">Affiliate commission</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task InsertAffiliateCommission(AffiliateCommission commission);
+
+    /// <summary>
+    /// Gets the affiliate commission by order identifiers
+    /// </summary>
+    /// <param name="commissionIds">The list of affiliate commission identifiers</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of affiliate commissions
+    /// </returns>
+    Task<IList<AffiliateCommission>> GetAffiliateCommissionsByIdsAsync(int[] commissionIds);
+
+    /// <summary>
+    /// Gets an affiliate commission by affiliate identifier
+    /// </summary>
+    /// <param name="commissionId">Affiliate commission identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the affiliate commission
+    /// </returns>
+    Task<AffiliateCommission> GetAffiliateCommissionByIdAsync(int commissionId);
+
+    /// <summary>
+    /// Updates the affiliate commission
+    /// </summary>
+    /// <param name="commission">Affiliate commission</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task UpdateAffiliateCommissionAsync(AffiliateCommission commission);
+
+    /// <summary>
+    /// Gets all affiliate commissions
+    /// </summary>
+    /// <param name="affiliateId">Affiliate identifier</param>
+    /// <param name="createdFromUtc">Created from UTC</param>
+    /// <param name="createdToUtc">Created to UTC</param>
+    /// <param name="commissionStatus">Commission status identifier</param>
+    /// <param name="pageIndex">Page index</param>
+    /// <param name="pageSize">Page size</param>
+    /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the affiliate commissions
+    /// </returns>
+    Task<IPagedList<AffiliateCommission>> GetAllCommissionsAsync(int affiliateId, 
+        DateTime? createdFromUtc = null,
+        DateTime? createdToUtc = null,
+        int? commissionStatus = null,
+        int pageIndex = 0, 
+        int pageSize = int.MaxValue, 
+        bool getOnlyTotalCount = false);
+
+    /// <summary>
+    /// Delete affiliate commissions
+    /// </summary>
+    /// <param name="commission">Commission to delete</param>
+    /// <returns> A task that represents the asynchronous operation</returns>
+    Task DeleteAffiliateCommissionAsync(AffiliateCommission commission);
 }

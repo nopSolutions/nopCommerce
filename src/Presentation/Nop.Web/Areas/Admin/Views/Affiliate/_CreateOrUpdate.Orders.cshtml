@@ -63,7 +63,7 @@
             @await Html.PartialAsync("Table", new DataTablesModel
             {
                 Name = "orders-grid",
-                UrlRead = new DataUrl("AffiliatedOrderListGrid", "Affiliate", new RouteValueDictionary { [nameof(Model.AffiliatedOrderSearchModel.AffliateId)] = Model.AffiliatedOrderSearchModel.AffliateId }),
+                UrlRead = new DataUrl("AffiliatedOrderListGrid", "Affiliate", new RouteValueDictionary { [nameof(Model.AffiliatedOrderSearchModel.AffiliateId)] = Model.AffiliatedOrderSearchModel.AffiliateId }),
                 SearchButtonId = "search-orders",
                 Length = Model.AffiliatedOrderSearchModel.PageSize,
                 LengthMenu = Model.AffiliatedOrderSearchModel.AvailablePageSizes,
@@ -103,6 +103,19 @@
                         Title = T("Admin.Affiliates.Orders.CreatedOn").Text,
                         Render = new RenderDate()
                     },
+                    new ColumnProperty(nameof(AffiliatedOrderModel.AffiliateCommission))
+                    {
+                        Title = T("Admin.Affiliates.Orders.AffiliateCommission").Text,
+                    },
+                    new ColumnProperty(nameof(AffiliatedOrderModel.CommissionStatus))
+                    {
+                        Title = T("Admin.Affiliates.Orders.CommissionStatus").Text,
+                    },
+                    new ColumnProperty(nameof(AffiliatedOrderModel.PaidOn))
+                    {
+                        Title = T("Admin.Affiliates.Orders.CommissionPaidOn").Text,
+                        Render = new RenderDate()
+                    },
                     new ColumnProperty(nameof(AffiliatedOrderModel.Id))
                     {
                         Title = T("Admin.Common.View").Text,
@@ -128,7 +141,7 @@
                     }
 
                     return '<span class="grid-report-item ' + color + '">' + data + '</span >';
-                }
+                }                
             </script>
         </div>
     </div>

@@ -2,6 +2,7 @@
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -678,6 +679,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.ShowOnNewsLetterPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnNewsletterPage, storeId);
         model.ShowOnProductReviewPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnProductReviewPage, storeId);
         model.ShowOnApplyVendorPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnApplyVendorPage, storeId);
+        model.ShowOnApplyAffiliatePage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnApplyAffiliatePage, storeId);
         model.ShowOnForgotPasswordPage_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnForgotPasswordPage, storeId);
         model.ShowOnCheckoutPageForGuests_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ShowOnCheckoutPageForGuests, storeId);
         model.ReCaptchaPublicKey_OverrideForStore = await _settingService.SettingExistsAsync(captchaSettings, x => x.ReCaptchaPublicKey, storeId);
@@ -914,6 +916,42 @@ public partial class SettingModelFactory : ISettingModelFactory
     #endregion
 
     #region Methods
+
+    /// <summary>
+    /// Prepare affiliate settings model
+    /// </summary>
+    /// <param name="model">Affiliate settings model</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the affiliate settings model
+    /// </returns>
+    public virtual async Task<AffiliateSettingsModel> PrepareAffiliateSettingsModelAsync(AffiliateSettingsModel model = null)
+    {
+        //load settings for a chosen store scope
+        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        var affiliateSettings = await _settingService.LoadSettingAsync<AffiliateSettings>(storeId);
+
+        //fill in model values from the entity
+        model ??= affiliateSettings.ToSettingsModel<AffiliateSettingsModel>();
+
+        //fill in additional values (not existing in the entity)
+        model.ActiveStoreScopeConfiguration = storeId;
+
+        //fill in overridden values
+        if (storeId > 0)
+        {
+            model.AllowCustomersToApplyForAffiliateAccount_OverrideForStore = await _settingService.SettingExistsAsync(affiliateSettings, x => x.AllowCustomersToApplyForAffiliateAccount, storeId);
+            model.UseDefaultCommissionIfNotSetOnCatalog_OverrideForStore = await _settingService.SettingExistsAsync(affiliateSettings, x => x.UseDefaultCommissionIfNotSetOnCatalog, storeId);
+            model.UsePercentage_OverrideForStore = await _settingService.SettingExistsAsync(affiliateSettings, x => x.UsePercentage, storeId);
+            model.CommissionAmount_OverrideForStore = await _settingService.SettingExistsAsync(affiliateSettings, x => x.CommissionAmount, storeId);
+            model.CommissionPercentage_OverrideForStore = await _settingService.SettingExistsAsync(affiliateSettings, x => x.CommissionPercentage, storeId);
+            model.HoldingPeriodInDays_OverrideForStore = await _settingService.SettingExistsAsync(affiliateSettings, x => x.HoldingPeriodInDays, storeId);
+            model.AffiliateStorageStrategy_OverrideForStore = await _settingService.SettingExistsAsync(affiliateSettings, x => x.AffiliateStorageStrategy, storeId);
+            model.CustomerAffiliatePageSize_OverrideForStore = await _settingService.SettingExistsAsync(affiliateSettings, x => x.CustomerAffiliatePageSize, storeId);
+        }
+
+        return model;
+    }
 
     /// <summary>
     /// Prepare app settings model
@@ -1496,7 +1534,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.ActiveStoreScopeConfiguration = storeId;
         model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
         model.OrderIdent = await _dataProvider.GetTableIdentAsync<Order>();
-        
+
         await PrepareReturnRequestSettingsModelAsync(model.ReturnRequestSettings);
 
         var paymentMethods = await _paymentPluginManager.LoadAllPluginsAsync(storeId: storeId);

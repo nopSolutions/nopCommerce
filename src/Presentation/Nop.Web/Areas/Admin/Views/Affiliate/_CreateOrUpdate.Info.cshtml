@@ -24,6 +24,51 @@
                         <span asp-validation-for="Active"></span>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AssociatedCustomerId" />
+                    </div>
+                    <div class="col-md-9">
+                        <input type="hidden" asp-for="AssociatedCustomerId" />
+                        <div id="customer-info">
+                            <a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.AssociatedCustomerId">@Model.CustomerInfo</a>
+                        </div>
+                        <button type="submit" onclick="javascript:OpenWindow('@(Url.Action("AddCustomerToAffiliatePopup", new { customerIdInput = Html.IdFor(model => model.AssociatedCustomerId), customerInfoInput = "customer-info", btnId = "btnRefreshCustomer"}))', 800, 850, true); return false;" class="btn btn-primary">
+                            @T("Admin.Affiliates.Fields.AssociatedCustomerId.Choose")
+                        </button>
+                        <button type="submit" id="customer-remove" class="btn btn-danger">
+                            @T("Admin.Affiliates.Fields.AssociatedCustomerId.Remove")
+                        </button>
+                        <button type="submit" id="btnRefreshCustomer" style="display: none"></button>
+                        <span asp-validation-for="AssociatedCustomerId"></span>
+                    </div>
+                </div>
+                <script asp-location="Footer">
+                                    $(function() {
+                                        const customerInput = $("#@Html.IdFor(model => model.AssociatedCustomerId)");
+                                        toggleRemoveButton();
+
+                                        $('#customer-remove').click(function() {
+                                            $('#customer-info').text('');
+                                            customerInput.val('');
+                                            toggleRemoveButton();
+                                            return false;
+                                        });
+
+                                        $('#btnRefreshCustomer').click(function() {
+                                            toggleRemoveButton();
+                                            return false;
+                                        });
+
+                                        function toggleRemoveButton() {
+                                            if (customerInput.val() > 0) {
+                                                $('#customer-remove').show();
+                                            } else {
+                                                $('#customer-remove').hide();
+                                            }
+                                        }
+                                    });
+                </script>
             </div>
         </div>
         <div class="card card-default">
