@@ -1486,7 +1486,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     public virtual async Task<IList<int>> SendNextRecurringPaymentNotificationCustomerMessageAsync(RecurringPayment recurringPayment, int delayBeforeSend, int languageId)
     {
         ArgumentNullException.ThrowIfNull(recurringPayment);
-        
+
         var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId) ?? throw new Exception("Order cannot be loaded");
 
         var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
@@ -1805,10 +1805,10 @@ public partial class WorkflowMessageService : IWorkflowMessageService
 
             var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
-            var toEmail = (await _customerService.IsGuestAsync(customer))
+            var toEmail = customer is null || await _customerService.IsGuestAsync(customer)
                 ? billingAddress.Email
                 : customer.Email;
-            var toName = (await _customerService.IsGuestAsync(customer))
+            var toName = customer is null || await _customerService.IsGuestAsync(customer)
                 ? billingAddress.FirstName
                 : await _customerService.GetCustomerFullNameAsync(customer);
 
@@ -1862,10 +1862,10 @@ public partial class WorkflowMessageService : IWorkflowMessageService
 
             var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
-            var toEmail = (await _customerService.IsGuestAsync(customer))
+            var toEmail = customer is null || await _customerService.IsGuestAsync(customer)
                 ? billingAddress.Email
                 : customer.Email;
-            var toName = (await _customerService.IsGuestAsync(customer))
+            var toName = customer is null || await _customerService.IsGuestAsync(customer)
                 ? billingAddress.FirstName
                 : await _customerService.GetCustomerFullNameAsync(customer);
 
@@ -2134,8 +2134,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         await _messageTokenProvider.AddProductReviewTokensAsync(commonTokens, productReview);
 
         var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId ?? 0);
-        if (customer is not null)
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
         return await messageTemplates.SelectAwait(async messageTemplate =>
         {
@@ -2450,9 +2449,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         //tokens
         var commonTokens = new List<Token>();
         await _messageTokenProvider.AddBlogCommentTokensAsync(commonTokens, blogComment);
-
-        if (customer is not null)
-            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
         return await messageTemplates.SelectAwait(async messageTemplate =>
         {
@@ -2538,7 +2535,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     /// The task result contains the queued email identifier
     /// </returns>
     public virtual async Task<IList<int>> SendContactUsMessageAsync(
-        int languageId, 
+        int languageId,
         string senderEmail,
         string senderName,
         string subject,
@@ -2801,7 +2798,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             ? string.Empty
             : customer.Email;
 
-        var replyToName = await _customerService.IsGuestAsync(customer)
+        var replyToName = customer is null || await _customerService.IsGuestAsync(customer)
             ? string.Empty
             : await _customerService.GetCustomerFullNameAsync(customer);
 
@@ -2954,7 +2951,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifiers
     /// </returns>
-    public virtual async Task<IList<int>> SendAbandonedCartFollowUpCustomerNotificationAsync(Customer customer, 
+    public virtual async Task<IList<int>> SendAbandonedCartFollowUpCustomerNotificationAsync(Customer customer,
         IList<ShoppingCartItem> cart, string messageTemplateName)
     {
         ArgumentNullException.ThrowIfNull(customer);

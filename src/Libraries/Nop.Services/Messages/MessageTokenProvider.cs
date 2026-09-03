@@ -1139,14 +1139,18 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         tokens.Add(new Token("Order.Product(s)", await ProductListToHtmlTableAsync(order, languageId, vendorId), true));
 
         var language = await _languageService.GetLanguageByIdAsync(languageId);
-        if (language != null && !string.IsNullOrEmpty(language.LanguageCulture))
+        if (language != null
+            && !string.IsNullOrEmpty(language.LanguageCulture)
+            && await _customerService.GetCustomerByIdAsync(order.CustomerId) is Customer customer)
         {
-            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-            var createdOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
+            var createdOn = _dateTimeHelper
+                .ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
             tokens.Add(new Token("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture))));
         }
         else
+        {
             tokens.Add(new Token("Order.CreatedOn", order.CreatedOnUtc.ToString("D")));
+        }
 
         var orderUrl = await RouteUrlAsync(order.StoreId, NopRouteNames.Standard.ORDER_DETAILS, new { orderId = order.Id });
         tokens.Add(new Token("Order.OrderURLForCustomer", orderUrl, true));
@@ -1257,7 +1261,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     public virtual async Task AddReturnRequestTokensAsync(IList<Token> tokens, ReturnRequest returnRequest, Order order, OrderItem orderItem, int languageId)
     {
         if (orderItem != null)
-        { 
+        {
             var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
             tokens.Add(new Token("ReturnRequest.OrderId", orderItem.OrderId));
             tokens.Add(new Token("ReturnRequest.Product.Name", await _localizationService.GetLocalizedAsync(product, x => x.Name, languageId)));
@@ -1275,7 +1279,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         }
 
         if (order != null)
-        { 
+        {
             var withdrawalUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.RETURN_REQUEST,
                 routeValues: new { orderId = order.Id, token = await _genericAttributeService.GetAttributeAsync<string>(order, NopOrderDefaults.WithdrawalTokenAttribute) });
 
@@ -1335,6 +1339,9 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task AddCustomerTokensAsync(IList<Token> tokens, Customer customer)
     {
+        if (customer is null)
+            return;
+
         tokens.Add(new Token("Customer.Email", customer.Email));
         tokens.Add(new Token("Customer.Username", customer.Username));
         tokens.Add(new Token("Customer.FullName", await _customerService.GetCustomerFullNameAsync(customer)));

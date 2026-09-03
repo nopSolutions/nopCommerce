@@ -61,8 +61,8 @@ public partial class PaymentService : IPaymentService
 
         var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
         var paymentMethod = await _paymentPluginManager
-                                .LoadPluginBySystemNameAsync(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
-                            ?? throw new NopException("Payment method couldn't be loaded");
+            .LoadPluginBySystemNameAsync(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
+            ?? throw new NopException("Payment method couldn't be loaded");
 
         return await paymentMethod.ProcessPaymentAsync(processPaymentRequest);
     }
@@ -80,8 +80,8 @@ public partial class PaymentService : IPaymentService
 
         var customer = await _customerService.GetCustomerByIdAsync(postProcessPaymentRequest.Order.CustomerId);
         var paymentMethod = await _paymentPluginManager
-                                .LoadPluginBySystemNameAsync(postProcessPaymentRequest.Order.PaymentMethodSystemName, customer, postProcessPaymentRequest.Order.StoreId)
-                            ?? throw new NopException("Payment method couldn't be loaded");
+            .LoadPluginBySystemNameAsync(postProcessPaymentRequest.Order.PaymentMethodSystemName, customer, postProcessPaymentRequest.Order.StoreId)
+            ?? throw new NopException("Payment method couldn't be loaded");
 
         await paymentMethod.PostProcessPaymentAsync(postProcessPaymentRequest);
     }
@@ -135,7 +135,7 @@ public partial class PaymentService : IPaymentService
         if (string.IsNullOrEmpty(paymentMethodSystemName))
             return decimal.Zero;
 
-        var customer = await _customerService.GetCustomerByIdAsync(cart.FirstOrDefault()?.CustomerId ?? 0);
+        var customer = await _customerService.GetShoppingCartCustomerAsync(cart);
         var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName, customer, cart.FirstOrDefault()?.StoreId ?? 0);
         if (paymentMethod == null)
             return decimal.Zero;
@@ -179,7 +179,7 @@ public partial class PaymentService : IPaymentService
     public virtual async Task<CapturePaymentResult> CaptureAsync(CapturePaymentRequest capturePaymentRequest)
     {
         var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(capturePaymentRequest.Order.PaymentMethodSystemName)
-                            ?? throw new NopException("Payment method couldn't be loaded");
+            ?? throw new NopException("Payment method couldn't be loaded");
 
         return await paymentMethod.CaptureAsync(capturePaymentRequest);
     }
@@ -227,7 +227,7 @@ public partial class PaymentService : IPaymentService
     public virtual async Task<RefundPaymentResult> RefundAsync(RefundPaymentRequest refundPaymentRequest)
     {
         var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(refundPaymentRequest.Order.PaymentMethodSystemName)
-                            ?? throw new NopException("Payment method couldn't be loaded");
+            ?? throw new NopException("Payment method couldn't be loaded");
 
         return await paymentMethod.RefundAsync(refundPaymentRequest);
     }
@@ -259,7 +259,7 @@ public partial class PaymentService : IPaymentService
     public virtual async Task<VoidPaymentResult> VoidAsync(VoidPaymentRequest voidPaymentRequest)
     {
         var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(voidPaymentRequest.Order.PaymentMethodSystemName)
-                            ?? throw new NopException("Payment method couldn't be loaded");
+            ?? throw new NopException("Payment method couldn't be loaded");
 
         return await paymentMethod.VoidAsync(voidPaymentRequest);
     }
@@ -302,8 +302,8 @@ public partial class PaymentService : IPaymentService
 
         var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
         var paymentMethod = await _paymentPluginManager
-                                .LoadPluginBySystemNameAsync(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
-                            ?? throw new NopException("Payment method couldn't be loaded");
+            .LoadPluginBySystemNameAsync(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
+            ?? throw new NopException("Payment method couldn't be loaded");
 
         return await paymentMethod.ProcessRecurringPaymentAsync(processPaymentRequest);
     }
@@ -322,7 +322,7 @@ public partial class PaymentService : IPaymentService
             return new CancelRecurringPaymentResult();
 
         var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(cancelPaymentRequest.Order.PaymentMethodSystemName)
-                            ?? throw new NopException("Payment method couldn't be loaded");
+            ?? throw new NopException("Payment method couldn't be loaded");
 
         return await paymentMethod.CancelRecurringPaymentAsync(cancelPaymentRequest);
     }

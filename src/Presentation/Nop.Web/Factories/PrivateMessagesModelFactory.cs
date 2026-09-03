@@ -230,17 +230,23 @@ public partial class PrivateMessagesModelFactory : IPrivateMessagesModelFactory
         ArgumentNullException.ThrowIfNull(pm);
 
         var fromCustomer = await _customerService.GetCustomerByIdAsync(pm.FromCustomerId);
+        var fromIsGuest = fromCustomer is null || await _customerService.IsGuestAsync(fromCustomer);
         var toCustomer = await _customerService.GetCustomerByIdAsync(pm.ToCustomerId);
+        var toIsGuest = toCustomer is null || await _customerService.IsGuestAsync(toCustomer);
 
         var model = new PrivateMessageModel
         {
             Id = pm.Id,
             FromCustomerId = pm.FromCustomerId,
-            CustomerFromName = await _customerService.FormatUsernameAsync(fromCustomer),
-            AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(fromCustomer),
+            CustomerFromName = fromIsGuest
+                ? await _localizationService.GetResourceAsync("Customer.Guest")
+                : await _customerService.FormatUsernameAsync(fromCustomer),
+            AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && !fromIsGuest,
             ToCustomerId = pm.ToCustomerId,
-            CustomerToName = await _customerService.FormatUsernameAsync(toCustomer),
-            AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(toCustomer),
+            CustomerToName = toIsGuest
+                ? await _localizationService.GetResourceAsync("Customer.Guest")
+                : await _customerService.FormatUsernameAsync(toCustomer),
+            AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !toIsGuest,
             Subject = pm.Subject,
             Message = _customerService.FormatPrivateMessageText(pm),
             CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(pm.CreatedOnUtc, DateTimeKind.Utc),

@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using FluentMigrator;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Data.Extensions;
 using Nop.Data.Mapping;
@@ -9,7 +8,7 @@ using Nop.Plugin.Misc.Forums.Domain;
 
 namespace Nop.Plugin.Misc.Forums.Data.Migrations;
 
-[NopMigration("2026-08-10 00:00:01", "Misc.Forums schema", MigrationProcessType.Installation)]
+[NopMigration("2026-02-02 00:00:00", "Misc.Forums schema", MigrationProcessType.Installation)]
 public class SchemaMigration : Migration
 {
     #region Utilities
@@ -85,22 +84,16 @@ public class SchemaMigration : Migration
     /// </summary>
     public override void Up()
     {
-        var customerTableName = NameCompatibilityManager.GetTableName(typeof(Customer));
-        var customerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(Customer), nameof(BaseEntity.Id));
-
         this.CreateTableIfNotExists<ForumGroup>();
         this.CreateTableIfNotExists<Forum>();
 
         var forumTopicTableName = NameCompatibilityManager.GetTableName(typeof(ForumTopic));
         var forumTopicCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(ForumTopic), nameof(ForumTopic.CustomerId));
-
         if (Schema.Table(forumTopicTableName).Column(forumTopicCustomerIdColumnName).Exists())
         {
-            Alter.Table(forumTopicTableName)
-                .AlterColumn(forumTopicCustomerIdColumnName)
-                .AsInt32()
-                .Nullable()
-                .ForeignKey(customerTableName, customerIdColumnName).OnDelete(Rule.SetNull);
+            this.AddOrAlterForeignKeyColumnFor<ForumTopic, Customer>(record => record.CustomerId)
+                .OnDelete(Rule.SetNull)
+                .Nullable();
         }
         else
         {
@@ -109,14 +102,11 @@ public class SchemaMigration : Migration
 
         var forumPostTableName = NameCompatibilityManager.GetTableName(typeof(ForumPost));
         var forumPostCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(ForumPost), nameof(ForumPost.CustomerId));
-
         if (Schema.Table(forumPostTableName).Column(forumPostCustomerIdColumnName).Exists())
         {
-            Alter.Table(forumPostTableName)
-                .AlterColumn(forumPostCustomerIdColumnName)
-                .AsInt32()
-                .Nullable()
-                .ForeignKey(customerTableName, customerIdColumnName).OnDelete(Rule.SetNull);
+            this.AddOrAlterForeignKeyColumnFor<ForumPost, Customer>(record => record.CustomerId)
+                .OnDelete(Rule.SetNull)
+                .Nullable();
         }
         else
         {

@@ -784,7 +784,7 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
         var totalAdditionalShippingCharge = decimal.Zero;
         foreach (var shoppingCartItem in cart)
             totalAdditionalShippingCharge += await _shippingService.GetAdditionalShippingChargeAsync(shoppingCartItem);
-        
+
         return totalAdditionalShippingCharge;
     }
 
@@ -1014,8 +1014,7 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
     public virtual async Task<bool> IsFreeShippingAsync(IList<ShoppingCartItem> cart, decimal? subTotal = null)
     {
         //check whether customer is in a customer role with free shipping applied
-        var customer = await _customerService.GetCustomerByIdAsync(cart.FirstOrDefault()?.CustomerId ?? 0);
-
+        var customer = await _customerService.GetShoppingCartCustomerAsync(cart);
         if (customer != null && (await _customerService.GetCustomerRolesAsync(customer)).Any(role => role.FreeShipping))
             return true;
 

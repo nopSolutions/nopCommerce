@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -158,8 +157,9 @@ public partial class ProductReviewModelFactory : IProductReviewModelFactory
                 productReviewModel.ProductName = (await _productService.GetProductByIdAsync(productReview.ProductId))?.Name;
 
                 var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId ?? 0);
-                productReviewModel.CustomerInfo = customer is null || string.IsNullOrEmpty(customer.Email) ?
-                    await _localizationService.GetResourceAsync("Admin.Customers.Guest") : customer.Email;
+                productReviewModel.CustomerInfo = string.IsNullOrEmpty(customer?.Email)
+                    ? await _localizationService.GetResourceAsync("Admin.Customers.Guest")
+                    : customer.Email;
 
                 productReviewModel.ReviewText = _htmlFormatter.FormatText(productReview.ReviewText);
                 productReviewModel.ReplyText = _htmlFormatter.FormatText(productReview.ReplyText);
@@ -202,8 +202,9 @@ public partial class ProductReviewModelFactory : IProductReviewModelFactory
             model.ShowStoreName = showStoreName;
 
             var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId ?? 0);
-            model.CustomerInfo = customer is null || string.IsNullOrEmpty(customer.Email) ?
-                await _localizationService.GetResourceAsync("Admin.Customers.Guest") : customer.Email;
+            model.CustomerInfo = string.IsNullOrEmpty(customer?.Email)
+                ? await _localizationService.GetResourceAsync("Admin.Customers.Guest")
+                : customer.Email;
 
             model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(productReview.CreatedOnUtc, DateTimeKind.Utc);
 

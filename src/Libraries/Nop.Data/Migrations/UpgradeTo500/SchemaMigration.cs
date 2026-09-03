@@ -4,12 +4,10 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Data.Extensions;
-using Nop.Core.Domain.Blogs;
-using System.Data;
 
 namespace Nop.Data.Migrations.UpgradeTo500;
 
-[NopSchemaMigration("2026-01-13 00:00:06", "SchemaMigration for 5.00.0")]
+[NopSchemaMigration("2026-01-13 00:00:05", "SchemaMigration for 5.00.0")]
 public class SchemaMigration : ForwardOnlyMigration
 {
     /// <summary>
@@ -104,8 +102,5 @@ public class SchemaMigration : ForwardOnlyMigration
 
         //#4279
         this.CreateTableIfNotExists<Product3dObject>();
-
-        this.AddOrAlterForeignKeyColumnFor<BlogComment, Customer>(t => t.CustomerId, onDelete: Rule.SetNull).Nullable();
-        this.AddOrAlterForeignKeyColumnFor<ProductReview, Customer>(t => t.CustomerId, onDelete: Rule.SetNull).Nullable();
     }
 }

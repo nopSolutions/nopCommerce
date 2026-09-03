@@ -1282,6 +1282,7 @@ public partial class CatalogModelFactory : ICatalogModelFactory
             return await vendorReviews.SelectAwait(async pr =>
             {
                 var customer = await _customerService.GetCustomerByIdAsync(pr.CustomerId ?? 0);
+                var isGuest = customer is null || await _customerService.IsGuestAsync(customer);
                 var product = await _productService.GetProductByIdAsync(pr.ProductId);
 
                 var model = new VendorProductReviewModel
@@ -1289,8 +1290,10 @@ public partial class CatalogModelFactory : ICatalogModelFactory
                     ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
                     ProductSeName = await _urlRecordService.GetSeNameAsync(product),
                     CustomerId = pr.CustomerId,
-                    CustomerName = await _customerService.FormatUsernameAsync(customer),
-                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer),
+                    CustomerName = isGuest
+                        ? await _localizationService.GetResourceAsync("Customer.Guest")
+                        : await _customerService.FormatUsernameAsync(customer),
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !isGuest,
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,
                     ReplyText = pr.ReplyText,
@@ -1306,11 +1309,11 @@ public partial class CatalogModelFactory : ICatalogModelFactory
 
                 if (_customerSettings.AllowCustomersToUploadAvatars)
                 {
-                    model.CustomerAvatarUrl = customer is null ?
-                    await _pictureService.GetDefaultPictureUrlAsync(_mediaSettings.AvatarPictureSize, PictureType.Avatar) :
-                    await _pictureService.GetPictureUrlAsync(
-                        await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
-                        _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
+                    model.CustomerAvatarUrl = isGuest
+                        ? await _pictureService.GetDefaultPictureUrlAsync(_mediaSettings.AvatarPictureSize, PictureType.Avatar)
+                        : await _pictureService.GetPictureUrlAsync(
+                            await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                            _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
                 }
 
                 return model;

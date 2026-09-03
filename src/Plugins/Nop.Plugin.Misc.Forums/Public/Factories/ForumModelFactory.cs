@@ -56,7 +56,7 @@ public class ForumModelFactory
 
     #region Ctor
 
-    public ForumModelFactory(BBCodeHelper bbCodeHelper, 
+    public ForumModelFactory(BBCodeHelper bbCodeHelper,
         CaptchaSettings captchaSettings,
         CustomerSettings customerSettings,
         ForumService forumService,
@@ -138,7 +138,9 @@ public class ForumModelFactory
     private async Task<JsonLdForumTopicModel> PrepareJsonLdForumTopicAsync(ForumTopic forumTopic, ForumPost firstPost, ForumTopicPageModel model)
     {
         var forumTopicCustomer = await _customerService.GetCustomerByIdAsync(forumTopic.CustomerId ?? 0);
-        var customerName = forumTopicCustomer == null ? await _localizationService.GetResourceAsync("Customer.Guest") : await _customerService.FormatUsernameAsync(forumTopicCustomer);
+        var customerName = forumTopicCustomer == null || await _customerService.IsGuestAsync(forumTopicCustomer)
+            ? await _localizationService.GetResourceAsync("Customer.Guest")
+            : await _customerService.FormatUsernameAsync(forumTopicCustomer);
         var createdOn = await _dateTimeHelper.ConvertToUserTimeAsync(forumTopic.CreatedOnUtc, DateTimeKind.Utc);
 
         var forumTopicModel = new JsonLdForumTopicModel
@@ -455,16 +457,21 @@ public class ForumModelFactory
                 IsCurrentCustomerAllowedToDeletePost = await _forumService.IsCustomerAllowedToDeletePostAsync(currentCustomer, post),
                 CustomerId = post.CustomerId,
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !customerIsGuest,
-                CustomerName = await _customerService.FormatUsernameAsync(customer),
+                CustomerName = customerIsGuest
+                    ? await _localizationService.GetResourceAsync("Customer.Guest")
+                    : await _customerService.FormatUsernameAsync(customer),
                 IsCustomerForumModerator = customerIsModerator,
                 ShowCustomersPostCount = !customerIsGuest && _forumSettings.ShowCustomersPostCount,
-                ForumPostCount = customerIsGuest ? 0 : await _genericAttributeService.GetAttributeAsync<int>(customer, ForumDefaults.ForumPostCountAttribute),
+                ForumPostCount = customerIsGuest
+                    ? 0
+                    : await _genericAttributeService.GetAttributeAsync<int>(customer, ForumDefaults.ForumPostCountAttribute),
                 ShowCustomersJoinDate = _customerSettings.ShowCustomersJoinDate && !customerIsGuest,
                 CustomerJoinDate = customer?.CreatedOnUtc ?? DateTime.Now,
                 AllowPrivateMessages = _privateMessageSettings.AllowPrivateMessages && !customerIsGuest,
                 SignaturesEnabled = _forumSettings.SignaturesEnabled,
-                FormattedSignature = customerIsGuest ? string.Empty : _forumService
-                    .FormatForumSignatureText(await _genericAttributeService.GetAttributeAsync<string>(customer, ForumDefaults.SignatureAttribute)),
+                FormattedSignature = customerIsGuest
+                    ? string.Empty
+                    : _forumService.FormatForumSignatureText(await _genericAttributeService.GetAttributeAsync<string>(customer, ForumDefaults.SignatureAttribute)),
                 //created on string
                 PostCreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(post.CreatedOnUtc, DateTimeKind.Utc)
             };
@@ -482,17 +489,15 @@ public class ForumModelFactory
             //avatar
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
-                forumPostModel.CustomerAvatarUrl = customerIsGuest ?
-                    await _pictureService.GetDefaultPictureUrlAsync(_mediaSettings.AvatarPictureSize, PictureType.Avatar) :
-                    await _pictureService.GetPictureUrlAsync(
+                forumPostModel.CustomerAvatarUrl = customerIsGuest
+                    ? await _pictureService.GetDefaultPictureUrlAsync(_mediaSettings.AvatarPictureSize, PictureType.Avatar)
+                    : await _pictureService.GetPictureUrlAsync(
                         await _genericAttributeService.GetAttributeAsync<Customer, int>(post.CustomerId.Value, NopCustomerDefaults.AvatarPictureIdAttribute),
-                        _mediaSettings.AvatarPictureSize,
-                        _customerSettings.DefaultAvatarEnabled,
-                        defaultPictureType: PictureType.Avatar);
+                        _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
             //location
             forumPostModel.ShowCustomersLocation = _customerSettings.ShowCustomersLocation && !customerIsGuest;
-            if (customer is not null && _customerSettings.ShowCustomersLocation)
+            if (_customerSettings.ShowCustomersLocation && !customerIsGuest)
             {
                 var country = await _countryService.GetCountryByIdAsync(customer.CountryId);
                 forumPostModel.CustomerLocation = country != null ? await _localizationService.GetLocalizedAsync(country, x => x.Name) : string.Empty;
@@ -661,7 +666,9 @@ public class ForumModelFactory
                 if (quotePost != null && quotePost.TopicId == forumTopic.Id)
                 {
                     var customer = await _customerService.GetCustomerByIdAsync(quotePost.CustomerId ?? 0);
-                    var username = customer == null ? await _localizationService.GetResourceAsync("Customer.Guest") : await _customerService.FormatUsernameAsync(customer);
+                    var username = customer == null || await _customerService.IsGuestAsync(customer)
+                        ? await _localizationService.GetResourceAsync("Customer.Guest")
+                        : await _customerService.FormatUsernameAsync(customer);
                     var quotePostText = quotePost.Text;
 
                     switch (_forumSettings.ForumEditor)
@@ -884,14 +891,17 @@ public class ForumModelFactory
             return model;
 
         var customer = await _customerService.GetCustomerByIdAsync(forumPost.CustomerId ?? 0);
+        var isGuest = customer == null || await _customerService.IsGuestAsync(customer);
 
         model.Id = forumPost.Id;
         model.ForumTopicId = topic.Id;
         model.ForumTopicSeName = await _forumService.GetTopicSeNameAsync(topic);
         model.ForumTopicSubject = _forumService.StripTopicSubject(topic);
         model.CustomerId = forumPost.CustomerId;
-        model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer is not null && !await _customerService.IsGuestAsync(customer);
-        model.CustomerName = customer == null ? await _localizationService.GetResourceAsync("Customer.Guest") : await _customerService.FormatUsernameAsync(customer);
+        model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !isGuest;
+        model.CustomerName = isGuest
+            ? await _localizationService.GetResourceAsync("Customer.Guest")
+            : await _customerService.FormatUsernameAsync(customer);
         //created on string
         var languageCode = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
         if (_forumSettings.RelativeDateTimeFormattingEnabled)
@@ -1040,6 +1050,7 @@ public class ForumModelFactory
         ArgumentNullException.ThrowIfNull(topic);
 
         var customer = await _customerService.GetCustomerByIdAsync(topic.CustomerId ?? 0);
+        var isGuest = customer == null || await _customerService.IsGuestAsync(customer);
         var firstPost = await _forumService.GetFirstPostAsync(topic);
 
         var topicModel = new ForumTopicRowModel
@@ -1053,8 +1064,10 @@ public class ForumModelFactory
             NumReplies = topic.NumPosts > 0 ? topic.NumPosts - 1 : 0,
             ForumTopicType = topic.ForumTopicType,
             CustomerId = topic.CustomerId,
-            AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer is not null && !await _customerService.IsGuestAsync(customer),
-            CustomerName = await _customerService.FormatUsernameAsync(customer),
+            AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !isGuest,
+            CustomerName = isGuest
+                ? await _localizationService.GetResourceAsync("Customer.Guest")
+                : await _customerService.FormatUsernameAsync(customer),
             TotalPostPages = (topic.NumPosts / _forumSettings.PostsPageSize) + 1,
             Votes = firstPost?.VoteCount ?? 0
         };

@@ -1,6 +1,5 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 using Nop.Plugin.Misc.News.Admin.Models;
 using Nop.Plugin.Misc.News.Domain;
 using Nop.Plugin.Misc.News.Services;
@@ -305,7 +304,9 @@ public class NewsModelFactory
             .Where(comment => comment.CustomerId != null)
             .Select(comment => comment.CustomerId.Value).Distinct().ToArray();
 
-        var customers = await _customerService.GetCustomersByIdsAsync(customerIds);
+        var customers = (await _customerService.GetCustomersByIdsAsync(customerIds))
+            .Where(customer => customer is not null)
+            .ToList();
 
         //prepare list model
         var model = await new NewsCommentListModel().PrepareToGridAsync(searchModel, comments, () =>
@@ -323,8 +324,9 @@ public class NewsModelFactory
 
                 var author = customers.FirstOrDefault(customer => customer.Id == newsComment.CustomerId);
 
-                commentModel.CustomerInfo = author is null || string.IsNullOrEmpty(author.Email) ?
-                        await _localizationService.GetResourceAsync("Admin.Customers.Guest") : author.Email;
+                commentModel.CustomerInfo = string.IsNullOrEmpty(author?.Email)
+                    ? await _localizationService.GetResourceAsync("Admin.Customers.Guest")
+                    : author.Email;
 
                 commentModel.CommentText = _htmlFormatter.FormatText(newsComment.CommentText);
                 commentModel.StoreName = storeNames.TryGetValue(newsComment.StoreId, out var value) ? value : "Deleted";

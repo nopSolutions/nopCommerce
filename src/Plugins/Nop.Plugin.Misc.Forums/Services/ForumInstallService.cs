@@ -21,14 +21,17 @@ public class ForumInstallService
     #region Fields
 
     private const int PAGE_SIZE = 500;
+
     private readonly EmailAccountSettings _emailAccountSettings;
     private readonly ForumService _forumService;
     private readonly ICustomerService _customerService;
     private readonly IEmailAccountService _emailAccountService;
     private readonly ILocalizationService _localizationService;
     private readonly IMessageTemplateService _messageTemplateService;
-    private readonly INopDataProvider _dataProvider;
     private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
+    private readonly IRepository<Customer> _customerRepository;
+    private readonly IRepository<ForumPost> _forumPostRepository;
+    private readonly IRepository<ForumTopic> _forumTopicRepository;
     private readonly IRepository<PermissionRecord> _permissionRepository;
     private readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionMappingRepository;
     private readonly ISettingService _settingService;
@@ -43,8 +46,10 @@ public class ForumInstallService
         IEmailAccountService emailAccountService,
         ILocalizationService localizationService,
         IMessageTemplateService messageTemplateService,
-        INopDataProvider dataProvider,
         IRepository<ActivityLogType> activityLogTypeRepository,
+        IRepository<Customer> customerRepository,
+        IRepository<ForumPost> forumPostRepository,
+        IRepository<ForumTopic> forumTopicRepository,
         IRepository<PermissionRecord> permissionRepository,
         IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository,
         ISettingService settingService)
@@ -55,8 +60,10 @@ public class ForumInstallService
         _emailAccountService = emailAccountService;
         _localizationService = localizationService;
         _messageTemplateService = messageTemplateService;
-        _dataProvider = dataProvider;
         _activityLogTypeRepository = activityLogTypeRepository;
+        _customerRepository = customerRepository;
+        _forumPostRepository = forumPostRepository;
+        _forumTopicRepository = forumTopicRepository;
         _permissionRepository = permissionRepository;
         _permissionMappingRepository = permissionRecordCustomerRoleMappingRepository;
         _settingService = settingService;
@@ -593,15 +600,17 @@ public class ForumInstallService
     /// <summary>
     /// Updates guest data
     /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
     private async Task UpdateGuestDataAsync()
     {
         var ftPageIndex = 0;
         while (true)
         {
-            var topics = (from ft in _dataProvider.GetTable<ForumTopic>()
-                          join c in _dataProvider.GetTable<Customer>() on ft.CustomerId equals c.Id
-                          where string.IsNullOrEmpty(c.Email)
-                          select ft).Skip(ftPageIndex++ * PAGE_SIZE).Take(PAGE_SIZE).ToList();
+            var topics =
+                (from ft in _forumTopicRepository.Table
+                 join c in _customerRepository.Table on ft.CustomerId equals c.Id
+                 where string.IsNullOrEmpty(c.Email)
+                 select ft).Skip(ftPageIndex++ * PAGE_SIZE).Take(PAGE_SIZE).ToList();
 
             if (!topics.Any())
                 break;
@@ -609,17 +618,18 @@ public class ForumInstallService
             foreach (var topic in topics)
             {
                 topic.CustomerId = null;
-                await _dataProvider.UpdateEntityAsync(topic);
             }
+            await _forumTopicRepository.UpdateAsync(topics);
         }
 
         var fpPageIndex = 0;
         while (true)
         {
-            var posts = (from fp in _dataProvider.GetTable<ForumPost>()
-                         join c in _dataProvider.GetTable<Customer>() on fp.CustomerId equals c.Id
-                         where string.IsNullOrEmpty(c.Email)
-                         select fp).Skip(fpPageIndex++ * PAGE_SIZE).Take(PAGE_SIZE).ToList();
+            var posts =
+                (from fp in _forumPostRepository.Table
+                 join c in _customerRepository.Table on fp.CustomerId equals c.Id
+                 where string.IsNullOrEmpty(c.Email)
+                 select fp).Skip(fpPageIndex++ * PAGE_SIZE).Take(PAGE_SIZE).ToList();
 
             if (!posts.Any())
                 break;
@@ -627,8 +637,8 @@ public class ForumInstallService
             foreach (var post in posts)
             {
                 post.CustomerId = null;
-                await _dataProvider.UpdateEntityAsync(post);
             }
+            await _forumPostRepository.UpdateAsync(posts);
         }
     }
 

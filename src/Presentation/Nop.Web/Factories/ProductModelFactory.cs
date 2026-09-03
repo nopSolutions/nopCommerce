@@ -816,7 +816,7 @@ public partial class ProductModelFactory : IProductModelFactory
 
         return model;
     }
-    
+
     /// <summary>
     /// Prepare the product add to cart model
     /// </summary>
@@ -966,8 +966,8 @@ public partial class ProductModelFactory : IProductModelFactory
                     //display price if allowed
                     if (await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.DISPLAY_PRICES))
                     {
-                        var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-                        var customer = updatecartitem?.CustomerId is null ? currentCustomer : await _customerService.GetCustomerByIdAsync(updatecartitem.CustomerId);
+                        var customer = await _customerService.GetCustomerByIdAsync(updatecartitem?.CustomerId ?? 0)
+                            ?? await _workContext.GetCurrentCustomerAsync();
 
                         var attributeValuePriceAdjustment = await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store, quantity: updatecartitem?.Quantity ?? 1);
                         var (priceAdjustmentBase, _) = await _taxService.GetProductPriceAsync(product, attributeValuePriceAdjustment);
@@ -1783,6 +1783,7 @@ public partial class ProductModelFactory : IProductModelFactory
         foreach (var pr in productReviews)
         {
             var customer = await _customerService.GetCustomerByIdAsync(pr.CustomerId ?? 0);
+            var isGuest = customer is null || await _customerService.IsGuestAsync(customer);
 
             var writeOn = await _dateTimeHelper.ConvertToUserTimeAsync(pr.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -1790,8 +1791,10 @@ public partial class ProductModelFactory : IProductModelFactory
             {
                 Id = pr.Id,
                 CustomerId = pr.CustomerId,
-                CustomerName = customer != null ? await _customerService.FormatUsernameAsync(customer) : await _localizationService.GetResourceAsync("Customer.Guest"),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer),
+                CustomerName = !isGuest
+                    ? await _customerService.FormatUsernameAsync(customer)
+                    : await _localizationService.GetResourceAsync("Customer.Guest"),
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !isGuest,
                 Title = pr.Title,
                 ReviewText = pr.ReviewText,
                 ReplyText = pr.ReplyText,
@@ -1808,11 +1811,11 @@ public partial class ProductModelFactory : IProductModelFactory
 
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
-                productReviewModel.CustomerAvatarUrl = customer is null ?
-                    await _pictureService.GetDefaultPictureUrlAsync(_mediaSettings.AvatarPictureSize, PictureType.Avatar) :
-                    await _pictureService.GetPictureUrlAsync(
-                    await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
-                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
+                productReviewModel.CustomerAvatarUrl = isGuest
+                    ? await _pictureService.GetDefaultPictureUrlAsync(_mediaSettings.AvatarPictureSize, PictureType.Avatar)
+                    : await _pictureService.GetPictureUrlAsync(
+                        await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                        _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
             foreach (var q in await _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewIdAsync(pr.Id))

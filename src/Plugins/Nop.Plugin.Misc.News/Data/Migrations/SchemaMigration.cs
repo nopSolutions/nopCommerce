@@ -10,7 +10,7 @@ using Nop.Plugin.Misc.News.Domain;
 
 namespace Nop.Plugin.Misc.News.Data.Migrations;
 
-[NopMigration("2025-03-06 00:00:01", "Misc.News schema", MigrationProcessType.Installation)]
+[NopMigration("2025-03-06 00:00:00", "Misc.News schema", MigrationProcessType.Installation)]
 public class SchemaMigration : Migration
 {
     #region Fields
@@ -35,33 +35,15 @@ public class SchemaMigration : Migration
     /// </summary>
     public override void Up()
     {
-        var newsCommentTableName = NameCompatibilityManager.GetTableName(typeof(NewsComment));
-        var newsCommentCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(NewsComment), nameof(NewsComment.CustomerId));
-
         this.CreateTableIfNotExists<NewsItem>();
 
+        var newsCommentTableName = NameCompatibilityManager.GetTableName(typeof(NewsComment));
+        var newsCommentCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(NewsComment), nameof(NewsComment.CustomerId));
         if (Schema.Table(newsCommentTableName).Column(newsCommentCustomerIdColumnName).Exists())
         {
-            var customerTableName = NameCompatibilityManager.GetTableName(typeof(Customer));
-            var customerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(Customer), nameof(BaseEntity.Id));
-
-            var constraintName = _dataProvider
-                .CreateForeignKeyName(newsCommentTableName, newsCommentCustomerIdColumnName, customerTableName, customerIdColumnName);
-
-            if (Schema.Table(newsCommentTableName).Constraint(constraintName).Exists())
-                Delete.UniqueConstraint(constraintName).FromTable(newsCommentTableName);
-
-            //databases migrated from version 3.00
-            constraintName = "NewsComment_Customer";
-            if (Schema.Table(newsCommentTableName).Constraint(constraintName).Exists())
-                Delete.UniqueConstraint(constraintName).FromTable(newsCommentTableName);
-
-            Alter.Table(newsCommentTableName)
-                .AlterColumn(newsCommentCustomerIdColumnName)
-                .AsInt32()
-                .Nullable()
-                .ForeignKey(customerTableName, customerIdColumnName)
-                .OnDelete(Rule.SetNull);
+            this.AddOrAlterForeignKeyColumnFor<NewsComment, Customer>(record => record.CustomerId)
+                .OnDelete(Rule.SetNull)
+                .Nullable();
         }
         else
         {

@@ -129,7 +129,9 @@ public partial class ActivityLogModelFactory : IActivityLogModelFactory
 
         //prepare list model
         var customerIds = activityLog.GroupBy(logItem => logItem.CustomerId).Select(logItem => logItem.Key);
-        var activityLogCustomers = await _customerService.GetCustomersByIdsAsync(customerIds.ToArray());
+        var activityLogCustomers = (await _customerService.GetCustomersByIdsAsync(customerIds.ToArray()))
+            .Where(customer => customer is not null)
+            .ToList();
         var model = await new ActivityLogListModel().PrepareToGridAsync(searchModel, activityLog, () =>
         {
             return activityLog.SelectAwait(async logItem =>
@@ -138,7 +140,7 @@ public partial class ActivityLogModelFactory : IActivityLogModelFactory
                 var logItemModel = logItem.ToModel<ActivityLogModel>();
                 logItemModel.ActivityLogTypeName = (await _customerActivityService.GetActivityTypeByIdAsync(logItem.ActivityLogTypeId))?.Name;
 
-                logItemModel.CustomerEmail = activityLogCustomers?.FirstOrDefault(x => x.Id == logItem.CustomerId)?.Email;
+                logItemModel.CustomerEmail = activityLogCustomers.FirstOrDefault(x => x.Id == logItem.CustomerId)?.Email;
 
                 //convert dates to the user time
                 logItemModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(logItem.CreatedOnUtc, DateTimeKind.Utc);

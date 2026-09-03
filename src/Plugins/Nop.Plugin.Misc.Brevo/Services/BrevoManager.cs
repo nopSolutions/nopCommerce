@@ -166,7 +166,9 @@ public partial class BrevoManager
             List<Customer> customers = null;
             async Task<List<Customer>> getCustomersAsync()
             {
-                customers ??= (await _customerService.GetAllCustomersAsync()).ToList();
+                customers ??= (await _customerService.GetAllCustomersAsync())
+                    .Where(customer => !string.IsNullOrEmpty(customer?.Email))
+                    .ToList();
                 return customers;
             }
 

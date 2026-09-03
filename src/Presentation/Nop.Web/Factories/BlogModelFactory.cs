@@ -182,10 +182,11 @@ public partial class BlogModelFactory : IBlogModelFactory
     {
         var model = new BlogPostTagListModel();
         var store = await _storeContext.GetCurrentStoreAsync();
+        var language = await _workContext.GetWorkingLanguageAsync();
 
         //get tags
         var tags = (await _blogService
-                .GetAllBlogPostTagsAsync(store.Id, (await _workContext.GetWorkingLanguageAsync()).Id))
+            .GetAllBlogPostTagsAsync(store.Id, language.Id))
             .OrderByDescending(x => x.BlogPostCount)
             .Take(_blogSettings.NumberOfTags);
 
@@ -282,22 +283,27 @@ public partial class BlogModelFactory : IBlogModelFactory
         ArgumentNullException.ThrowIfNull(blogComment);
 
         var customer = await _customerService.GetCustomerByIdAsync(blogComment.CustomerId ?? 0);
+        var isGuest = customer is null || await _customerService.IsGuestAsync(customer);
 
         var model = new BlogCommentModel
         {
             Id = blogComment.Id,
             CustomerId = blogComment.CustomerId,
-            CustomerName = customer is null ? await _localizationService.GetResourceAsync("Customer.Guest") : await _customerService.FormatUsernameAsync(customer),
+            CustomerName = isGuest
+                ? await _localizationService.GetResourceAsync("Customer.Guest")
+                : await _customerService.FormatUsernameAsync(customer),
             CommentText = blogComment.CommentText,
             CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc),
-            AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer)
+            AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !isGuest
         };
 
         if (_customerSettings.AllowCustomersToUploadAvatars)
         {
-            model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
-                await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
-                _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
+            model.CustomerAvatarUrl = isGuest
+                ? await _pictureService.GetDefaultPictureUrlAsync(_mediaSettings.AvatarPictureSize, PictureType.Avatar)
+                : await _pictureService.GetPictureUrlAsync(
+                    await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
         }
 
         return model;

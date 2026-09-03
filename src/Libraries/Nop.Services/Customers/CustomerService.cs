@@ -311,8 +311,7 @@ public partial class CustomerService : ICustomerService
     public virtual async Task<Customer> GetShoppingCartCustomerAsync(IList<ShoppingCartItem> shoppingCart)
     {
         var customerId = shoppingCart.FirstOrDefault()?.CustomerId;
-
-        return customerId.HasValue && customerId != 0 ? await GetCustomerByIdAsync(customerId.Value) : null;
+        return await GetCustomerByIdAsync(customerId ?? 0);
     }
 
     /// <summary>

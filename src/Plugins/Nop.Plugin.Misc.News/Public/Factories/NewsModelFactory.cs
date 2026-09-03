@@ -213,27 +213,28 @@ public class NewsModelFactory
         ArgumentNullException.ThrowIfNull(newsComment);
 
         var customer = await _customerService.GetCustomerByIdAsync(newsComment.CustomerId ?? 0);
+        var isGuest = customer is null || await _customerService.IsGuestAsync(customer);
 
         var model = new NewsCommentModel
         {
             Id = newsComment.Id,
             CustomerId = newsComment.CustomerId,
-            CustomerName = customer is null ? await _localizationService.GetResourceAsync("Customer.Guest") : await _customerService.FormatUsernameAsync(customer),
+            CustomerName = isGuest
+                ? await _localizationService.GetResourceAsync("Customer.Guest")
+                : await _customerService.FormatUsernameAsync(customer),
             CommentTitle = newsComment.CommentTitle,
             CommentText = newsComment.CommentText,
             CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsComment.CreatedOnUtc, DateTimeKind.Utc),
-            AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer),
+            AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !isGuest,
         };
 
         if (_customerSettings.AllowCustomersToUploadAvatars)
         {
-            model.CustomerAvatarUrl = customer is null ?
-                await _pictureService.GetDefaultPictureUrlAsync(_mediaSettings.AvatarPictureSize, PictureType.Avatar) :
-                await _pictureService.GetPictureUrlAsync(
+            model.CustomerAvatarUrl = isGuest
+                ? await _pictureService.GetDefaultPictureUrlAsync(_mediaSettings.AvatarPictureSize, PictureType.Avatar)
+                : await _pictureService.GetPictureUrlAsync(
                     await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
-                    _mediaSettings.AvatarPictureSize,
-                    _customerSettings.DefaultAvatarEnabled,
-                    defaultPictureType: PictureType.Avatar);
+                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
         }
 
         return model;

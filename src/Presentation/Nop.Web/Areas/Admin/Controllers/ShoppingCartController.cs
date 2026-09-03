@@ -61,7 +61,7 @@ public partial class ShoppingCartController : BaseAdminController
     {
         //try to get a customer with the specified id
         var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
-                       ?? throw new ArgumentException("No customer found with the specified id");
+            ?? throw new ArgumentException("No customer found with the specified id");
 
         //prepare model
         var model = await _shoppingCartModelFactory.PrepareShoppingCartItemListModelAsync(searchModel, customer);

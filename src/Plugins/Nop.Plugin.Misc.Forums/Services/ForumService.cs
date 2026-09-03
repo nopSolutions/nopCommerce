@@ -174,9 +174,11 @@ public class ForumService
     private async Task AddForumPostTokensAsync(List<Token> tokens, ForumPost forumPost)
     {
         var customer = await _customerService.GetCustomerByIdAsync(forumPost.CustomerId ?? 0);
+        var isGuest = customer == null || await _customerService.IsGuestAsync(customer);
 
-        tokens.Add(new("Forums.PostAuthor", customer == null ? 
-            await _localizationService.GetResourceAsync("Customer.Guest") : await _customerService.FormatUsernameAsync(customer)));
+        tokens.Add(new("Forums.PostAuthor", isGuest
+            ? await _localizationService.GetResourceAsync("Customer.Guest")
+            : await _customerService.FormatUsernameAsync(customer)));
         tokens.Add(new("Forums.PostBody", FormatPostText(forumPost), true));
     }
 
@@ -567,7 +569,7 @@ public class ForumService
         //update stats
         await UpdateForumStatsAsync(forumId);
         foreach (var customerId in customerIds)
-            await UpdateCustomerStatsAsync(customerId);
+            await UpdateCustomerStatsAsync(customerId ?? 0);
     }
 
     /// <summary>
@@ -769,16 +771,14 @@ public class ForumService
         if (deleteTopic)
         {
             await DeleteTopicAsync(forumTopic);
-            await UpdateCustomerStatsAsync(customerId);
+            await UpdateCustomerStatsAsync(customerId ?? 0);
             return;
         }
 
         //update stats
         await UpdateForumTopicStatsAsync(forumTopicId);
         await UpdateForumStatsAsync(forumId);
-
-        if (customerId.HasValue)
-            await UpdateCustomerStatsAsync(customerId.Value);
+        await UpdateCustomerStatsAsync(customerId ?? 0);
     }
 
     /// <summary>
@@ -868,9 +868,7 @@ public class ForumService
 
         await UpdateForumTopicStatsAsync(forumPost.TopicId);
         await UpdateForumStatsAsync(forumId);
-
-        if (customerId.HasValue)
-            await UpdateCustomerStatsAsync(customerId.Value);
+        await UpdateCustomerStatsAsync(customerId ?? 0);
 
         //notifications
         if (!sendNotifications)
