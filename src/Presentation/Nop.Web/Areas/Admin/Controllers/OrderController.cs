@@ -1195,19 +1195,19 @@ public partial class OrderController : BaseAdminController
         var orderItem = await _orderService.GetOrderItemByIdAsync(orderItemId)
             ?? throw new ArgumentException("No order item found with the specified id");
 
-        if (!decimal.TryParse(form["pvUnitPriceInclTax" + orderItemId], NumberStyles.Any, CultureInfo.InvariantCulture, out var unitPriceInclTax))
+        if (!decimal.TryParse(form["pvUnitPriceInclTax" + orderItemId], out var unitPriceInclTax))
             unitPriceInclTax = orderItem.UnitPriceInclTax;
-        if (!decimal.TryParse(form["pvUnitPriceExclTax" + orderItemId], NumberStyles.Any, CultureInfo.InvariantCulture, out var unitPriceExclTax))
+        if (!decimal.TryParse(form["pvUnitPriceExclTax" + orderItemId], out var unitPriceExclTax))
             unitPriceExclTax = orderItem.UnitPriceExclTax;
         if (!int.TryParse(form["pvQuantity" + orderItemId], out var quantity))
             quantity = orderItem.Quantity;
-        if (!decimal.TryParse(form["pvDiscountInclTax" + orderItemId], NumberStyles.Any, CultureInfo.InvariantCulture, out var discountInclTax))
+        if (!decimal.TryParse(form["pvDiscountInclTax" + orderItemId], out var discountInclTax))
             discountInclTax = orderItem.DiscountAmountInclTax;
-        if (!decimal.TryParse(form["pvDiscountExclTax" + orderItemId], NumberStyles.Any, CultureInfo.InvariantCulture, out var discountExclTax))
+        if (!decimal.TryParse(form["pvDiscountExclTax" + orderItemId], out var discountExclTax))
             discountExclTax = orderItem.DiscountAmountExclTax;
-        if (!decimal.TryParse(form["pvPriceInclTax" + orderItemId], NumberStyles.Any, CultureInfo.InvariantCulture, out var priceInclTax))
+        if (!decimal.TryParse(form["pvPriceInclTax" + orderItemId], out var priceInclTax))
             priceInclTax = orderItem.PriceInclTax;
-        if (!decimal.TryParse(form["pvPriceExclTax" + orderItemId], NumberStyles.Any, CultureInfo.InvariantCulture, out var priceExclTax))
+        if (!decimal.TryParse(form["pvPriceExclTax" + orderItemId], out var priceExclTax))
             priceExclTax = orderItem.PriceExclTax;
 
         var product = await _productService.GetProductByIdAsync(orderItem.ProductId);

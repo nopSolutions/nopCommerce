@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Misc.RFQ.Domains;
@@ -148,7 +147,7 @@ public class RfqAdminController : BasePluginController
             ?? throw new ArgumentException("No product found with the specified id");
 
         //basic properties
-        _ = decimal.TryParse(form["UnitPriceInclTax"], NumberStyles.Any, CultureInfo.InvariantCulture, out var unitPriceInclTax);
+        _ = decimal.TryParse(form["UnitPriceInclTax"], out var unitPriceInclTax);
         _ = int.TryParse(form["Quantity"], out var quantity);
 
         //warnings
@@ -338,7 +337,7 @@ public class RfqAdminController : BasePluginController
             return await AdminRequest(id);
 
         int.TryParse(form[$"quantity{requestQuoteItemId}"], out var requestedQty);
-        decimal.TryParse(form[$"unitPrice{requestQuoteItemId}"], NumberStyles.Any, CultureInfo.InvariantCulture, out var requestedUnitPrice);
+        decimal.TryParse(form[$"unitPrice{requestQuoteItemId}"], out var requestedUnitPrice);
 
         await _rfqService.UpdateRequestQuoteItemAsync(requestQuoteItemId, requestedQty, requestedUnitPrice);
 
@@ -617,7 +616,7 @@ public class RfqAdminController : BasePluginController
             return await AdminQuote(id);
 
         int.TryParse(form[$"quantity{quoteItemId}"], out var offeredQty);
-        decimal.TryParse(form[$"unitPrice{quoteItemId}"], NumberStyles.Any, CultureInfo.InvariantCulture, out var offeredUnitPrice);
+        decimal.TryParse(form[$"unitPrice{quoteItemId}"], out var offeredUnitPrice);
 
         await _rfqService.UpdateQuoteItemAsync(quoteItemId, offeredQty, offeredUnitPrice);
 

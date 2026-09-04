@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -144,7 +143,7 @@ public class RfqService
                     await UpdateQuantityWithLogAsync(requestQuoteItem, quantity);
                 break;
             case RfqDefaults.UNIT_PRICE_FORM_KEY:
-                if (decimal.TryParse(formValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var price) && requestQuoteItem.RequestedUnitPrice != price)
+                if (decimal.TryParse(formValue, out var price) && requestQuoteItem.RequestedUnitPrice != price)
                     await UpdateUnitPriceWithLogAsync(requestQuoteItem, price);
 
                 break;
