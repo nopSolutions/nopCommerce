@@ -135,6 +135,11 @@ public partial class Product : BaseEntity, ILocalizedEntity, ISlugSupported, IAc
     public bool IsGiftCard { get; set; }
 
     /// <summary>
+    /// Gets or sets value whether the product is fragile
+    /// </summary>
+    public bool IsFragile { get; set; }
+
+    /// <summary>
     /// Gets or sets the gift card type identifier
     /// </summary>
     public int GiftCardTypeId { get; set; }

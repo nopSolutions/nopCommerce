@@ -209,8 +209,15 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IEncryptionService, EncryptionService>();
         services.AddScoped<IAuthenticationService, CookieAuthenticationService>();
         services.AddScoped<IUrlRecordService, UrlRecordService>();
-        services.AddScoped<IShipmentService, ShipmentService>();
-        services.AddScoped<IShippingService, ShippingService>();
+        services.AddScoped<ShipmentService>();
+        services.AddScoped<FragileShippingService>();
+        services.AddScoped<IShippingService>(sp =>
+        {
+            var original = sp.GetRequiredService<ShippingService>();
+            var custom = sp.GetService<FragileShippingService>();
+            var productService = sp.GetRequiredService<IProductService>();
+            return new ShippingServiceDecorator(original, custom, productService);
+        });
         services.AddScoped<IWarehouseService, WarehouseService>();
         services.AddScoped<IShippingMethodsService, ShippingMethodsService>();
         services.AddScoped<IDateRangeService, DateRangeService>();

@@ -382,7 +382,19 @@ public partial class BaseNopTest
         services.AddTransient<IAuthenticationService, TestAuthenticationService>();
         services.AddTransient<IUrlRecordService, UrlRecordService>();
         services.AddTransient<IShipmentService, ShipmentService>();
-        services.AddTransient<IShippingService, ShippingService>();
+        //services.AddTransient<IShippingService, ShippingService>();
+
+        // register concrete implementations so DI can create them
+        services.AddTransient<ShippingService>();
+        services.AddTransient<FragileShippingService>();
+
+        // register the decorator as the resolved IShippingService
+        services.AddTransient<IShippingService>(sp =>
+            new ShippingServiceDecorator(
+                sp.GetRequiredService<ShippingService>(),
+                sp.GetRequiredService<FragileShippingService>(),
+                sp.GetRequiredService<IProductService>()));
+
         services.AddTransient<IWarehouseService, WarehouseService>();
         services.AddTransient<IShippingMethodsService, ShippingMethodsService>();
         services.AddTransient<IDateRangeService, DateRangeService>();
