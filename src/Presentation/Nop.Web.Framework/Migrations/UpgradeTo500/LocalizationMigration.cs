@@ -859,7 +859,6 @@ public class LocalizationMigration : MigrationBase
             ["ShoppingCart.VendorList"] = "Vendor",
             ["ShoppingCart.VendorList.All"] = "All",
             ["ShoppingCart.SelectVendorToCheckout"] = "Please select a vendor before proceeding to checkout",
-
         });
 
         #endregion
