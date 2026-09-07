@@ -21,7 +21,7 @@
     <PackageReference Include="Markdig" Version="0.42.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="5.3.0" />
     <PackageReference Include="PdfRpt.Core" Version="1.5.15" />
-    <PackageReference Include="System.ServiceModel.Http" Version="8.1.2" />
+    <PackageReference Include="System.ServiceModel.Http" Version="10.0.652802" />
     <PackageReference Include="SkiaSharp" Version="4.151.2" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.151.2" />
     <PackageReference Include="Svg.Skia" Version="5.2.3" />
