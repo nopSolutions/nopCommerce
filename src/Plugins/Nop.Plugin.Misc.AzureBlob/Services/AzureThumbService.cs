@@ -129,7 +129,7 @@ public class AzureThumbService : IThumbService
         var prefix = $"{picture.Id:0000000}";
 
         var tasks = await _blobContainerClient
-            .GetBlobsAsync(BlobTraits.All, BlobStates.All, prefix)
+            .GetBlobsAsync(BlobTraits.All, BlobStates.All, prefix, default)
             .Select(blob => _blobContainerClient.DeleteBlobIfExistsAsync(blob.Name, DeleteSnapshotsOption.IncludeSnapshots))
             .Select(dummy => (Task)dummy)
             .ToListAsync();
