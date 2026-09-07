@@ -860,6 +860,9 @@ public class LocalizationMigration : MigrationBase
             ["ShoppingCart.VendorList.All"] = "All",
             ["ShoppingCart.SelectVendorToCheckout"] = "Please select a vendor before proceeding to checkout",
 
+            //#8299
+            ["Customer.Anonymous"] = "Anonymous",
+
         });
 
         #endregion

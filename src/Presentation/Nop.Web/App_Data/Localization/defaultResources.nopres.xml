@@ -17968,6 +17968,9 @@
   <LocaleResource Name="Currency.Selector.Text.Pattern">
     <Value>{0}, {1}</Value>
   </LocaleResource>
+  <LocaleResource Name="Customer.Anonymous">
+    <Value>Anonymous</Value>
+  </LocaleResource>
   <LocaleResource Name="Customer.FullNameFormat">
     <Value>{0} {1}</Value>
   </LocaleResource>
