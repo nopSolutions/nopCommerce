@@ -55,4 +55,9 @@ public static class GoogleAnalyticsDefaults
     /// </summary>
     public static string SessionIdAttribute => "GoogleAnalytics.SessionId";
 
+    public static string UtmSourceKey => "utm_source";
+    public static string UtmMediumKey => "utm_medium";
+    public static string UtmCampaignKey => "utm_campaign";
+    public static string UtmTermKey => "utm_term";
+    public static string UtmContentKey => "utm_content";
 }
