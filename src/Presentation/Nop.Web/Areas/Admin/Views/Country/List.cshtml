@@ -8,11 +8,11 @@
 }
 
 
-<div class="content-header clearfix">
-    <h1 class="float-left">
+<div class="app-content-header clearfix">
+    <h1 class="float-start">
         @T("Admin.Configuration.Countries")
     </h1>
-    <div class="float-right">
+    <div class="float-end">
         <a asp-action="Create" class="btn btn-primary">
             <i class="fas fa-square-plus"></i>
             @T("Admin.Common.AddNew")
@@ -29,7 +29,7 @@
             <i class="fas fa-download"></i>
             @T("Admin.Configuration.Countries.ExportToCsv")
         </a>
-        <button type="submit" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
+        <button type="submit" name="importcsv" class="btn bg-olive" data-bs-toggle="modal" data-bs-target="#importcsv-window">
             <i class="fas fa-upload"></i>
             @T("Admin.Configuration.Countries.ImportFromCsv")
         </button>
@@ -37,7 +37,7 @@
     </div>
 </div>
 
-<section class="content">
+<section class="app-content">
     <div class="container-fluid">
     <div class="form-horizontal">
         <div class="cards-group">
@@ -205,7 +205,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="importcsv-window-title">@T("Admin.Common.ImportFromCsv")</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
             </div>
             <form asp-controller="Country" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">

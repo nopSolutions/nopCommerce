@@ -1,9 +1,6 @@
 ﻿@model Nop.Web.Framework.Menu.AdminMenuItem
 
-@using Nop.Core.Domain.Localization
-@inject LocalizationSettings localizationSettings
 @{
-    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
     var isActive = Model.ContainsSystemName(NopHtml.GetActiveMenuItemSystemName());
 }
 @if (!string.IsNullOrEmpty(Model.Url))
@@ -13,9 +10,7 @@
         <a href="@Model.Url" @(isActive ? Html.Raw("class=\"nav-link active\"") : Html.Raw("class=\"nav-link\"")) @(Model.OpenUrlInNewTab ? Html.Raw(" target=\"_blank\"") : null)>
             @if (!string.IsNullOrEmpty(Model.IconClass))
             {
-                <text>
-                    <i class="nav-icon @Url.Content(Model.IconClass)"></i>
-                </text>
+                <i class="nav-icon @Url.Content(Model.IconClass)"></i>
             }
 
             <p> @Model.Title</p>
@@ -31,7 +26,7 @@ else
 
     if (hasChildNodes)
     {
-        liCssClass = "nav-item has-treeview";
+        liCssClass = "nav-item";
     }
 
     if (isActive)
@@ -47,20 +42,11 @@ else
         <a href="#" @(isActive ? Html.Raw("class=\"nav-link active\"") : Html.Raw("class=\"nav-link\""))>
             @if (!string.IsNullOrEmpty(Model.IconClass))
             {
-                <text>
-                    <i class="nav-icon @Url.Content(Model.IconClass)"></i>
-                </text>
+                <i class="nav-icon @Url.Content(Model.IconClass)"></i>
             }
             <p>
                 @Model.Title
-                @if (supportRtl)
-                {
-                    <i class="right fas fa-angle-right"></i>
-                }
-                else
-                {
-                    <i class="right fas fa-angle-left "></i>
-                }
+                <i class="nav-arrow bi bi-chevron-right"></i>
             </p>
         </a>
         @if (hasChildNodes)

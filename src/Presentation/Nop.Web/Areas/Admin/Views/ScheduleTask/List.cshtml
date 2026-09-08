@@ -7,11 +7,11 @@
     NopHtml.SetActiveMenuItemSystemName("Schedule tasks");
 }
 
-<div class="content-header clearfix">
-    <h1 class="float-left">
+<div class="app-content-header clearfix">
+    <h1 class="float-start">
         @T("Admin.System.ScheduleTasks")
     </h1>
-    <div class="float-right">
+    <div class="float-end">
         &nbsp;
         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ScheduleTaskListButtons, additionalData = Model })
     </div>
@@ -25,7 +25,7 @@
     });
 </script>
 
-<section class="content">
+<section class="app-content">
     <div class="container-fluid">
     <div class="form-horizontal">
         <div class="cards-group">

@@ -20,11 +20,11 @@
 }
 
 <form asp-controller="Setting" asp-action="Vendor" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Configuration.Settings.Vendor")
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")
@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <section class="content">
+    <section class="app-content">
         <div class="container-fluid">
             <div class="form-horizontal">
                 @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))

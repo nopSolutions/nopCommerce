@@ -16,20 +16,20 @@
     
     <div asp-validation-summary="All"></div>
 
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId)
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="AddProductToOrder" asp-route-orderId="@Model.OrderId">@T("Admin.Orders.Products.AddNew.BackToList")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             &nbsp;
         </div>
     </div>
 
-   <section class="content">
+   <section class="app-content">
         <div class="container-fluid">
            @if (Model.Warnings.Count > 0)
             {

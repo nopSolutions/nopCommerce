@@ -12,11 +12,11 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<div class="content-header clearfix">
-    <h1 class="float-left">
+<div class="app-content-header clearfix">
+    <h1 class="float-start">
         @T("Admin.System.SeNames")
     </h1>
-    <div class="float-right">
+    <div class="float-end">
         <button type="button" id="delete-selected" class="btn btn-danger">
             <i class="far fa-trash-can"></i>
             @T("Admin.System.SeNames.DeleteSelected")
@@ -25,7 +25,7 @@
     </div>
 </div>
 
-<section class="content">
+<section class="app-content">
     <div class="container-fluid">
     <div class="form-horizontal">
         <div class="cards-group">

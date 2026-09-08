@@ -20,16 +20,16 @@ else
     <form asp-controller="ItemClassification" asp-action="ProductToClassification"
           asp-route-btnId="@Context.Request.Query["btnId"]"
           asp-route-formId="@Context.Request.Query["formId"]">
-        <div class="content-header clearfix">
-            <h1 class="float-left">
+        <div class="app-content-header clearfix">
+            <h1 class="float-start">
                 @T("Plugins.Tax.Avalara.ItemClassification.AddProduct")
             </h1>
-            <div class="float-right">
+            <div class="float-end">
                 &nbsp;
             </div>
         </div>
 
-        <section class="content">
+        <section class="app-content">
             <div class="container-fluid">
                 <div class="form-horizontal">
                     <div class="cards-group">

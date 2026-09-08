@@ -5,7 +5,7 @@
 }
 
 <form asp-controller="Avalara" asp-action="Configure" method="post" id="configuration-form">
-    <div class="content">
+    <div class="app-content">
         <div class="form-horizontal">
             <nop-cards id="avalara-cards">
                 <nop-card asp-name="configuration" asp-icon="fas fa-info" asp-title="@T("Plugins.Tax.Avalara.Configuration")" asp-hide-block-attribute-name="@AvalaraTaxDefaults.HideGeneralBlock" asp-hide="@Model.HideGeneralBlock" asp-advanced="false">

@@ -14,11 +14,11 @@
       asp-route-customerIdInput="@customerIdInput"
       asp-route-customerInfoInput="@customerInfoInput"
       asp-route-btnId="@btnId">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Vendors.PmCustomer.Choose")
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             &nbsp;
         </div>
     </div>
@@ -38,7 +38,7 @@
     else
     {
         <input type="hidden" asp-for="AddCustomerToVendorModel.CustomerId" />
-        <div class="content">
+        <div class="app-content">
             <div class="form-horizontal">
                 <div class="cards-group">
                     <div class="card card-default card-search card-popup">

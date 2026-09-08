@@ -9,15 +9,15 @@
 
 
 <form asp-controller="ReturnRequest" asp-action="ReturnRequestReasonCreate" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Configuration.Settings.Order.ReturnRequestReasons.AddNew")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="ReturnRequestReasonList">@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.BackToList")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")
@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <section class="content">
+    <section class="app-content">
         <div class="container-fluid">
             <div class="form-horizontal">
                 @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestReason", Model)

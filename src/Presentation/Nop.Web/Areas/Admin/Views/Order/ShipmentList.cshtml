@@ -14,28 +14,25 @@
 }
 
 <form asp-controller="Order" asp-action="ShipmentList" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Orders.Shipments.List")
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <div class="btn-group">
                 <button type="button" class="btn btn-info">
                     <i class="far fa-file-pdf"></i>
                     @T("Admin.Orders.Shipments.PrintPackagingSlips")
                 </button>
-                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">&nbsp;</span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li class="dropdown-item">
-                        <button type="submit" name="exportpackagingslips-all">
+                <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <button type="submit" name="exportpackagingslips-all" class="dropdown-item">
                             @T("Admin.Orders.Shipments.PrintPackagingSlips.All")
                         </button>
                     </li>
-                    <li class="dropdown-item">
-                        <button type="button" id="exportpackagingslips-selected">
+                    <li>
+                        <button type="button" id="exportpackagingslips-selected" class="dropdown-item">
                             @T("Admin.Orders.Shipments.PrintPackagingSlips.Selected")
                         </button>
                     </li>
@@ -56,7 +53,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderShipmentListButtons, additionalData = Model })
         </div>
     </div>
-    <section class="content">
+    <section class="app-content">
         <div class="container-fluid">
             <div class="form-horizontal">
                 <div class="form-horizontal">

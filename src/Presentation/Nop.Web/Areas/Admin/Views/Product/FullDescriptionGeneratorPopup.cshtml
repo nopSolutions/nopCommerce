@@ -34,13 +34,13 @@
 <form asp-controller="Product" asp-action="FullDescriptionGeneratorPopup" id="generatorForm">
     <input type="hidden" asp-for="SaveButtonClicked" />
     <input type="hidden" asp-for="LanguageId" />
-    <section class="content">
+    <section class="app-content">
         <div class="container-fluid">
-            <div class="content-header clearfix">
-                <h1 class="float-left">
+            <div class="app-content-header clearfix">
+                <h1 class="float-start">
                     @T("Admin.Catalog.Products.AiGenerateFullDescription")
                 </h1>
-                <div class="float-right">
+                <div class="float-end">
                     @if (!string.IsNullOrEmpty(Model.GeneratedDescription))
                     {
                         <button id="save_button" type="submit" onclick="set_save()" name="save" class="btn btn-primary">

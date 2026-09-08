@@ -4,10 +4,10 @@ Admin.Navigation = (function () {
     var buildMap = function () {
         var map = {};
 
-        var linkElements = $("a.nav-link");
+        var linkElements = $(".sidebar-menu a.nav-link");
 
         linkElements.each(function () {
-            var parents = $(this).parentsUntil(".nav-sidebar");
+            var parents = $(this).parentsUntil(".sidebar-menu");
             var href;
             var title;
             var parent;

@@ -1,19 +1,23 @@
 ﻿body {
+    min-height: 100vh;
     background: #ecf0f5 !important;
     color: #868686;
     font-size: 15px;
 }
 
 hr {
-    margin-top: 25px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #e7e7e7;
+    margin: 25px 0 20px;
+    border: 0;
+    border-top: 1px solid #e7e7e7;
+    opacity: 1;
 }
 
 .wrapper {
+    width: 100%;
+    max-width: 960px;
+    min-height: 100vh;
+    margin: 0 auto;
     overflow: hidden;
-    min-height: 100%;
-				height: auto;
 }
 
 .btn-install {
@@ -48,39 +52,33 @@ hr {
     margin-top: 30px;
 }
 
-.wrapper {
-    width: 960px; 
-    margin: 0 auto;
-}
-
 .logo-wrapper {
-    background-color: #3c8dbc;
     padding: 25px;
+    background-color: #3c8dbc;
 }
 
 .logo {
-    background: url(images/logo.png) no-repeat 50% 50%;
     height: 50px;
+    background: url(images/logo.png) no-repeat 50% 50%;
 }
 
 .language-selector {
     margin: 10px 0;
 }
 
-.content{
-    background-color: #ffffff;
+.content {
     padding: 20px;
+    background-color: #ffffff;
 }
 
 .form-horizontal {
-    padding: 0 60px;
+    padding: 0 1rem;
 }
 
 .credentials {
-    background: #eeeeee;
     padding: 22px 10px 7px;
-    margin-bottom: 15px;
-    margin-top: 20px;
+    margin: 20px 0 15px;
+    background: #eeeeee;
 }
 
 .content-footer {
@@ -91,8 +89,8 @@ hr {
     color: red;
 }
 
-.validation-summary-errors ul{
-    padding-left: 0;
+.validation-summary-errors ul {
+    padding-inline-start: 0;
     list-style: none;
 }
 
@@ -104,27 +102,33 @@ hr {
     display: none;
 }
 
-    .throbber .curtain {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #5e7b8c;
-        opacity: 0.9;
-        filter: alpha(opacity=90);
+.throbber .curtain {
+    position: fixed;
+    inset: 0;
+    background-color: #5e7b8c;
+    opacity: 0.9;
+}
+
+.throbber .curtain-content {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.throbber .curtain-content div {
+    padding: 1.5rem;
+    color: #ffffff;
+    text-align: center;
+}
+
+@media (max-width: 575.98px) {
+    .content {
+        padding: 1rem;
     }
 
-    .throbber .curtain-content {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
+    .form-horizontal {
+        padding: 0;
     }
-
-        .throbber .curtain-content div {
-            text-align: center;
-            padding: 250px;
-            color: #FFF;
-        }
+}

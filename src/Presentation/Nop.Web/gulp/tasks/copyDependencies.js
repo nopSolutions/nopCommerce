@@ -27,9 +27,14 @@ export default function copyDependencies()
       .pipe(filter(['**/css/*.min*', '**/webfonts/*', 'attribution.js']))
       .pipe(gulp.dest(targetPath + '/@fortawesome/fontawesome-free')),
 
+    //bootstrap-icons
+    gulp
+      .src(nodeModules + 'bootstrap-icons/font/**')
+      .pipe(gulp.dest(targetPath + '/bootstrap-icons/font')),
+
     //datatables.net
     gulp
-      .src(nodeModules + '{datatables.net,datatables.net-bs4,datatables.net-buttons,datatables.net-buttons-bs4}/**')
+      .src(nodeModules + '{datatables.net,datatables.net-bs5,datatables.net-buttons,datatables.net-buttons-bs5}/**')
       .pipe(filter(['**/{css,js}/*.min*', '**/swf/*']))      
       .pipe(gulp.dest(targetPath)),
 
@@ -50,11 +55,6 @@ export default function copyDependencies()
     gulp
       .src(`${nodeModules}moment/dist/**`)
       .pipe(gulp.dest(targetPath + '/moment')),
-
-    //Ionicons
-    gulp
-      .src(`${nodeModules}ionicons/{css,fonts,png}/**`)
-      .pipe(gulp.dest(targetPath + '/ionicons')),
 
     //Summernote
     gulp
@@ -113,11 +113,6 @@ export default function copyDependencies()
     gulp
       .src(nodeModules + 'magnific-popup/dist/**/*.{css,min.js}')
       .pipe(gulp.dest(`${targetPath}magnific-popup`)),
-
-    //Admin LTE plugins: select2
-    gulp
-    .src(nodeModules + 'admin-lte/plugins/select2/**/*.{css,min.js}')
-    .pipe(gulp.dest(`${targetPath}admin-lte/plugins/select2`)),
 
     //Chart.js
     gulp

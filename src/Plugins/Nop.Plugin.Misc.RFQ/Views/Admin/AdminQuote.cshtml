@@ -19,15 +19,15 @@
 
 <form asp-controller="RfqAdmin" asp-action="AdminQuote" method="post">
     <input asp-for="Id" type="hidden" />
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @title
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="AdminQuotes">@T("Plugins.Misc.RFQ.AdminQuote.BackToList")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             @if (Model.DisplayAddNewProductButton)
             {
                 <button type="submit" id="btnAddNewProduct" name="btnAddNewProduct" onclick="javascript:setLocation('@(Url.Action("AddProductToQuote", "RfqAdmin", new { quoteId = Model.Id }))'); return false;" class="btn btn-info">
@@ -75,7 +75,7 @@
             }
         </div>
     </div>
-    <section class="content">
+    <section class="app-content">
         <div class="container-fluid">
             <div class="form-horizontal">
                 <nop-cards id="quote-cards">

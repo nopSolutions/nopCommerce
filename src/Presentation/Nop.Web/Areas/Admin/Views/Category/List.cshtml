@@ -12,11 +12,11 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<div class="content-header clearfix">
-    <h1 class="float-left">
+<div class="app-content-header clearfix">
+    <h1 class="float-start">
         @T("Admin.Catalog.Categories")
     </h1>
-    <div class="float-right">
+    <div class="float-end">
         <a asp-action="Create" class="btn btn-primary">
             <i class="fas fa-square-plus"></i>
             @T("Admin.Common.AddNew")
@@ -26,26 +26,23 @@
                 <i class="fas fa-download"></i>
                 @T("Admin.Common.Export")
             </button>
-            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <span class="caret"></span>
-                <span class="sr-only">&nbsp;</span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                <li class="dropdown-item">
-                    <a asp-action="ExportXml">
+            <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" asp-action="ExportXml">
                         <i class="far fa-file-code"></i>
                         @T("Admin.Common.ExportToXml")
                     </a>
                 </li>
-                <li class="dropdown-item">
-                    <a asp-action="ExportXlsx">
+                <li>
+                    <a class="dropdown-item" asp-action="ExportXlsx">
                         <i class="far fa-file-excel"></i>
                         @T("Admin.Common.ExportToExcel")
                     </a>
                 </li>
             </ul>
         </div>
-        <button type="button" name="importexcel" class="btn bg-olive" data-toggle="modal" data-target="#importexcel-window">
+        <button type="button" name="importexcel" class="btn bg-olive" data-bs-toggle="modal" data-bs-target="#importexcel-window">
             <i class="fas fa-upload"></i>
             @T("Admin.Common.Import")
         </button>
@@ -57,7 +54,7 @@
     </div>
 </div>
 
-<section class="content">
+<section class="app-content">
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="cards-group">
@@ -205,7 +202,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="importexcel-window-title">@T("Admin.Common.ImportFromExcel")</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
             </div>
             <form asp-controller="Category" asp-action="ImportFromXlsx" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">

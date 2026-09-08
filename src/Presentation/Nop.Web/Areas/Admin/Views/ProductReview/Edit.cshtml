@@ -8,15 +8,15 @@
 }
 
 <form asp-controller="ProductReview" asp-action="Edit" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Catalog.ProductReviews.EditProductReviewDetails")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.Catalog.ProductReviews.BackToList")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")
@@ -28,7 +28,7 @@
             @if (!Model.IsLoggedInAsVendor)
             {
                 //this button is not visible to vendors
-                <span id="productreview-delete" class="btn bg-red">
+                <span id="productreview-delete" class="btn btn-danger">
                     <i class="far fa-trash-can"></i>
                     @T("Admin.Common.Delete")
                 </span>

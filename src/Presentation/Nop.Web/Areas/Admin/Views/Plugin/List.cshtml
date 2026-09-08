@@ -14,11 +14,11 @@
 }
 
 <form asp-controller="Plugin" asp-action="List" id="plugins-form-local">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Configuration.Plugins.Local")
         </h1>    
-        <div class="float-right">
+        <div class="float-end">
             @if (Model.NeedToRestart)
             {
                 <button type="submit" name="plugin-apply-changes" class="btn btn-success">@T("Admin.Configuration.Plugins.ApplyChanges")</button>
@@ -45,7 +45,7 @@
                         });
                 });
             </script>
-            <button type="button" name="uploadplugin" class="btn bg-olive" data-toggle="modal" data-target="#uploadplugin-window">
+            <button type="button" name="uploadplugin" class="btn bg-olive" data-bs-toggle="modal" data-bs-target="#uploadplugin-window">
                 <i class="fas fa-upload"></i>
                 @T("Admin.Configuration.Plugins.Upload")
             </button>
@@ -53,7 +53,7 @@
         </div>
     </div>
 
-    <section class="content">
+    <section class="app-content">
     <div class="container-fluid">
         <div class="form-horizontal">
             <script>
@@ -83,8 +83,8 @@
                     $("#plugins-local-grid")
                         .on("click", ".delete-plugin-link", function (e) {
                             $(this)
-                                .attr("data-toggle", "modal")
-                                .attr("data-target", "#plugin-delete-confirmation");
+                                .attr("data-bs-toggle", "modal")
+                                .attr("data-bs-target", "#plugin-delete-confirmation");
                             $("#plugin-delete-confirmation button[type=submit]").attr("name", $(this).attr("name"));
                     });
 
@@ -274,9 +274,9 @@
 
                             function renderColumnInstalled(data, type, row, meta) {
                                 if (row.Installed) {
-                                    return '<button type="submit" name="uninstall-plugin-link-' + row.SystemName + '" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall").Text</button>';
+                                    return '<button type="submit" name="uninstall-plugin-link-' + row.SystemName + '" class="btn btn-danger uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall").Text</button>';
                                 } else {
-                                    return '<button type="submit" name="install-plugin-link-' + row.SystemName + '" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install").Text</button> <button type="button" name="delete-plugin-link-' + row.SystemName + '" class="btn bg-red delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete").Text</button>';
+                                    return '<button type="submit" name="install-plugin-link-' + row.SystemName + '" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install").Text</button> <button type="button" name="delete-plugin-link-' + row.SystemName + '" class="btn btn-danger delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete").Text</button>';
                                 }
                             }
                         </script>
@@ -287,15 +287,15 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="plugindelete-confirmation-title">@T("Admin.Common.AreYouSure")</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>                                    
+                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>                                    
                                 </div>
                                 <div class="form-horizontal">
                                     <div class="modal-body">
                                         @T("Admin.Common.DeleteConfirmation")
                                     </div>
                                     <div class="modal-footer">
-                                        <span class="btn btn-default" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
-                                        <button type="submit" class="btn btn-danger float-right">@T("Admin.Common.Delete")</button>
+                                        <span class="btn btn-default" data-bs-dismiss="modal">@T("Admin.Common.NoCancel")</span>
+                                        <button type="submit" class="btn btn-danger float-end">@T("Admin.Common.Delete")</button>
                                     </div>
                                 </div>
                             </div>
@@ -330,7 +330,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="uploadplugin-window-title">@T("Admin.Configuration.Plugins.Upload")</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
             </div>
             <form asp-controller="Plugin" asp-action="UploadPluginsAndThemes" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">

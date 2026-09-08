@@ -14,11 +14,11 @@
 }
 @inject IStoreService storeService
 
-<div class="content-header clearfix">
-    <h1 class="float-left">
+<div class="app-content-header clearfix">
+    <h1 class="float-start">
         @T("Admin.Catalog.ProductReviews")
     </h1>
-    <div class="float-right">
+    <div class="float-end">
         @if (!Model.IsLoggedInAsVendor)
         {
             //these buttons are not visible to vendors
@@ -39,7 +39,7 @@
     </div>
 </div>
 
-<section class="content">
+<section class="app-content">
     <div class="container-fluid">
         <div class="form-horizontal">
         <div class="cards-group">

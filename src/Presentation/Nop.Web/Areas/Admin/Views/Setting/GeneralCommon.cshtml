@@ -56,11 +56,11 @@
 }
 
 <form asp-controller="Setting" asp-action="GeneralCommon" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Configuration.Settings.GeneralCommon")
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")
@@ -69,7 +69,7 @@
         </div>
     </div>
 
-    <section class="content">
+    <section class="app-content">
         <div class="container-fluid">
             <div class="form-horizontal">
                 @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
@@ -131,7 +131,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="uploadicons-window-title">@T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons")</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <form asp-controller="Setting" asp-action="UploadIcons" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">

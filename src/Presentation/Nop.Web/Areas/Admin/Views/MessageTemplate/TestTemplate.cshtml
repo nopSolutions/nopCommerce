@@ -8,15 +8,15 @@
 }
 
 <form asp-controller="MessageTemplate" asp-action="TestTemplate" method="post" id="specificationattribute-form">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.ContentManagement.MessageTemplates.TestDetails")
             <small>
                 <a asp-action="Edit" asp-route-id="@Model.Id">@T("Admin.ContentManagement.MessageTemplates.Test.BackToTemplate")</a>
                 <i class="fas fa-arrow-circle-left"></i>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="send-test" class="btn btn-primary">
                 @T("Admin.ContentManagement.MessageTemplates.Test.Send")
             </button>
@@ -25,7 +25,7 @@
     </div>
     <input asp-for="Id" type="hidden" />
 
-    <section class="content">
+    <section class="app-content">
         <div class="container-fluid">
             <div class="form-horizontal">
                 <div class="cards-group">

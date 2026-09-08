@@ -9,15 +9,15 @@
 
 
 <form asp-controller="Language" asp-action="Edit" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Configuration.Languages.EditLanguageDetails") - @Model.Name
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.Configuration.Languages.BackToList")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")
@@ -30,7 +30,7 @@
                 <i class="fas fa-download"></i>
                 @T("Admin.Configuration.Languages.Export")
             </a>
-            <button type="button" class="btn bg-olive" data-toggle="modal" data-target="#importxml-window">
+            <button type="button" class="btn bg-olive" data-bs-toggle="modal" data-bs-target="#importxml-window">
                 <i class="fas fa-upload"></i>
                 @T("Admin.Configuration.Languages.Import")
             </button>
@@ -51,7 +51,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="importxml-window-title">@T("Admin.Configuration.Languages.Import")</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
             </div>
             <form asp-controller="Language" asp-route-id="@Model.Id" asp-action="ImportXml" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
