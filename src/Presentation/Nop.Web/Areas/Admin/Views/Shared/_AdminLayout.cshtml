@@ -13,7 +13,6 @@
 @using Nop.Services.Helpers
 @using Nop.Services.Localization
 
-
 @{
     var returnUrl = webHelper.GetRawUrl(Context.Request);
 
@@ -49,10 +48,9 @@
     @*Insert favicon and app icons head code*@
     @await Component.InvokeAsync(typeof(FaviconViewComponent))
 </head>
-<body class="hold-transition sidebar-mini layout-fixed control-sidebar-slide-open">
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary control-sidebar-slide-open">
     <div class="throbber">
-        <div class="curtain">
-        </div>
+        <div class="curtain"></div>
         <div class="curtain-content">
             <div>
                 <h1 class="throbber-header">@T("Common.Wait")</h1>
@@ -65,7 +63,8 @@
     <div id="ajaxBusy">
         <span>&nbsp;</span>
     </div>
-    <div class="wrapper">
+    
+    <div class="app-wrapper">
         @if (IsSectionDefined("header"))
         {
             @RenderSection("header")
@@ -73,96 +72,108 @@
         else
         {
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderBefore })
-            <nav class="main-header navbar navbar-expand-md navbar-dark bg-dark">
-                <ul class="navbar-nav pl-2 pl-md-0">
-                    <li class="nav-item">
-                        <a class="nav-link" id="nopSideBarPusher" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
-                    </li>
-                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderToggleAfter })
-                </ul>
-                <a href="@Url.Content("~/Admin")" class="brand-link navbar-dark">
-                    <img src="~/css/admin/images/logo.png" alt="logo.png" class="brand-image logo d-block d-md-none d-sm-block d-sm-none">
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderNavbarBefore })
-                <div class="collapse navbar-collapse" id="navbarText">
-                    <ul class="navbar-nav ml-auto pl-2">
+            <nav class="app-header navbar navbar-expand bg-body">
+                <div class="container-fluid">
+                    <ul class="navbar-nav ps-2 ps-md-0">
                         <li class="nav-item">
-                            @await Component.InvokeAsync(typeof(AdminLanguageSelectorViewComponent))
+                            <a class="nav-link" id="nopSideBarPusher" data-lte-toggle="sidebar" href="#" role="button">
+                                <i class="fa fa-bars"></i>
+                            </a>
                         </li>
-                        @if (await customerService.IsRegisteredAsync(currentCustomer))
-                        {
-                            <li class="nav-item">
-                                <a href="#" class="nav-link disabled">@await customerService.GetCustomerFullNameAsync(currentCustomer)</a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-controller="Customer" asp-action="Logout" asp-area="" class="nav-link">@T("Admin.Header.Logout")</a>
-                            </li>
-                        }
-                        <li class="nav-item">
-                            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderMiddle })
-                        </li>
-                        <li class="nav-item">
-                            <a asp-controller="Home" asp-action="Index" asp-area="" class="nav-link">@T("Admin.Header.PublicStore")</a>
-                        </li>
-                        @if (canManageMaintenance)
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link" href="#" data-toggle="dropdown">
-                                    <i class="fas fa-gears"></i>
-                                </a>
-                                <ul class="maintenance-menu dropdown-menu dropdown-menu-right" role="menu">
-                                    <li class="dropdown-item">
-                                        <form asp-controller="Common" asp-action="ClearCache" asp-area="@AreaNames.ADMIN">
-                                            <input name="returnurl" type="hidden" value="@returnUrl">
-                                            <div class="input-group-append">
-                                                <button type="submit" style="width:210px;background-color: Transparent;">
-                                                    <span>@T("Admin.Header.ClearCache")</span>
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </li>
-                                    <li class="dropdown-item">
-                                        <form asp-controller="Common" asp-action="RestartApplication" asp-area="@AreaNames.ADMIN">
-                                            <input name="returnurl" type="hidden" value="@returnUrl">
-                                            <button id="restart-application" type="submit" style="width:210px;background-color: Transparent;">
-                                                <span>@T("Admin.Header.RestartApplication")</span>
-                                            </button>
-                                            <script>
-                                                $(function() {
-                                                    $("#restart-application").click(function (e) {
-                                                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
-                                                    });
-                                                });
-                                            </script>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        }
+                        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderToggleAfter })
                     </ul>
+                    
+                    <div class="sidebar-brand d-md-none">
+                        <a href="@Url.Content("~/Admin")" class="brand-link navbar-dark">
+                            <img src="~/css/admin/images/logo.png" alt="logo.png" class="brand-image logo">
+                        </a>
+                    </div>
+                    
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderNavbarBefore })
+                    
+                    <div class="collapse navbar-collapse" id="navbarText">
+                        <ul class="navbar-nav ms-auto ps-2">
+                            <li class="nav-item">
+                                @await Component.InvokeAsync(typeof(AdminLanguageSelectorViewComponent))
+                            </li>
+                            @if (await customerService.IsRegisteredAsync(currentCustomer))
+                            {
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link disabled">@await customerService.GetCustomerFullNameAsync(currentCustomer)</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="Customer" asp-action="Logout" asp-area="" class="nav-link">@T("Admin.Header.Logout")</a>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderMiddle })
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="Home" asp-action="Index" asp-area="" class="nav-link">@T("Admin.Header.PublicStore")</a>
+                            </li>
+                            @if (canManageMaintenance)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" href="#" data-bs-toggle="dropdown">
+                                        <i class="fas fa-gears"></i>
+                                    </a>
+                                    <ul class="maintenance-menu dropdown-menu dropdown-menu-end" role="menu">
+                                        <li class="dropdown-item">
+                                            <form asp-controller="Common" asp-action="ClearCache" asp-area="@AreaNames.ADMIN">
+                                                <input name="returnurl" type="hidden" value="@returnUrl">
+                                                <div class="d-flex">
+                                                    <button type="submit" class="dropdown-item" style="width:210px;background-color: Transparent; border: 0;">
+                                                        <span>@T("Admin.Header.ClearCache")</span>
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </li>
+                                        <li class="dropdown-item">
+                                            <form asp-controller="Common" asp-action="RestartApplication" asp-area="@AreaNames.ADMIN">
+                                                <input name="returnurl" type="hidden" value="@returnUrl">
+                                                <button id="restart-application" type="submit" class="dropdown-item" style="width:210px;background-color: Transparent; border: 0;">
+                                                    <span>@T("Admin.Header.RestartApplication")</span>
+                                                </button>
+                                                <script>
+                                                    $(function() {
+                                                        $("#restart-application").click(function (e) {
+                                                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
+                                                        });
+                                                    });
+                                                </script>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderNavbarAfter })
                 </div>
-                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderNavbarAfter })
             </nav>
 
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderAfter })
         }
+        
         @if (IsSectionDefined("headermenu"))
         {
             @RenderSection("headermenu")
         }
         else
         {
-            <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <aside class="app-sidebar bg-body-secondary" data-bs-theme="dark">
                 <!-- Brand Logo -->
-                <a href="@Url.Content("~/Admin")" class="brand-link navbar-dark logo-switch">
-                    <img src="~/css/admin/images/logo.png" alt="logo.png" class="brand-image-xl logo-xl">
-                    <img src="~/css/admin/images/logo-mini.png" alt="logo.png" class="brand-image-xs logo-xs">
-                </a>
-                <div class="sidebar">
-                    <div class="sidebar-form">
+                <div class="sidebar-brand">
+                    <a href="@Url.Content("~/Admin")" class="brand-link">
+                        <img src="~/css/admin/images/logo.png" alt="logo.png" class="brand-image opacity-75">
+                    </a>
+                </div>
+                <div class="sidebar-wrapper">
+                    <div class="p-2">
                         <div id="search-box">
                             <input type="text" class="form-control admin-search-box typeahead" placeholder="@T("Admin.Menu.Search")">
                         </div>
@@ -176,49 +187,48 @@
                         </script>
                         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MenuBefore })
                         @await Html.PartialAsync("Menu")
-
                     </nav>
                 </div>
             </aside>
         }
-        <div class="content-wrapper @(adminAreaSettings.UseStickyHeaderLayout ? "sticky-header-layout" : "")">
+        
+        <main class="app-main @(adminAreaSettings.UseStickyHeaderLayout ? "sticky-header-layout" : "")">
             @await Html.PartialAsync("Notifications")
             <nop-antiforgery-token />
             @RenderBody()
-        </div>
-        <div class="main-footer">
+        </main>
+        
+        <footer class="app-footer">
             <div class="container-fluid">
-                <div class="col-md-12">
-                    <div class="row">
-                        @if (!storeInformationSettings.HidePoweredByNopCommerce)
-                        {
-                            <div class="col-md-4 col-xs-12 text-md-left text-center">
+                <div class="row">
+                    @if (!storeInformationSettings.HidePoweredByNopCommerce)
+                    {
+                        <div class="col-md-4 col-12 text-md-start text-center">
                                 @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
                                     Please find more info at https://www.nopcommerce.com/nopcommerce-copyright-removal-key*@
-                                Powered by <a href="@(OfficialSite.Main + Utm.OnAdminFooter)" target="_blank">nopCommerce</a>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="col-md-4 col-xs-12"></div>
-                        }
-                        <div class="col-md-4 col-xs-12 text-center">
-                            @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("f", CultureInfo.CurrentCulture))
+                            Powered by <a href="@(OfficialSite.Main + Utm.OnAdminFooter)" target="_blank">nopCommerce</a>
                         </div>
-                        <div class="col-md-4 col-xs-12 text-md-right text-center">
-                            <b>nopCommerce version @NopVersion.FULL_VERSION</b>
-                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-4 col-12"></div>
+                    }
+                    <div class="col-md-4 col-12 text-center">
+                        @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("f", CultureInfo.CurrentCulture))
+                    </div>
+                    <div class="col-md-4 col-12 text-md-end text-center">
+                        <b>nopCommerce version @NopVersion.FULL_VERSION</b>
                     </div>
                 </div>
             </div>
-        </div>
+        </footer>
     </div>
 
     @if (adminAreaSettings.UseStickyHeaderLayout)
     {
         <script asp-location="Footer">
             $(function() {
-                const stickyHeader = document.querySelector(".sticky-header-layout .content-header");
+                const stickyHeader = document.querySelector(".sticky-header-layout .app-content-header");
 
                 if (stickyHeader !== null) {
                     const observer = new IntersectionObserver(
@@ -231,16 +241,7 @@
             });
         </script>
     }
-    <script>
-        var AdminLTEOptions = {
-            boxWidgetOptions: {
-                boxWidgetIcons: {
-                    collapse: 'fa-minus',
-                    open: 'fa-plus'
-                }
-            }
-        };
-    </script>
+    
     @{
         //scroll to a selected card (if specified)
         var selectedCardName = Html.GetSelectedCardName();
@@ -257,10 +258,13 @@
             //enable "back top" arrow
             $('#backTop').backTop();
 
-            //enable tooltips
-            $('[data-toggle="tooltip"]').tooltip({ placement: 'bottom' });
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+              return new bootstrap.Tooltip(tooltipTriggerEl, { placement: 'bottom' })
+            });
         });
     </script>
+    
     @{
         var (licenseTermsDisplay, licenseTermsText) = Context.Items.TryGetValue("licenseTerms", out var licenseTerms) && licenseTerms is LicenseCheckModel licenseCheckModel
             ? (licenseCheckModel.DisplayWarning == true && licenseCheckModel.AcceptedLicenseTerms != true, licenseCheckModel.WarningText)
@@ -278,7 +282,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" id="accept-license-terms-button" class="btn btn-primary">Accept terms</button>
-                                <a class="btn btn-default float-right" href="https://www.nopcommerce.com/nopcommerce-copyright-removal-key?utm_source=admin-panel&utm_medium=popup-accept-license&utm_campaign=powered_by_nopcommerce&utm_content=key" target="_blank">Buy a key</a>
+                                <a class="btn btn-secondary float-end" href="https://www.nopcommerce.com/nopcommerce-copyright-removal-key?utm_source=admin-panel&utm_medium=popup-accept-license&utm_campaign=powered_by_nopcommerce&utm_content=key" target="_blank">Buy a key</a>
                             </div>
                         </div>
                     </div>
@@ -288,10 +292,11 @@
                 $(function() {
                     var displayModal = @((licenseTermsDisplay == true).ToString().ToLower());
                     if (displayModal) {
-                        $('#license-terms').modal({
+                        var licenseModal = new bootstrap.Modal(document.getElementById('license-terms'), {
                             backdrop: 'static',
                             keyboard: false
                         });
+                        licenseModal.show();
                     }
 
                     $('#accept-license-terms-button').on('click', function () {
@@ -305,7 +310,11 @@
                             url: '@(Url.Action("AcceptLicenseTerms", "Home"))',
                             data: postData,
                             complete: function (jqXHR, textStatus) {
-                                $('#license-terms').modal('hide');
+                                var modalEl = document.getElementById('license-terms');
+                                var modalInstance = bootstrap.Modal.getInstance(modalEl);
+                                if(modalInstance) {
+                                    modalInstance.hide();
+                                }
                             }
                         });
                     });

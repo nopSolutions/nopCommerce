@@ -2,7 +2,7 @@
 
 @inject IAdminMenu siteMap;
 
-<ul class="nav nav-pills nav-sidebar flex-column nav-legacy" data-widget="treeview" role="menu">
+<ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" role="menu">
     @{
         //display menu items
         foreach (var item in (await siteMap.GetRootNodeAsync()).ChildNodes.Where(n => n.Visible))

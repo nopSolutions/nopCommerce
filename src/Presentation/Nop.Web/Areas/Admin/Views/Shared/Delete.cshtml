@@ -4,7 +4,7 @@
     <div class="modal-content">
         <div class="modal-header">            
             <h4 class="modal-title" id="@(Model.WindowId)-title">@T("Admin.Common.AreYouSure")</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form asp-action="@Model.ActionName" asp-controller="@Model.ControllerName" asp-route-id="@Model.Id">
             <div class="form-horizontal">
@@ -12,7 +12,7 @@
                     @T("Admin.Common.DeleteConfirmation")
                 </div>
                 <div class="modal-footer">
-                    <span class="btn btn-default" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">@T("Admin.Common.NoCancel")</button>
                     <button type="submit" class="btn btn-danger float-right">
                         @T("Admin.Common.Delete")
                     </button>

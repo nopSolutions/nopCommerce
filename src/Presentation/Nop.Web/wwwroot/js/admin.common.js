@@ -31,6 +31,16 @@ function showThrobber(message) {
 }
 
 $(function() {
+    $('[data-toggle]').each(function () {
+        $(this).attr('data-bs-toggle', $(this).attr('data-toggle')).removeAttr('data-toggle');
+    });
+    $('[data-target]').each(function () {
+        $(this).attr('data-bs-target', $(this).attr('data-target')).removeAttr('data-target');
+    });
+    $('[data-dismiss]').each(function () {
+        $(this).attr('data-bs-dismiss', $(this).attr('data-dismiss')).removeAttr('data-dismiss');
+    });
+
     $('.multi-store-override-option').each(function (k, v) {
         checkOverriddenStoreValue(v, $(v).attr('data-for-input-selector'));
     });
@@ -76,7 +86,7 @@ function checkOverriddenStoreValue(obj, selector) {
 }
 
 function bindBootstrapTabSelectEvent(tabsId, inputId) {
-    $('#' + tabsId + ' > div ul li a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+  $('#' + tabsId + ' > div ul li a[data-bs-toggle="pill"], #' + tabsId + ' > div ul li a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
         var tabName = $(e.target).attr("data-tab-name");
         $("#" + inputId).val(tabName);
     });
@@ -239,27 +249,19 @@ $(document).ajaxStart(function () {
 //no-tabs solution
 $(function() {
   $(".card.card-secondary >.card-header").click(CardToggle);
-
-  //expanded
-  $('.card.card-secondary').on('expanded.lte.cardwidget', function () {
-    WrapAndSaveBlockData($(this), false)
-    
-    if ($(this).find('table.dataTable').length > 0) {
-      setTimeout(function () {
-        ensureDataTablesRendered();
-      }, 420);
-    }
-  });
-
-  //collapsed
-  $('.card.card-secondary').on('collapsed.lte.cardwidget', function () {
-    WrapAndSaveBlockData($(this), true)
-  });
 });
 
 function CardToggle() {
   var card = $(this).parent(".card.card-secondary");
-  card.CardWidget('toggle'); 
+  var collapsed = !card.hasClass("collapsed-card");
+  card.children(".card-body, .card-footer").stop(true, true).slideToggle(150);
+  card.toggleClass("collapsed-card", collapsed);
+  WrapAndSaveBlockData(card, collapsed);
+  if (!collapsed && card.find('table.dataTable').length > 0) {
+    setTimeout(function () {
+      ensureDataTablesRendered();
+    }, 420);
+  }
 }
 
 function WrapAndSaveBlockData(card, collapsed) {
@@ -318,7 +320,7 @@ function showAlert(alertId, text)
 //scrolling and hidden DataTables issue workaround
 //More info - https://datatables.net/examples/api/tabs_and_scrolling.html
 $(function() {
-  $('button[data-card-widget="collapse"]').on('click', function (e) {
+  $('button[data-card-widget="collapse"], button[data-lte-toggle="card-collapse"]').on('click', function (e) {
     //hack with waiting animation. 
     //when page is loaded, a box that should be collapsed have style 'display: none;'.that's why a table is not updated
     setTimeout(function () {
@@ -333,7 +335,7 @@ $(function() {
     }, 1);
   });
 
-  $('ul li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+  $('ul li a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
     ensureDataTablesRendered();
   });
 
@@ -373,13 +375,12 @@ function displayBarNotification(message, notifyTypeId, timeout) {
   cssStyle = notifyTypeId >= 0 && notifyTypeId <= 2 ? cssStyles[notifyTypeId] : cssStyles[0];
 
   var htmlcode = document.createElement('div');
-  htmlcode.classList.add('alert', cssStyle, 'alert-dismissable');
+  htmlcode.classList.add('alert', cssStyle, 'alert-dismissible');
 
   var button = document.createElement('button');
-  button.classList.add('close');
-  button.setAttribute('data-dismiss', 'alert');
-  button.setAttribute('aria-hidden', 'true');
-  button.innerHTML = '&times;';
+  button.classList.add('btn-close');
+  button.setAttribute('data-bs-dismiss', 'alert');
+  button.setAttribute('aria-label', 'Close');
   htmlcode.appendChild(button);
 
   var html = document.createElement('span');
