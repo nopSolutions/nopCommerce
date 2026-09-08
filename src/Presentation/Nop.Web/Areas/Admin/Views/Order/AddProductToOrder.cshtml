@@ -12,7 +12,7 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<div class="content-header clearfix">
+<div class="app-content-header clearfix">
     <h1 class="float-left">
         @string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId)
         <small>

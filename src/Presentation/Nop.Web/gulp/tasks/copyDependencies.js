@@ -29,7 +29,7 @@ export default function copyDependencies()
 
     //datatables.net
     gulp
-      .src(nodeModules + '{datatables.net,datatables.net-bs4,datatables.net-buttons,datatables.net-buttons-bs4}/**')
+      .src(nodeModules + '{datatables.net,datatables.net-bs5,datatables.net-buttons,datatables.net-buttons-bs5}/**')
       .pipe(filter(['**/{css,js}/*.min*', '**/swf/*']))      
       .pipe(gulp.dest(targetPath)),
 
@@ -113,11 +113,6 @@ export default function copyDependencies()
     gulp
       .src(nodeModules + 'magnific-popup/dist/**/*.{css,min.js}')
       .pipe(gulp.dest(`${targetPath}magnific-popup`)),
-
-    //Admin LTE plugins: select2
-    gulp
-    .src(nodeModules + 'admin-lte/plugins/select2/**/*.{css,min.js}')
-    .pipe(gulp.dest(`${targetPath}admin-lte/plugins/select2`)),
 
     //Chart.js
     gulp

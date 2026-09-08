@@ -23,9 +23,9 @@
     @* CSS & Script resources *@
     @{ await Html.RenderPartialAsync("_AdminScripts");  }
 </head>
-<body class="hold-transition skin-blue sidebar-collapse layout-fixed">
-    <div class="wrapper">
-        <div class="content-wrapper">
+<body class="bg-body-tertiary">
+    <div class="app-wrapper">
+        <div class="app-main">
             @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Notifications.cshtml")
             <div>
                 <nop-antiforgery-token />
@@ -36,8 +36,9 @@
 
     <script>
         $(function() {
-            //enable tooltips
-            $('[data-toggle="tooltip"]').tooltip();
+            document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (element) {
+                new bootstrap.Tooltip(element);
+            });
         });
     </script>
 

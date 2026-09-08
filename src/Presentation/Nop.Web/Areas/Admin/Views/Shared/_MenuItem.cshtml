@@ -31,7 +31,7 @@ else
 
     if (hasChildNodes)
     {
-        liCssClass = "nav-item has-treeview";
+        liCssClass = "nav-item";
     }
 
     if (isActive)
@@ -55,11 +55,11 @@ else
                 @Model.Title
                 @if (supportRtl)
                 {
-                    <i class="right fas fa-angle-right"></i>
+                    <i class="nav-arrow fas fa-angle-right"></i>
                 }
                 else
                 {
-                    <i class="right fas fa-angle-left "></i>
+                    <i class="nav-arrow fas fa-angle-left"></i>
                 }
             </p>
         </a>

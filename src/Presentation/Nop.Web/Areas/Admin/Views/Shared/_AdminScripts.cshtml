@@ -13,36 +13,40 @@
 <link rel="stylesheet" href="~/lib_npm/jquery-ui-dist/jquery-ui.min.css"/>
 <link rel="stylesheet" href="~/lib_npm/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css"/>
 <link rel="stylesheet" href="~/lib_npm/@("@fortawesome")/fontawesome-free/css/all.min.css"/>
-<link rel="stylesheet" href="~/lib_npm/datatables.net-buttons-bs4/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css" />
-<link rel="stylesheet" href="~/lib_npm/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css"/>
+<link rel="stylesheet" href="~/lib_npm/datatables.net-buttons-bs5/node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css" />
+<link rel="stylesheet" href="~/lib_npm/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css"/>
 <link rel="stylesheet" href="~/lib_npm/overlayscrollbars/styles/overlayscrollbars.min.css" />
 
 @if (supportRtl)
 {
-    <link rel="stylesheet" href="~/lib_npm/@("@laylazi")/bootstrap-rtl/css/bootstrap-rtl.min.css"/>
-    <link rel="stylesheet" href="~/lib/adminLTE/css/adminlte-rtl.min.css"/>
+    <link rel="stylesheet" href="~/lib_npm/bootstrap/css/bootstrap.rtl.min.css"/>
+    <link rel="stylesheet" href="~/lib_npm/admin-lte/css/adminlte.rtl.min.css"/>
     <link rel="stylesheet" href="~/css/admin/styles.rtl.css"/>
 }
 else
 {
+    <link rel="stylesheet" href="~/lib_npm/bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/lib_npm/admin-lte/css/adminlte.min.css"/>
     <link rel="stylesheet" href="~/css/admin/styles.css"/>
 }
+@* custom add *@
+<link rel="stylesheet" href="~/lib/select2/select2.min.css" />
 
-<link rel="stylesheet" href="~/lib_npm/admin-lte/plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="~/lib_npm/admin-lte/css/adminlte-select2@(supportRtl ? ".rtl" : "").min.css">
 
 @NopHtml.GenerateCssFiles()
 
 @* scripts *@
 <script asp-location="None" src="~/lib_npm/jquery/jquery.min.js"></script>
 <script src="~/lib_npm/jquery-ui-dist/jquery-ui.min.js"></script>
+<script src="~/lib_npm/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="~/lib_npm/admin-lte/js/adminlte.min.js"></script>
 <script src="~/lib_npm/overlayscrollbars/browser/overlayscrollbars.browser.es6.min.js"></script>
 <script src="~/lib_npm/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-<script src="~/lib_npm/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="~/lib_npm/jquery-validation/jquery.validate.min.js"></script>
 <script src="~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-<script src="~/lib_npm/admin-lte/plugins/select2/js/select2.full.min.js"></script>
+@* custom add *@
+<script src="~/lib/select2/select2.full.min.js"></script>
 
 @* cldr scripts (needed for globalize) *@
 <script src="~/lib_npm/cldrjs/cldr.js"></script>
@@ -62,10 +66,10 @@ else
 <script src="~/js/admin.search.js"></script>
 
 <script src="~/lib_npm/datatables.net/js/dataTables.min.js"></script>
-<script src="~/lib_npm/datatables.net-buttons-bs4/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/lib_npm/datatables.net-buttons-bs5/node_modules/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
 <script src="~/lib_npm/moment/min/moment-with-locales.min.js"></script>
 <script src="~/lib_npm/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="~/lib_npm/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="~/lib_npm/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
 <script asp-location="Footer">
         var rootAppPath = '@(Url.Content("~/"))';
         var culture = "@NopHtml.GetDefaultJavaScriptCulture()";

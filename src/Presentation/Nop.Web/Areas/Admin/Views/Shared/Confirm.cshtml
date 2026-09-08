@@ -4,7 +4,7 @@
     <div class="modal-content">
         <div class="modal-header">            
             <h4 class="modal-title" id="@(Model.WindowId)-title">@T("Admin.Common.AreYouSure")</h4>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             @if (!string.IsNullOrEmpty(Model.AdditonalConfirmText))
@@ -19,7 +19,7 @@
             <button type="button" id="@(Model.WindowId)-submit-button" class="btn btn-primary float-right">
                 @T("Admin.Common.Yes")
             </button>
-            <span class="btn btn-default float-right margin-r-5" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
+            <button type="button" class="btn btn-default float-right margin-r-5" data-bs-dismiss="modal">@T("Admin.Common.NoCancel")</button>
         </div>
     </div>
 </div>
@@ -30,8 +30,8 @@
 
         if (openerBtn) {
             openerBtn.type = "button";
-            openerBtn.setAttribute("data-toggle", "modal");
-            openerBtn.setAttribute("data-target", "#@Model.WindowId")
+            openerBtn.setAttribute("data-bs-toggle", "modal");
+            openerBtn.setAttribute("data-bs-target", "#@Model.WindowId")
 
             $('#@(Model.WindowId)-submit-button').on('click', function() {
                 if (!openerBtn.name)
