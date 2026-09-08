@@ -88,7 +88,7 @@ public partial class NopDeleteConfirmationTagHelper : TagHelper
         var script = new TagBuilder("script");
         script.InnerHtml.AppendHtml(
             "$(function() {" +
-            $"$('#{ButtonId}').attr(\"data-toggle\", \"modal\").attr(\"data-target\", \"#{modalId}\")" +
+            $"$('#{ButtonId}').attr(\"data-bs-toggle\", \"modal\").attr(\"data-bs-target\", \"#{modalId}\")" +
             "});");
         var scriptTag = await script.RenderHtmlContentAsync();
         output.PostContent.SetHtmlContent(scriptTag);

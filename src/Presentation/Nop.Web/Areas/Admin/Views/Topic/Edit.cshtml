@@ -12,15 +12,15 @@
 }
 
 <form asp-controller="Topic" asp-action="Edit" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.ContentManagement.Topics.EditTopicDetails") - @Model.SystemName
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.ContentManagement.Topics.BackToList")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             @await Component.InvokeAsync(typeof(MultistorePreviewViewComponent), Model)
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>

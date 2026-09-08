@@ -95,11 +95,11 @@
         var i = $.summernote.options.imageAttributes._counter;
         // console.log('indice for imageAttribute : ', i);
         var body = '<ul class="nav note-nav nav-tabs note-nav-tabs">' +
-                      '<li class="nav-item note-nav-item active"><a class="nav-link note-nav-link active" href="#note-imageAttributes-' + i + '" data-toggle="tab">' + lang.imageAttributes.tabImage + '</a></li>' +
-                      '<li class="nav-item note-nav-item"><a class="nav-link note-nav-link" href="#note-imageAttributes-attributes-' + i + '" data-toggle="tab">' + lang.imageAttributes.tabAttributes + '</a></li>' +
-                      '<li class="nav-item note-nav-item"><a class="nav-link note-nav-link" href="#note-imageAttributes-link-' + i + '" data-toggle="tab">' + lang.imageAttributes.tabLink + '</a></li>';
+                      '<li class="nav-item note-nav-item active"><a class="nav-link note-nav-link active" href="#note-imageAttributes-' + i + '" data-bs-toggle="tab">' + lang.imageAttributes.tabImage + '</a></li>' +
+                      '<li class="nav-item note-nav-item"><a class="nav-link note-nav-link" href="#note-imageAttributes-attributes-' + i + '" data-bs-toggle="tab">' + lang.imageAttributes.tabAttributes + '</a></li>' +
+                      '<li class="nav-item note-nav-item"><a class="nav-link note-nav-link" href="#note-imageAttributes-link-' + i + '" data-bs-toggle="tab">' + lang.imageAttributes.tabLink + '</a></li>';
         if (options.imageAttributes.disableUpload == false) {
-           body +=    '<li class="nav-item note-nav-item"><a class="nav-link note-nav-link" href="#note-imageAttributes-upload-' + i + '" data-toggle="tab">' + lang.imageAttributes.tabUpload + '</a></li>';
+           body +=    '<li class="nav-item note-nav-item"><a class="nav-link note-nav-link" href="#note-imageAttributes-upload-' + i + '" data-bs-toggle="tab">' + lang.imageAttributes.tabUpload + '</a></li>';
         }
         body +=     '</ul>' +
                     '<div class="tab-content">' +

@@ -32,11 +32,11 @@
       asp-route-productId="@Context.Request.Query["productId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveralTitle")
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Generate")
@@ -44,7 +44,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeCombinationDetailsButtons, additionalData = Model })
         </div>
     </div>
-    <section class="content">
+    <section class="app-content">
         <div class="container-fluid">
             <div class="form-horizontal">
                 <h4>@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.RequiredAttribute")</h4>

@@ -5,7 +5,7 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="@ILS.GetCurrentLanguage().Code" dir="@(ILS.GetCurrentLanguage().IsRightToLeft ? "rtl" : "ltr")">
 <head>
     <title>@ILS.GetResource("Title")</title>
     
@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="/icons/icons_0/favicon.ico" />
     @if (ILS.GetCurrentLanguage().IsRightToLeft)
     {
-        <link href="@Url.Content("~/lib_npm/@laylazi/bootstrap-rtl/css/bootstrap-rtl.min.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib_npm/bootstrap/css/bootstrap.rtl.min.css")" type="text/css" rel="stylesheet" />
         <link href="@Url.Content("~/css/install/styles.rtl.css")" type="text/css" rel="stylesheet" />
     }
     else
@@ -165,29 +165,29 @@
                 </script>
 
                 <div class="form-horizontal">
-                    <div class="card border-light margin-t-30">
+                    <div class="card border-light mt-4">
                         <h3 class="card-header">
                             @ILS.GetResource("StoreInformation")
                         </h3>
                         <div class="card-body">
-                            <div class="form-group row">
-                                <label asp-for="AdminEmail" class="col-sm-3 col-form-label text-right font-weight-bold">
+                            <div class="row mb-3">
+                                <label asp-for="AdminEmail" class="col-sm-3 col-form-label text-end fw-bold">
                                     @ILS.GetResource("AdminEmail")
                                 </label>
                                 <div class="col-sm-8">
                                     <input asp-for="AdminEmail" class="form-control" />
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label asp-for="AdminPassword" class="col-sm-3 col-form-label text-right font-weight-bold">
+                            <div class="row mb-3">
+                                <label asp-for="AdminPassword" class="col-sm-3 col-form-label text-end fw-bold">
                                     @ILS.GetResource("AdminPassword")
                                 </label>
                                 <div class="col-sm-8">
                                     <input asp-for="AdminPassword" class="form-control" />
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label asp-for="ConfirmPassword" class="col-sm-3 col-form-label text-right font-weight-bold">
+                            <div class="row mb-3">
+                                <label asp-for="ConfirmPassword" class="col-sm-3 col-form-label text-end fw-bold">
                                     @ILS.GetResource("ConfirmPassword")
                                 </label>
                                 <div class="col-sm-8">
@@ -196,8 +196,8 @@
                             </div>
                             @if (Model.InstallRegionalResources)
                             {
-                                <div class="form-group row" id="regionalResources">
-                                    <label asp-for="Country" class="col-sm-3 col-form-label text-right font-weight-bold">
+                                <div class="row mb-3" id="regionalResources">
+                                    <label asp-for="Country" class="col-sm-3 col-form-label text-end fw-bold">
                                         @ILS.GetResource("Country")
                                     </label>
                                     <div class="col-sm-8">
@@ -207,7 +207,7 @@
                             }
                             @if (!Model.DisableSampleDataOption)
                             {
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <div class="col-md-6 offset-md-3">
                                         <div class="form-check">
                                             <input class="form-check-input" asp-for="InstallSampleData" />
@@ -218,7 +218,7 @@
                                     </div>
                                 </div>
                             }
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <div class="col-md-6 offset-md-3">
                                     <div class="form-check">
                                         <input class="form-check-input" asp-for="SubscribeNewsletters" />
@@ -231,20 +231,20 @@
                         </div>
                     </div>
 
-                    <div class="card border-light margin-t-10">
+                    <div class="card border-light mt-2">
                         <h3 class="card-header">
                             @ILS.GetResource("DatabaseInformation")
                         </h3>
                         <div class="card-body">
-                            <div class="form-group row">
-                                <label asp-for="DataProvider" class="col-sm-3 col-form-label text-right font-weight-bold">
+                            <div class="row mb-3">
+                                <label asp-for="DataProvider" class="col-sm-3 col-form-label text-end fw-bold">
                                     @ILS.GetResource("Database")
                                 </label>
                                 <div class="col-sm-8">
                                     <select asp-for="DataProvider" asp-items="Model.AvailableDataProviders" class="form-control"></select>
                                 </div>
                             </div>
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <div class="col-md-6 offset-md-3">
                                     <div class="form-check">
                                         <input class="form-check-input" asp-for="CreateDatabaseIfNotExists" />
@@ -254,7 +254,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <div class="col-md-6 offset-md-3">
                                     <div class="form-check">
                                         <input class="form-check-input" asp-for="ConnectionStringRaw" />
@@ -267,8 +267,8 @@
                             <div id="sqlConnectionInfo">
                                 <hr />
                                 @await Html.PartialAsync("_Install.ConnectionString", Model)
-                                <div class="form-group row" id="sqlDatabaseConnectionString">
-                                    <label asp-for="ConnectionString" class="col-sm-3 col-form-label text-right font-weight-bold">
+                                <div class="row mb-3" id="sqlDatabaseConnectionString">
+                                    <label asp-for="ConnectionString" class="col-sm-3 col-form-label text-end fw-bold">
                                         @ILS.GetResource("ConnectionString")
                                     </label>
                                     <div class="col-sm-8">
@@ -282,7 +282,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <div class="col-sm-8 offset-sm-3">
                                         <div class="form-check">
                                             <input class="form-check-input" asp-for="UseCustomCollation" />
@@ -293,16 +293,16 @@
                                     </div>
                                 </div>
                                 <div class="credentials" id="sqlDatabaseCollation">
-                                    <div class="form-group row">
-                                        <label asp-for="Collation" class="col-sm-3 col-form-label text-right font-weight-bold">
+                                    <div class="row mb-3">
+                                        <label asp-for="Collation" class="col-sm-3 col-form-label text-end fw-bold">
                                             @ILS.GetResource("Collation")
                                         </label>
                                         <div class="col-sm-8">
                                             <input asp-for="Collation" class="form-control" />
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label asp-for="CharacterSet" class="col-sm-3 col-form-label text-right font-weight-bold">
+                                    <div class="row mb-3">
+                                        <label asp-for="CharacterSet" class="col-sm-3 col-form-label text-end fw-bold">
                                             @ILS.GetResource("CharacterSet")
                                         </label>
                                         <div class="col-sm-8">
@@ -312,7 +312,7 @@
                                 </div>
                                 
                             </div>
-                            <div class="form-group row margin-t-30">
+                            <div class="row mt-4">
                                 <div class="col-sm-12 text-center">
                                     <button type="submit" class="btn btn-md btn-install">@ILS.GetResource("Install")</button>
                                 </div>

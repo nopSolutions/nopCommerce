@@ -10,15 +10,15 @@
 <form asp-controller="Order" asp-action="AddressEdit"
       asp-route-addressId="@Context.Request.Query["addressId"]"
       asp-route-orderId="@Context.Request.Query["orderId"]">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Orders.Address.EditAddress")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="Edit" asp-route-id="@Model.OrderId">@T("Admin.Orders.Address.BackToOrder")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")

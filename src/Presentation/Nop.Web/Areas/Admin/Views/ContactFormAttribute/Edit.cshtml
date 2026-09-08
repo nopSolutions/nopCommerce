@@ -8,15 +8,15 @@
 }
 
 <form asp-controller="ContactFormAttribute" asp-action="Edit" method="post" id="contact-form-attribute-form">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Common.ContactFormAttributes.EditAttributeDetails") - @Model.Name
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.Common.ContactFormAttributes.BackToList")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")

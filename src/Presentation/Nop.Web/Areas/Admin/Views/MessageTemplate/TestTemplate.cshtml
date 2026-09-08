@@ -9,14 +9,14 @@
 
 <form asp-controller="MessageTemplate" asp-action="TestTemplate" method="post" id="testtemplate-form" asp-route-languageId="@Model.LanguageId" asp-route-id="@Model.Id">
     <div class="content-header clearfix">
-        <h1 class="float-left">
+        <h1 class="float-start">
             @T("Admin.ContentManagement.MessageTemplates.TestDetails")
             <small>
                 <a asp-action="Edit" asp-route-id="@Model.Id">@T("Admin.ContentManagement.MessageTemplates.Test.BackToTemplate")</a>
                 <i class="fas fa-arrow-circle-left"></i>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="send-test" class="btn btn-primary">
                 @T("Admin.ContentManagement.MessageTemplates.Test.Send")
             </button>
@@ -24,7 +24,7 @@
         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MessageTemplateTestButtons, additionalData = Model })
     </div>
 
-    <section class="content">
+    <section class="app-content">
         <div class="container-fluid">
             <div class="form-horizontal">
                 <div class="cards-group">

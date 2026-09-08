@@ -12,11 +12,11 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<div class="content-header clearfix">
-    <h1 class="float-left">
+<div class="app-content-header clearfix">
+    <h1 class="float-start">
         @T("Plugins.Misc.News.NewsItems")
     </h1>
-    <div class="float-right">
+    <div class="float-end">
         <a asp-action="NewsItemCreate" class="btn btn-primary">
             <i class="fas fa-square-plus"></i>
             @T("Admin.Common.AddNew")
@@ -24,7 +24,7 @@
     </div>
 </div>
 
-<section class="content">
+<section class="app-content">
     <div class="container-fluid">
     <div class="form-horizontal">
         <div class="cards-group">

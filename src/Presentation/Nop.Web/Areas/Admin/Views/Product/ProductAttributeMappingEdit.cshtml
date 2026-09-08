@@ -8,15 +8,15 @@
 }
 
 <form asp-controller="Product" asp-action="ProductAttributeMappingEdit" method="post" id="productattribute-form">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Catalog.Products.ProductAttributes.Attributes.EditAttributeDetails")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="Edit" asp-route-id="@Model.ProductId">@T("Admin.Catalog.Products.ProductAttributes.Attributes.BackToProduct")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             @if (Model.PreTranslationAvailable)
             {
                 @await Html.PartialAsync("_PreTranslateButton", "PreTranslateProductAttribute")

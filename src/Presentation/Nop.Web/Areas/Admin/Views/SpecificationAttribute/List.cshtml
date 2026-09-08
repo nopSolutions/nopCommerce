@@ -10,11 +10,11 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<div class="content-header clearfix">
-    <h1 class="float-left">
+<div class="app-content-header clearfix">
+    <h1 class="float-start">
         @T("Admin.Catalog.Attributes.SpecificationAttributes")
     </h1>
-    <div class="float-right">
+    <div class="float-end">
         <a asp-action="CreateSpecificationAttributeGroup" class="btn btn-primary">
             <i class="fas fa-square-plus"></i>
             @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Buttons.AddNew")
@@ -31,7 +31,7 @@
     </div>
 </div>
 
-<section class="content">
+<section class="app-content">
     <div class="form-horizontal">
         <div class="container-fluid">
             <div class="cards-group">

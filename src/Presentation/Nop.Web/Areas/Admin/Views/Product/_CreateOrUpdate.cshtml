@@ -65,7 +65,7 @@
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
-<section class="content">
+<section class="app-content">
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="row">
@@ -75,7 +75,7 @@
                     </div>
                     @if (!Model.IsLoggedInAsVendor)
                     {
-                        <button type="button" class="btn btn-info float-left mx-2" id="product-editor-settings" data-toggle="modal" data-target="#productsettings-window">
+                        <button type="button" class="btn btn-info float-left mx-2" id="product-editor-settings" data-bs-toggle="modal" data-bs-target="#productsettings-window">
                             <i class="fas fa-gear"></i>
                             @T("Admin.Configuration.Settings.ProductEditor.Button")
                         </button>

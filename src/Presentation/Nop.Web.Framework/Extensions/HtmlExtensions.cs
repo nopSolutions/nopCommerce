@@ -81,9 +81,9 @@ public static class HtmlExtensions
         var standardTabSelected = string.IsNullOrEmpty(tabNameToSelect) || standardTabName == tabNameToSelect;
         tabStrip.AppendLine(string.Format("<li class=\"nav-item\">"));
         if (standardTabSelected)
-            tabStrip.AppendLine($"<a class=\"nav-link active\" data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"pill\" role=\"tab\" aria-selected=\"false\">{await localizationService.GetResourceAsync("Admin.Common.Standard")}</a>");
+            tabStrip.AppendLine($"<a class=\"nav-link active\" data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-bs-toggle=\"pill\" role=\"tab\" aria-selected=\"false\">{await localizationService.GetResourceAsync("Admin.Common.Standard")}</a>");
         else
-            tabStrip.AppendLine($"<a class=\"nav-link\" data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"pill\" role=\"tab\" aria-selected=\"false\">{await localizationService.GetResourceAsync("Admin.Common.Standard")}</a>");
+            tabStrip.AppendLine($"<a class=\"nav-link\" data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-bs-toggle=\"pill\" role=\"tab\" aria-selected=\"false\">{await localizationService.GetResourceAsync("Admin.Common.Standard")}</a>");
         tabStrip.AppendLine("</li>");
 
         foreach (var locale in helper.ViewData.Model.Locales)
@@ -96,7 +96,7 @@ public static class HtmlExtensions
             tabStrip.AppendLine(string.Format("<li class=\"nav-item\">"));
             var iconUrl = helper.ViewContext.HttpContext.Request.PathBase + "/images/flags/" + language.FlagImageFileName;
             var active = localizedTabName == tabNameToSelect ? "active" : null;
-            tabStrip.AppendLine($"<a class=\"nav-link {active}\" data-tab-name=\"{localizedTabName}\" href=\"#{localizedTabName}\" data-toggle=\"pill\" role=\"tab\" aria-selected=\"false\"><img alt='' src='{iconUrl}'>{WebUtility.HtmlEncode(language.Name)}</a>");
+            tabStrip.AppendLine($"<a class=\"nav-link {active}\" data-tab-name=\"{localizedTabName}\" href=\"#{localizedTabName}\" data-bs-toggle=\"pill\" role=\"tab\" aria-selected=\"false\"><img alt='' src='{iconUrl}'>{WebUtility.HtmlEncode(language.Name)}</a>");
 
             tabStrip.AppendLine("</li>");
         }
@@ -196,7 +196,7 @@ public static class HtmlExtensions
         return new HtmlString($@"
                 <script>
                     $(function() {{
-                        $('<li><a data-tab-name='{tabId}' data-toggle='tab' href='#{tabId}'>{tabName}</a></li>').appendTo('#{eventMessage.TabStripName} .nav-tabs:first');
+                        $('<li><a data-tab-name='{tabId}' data-bs-toggle='tab' href='#{tabId}'>{tabName}</a></li>').appendTo('#{eventMessage.TabStripName} .nav-tabs:first');
                         $.get('{url}', function(result) {{
                             $(`<div class='tab-pane' id='{tabId}'>` + result + `</div>`).appendTo('#{eventMessage.TabStripName} .tab-content:first');
                         }});
@@ -217,7 +217,7 @@ public static class HtmlExtensions
         return new HtmlString($@"
                 <script>
                     $(function() {{
-                        $(`<li><a data-tab-name='{tabId}' data-toggle='tab' href='#{tabId}'>{tabName}</a></li>`).appendTo('#{eventMessage.TabStripName} .nav-tabs:first');
+                        $(`<li><a data-tab-name='{tabId}' data-bs-toggle='tab' href='#{tabId}'>{tabName}</a></li>`).appendTo('#{eventMessage.TabStripName} .nav-tabs:first');
                         $(`<div class='tab-pane' id='{tabId}'>{contentModel}</div>`).appendTo('#{eventMessage.TabStripName} .tab-content:first');
                     }});
                 </script>");
@@ -240,7 +240,7 @@ public static class HtmlExtensions
         var builder = new TagBuilder("div");
         builder.MergeAttribute("title", value);
         builder.MergeAttribute("class", "ico-help");
-        builder.MergeAttribute("data-toggle", "tooltip");
+        builder.MergeAttribute("data-bs-toggle", "tooltip");
         var icon = new StringBuilder();
         icon.Append("<i class='fas fa-circle-question'></i>");
         builder.InnerHtml.AppendHtml(icon.ToString());

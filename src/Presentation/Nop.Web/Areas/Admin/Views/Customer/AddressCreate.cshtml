@@ -8,15 +8,15 @@
 }
 
 <form asp-controller="Customer" asp-action="AddressCreate" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Customers.Customers.Addresses.AddNew") 
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="Edit" asp-route-id="@Model.CustomerId">@T("Admin.Customers.Customers.Addresses.BackToCustomer")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" class="btn btn-primary">
                 @T("Admin.Common.Save")
             </button>

@@ -13,8 +13,8 @@
 }
 
 <form asp-controller="Product" asp-action="ProductSpecAttrUpdate" id="spec-form" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @if (Model.SpecificationId == 0)
             {
                 <text>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</text>
@@ -30,7 +30,7 @@
                 </a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             @if (Model.AttributeId == 0)
             {
                 <button type="submit"
@@ -71,7 +71,7 @@
             }
         </div>
     </div>
-     <section class="content">
+     <section class="app-content">
         <div class="container-fluid">
             <div class="form-horizontal">
                 <div class="cards-group">

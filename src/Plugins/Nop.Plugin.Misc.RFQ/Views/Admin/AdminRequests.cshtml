@@ -16,11 +16,11 @@
 
 <form asp-controller="RfqAdmin" asp-action="AdminRequests" method="post">
     <input asp-for="CustomerId" type="hidden" />
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Plugins.Misc.RFQ.RequestsQuote")
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="button" id="delete-selected" class="btn btn-danger">
                 <i class="far fa-trash-alt"></i>
                 @T("Plugins.Misc.RFQ.DeleteSelected")
@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <section class="content">
+    <section class="app-content">
         <div class="container-fluid">
             <div class="form-horizontal">
                 <div class="cards-group">

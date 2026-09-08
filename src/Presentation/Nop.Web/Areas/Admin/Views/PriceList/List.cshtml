@@ -13,11 +13,11 @@
 }
 
 <form asp-controller="PriceList" asp-action="List" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Catalog.PriceLists")
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <a asp-action="Create" class="btn btn-primary">
                 <i class="fas fa-square-plus"></i>
                 @T("Admin.Common.AddNew")
@@ -27,27 +27,23 @@
                     <i class="fas fa-download"></i>
                     @T("Admin.Common.Export")
                 </button>
-                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">&nbsp;</span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li class="dropdown-item">
-                        <button asp-action="ExportExcel" type="submit" name="exportexcel-all">
+                <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <button asp-action="ExportExcel" type="submit" name="exportexcel-all" class="dropdown-item">
                             <i class="far fa-file-excel"></i>
                             @T("Admin.Common.ExportToExcel.All")
                         </button>
                     </li>
-                    <li class="dropdown-item">
-                        <button type="button" id="exportexcel-selected">
+                    <li>
+                        <button type="button" id="exportexcel-selected" class="dropdown-item">
                             <i class="far fa-file-excel"></i>
                             @T("Admin.Common.ExportToExcel.Selected")
                         </button>
                     </li>
                 </ul>
-
             </div>
-            <button type="button" name="importexcel" class="btn bg-olive" data-toggle="modal" data-target="#importexcel-window">
+            <button type="button" name="importexcel" class="btn bg-olive" data-bs-toggle="modal" data-bs-target="#importexcel-window">
                 <i class="fas fa-upload"></i>
                 @T("Admin.Common.Import")
             </button>
@@ -55,7 +51,7 @@
         </div>
     </div>
 
-    <section class="content">
+    <section class="app-content">
         <div class="container-fluid">
             <div class="form-horizontal">
                 <div class="cards-group">
@@ -196,7 +192,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="importexcel-window-title">@T("Admin.Common.ImportFromExcel")</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <form asp-controller="PriceList" asp-action="ImportExcel" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">

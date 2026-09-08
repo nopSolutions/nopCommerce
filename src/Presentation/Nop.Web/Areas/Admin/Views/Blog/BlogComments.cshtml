@@ -14,11 +14,11 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<div class="content-header clearfix">
-    <h1 class="float-left">
+<div class="app-content-header clearfix">
+    <h1 class="float-start">
         @T("Admin.ContentManagement.Blog.Comments")
     </h1>
-    <div class="float-right">
+    <div class="float-end">
         <button type="button" id="approve-selected" class="btn btn-success">
             <i class="fas fa-square-check"></i>
             @T("Admin.ContentManagement.Blog.Comments.ApproveSelected")
@@ -35,7 +35,7 @@
     </div>
 </div>
 
-<section class="content">
+<section class="app-content">
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="form-horizontal">

@@ -12,23 +12,22 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<div class="content-header clearfix">
-    <h1 class="float-left">
-        @T("Admin.Customers.ActivityLog")
-    </h1>
-    <div class="float-right">
-        <form asp-controller="ActivityLog" asp-action="ClearAll" method="post">
-            <button type="submit" id="clearall" name="clearall" class="btn bg-red">
-                <i class="far fa-trash-can"></i>
+<div class="app-content-header">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <h1 class="mb-0">
+            @T("Admin.Customers.ActivityLog")
+        </h1>
+        <form class="d-flex flex-wrap align-items-center justify-content-end gap-2" asp-controller="ActivityLog" asp-action="ClearAll" method="post">
+            <button type="submit" id="clearall" name="clearall" class="btn btn-danger">
+                <i class="far fa-trash-can me-1"></i>
                 @T("Admin.Customers.ActivityLog.Clear")
             </button>
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ActivityLogListButtons, additionalData = Model })
         </form>
     </div>
-
 </div>
 
-<section class="content">
+<div class="app-content">
     <div class="container-fluid">
     <div class="form-horizontal">
         <div class="cards-group">
@@ -44,7 +43,7 @@
 
                         <div class="row">
                             <div class="col-md-5">
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <div class="col-md-4">
                                         <nop-label asp-for="CreatedOnFrom" />
                                     </div>
@@ -52,7 +51,7 @@
                                         <nop-editor asp-for="CreatedOnFrom" />
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <div class="col-md-4">
                                         <nop-label asp-for="CreatedOnTo" />
                                     </div>
@@ -62,7 +61,7 @@
                                 </div>
                             </div>
                             <div class="col-md-7">
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <div class="col-md-4">
                                         <nop-label asp-for="ActivityLogTypeId" />
                                     </div>
@@ -70,7 +69,7 @@
                                         <nop-select asp-for="ActivityLogTypeId" asp-items="Model.ActivityLogType" />
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <div class="col-md-4">
                                         <nop-label asp-for="IpAddress" />
                                     </div>
@@ -83,7 +82,7 @@
                         <div class="row">
                             <div class="text-center col-12">
                                 <button type="button" id="search-log" class="btn btn-primary btn-search">
-                                    <i class="fas fa-magnifying-glass"></i>
+                                    <i class="fas fa-magnifying-glass me-1"></i>
                                     @T("Admin.Common.Search")
                                 </button>
                             </div>
@@ -151,5 +150,5 @@
         </div>
     </div>
 </div>
-</section>
+</div>
 <nop-action-confirmation asp-button-id="clearall" />

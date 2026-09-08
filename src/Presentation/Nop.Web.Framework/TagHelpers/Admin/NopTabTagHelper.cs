@@ -74,7 +74,7 @@ public partial class NopTabTagHelper : TagHelper
             {
                 new KeyValuePair<string, string>("data-tab-name", Name),
                 new KeyValuePair<string, string>("href", $"#{Name}"),
-                new KeyValuePair<string, string>("data-toggle", "pill"),
+                new KeyValuePair<string, string>("data-bs-toggle", "pill"),
                 new KeyValuePair<string, string>("role", "tab"),
                 new KeyValuePair<string, string>("aria-selected", "false"),
             }

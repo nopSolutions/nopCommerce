@@ -101,7 +101,7 @@ public partial class NopCardTagHelper : TagHelper
         collapseIcon.AddCssClass(context.AllAttributes[IS_HIDE_ATTRIBUTE_NAME].Value.Equals(true) ? "fa-plus" : "fa-minus");
 
         var cardToolContainer = new TagBuilder("div");
-        cardToolContainer.AddCssClass("card-tools float-right");
+        cardToolContainer.AddCssClass("card-tools float-end");
         var cardbtnContainer = new TagBuilder("button");
 
         cardbtnContainer.AddCssClass("btn btn-tool");

@@ -6,15 +6,15 @@
     NopHtml.SetActiveMenuItemSystemName("Affiliates");
 }
 <form asp-controller="Affiliate" asp-action="Edit" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Affiliates.EditAffiliateDetails") - @Model.Address.FirstName @Model.Address.LastName
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.Affiliates.BackToList")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")

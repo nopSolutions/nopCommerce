@@ -8,15 +8,15 @@
 }
 
 <form asp-controller="Menu" asp-action="MenuItemEdit" method="post" id="menuitem-form">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.ContentManagement.Menus.MenuItem.EditDetails") - @Model.Title
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="Edit" asp-route-id="@Model.MenuId">@T("Admin.ContentManagement.Menus.MenuItem.BackToMenu")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")

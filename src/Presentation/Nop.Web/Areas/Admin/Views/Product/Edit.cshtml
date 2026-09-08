@@ -10,15 +10,15 @@
 }
 
 <form asp-controller="Product" asp-action="Edit" method="post" id="product-form">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Catalog.Products.EditProductDetails") - @Model.Name
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.Catalog.Products.BackToList")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             @await Component.InvokeAsync(typeof(MultistorePreviewViewComponent), Model)
             @if (Model.PreTranslationAvailable)
             {
@@ -32,7 +32,7 @@
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            <button type="button" name="copyproduct" class="btn bg-olive" data-toggle="modal" data-target="#copyproduct-window">
+            <button type="button" name="copyproduct" class="btn bg-olive" data-bs-toggle="modal" data-bs-target="#copyproduct-window">
                 <i class="far fa-clone"></i>
                 @T("Admin.Catalog.Products.Copy")
             </button>
@@ -59,7 +59,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="copyproduct-window-title">@T("Admin.Catalog.Products.Copy")</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <form asp-controller="Product" asp-action="CopyProduct" method="post">
                 <div class="form-horizontal">

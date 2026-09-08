@@ -25,11 +25,11 @@
 }
 
 <form asp-controller="Setting" asp-action="AppSettings" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Configuration.AppSettings")
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")
@@ -37,7 +37,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AppSettingsButtons, additionalData = Model })
         </div>
     </div>
-    <div class="content">
+    <div class="app-content">
         <div class="form-horizontal">
             @await Component.InvokeAsync(typeof(SettingModeViewComponent))
             <div asp-validation-summary="All"></div>

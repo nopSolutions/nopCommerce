@@ -10,15 +10,15 @@
 }
 
 <form asp-controller="Customer" asp-action="Edit" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
+    <div class="app-content-header clearfix">
+        <h1 class="float-start">
             @T("Admin.Customers.Customers.EditCustomerDetails") - @Model.LastName @Model.FirstName
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.Customers.Customers.BackToList")</a>
             </small>
         </h1>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.Save")
@@ -27,13 +27,13 @@
                 <i class="far fa-floppy-disk"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#sendemail-window">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#sendemail-window">
                 <i class="far fa-envelope"></i>
                 @T("Admin.Customers.Customers.SendEmail")
             </button>
              @if (Model.AllowSendingOfPrivateMessage)
              {
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#sendprivatemessage-window">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#sendprivatemessage-window">
                     <i class="fas fa-at"></i>
                     @T("Admin.Customers.Customers.SendPM")
                 </button>
@@ -54,25 +54,21 @@
             }
             @if (Model.GdprEnabled)
             {
-                
                 <div class="btn-group">
                     <button type="button" class="btn btn-success">
                         <i class="fas fa-download"></i>
                         @T("Admin.Customers.Customers.Gdpr")
                     </button>
-                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <span class="caret"></span>
-                        <span class="sr-only">&nbsp;</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li class="dropdown-item">
-                            <a asp-action="GdprExport" asp-route-id="@Model.Id">
+                    <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" asp-action="GdprExport" asp-route-id="@Model.Id">
                                 <i class="far fa-file-code"></i>
                                 @T("Admin.Customers.Customers.Gdpr.Export")
                             </a>
                         </li>
-                        <li class="dropdown-item">
-                            <a id="customer-gdpr-delete" href="#">
+                        <li>
+                            <a class="dropdown-item" id="customer-gdpr-delete" href="#">
                                 <i class="far fa-trash-can"></i>
                                 @T("Admin.Customers.Customers.Gdpr.Delete")
                             </a>
@@ -96,7 +92,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="sendemail-window-title">@T("Admin.Customers.Customers.SendEmail")</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
             </div>
             <form asp-controller="Customer" asp-action="SendEmail" method="post">
                 <input type="hidden" asp-for="Id" id="SendEmail_Id"/>
@@ -177,7 +173,7 @@
         <div class="modal-content">
             <div class="modal-header">                
                 <h4 class="modal-title" id="sendprivatemessage-window-title">@T("Admin.Customers.Customers.SendPM")</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <form asp-controller="Customer" asp-action="SendPm" method="post">
                 <input type="hidden" asp-for="Id" id="SendPm_Id"/>
