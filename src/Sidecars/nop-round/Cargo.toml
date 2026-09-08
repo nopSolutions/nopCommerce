@@ -1,0 +1,18 @@
+[package]
+name = "nop-round"
+version = "0.1.0"
+edition = "2021"
+description = "JSON-lines sidecar for PriceCalculationService.Round"
+publish = false
+
+[[bin]]
+name = "nop-round"
+path = "src/main.rs"
+
+[dependencies]
+rust_decimal = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+serde_json = "1"

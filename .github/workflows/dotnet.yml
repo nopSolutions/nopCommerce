@@ -5,9 +5,12 @@ name: .NET
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "develop", "progressive" ]
   pull_request:
-    branches: [ "develop" ]
+    branches: [ "develop", "progressive" ]
+
+env:
+  CARGO_TERM_COLOR: always
 
 jobs:
   build:
@@ -20,9 +23,30 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 10.0.x
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@stable
+    - name: Cargo test
+      working-directory: src/Sidecars/nop-round
+      run: cargo test
+    - name: Build sidecar
+      working-directory: src/Sidecars/nop-round
+      run: cargo build --release
+    - name: Spawn sidecar
+      working-directory: src/Sidecars/nop-round
+      shell: pwsh
+      run: |
+        $bin = Join-Path (Get-Location) "target/release/nop-round.exe"
+        $request = '{"value":"1.225","roundingType":"Rounding001"}'
+        $result = $request | & $bin
+        if ($result -notmatch '"1\.22"') {
+          throw "sidecar spawn failed: $result"
+        }
+        Write-Host "sidecar spawn ok: $result"
     - name: Restore dependencies
       run: dotnet restore src
     - name: Build
       run: dotnet build --no-restore --configuration Release src
+    - name: Test PriceCalculationService
+      run: dotnet test --no-build --configuration Release --verbosity normal src --filter FullyQualifiedName~PriceCalculationServiceTests
     - name: Test
       run: dotnet test --no-build --configuration Release --verbosity normal src
