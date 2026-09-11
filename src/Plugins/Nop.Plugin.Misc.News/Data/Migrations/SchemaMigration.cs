@@ -1,8 +1,6 @@
 ﻿using System.Data;
 using FluentMigrator;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Data;
 using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
@@ -13,21 +11,6 @@ namespace Nop.Plugin.Misc.News.Data.Migrations;
 [NopMigration("2025-03-06 00:00:00", "Misc.News schema", MigrationProcessType.Installation)]
 public class SchemaMigration : Migration
 {
-    #region Fields
-
-    private readonly INopDataProvider _dataProvider;
-
-    #endregion
-
-    #region Ctor
-
-    public SchemaMigration(INopDataProvider dataProvider)
-    {
-        _dataProvider = dataProvider;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -41,7 +24,7 @@ public class SchemaMigration : Migration
         var newsCommentCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(NewsComment), nameof(NewsComment.CustomerId));
         if (Schema.Table(newsCommentTableName).Column(newsCommentCustomerIdColumnName).Exists())
         {
-            this.AddOrAlterForeignKeyColumnFor<NewsComment, Customer>(record => record.CustomerId)
+            this.AddOrAlterForeignKeyColumnFor<NewsComment, Customer>(record => record.CustomerId, "NewsComment_Customer")
                 .OnDelete(Rule.SetNull)
                 .Nullable();
         }
