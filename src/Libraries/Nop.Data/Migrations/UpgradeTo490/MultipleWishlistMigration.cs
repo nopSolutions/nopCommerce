@@ -17,9 +17,9 @@ public class MultipleWishlistMigration : ForwardOnlyMigration
         this.CreateTableIfNotExists<CustomWishlist>();
 
         //add new column
-        this.AddOrAlterForeignKeyColumnFor<ShoppingCartItem, CustomWishlist>(t => t.CustomWishlistId).Nullable();
+        this.AddOrAlterForeignKeyColumnFor<ShoppingCartItem, CustomWishlist>(t => t.CustomWishlistId)
+            .Nullable();
     }
-
 
     #endregion
 }

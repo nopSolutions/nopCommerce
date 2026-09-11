@@ -17,8 +17,14 @@ public class SchemaMigration : ForwardOnlyMigration
     public override void Up()
     {
         //#8224
-        this.AddOrAlterForeignKeyColumnFor<BlogComment, Customer>(t => t.CustomerId, onDelete: Rule.SetNull).Nullable();
-        this.AddOrAlterForeignKeyColumnFor<ProductReview, Customer>(t => t.CustomerId, onDelete: Rule.SetNull).Nullable();
-        this.AddOrAlterForeignKeyColumnFor<SearchTerm, Customer>(t => t.CustomerId, onDelete: Rule.SetNull).Nullable();
+        this.AddOrAlterForeignKeyColumnFor<BlogComment, Customer>(record => record.CustomerId, "BlogComment_Customer")
+            .OnDelete(Rule.SetNull)
+            .Nullable();
+        this.AddOrAlterForeignKeyColumnFor<ProductReview, Customer>(record => record.CustomerId, "ProductReview_Customer")
+            .OnDelete(Rule.SetNull)
+            .Nullable();
+        this.AddOrAlterForeignKeyColumnFor<SearchTerm, Customer>(record => record.CustomerId)
+            .OnDelete(Rule.SetNull)
+            .Nullable();
     }
 }

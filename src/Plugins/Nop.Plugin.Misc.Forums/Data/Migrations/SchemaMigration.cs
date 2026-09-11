@@ -91,7 +91,7 @@ public class SchemaMigration : Migration
         var forumTopicCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(ForumTopic), nameof(ForumTopic.CustomerId));
         if (Schema.Table(forumTopicTableName).Column(forumTopicCustomerIdColumnName).Exists())
         {
-            this.AddOrAlterForeignKeyColumnFor<ForumTopic, Customer>(record => record.CustomerId)
+            this.AddOrAlterForeignKeyColumnFor<ForumTopic, Customer>(record => record.CustomerId, "ForumTopic_Customer")
                 .OnDelete(Rule.SetNull)
                 .Nullable();
         }
@@ -104,7 +104,7 @@ public class SchemaMigration : Migration
         var forumPostCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(ForumPost), nameof(ForumPost.CustomerId));
         if (Schema.Table(forumPostTableName).Column(forumPostCustomerIdColumnName).Exists())
         {
-            this.AddOrAlterForeignKeyColumnFor<ForumPost, Customer>(record => record.CustomerId)
+            this.AddOrAlterForeignKeyColumnFor<ForumPost, Customer>(record => record.CustomerId, "ForumPost_Customer")
                 .OnDelete(Rule.SetNull)
                 .Nullable();
         }
