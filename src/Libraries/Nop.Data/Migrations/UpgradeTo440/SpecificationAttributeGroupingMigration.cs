@@ -17,8 +17,8 @@ public class SpecificationAttributeGroupingMigration : ForwardOnlyMigration
         this.CreateTableIfNotExists<SpecificationAttributeGroup>();
 
         //add new column
-        this.AddOrAlterForeignKeyColumnFor<SpecificationAttribute, SpecificationAttributeGroup>(t =>
-            t.SpecificationAttributeGroupId).Nullable();
+        this.AddOrAlterForeignKeyColumnFor<SpecificationAttribute, SpecificationAttributeGroup>(t => t.SpecificationAttributeGroupId)
+            .Nullable();
     }
 
     #endregion

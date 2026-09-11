@@ -1,8 +1,6 @@
 ﻿using System.Data;
 using FluentMigrator;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Data;
 using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
@@ -13,21 +11,6 @@ namespace Nop.Plugin.Misc.News.Data.Migrations;
 [NopMigration("2025-03-06 00:00:00", "Misc.News schema", MigrationProcessType.Installation)]
 public class SchemaMigration : Migration
 {
-    #region Fields
-
-    private readonly INopDataProvider _dataProvider;
-
-    #endregion
-
-    #region Ctor
-
-    public SchemaMigration(INopDataProvider dataProvider)
-    {
-        _dataProvider = dataProvider;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -42,26 +25,14 @@ public class SchemaMigration : Migration
 
         if (Schema.Table(newsCommentTableName).Column(newsCommentCustomerIdColumnName).Exists())
         {
-            var customerTableName = NameCompatibilityManager.GetTableName(typeof(Customer));
-            var customerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(Customer), nameof(BaseEntity.Id));
+            this.AddOrAlterForeignKeyColumnFor<NewsComment, Customer>(t => t.CustomerId, "NewsComment_Customer")
+                .OnDelete(Rule.SetNull)
+                .Nullable();
 
-            var constraintName = _dataProvider
-                .CreateForeignKeyName(newsCommentTableName, newsCommentCustomerIdColumnName, customerTableName, customerIdColumnName);
-
-            if (Schema.Table(newsCommentTableName).Constraint(constraintName).Exists())
-                Delete.UniqueConstraint(constraintName).FromTable(newsCommentTableName);
-
-            //databases migrated from version 3.00
-            constraintName = "NewsComment_Customer";
-            if (Schema.Table(newsCommentTableName).Constraint(constraintName).Exists())
-                Delete.UniqueConstraint(constraintName).FromTable(newsCommentTableName);
-
-            this.AddOrAlterForeignKeyColumnFor<NewsComment, Customer>(t => t.CustomerId, Rule.SetNull).Nullable();
+            return;
         }
-        else
-        {
-            this.CreateTableIfNotExists<NewsComment>();
-        }
+
+        this.CreateTableIfNotExists<NewsComment>();
     }
 
     /// <summary>

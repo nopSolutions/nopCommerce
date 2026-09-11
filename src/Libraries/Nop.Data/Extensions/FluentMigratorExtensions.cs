@@ -166,52 +166,71 @@ public static class FluentMigratorExtensions
     }
 
     /// <summary>
-    /// Adds a new column or alters an existing column in the database table
-    /// mapped to the specified entity, depending on whether the column
-    /// already exists.
+    /// Adds a new column or alters an existing column in the database table mapped to the specified entity, depending on whether the column already exists.
     /// </summary>
-    /// <typeparam name="TEntity">
-    /// The entity type mapped to the database table
-    /// </typeparam>
-    /// <typeparam name="TPrimary">
-    /// The entity type of the primary key that the foreign key column references
-    /// </typeparam>
-    /// <param name="migration">
-    /// The migration context used to inspect the schema and apply changes
-    /// </param>
-    /// <param name="selector">
-    /// An expression selecting the entity property that maps to the target column
-    /// </param>
-    /// <param name="onDelete">
-    /// The behavior for DELETEs on the foreign key relationship (defaults to Cascade)
-    /// </param>
-    /// <returns>
-    /// A fluent syntax interface allowing further ALTER TABLE operations
-    /// on the added or altered column.
-    /// </returns>
-    public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddOrAlterForeignKeyColumnFor<TEntity, TPrimary>(this MigrationBase migration, Expression<Func<TEntity, object>> selector, Rule onDelete = Rule.Cascade) where TEntity : BaseEntity
+    /// <typeparam name="TEntity">The entity type mapped to the database table</typeparam>
+    /// <typeparam name="TPrimary">The entity type of the primary key that the foreign key column references</typeparam>
+    /// <param name="migration">The migration context used to inspect the schema and apply changes</param>
+    /// <param name="selector">An expression selecting the entity property that maps to the target column</param>
+    /// <param name="constraintName">Constraint name to delete when altering an existing column; pass null to use the default name</param>
+    /// <param name="indexName">Index name to delete when altering an existing column; pass null to use the default name</param>
+    /// <returns>A fluent syntax interface allowing further ALTER TABLE operations on the added or altered column</returns>
+    public static IAlterTableColumnOptionOrAddColumnOrAlterColumnOrForeignKeyCascadeSyntax AddOrAlterForeignKeyColumnFor<TEntity, TPrimary>(this Migration migration,
+        Expression<Func<TEntity, object>> selector, string constraintName = null, string indexName = null)
+        where TEntity : BaseEntity
     {
         var tableName = NameCompatibilityManager.GetTableName(typeof(TEntity));
         var propertyMemberExpression = selector.Body as MemberExpression
             ?? (selector.Body as UnaryExpression)?.Operand as MemberExpression
             ?? throw new ArgumentException("Selector must be a property expression.", nameof(selector));
         var columnName = NameCompatibilityManager.GetColumnName(typeof(TEntity), propertyMemberExpression.Member.Name);
+        var primaryTableName = NameCompatibilityManager.GetTableName(typeof(TPrimary));
+        var primaryColumnName = nameof(BaseEntity.Id);
 
-        IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax rez;
+        IAlterTableColumnAsTypeSyntax rez;
 
         if (migration.Schema.Table(tableName).Column(columnName).Exists())
         {
-            rez = migration.Alter.Table(tableName).AlterColumn(columnName).AsInt32();
+            var dataProvider = EngineContext.Current.Resolve<INopDataProvider>();
+
+            //check custom constraint (mostly used in earlier versions, e.g. 3.00)
+            if (!string.IsNullOrEmpty(constraintName))
+            {
+                if (migration.Schema.Table(tableName).Constraint(constraintName).Exists())
+                    migration.Delete.UniqueConstraint(constraintName).FromTable(tableName);
+            }
+
+            //then check constraint with the default name
+            constraintName = dataProvider.CreateForeignKeyName(tableName, columnName, primaryTableName, primaryColumnName);
+            if (!string.IsNullOrEmpty(constraintName))
+            {
+                if (migration.Schema.Table(tableName).Constraint(constraintName).Exists())
+                    migration.Delete.UniqueConstraint(constraintName).FromTable(tableName);
+            }
+
+            //check custom index
+            if (!string.IsNullOrEmpty(indexName))
+            {
+                if (migration.Schema.Table(tableName).Index(indexName).Exists())
+                    migration.Delete.Index(indexName).OnTable(tableName);
+            }
+
+            indexName = dataProvider.GetIndexName(tableName, columnName);
+            if (!string.IsNullOrEmpty(indexName))
+            {
+                if (migration.Schema.Table(tableName).Index(indexName).Exists())
+                    migration.Delete.Index(indexName).OnTable(tableName);
+            }
+
+            //finally alter an existing column
+            rez = migration.Alter.Table(tableName).AlterColumn(columnName);
         }
         else
         {
-            var primaryTableName = NameCompatibilityManager.GetTableName(typeof(TPrimary));
-            var primaryColumnName = nameof(BaseEntity.Id);
-
-            rez = migration.Alter.Table(tableName).AddColumn(columnName).AsInt32().Indexed().ForeignKey(primaryTableName, primaryColumnName).OnDelete(onDelete);
+            rez = migration.Alter.Table(tableName).AddColumn(columnName);
         }
 
-        return rez;
+        return rez.AsInt32().Indexed().ForeignKey(primaryTableName, primaryColumnName);
     }
 
     /// <summary>
