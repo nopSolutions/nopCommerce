@@ -63,9 +63,14 @@ public class OmnisendDefaults
     public static string UserAgent => $"nopCommerce-{NopVersion.CURRENT_VERSION}";
 
     /// <summary>
-    /// Gets a header of the API key authorization: key
+    /// Gets a header of the API key
     /// </summary>
-    public static string ApiKeyHeader => "X-API-KEY";
+    public static string ApiKeyHeader => "Omnisend-API-Key";
+
+    /// <summary>
+    /// Gets a header of the API version
+    /// </summary>
+    public static string ApiVersionHeader => "Omnisend-Version";
 
     /// <summary>
     /// Gets the configuration route name
@@ -95,7 +100,7 @@ public class OmnisendDefaults
     /// <summary>
     /// Default contact tags
     /// </summary>
-    public static List<string> ContactTags => new() { $"source: nopCommerce {NopVersion.FULL_VERSION}" };
+    public static List<string> ContactTags => [$"source: nopCommerce {NopVersion.FULL_VERSION}"];
 
     /// <summary>
     /// ContactId query parameter name
@@ -112,6 +117,11 @@ public class OmnisendDefaults
     /// </summary>
     public static string OrderFulfilledAttribute => "Omnisend.OrderFulfilledEvent.IsSent";
 
+    /// <summary>
+    /// Gets an API version
+    /// </summary>
+    public static string ApiVersion => "2026-03-15";
+
     #region Batch
 
     /// <summary>
@@ -122,14 +132,19 @@ public class OmnisendDefaults
     /// <summary>
     /// The batch page size
     ///
-    /// The max size is 1000
+    /// The max size is 100
     /// </summary>
-    public static int PageSize => 800;
+    public static int PageSize => 90;
 
     /// <summary>
     /// Batch finished status
     /// </summary>
     public static string BatchFinishedStatus => "finished";
+
+    /// <summary>
+    /// Get a categories endpoint
+    /// </summary>
+    public static string CategoriesBatchEndpoint => "categories";
 
     #endregion
 
@@ -138,7 +153,7 @@ public class OmnisendDefaults
     /// <summary>
     /// Gets a base API URL
     /// </summary>
-    public static string BaseApiUrl => "https://api.omnisend.com/v3";
+    public static string BaseApiUrl => "https://api.omnisend.com/api";
 
     /// <summary>
     /// Get a batches API URL
@@ -148,7 +163,7 @@ public class OmnisendDefaults
     /// <summary>
     /// Get an accounts API URL
     /// </summary>
-    public static string AccountsApiUrl => BaseApiUrl + "/accounts";
+    public static string AccountsApiUrl => BaseApiUrl + "/brands/current";
 
     /// <summary>
     /// Get a contacts endpoint
@@ -193,7 +208,7 @@ public class OmnisendDefaults
     /// <summary>
     /// Get a categories endpoint
     /// </summary>
-    public static string CategoriesEndpoint => "categories";
+    public static string CategoriesEndpoint => "product-categories";
 
     /// <summary>
     /// Get a categories API URL

@@ -2,7 +2,7 @@
 
 namespace Nop.Plugin.Misc.Omnisend.DTO.Events;
 
-public abstract class OrderEventBaseProperty
+public class OrderEventProperties
 {
     [JsonProperty("billingAddress")] public AddressItem BillingAddress { get; set; }
     [JsonProperty("createdAt")] public string CreatedAt { get; set; }

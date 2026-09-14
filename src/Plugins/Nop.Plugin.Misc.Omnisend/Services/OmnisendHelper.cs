@@ -98,7 +98,7 @@ public class OmnisendHelper
     /// Gets the product picture URL
     /// </summary>
     /// <param name="product">Product</param>
-    public async Task<ProductDto.Image> GetProductPictureUrlAsync(Product product)
+    public async Task<string> GetProductPictureUrlAsync(Product product)
     {
         var picture = (await _pictureService
             .GetPicturesByProductIdAsync(product.Id, 1)).DefaultIfEmpty(null).FirstOrDefault();
@@ -110,7 +110,7 @@ public class OmnisendHelper
         if (!url.StartsWith(storeLocation))
             url = storeLocation + url;
 
-        return new ProductDto.Image { ImageId = (picture?.Id ?? 0).ToString(), Url = url };
+        return url;
     }
 
     #endregion

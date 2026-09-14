@@ -2,8 +2,10 @@
 
 namespace Nop.Plugin.Misc.Omnisend.DTO.Events;
 
-public class PaidForOrderProperty : OrderEventBaseProperty, IEventProperty
+public class PaidForOrderProperty : IEventProperty
 {
     [JsonIgnore] public string EventName => CustomerEventType.OrderPaid;
     [JsonIgnore] public string EventVersion => "v2";
+
+    [JsonProperty("properties")] public OrderEventProperties Properties { get; set; } = new();
 }
