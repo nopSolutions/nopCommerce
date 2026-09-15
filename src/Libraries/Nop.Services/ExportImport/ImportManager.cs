@@ -386,9 +386,6 @@ public partial class ImportManager : IImportManager
                     var newPicture = await _pictureService.InsertPictureAsync(newPictureBinary, mimeType, await _pictureService.GetPictureSeNameAsync(product.ProductItem.Name));
                     await _productService.InsertProductPictureAsync(new ProductPicture
                     {
-                        //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
-                        //pictures are duplicated
-                        //maybe because entity size is too large
                         PictureId = newPicture.Id,
                         DisplayOrder = 1,
                         ProductId = product.ProductItem.Id
@@ -460,9 +457,6 @@ public partial class ImportManager : IImportManager
 
                     await _productService.InsertProductPictureAsync(new ProductPicture
                     {
-                        //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
-                        //pictures are duplicated
-                        //maybe because entity size is too large
                         PictureId = newPicture.Id,
                         DisplayOrder = 1,
                         ProductId = product.ProductItem.Id
