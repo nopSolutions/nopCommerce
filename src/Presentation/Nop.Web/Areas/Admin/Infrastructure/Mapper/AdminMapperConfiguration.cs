@@ -155,6 +155,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             {
                 map.ForMember(nameof(IAclSupportedModel.AvailableCustomerRoles), options => options.Ignore());
                 map.ForMember(nameof(IAclSupportedModel.SelectedCustomerRoleIds), options => options.Ignore());
+                map.ForMember(nameof(IAclSupportedModel.IsAdvancedSetting), options => options.Ignore());
             }
 
             //exclude some properties from mapping discount supported entities and models

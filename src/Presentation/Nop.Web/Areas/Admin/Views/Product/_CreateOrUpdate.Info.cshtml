@@ -8,6 +8,7 @@
 
 @{
     var stores = await storeService.GetAllStoresAsync();
+    (Model as IAclSupportedModel).IsAdvancedSetting = !Model.ProductEditorSettingsModel.ACL;
 }
     @* resources for product tags input *@
     <script src="~/lib_npm/jquery-tageditor/jquery.caret.min.js"></script>
@@ -515,7 +516,7 @@
             </div>
         </div>
     </nop-nested-setting>
-@await Component.InvokeAsync(typeof(AclCustomerRolesViewComponent), Model)
+    @await Component.InvokeAsync(typeof(AclCustomerRolesViewComponent), Model)
     <div class="form-group row @(Model.ProductEditorSettingsModel.Stores ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="SelectedStoreIds" />
