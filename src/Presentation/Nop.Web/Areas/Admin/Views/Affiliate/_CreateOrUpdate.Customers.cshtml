@@ -3,7 +3,7 @@
     @await Html.PartialAsync("Table", new DataTablesModel
     {
         Name = "customers-grid",
-        UrlRead = new DataUrl("AffiliatedCustomerList", "Affiliate", new RouteValueDictionary { [nameof(Model.AffiliatedCustomerSearchModel.AffliateId)] = Model.AffiliatedCustomerSearchModel.AffliateId }),
+        UrlRead = new DataUrl("AffiliatedCustomerList", "Affiliate", new RouteValueDictionary { [nameof(Model.AffiliatedCustomerSearchModel.AffiliateId)] = Model.AffiliatedCustomerSearchModel.AffiliateId }),
         Length = Model.AffiliatedCustomerSearchModel.PageSize,
         LengthMenu = Model.AffiliatedCustomerSearchModel.AvailablePageSizes,
         ColumnCollection = new List<ColumnProperty>

@@ -21,7 +21,7 @@ public partial record AffiliateCommissionSearchModel : BaseSearchModel
 
     #region Properties
 
-    public int AffliateId { get; set; }
+    public int AffiliateId { get; set; }
 
     [NopResourceDisplayName("Admin.Affiliates.Commissions.StartDate")]
     [UIHint("DateNullable")]

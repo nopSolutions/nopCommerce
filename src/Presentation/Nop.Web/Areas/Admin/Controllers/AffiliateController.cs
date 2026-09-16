@@ -30,7 +30,6 @@ public partial class AffiliateController : BaseAdminController
     protected readonly ILocalizationService _localizationService;
     protected readonly INotificationService _notificationService;
     protected readonly IOrderService _orderService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IPriceFormatter _priceFormatter;
     protected readonly IWorkflowMessageService _workflowMessageService;
 
@@ -46,7 +45,6 @@ public partial class AffiliateController : BaseAdminController
         ILocalizationService localizationService,
         INotificationService notificationService,
         IOrderService orderService,
-        IPermissionService permissionService,
         IPriceFormatter priceFormatter,
         IWorkflowMessageService workflowMessageService)
     {
@@ -58,7 +56,6 @@ public partial class AffiliateController : BaseAdminController
         _localizationService = localizationService;
         _notificationService = notificationService;
         _orderService = orderService;
-        _permissionService = permissionService;
         _priceFormatter = priceFormatter;
         _workflowMessageService = workflowMessageService;
     }
@@ -265,7 +262,7 @@ public partial class AffiliateController : BaseAdminController
     {
         //try to get an affiliate with the specified id
         var affiliate = await _affiliateService.GetAffiliateByIdAsync(searchModel.AffiliateId)
-                        ?? throw new ArgumentException("No affiliate found with the specified id");
+            ?? throw new ArgumentException("No affiliate found with the specified id");
 
         //prepare model
         var model = await _affiliateModelFactory.PrepareAffiliatedOrderListModelAsync(searchModel, affiliate);
@@ -278,8 +275,8 @@ public partial class AffiliateController : BaseAdminController
     public virtual async Task<IActionResult> AffiliateCommissionListGrid(AffiliateCommissionSearchModel searchModel)
     {
         //try to get an affiliate with the specified id
-        var affiliate = await _affiliateService.GetAffiliateByIdAsync(searchModel.AffliateId)
-                        ?? throw new ArgumentException("No affiliate found with the specified id");
+        var affiliate = await _affiliateService.GetAffiliateByIdAsync(searchModel.AffiliateId)
+            ?? throw new ArgumentException("No affiliate found with the specified id");
 
         //prepare model
         var model = await _affiliateModelFactory.PrepareAffiliateCommissionListModelAsync(searchModel, affiliate);
@@ -292,8 +289,8 @@ public partial class AffiliateController : BaseAdminController
     public virtual async Task<IActionResult> AffiliatedCustomerList(AffiliatedCustomerSearchModel searchModel)
     {
         //try to get an affiliate with the specified id
-        var affiliate = await _affiliateService.GetAffiliateByIdAsync(searchModel.AffliateId)
-                        ?? throw new ArgumentException("No affiliate found with the specified id");
+        var affiliate = await _affiliateService.GetAffiliateByIdAsync(searchModel.AffiliateId)
+            ?? throw new ArgumentException("No affiliate found with the specified id");
 
         //prepare model
         var model = await _affiliateModelFactory.PrepareAffiliatedCustomerListModelAsync(searchModel, affiliate);
@@ -369,8 +366,8 @@ public partial class AffiliateController : BaseAdminController
                 AffiliateId = model.AffiliateId
             };
 
-            await _affiliateService.InsertAffiliateCommission(commission);
-            
+            await _affiliateService.InsertAffiliateCommissionAsync(commission);
+
             return continueEditing ? RedirectToAction("EditCommission", new { id = commission.Id }) : RedirectToAction("Edit", new { id = model.AffiliateId });
         }
 
@@ -389,7 +386,7 @@ public partial class AffiliateController : BaseAdminController
     [CheckPermission(StandardPermission.Promotions.AFFILIATES_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> EditCommission(int id)
     {
-        //try to get an affiliate with the specified id
+        //try to get an affiliate commission with the specified id
         var commission = await _affiliateService.GetAffiliateCommissionByIdAsync(id);
         if (commission == null)
             return RedirectToAction("List");
@@ -473,7 +470,7 @@ public partial class AffiliateController : BaseAdminController
 
         await _affiliateService.UpdateAffiliateCommissionAsync(commission);
         var totalCommissionAmount = await _priceFormatter.FormatPriceAsync(commission.TotalCommissionAmount, true, false);
-        
+
         return Json(new { Result = true, totalCommissionAmount });
     }
 
@@ -486,16 +483,16 @@ public partial class AffiliateController : BaseAdminController
         if (commission == null)
             return Json(new { Result = false });
 
-        var orders = await _orderService.GetOrderByIdAsync(orderId);
+        var order = await _orderService.GetOrderByIdAsync(orderId);
 
-        if (orders != null)
+        if (order != null)
         {
-            orders.AffiliateCommissionId = null;
-            await _orderService.UpdateOrderAsync(orders);
-            commission.TotalCommissionAmount -= orders.AffiliateCommissionAmount ?? 0;
+            order.AffiliateCommissionId = null;
+            await _orderService.UpdateOrderAsync(order);
+            commission.TotalCommissionAmount -= order.AffiliateCommissionAmount ?? 0;
             await _affiliateService.UpdateAffiliateCommissionAsync(commission);
         }
-        
+
         var totalCommissionAmount = await _priceFormatter.FormatPriceAsync(commission.TotalCommissionAmount, true, false);
 
         return Json(new { Result = true, totalCommissionAmount });

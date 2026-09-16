@@ -25,7 +25,6 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
 {
     #region Fields
 
-    protected readonly AffiliateSettings _affiliateSettings;
     protected readonly IAddressModelFactory _addressModelFactory;
     protected readonly IAddressService _addressService;
     protected readonly IAffiliateService _affiliateService;
@@ -42,8 +41,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
 
     #region Ctor
 
-    public AffiliateModelFactory(AffiliateSettings affiliateSettings,
-        IAddressModelFactory addressModelFactory,
+    public AffiliateModelFactory(IAddressModelFactory addressModelFactory,
         IAddressService addressService,
         IAffiliateService affiliateService,
         IBaseAdminModelFactory baseAdminModelFactory,
@@ -55,7 +53,6 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
         IPriceFormatter priceFormatter,
         IStateProvinceService stateProvinceService)
     {
-        _affiliateSettings = affiliateSettings;
         _addressModelFactory = addressModelFactory;
         _addressService = addressService;
         _affiliateService = affiliateService;
@@ -108,7 +105,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
 
         ArgumentNullException.ThrowIfNull(affiliate);
 
-        searchModel.AffliateId = affiliate.Id;
+        searchModel.AffiliateId = affiliate.Id;
 
         //prepare page parameters
         searchModel.SetGridPageSize();
@@ -128,7 +125,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
 
         ArgumentNullException.ThrowIfNull(affiliate);
 
-        searchModel.AffliateId = affiliate.Id;
+        searchModel.AffiliateId = affiliate.Id;
 
         //prepare available order statuses
         var availableStatusItems = await CommissionStatus.Pending.ToSelectListAsync(false);
@@ -250,11 +247,8 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
             PrepareAffiliatedCustomerSearchModel(model.AffiliatedCustomerSearchModel, affiliate);
             await PrepareAffiliateCommissionSearchModelAsync(model.AffiliateCommissionSearchModel, affiliate);
 
-            if (affiliate.AssociatedCustomerId > 0)
-            {
-                var associatedCustomer = await _customerService.GetCustomerByIdAsync(affiliate.AssociatedCustomerId.Value);
-                model.CustomerInfo = await _customerService.FormatUsernameAsync(associatedCustomer) + $" {associatedCustomer.Email}";
-            }
+            if (await _customerService.GetCustomerByIdAsync(affiliate.AssociatedCustomerId ?? 0) is Customer associatedCustomer)
+                model.CustomerInfo = await _customerService.FormatUsernameAsync(associatedCustomer) + $" ({associatedCustomer.Email})";
 
             //whether to fill in some of properties
             if (!excludeProperties)
@@ -320,7 +314,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
         var affiliateCommissions =
-            await _affiliateService.GetAffiliateCommissionsByIdsAsync(orders.Where(o=>o.AffiliateCommissionId != null).Select(o => o.AffiliateCommissionId.Value).ToArray());
+            await _affiliateService.GetAffiliateCommissionsByIdsAsync(orders.Where(o => o.AffiliateCommissionId != null).Select(o => o.AffiliateCommissionId.Value).ToArray());
 
         var commissions = affiliateCommissions.GroupBy(ac => ac.Id).ToDictionary(g => g.Key, g => g.FirstOrDefault());
 
@@ -333,7 +327,9 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
                 var affiliatedOrderModel = order.ToModel<AffiliatedOrderModel>();
 
                 //fill in additional values (not existing in the entity)
-                var commissionAmount = order.AffiliateCommissionAmount.HasValue && order.AffiliateCommissionAmount > 0M ? await _priceFormatter.FormatPriceAsync(order.AffiliateCommissionAmount.Value, true, false) : string.Empty;
+                var commissionAmount = order.AffiliateCommissionAmount.HasValue && order.AffiliateCommissionAmount > 0M
+                    ? await _priceFormatter.FormatPriceAsync(order.AffiliateCommissionAmount.Value, true, false)
+                    : string.Empty;
                 var commissionStatus = string.Empty;
                 DateTime? commissionPaidOn = null;
 
@@ -348,7 +344,6 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
                 affiliatedOrderModel.AffiliateCommission = commissionAmount;
                 affiliatedOrderModel.CommissionStatus = commissionStatus;
                 affiliatedOrderModel.PaidOn = commissionPaidOn;
-
 
                 affiliatedOrderModel.OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus);
                 affiliatedOrderModel.PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
@@ -392,7 +387,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
 
         int? commissionStatusId = searchModel.CommissionStatusId > 0 ? searchModel.CommissionStatusId : null;
 
-        var commission = await _affiliateService.GetAllCommissionsAsync(searchModel.AffliateId, startDateValue,
+        var commission = await _affiliateService.GetAllCommissionsAsync(searchModel.AffiliateId, startDateValue,
             endDateValue, commissionStatusId, searchModel.Page - 1, searchModel.PageSize);
 
         //prepare list model
@@ -411,7 +406,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
                 DateTime? commissionPaidOn = affiliateCommission.PaidOn.HasValue
                     ? await _dateTimeHelper.ConvertToUserTimeAsync(affiliateCommission.PaidOn.Value, DateTimeKind.Utc)
                     : null;
-                
+
                 affiliateCommissionModel.TotalCommissionAmount = commissionAmount;
                 affiliateCommissionModel.CommissionStatus = commissionStatus;
                 affiliateCommissionModel.PaidOn = commissionPaidOn;
@@ -447,13 +442,15 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
         //prepare list model
-        var model = new AffiliatedCustomerListModel().PrepareToGrid(searchModel, customers, () =>
+        var model = await new AffiliatedCustomerListModel().PrepareToGridAsync(searchModel, customers, () =>
         {
             //fill in model values from the entity
-            return customers.Select(customer =>
+            return customers.SelectAwait(async customer =>
             {
                 var affiliatedCustomerModel = customer.ToModel<AffiliatedCustomerModel>();
-                affiliatedCustomerModel.Name = customer.Email;
+                affiliatedCustomerModel.Name = !string.IsNullOrEmpty(customer.Email)
+                    ? customer.Email
+                    : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
 
                 return affiliatedCustomerModel;
             });
@@ -527,7 +524,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
 
             affiliateCommissionEditModel.CreateOn =
                 await _dateTimeHelper.ConvertToUserTimeAsync(affiliateCommission.CreateOn, DateTimeKind.Utc);
-                
+
             var commissionStatus =
                 await _localizationService.GetLocalizedEnumAsync(affiliateCommission.CommissionStatus);
             DateTime? commissionPaidOn = affiliateCommission.PaidOn.HasValue

@@ -8,11 +8,8 @@ using Nop.Core.Http;
 using Nop.Services.Affiliates;
 using Nop.Services.Common;
 using Nop.Services.Customers;
-using Nop.Services.Html;
 using Nop.Services.Localization;
-using Nop.Services.Media;
 using Nop.Services.Messages;
-using Nop.Services.Seo;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Affiliate;
@@ -24,62 +21,43 @@ public partial class AffiliateController : BasePublicController
 {
     #region Fields
 
+    protected readonly AffiliateSettings _affiliateSettings;
     protected readonly CaptchaSettings _captchaSettings;
     protected readonly IAddressService _addressService;
     protected readonly IAffiliateModelFactory _affiliateModelFactory;
     protected readonly IAffiliateService _affiliateService;
     protected readonly ICustomerService _customerService;
-    protected readonly IDownloadService _downloadService;
-    protected readonly IGenericAttributeService _genericAttributeService;
-    protected readonly IHtmlFormatter _htmlFormatter;
     protected readonly ILocalizationService _localizationService;
-    protected readonly IPictureService _pictureService;
-    protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWorkContext _workContext;
     protected readonly IWorkflowMessageService _workflowMessageService;
-    protected readonly AffiliateSettings _affiliateSettings;
     protected readonly LocalizationSettings _localizationSettings;
 
     #endregion
 
     #region Ctor
 
-    public AffiliateController(CaptchaSettings captchaSettings,
+    public AffiliateController(AffiliateSettings affiliateSettings,
+        CaptchaSettings captchaSettings,
         IAddressService addressService,
         IAffiliateModelFactory affiliateModelFactory,
         IAffiliateService affiliateService,
         ICustomerService customerService,
-        IDownloadService downloadService,
-        IGenericAttributeService genericAttributeService,
-        IHtmlFormatter htmlFormatter,
         ILocalizationService localizationService,
-        IPictureService pictureService,
-        IUrlRecordService urlRecordService,
         IWorkContext workContext,
         IWorkflowMessageService workflowMessageService,
-        AffiliateSettings affiliateSettings,
         LocalizationSettings localizationSettings)
     {
+        _affiliateSettings = affiliateSettings;
         _captchaSettings = captchaSettings;
         _addressService = addressService;
         _affiliateModelFactory = affiliateModelFactory;
         _affiliateService = affiliateService;
         _customerService = customerService;
-        _downloadService = downloadService;
-        _genericAttributeService = genericAttributeService;
-        _htmlFormatter = htmlFormatter;
         _localizationService = localizationService;
-        _pictureService = pictureService;
-        _urlRecordService = urlRecordService;
         _workContext = workContext;
         _workflowMessageService = workflowMessageService;
-        _affiliateSettings = affiliateSettings;
         _localizationSettings = localizationSettings;
     }
-
-    #endregion
-
-    #region Utilities
 
     #endregion
 

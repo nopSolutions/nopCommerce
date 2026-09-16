@@ -71,7 +71,7 @@ public partial interface IAffiliateModelFactory
     /// The task result contains the affiliate commission list model
     /// </returns>
     Task<AffiliateCommissionListModel> PrepareAffiliateCommissionListModelAsync(AffiliateCommissionSearchModel searchModel, Affiliate affiliate);
-    
+
     /// <summary>
     /// Prepare paged affiliated customer list model
     /// </summary>

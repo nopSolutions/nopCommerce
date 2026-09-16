@@ -9,12 +9,14 @@ public enum AffiliateStorageStrategyType
     /// If an affiliate already exists, it will not be overwritten
     /// </summary>
     NoOverwrites,
+
     /// <summary>
     /// Always overwrite existing affiliates with new ones
     /// </summary>
     AlwaysOverwrite,
+
     /// <summary>
-    /// Only overwrite existing affiliates if an order
+    /// Overwrite existing affiliates only after an order with that affiliate has been placed
     /// </summary>
     OverwriteAfterOrder
 }

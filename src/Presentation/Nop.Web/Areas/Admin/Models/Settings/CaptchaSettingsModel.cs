@@ -56,7 +56,6 @@ public partial record CaptchaSettingsModel : BaseNopModel, ISettingsModel
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnApplyAffiliatePage")]
     public bool ShowOnApplyAffiliatePage { get; set; }
     public bool ShowOnApplyAffiliatePage_OverrideForStore { get; set; }
-    
 
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage")]
     public bool ShowOnForgotPasswordPage { get; set; }

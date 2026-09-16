@@ -1283,7 +1283,10 @@ public partial class OrderProcessingService : IOrderProcessingService
     /// </summary>
     /// <param name="details">Place order container</param>
     /// <param name="order">Order</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of created order items
+    /// </returns>
     protected virtual async Task<IList<OrderItem>> MoveShoppingCartItemsToOrderItemsAsync(PlaceOrderContainer details, Order order)
     {
         var orderItems = new List<OrderItem>();
@@ -1351,7 +1354,7 @@ public partial class OrderProcessingService : IOrderProcessingService
         }
 
         await _shoppingCartService.ClearShoppingCartAsync(details.Customer, order.StoreId);
-        
+
         return orderItems;
     }
 
@@ -1579,9 +1582,9 @@ public partial class OrderProcessingService : IOrderProcessingService
     }
 
     /// <summary>
-    /// Saves affiliate commission
+    /// Get affiliate commission
     /// </summary>
-    /// <param name="order">The order to save commission</param>
+    /// <param name="order">The order to get commission</param>
     /// <param name="orderItems">The list of order items</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     protected virtual async Task<decimal?> GetAffiliateCommissionAsync(Order order, IList<OrderItem> orderItems)
@@ -1682,7 +1685,12 @@ public partial class OrderProcessingService : IOrderProcessingService
                         await CreateFirstRecurringPaymentAsync(processPaymentRequest, order);
 
                     //affiliate commission
-                    order.AffiliateCommissionAmount = await GetAffiliateCommissionAsync(order, orderItems);
+                    var affiliateCommissionAmount = await GetAffiliateCommissionAsync(order, orderItems);
+                    if (affiliateCommissionAmount is not null)
+                    {
+                        order.AffiliateCommissionAmount = affiliateCommissionAmount;
+                        await _orderService.UpdateOrderAsync(order);
+                    }
 
                     //notifications
                     await SendNotificationsAndSaveNotesAsync(order);

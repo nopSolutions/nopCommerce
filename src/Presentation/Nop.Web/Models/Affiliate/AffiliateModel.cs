@@ -10,11 +10,6 @@ namespace Nop.Web.Models.Affiliate;
 /// </summary>
 public record AffiliateModel : BaseNopModel
 {
-    public AffiliateModel()
-    {
-        Orders = new List<AffiliatedOrderModel>();
-    }
-
     [NopResourceDisplayName("Account.Affiliates.Status")]
     public string Status { get; set; }
 
@@ -35,5 +30,5 @@ public record AffiliateModel : BaseNopModel
     public string PaidCommission { get; set; }
 
     public PagerModel PagerModel { get; set; }
-    public List<AffiliatedOrderModel> Orders { get; set; }
+    public List<AffiliatedOrderModel> Orders { get; set; } = new();
 }

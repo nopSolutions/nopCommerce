@@ -98,14 +98,19 @@ public sealed class CheckAffiliateAttribute : TypeFilterAttribute
                     case AffiliateStorageStrategyType.NoOverwrites:
                         //ignore if the customer already has an affiliate
                         return;
+
                     case AffiliateStorageStrategyType.AlwaysOverwrite:
+                        //always overwrite
                         customer.AffiliateId = affiliate.Id;
                         break;
-                    case AffiliateStorageStrategyType.OverwriteAfterOrder:
-                        var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id,
-                            affiliateId: customer.AffiliateId, getOnlyTotalCount: true);
 
-                        if(orders.TotalCount > 0) 
+                    case AffiliateStorageStrategyType.OverwriteAfterOrder:
+                        //check for orders with existing affiliate; if there are not any yet, keep it
+                        var orders = await _orderService
+                            .SearchOrdersAsync(customerId: customer.Id, affiliateId: customer.AffiliateId, getOnlyTotalCount: true);
+
+                        //if there are any, overwrite it
+                        if (orders.TotalCount > 0)
                             customer.AffiliateId = affiliate.Id;
 
                         break;

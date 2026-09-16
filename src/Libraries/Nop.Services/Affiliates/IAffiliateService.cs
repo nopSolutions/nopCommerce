@@ -19,7 +19,7 @@ public partial interface IAffiliateService
     Task<Affiliate> GetAffiliateByIdAsync(int affiliateId);
 
     /// <summary>
-    /// Gets an affiliate by customer identifier
+    /// Gets an affiliate by associated customer identifier
     /// </summary>
     /// <param name="customerId">Customer identifier</param>
     /// <returns>
@@ -118,10 +118,10 @@ public partial interface IAffiliateService
     /// </summary>
     /// <param name="commission">Affiliate commission</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    Task InsertAffiliateCommission(AffiliateCommission commission);
+    Task InsertAffiliateCommissionAsync(AffiliateCommission commission);
 
     /// <summary>
-    /// Gets the affiliate commission by order identifiers
+    /// Gets the affiliate commission by identifiers
     /// </summary>
     /// <param name="commissionIds">The list of affiliate commission identifiers</param>
     /// <returns>
@@ -161,12 +161,12 @@ public partial interface IAffiliateService
     /// A task that represents the asynchronous operation
     /// The task result contains the affiliate commissions
     /// </returns>
-    Task<IPagedList<AffiliateCommission>> GetAllCommissionsAsync(int affiliateId, 
+    Task<IPagedList<AffiliateCommission>> GetAllCommissionsAsync(int affiliateId,
         DateTime? createdFromUtc = null,
         DateTime? createdToUtc = null,
         int? commissionStatus = null,
-        int pageIndex = 0, 
-        int pageSize = int.MaxValue, 
+        int pageIndex = 0,
+        int pageSize = int.MaxValue,
         bool getOnlyTotalCount = false);
 
     /// <summary>

@@ -515,7 +515,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{lang}/vendor/apply",
             defaults: new { controller = "Vendor", action = "ApplyVendor" });
 
-        //apply for vendor account
+        //apply for affiliate account
         endpointRouteBuilder.MapControllerRoute(name: NopRouteNames.General.APPLY_AFFILIATE_ACCOUNT,
             pattern: $"{lang}/affiliate/apply",
             defaults: new { controller = "Affiliate", action = "ApplyAffiliate" });

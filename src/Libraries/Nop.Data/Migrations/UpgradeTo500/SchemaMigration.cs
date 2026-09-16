@@ -111,20 +111,22 @@ public class SchemaMigration : ForwardOnlyMigration
         this.AddOrAlterColumnFor<Affiliate>(a => a.CreatedOnUtc).AsDateTime2().Nullable();
 
         this.AddOrAlterColumnFor<Product>(p => p.SpecifyAffiliateCommission)
-                .AsBoolean()
-                .NotNullable()
-                .SetExistingRowsTo(false);
+            .AsBoolean()
+            .NotNullable()
+            .SetExistingRowsTo(false);
         this.AddOrAlterColumnFor<Product>(p => p.AffiliateCommissionAmount)
-                .AsDecimal(18, 2)
-                .Nullable();
+            .AsDecimal(18, 2)
+            .Nullable();
         this.AddOrAlterColumnFor<Product>(p => p.AffiliateCommissionPercentage)
-                .AsDecimal(18, 2)
-                .Nullable();
+            .AsDecimal(18, 2)
+            .Nullable();
         this.AddOrAlterColumnFor<Product>(p => p.AffiliateUsePercentage)
-                .AsBoolean()
-                .NotNullable()
-                .SetExistingRowsTo(false);
+            .AsBoolean()
+            .NotNullable()
+            .SetExistingRowsTo(false);
+
         this.CreateTableIfNotExists<AffiliateCommission>();
+
         this.AddOrAlterColumnFor<Order>(o => o.AffiliateCommissionAmount)
             .AsDecimal(18, 2)
             .Nullable();

@@ -33,7 +33,7 @@
             </div>
             <div class="row">
                 <div class="col-md-8 offset-md-5">
-                    <button type="button" id="search-orders" class="btn btn-primary btn-search">
+                    <button type="button" id="search-commission" class="btn btn-primary btn-search">
                         <i class="fas fa-magnifying-glass"></i>
                         @T("Admin.Common.Search")
                     </button>
@@ -47,15 +47,15 @@
             @await Html.PartialAsync("Table", new DataTablesModel
             {
                 Name = "commission-grid",
-                UrlRead = new DataUrl("AffiliateCommissionListGrid", "Affiliate", new RouteValueDictionary { [nameof(Model.AffiliateCommissionSearchModel.AffliateId)] = Model.AffiliateCommissionSearchModel.AffliateId }),
+                UrlRead = new DataUrl("AffiliateCommissionListGrid", "Affiliate", new RouteValueDictionary { [nameof(Model.AffiliateCommissionSearchModel.AffiliateId)] = Model.AffiliateCommissionSearchModel.AffiliateId }),
                 SearchButtonId = "search-commission",
                 Length = Model.AffiliateCommissionSearchModel.PageSize,
                 LengthMenu = Model.AffiliateCommissionSearchModel.AvailablePageSizes,
                 Filters = new List<FilterParameter>
                 {
-                    new FilterParameter(nameof(Model.AffiliateCommissionSearchModel.StartDate), nameof(AffiliatedOrderSearchModel)),
-                    new FilterParameter(nameof(Model.AffiliateCommissionSearchModel.EndDate), nameof(AffiliatedOrderSearchModel)),
-                    new FilterParameter(nameof(Model.AffiliateCommissionSearchModel.CommissionStatusId), nameof(AffiliatedOrderSearchModel)),
+                    new FilterParameter(nameof(Model.AffiliateCommissionSearchModel.StartDate), nameof(AffiliateCommissionSearchModel)),
+                    new FilterParameter(nameof(Model.AffiliateCommissionSearchModel.EndDate), nameof(AffiliateCommissionSearchModel)),
+                    new FilterParameter(nameof(Model.AffiliateCommissionSearchModel.CommissionStatusId), nameof(AffiliateCommissionSearchModel)),
                 },
                 ColumnCollection = new List<ColumnProperty>
                 {

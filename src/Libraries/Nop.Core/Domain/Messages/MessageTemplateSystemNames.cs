@@ -233,7 +233,7 @@ public static partial class MessageTemplateSystemNames
     public const string NEW_AFFILIATE_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION = "AffiliateAccountApply.StoreOwnerNotification";
 
     /// <summary>
-    /// Represents system name of notification store owner about applying new affiliate account
+    /// Represents system name of notification customer about activating affiliate account
     /// </summary>
     public const string AFFILIATE_ACCOUNT_ACTIVE_CUSTOMER_NOTIFICATION = "AffiliateAccountActive.CustomerNotification";
 

@@ -489,7 +489,7 @@ public partial interface IWorkflowMessageService
     /// The task result contains the queued email identifier
     /// </returns>
     Task<IList<int>> SendWithdrawalRequestConfirmationNotificationAsync(Order order);
-    
+
     #endregion
 
     #region Messages
@@ -510,7 +510,7 @@ public partial interface IWorkflowMessageService
     #region Misc
 
     /// <summary>
-    /// Sends 'New vendor account submitted' message to a store owner
+    /// Sends 'New affiliate account submitted' message to a store owner
     /// </summary>
     /// <param name="customer">Customer</param>
     /// <param name="affiliate">Affiliate</param>

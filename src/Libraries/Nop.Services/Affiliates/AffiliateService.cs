@@ -67,7 +67,7 @@ public partial class AffiliateService : IAffiliateService
     }
 
     /// <summary>
-    /// Gets an affiliate by customer identifier
+    /// Gets an affiliate by associated customer identifier
     /// </summary>
     /// <param name="customerId">Customer identifier</param>
     /// <returns>
@@ -76,7 +76,7 @@ public partial class AffiliateService : IAffiliateService
     /// </returns>
     public virtual async Task<Affiliate> GetAffiliateByCustomerIdAsync(int customerId)
     {
-        return await _affiliateRepository.Table.FirstOrDefaultAsync(a=>a.AssociatedCustomerId == customerId);
+        return await _affiliateRepository.Table.FirstOrDefaultAsync(a => a.AssociatedCustomerId == customerId);
     }
 
     /// <summary>
@@ -291,13 +291,13 @@ public partial class AffiliateService : IAffiliateService
     /// </summary>
     /// <param name="commission">Affiliate commission</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task InsertAffiliateCommission(AffiliateCommission commission)
+    public virtual async Task InsertAffiliateCommissionAsync(AffiliateCommission commission)
     {
         await _affiliateCommissionRepository.InsertAsync(commission);
     }
 
     /// <summary>
-    /// Gets the affiliate commission by order identifiers
+    /// Gets the affiliate commission by identifiers
     /// </summary>
     /// <param name="commissionIds">The list of affiliate commission identifiers</param>
     /// <returns>
@@ -334,7 +334,7 @@ public partial class AffiliateService : IAffiliateService
     {
         await _affiliateCommissionRepository.UpdateAsync(commission);
     }
-    
+
     /// <summary>
     /// Gets all affiliate commissions
     /// </summary>
@@ -357,7 +357,7 @@ public partial class AffiliateService : IAffiliateService
         int pageSize = int.MaxValue,
         bool getOnlyTotalCount = false)
     {
-        var query = _affiliateCommissionRepository.Table.Where(ac=>ac.AffiliateId == affiliateId);
+        var query = _affiliateCommissionRepository.Table.Where(ac => ac.AffiliateId == affiliateId);
 
         if (createdFromUtc.HasValue)
             query = query.Where(c => c.CreateOn >= createdFromUtc.Value);
@@ -379,9 +379,12 @@ public partial class AffiliateService : IAffiliateService
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task DeleteAffiliateCommissionAsync(AffiliateCommission commission)
     {
+        if (commission is null)
+            return;
+
         var orders = await _orderRepository.Table.Where(o => o.AffiliateCommissionId == commission.Id).ToListAsync();
-        
-        foreach (var order in orders) 
+
+        foreach (var order in orders)
             order.AffiliateCommissionId = null;
 
         await _orderRepository.UpdateAsync(orders);

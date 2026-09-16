@@ -44,30 +44,30 @@
                     </div>
                 </div>
                 <script asp-location="Footer">
-                                    $(function() {
-                                        const customerInput = $("#@Html.IdFor(model => model.AssociatedCustomerId)");
-                                        toggleRemoveButton();
+                    $(function() {
+                        const customerInput = $('#@Html.IdFor(model => model.AssociatedCustomerId)');
+                        toggleRemoveButton();
 
-                                        $('#customer-remove').click(function() {
-                                            $('#customer-info').text('');
-                                            customerInput.val('');
-                                            toggleRemoveButton();
-                                            return false;
-                                        });
+                        $('#customer-remove').click(function() {
+                            $('#customer-info').text('');
+                            customerInput.val('');
+                            toggleRemoveButton();
+                            return false;
+                        });
 
-                                        $('#btnRefreshCustomer').click(function() {
-                                            toggleRemoveButton();
-                                            return false;
-                                        });
+                        $('#btnRefreshCustomer').click(function() {
+                            toggleRemoveButton();
+                            return false;
+                        });
 
-                                        function toggleRemoveButton() {
-                                            if (customerInput.val() > 0) {
-                                                $('#customer-remove').show();
-                                            } else {
-                                                $('#customer-remove').hide();
-                                            }
-                                        }
-                                    });
+                        function toggleRemoveButton() {
+                            if (customerInput.val() > 0) {
+                                $('#customer-remove').show();
+                            } else {
+                                $('#customer-remove').hide();
+                            }
+                        }
+                    });
                 </script>
             </div>
         </div>

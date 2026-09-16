@@ -5,7 +5,7 @@ namespace Nop.Web.Models.Affiliate;
 /// <summary>
 /// Represents the affiliate order model
 /// </summary>
-public partial record AffiliatedOrderModel : BaseNopModel
+public partial record AffiliatedOrderModel : BaseNopEntityModel
 {
     public string CustomOrderNumber { get; set; }
     public string OrderTotal { get; set; }

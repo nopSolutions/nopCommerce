@@ -10,7 +10,7 @@ namespace Nop.Web.Factories;
 public partial interface IAffiliateModelFactory
 {
     /// <summary>
-    /// Prepares the apply affiliate model
+    /// Prepare the apply affiliate model
     /// </summary>
     /// <param name="model">An apply affiliate model</param>
     /// <returns>
@@ -20,7 +20,7 @@ public partial interface IAffiliateModelFactory
     Task<ApplyAffiliateModel> PrepareApplyAffiliateModelAsync(ApplyAffiliateModel model);
 
     /// <summary>
-    /// Prepares the affiliate model
+    /// Prepare the affiliate model
     /// </summary>
     /// <param name="affiliate">The affiliate</param>
     /// <param name="model">An affiliate model</param>

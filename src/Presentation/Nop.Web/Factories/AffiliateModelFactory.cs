@@ -31,15 +31,14 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
     protected readonly AddressSettings _addressSettings;
     protected readonly AffiliateSettings _affiliateSettings;
     protected readonly CaptchaSettings _captchaSettings;
-    protected readonly CommonSettings _commonSettings;
     protected readonly CurrencySettings _currencySettings;
     protected readonly IAddressModelFactory _addressModelFactory;
     protected readonly IAddressService _addressService;
     protected readonly IAffiliateService _affiliateService;
-    protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly ICountryService _countryService;
     protected readonly ICurrencyService _currencyService;
     protected readonly ICustomerService _customerService;
+    protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly ILocalizationService _localizationService;
     protected readonly IOrderService _orderService;
     protected readonly IPriceFormatter _priceFormatter;
@@ -53,15 +52,14 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
     public AffiliateModelFactory(AddressSettings addressSettings,
         AffiliateSettings affiliateSettings,
         CaptchaSettings captchaSettings,
-        CommonSettings commonSettings,
         CurrencySettings currencySettings,
         IAddressModelFactory addressModelFactory,
         IAddressService addressService,
         IAffiliateService affiliateService,
-        IDateTimeHelper dateTimeHelper,
         ICountryService countryService,
         ICurrencyService currencyService,
         ICustomerService customerService,
+        IDateTimeHelper dateTimeHelper,
         ILocalizationService localizationService,
         IOrderService orderService,
         IPriceFormatter priceFormatter,
@@ -71,15 +69,14 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
         _addressSettings = addressSettings;
         _affiliateSettings = affiliateSettings;
         _captchaSettings = captchaSettings;
-        _commonSettings = commonSettings;
         _currencySettings = currencySettings;
         _addressModelFactory = addressModelFactory;
         _addressService = addressService;
         _affiliateService = affiliateService;
-        _dateTimeHelper = dateTimeHelper;
         _countryService = countryService;
         _currencyService = currencyService;
         _customerService = customerService;
+        _dateTimeHelper = dateTimeHelper;
         _localizationService = localizationService;
         _orderService = orderService;
         _priceFormatter = priceFormatter;
@@ -90,7 +87,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
     #endregion
 
     /// <summary>
-    /// Prepares the apply affiliate model
+    /// Prepare the apply affiliate model
     /// </summary>
     /// <param name="model">An apply affiliate model</param>
     /// <returns>
@@ -109,6 +106,8 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
             //already applied for affiliate account
             model.DisableFormInput = true;
             model.Result = await _localizationService.GetResourceAsync("Affiliate.ApplyAccount.AlreadyApplied");
+
+            return model;
         }
 
         model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyAffiliatePage;
@@ -141,7 +140,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
     }
 
     /// <summary>
-    /// Prepares the affiliate model
+    /// Prepare the affiliate model
     /// </summary>
     /// <param name="affiliate">The affiliate</param>
     /// <param name="model">An affiliate model</param>
@@ -161,7 +160,8 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
             }).ToListAsync();
 
         model.AvailableLimits = new SelectList(periods, "ID", "Name", limit.ToString()).ToList();
-        model.Status = await _localizationService.GetResourceAsync(affiliate.Active ? "Account.Affiliates.Status.Active" : "Account.Affiliates.Status.Disabled");
+        model.Status = await _localizationService
+            .GetResourceAsync(affiliate.Active ? "Account.Affiliates.Status.Active" : "Account.Affiliates.Status.Disabled");
         model.TotalAffiliatedCustomers =
             (await _customerService.GetAllCustomersAsync(affiliateId: affiliate.Id, isActive: true,
                 getOnlyTotalCount: true)).TotalCount;
@@ -189,12 +189,11 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
             ShowTotalSummary = true,
             RouteActionName = NopRouteNames.Standard.CUSTOMER_AFFILIATES_INFO,
             UseRouteLinks = true,
-            RouteValues =
-                new CustomerAffiliateRouteValues
-                {
-                    PageNumber = orders.PageIndex,
-                    Limit = limit.ToString().ToLower()
-                }
+            RouteValues = new CustomerAffiliateRouteValues
+            {
+                PageNumber = orders.PageIndex,
+                Limit = limit.ToString().ToLower()
+            }
         };
 
         var affiliateCommissions =
@@ -204,7 +203,9 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
 
         foreach (var order in orders)
         {
-            var commissionAmount = order.AffiliateCommissionAmount.HasValue && order.AffiliateCommissionAmount > 0M ? await _priceFormatter.FormatPriceAsync(order.AffiliateCommissionAmount.Value, true, false) : string.Empty;
+            var commissionAmount = order.AffiliateCommissionAmount.HasValue && order.AffiliateCommissionAmount > 0M
+                ? await _priceFormatter.FormatPriceAsync(order.AffiliateCommissionAmount.Value, true, false)
+                : string.Empty;
             var commissionStatus = string.Empty;
             DateTime? commissionPaidOn = null;
 
@@ -218,6 +219,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
 
             var affiliateOrder = new AffiliatedOrderModel
             {
+                Id = order.Id,
                 CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc),
                 OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus),
                 PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus),
@@ -231,15 +233,16 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
             model.Orders.Add(affiliateOrder);
         }
 
-        model.TotalCommission = await _priceFormatter.FormatPriceAsync(orders.Sum(o => o.AffiliateCommissionAmount ?? 0M), true, primaryStoreCurrency);
+        model.TotalCommission = await _priceFormatter
+            .FormatPriceAsync(orders.Sum(o => o.AffiliateCommissionAmount ?? 0M), true, primaryStoreCurrency);
         var paidCommissions = 0M;
 
-        foreach (var order in orders.Where(o=>o.AffiliateCommissionId.HasValue))
+        foreach (var order in orders.Where(o => o.AffiliateCommissionId.HasValue))
         {
             if (!commissions.TryGetValue(order.AffiliateCommissionId!.Value, out var commission))
                 continue;
 
-            if(commission.CommissionStatus != CommissionStatus.Paid)
+            if (commission.CommissionStatus != CommissionStatus.Paid)
                 continue;
 
             paidCommissions += order.AffiliateCommissionAmount ?? 0M;
@@ -250,7 +253,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
         return model;
     }
 
-    #region nested class
+    #region Nested class
 
     /// <summary>
     /// Record that has filter options for route values. Used for Customer orders pagination (My Account)

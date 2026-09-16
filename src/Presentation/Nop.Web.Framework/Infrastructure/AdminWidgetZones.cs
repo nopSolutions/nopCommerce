@@ -9,7 +9,7 @@ public static partial class AdminWidgetZones
     public static string AddressAttributeValueDetailsBottom => "admin_address_attribute_value_details_bottom";
     public static string AddressAttributeValueDetailsButtons => "admin_address_attribute_value_details_buttons";
     public static string AddressAttributeValueDetailsTop => "admin_address_attribute_value_details_top";
-    public static string AffiliateCommissionDetailsButtons => "aadmin_affiliate_details_buttons";
+    public static string AffiliateCommissionDetailsButtons => "admin_affiliate_details_buttons";
     public static string AffiliateDetailsBlock => "admin_affiliate_details_block";
     public static string AffiliateDetailsButtons => "admin_affiliate_details_buttons";
     public static string AffiliateListButtons => "admin_affiliate_list_buttons";

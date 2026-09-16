@@ -4,7 +4,6 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="cards-group">
-
                 <div class="card-body">
                     <div class="form-group row">
                         <div class="col-md-3">
@@ -124,8 +123,7 @@
                                     Name = "orders-grid",
                                     UrlRead = new DataUrl("AffiliatedOrderListGrid", "Affiliate", new RouteValueDictionary
                                     {
-                                        [nameof(Model.AffiliatedOrderSearchModel.AffiliateId)] =
-                            Model.AffiliatedOrderSearchModel.AffiliateId,
+                                        [nameof(Model.AffiliatedOrderSearchModel.AffiliateId)] = Model.AffiliatedOrderSearchModel.AffiliateId,
                                         [nameof(Model.AffiliatedOrderSearchModel.IsCommissionPage)] = true
                                     }),
                                     SearchButtonId = "search-orders",
@@ -222,60 +220,58 @@
                                     Length = Model.AffiliatedOrderSearchModel.PageSize,
                                     LengthMenu = Model.AffiliatedOrderSearchModel.AvailablePageSizes,
                                     ColumnCollection = new List<ColumnProperty>
-                                {
-                                    new(nameof(AffiliatedOrderModel.CustomOrderNumber))
                                     {
-                                        Title = T("Admin.Affiliates.Orders.CustomOrderNumber").Text
-                                    },
-                                    new(nameof(AffiliatedOrderModel.OrderStatus))
-                                    {
-                                        Title = T("Admin.Affiliates.Orders.OrderStatus").Text,
-                                        Render = new RenderCustom("renderOrderStatus")
-                                    },
-                                    new(nameof(AffiliatedOrderModel.PaymentStatus))
-                                    {
-                                        Title = T("Admin.Affiliates.Orders.PaymentStatus").Text
-                                    },
-                                    new(nameof(AffiliatedOrderModel.ShippingStatus))
-                                    {
-                                        Title = T("Admin.Affiliates.Orders.ShippingStatus").Text
-                                    },
-                                    new(nameof(AffiliatedOrderModel.OrderTotal))
-                                    {
-                                        Title = T("Admin.Affiliates.Orders.OrderTotal").Text
-                                    },
-                                    new(nameof(AffiliatedOrderModel.CreatedOn))
-                                    {
-                                        Title = T("Admin.Affiliates.Orders.CreatedOn").Text,
-                                        Render = new RenderDate()
-                                    },
-                                    new(nameof(AffiliatedOrderModel.AffiliateCommission))
-                                    {
-                                        Title = T("Admin.Affiliates.Orders.AffiliateCommission").Text,
-                                    },
-                                    new(nameof(AffiliatedOrderModel.Id))
-                                    {
-                                        Title = T("Admin.Common.View").Text,
-                                        Width = "100",
-                                        ClassName = NopColumnClassDefaults.Button,
-                                        Render = new RenderButtonView(new DataUrl("~/Admin/Order/Edit/", nameof(AffiliatedOrderModel.Id)))
-                                    },
-                                    new(nameof(AffiliatedOrderModel.Id))
-                                    {
-                                        Title = T("Admin.Affiliates.Commission.RemoveOrderFromCommission").Text,
-                                        Width = "100",
-                                        Render = new RenderCustom("renderRemoveOrder"),
-                                        Visible = !Model.PaidOn.HasValue
+                                        new(nameof(AffiliatedOrderModel.CustomOrderNumber))
+                                        {
+                                            Title = T("Admin.Affiliates.Orders.CustomOrderNumber").Text
+                                        },
+                                        new(nameof(AffiliatedOrderModel.OrderStatus))
+                                        {
+                                            Title = T("Admin.Affiliates.Orders.OrderStatus").Text,
+                                            Render = new RenderCustom("renderOrderStatus")
+                                        },
+                                        new(nameof(AffiliatedOrderModel.PaymentStatus))
+                                        {
+                                            Title = T("Admin.Affiliates.Orders.PaymentStatus").Text
+                                        },
+                                        new(nameof(AffiliatedOrderModel.ShippingStatus))
+                                        {
+                                            Title = T("Admin.Affiliates.Orders.ShippingStatus").Text
+                                        },
+                                        new(nameof(AffiliatedOrderModel.OrderTotal))
+                                        {
+                                            Title = T("Admin.Affiliates.Orders.OrderTotal").Text
+                                        },
+                                        new(nameof(AffiliatedOrderModel.CreatedOn))
+                                        {
+                                            Title = T("Admin.Affiliates.Orders.CreatedOn").Text,
+                                            Render = new RenderDate()
+                                        },
+                                        new(nameof(AffiliatedOrderModel.AffiliateCommission))
+                                        {
+                                            Title = T("Admin.Affiliates.Orders.AffiliateCommission").Text,
+                                        },
+                                        new(nameof(AffiliatedOrderModel.Id))
+                                        {
+                                            Title = T("Admin.Common.View").Text,
+                                            Width = "100",
+                                            ClassName = NopColumnClassDefaults.Button,
+                                            Render = new RenderButtonView(new DataUrl("~/Admin/Order/Edit/", nameof(AffiliatedOrderModel.Id)))
+                                        },
+                                        new(nameof(AffiliatedOrderModel.Id))
+                                        {
+                                            Title = T("Admin.Affiliates.Commission.RemoveOrderFromCommission").Text,
+                                            Width = "100",
+                                            Render = new RenderCustom("renderRemoveOrder"),
+                                            Visible = !Model.PaidOn.HasValue
+                                        }
                                     }
-                                }
                                 })
                             </div>
                         </div>
                     }
 
                 </div>
-
-                    
             </div>
         </div>
     </div>
@@ -307,18 +303,17 @@
     function removeOrder(orderId) {
         var postData = {
             orderId: orderId,
-            affiliateCommissionId:@Model.Id
+            affiliateCommissionId: @Model.Id
         };
         addAntiForgeryToken(postData);
         $.ajax({
             cache: false,
-            type: "POST",
-            url: "@(Url.Action("RemoveOrderFromCommission", "Affiliate"))",
+            type: 'POST',
+            url: '@(Url.Action("RemoveOrderFromCommission", "Affiliate"))',
             data: postData,
             success: function (data, textStatus, jqXHR) {
-                console.log(data);
                 if (data && data.Result) {
-                    $("#totalCommissionAmount").text(data.totalCommissionAmount);
+                    $('#totalCommissionAmount').text(data.totalCommissionAmount);
                 }
             },
             complete: function (jqXHR, textStatus) {
@@ -332,18 +327,17 @@
         $('#add-selected').on('click', function () {
             var postData = {
                 selectedIds: selectedIds,
-                affiliateCommissionId:@Model.Id
+                affiliateCommissionId: @Model.Id
             };
             addAntiForgeryToken(postData);
             $.ajax({
                 cache: false,
-                type: "POST",
-                url: "@(Url.Action("AddSelectedOrders", "Affiliate"))",
+                type: 'POST',
+                url: '@(Url.Action("AddSelectedOrders", "Affiliate"))',
                 data: postData,
                 success: function (data, textStatus, jqXHR) {
-                    console.log(data);
                     if (data && data.Result) {
-                        $("#totalCommissionAmount").text(data.totalCommissionAmount);
+                        $('#totalCommissionAmount').text(data.totalCommissionAmount);
                     }
                 },
                 complete: function (jqXHR, textStatus) {

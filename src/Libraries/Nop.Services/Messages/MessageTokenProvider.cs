@@ -1267,7 +1267,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     public virtual async Task AddReturnRequestTokensAsync(IList<Token> tokens, ReturnRequest returnRequest, Order order, OrderItem orderItem, int languageId)
     {
         if (orderItem != null)
-        { 
+        {
             var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
             tokens.Add(new Token("ReturnRequest.OrderId", orderItem.OrderId));
             tokens.Add(new Token("ReturnRequest.Product.Name", await _localizationService.GetLocalizedAsync(product, x => x.Name, languageId)));
@@ -1285,7 +1285,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         }
 
         if (order != null)
-        { 
+        {
             var withdrawalUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.RETURN_REQUEST,
                 routeValues: new { orderId = order.Id, token = await _genericAttributeService.GetAttributeAsync<string>(order, NopOrderDefaults.WithdrawalTokenAttribute) });
 
@@ -1398,8 +1398,9 @@ public partial class MessageTokenProvider : IMessageTokenProvider
     public virtual async Task AddAffiliateTokensAsync(IList<Token> tokens, Affiliate affiliate)
     {
         var affiliateAddress = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
+        if (!string.IsNullOrEmpty(affiliateAddress?.Email))
+            tokens.Add(new Token("Affiliate.Email", affiliateAddress.Email));
 
-        tokens.Add(new Token("Affiliate.Email", affiliateAddress.Email));
         tokens.Add(new Token("Affiliate.FriendlyUrlName", affiliate.FriendlyUrlName));
 
         //event notification
@@ -1733,8 +1734,10 @@ public partial class MessageTokenProvider : IMessageTokenProvider
 
             MessageTemplateSystemNames.PRIVATE_MESSAGE_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.PrivateMessageTokens, TokenGroupNames.CustomerTokens],
             MessageTemplateSystemNames.NEW_VENDOR_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VendorTokens],
-            MessageTemplateSystemNames.NEW_AFFILIATE_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.AffiliateTokens],
+
+            MessageTemplateSystemNames.NEW_AFFILIATE_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION or
             MessageTemplateSystemNames.AFFILIATE_ACCOUNT_ACTIVE_CUSTOMER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.AffiliateTokens],
+
             MessageTemplateSystemNames.VENDOR_INFORMATION_CHANGE_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.VendorTokens],
             MessageTemplateSystemNames.GIFT_CARD_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.GiftCardTokens],
 

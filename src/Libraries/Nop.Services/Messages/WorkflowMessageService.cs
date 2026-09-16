@@ -1487,7 +1487,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     public virtual async Task<IList<int>> SendNextRecurringPaymentNotificationCustomerMessageAsync(RecurringPayment recurringPayment, int delayBeforeSend, int languageId)
     {
         ArgumentNullException.ThrowIfNull(recurringPayment);
-        
+
         var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId) ?? throw new Exception("Order cannot be loaded");
 
         var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
@@ -1970,7 +1970,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     #region Misc
 
     /// <summary>
-    /// Sends 'New vendor account submitted' message to a store owner
+    /// Sends 'New affiliate account submitted' message to a store owner
     /// </summary>
     /// <param name="customer">Customer</param>
     /// <param name="affiliate">Affiliate</param>
@@ -2012,8 +2012,8 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
 
             var affiliateAddress = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
-            var replyToEmail = messageTemplate.AllowDirectReply ? affiliateAddress.Email : "";
-            var replyToName = messageTemplate.AllowDirectReply ? $"{affiliateAddress.FirstName} {affiliateAddress.LastName}" : "";
+            var replyToEmail = messageTemplate.AllowDirectReply ? affiliateAddress?.Email : "";
+            var replyToName = messageTemplate.AllowDirectReply ? $"{affiliateAddress?.FirstName} {affiliateAddress?.LastName}" : "";
 
             return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
                 replyToEmailAddress: replyToEmail, replyToName: replyToName);
@@ -2637,7 +2637,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     /// The task result contains the queued email identifier
     /// </returns>
     public virtual async Task<IList<int>> SendContactUsMessageAsync(
-        int languageId, 
+        int languageId,
         string senderEmail,
         string senderName,
         string subject,
@@ -3053,7 +3053,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifiers
     /// </returns>
-    public virtual async Task<IList<int>> SendAbandonedCartFollowUpCustomerNotificationAsync(Customer customer, 
+    public virtual async Task<IList<int>> SendAbandonedCartFollowUpCustomerNotificationAsync(Customer customer,
         IList<ShoppingCartItem> cart, string messageTemplateName)
     {
         ArgumentNullException.ThrowIfNull(customer);
