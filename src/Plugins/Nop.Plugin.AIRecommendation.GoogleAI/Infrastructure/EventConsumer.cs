@@ -1,9 +1,9 @@
 ﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Events;
-using Nop.Plugin.AIPoweredRecommendation.GoogleAI.Services;
+using Nop.Plugin.AIRecommendation.GoogleAI.Services;
 using Nop.Services.Events;
 
-namespace Nop.Plugin.AIPoweredRecommendation.GoogleAI.Infrastructure;
+namespace Nop.Plugin.AIRecommendation.GoogleAI.Infrastructure;
 
 /// <summary>
 /// Represents plugin event consumer

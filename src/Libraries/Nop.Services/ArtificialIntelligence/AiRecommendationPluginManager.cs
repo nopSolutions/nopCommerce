@@ -6,9 +6,9 @@ using Nop.Services.Plugins;
 namespace Nop.Services.ArtificialIntelligence;
 
 /// <summary>
-/// Represents a search plugin manager implementation
+/// Represents an AI-powered recommendation plugin manager implementation
 /// </summary>
-public partial class AiPoweredRecommendationPluginManager : PluginManager<IAiPoweredRecommendationPlugin>, IAiPoweredRecommendationPluginManager
+public partial class AiRecommendationPluginManager : PluginManager<IAiRecommendationPlugin>, IAiRecommendationPluginManager
 {
     #region Fields
 
@@ -18,7 +18,7 @@ public partial class AiPoweredRecommendationPluginManager : PluginManager<IAiPow
 
     #region Ctor
 
-    public AiPoweredRecommendationPluginManager(ArtificialIntelligenceSettings artificialIntelligenceSettings, ICustomerService customerService, IPluginService pluginService)
+    public AiRecommendationPluginManager(ArtificialIntelligenceSettings artificialIntelligenceSettings, ICustomerService customerService, IPluginService pluginService)
         : base(customerService, pluginService)
     {
         _artificialIntelligenceSettings = artificialIntelligenceSettings;
@@ -29,20 +29,20 @@ public partial class AiPoweredRecommendationPluginManager : PluginManager<IAiPow
     #region Methods
 
     /// <summary>
-    /// Load primary active search provider
+    /// Load primary active AI-powered recommendation provider
     /// </summary>
     /// <param name="customer">Filter by customer; pass null to load all plugins</param>
     /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the search provider
+    /// The task result contains the recommendation provider
     /// </returns>
-    public virtual async Task<IAiPoweredRecommendationPlugin> LoadPrimaryPluginAsync(Customer customer = null, int storeId = 0)
+    public virtual async Task<IAiRecommendationPlugin> LoadPrimaryPluginAsync(Customer customer = null, int storeId = 0)
     {
-        if (string.IsNullOrEmpty(_artificialIntelligenceSettings.ActiveAiPoweredRecommendationProviderSystemName))
+        if (string.IsNullOrEmpty(_artificialIntelligenceSettings.ActiveAIRecommendationProviderSystemName))
             return null;
 
-        return await LoadPrimaryPluginAsync(_artificialIntelligenceSettings.ActiveAiPoweredRecommendationProviderSystemName, customer, storeId);
+        return await LoadPrimaryPluginAsync(_artificialIntelligenceSettings.ActiveAIRecommendationProviderSystemName, customer, storeId);
     }
 
     /// <summary>
@@ -50,9 +50,9 @@ public partial class AiPoweredRecommendationPluginManager : PluginManager<IAiPow
     /// </summary>
     /// <param name="recommendationProvider">Recommendation provider to check</param>
     /// <returns>Result</returns>
-    public virtual bool IsPluginActive(IAiPoweredRecommendationPlugin recommendationProvider)
+    public virtual bool IsPluginActive(IAiRecommendationPlugin recommendationProvider)
     {
-        return IsPluginActive(recommendationProvider, [_artificialIntelligenceSettings.ActiveAiPoweredRecommendationProviderSystemName]);
+        return IsPluginActive(recommendationProvider, [_artificialIntelligenceSettings.ActiveAIRecommendationProviderSystemName]);
     }
     
     /// <summary>

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Plugin.AIPoweredRecommendation.GoogleAI.Models;
-using Nop.Plugin.AIPoweredRecommendation.GoogleAI.Services;
+using Nop.Plugin.AIRecommendation.GoogleAI.Models;
+using Nop.Plugin.AIRecommendation.GoogleAI.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -9,7 +9,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 
-namespace Nop.Plugin.AIPoweredRecommendation.GoogleAI.Controllers;
+namespace Nop.Plugin.AIRecommendation.GoogleAI.Controllers;
 
 [AuthorizeAdmin]
 [Area(AreaNames.ADMIN)]
@@ -59,7 +59,7 @@ public class GoogleAiController : BasePluginController
             SearchAllowed = _googleAiSettings.SearchAllowed
         };
 
-        return View("~/Plugins/AIPoweredRecommendation.GoogleAI/Views/Configure.cshtml", model);
+        return View("~/Plugins/AIRecommendation.GoogleAI/Views/Configure.cshtml", model);
     }
 
     [HttpPost]
@@ -91,7 +91,7 @@ public class GoogleAiController : BasePluginController
         try
         {
             var (successCount, failureCount) = await _googleAiService.SyncProductsAsync();
-            _notificationService.SuccessNotification(string.Format(await _localizationService.GetResourceAsync("Plugin.AIPoweredRecommendation.GoogleAI.CatalogImportedSuccessfully"), successCount, failureCount));
+            _notificationService.SuccessNotification(string.Format(await _localizationService.GetResourceAsync("Plugin.AIRecommendation.GoogleAI.CatalogImportedSuccessfully"), successCount, failureCount));
         }
         catch (Exception ex)
         {

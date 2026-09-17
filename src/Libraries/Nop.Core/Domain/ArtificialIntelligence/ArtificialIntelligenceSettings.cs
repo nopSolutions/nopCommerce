@@ -85,5 +85,5 @@ public partial class ArtificialIntelligenceSettings : ISettings
     /// <summary>
     /// Gets or sets the system name of the active AI-powered recommendation provider
     /// </summary>
-    public string ActiveAiPoweredRecommendationProviderSystemName { get; set; }
+    public string ActiveAIRecommendationProviderSystemName { get; set; }
 }

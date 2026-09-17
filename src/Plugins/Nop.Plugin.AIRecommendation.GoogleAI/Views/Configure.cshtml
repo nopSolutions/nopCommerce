@@ -7,10 +7,10 @@
 <form asp-controller="GoogleAi" asp-action="Configure" method="post">
     <nop-cards id="google-ai">
         <nop-card asp-name="google-ai-config" asp-icon="fas fa-gears"
-                  asp-title="@T("Plugin.AIPoweredRecommendation.GoogleAI.Title")"
+                  asp-title="@T("Plugin.AIRecommendation.GoogleAI.Title")"
                   asp-hide-block-attribute-name="google-ai-general" asp-hide="false" asp-advanced="false">
             <div class="card-body">
-                @Html.Raw(T("Plugin.AIPoweredRecommendation.GoogleAI.Description"))
+                @Html.Raw(T("Plugin.AIRecommendation.GoogleAI.Description"))
                 <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="Enabled" />
@@ -70,7 +70,7 @@
                         <div class="form-group row">
                             <div class="col-md-9 offset-md-3">
                                 <button type="submit" name="sync-catalog" id="sync-catalog"
-                                        class="btn btn-primary">@T("Plugin.AIPoweredRecommendation.GoogleAI.SyncCatalog")</button>
+                                        class="btn btn-primary">@T("Plugin.AIRecommendation.GoogleAI.SyncCatalog")</button>
                             </div>
                         </div>
                     </nop-nested-setting>

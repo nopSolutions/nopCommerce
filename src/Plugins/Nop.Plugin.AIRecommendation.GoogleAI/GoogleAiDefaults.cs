@@ -1,4 +1,4 @@
-﻿namespace Nop.Plugin.AIPoweredRecommendation.GoogleAI;
+﻿namespace Nop.Plugin.AIRecommendation.GoogleAI;
 
 /// <summary>
 /// Represents plugin constants
@@ -8,12 +8,12 @@ public class GoogleAiDefaults
     /// <summary>
     /// Gets the system name of the plugin
     /// </summary>
-    public static string SystemName => "AIPoweredRecommendation.GoogleAI";
+    public static string SystemName => "AIRecommendation.GoogleAI";
 
     /// <summary>
     /// Gets the configuration route name
     /// </summary>
-    public static string ConfigurationRouteName => "Plugin.AIPoweredRecommendation.GoogleAI.Configure";
+    public static string ConfigurationRouteName => "Plugin.AIRecommendation.GoogleAI.Configure";
 
     /// <summary>
     /// Gets a name of the cookies "client_id"

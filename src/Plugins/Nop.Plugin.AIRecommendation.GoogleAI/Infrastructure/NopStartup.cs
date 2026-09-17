@@ -1,7 +1,10 @@
-﻿using Nop.Core.Infrastructure;
-using Nop.Plugin.AIPoweredRecommendation.GoogleAI.Services;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Nop.Core.Infrastructure;
+using Nop.Plugin.AIRecommendation.GoogleAI.Services;
 
-namespace Nop.Plugin.AIPoweredRecommendation.GoogleAI.Infrastructure;
+namespace Nop.Plugin.AIRecommendation.GoogleAI.Infrastructure;
 
 /// <summary>
 /// Represents object for the configuring services on application startup

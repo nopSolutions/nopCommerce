@@ -1,6 +1,6 @@
 ﻿using Nop.Core.Configuration;
 
-namespace Nop.Plugin.AIPoweredRecommendation.GoogleAI;
+namespace Nop.Plugin.AIRecommendation.GoogleAI;
 
 /// <summary>
 /// Represents plugin settings

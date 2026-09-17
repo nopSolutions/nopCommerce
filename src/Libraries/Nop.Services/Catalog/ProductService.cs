@@ -30,7 +30,7 @@ public partial class ProductService : IProductService
 
     protected readonly CatalogSettings _catalogSettings;
     protected readonly IAclService _aclService;
-    protected readonly IAiPoweredRecommendationPluginManager _aiPoweredRecommendationPluginManager;
+    protected readonly IAiRecommendationPluginManager _aiRecommendationPluginManager;
     protected readonly ICustomerService _customerService;
     protected readonly IDateRangeService _dateRangeService;
     protected readonly ILanguageService _languageService;
@@ -72,7 +72,7 @@ public partial class ProductService : IProductService
 
     public ProductService(CatalogSettings catalogSettings,
         IAclService aclService,
-        IAiPoweredRecommendationPluginManager aiPoweredRecommendationPluginManager,
+        IAiRecommendationPluginManager aiRecommendationPluginManager,
         ICustomerService customerService,
         IDateRangeService dateRangeService,
         ILanguageService languageService,
@@ -109,7 +109,7 @@ public partial class ProductService : IProductService
     {
         _catalogSettings = catalogSettings;
         _aclService = aclService;
-        _aiPoweredRecommendationPluginManager = aiPoweredRecommendationPluginManager;
+        _aiRecommendationPluginManager = aiRecommendationPluginManager;
         _customerService = customerService;
         _dateRangeService = dateRangeService;
         _languageService = languageService;
@@ -500,6 +500,45 @@ public partial class ProductService : IProductService
         return crossSellProducts;
     }
 
+    /// <summary>
+    /// Search by search provider if active
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="storeId">Store identifier</param>
+    /// <param name="keywords">Keywords</param>
+    /// <param name="searchLocalizedValue">A value indicating whether to search localized value</param>
+    /// <param name="runStandardSearch">A value indicating whether to run standard search</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains a tuple with provider results, products by keywords, and a value indicating whether to run standard search
+    /// </returns>
+    protected virtual async Task<(List<int> providerResults, IQueryable<int> productsByKeywords, bool runStandardSearch)> UseSearchProviderIfActiveAsync(Customer customer, int storeId, string keywords, bool searchLocalizedValue, bool runStandardSearch)
+    {
+        var productsByKeywords = new List<int>().AsQueryable();
+        var providerResults = new List<int>();
+
+        if (runStandardSearch)
+            return (providerResults, productsByKeywords, true);
+
+        //try to use search provider for searching products by keywords
+        var activeSearchProvider = await _searchPluginManager.LoadPrimaryPluginAsync(customer, storeId);
+
+        if (activeSearchProvider == null) 
+            return (providerResults, productsByKeywords, false);
+
+        try
+        {
+            providerResults = await activeSearchProvider.SearchProductsAsync(keywords, searchLocalizedValue);
+            productsByKeywords = providerResults.AsQueryable();
+        }
+        catch
+        {
+            runStandardSearch = _catalogSettings.UseStandardSearchWhenSearchProviderThrowsException;
+        }
+
+        return (providerResults, productsByKeywords, runStandardSearch);
+    }
+
     #endregion
 
     #region Methods
@@ -884,7 +923,7 @@ public partial class ProductService : IProductService
 
         var providerResults = new List<int>();
         //try to use AI-powered recommendation provider
-        var activeAiPoweredRecommendationProvider = await _aiPoweredRecommendationPluginManager.LoadPrimaryPluginAsync(customer, storeId);
+        var activeAiRecommendationProvider = await _aiRecommendationPluginManager.LoadPrimaryPluginAsync(customer, storeId);
 
         if (!string.IsNullOrEmpty(keywords))
         {
@@ -899,16 +938,16 @@ public partial class ProductService : IProductService
             //because in this case we should return all products (including hidden) and not only products that match the keywords
             var runStandardSearch = showHidden;
 
-            if (activeAiPoweredRecommendationProvider is not null && !runStandardSearch)
+            if (activeAiRecommendationProvider is not null && !runStandardSearch)
             {
                 try
                 {
-                    var aiPoweredRecommendationResults = await activeAiPoweredRecommendationProvider.SearchProductsAsync(keywords, categoryIds, manufacturerIds, productTagId, filteredSpecOptions);
+                    var aiRecommendationResults = await activeAiRecommendationProvider.SearchProductsAsync(keywords, categoryIds, manufacturerIds, productTagId, filteredSpecOptions);
 
-                    if (!aiPoweredRecommendationResults.Any())
+                    if (!aiRecommendationResults.Any())
                         throw new Exception("No products found by the specified keywords.");
 
-                    productsByKeywords = aiPoweredRecommendationResults.AsQueryable();
+                    productsByKeywords = aiRecommendationResults.AsQueryable();
 
                     productsQuery =
                         from p in productsQuery
@@ -921,13 +960,13 @@ public partial class ProductService : IProductService
                 catch
                 {
                     //if AI-powered recommendation provider fails, we should try to run search provider if active
-                    (productsByKeywords, runStandardSearch) = await useSearchProviderIfActive(searchLocalizedValue, runStandardSearch);
+                    (providerResults, productsByKeywords, runStandardSearch) = await UseSearchProviderIfActiveAsync(customer, storeId, keywords, searchLocalizedValue, runStandardSearch);
                 }
             }
             else if (!runStandardSearch)
             {
                 //if AI-powered recommendation provider is not active, we should try to run search provider if active
-                (productsByKeywords, runStandardSearch) = await useSearchProviderIfActive(searchLocalizedValue, runStandardSearch);
+                (providerResults, productsByKeywords, runStandardSearch) = await UseSearchProviderIfActiveAsync(customer, storeId, keywords, searchLocalizedValue, runStandardSearch);
             }
 
             //use standard search if AI-powered recommendation provider and search provider are not active or failed
@@ -1172,32 +1211,6 @@ public partial class ProductService : IProductService
         }
 
         return result;
-
-        async Task<(IQueryable<int> productsByKeywords, bool runStandardSearch)> useSearchProviderIfActive(bool searchLocalizedValue, bool runStandardSearch)
-        {
-            var productsByKeywords = new List<int>().AsQueryable();
-
-            if (runStandardSearch)
-                return (productsByKeywords, true);
-
-            //try to use search provider for searching products by keywords
-            var activeSearchProvider = await _searchPluginManager.LoadPrimaryPluginAsync(customer, storeId);
-
-            if (activeSearchProvider != null)
-            {
-                try
-                {
-                    providerResults = await activeSearchProvider.SearchProductsAsync(keywords, searchLocalizedValue);
-                    productsByKeywords = providerResults.AsQueryable();
-                }
-                catch
-                {
-                    runStandardSearch = _catalogSettings.UseStandardSearchWhenSearchProviderThrowsException;
-                }
-            }
-
-            return (productsByKeywords, runStandardSearch);
-        }
     }
 
     /// <summary>

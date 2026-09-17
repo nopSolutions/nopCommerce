@@ -6,7 +6,7 @@ namespace Nop.Services.ArtificialIntelligence;
 /// <summary>
 /// Provides an interface for creating AI-powered recommendation provider
 /// </summary>
-public partial interface IAiPoweredRecommendationPlugin : IPlugin
+public partial interface IAiRecommendationPlugin : IPlugin
 {
     /// <summary>
     /// Get products identifiers by the specified keywords

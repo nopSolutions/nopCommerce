@@ -42,7 +42,7 @@ public partial class PluginController : BaseAdminController
     protected readonly ArtificialIntelligenceSettings _artificialIntelligenceSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
-    protected readonly IAiPoweredRecommendationPluginManager _aiPoweredRecommendationPluginManager;
+    protected readonly IAiRecommendationPluginManager _aiRecommendationPluginManager;
     protected readonly IAuthenticationPluginManager _authenticationPluginManager;
     protected readonly ICommonModelFactory _commonModelFactory;
     protected readonly ICustomerActivityService _customerActivityService;
@@ -77,7 +77,7 @@ public partial class PluginController : BaseAdminController
     public PluginController(ArtificialIntelligenceSettings artificialIntelligenceSettings,
         CatalogSettings catalogSettings,
         ExternalAuthenticationSettings externalAuthenticationSettings,
-        IAiPoweredRecommendationPluginManager aiPoweredRecommendationPluginManager,
+        IAiRecommendationPluginManager aiRecommendationPluginManager,
         IAuthenticationPluginManager authenticationPluginManager,
         ICommonModelFactory commonModelFactory,
         ICustomerActivityService customerActivityService,
@@ -108,7 +108,7 @@ public partial class PluginController : BaseAdminController
         _artificialIntelligenceSettings = artificialIntelligenceSettings;
         _catalogSettings = catalogSettings;
         _externalAuthenticationSettings = externalAuthenticationSettings;
-        _aiPoweredRecommendationPluginManager = aiPoweredRecommendationPluginManager;
+        _aiRecommendationPluginManager = aiRecommendationPluginManager;
         _authenticationPluginManager = authenticationPluginManager;
         _commonModelFactory = commonModelFactory;
         _customerActivityService = customerActivityService;
@@ -523,13 +523,13 @@ public partial class PluginController : BaseAdminController
                         pluginIsActive = _widgetPluginManager.IsPluginActive(pluginInstance as IWidgetPlugin);
                         await ChangeSettingAsync(model, pluginDescriptor, pluginIsActive, _widgetSettings, _widgetSettings.ActiveWidgetSystemNames);
                         break;
-                    case nameof(IAiPoweredRecommendationPlugin):
-                        pluginIsActive = _aiPoweredRecommendationPluginManager.IsPluginActive(pluginInstance as IAiPoweredRecommendationPlugin);
-                        _artificialIntelligenceSettings.ActiveAiPoweredRecommendationProviderSystemName = pluginIsActive switch
+                    case nameof(IAiRecommendationPlugin):
+                        pluginIsActive = _aiRecommendationPluginManager.IsPluginActive(pluginInstance as IAiRecommendationPlugin);
+                        _artificialIntelligenceSettings.ActiveAIRecommendationProviderSystemName = pluginIsActive switch
                         {
                             true when !model.IsEnabled => string.Empty,
                             false when model.IsEnabled => model.SystemName,
-                            _ => _artificialIntelligenceSettings.ActiveAiPoweredRecommendationProviderSystemName
+                            _ => _artificialIntelligenceSettings.ActiveAIRecommendationProviderSystemName
                         };
                         await _settingService.SaveSettingAsync(_artificialIntelligenceSettings);
                         break;

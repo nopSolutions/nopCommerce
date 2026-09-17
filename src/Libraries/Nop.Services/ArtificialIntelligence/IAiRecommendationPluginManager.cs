@@ -6,7 +6,7 @@ namespace Nop.Services.ArtificialIntelligence;
 /// <summary>
 /// Provides an interface for AI-powered recommendation plugin manager
 /// </summary>
-public partial interface IAiPoweredRecommendationPluginManager : IPluginManager<IAiPoweredRecommendationPlugin>
+public partial interface IAiRecommendationPluginManager : IPluginManager<IAiRecommendationPlugin>
 {
     /// <summary>
     /// Load primary active AI-powered recommendation provider
@@ -17,14 +17,14 @@ public partial interface IAiPoweredRecommendationPluginManager : IPluginManager<
     /// A task that represents the asynchronous operation
     /// The task result contains the recommendation provider
     /// </returns>
-    Task<IAiPoweredRecommendationPlugin> LoadPrimaryPluginAsync(Customer customer = null, int storeId = 0);
+    Task<IAiRecommendationPlugin> LoadPrimaryPluginAsync(Customer customer = null, int storeId = 0);
 
     /// <summary>
     /// Check whether the passed recommendation provider is active
     /// </summary>
     /// <param name="recommendationProvider">Recommendation provider to check</param>
     /// <returns>Result</returns>
-    bool IsPluginActive(IAiPoweredRecommendationPlugin recommendationProvider);
+    bool IsPluginActive(IAiRecommendationPlugin recommendationProvider);
 
     /// <summary>
     /// Check whether the AI-powered recommendation provider with the passed system name is active

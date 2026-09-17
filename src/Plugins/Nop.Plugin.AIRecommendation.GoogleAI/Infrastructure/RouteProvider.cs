@@ -1,7 +1,9 @@
-﻿using Nop.Web.Framework;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc.Routing;
 
-namespace Nop.Plugin.AIPoweredRecommendation.GoogleAI.Infrastructure;
+namespace Nop.Plugin.AIRecommendation.GoogleAI.Infrastructure;
 
 /// <summary>
 /// Represents plugin route provider

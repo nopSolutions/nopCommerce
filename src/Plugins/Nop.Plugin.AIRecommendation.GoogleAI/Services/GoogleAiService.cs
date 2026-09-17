@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Google.Cloud.Retail.V2;
+using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
@@ -12,7 +13,7 @@ using Nop.Web.Framework.Mvc.Routing;
 using ILogger = Nop.Services.Logging.ILogger;
 using Product = Nop.Core.Domain.Catalog.Product;
 
-namespace Nop.Plugin.AIPoweredRecommendation.GoogleAI.Services;
+namespace Nop.Plugin.AIRecommendation.GoogleAI.Services;
 
 /// <summary>
 /// Represents the Google AI service
@@ -174,13 +175,9 @@ public class GoogleAiService
     /// </returns>
     private async Task<Image> GetProductImageAsync(Core.Domain.Media.Picture picture)
     {
-        var (url, _) = await _pictureService.GetPictureUrlAsync(picture);
-
         var storeLocation = _webHelper.GetStoreLocation();
-
-        if (!url.StartsWith(storeLocation))
-            url = storeLocation + url;
-
+        var (url, _) = await _pictureService.GetPictureUrlAsync(picture, storeLocation: storeLocation);
+        
         return new Image { Uri = url };
     }
 
