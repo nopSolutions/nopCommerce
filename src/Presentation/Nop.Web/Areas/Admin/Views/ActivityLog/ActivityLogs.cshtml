@@ -18,7 +18,7 @@
     </h1>
     <div class="float-right">
         <form asp-controller="ActivityLog" asp-action="ClearAll" method="post">
-            <button type="submit" id="clearall" name="clearall" class="btn bg-red">
+            <button type="submit" id="clearall" name="clearall" class="btn btn-danger">
                 <i class="far fa-trash-can"></i>
                 @T("Admin.Customers.ActivityLog.Clear")
             </button>
@@ -28,11 +28,11 @@
 
 </div>
 
-<section class="content">
+<div class="app-content">
     <div class="container-fluid">
     <div class="form-horizontal">
         <div class="cards-group">
-            <div class="card card-default card-search">
+            <div class="card card-search">
                 <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                         <div class="search-text">@T("Admin.Common.Search")</div>
@@ -151,5 +151,5 @@
         </div>
     </div>
 </div>
-</section>
+</div>
 <nop-action-confirmation asp-button-id="clearall" />

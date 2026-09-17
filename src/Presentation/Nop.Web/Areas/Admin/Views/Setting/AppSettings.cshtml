@@ -37,7 +37,7 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AppSettingsButtons, additionalData = Model })
         </div>
     </div>
-    <div class="content">
+    <div class="app-content">
         <div class="form-horizontal">
             @await Component.InvokeAsync(typeof(SettingModeViewComponent))
             <div asp-validation-summary="All"></div>

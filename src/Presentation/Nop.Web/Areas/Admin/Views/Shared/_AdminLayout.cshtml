@@ -192,13 +192,13 @@
             </aside>
         }
         
-        <main class="app-main @(adminAreaSettings.UseStickyHeaderLayout ? "sticky-header-layout" : "")">
+        <main class="app-main @(adminAreaSettings.UseStickyHeaderLayout ? "sticky-header-layout" : "")" data-bs-theme="light">
             @await Html.PartialAsync("Notifications")
             <nop-antiforgery-token />
             @RenderBody()
         </main>
         
-        <footer class="app-footer">
+        <footer class="app-footer" data-bs-theme="light">
             <div class="container-fluid">
                 <div class="row">
                     @if (!storeInformationSettings.HidePoweredByNopCommerce)

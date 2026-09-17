@@ -53,7 +53,7 @@
         </div>
     </div>
 
-    <section class="content">
+    <section class="app-content">
     <div class="container-fluid">
         <div class="form-horizontal">
             <script>
@@ -274,9 +274,9 @@
 
                             function renderColumnInstalled(data, type, row, meta) {
                                 if (row.Installed) {
-                                    return '<button type="submit" name="uninstall-plugin-link-' + row.SystemName + '" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall").Text</button>';
+                                    return '<button type="submit" name="uninstall-plugin-link-' + row.SystemName + '" class="btn btn-danger uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall").Text</button>';
                                 } else {
-                                    return '<button type="submit" name="install-plugin-link-' + row.SystemName + '" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install").Text</button> <button type="button" name="delete-plugin-link-' + row.SystemName + '" class="btn bg-red delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete").Text</button>';
+                                    return '<button type="submit" name="install-plugin-link-' + row.SystemName + '" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install").Text</button> <button type="button" name="delete-plugin-link-' + row.SystemName + '" class="btn btn-danger delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete").Text</button>';
                                 }
                             }
                         </script>
