@@ -1,11 +1,14 @@
 ﻿using System.Globalization;
 using System.Text;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Http;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -14,6 +17,7 @@ using Nop.Services.Orders;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Components;
 using Nop.Web.Framework.Infrastructure;
+using Nop.Web.Framework.UI;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Components;
@@ -29,6 +33,7 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
     protected readonly ICustomerService _customerService;
     protected readonly ILogger _logger;
     protected readonly IManufacturerService _manufacturerService;
+    protected readonly INopHtmlHelper _nopHtmlHelper;
     protected readonly IOrderTotalCalculationService _orderTotalCalculationService;
     protected readonly IPriceCalculationService _priceCalculationService;
     protected readonly IProductService _productService;
@@ -49,6 +54,7 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
         ICustomerService customerService,
         ILogger logger,
         IManufacturerService manufacturerService,
+        INopHtmlHelper nopHtmlHelper,
         IOrderTotalCalculationService orderTotalCalculationService,
         IPriceCalculationService priceCalculationService,
         IProductService productService,
@@ -64,6 +70,7 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
         _customerService = customerService;
         _logger = logger;
         _manufacturerService = manufacturerService;
+        _nopHtmlHelper = nopHtmlHelper;
         _orderTotalCalculationService = orderTotalCalculationService;
         _priceCalculationService = priceCalculationService;
         _productService = productService;
@@ -116,6 +123,8 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
                 customerIdCode = $"gtag('set', {{'user_id': '{customer.Id}'}});{Environment.NewLine}";
             analyticsTrackingScript = analyticsTrackingScript.Replace("{CUSTOMER_TRACKING}", customerIdCode);
             analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE_TRACKING}", "");
+
+            return analyticsTrackingScript;
         }
         catch (Exception ex)
         {
@@ -263,7 +272,7 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
     /// </returns>
     private async Task<string> GetEventAsync(string widgetZone, object additionalData)
     {
-        if (!_googleAnalyticsSettings.EnableEcommerce || !_googleAnalyticsSettings.EnableEcommerce)
+        if (!_googleAnalyticsSettings.EnableEcommerce)
             return string.Empty;
 
         var script = string.Empty;
@@ -287,10 +296,11 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
             if (widgetZone.Equals(PublicWidgetZones.Footer) || widgetZone.Equals(PublicWidgetZones.ProductBoxAddinfoAfter))
                 script = await GetViewItemListEventScriptAsync(widgetZone, additionalData, controller, action);
 
-            //view_cart
-            if ((controller.Equals("ShoppingCart", StringComparison.InvariantCultureIgnoreCase) && action.Equals("Cart", StringComparison.InvariantCultureIgnoreCase))
-                || (controller.Equals("PrivateStore", StringComparison.InvariantCultureIgnoreCase) && action.Equals("Cart", StringComparison.InvariantCultureIgnoreCase))
-                || (controller.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) && action.Equals("CheckoutAsGuest", StringComparison.InvariantCultureIgnoreCase)))
+            var routeName = _nopHtmlHelper.GetRouteName();
+
+            if (routeName.Equals(NopRouteNames.General.CART, StringComparison.InvariantCultureIgnoreCase) ||
+                routeName.Equals(NopRouteNames.Standard.LOGIN_CHECKOUT_AS_GUEST,
+                    StringComparison.InvariantCultureIgnoreCase))
             {
                 script = await GetViewCartEventScriptAsync();
             }
@@ -313,15 +323,20 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
     {
         var (shoppingCartTotalBase, _, _, _, _, _) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart);
 
-        if (!shoppingCartTotalBase.HasValue)
-            shoppingCartTotalBase = (await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart, true)).subTotalWithDiscount;
+        shoppingCartTotalBase ??= (await _orderTotalCalculationService.GetShoppingCartSubTotalAsync(cart, true))
+            .subTotalWithDiscount;
 
         var shoppingCartTotal = await _priceCalculationService.RoundPriceAsync(shoppingCartTotalBase.Value, await GetPrimaryCurrencyAsync());
         var currency = await GetPrimaryCurrencyAsync();
         stringBuilder.AppendLine("'ecommerce': {");
         stringBuilder.AppendLine($"'currency': '{currency.CurrencyCode}',");
+        
         if (shoppingCartTotal > 0)
-            stringBuilder.AppendLine(string.Format("'value': {0},", shoppingCartTotal.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)));
+        {
+            stringBuilder.AppendLine(
+                $"'value': {shoppingCartTotal.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)},");
+        }
+
         stringBuilder.AppendLine("'items': [");
 
         var needComma = false;
@@ -331,7 +346,7 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
             if (needComma)
                 stringBuilder.AppendLine(",");
 
-            needComma = WriteProductDetails(stringBuilder, await ConvertToGoogleProductAsync(cartItem.ProductId, cartItem.AttributesXml));
+            needComma = WriteProductDetails(stringBuilder, await ConvertToGoogleProductAsync(cartItem));
         }
 
         stringBuilder.AppendLine("]");
@@ -346,16 +361,16 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
     /// <param name="controller">The controller name</param>
     /// <param name="action">The action name</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    private async Task AddProductDetailsDataAsync(StringBuilder stringBuilder, IList<ProductOverviewModel> models, string controlle, string action)
+    private async Task AddProductDetailsDataAsync(StringBuilder stringBuilder, IList<ProductOverviewModel> models, string controller, string action)
     {
         var list = action;
 
-        if (controlle.Equals("Catalog", StringComparison.InvariantCultureIgnoreCase))
+        if (controller.Equals("Catalog", StringComparison.InvariantCultureIgnoreCase))
         {
             if (action.Contains("ProductsByTag", StringComparison.InvariantCultureIgnoreCase))
                 list = "Products Tag";
         }
-        else if (controlle.Equals("Product", StringComparison.InvariantCultureIgnoreCase))
+        else if (controller.Equals("Product", StringComparison.InvariantCultureIgnoreCase))
         {
             if (action.Contains("ProductDetails", StringComparison.InvariantCultureIgnoreCase))
                 list = "Product Details";
@@ -365,7 +380,7 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
         }
         else
         {
-            list = controlle;
+            list = controller;
         }
 
         list += " page";
@@ -402,7 +417,7 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
     /// Convert a product details to Google Analytics format
     /// </summary>
     /// <param name="model">Product details model</param>
-    /// <returns>Produc details in Google Analytics format</returns>
+    /// <returns>Product details in Google Analytics format</returns>
     private GoogleProduct ConvertToGoogleProduct(ProductDetailsModel model)
     {
         var sku = model.Sku;
@@ -429,8 +444,8 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
     /// <param name="list">List name</param>
     /// <returns>
     /// A task that represents the asynchronous operation
-    /// The task result contains the produc details in Google Analytics format
-    /// </return>
+    /// The task result contains the product details in Google Analytics format
+    /// </returns>
     protected virtual async Task<GoogleProduct> ConvertToGoogleProductAsync(int productId, string attributesXml = null, string list = "")
     {
         try
@@ -460,12 +475,60 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
             var id = productManufacturers.OrderBy(p => p.DisplayOrder).Select(pc => pc.ManufacturerId).FirstOrDefault();
             var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(id);
 
-            return new GoogleProduct()
+            return new GoogleProduct
             {
                 Id = sku,
                 Name = product.Name,
                 List = list,
                 Price = price ?? 0,
+                ProductId = productId,
+                Brand = manufacturer?.Name ?? string.Empty,
+                Category = await _categoryService.GetCategoryNameForProductAsync(productId)
+            };
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Convert a product details to Google Analytics format
+    /// </summary>
+    /// <param name="shoppingCartItem">Shopping cart item</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the product details in Google Analytics format
+    /// </returns>
+    protected virtual async Task<GoogleProduct> ConvertToGoogleProductAsync(ShoppingCartItem shoppingCartItem)
+    {
+        try
+        {
+            var productId = shoppingCartItem.ProductId;
+            var product = await _productService.GetProductByIdAsync(productId);
+
+            if (product == null)
+                return null;
+
+            var sku = await _productService.FormatSkuAsync(product, shoppingCartItem.AttributesXml);
+
+            if (string.IsNullOrEmpty(sku))
+                sku = product.Id.ToString();
+            
+            var sciUnitPrice = await _shoppingCartService.GetUnitPriceAsync(shoppingCartItem, true);
+            
+            var price = sciUnitPrice.unitPrice;
+
+            var productManufacturers = await _manufacturerService.GetProductManufacturersByProductIdAsync(productId);
+            var id = productManufacturers.OrderBy(p => p.DisplayOrder).Select(pc => pc.ManufacturerId).FirstOrDefault();
+            var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(id);
+
+            return new GoogleProduct
+            {
+                Id = sku,
+                Name = product.Name,
+                List = string.Empty,
+                Price = price,
                 ProductId = productId,
                 Brand = manufacturer?.Name ?? string.Empty,
                 Category = await _categoryService.GetCategoryNameForProductAsync(productId)
@@ -527,12 +590,13 @@ public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
         if (widgetZone.Equals(PublicWidgetZones.HeadHtmlTag))
         {
             var script = await GetScriptAsync();
-            return await ViewAsync("~/Plugins/Widgets.GoogleAnalytics/Views/PublicInfo.cshtml", script);
+
+            return new HtmlContentViewComponentResult(new HtmlString(script));
         }
 
-        var model = await GetEventAsync(widgetZone, additionalData);
+        var eventScript = await GetEventAsync(widgetZone, additionalData);
 
-        return await ViewAsync("~/Plugins/Widgets.GoogleAnalytics/Views/PublicInfo.cshtml", model);
+        return new HtmlContentViewComponentResult(new HtmlString(eventScript));
     }
 
     #endregion

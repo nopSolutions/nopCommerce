@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
@@ -12,6 +13,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Logging;
@@ -34,6 +36,7 @@ public class EventConsumer :
     protected readonly GoogleAnalyticsHttpClient _googleAnalyticsHttpClient;
     protected readonly ICategoryService _categoryService;
     protected readonly ICurrencyService _currencyService;
+    protected readonly ICustomerService _customerService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly ILogger _logger;
@@ -56,6 +59,7 @@ public class EventConsumer :
         GoogleAnalyticsHttpClient googleAnalyticsHttpClient,
         ICategoryService categoryService,
         ICurrencyService currencyService,
+        ICustomerService customerService,
         IGenericAttributeService genericAttributeService,
         IHttpContextAccessor httpContextAccessor,
         ILogger logger,
@@ -73,6 +77,7 @@ public class EventConsumer :
         _googleAnalyticsHttpClient = googleAnalyticsHttpClient;
         _categoryService = categoryService;
         _currencyService = currencyService;
+        _customerService = customerService;
         _genericAttributeService = genericAttributeService;
         _httpContextAccessor = httpContextAccessor;
         _logger = logger;
@@ -202,7 +207,7 @@ public class EventConsumer :
         }
         catch (Exception ex)
         {
-            await _logger.InsertLogAsync(LogLevel.Error, "Google Analytics. Error canceling transaction from server side", ex.ToString());
+            await _logger.InsertLogAsync(LogLevel.Error, "Google Analytics. Error processing order from server side", ex.ToString());
         }
     }
 
@@ -210,16 +215,31 @@ public class EventConsumer :
     /// Process shopping cart event
     /// </summary>
     /// <param name="shoppingCartItem">Shopping cart item</param>
+    /// <param name="store">Store</param>
     /// <param name="googleAnalyticsSettings">Google Analytics settings</param>
     /// <param name="add">The flag indicating whether the item is added or removed</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected async Task ProcessShoppingCartEventAsync(ShoppingCartItem shoppingCartItem, GoogleAnalyticsSettings googleAnalyticsSettings, bool add)
+    protected async Task ProcessShoppingCartEventAsync(ShoppingCartItem shoppingCartItem, Store store, GoogleAnalyticsSettings googleAnalyticsSettings, bool add)
     {
         try
         {
-            var store = await _storeService.GetStoreByIdAsync(shoppingCartItem.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
             var currency = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
-            var unitPrice = await getUnitPriceAsync(shoppingCartItem, googleAnalyticsSettings);
+
+            var unitPrice = decimal.Zero;//ICustomerService.GetShoppingCartCustomerAsync()
+
+            if (product is { CallForPrice: false })
+            {
+                var customer =
+                    await _customerService.GetShoppingCartCustomerAsync(
+                        new List<ShoppingCartItem> { shoppingCartItem });
+
+                var sciUnitPrice = await _shoppingCartService.GetUnitPriceAsync(shoppingCartItem, true);
+                var productPrice = await _taxService.GetProductPriceAsync(product, price: sciUnitPrice.unitPrice,
+                    includingTax: googleAnalyticsSettings.IncludingTax, customer: customer);
+
+                unitPrice = productPrice.price;
+            }
 
             var httpContext = _httpContextAccessor.HttpContext;
             httpContext.Request.Cookies.TryGetValue(GoogleAnalyticsDefaults.ClientIdCookiesName, out var clientId);
@@ -250,7 +270,6 @@ public class EventConsumer :
             httpContext.Request.Cookies.TryGetValue(sessionCookieKey, out var sessionId);
 
             var items = new List<Item>();
-            var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
             var sku = await _productService.FormatSkuAsync(product, shoppingCartItem.AttributesXml);
 
             if (string.IsNullOrEmpty(sku))
@@ -268,13 +287,16 @@ public class EventConsumer :
 
             items.Add(gaItem);
 
+            var subTotal = await _shoppingCartService.GetSubTotalAsync(shoppingCartItem, true);
+
             var gaParams = new Parameters
             {
                 Currency = currency,
                 TransactionId = shoppingCartItem.Id.ToString(),
                 EngagementTime = 100,
                 SessionId = sessionId,
-                Value = Math.Round(unitPrice * shoppingCartItem.Quantity, 2),
+                Value = Math.Round(subTotal.subTotal, 2),
+                
                 Items = items
             };
 
@@ -285,26 +307,7 @@ public class EventConsumer :
         }
         catch (Exception ex)
         {
-            await _logger.InsertLogAsync(LogLevel.Error, "Google Analytics. Error canceling transaction from server side", ex.ToString());
-        }
-
-        return;
-
-        async Task<decimal> getUnitPriceAsync(ShoppingCartItem sci, GoogleAnalyticsSettings googleAnalyticsSettings)
-        {
-            var unitPrice = decimal.Zero;
-            var product = await _productService.GetProductByIdAsync(sci.ProductId);
-
-            if (product == null)
-                return unitPrice;
-
-            if (!product.CallForPrice)
-            {
-                unitPrice = (await _taxService.GetProductPriceAsync(product, (await _shoppingCartService.GetUnitPriceAsync(sci, googleAnalyticsSettings.IncludingTax)).unitPrice,
-                    googleAnalyticsSettings.IncludingTax, await _workContext.GetCurrentCustomerAsync())).price;
-            }
-
-            return unitPrice;
+            await _logger.InsertLogAsync(LogLevel.Error, "Google Analytics. Error processing shopping cart from server side", ex.ToString());
         }
     }
 
@@ -406,8 +409,8 @@ public class EventConsumer :
         var store = await _storeService.GetStoreByIdAsync(shoppingCartItem.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
         var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(store.Id);
 
-        if (eventMessage?.Entity != null)
-            await ProcessShoppingCartEventAsync(shoppingCartItem, googleAnalyticsSettings, false);
+        if (eventMessage.Entity != null)
+            await ProcessShoppingCartEventAsync(shoppingCartItem, store, googleAnalyticsSettings, false);
     }
 
     /// <summary>
@@ -427,8 +430,8 @@ public class EventConsumer :
         var store = await _storeService.GetStoreByIdAsync(shoppingCartItem.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
         var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(store.Id);
 
-        if (eventMessage?.Entity != null)
-            await ProcessShoppingCartEventAsync(shoppingCartItem, googleAnalyticsSettings, true);
+        if (eventMessage.Entity != null)
+            await ProcessShoppingCartEventAsync(shoppingCartItem, store, googleAnalyticsSettings, true);
     }
 
     #endregion
