@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Api.Models;
 
@@ -16,5 +17,5 @@ public class Event
     /// Optional. The parameters for the event
     /// </summary>
     [JsonProperty("params")]
-    public Parameters Params { get; set; }
+    public JObject Params { get; set; }
 }
