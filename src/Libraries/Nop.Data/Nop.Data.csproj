@@ -17,7 +17,7 @@
     <PackageReference Include="FluentMigrator.Runner.Postgres" Version="8.0.1" />
     <PackageReference Include="FluentMigrator.Runner.SqlServer" Version="8.0.1" />
     <PackageReference Include="linq2db" Version="6.5.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.3" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.0" />
     <PackageReference Include="Npgsql" Version="10.0.3" />
     <PackageReference Include="MySqlConnector" Version="2.6.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.12" />
