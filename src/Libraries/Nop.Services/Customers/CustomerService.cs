@@ -852,6 +852,10 @@ public partial class CustomerService : ICustomerService
                 break;
         }
 
+        result = string.IsNullOrEmpty(result)
+            ? await EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync("Customer.Guest")
+            : result;
+
         if (stripTooLong && maxLength > 0)
             result = CommonHelper.EnsureMaximumLength(result, maxLength);
 
