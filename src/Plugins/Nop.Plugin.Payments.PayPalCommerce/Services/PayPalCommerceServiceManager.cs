@@ -664,6 +664,13 @@ public class PayPalCommerceServiceManager
         }
 
         var (shippingOptions, pickupPoints) = await PrepareShippingOptionsAsync(details);
+
+        //the customer has no shipping address yet (e.g. a guest using the buttons on the cart/product page),
+        //so there is nothing to estimate rates from; create the order without a shipping block and let PayPal
+        //collect the address (GET_FROM_FILE), the options are then computed and patched in UpdateOrderShippingAsync
+        if ((!shippingOptions?.Any() ?? true) && details.ShippingAddress is null)
+            return null;
+
         if (!shippingOptions?.Any() ?? true)
             throw new NopException("No available shipping options");
 
@@ -907,8 +914,11 @@ public class PayPalCommerceServiceManager
     /// Prepare patches to update an order
     /// </summary>
     /// <param name="purchaseUnit">Purchase unit details</param>
+    /// <param name="orderHasShipping">Whether the remote order already contains a shipping block; when it doesn't
+    /// (e.g. it was created for a customer without a shipping address), nested shipping members cannot be patched
+    /// and the whole object is added instead</param>
     /// <returns>List of patch objects</returns>
-    private static List<Patch<object>> PreparePatches(PurchaseUnit purchaseUnit)
+    private static List<Patch<object>> PreparePatches(PurchaseUnit purchaseUnit, bool orderHasShipping = true)
     {
         var patches = new List<Patch<object>>
         {
@@ -931,6 +941,21 @@ public class PayPalCommerceServiceManager
                 Value = purchaseUnit.SupplementaryData.Card
             }
         };
+
+        //an order created without a shipping block has no "shipping" parent to patch members of
+        //(RFC 6902 requires the parent to exist), so the whole object is added at once
+        //("add" replaces the value when the member already exists)
+        if (purchaseUnit.Shipping is not null && !orderHasShipping)
+        {
+            patches.Add(new()
+            {
+                Op = PatchOpType.ADD.ToString().ToLower(),
+                Path = "/purchase_units/@reference_id=='default'/shipping",
+                Value = purchaseUnit.Shipping
+            });
+
+            return patches;
+        }
 
         if (purchaseUnit.Shipping?.Name is not null)
         {
@@ -1763,7 +1788,7 @@ public class PayPalCommerceServiceManager
             else
             {
                 //order exists, so just update some details
-                var patches = PreparePatches(purchaseUnit);
+                var patches = PreparePatches(purchaseUnit, order.PurchaseUnits?.FirstOrDefault()?.Shipping is not null);
                 patches.Add(new()
                 {
                     Op = PatchOpType.REPLACE.ToString().ToLower(),
@@ -1897,7 +1922,7 @@ public class PayPalCommerceServiceManager
                 Items = items,
                 Amount = orderAmount,
                 SupplementaryData = new() { Card = cardData }
-            });
+            }, unit.Shipping is not null);
             var updateRequest = new UpdateOrderRequest<object>(patches) { OrderId = order.Id };
             await _httpClient.RequestAsync<UpdateOrderRequest<object>, EmptyResponse>(updateRequest, settings);
 
