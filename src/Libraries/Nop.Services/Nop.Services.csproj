@@ -20,7 +20,7 @@
     <PackageReference Include="MailKit" Version="4.17.0" />
     <PackageReference Include="Markdig" Version="0.42.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="5.3.0" />
-    <PackageReference Include="PdfRpt.Core" Version="1.5.15" />
+    <PackageReference Include="PdfRpt.Core" Version="1.5.18" />
     <PackageReference Include="System.ServiceModel.Http" Version="10.0.652802" />
     <PackageReference Include="SkiaSharp" Version="4.152.1" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.152.1" />
