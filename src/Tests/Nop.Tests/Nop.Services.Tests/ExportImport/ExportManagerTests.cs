@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -17,7 +18,6 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport;
 using Nop.Services.ExportImport.Help;
-using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Tax;
@@ -39,15 +39,12 @@ public class ExportManagerTests : ServiceTest
     private ICustomerService _customerService;
     private IDateRangeService _dateRangeService;
     private IExportManager _exportManager;
-    private ILanguageService _languageService;
     private IManufacturerService _manufacturerService;
     private IMeasureService _measureService;
-    private IOrderService _orderService;
     private IProductTemplateService _productTemplateService;
     private IRepository<Product> _productRepository;
     private ITaxCategoryService _taxCategoryService;
     private IVendorService _vendorService;
-    private ProductEditorSettings _productEditorSettings;
 
     #endregion
 
@@ -64,10 +61,8 @@ public class ExportManagerTests : ServiceTest
         _customerService = GetService<ICustomerService>();
         _dateRangeService = GetService<IDateRangeService>();
         _exportManager = GetService<IExportManager>();
-        _languageService = GetService<ILanguageService>();
         _manufacturerService = GetService<IManufacturerService>();
         _measureService = GetService<IMeasureService>();
-        _orderService = GetService<IOrderService>();
         _productTemplateService = GetService<IProductTemplateService>();
         _productRepository = GetService<IRepository<Product>>();
         _taxCategoryService = GetService<ITaxCategoryService>();
@@ -82,8 +77,6 @@ public class ExportManagerTests : ServiceTest
         await GetService<IGenericAttributeService>()
             .SaveAttributeAsync(await _customerService.GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail), "product-advanced-mode",
                 true);
-
-        _productEditorSettings = GetService<ProductEditorSettings>();
     }
 
     [OneTimeTearDown]
@@ -104,11 +97,8 @@ public class ExportManagerTests : ServiceTest
 
     #region Utilities
 
-    protected static void PropertiesShouldEqual<T, Tp>(T actual, PropertyManager<Tp> manager, IDictionary<string, string> replacePairs, params string[] filter)
+    protected static T PropertiesShouldEqual<T, Tp>(T actual, PropertyManager<Tp> manager, IDictionary<string, string> replacePairs, params string[] filter)
     {
-        if (actual == null)
-            return;
-
         var objectProperties = typeof(T).GetProperties();
         foreach (var property in manager.GetDefaultProperties)
         {
@@ -121,7 +111,7 @@ public class ExportManagerTests : ServiceTest
             if (objectProperty == null)
                 continue;
 
-            var objectPropertyValue = objectProperty.GetValue(actual);
+            var objectPropertyValue = actual == null ? null : objectProperty.GetValue(actual);
             var propertyValue = property.PropertyValue;
 
             if (propertyValue is XLCellValue { IsBlank: true })
@@ -164,21 +154,21 @@ public class ExportManagerTests : ServiceTest
 
             propertyValue.Should().Be(objectPropertyValue, $"The property \"{typeof(T).Name}.{property.PropertyName}\" of these objects is not equal");
         }
+
+        return actual;
     }
 
-    protected async Task<PropertyManager<T>> GetPropertyManagerAsync<T>(XLWorkbook workbook)
+    private static PropertyManager<T> GetPropertyManager<T>(XLWorkbook workbook, CatalogSettings catalogSettings)
     {
-        var languages = await _languageService.GetAllLanguagesAsync();
-
         //the columns
-        var metadata = ImportManager.GetWorkbookMetadata<T>(workbook, languages);
+        var metadata = ImportManager.GetWorkbookMetadata<T>(workbook, new List<Language>());
         var defaultProperties = metadata.DefaultProperties;
         var localizedProperties = metadata.LocalizedProperties;
 
-        return new PropertyManager<T>(defaultProperties, _catalogSettings, localizedProperties);
+        return new PropertyManager<T>(defaultProperties, catalogSettings, localizedProperties);
     }
 
-    protected XLWorkbook GetWorkbook(byte[] excelData)
+    private static XLWorkbook GetWorkbook(byte[] excelData)
     {
         var stream = new MemoryStream(excelData);
         return new XLWorkbook(stream);
@@ -200,24 +190,17 @@ public class ExportManagerTests : ServiceTest
         return obj;
     }
 
-    #endregion
-
-    #region Test export to excel
-
-    [Test]
-    public async Task CanExportOrdersXlsx()
+    private static IEnumerable<TestCaseData> GetExportOrdersTestCases()
     {
-        var orders = await _orderService.SearchOrdersAsync();
-
-        var excelData = await _exportManager.ExportOrdersToXlsxAsync(orders);
+        var orderService = GetService<IOrderService>();
+        var orders = orderService.SearchOrdersAsync().Result;
+        var exportManager = GetService<IExportManager>();
+        var excelData = exportManager.ExportOrdersToXlsxAsync(orders).Result;
         var workbook = GetWorkbook(excelData);
-        var manager = await GetPropertyManagerAsync<Order>(workbook);
 
         // get the first worksheet in the workbook
         var worksheet = workbook.Worksheets.FirstOrDefault()
                         ?? throw new NopException("No worksheet found");
-
-        manager.ReadDefaultFromXlsx(worksheet, 2);
 
         var replacePairs = new Dictionary<string, string>
         {
@@ -227,8 +210,6 @@ public class ExportManagerTests : ServiceTest
             { "ShippingStatus", "ShippingStatusId" },
             { "ShippingPickupInStore", "PickupInStore" }
         };
-
-        var order = orders.First();
 
         var ignore = new List<string>();
         ignore.AddRange(replacePairs.Values);
@@ -242,9 +223,10 @@ public class ExportManagerTests : ServiceTest
             "CardNumber", "MaskedCreditCardNumber", "CardCvv2", "CardExpirationMonth", "CardExpirationYear",
             "AuthorizationTransactionId", "AuthorizationTransactionCode", "AuthorizationTransactionResult",
             "CaptureTransactionId", "CaptureTransactionResult", "SubscriptionTransactionId", "PaidDateUtc",
-            "Deleted", "PickupAddress", "RedeemedRewardPointsEntryId", "DiscountUsageHistory", "GiftCardUsageHistory",
-            "OrderNotes", "OrderItems", "Shipments", "OrderStatus", "PaymentStatus", "ShippingStatus",
-            "CustomerTaxDisplayType", "CustomOrderNumber", "DesiredDeliveryDateUtc", "LastPendingOrderFollowUpNumber", "LastPendingOrderFollowUpDateUtc"
+            "Deleted", "PickupAddress", "RedeemedRewardPointsEntryId", "DiscountUsageHistory",
+            "GiftCardUsageHistory", "OrderNotes", "OrderItems", "Shipments", "OrderStatus", "PaymentStatus",
+            "ShippingStatus", "CustomerTaxDisplayType", "CustomOrderNumber", "DesiredDeliveryDateUtc",
+            "LastPendingOrderFollowUpNumber", "LastPendingOrderFollowUpDateUtc"
         });
 
         //fields tested individually
@@ -252,13 +234,6 @@ public class ExportManagerTests : ServiceTest
         {
             "Customer", "BillingAddressId", "ShippingAddressId", "EntityCacheKey"
         });
-
-        manager.SetSelectList("OrderStatus", await OrderStatus.Pending.ToSelectListAsync(useLocalization: false));
-        manager.SetSelectList("PaymentStatus", await PaymentStatus.Pending.ToSelectListAsync(useLocalization: false));
-        manager.SetSelectList("ShippingStatus", await ShippingStatus.ShippingNotRequired.ToSelectListAsync(useLocalization: false));
-
-        AreAllObjectPropertiesPresent(order, manager, ignore.ToArray());
-        PropertiesShouldEqual(order, manager, replacePairs);
 
         var addressFields = new List<string>
         {
@@ -277,22 +252,54 @@ public class ExportManagerTests : ServiceTest
             "FaxNumber"
         };
 
+        var catalogSettings = GetService<CatalogSettings>();
+
+        var index = 2;
+
+        foreach (var order in orders)
+        {
+            var manager = GetPropertyManager<Order>(workbook, catalogSettings);
+            manager.SetSelectList("OrderStatus", OrderStatus.Pending.ToSelectListAsync(useLocalization: false).Result);
+            manager.SetSelectList("PaymentStatus", PaymentStatus.Pending.ToSelectListAsync(useLocalization: false).Result);
+            manager.SetSelectList("ShippingStatus", ShippingStatus.ShippingNotRequired.ToSelectListAsync(useLocalization: false).Result);
+
+            while (worksheet.Row(index).OutlineLevel == 1)
+                index++;
+
+            manager.ReadDefaultFromXlsx(worksheet, index++);
+
+            yield return new TestCaseData(order, manager, ignore, replacePairs, addressFields).SetName($"Order #{order.Id}");
+        }
+    }
+
+    #endregion
+
+    #region Test export to excel
+
+    [Test]
+    [TestCaseSource(nameof(GetExportOrdersTestCases))]
+    public async Task CanExportOrdersXlsx(Order order, PropertyManager<Order> manager, List<string> ignore, Dictionary<string, string> replacePairs, List<string> addressFields)
+    {
+        AreAllObjectPropertiesPresent(order, manager, ignore.ToArray());
+        PropertiesShouldEqual(order, manager, replacePairs);
+
         const string billingPattern = "Billing";
-        replacePairs = addressFields.ToDictionary(p => billingPattern + p, p => p);
+        var pairs = addressFields.ToDictionary(p => billingPattern + p, p => p);
 
         var testBillingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
-        PropertiesShouldEqual(testBillingAddress, manager, replacePairs, "CreatedOnUtc", "BillingCountry");
+        PropertiesShouldEqual(testBillingAddress, manager, pairs, "CreatedOnUtc", "BillingCountry");
 
         var country = await _countryService.GetCountryByAddressAsync(testBillingAddress);
         manager.GetDefaultProperties.First(p => p.PropertyName == "BillingCountry").StringValue.Should().Be(country.Name);
 
         const string shippingPattern = "Shipping";
-        replacePairs = addressFields.ToDictionary(p => shippingPattern + p, p => p);
+        pairs = addressFields.ToDictionary(p => shippingPattern + p, p => p);
+
         var testShippingAddress = await _addressService.GetAddressByIdAsync((order.PickupInStore ? order.PickupAddressId : order.ShippingAddressId) ?? 0);
-        PropertiesShouldEqual(testShippingAddress, manager, replacePairs, "CreatedOnUtc", "ShippingCountry");
+        PropertiesShouldEqual(testShippingAddress, manager, pairs, "CreatedOnUtc", "ShippingCountry");
         country = await _countryService.GetCountryByAddressAsync(testShippingAddress);
-        manager.GetDefaultProperties.First(p => p.PropertyName == "ShippingCountry").StringValue.Should().Be(country.Name);
+        manager.GetDefaultProperties.First(p => p.PropertyName == "ShippingCountry").StringValue.Should().Be(country?.Name ?? string.Empty);
     }
 
     [Test]
@@ -302,7 +309,7 @@ public class ExportManagerTests : ServiceTest
 
         var excelData = await _exportManager.ExportManufacturersToXlsxAsync(manufacturers);
         var workbook = GetWorkbook(excelData);
-        var manager = await GetPropertyManagerAsync<Manufacturer>(workbook);
+        var manager = GetPropertyManager<Manufacturer>(workbook, _catalogSettings);
 
         // get the first worksheet in the workbook
         var worksheet = workbook.Worksheets.FirstOrDefault()
@@ -327,7 +334,7 @@ public class ExportManagerTests : ServiceTest
 
         var excelData = await _exportManager.ExportCustomersToXlsxAsync(customers);
         var workbook = GetWorkbook(excelData);
-        var manager = await GetPropertyManagerAsync<Customer>(workbook);
+        var manager = GetPropertyManager<Customer>(workbook, _catalogSettings);
 
         // get the first worksheet in the workbook
         var worksheet = workbook.Worksheets.FirstOrDefault()
@@ -399,7 +406,7 @@ public class ExportManagerTests : ServiceTest
 
         var excelData = await _exportManager.ExportCategoriesToXlsxAsync(categories);
         var workbook = GetWorkbook(excelData);
-        var manager = await GetPropertyManagerAsync<Category>(workbook);
+        var manager = GetPropertyManager<Category>(workbook, _catalogSettings);
 
         // get the first worksheet in the workbook
         var worksheet = workbook.Worksheets.FirstOrDefault()
@@ -457,7 +464,7 @@ public class ExportManagerTests : ServiceTest
 
         var excelData = await _exportManager.ExportProductsToXlsxAsync(new[] { product });
         var workbook = GetWorkbook(excelData);
-        var manager = await GetPropertyManagerAsync<Product>(workbook);
+        var manager = GetPropertyManager<Product>(workbook, _catalogSettings);
 
         // get the first worksheet in the workbook
         var worksheet = workbook.Worksheets.FirstOrDefault()
