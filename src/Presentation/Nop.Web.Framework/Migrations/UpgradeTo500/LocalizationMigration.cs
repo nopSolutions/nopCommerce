@@ -645,6 +645,8 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.CustomerUser.OtpTimeLife.Hint"] = "The time (in seconds) during which the OTP code is valid.",
             ["Admin.Configuration.Settings.CustomerUser.OtpCountAttemptsToSendCode"] = "OTP code send attempts",
             ["Admin.Configuration.Settings.CustomerUser.OtpCountAttemptsToSendCode.Hint"] = "The number of attempts to send the OTP code.",
+            ["Admin.Configuration.Settings.CustomerUser.OtpFailedAllowedAttempts"] = "OTP code verification attempts",
+            ["Admin.Configuration.Settings.CustomerUser.OtpFailedAllowedAttempts.Hint"] = "The number of failed attempts allowed for OTP code verification.",
             ["Admin.Configuration.Settings.CustomerUser.OtpTimeToRepeat"] = "OTP code resend time",
             ["Admin.Configuration.Settings.CustomerUser.OtpTimeToRepeat.Hint"] = "The time (in minutes) before the OTP code can be resent.",
             ["Admin.Configuration.Settings.CustomerUser.OtpLength"] = "OTP code length",
@@ -678,6 +680,7 @@ public class LocalizationMigration : MigrationBase
             ["PhoneVerification.OtpCode.Error.NotRequested"] = "You have not requested an SMS code. Please request a code and try again.",
             ["PhoneVerification.OtpCode.Error.Expired"] = "The SMS code has expired.",
             ["PhoneVerification.OtpCode.Error.Invalid"] = "The SMS code you entered is invalid. Please try again.",
+            ["PhoneVerification.OtpCode.Error.Locked"] = "The SMS code has been locked due to too many failed attempts.",
             ["PhoneVerification.OtpCode.Error.Verification"] = "SMS verification error.",
             ["PhoneVerification.Placeholder"] = "+1 (555) 000-0000",
 

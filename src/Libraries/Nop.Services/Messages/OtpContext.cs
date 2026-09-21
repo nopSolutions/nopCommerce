@@ -24,4 +24,9 @@ public partial class OtpContext
     /// Gets or sets the date when the most recent attempt was made
     /// </summary>
     public DateTime? LastAttemptAtUtc { get; set; }
+
+    /// <summary>
+    /// Gets or sets the number of failed attempts to enter the code
+    /// </summary>
+    public int FailedOtpCodeAttemptsCount { get; set; }
 }

@@ -1699,6 +1699,7 @@ public partial class InstallationService
             LoginByPhoneEnabled = false,
             OtpTimeLife = 30,
             OtpCountAttemptsToSendCode = 3,
+            OtpFailedAllowedAttempts = 3,
             OtpTimeToRepeat = 15,
             OtpLength = 6
         });

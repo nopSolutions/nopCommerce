@@ -7590,6 +7590,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpCountAttemptsToSendCode.Hint">
     <Value>The number of attempts to send the OTP code.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpFailedAllowedAttempts">
+    <Value>OTP code verification attempts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpFailedAllowedAttempts.Hint">
+    <Value>The number of failed attempts allowed for OTP code verification.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpLength">
     <Value>OTP code length</Value>
   </LocaleResource>
@@ -19443,6 +19449,9 @@
   </LocaleResource>
   <LocaleResource Name="PhoneVerification.OtpCode.Error.Invalid">
     <Value>The SMS code you entered is invalid. Please try again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PhoneVerification.OtpCode.Error.Locked">
+    <Value>The SMS code has been locked due to too many failed attempts.</Value>
   </LocaleResource>
   <LocaleResource Name="PhoneVerification.OtpCode.Error.NotRequested">
     <Value>You have not requested an SMS code. Please request a code and try again.</Value>

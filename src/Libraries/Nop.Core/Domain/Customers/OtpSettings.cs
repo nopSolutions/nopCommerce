@@ -24,6 +24,11 @@ public partial class OtpSettings : ISettings
     public int OtpCountAttemptsToSendCode { get; set; }
 
     /// <summary>
+    /// Gets or sets the number of failed attempts allowed to enter a one-time password (OTP) code before the process is blocked or requires additional verification
+    /// </summary>
+    public int OtpFailedAllowedAttempts { get; set; }
+
+    /// <summary>
     /// Gets or sets the time interval, in minutes, before a one-time password (OTP) can be requested again
     /// </summary>
     public int OtpTimeToRepeat { get; set; }
