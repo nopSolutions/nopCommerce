@@ -1,4 +1,5 @@
-﻿using AwesomeAssertions;
+﻿using System.Diagnostics;
+using AwesomeAssertions;
 using ClosedXML.Excel;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -190,7 +191,7 @@ public class ExportManagerTests : ServiceTest
         return obj;
     }
 
-    private static IEnumerable<TestCaseData> GetExportOrdersTestCases()
+    public static IEnumerable<object[]> GetExportOrdersTestCases()
     {
         var orderService = GetService<IOrderService>();
         var orders = orderService.SearchOrdersAsync().Result;
@@ -268,7 +269,7 @@ public class ExportManagerTests : ServiceTest
 
             manager.ReadDefaultFromXlsx(worksheet, index++);
 
-            yield return new TestCaseData(order, manager, ignore, replacePairs, addressFields).SetName($"Order #{order.Id}");
+            yield return [order, manager, ignore, replacePairs, addressFields, $"Order #{order.Id}"];
         }
     }
 
@@ -278,8 +279,9 @@ public class ExportManagerTests : ServiceTest
 
     [Test]
     [TestCaseSource(nameof(GetExportOrdersTestCases))]
-    public async Task CanExportOrdersXlsx(Order order, PropertyManager<Order> manager, List<string> ignore, Dictionary<string, string> replacePairs, List<string> addressFields)
+    public async Task CanExportOrdersXlsx(Order order, PropertyManager<Order> manager, List<string> ignore, Dictionary<string, string> replacePairs, List<string> addressFields, string testName)
     {
+        Debug.WriteLine($"Test for {testName}");
         AreAllObjectPropertiesPresent(order, manager, ignore.ToArray());
         PropertiesShouldEqual(order, manager, replacePairs);
 
