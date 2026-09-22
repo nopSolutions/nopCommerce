@@ -134,6 +134,12 @@ public class ForumService
             if (tag.Contains("onclick", StringComparison.InvariantCultureIgnoreCase))
                 return false;
 
+            if (tag.Contains("onerror", StringComparison.InvariantCultureIgnoreCase))
+                return false;
+
+            if (tag.Contains("onload", StringComparison.InvariantCultureIgnoreCase))
+                return false;
+
             var endChars = new[] { ' ', '>', '/', '\t' };
 
             var pos = tag.IndexOfAny(endChars, 1);
