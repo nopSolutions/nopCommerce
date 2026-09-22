@@ -588,6 +588,17 @@ public partial interface IProductService
     Task<IList<TierPrice>> GetTierPricesByProductAsync(int productId);
 
     /// <summary>
+    /// Gets tier prices of several products. Products missing from the cache are loaded with a single query
+    /// and cached the same way <see cref="GetTierPricesByProductAsync"/> does (also as empty lists)
+    /// </summary>
+    /// <param name="productIds">Product identifiers</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the tier prices keyed by product identifier
+    /// </returns>
+    Task<IDictionary<int, IList<TierPrice>>> GetTierPricesByProductsAsync(int[] productIds);
+
+    /// <summary>
     /// Deletes a tier price
     /// </summary>
     /// <param name="tierPrice">Tier price</param>

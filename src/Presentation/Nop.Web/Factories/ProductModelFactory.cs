@@ -19,6 +19,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Discounts;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -53,6 +54,7 @@ public partial class ProductModelFactory : IProductModelFactory
     protected readonly ICustomWishlistService _customWishlistService;
     protected readonly IDateRangeService _dateRangeService;
     protected readonly IDateTimeHelper _dateTimeHelper;
+    protected readonly IDiscountService _discountService;
     protected readonly IDownloadService _downloadService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IJsonLdModelFactory _jsonLdModelFactory;
@@ -133,7 +135,8 @@ public partial class ProductModelFactory : IProductModelFactory
         OrderSettings orderSettings,
         SeoSettings seoSettings,
         ShippingSettings shippingSettings,
-        VendorSettings vendorSettings)
+        VendorSettings vendorSettings,
+        IDiscountService discountService)
     {
         _captchaSettings = captchaSettings;
         _catalogSettings = catalogSettings;
@@ -144,6 +147,7 @@ public partial class ProductModelFactory : IProductModelFactory
         _customWishlistService = customWishlistService;
         _dateRangeService = dateRangeService;
         _dateTimeHelper = dateTimeHelper;
+        _discountService = discountService;
         _downloadService = downloadService;
         _genericAttributeService = genericAttributeService;
         _jsonLdModelFactory = jsonLdModelFactory;
@@ -1365,8 +1369,18 @@ public partial class ProductModelFactory : IProductModelFactory
     {
         ArgumentNullException.ThrowIfNull(products);
 
+        var productList = products.ToList();
+
+        //price calculation asks for discounts and tier prices of every product separately; for a list,
+        //load the ones missing from the caches with one query each, so the per-product calls are served from cache
+        if (preparePriceModel && productList.Count > 1)
+        {
+            await _discountService.GetAppliedDiscountsAsync(productList);
+            await _productService.GetTierPricesByProductsAsync(productList.Select(p => p.Id).ToArray());
+        }
+
         var models = new List<ProductOverviewModel>();
-        foreach (var product in products)
+        foreach (var product in productList)
         {
             var model = new ProductOverviewModel
             {

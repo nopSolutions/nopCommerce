@@ -72,6 +72,19 @@ public partial interface IDiscountService
     /// </returns>
     Task<IList<Discount>> GetAppliedDiscountsAsync<T>(IDiscountSupported<T> entity) where T : DiscountMapping;
 
+    /// <summary>
+    /// Gets discounts applied to several entities. Entities missing from the per-request cache are loaded
+    /// with a single query and cached (also as empty lists), so per-entity calls later in the same request
+    /// (e.g. price calculation for every product on a catalog page) do not hit the database
+    /// </summary>
+    /// <typeparam name="T">Type based on <see cref="DiscountMapping" /></typeparam>
+    /// <param name="entities">Entities which support discounts (<see cref="IDiscountSupported{T}" />)</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the applied discounts keyed by entity identifier
+    /// </returns>
+    Task<IDictionary<int, IList<Discount>>> GetAppliedDiscountsAsync<T>(IEnumerable<IDiscountSupported<T>> entities) where T : DiscountMapping;
+
     #endregion
 
     #region Discounts (caching)

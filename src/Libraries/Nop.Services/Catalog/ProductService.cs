@@ -2087,6 +2087,42 @@ public partial class ProductService : IProductService
     }
 
     /// <summary>
+    /// Gets tier prices of several products. Products missing from the cache are loaded with a single query
+    /// and cached the same way <see cref="GetTierPricesByProductAsync"/> does (also as empty lists)
+    /// </summary>
+    /// <param name="productIds">Product identifiers</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the tier prices keyed by product identifier
+    /// </returns>
+    public virtual async Task<IDictionary<int, IList<TierPrice>>> GetTierPricesByProductsAsync(int[] productIds)
+    {
+        ArgumentNullException.ThrowIfNull(productIds);
+
+        var ids = productIds.Where(id => id > 0).Distinct().ToArray();
+        var result = new Dictionary<int, IList<TierPrice>>();
+        if (!ids.Any())
+            return result;
+
+        //one query for the whole batch, executed only when some product is missing from the cache
+        var byProduct = new Lazy<Task<Dictionary<int, List<TierPrice>>>>(async () =>
+            (await _tierPriceRepository.Table.Where(tp => ids.Contains(tp.ProductId)).ToListAsync())
+            .GroupBy(tp => tp.ProductId)
+            .ToDictionary(g => g.Key, g => g.ToList()));
+
+        foreach (var productId in ids)
+        {
+            //the same key and the same value type (List<TierPrice>) as GetTierPricesByProductAsync caches
+            //(MemoryCacheManager stores Lazy<Task<T>>, a value cached as IList<TierPrice> would not be found)
+            result[productId] = await _staticCacheManager.GetAsync(
+                _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.TierPricesByProductCacheKey, productId),
+                async () => (await byProduct.Value).TryGetValue(productId, out var prices) ? prices : new List<TierPrice>());
+        }
+
+        return result;
+    }
+
+    /// <summary>
     /// Deletes a tier price
     /// </summary>
     /// <param name="tierPrice">Tier price</param>

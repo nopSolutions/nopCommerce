@@ -261,17 +261,53 @@ public partial class DiscountService : IDiscountService
     /// </returns>
     public virtual async Task<IList<Discount>> GetAppliedDiscountsAsync<T>(IDiscountSupported<T> entity) where T : DiscountMapping
     {
+        ArgumentNullException.ThrowIfNull(entity);
+
+        return (await GetAppliedDiscountsAsync(new[] { entity }))[entity.Id];
+    }
+
+    /// <summary>
+    /// Gets discounts applied to several entities. Entities missing from the per-request cache are loaded
+    /// with a single query and cached (also as empty lists), so per-entity calls later in the same request
+    /// (e.g. price calculation for every product on a catalog page) do not hit the database
+    /// </summary>
+    /// <typeparam name="T">Type based on <see cref="DiscountMapping" /></typeparam>
+    /// <param name="entities">Entities which support discounts (<see cref="IDiscountSupported{T}" />)</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the applied discounts keyed by entity identifier
+    /// </returns>
+    public virtual async Task<IDictionary<int, IList<Discount>>> GetAppliedDiscountsAsync<T>(IEnumerable<IDiscountSupported<T>> entities) where T : DiscountMapping
+    {
+        ArgumentNullException.ThrowIfNull(entities);
+
+        var entityList = entities.Where(e => e != null).DistinctBy(e => e.Id).ToList();
+        var result = new Dictionary<int, IList<Discount>>();
+        if (!entityList.Any())
+            return result;
+
         var discountMappingRepository = EngineContext.Current.Resolve<IRepository<T>>();
+        var entityIds = entityList.Select(e => e.Id).ToArray();
 
-        var appliedDiscounts = await _shortTermCacheManager.GetAsync(async () =>
-        {
-            return await (from d in _discountRepository.Table
+        //one query for the whole batch, executed only when some entity is missing from the cache
+        var byEntity = new Lazy<Task<Dictionary<int, List<Discount>>>>(async () =>
+            (await (from d in _discountRepository.Table
                 join ad in discountMappingRepository.Table on d.Id equals ad.DiscountId
-                where ad.EntityId == entity.Id
-                select d).ToListAsync();
-        }, NopDiscountDefaults.AppliedDiscountsCacheKey, entity.GetType().Name, entity);
+                where entityIds.Contains(ad.EntityId)
+                select new { ad.EntityId, Discount = d }).ToListAsync())
+            .GroupBy(x => x.EntityId)
+            .ToDictionary(g => g.Key, g => g.Select(x => x.Discount).ToList()));
 
-        return appliedDiscounts;
+        foreach (var entity in entityList)
+        {
+            //the same key and the same value type (List<Discount>) as a per-entity call would cache;
+            //entities without discounts are cached too, otherwise they would be queried again
+            result[entity.Id] = await _shortTermCacheManager.GetAsync(
+                async () => (await byEntity.Value).TryGetValue(entity.Id, out var discounts) ? discounts : new List<Discount>(),
+                NopDiscountDefaults.AppliedDiscountsCacheKey, entity.GetType().Name, entity);
+        }
+
+        return result;
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Nop.Core.Caching;
+using FluentAssertions;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using NUnit.Framework;
@@ -9,6 +10,8 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog;
 public class ProductServiceTests : ServiceTest
 {
     #region Fields
+
+    private static readonly decimal[] ExpectedTierPrices = [25m, 20m];
 
     private IProductService _productService;
 
@@ -365,5 +368,59 @@ public class ProductServiceTests : ServiceTest
         _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2016, 3, 7)).Should().Be(2);
     }
 
+    [Test]
+    public async Task CanGetTierPricesForManyProductsWithOneQueryAndSeedTheCache()
+    {
+        var product1 = await _productService.GetProductByIdAsync(1);
+        var product2 = await _productService.GetProductByIdAsync(2);
+        var tierPrices = new List<TierPrice>
+        {
+            new() { ProductId = product1.Id, Quantity = 2, Price = 25 },
+            new() { ProductId = product1.Id, Quantity = 5, Price = 20 }
+        };
+        foreach (var tierPrice in tierPrices)
+            await _productService.InsertTierPriceAsync(tierPrice);
+
+        try
+        {
+            var byProduct = await _productService.GetTierPricesByProductsAsync(new[] { product1.Id, product2.Id, product1.Id });
+
+            byProduct.Should().HaveCount(2, "duplicate identifiers are folded");
+            byProduct[product1.Id].Select(tp => tp.Price).Should().BeEquivalentTo(ExpectedTierPrices);
+            byProduct[product2.Id].Should().BeEmpty("products without tier prices are cached as empty lists");
+
+            //the per-product method must be served from the seeded cache
+            (await _productService.GetTierPricesByProductAsync(product1.Id)).Should().BeSameAs(byProduct[product1.Id]);
+            (await _productService.GetTierPricesByProductAsync(product2.Id)).Should().BeSameAs(byProduct[product2.Id]);
+        }
+        finally
+        {
+            foreach (var tierPrice in tierPrices)
+                await _productService.DeleteTierPriceAsync(tierPrice);
+            await GetService<IStaticCacheManager>().RemoveByPrefixAsync(NopEntityCacheDefaults<TierPrice>.Prefix);
+        }
+    }
+
+    [Test]
+    public async Task GetTierPricesByProductsIsServedFromTheCacheAndIgnoresEmptyInput()
+    {
+        var product = await _productService.GetProductByIdAsync(1);
+        try
+        {
+            var single = await _productService.GetTierPricesByProductAsync(product.Id);
+
+            //already cached products are returned from the cache, i.e. the very same instances
+            (await _productService.GetTierPricesByProductsAsync(new[] { product.Id, 0, product.Id }))
+                .Should().ContainSingle().Which.Value.Should().BeSameAs(single);
+
+            (await _productService.GetTierPricesByProductsAsync(Array.Empty<int>())).Should().BeEmpty();
+        }
+        finally
+        {
+            await GetService<IStaticCacheManager>().RemoveByPrefixAsync(NopEntityCacheDefaults<TierPrice>.Prefix);
+        }
+    }
+
     #endregion
+
 }
