@@ -12,38 +12,37 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
+<form asp-controller="Report" method="post">
 <div class="content-header clearfix">
     <h1 class="float-left">
         @T("Admin.Reports.SalesSummary")
     </h1>
-    <form asp-controller="Report" method="post">
-            <div class="float-right">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-success">
-                        <i class="fas fa-download"></i>
-                        @T("Admin.Common.Export")
+    <div class="float-right">
+        <div class="btn-group">
+            <button type="button" class="btn btn-success">
+                <i class="fas fa-download"></i>
+                @T("Admin.Common.Export")
+            </button>
+            <button type="button" class="btn btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                <span class="sr-only">&nbsp;</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li class="dropdown-item">
+                    <button asp-action="ExportSalesSummaryXmlAll" type="submit" name="exportxml-all">
+                        <i class="far fa-file-code"></i>
+                        @T("Admin.Common.ExportToXml.All")
                     </button>
-                    <button type="button" class="btn btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
-                        <span class="sr-only">&nbsp;</span>
+                </li>
+                <li class="dropdown-divider"></li>
+                <li class="dropdown-item">
+                    <button asp-action="ExportSalesSummaryExcelAll" type="submit" name="exportexcel-all">
+                        <i class="far fa-file-excel"></i>
+                            @T("Admin.Common.ExportToExcel.All")
                     </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li class="dropdown-item">
-                            <button asp-action="ExportSalesSummaryXmlAll" type="submit" name="exportxml-all">
-                                <i class="far fa-file-code"></i>
-                                @T("Admin.Common.ExportToXml")
-                            </button>
-                        </li>
-                        <li class="dropdown-divider"></li>
-                        <li class="dropdown-item">
-                            <button asp-action="ExportSalesSummaryExcelAll" type="submit" name="exportexcel-all">
-                                <i class="far fa-file-excel"></i>
-                                @T("Admin.Common.ExportToExcel")
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            </form>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <section class="content">
@@ -136,15 +135,15 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                    <div class="col-md-4">
-                                        <nop-label asp-for="ProductId" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <input type="text" id="search-product-name" autocomplete="off" class="form-control" />
-                                        <span id="search-product-friendly-name"></span>
-                                        <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
-                                        <input asp-for="ProductId" autocomplete="off" style="display: none;" />
-                                        <script>
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="ProductId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="text" id="search-product-name" autocomplete="off" class="form-control" />
+                                            <span id="search-product-friendly-name"></span>
+                                            <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
+                                            <input asp-for="ProductId" autocomplete="off" style="display: none;" />
+                                            <script>
                                             $(function() {
                                                 $('#search-product-name').autocomplete({
                                                     delay: 500,
@@ -168,8 +167,8 @@
                                                 });
                                             });
                                         </script>
+                                        </div>
                                     </div>
-                                </div>
                                     <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchGroupId" />
@@ -252,3 +251,4 @@
         </div>
     </div>
 </section>
+</form>
