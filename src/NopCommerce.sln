@@ -87,7 +87,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Widgets.Jotform"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Misc.PunchOut", "Plugins\Nop.Plugin.Misc.PunchOut\Nop.Plugin.Misc.PunchOut.csproj", "{350207D3-5CD7-DEBC-19FD-59D187574035}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Feed.ChatGptShopping", "Plugins\Nop.Plugin.Feed.ChatGPTShopping\Nop.Plugin.Feed.ChatGptShopping.csproj", "{8850FC94-04BB-47BB-80D1-8D0677C13981}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Feed.ChatGptShopping", "Plugins\Nop.Plugin.Feed.ChatGptShopping\Nop.Plugin.Feed.ChatGptShopping.csproj", "{8850FC94-04BB-47BB-80D1-8D0677C13981}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
