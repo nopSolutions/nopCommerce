@@ -90,7 +90,7 @@ public class ForumInstallService
             ActiveDiscussionsPageSize = 50,
             LatestCustomerPostsPageSize = 10,
             ShowCustomersPostCount = true,
-            ForumEditor = EditorType.MarkdownEditor,
+            ForumEditor = EditorType.BBCodeEditor,
             SignaturesEnabled = true,
             ForumSubscriptionsPageSize = 10,
             HomepageActiveDiscussionsTopicCount = 5,
