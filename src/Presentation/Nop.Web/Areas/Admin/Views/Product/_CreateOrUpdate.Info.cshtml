@@ -257,11 +257,7 @@
             <nop-label asp-for="SelectedCategoryIds" />
         </div>
         <div class="col-md-9">
-            <div class="input-group-append">
-                <div class="input-group">
-                    <nop-select asp-for="SelectedCategoryIds" asp-items="Model.AvailableCategories" asp-multiple="true" />
-                </div>
-            </div>
+            <nop-select asp-for="SelectedCategoryIds" asp-items="Model.AvailableCategories" asp-multiple="true" />
             <script>
                 $(function() {
 					var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedCategoryIds)').select2({
