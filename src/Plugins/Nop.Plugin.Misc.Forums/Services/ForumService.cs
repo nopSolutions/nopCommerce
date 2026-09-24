@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Ganss.Xss;
 using Markdig;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -19,7 +20,7 @@ namespace Nop.Plugin.Misc.Forums.Services;
 /// <summary>
 /// Forum service
 /// </summary>
-public class ForumService
+public partial class ForumService
 {
     #region Fields
 
@@ -44,6 +45,8 @@ public class ForumService
     private readonly IWorkContext _workContext;
     private readonly IWorkflowMessageService _workflowMessageService;
     private readonly SeoSettings _seoSettings;
+
+    const string ALLOWED_TAGS = "br,hr,b,i,u,a,div,ol,ul,li,blockquote,img,span,p,em,strong,font,pre,h1,h2,h3,h4,h5,h6,address,cite,code";
 
     #endregion
 
@@ -98,58 +101,46 @@ public class ForumService
 
     #region Utilities
 
+    private bool IsValidTag(string tag)
+    {
+        var aTags = ALLOWED_TAGS.Split(',');
+
+        var endChars = new[] { ' ', '>', '/', '\t' };
+
+        var pos = tag.IndexOfAny(endChars, 1);
+
+        if (pos > 0)
+            tag = tag[..pos];
+
+        if (tag[0] == '/')
+            tag = tag[1..];
+
+        return aTags.Any(aTag => tag == aTag);
+    }
+
     /// <summary>
     /// Ensure only allowed HTML tags
     /// </summary>
     /// <param name="text">Text</param>
     /// <returns>Sanitized text with all invalid tags removed</returns>
-    private static string EnsureOnlyAllowedHtml(string text)
+    private string EnsureOnlyAllowedHtml(string text)
     {
         if (string.IsNullOrEmpty(text))
             return string.Empty;
-
-        const string allowedTags = "br,hr,b,i,u,a,div,ol,ul,li,blockquote,img,span,p,em,strong,font,pre,h1,h2,h3,h4,h5,h6,address,cite,code";
-
-        var m = Regex.Matches(text, "<.*?>", RegexOptions.IgnoreCase);
+        
+        var m = HtmlTagRegex().Matches(text);
 
         for (var i = m.Count - 1; i >= 0; i--)
         {
             var tag = text[(m[i].Index + 1)..(m[i].Index + m[i].Length)].Trim().ToLower();
 
-            if (!isValidTag(tag))
+            if (!IsValidTag(tag))
                 text = text.Remove(m[i].Index, m[i].Length);
         }
 
-        return text;
+        var sanitizer = new HtmlSanitizer();
 
-        static bool isValidTag(string tag)
-        {
-            var aTags = allowedTags.Split(',');
-            if (tag.Contains("javascript", StringComparison.InvariantCultureIgnoreCase))
-                return false;
-
-            if (tag.Contains("vbscript", StringComparison.InvariantCultureIgnoreCase))
-                return false;
-
-            if (tag.Contains("onclick", StringComparison.InvariantCultureIgnoreCase))
-                return false;
-
-            if (tag.Contains("onerror", StringComparison.InvariantCultureIgnoreCase))
-                return false;
-
-            if (tag.Contains("onload", StringComparison.InvariantCultureIgnoreCase))
-                return false;
-
-            var endChars = new[] { ' ', '>', '/', '\t' };
-
-            var pos = tag.IndexOfAny(endChars, 1);
-            if (pos > 0)
-                tag = tag[0..pos];
-            if (tag[0] == '/')
-                tag = tag[1..^0];
-
-            return aTags.Any(aTag => tag == aTag);
-        }
+        return sanitizer.Sanitize(text);
     }
 
     /// <summary>
@@ -1547,6 +1538,9 @@ public class ForumService
             return await _workflowMessageService.SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }).ToListAsync();
     }
+
+    [GeneratedRegex("<.*?>", RegexOptions.IgnoreCase)]
+    private static partial Regex HtmlTagRegex();
 
     #endregion
 }
