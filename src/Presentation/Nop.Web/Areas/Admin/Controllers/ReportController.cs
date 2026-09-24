@@ -139,8 +139,7 @@ public partial class ReportController : BaseAdminController
             productId: searchModel.ProductId,
             manufacturerId: searchModel.ManufacturerId,
             vendorId: currentVendor?.Id ?? searchModel.VendorId,
-            storeId: searchModel.StoreId,
-            pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            storeId: searchModel.StoreId);
 
         try
         {
@@ -182,8 +181,7 @@ public partial class ReportController : BaseAdminController
             productId: searchModel.ProductId,
             manufacturerId: searchModel.ManufacturerId,
             vendorId: currentVendor?.Id ?? searchModel.VendorId,
-            storeId: searchModel.StoreId,
-            pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            storeId: searchModel.StoreId);
 
         try
         {
@@ -402,8 +400,7 @@ public partial class ReportController : BaseAdminController
             vendorId: searchModel.VendorId,
             categoryId: searchModel.CategoryId,
             manufacturerId: searchModel.ManufacturerId,
-            storeId: searchModel.StoreId,
-            pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            storeId: searchModel.StoreId);
 
         var models = await bestsellers.SelectAwait(async item =>
             {
@@ -451,8 +448,7 @@ public partial class ReportController : BaseAdminController
             vendorId: searchModel.VendorId,
             categoryId: searchModel.CategoryId,
             manufacturerId: searchModel.ManufacturerId,
-            storeId: searchModel.StoreId,
-            pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            storeId: searchModel.StoreId);
 
         var models = await bestsellers.SelectAwait(async item =>
             {
@@ -519,8 +515,7 @@ public partial class ReportController : BaseAdminController
             categoryId: searchModel.SearchCategoryId,
             manufacturerId: searchModel.SearchManufacturerId,
             createdFromUtc: startDateValue,
-            createdToUtc: endDateValue,
-            pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            createdToUtc: endDateValue);
 
         try
         {
@@ -555,8 +550,7 @@ public partial class ReportController : BaseAdminController
             categoryId: searchModel.SearchCategoryId,
             manufacturerId: searchModel.SearchManufacturerId,
             createdFromUtc: startDateValue,
-            createdToUtc: endDateValue,
-            pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            createdToUtc: endDateValue);
 
         try
         {
@@ -844,8 +838,7 @@ public partial class ReportController : BaseAdminController
             os: orderStatus,
             ps: paymentStatus,
             ss: shippingStatus,
-            orderBy: OrderByEnum.OrderByTotalAmount,
-            pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            orderBy: OrderByEnum.OrderByTotalAmount);
 
         var models = await reportItems.SelectAwait(async item =>
                 {
@@ -895,8 +888,7 @@ public partial class ReportController : BaseAdminController
             os: orderStatus,
             ps: paymentStatus,
             ss: shippingStatus,
-            orderBy: OrderByEnum.OrderByTotalAmount,
-            pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            orderBy: OrderByEnum.OrderByTotalAmount);
 
         var models = await reportItems.SelectAwait(async item =>
                 {
@@ -947,8 +939,7 @@ public partial class ReportController : BaseAdminController
             os: orderStatus,
             ps: paymentStatus,
             ss: shippingStatus,
-            orderBy: OrderByEnum.OrderByQuantity,
-            pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            orderBy: OrderByEnum.OrderByQuantity);
 
         var models = await reportItems.SelectAwait(async item =>
                 {
@@ -999,8 +990,7 @@ public partial class ReportController : BaseAdminController
             os: orderStatus,
             ps: paymentStatus,
             ss: shippingStatus,
-            orderBy: OrderByEnum.OrderByQuantity,
-            pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            orderBy: OrderByEnum.OrderByQuantity);
 
         var models = await reportItems.SelectAwait(async item =>
                 {

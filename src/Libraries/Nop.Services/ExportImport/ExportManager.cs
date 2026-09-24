@@ -2084,6 +2084,9 @@ public partial class ExportManager : IExportManager
             new PropertyByName<SalesSummaryReportLine>("Tax",  (p, _) => p.Tax),
             new PropertyByName<SalesSummaryReportLine>("OrderTotal", (p, _) => p.OrderTotal),
             new PropertyByName<SalesSummaryReportLine>("SummaryType", (p, _) =>  p.SummaryType)
+            {
+                DropDownElements = await GroupByOptions.Day.ToSelectListAsync()
+            }
 
         ], _catalogSettings);
 
