@@ -77,7 +77,7 @@ using Nop.Services.Themes;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Tests.Nop.Services.Tests.ScheduleTasks;
-using Nop.Tests.Nop.Web.Tests.Public.Factories;
+using Nop.Tests.Nop.Web.Tests.Admin.Factories;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Factories;
@@ -89,7 +89,6 @@ using Nop.Web.Framework.UI;
 using Nop.Web.Framework.WebOptimizer;
 using Nop.Web.Infrastructure.Installation;
 using SkiaSharp;
-using static Nop.Tests.Nop.Web.Tests.Admin.Factories.CommonModelFactoryTests;
 using IAuthenticationService = Nop.Services.Authentication.IAuthenticationService;
 using Task = System.Threading.Tasks.Task;
 
@@ -112,6 +111,9 @@ public partial class BaseNopTest
 
         dataProvider.CreateDatabase();
         dataProvider.InitializeDatabase();
+
+        //apply additional schema migrations
+        TestMigration.ApplyMigrations(_serviceProvider.GetService<ITypeFinder>(), _serviceProvider.GetService<IMigrationManager>());
 
         var installationService = _serviceProvider.GetService<IInstallationService>();
 
@@ -171,10 +173,21 @@ public partial class BaseNopTest
         var services = new ServiceCollection();
         services.AddSingleton<IServiceCollection>(services);
 
-        var rootPath =
-            new DirectoryInfo(
-                    $"{Directory.GetCurrentDirectory().Split("bin")[0]}{Path.Combine([.. @"\..\..\Presentation\Nop.Web".Split('\\', '/')])}")
-                .FullName;
+        var rootPath = findRootPath();
+        static string findRootPath()
+        {
+            var presentationPath = @"..\..\Presentation\Nop.Web";
+            var basePath = $"{Directory.GetCurrentDirectory().Split("bin")[0]}";
+            for (var i = 0; i < 3; i++)
+            {
+                if (i > 0)
+                    presentationPath = @"..\" + presentationPath;
+                var directory = new DirectoryInfo($"{basePath}{Path.Combine(presentationPath.Split('\\', '/'))}");
+                if (directory.Exists)
+                    return directory.FullName;
+            }
+            throw new DirectoryNotFoundException();
+        }
 
         //Presentation\Nop.Web\wwwroot
         var webHostEnvironment = new Mock<IWebHostEnvironment>();
@@ -234,14 +247,14 @@ public partial class BaseNopTest
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Headers.Append(HeaderNames.Host, NopTestsDefaults.HostIpAddress);
         httpContext.Session = new TestSeesion();
-        
+
         var actionContext = new ActionContext(httpContext, httpContext.GetRouteData(), new ActionDescriptor());
 
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         httpContextAccessor.Setup(p => p.HttpContext).Returns(httpContext);
 
         services.AddSingleton(httpContextAccessor.Object);
-        
+
         var urlHelperFactory = new Mock<IUrlHelperFactory>();
         var urlHelper = new NopTestUrlHelper(actionContext);
 
@@ -518,7 +531,6 @@ public partial class BaseNopTest
         services.AddTransient<IPaymentModelFactory, PaymentModelFactory>();
         services.AddTransient<IPluginModelFactory, PluginModelFactory>();
         services.AddTransient<IProductModelFactory, ProductModelFactory>();
-        services.AddTransient<ProductModelFactoryTests.ProductModelFactoryForTest>();
         services.AddTransient<IProductAttributeModelFactory, ProductAttributeModelFactory>();
         services.AddTransient<IProductReviewModelFactory, ProductReviewModelFactory>();
         services.AddTransient<IReportModelFactory, ReportModelFactory>();
@@ -552,8 +564,7 @@ public partial class BaseNopTest
         services.AddTransient<Web.Factories.IJsonLdModelFactory, Web.Factories.JsonLdModelFactory>();
         services.AddTransient<Web.Factories.INewsLetterModelFactory, Web.Factories.NewsLetterModelFactory>();
         services.AddTransient<Web.Factories.IOrderModelFactory, Web.Factories.OrderModelFactory>();
-        services
-            .AddTransient<Web.Factories.IPrivateMessagesModelFactory, Web.Factories.PrivateMessagesModelFactory>();
+        services.AddTransient<Web.Factories.IPrivateMessagesModelFactory, Web.Factories.PrivateMessagesModelFactory>();
         services.AddTransient<Web.Factories.IProductModelFactory, Web.Factories.ProductModelFactory>();
         services.AddTransient<Web.Factories.IProfileModelFactory, Web.Factories.ProfileModelFactory>();
         services.AddTransient<Web.Factories.IReturnRequestModelFactory, Web.Factories.ReturnRequestModelFactory>();
@@ -561,6 +572,19 @@ public partial class BaseNopTest
         services.AddTransient<Web.Factories.ISitemapModelFactory, Web.Factories.SitemapModelFactory>();
         services.AddTransient<Web.Factories.ITopicModelFactory, Web.Factories.TopicModelFactory>();
         services.AddTransient<Web.Factories.IVendorModelFactory, Web.Factories.VendorModelFactory>();
+
+        //find additional test services
+        var startupConfigurations = typeFinder.FindClassesOfType<ITestNopStartup>();
+
+        //create and sort instances of startup configurations
+        var instances = startupConfigurations
+            .Select(startup => (ITestNopStartup)Activator.CreateInstance(startup))
+            .Where(startup => startup != null)
+            .OrderBy(startup => startup.Order);
+
+        //configure services
+        foreach (var instance in instances)
+            instance.ConfigureServices(services, null);
 
         _serviceProvider = services.BuildServiceProvider();
 
@@ -601,7 +625,7 @@ public partial class BaseNopTest
                 dataConfig.ConnectionString = NopTestConfiguration.SqliteConnectionString;
                 break;
         }
-       
+
         Singleton<DataConfig>.Instance = dataConfig;
         var flag = !string.IsNullOrEmpty(dataConfig.ConnectionString);
 
