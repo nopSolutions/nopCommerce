@@ -64,7 +64,7 @@ public partial interface IShoppingCartService
     /// Gets shopping cart
     /// </summary>
     /// <param name="customer">Customer</param>
-    /// <param name="shoppingCartType">Shopping cart type; pass null to load all records</param>
+    /// <param name="shoppingCartTypes">Shopping cart types; pass null to load all records</param>
     /// <param name="storeId">Store identifier; pass 0 to load all records</param>
     /// <param name="productId">Product identifier; pass null to load all records</param>
     /// <param name="createdFromUtc">Created date from (UTC); pass null to load all records</param>
@@ -74,7 +74,24 @@ public partial interface IShoppingCartService
     /// A task that represents the asynchronous operation
     /// The task result contains the shopping Cart
     /// </returns>
-    Task<IList<ShoppingCartItem>> GetShoppingCartAsync(Customer customer, ShoppingCartType? shoppingCartType = null,
+    Task<IList<ShoppingCartItem>> GetShoppingCartAsync(Customer customer, List<int> shoppingCartTypes = null,
+        int storeId = 0, int? productId = null, DateTime? createdFromUtc = null, DateTime? createdToUtc = null, int? customWishlistId = null);
+
+    /// <summary>
+    /// Gets shopping cart
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="shoppingCartType">Shopping cart type</param>
+    /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+    /// <param name="productId">Product identifier; pass null to load all records</param>
+    /// <param name="createdFromUtc">Created date from (UTC); pass null to load all records</param>
+    /// <param name="createdToUtc">Created date to (UTC); pass null to load all records</param>
+    /// <param name="customWishlistId">Custom wishlist identifier; pass 0 to load all records from all wishlists, pass null to load records from the default wishlist</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the shopping Cart
+    /// </returns>
+    Task<IList<ShoppingCartItem>> GetShoppingCartAsync(Customer customer, ShoppingCartType shoppingCartType,
         int storeId = 0, int? productId = null, DateTime? createdFromUtc = null, DateTime? createdToUtc = null, int? customWishlistId = null);
 
     /// <summary>
@@ -307,6 +324,31 @@ public partial interface IShoppingCartService
     /// <param name="includeCouponCodes">A value indicating whether to coupon codes (discount and gift card) should be also re-applied</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task MigrateShoppingCartAsync(Customer fromCustomer, Customer toCustomer, bool includeCouponCodes);
+
+    /// <summary>
+    /// Reset data required for checkout
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="storeId">Store identifier</param>
+    /// <param name="clearCouponCodes">A value indicating whether to clear coupon code</param>
+    /// <param name="clearCheckoutAttributes">A value indicating whether to clear selected checkout attributes</param>
+    /// <param name="clearRewardPoints">A value indicating whether to clear "Use reward points" flag</param>
+    /// <param name="clearShippingMethod">A value indicating whether to clear selected shipping method</param>
+    /// <param name="clearPaymentMethod">A value indicating whether to clear selected payment method</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task ResetCheckoutDataAsync(Customer customer, int storeId,
+        bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
+        bool clearRewardPoints = true, bool clearShippingMethod = true,
+        bool clearPaymentMethod = true);
+
+    /// <summary>
+    /// Set the vendor for the customer's shopping cart
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="vendorId">Vendor identifier; pass null to clear</param>
+    /// <param name="storeId">Store identifier</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task SetShoppingCartVendorAsync(Customer customer, int? vendorId, int storeId);
 
     /// <summary>
     /// Indicates whether the shopping cart requires shipping

@@ -229,7 +229,7 @@ public class RfqService
                     await UpdateQuantityWithLogAsync(requestQuoteItem, quantity);
                 break;
             case RfqDefaults.UNIT_PRICE_FORM_KEY:
-                if (decimal.TryParse(formValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var price) && requestQuoteItem.RequestedUnitPrice != price)
+                if (decimal.TryParse(formValue, out var price) && requestQuoteItem.RequestedUnitPrice != price)
                     await UpdateUnitPriceWithLogAsync(requestQuoteItem, price);
 
                 break;
@@ -858,10 +858,10 @@ public class RfqService
         var store = await _storeContext.GetCurrentStoreAsync();
         var quoteItems = await GetQuoteItemsAsync(quoteId);
 
+        //reset cart and checkout info
+        await _shoppingCartService.SetShoppingCartVendorAsync(customer, null, store.Id);
         await _shoppingCartService.ClearShoppingCartAsync(customer, store.Id);
-
-        //reset checkout info
-        await _customerService.ResetCheckoutDataAsync(customer, store.Id);
+        await _shoppingCartService.ResetCheckoutDataAsync(customer, store.Id);
 
         foreach (var quoteItem in quoteItems)
         {

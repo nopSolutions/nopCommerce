@@ -824,9 +824,10 @@ public partial class ShoppingCartController : BasePublicController
         if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
         {
             var store = await _storeContext.GetCurrentStoreAsync();
+
             //search with the same cart type as specified
-            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), 
-                (ShoppingCartType)shoppingCartTypeId, store.Id, customWishlistId: customwishlistid);
+            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(),
+                [shoppingCartTypeId, (int)ShoppingCartType.Stash], store.Id, customWishlistId: customwishlistid);
 
             updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
             //not found? let's ignore it. in this case we'll add a new item
@@ -1248,7 +1249,9 @@ public partial class ShoppingCartController : BasePublicController
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
         var store = await _storeContext.GetCurrentStoreAsync();
+
         var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, store.Id);
+
         var model = new ShoppingCartModel();
         model = await _shoppingCartModelFactory.PrepareShoppingCartModelAsync(model, cart);
         return View(model);
@@ -1265,6 +1268,25 @@ public partial class ShoppingCartController : BasePublicController
             return Challenge();
 
         return RedirectToRoute(NopRouteNames.General.CART);
+    }
+
+
+    [HttpPost, ActionName("Cart")]
+    [FormValueRequired("changevendorcart")]
+    public virtual async Task<IActionResult> ChangeVendorCart(ShoppingCartModel model)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermission.PublicStore.ENABLE_SHOPPING_CART))
+            return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
+
+        if (!_shoppingCartSettings.VendorEnabled)
+            return RedirectToRoute(NopRouteNames.General.CART);
+
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+
+        await _shoppingCartService.SetShoppingCartVendorAsync(customer, model.SelectedVendorId, store.Id);
+
+        return await Cart();
     }
 
     [HttpPost, ActionName("Cart")]
@@ -1850,7 +1872,7 @@ public partial class ShoppingCartController : BasePublicController
         }
 
         // Check if customer has reached the maximum number of custom wishlists allowed
-        var maximumNumberOfCustomWishlist = _shoppingCartSettings.MaximumNumberOfCustomWishlist;        
+        var maximumNumberOfCustomWishlist = _shoppingCartSettings.MaximumNumberOfCustomWishlist;
         if (currentWishlists.Count >= maximumNumberOfCustomWishlist)
         {
             return Json(new
@@ -2000,7 +2022,7 @@ public partial class ShoppingCartController : BasePublicController
             redirect = Url.RouteUrl(NopRouteNames.General.WISHLIST, new { list = wishlistId })
         });
     }
-    
+
     [HttpPost]
     public virtual async Task<IActionResult> DeleteWishlist(int wishlistId)
     {

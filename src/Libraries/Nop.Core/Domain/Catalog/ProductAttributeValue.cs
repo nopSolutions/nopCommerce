@@ -86,13 +86,4 @@ public partial class ProductAttributeValue : BaseEntity, ILocalizedEntity
         get => (AttributeValueType)AttributeValueTypeId;
         set => AttributeValueTypeId = (int)value;
     }
-
-    /// <summary>
-    /// The field is not used since 4.70 and is left only for the update process
-    /// use the <see cref="ProductAttributeValuePicture"/> instead
-    /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Browsable(false)]
-    [Obsolete("The field is not used since 4.70 and is left only for the update process use the ProductAttributeValuePicture instead")]
-    public int? PictureId { get; set; }
 }

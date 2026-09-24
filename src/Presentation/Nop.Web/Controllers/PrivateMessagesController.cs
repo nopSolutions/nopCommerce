@@ -265,7 +265,7 @@ public partial class PrivateMessagesController : BasePublicController
 
                 //Email notification
                 if (_privateMessageSettings.NotifyAboutPrivateMessages)
-                    await _workflowMessageService.SendPrivateMessageNotificationAsync(privateMessage, (await _workContext.GetWorkingLanguageAsync())?.Id ?? 0);
+                    await _workflowMessageService.SendPrivateMessageNotificationAsync(privateMessage, toCustomer.LanguageId ?? 0);
 
                 //activity log
                 await _customerActivityService.InsertActivityAsync("PublicStore.SendPM",

@@ -333,7 +333,7 @@ public partial class PictureService : IPictureService
                 using (var surface = new SKCanvas(bitmap))
                 {
                     surface.RotateDegrees(180, bitmap.Width / 2f, bitmap.Height / 2f);
-                    surface.DrawBitmap(bitmap.Copy(), 0, 0);
+                    surface.DrawBitmap(bitmap.Copy(), 0, 0, SKSamplingOptions.Default);
                 }
                 return bitmap;
             case SKEncodedOrigin.RightTop:
@@ -342,7 +342,7 @@ public partial class PictureService : IPictureService
                 {
                     surface.Translate(rotated.Width, 0);
                     surface.RotateDegrees(90);
-                    surface.DrawBitmap(bitmap, 0, 0);
+                    surface.DrawBitmap(bitmap, 0, 0, SKSamplingOptions.Default);
                 }
                 return rotated;
             case SKEncodedOrigin.LeftBottom:
@@ -351,7 +351,7 @@ public partial class PictureService : IPictureService
                 {
                     surface.Translate(0, rotated.Height);
                     surface.RotateDegrees(270);
-                    surface.DrawBitmap(bitmap, 0, 0);
+                    surface.DrawBitmap(bitmap, 0, 0, SKSamplingOptions.Default);
                 }
                 return rotated;
             default:
@@ -1006,15 +1006,33 @@ public partial class PictureService : IPictureService
         try
         {
             SKBitmap image;
+            var isSvg = mimeType?.Equals("image/svg+xml", StringComparison.OrdinalIgnoreCase) == true;
 
-            if (_mediaSettings.AutoOrientImage)
+            if (isSvg)
             {
                 using var input = new MemoryStream(pictureBinary);
-                using var codec = SKCodec.Create(input);
-                image = AutoOrient(SKBitmap.Decode(codec), codec.EncodedOrigin);
+                using var svg = new SKSvg();
+                svg.Load(input);
+
+                var width = (int)svg.Picture.CullRect.Width;
+                var height = (int)svg.Picture.CullRect.Height;
+
+                image = new SKBitmap(width, height);
+                using var canvas = new SKCanvas(image);
+                canvas.Clear(SKColors.Transparent);
+                canvas.DrawPicture(svg.Picture);
             }
             else
-                image = SKBitmap.Decode(pictureBinary);
+            {
+                if (_mediaSettings.AutoOrientImage)
+                {
+                    using var input = new MemoryStream(pictureBinary);
+                    using var codec = SKCodec.Create(input);
+                    image = AutoOrient(SKBitmap.Decode(codec), codec.EncodedOrigin);
+                }
+                else
+                    image = SKBitmap.Decode(pictureBinary);
+            }
 
             //resize the image in accordance with the maximum size
             if (Math.Max(image.Height, image.Width) <= _mediaSettings.MaximumImageSize)

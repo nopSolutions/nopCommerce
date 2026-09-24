@@ -18,6 +18,9 @@ public partial record OtpSettingsModel : BaseNopModel, ISettingsModel
     [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.OtpCountAttemptsToSendCode")]
     public int OtpCountAttemptsToSendCode { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.OtpFailedAllowedAttempts")]
+    public int OtpFailedAllowedAttempts { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.OtpTimeToRepeat")]
     public int OtpTimeToRepeat { get; set; }
 

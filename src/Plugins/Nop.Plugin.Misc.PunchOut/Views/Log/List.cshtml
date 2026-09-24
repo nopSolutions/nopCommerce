@@ -1,0 +1,118 @@
+@model PunchOutLogSearchModel
+
+@{
+    var hideSearchBlock = Model.HideSearchBlock;
+}
+
+<div class="card-body">
+    <div class="card card-default card-search">
+        <div class="card-body">
+            <div class="row search-row @(!Model.HideSearchBlock ? "opened" : "")" data-hideAttribute="@PunchOutDefaults.HideSearchLogBlock">
+                <div class="search-text">@T("Admin.Common.Search")</div>
+                <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
+                <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+            </div>
+            <div class="search-body @(Model.HideSearchBlock ? "closed" : "")">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <nop-label asp-for="@Model.CreatedFrom" />
+                            </div>
+                            <div class="col-md-8">
+                                <nop-editor asp-for="@Model.CreatedFrom" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <nop-label asp-for="@Model.CreatedTo" />
+                            </div>
+                            <div class="col-md-8">
+                                <nop-editor asp-for="@Model.CreatedTo" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-8 offset-md-4">
+                                <button type="button" id="search-log" class="btn btn-primary btn-search">
+                                    <i class="fas fa-magnifying-glass"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-default">
+        <div class="card-body">
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+                Name = "log-grid",
+                UrlRead = new DataUrl("LogList", "PunchOutAdmin", null),
+                SearchButtonId = "search-log",
+                Length = Model.PageSize,
+                LengthMenu = Model.AvailablePageSizes,
+                Filters = new List<FilterParameter>
+                {
+                    new FilterParameter(nameof(Model.CreatedFrom)),
+                    new FilterParameter(nameof(Model.CreatedTo))
+                },
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(PunchOutLogModel.SessionId))
+                    {
+                        Title = T("Plugins.Misc.PunchOut.Log.SessionId").Text,
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(PunchOutLogModel.MessageType))
+                    {
+                        Title = T("Plugins.Misc.PunchOut.Log.MessageType").Text
+                    },
+                    new ColumnProperty(nameof(PunchOutLogModel.CreatedDate))
+                    {
+                        Title = T("Plugins.Misc.PunchOut.Log.CreatedDate").Text,
+                        Width = "200",
+                        Render = new RenderDate()
+                    },
+                    new ColumnProperty(nameof(PunchOutLogModel.Id))
+                    {
+                        Title = T("Admin.Common.View").Text,
+                        Width = "100",
+                        ClassName = NopColumnClassDefaults.Button,
+                        Render = new RenderButtonView(new DataUrl("~/Admin/PunchOutAdmin/LogView/"))
+                    }
+                }
+            })
+            <script>
+                $(function() {
+                    $('#clear-all-action-confirmation-submit-button').on('click', function () {
+                        $.ajax({
+                            cache: false,
+                            type: 'GET',
+                            url: '@(Url.Action("ClearAll", "PunchOutAdmin"))',
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                showAlert('clear-all-failed', errorThrown);
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                updateTable('#log-grid');
+                            }
+                        });
+                        $('#clear-all-action-confirmation').modal('toggle');
+                        return false;
+                    });
+                });
+            </script>
+        </div>
+        <div class="card-footer">
+            <button type="button" id="clear-all" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.System.Log.ClearLog")
+            </button>
+            <nop-action-confirmation asp-button-id="clear-all" />
+        </div>
+    </div>
+</div>
+
+<nop-alert asp-alert-id="clear-all-failed" />

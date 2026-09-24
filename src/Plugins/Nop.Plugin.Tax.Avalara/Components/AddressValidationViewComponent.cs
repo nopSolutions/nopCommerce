@@ -114,8 +114,7 @@ public class AddressValidationViewComponent : NopViewComponent
             return await ViewAsync("~/Plugins/Tax.Avalara/Views/Checkout/AddressValidation.cshtml", new AddressValidationModel
             {
                 Message = string.Format(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.AddressValidation.Error"),
-                    WebUtility.HtmlEncode(string.Join("; ", errorDetails))),
-                IsError = true
+                    WebUtility.HtmlEncode(string.Join("; ", errorDetails)))
             });
         }
 
@@ -148,15 +147,13 @@ public class AddressValidationViewComponent : NopViewComponent
             return Content(string.Empty);
 
         //otherwise display to customer a confirmation dialog about address updating
-        var model = new AddressValidationModel();
+        var model = new AddressValidationModel { AddressId = existingAddress?.Id ?? 0 };
         if (existingAddress == null)
         {
             await _addressService.InsertAddressAsync(validatedAddress);
+            await _customerService.InsertCustomerAddressAsync(customer, validatedAddress);
             model.AddressId = validatedAddress.Id;
-            model.IsNewAddress = true;
         }
-        else
-            model.AddressId = existingAddress.Id;
 
         async Task<string> getAddressLineAsync(Address address) =>
             WebUtility.HtmlEncode($"{(!string.IsNullOrEmpty(address.Address1) ? $"{address.Address1}, " : string.Empty)}" +

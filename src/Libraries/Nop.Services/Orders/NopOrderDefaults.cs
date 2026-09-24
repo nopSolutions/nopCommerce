@@ -29,7 +29,7 @@ public static partial class NopOrderDefaults
     /// </summary>
     /// <remarks>
     /// {0} : customer ID
-    /// {1} : shopping cart type
+    /// {1} : shopping cart types
     /// {2} : store ID
     /// {3} : product ID
     /// {4} : created from date

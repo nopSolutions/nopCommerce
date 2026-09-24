@@ -1424,7 +1424,7 @@ public class PayPalCommerceServiceManager
             if (!cart.Any())
                 throw new NopException("Shopping cart is empty");
 
-            await _customerService.ResetCheckoutDataAsync(customer, store.Id, clearShippingMethod: false);
+            await _shoppingCartService.ResetCheckoutDataAsync(customer, store.Id, clearShippingMethod: false);
 
             var checkoutAttributesXml = await _genericAttributeService
                 .GetAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, store.Id);

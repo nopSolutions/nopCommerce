@@ -46,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Twilio" Version="7.14.3" />
+    <PackageReference Include="Twilio" Version="8.0.1" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->

@@ -1,0 +1,122 @@
+@model ConfigurationModel
+
+<div class="card-body">
+    <div class="card card-default">
+        <div class="card-header">
+            @T("Plugins.Misc.PunchOut.Configuration.Common")
+        </div>
+        <div class="card-body">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Instruction
+                </div>
+                <div class="panel-body">
+                    <ol>
+                        <li>
+                            A procurement system sends a <strong>PunchOutSetupRequest</strong> to nopCommerce.
+                        </li>
+                        <li>
+                            nopCommerce validates the request, creates a PunchOut session, and returns a <strong>PunchOutSetupResponse</strong> containing the Start Page URL.
+                        </li>
+                        <li>
+                            The user is redirected from the procurement system to the nopCommerce storefront and is automatically authenticated.
+                        </li>
+                        <li>
+                            The user browses the catalog and adds products to the shopping cart as usual.
+                        </li>
+                        <li>
+                            During an active PunchOut session, the standard <strong>Checkout</strong> button is replaced with <strong>Submit for Approval</strong>.
+                        </li>
+                        <li>
+                            When <strong>Submit for Approval</strong> is clicked, nopCommerce generates a <strong>PunchOutOrderMessage (cXML)</strong> from the current shopping cart.
+                        </li>
+                        <li>
+                            The browser automatically posts the PunchOutOrderMessage back to the procurement system using the <strong>BrowserFormPost URL</strong> provided in the original setup request.
+                        </li>
+                        <li>
+                            The procurement system creates or updates the requisition based on the received cart data.
+                        </li>
+                        <li>
+                            No order is created in nopCommerce, and payment processing is skipped.
+                        </li>
+                        <li>
+                            The PunchOut session is completed and the user is returned to the procurement system.
+                        </li>
+                    </ol>
+
+                    <hr />
+
+                    Important notes
+
+                    <ul>
+                        <li>
+                            PunchOut sessions are stored in the DB and expire automatically.
+                        </li>
+                        <li>
+                            All inbound and outbound cXML documents are logged for auditing and troubleshooting.
+                        </li>
+                        <li>
+                            Multiple procurement systems can be configured using separate PunchOut client credentials.
+                        </li>
+                        <li>
+                            Standard nopCommerce checkout flow is bypassed for active PunchOut sessions.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr/>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="IsActive" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="IsActive" />
+                    <span asp-validation-for="IsActive"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="IsActive">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TimeToExpire" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="TimeToExpire" />
+                        <span asp-validation-for="TimeToExpire"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SelectedCustomerRoleIds" />
+                    </div>
+
+                    <div class="col-md-9">            
+                        <div class="input-group-append input-group-required">
+                            <div class="input-group">
+                                <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.UnavailableCustomerRoles" asp-multiple="true" />
+                            </div>
+                        </div>
+                        <script>
+                            $(function() {
+                                var customerRoleIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
+                                    closeOnSelect: false,
+                                    @if (!Model.UnavailableCustomerRoles.Any())
+                                    {
+                                        <text>
+                                        disabled: true,
+                                        placeholder: '@T("Plugins.Misc.PunchOut.Configuration.CustomerRoles.NoRoles")',
+                                        </text>
+                                    }
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group row">
+                <div class="col-md-9 offset-md-3">
+                    <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

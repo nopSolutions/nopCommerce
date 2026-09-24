@@ -73,14 +73,14 @@ public partial class ProcessAbandonedCartsTask : IScheduleTask
             from c in _customerRepository.Table
             join cartItem in _shoppingCartRepository.Table on c.Id equals cartItem.CustomerId
             where !c.Deleted && !string.IsNullOrEmpty(c.Email)
-                && c.HasShoppingCartItems && c.LastShoppingCartUpdateDateUtc != null
+                && c.LastShoppingCartUpdateDateUtc != null
                 && (_reminderSettings.ProcessingStartDateUtc == null || c.LastShoppingCartUpdateDateUtc >= _reminderSettings.ProcessingStartDateUtc)
                 && (
                     ((c.LastAbandonedCartFollowUpNumber == null || c.LastAbandonedCartFollowUpNumber == 0) && c.LastShoppingCartUpdateDateUtc < followUps[MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_1_MESSAGE].Date)
                     || (c.LastAbandonedCartFollowUpNumber == 1 && c.LastAbandonedCartFollowUpDateUtc < followUps[MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_2_MESSAGE].Date)
                     || (c.LastAbandonedCartFollowUpNumber == 2 && c.LastAbandonedCartFollowUpDateUtc < followUps[MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_3_MESSAGE].Date)
                 )
-                && cartItem.ShoppingCartTypeId == (int)ShoppingCartType.ShoppingCart
+                && (cartItem.ShoppingCartTypeId == (int)ShoppingCartType.ShoppingCart || cartItem.ShoppingCartTypeId == (int)ShoppingCartType.Stash)
             select new { Customer = c, CartItem = cartItem };
 
         var skip = 0;

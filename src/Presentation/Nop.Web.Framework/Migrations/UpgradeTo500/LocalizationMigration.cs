@@ -645,6 +645,8 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.CustomerUser.OtpTimeLife.Hint"] = "The time (in seconds) during which the OTP code is valid.",
             ["Admin.Configuration.Settings.CustomerUser.OtpCountAttemptsToSendCode"] = "OTP code send attempts",
             ["Admin.Configuration.Settings.CustomerUser.OtpCountAttemptsToSendCode.Hint"] = "The number of attempts to send the OTP code.",
+            ["Admin.Configuration.Settings.CustomerUser.OtpFailedAllowedAttempts"] = "OTP code verification attempts",
+            ["Admin.Configuration.Settings.CustomerUser.OtpFailedAllowedAttempts.Hint"] = "The number of failed attempts allowed for OTP code verification.",
             ["Admin.Configuration.Settings.CustomerUser.OtpTimeToRepeat"] = "OTP code resend time",
             ["Admin.Configuration.Settings.CustomerUser.OtpTimeToRepeat.Hint"] = "The time (in minutes) before the OTP code can be resent.",
             ["Admin.Configuration.Settings.CustomerUser.OtpLength"] = "OTP code length",
@@ -678,6 +680,7 @@ public class LocalizationMigration : MigrationBase
             ["PhoneVerification.OtpCode.Error.NotRequested"] = "You have not requested an SMS code. Please request a code and try again.",
             ["PhoneVerification.OtpCode.Error.Expired"] = "The SMS code has expired.",
             ["PhoneVerification.OtpCode.Error.Invalid"] = "The SMS code you entered is invalid. Please try again.",
+            ["PhoneVerification.OtpCode.Error.Locked"] = "The SMS code has been locked due to too many failed attempts.",
             ["PhoneVerification.OtpCode.Error.Verification"] = "SMS verification error.",
             ["PhoneVerification.Placeholder"] = "+1 (555) 000-0000",
 
@@ -849,6 +852,17 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.Products.Fields.PriceLists"] = "Price lists",
             ["Admin.Catalog.Products.Fields.PriceLists.Hint"] = "Choose price lists of this product.",
             ["Admin.Catalog.Products.Fields.PriceLists.NoPriceList"] = "No price lists available. Create at least one price list before mapping.",
+
+            //#56
+            ["Admin.Configuration.Settings.ShoppingCart.VendorEnabled"] = "Vendor filtering",
+            ["Admin.Configuration.Settings.ShoppingCart.VendorEnabled.Hint"] = "Check to allow customers to filter shopping cart items by a specific vendor in the cart. It could be useful when you have multi-vendor configured in your store.",
+            ["Admin.Configuration.Settings.ShoppingCart.VendorRequired"] = "Vendor required",
+            ["Admin.Configuration.Settings.ShoppingCart.VendorRequired.Hint"] = "Check if customers are required to choose a vendor before starting the checkout process.",
+            ["Enums.Nop.Core.Domain.Orders.ShoppingCartType.Stash"] = "Stash",
+            ["ShoppingCart.VendorList"] = "Vendor",
+            ["ShoppingCart.VendorList.All"] = "All",
+            ["ShoppingCart.SelectVendorToCheckout"] = "Please select a vendor before proceeding to checkout",
+
         });
 
         #endregion

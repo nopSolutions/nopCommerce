@@ -180,5 +180,10 @@ public static partial class NopCustomerDefaults
     /// </summary>
     public static string OtpContextAttribute => "OtpContext";
 
+    /// <summary>
+    /// Gets a name of generic attribute to store the value of 'ShoppingCartVendor'
+    /// </summary>
+    public static string ShoppingCartVendorAttribute => "ShoppingCartVendor";
+
     #endregion
 }

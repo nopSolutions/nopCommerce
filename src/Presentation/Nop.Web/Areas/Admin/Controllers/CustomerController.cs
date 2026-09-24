@@ -1107,7 +1107,7 @@ public partial class CustomerController : BaseAdminController
 
             //Email notification
             if (_privateMessageSettings.NotifyAboutPrivateMessages)
-                await _workflowMessageService.SendPrivateMessageNotificationAsync(privateMessage, (await _workContext.GetWorkingLanguageAsync())?.Id ?? 0);
+                await _workflowMessageService.SendPrivateMessageNotificationAsync(privateMessage, customerTo.LanguageId ?? 0);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.SendPM.Sent"));
         }

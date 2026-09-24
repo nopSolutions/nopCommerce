@@ -21,6 +21,28 @@
             <span asp-validation-for="ShowGiftCardBox"></span>
         </div>
     </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="VendorEnabled_OverrideForStore" asp-input="VendorEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="VendorEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="VendorEnabled" />
+            <span asp-validation-for="VendorEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="VendorEnabled">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="VendorRequired_OverrideForStore" asp-input="VendorRequired" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="VendorRequired" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="VendorRequired" />
+                <span asp-validation-for="VendorRequired"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
     <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="AllowCartItemEditing_OverrideForStore" asp-input="AllowCartItemEditing" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

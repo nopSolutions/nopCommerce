@@ -32,20 +32,7 @@ public class SchemaMigration : ForwardOnlyMigration
             .NotNullable()
             .SetExistingRowsTo(false);
 
-        //#6710
-        var description = "The field is not used since 4.70 and is left only for the update process use the ProductAttributeCombinationPicture instead";
-
-        this.AddOrAlterColumnFor<ProductAttributeCombination>(t => t.PictureId)
-        .AsInt32()
-        .Nullable()
-        .WithColumnDescription(description);
-
-        this.AddOrAlterColumnFor<ProductAttributeValue>(t => t.PictureId)
-            .AsInt32()
-            .Nullable()
-            .WithColumnDescription(description);
-
-        // 6771
+        //#6771
         this.AddOrAlterColumnFor<Customer>(t => t.LastIpAddress)
             .AsString(100)
             .Nullable();

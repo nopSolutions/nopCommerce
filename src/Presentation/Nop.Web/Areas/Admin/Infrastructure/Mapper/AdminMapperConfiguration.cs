@@ -150,6 +150,7 @@ public partial class AdminMapperConfiguration : BaseMapperProfile
             {
                 map.ForMember(nameof(IAclSupportedModel.AvailableCustomerRoles), options => options.Ignore());
                 map.ForMember(nameof(IAclSupportedModel.SelectedCustomerRoleIds), options => options.Ignore());
+                map.ForMember(nameof(IAclSupportedModel.IsAdvancedSetting), options => options.Ignore());
             }
 
             //exclude some properties from mapping discount supported entities and models
@@ -591,10 +592,7 @@ public partial class AdminMapperConfiguration : BaseMapperProfile
             .ForMember(model => model.Warnings, options => options.Ignore())
             .ForMember(model => model.PictureIds, options => options.Ignore());
         CreateMap<ProductAttributeCombinationModel, ProductAttributeCombination>()
-            .ForMember(entity => entity.AttributesXml, options => options.Ignore())
-#pragma warning disable CS0618
-            .ForMember(entity => entity.PictureId, options => options.Ignore());
-#pragma warning restore CS0618
+            .ForMember(entity => entity.AttributesXml, options => options.Ignore());
 
         CreateMap<ProductAttribute, ProductAttributeModel>()
             .ForMember(model => model.PredefinedProductAttributeValueSearchModel, options => options.Ignore())
@@ -635,10 +633,7 @@ public partial class AdminMapperConfiguration : BaseMapperProfile
             .ForMember(model => model.PictureIds, options => options.Ignore());
         CreateMap<ProductAttributeValueModel, ProductAttributeValue>()
             .ForMember(entity => entity.AttributeValueType, options => options.Ignore())
-            .ForMember(entity => entity.Quantity, options => options.Ignore())
-#pragma warning disable CS0618
-            .ForMember(entity => entity.PictureId, options => options.Ignore());
-#pragma warning restore CS0618
+            .ForMember(entity => entity.Quantity, options => options.Ignore());
 
         CreateMap<ProductEditorSettings, ProductEditorSettingsModel>();
         CreateMap<ProductEditorSettingsModel, ProductEditorSettings>();
@@ -1425,7 +1420,9 @@ public partial class AdminMapperConfiguration : BaseMapperProfile
             .ForMember(model => model.ShowGiftCardBox_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowProductImagesInMiniShoppingCart_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ShowProductImagesOnShoppingCart_OverrideForStore, options => options.Ignore())
-            .ForMember(model => model.ShowProductImagesOnWishList_OverrideForStore, options => options.Ignore());
+            .ForMember(model => model.ShowProductImagesOnWishList_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.VendorEnabled_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.VendorRequired_OverrideForStore, options => options.Ignore());
         CreateMap<ShoppingCartSettingsModel, ShoppingCartSettings>()
             .ForMember(settings => settings.RenderAssociatedAttributeValueQuantity, options => options.Ignore())
             .ForMember(settings => settings.RoundPricesDuringCalculation, options => options.Ignore());

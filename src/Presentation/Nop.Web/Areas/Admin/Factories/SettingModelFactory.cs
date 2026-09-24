@@ -1640,6 +1640,8 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.MiniShoppingCartProductNumber_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.MiniShoppingCartProductNumber, storeId);
         model.AllowCartItemEditing_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.AllowCartItemEditing, storeId);
         model.GroupTierPricesForDistinctShoppingCartItems_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.GroupTierPricesForDistinctShoppingCartItems, storeId);
+        model.VendorEnabled_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.VendorEnabled, storeId);
+        model.VendorRequired_OverrideForStore = await _settingService.SettingExistsAsync(shoppingCartSettings, x => x.VendorRequired, storeId);
 
         return model;
     }

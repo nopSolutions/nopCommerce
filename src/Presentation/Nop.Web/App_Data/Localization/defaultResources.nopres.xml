@@ -7590,6 +7590,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpCountAttemptsToSendCode.Hint">
     <Value>The number of attempts to send the OTP code.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpFailedAllowedAttempts">
+    <Value>OTP code verification attempts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpFailedAllowedAttempts.Hint">
+    <Value>The number of failed attempts allowed for OTP code verification.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.OtpLength">
     <Value>OTP code length</Value>
   </LocaleResource>
@@ -9787,6 +9793,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.ShowProductImagesOnWishList.Hint">
     <Value>Determines whether product images should be displayed in customer wishlists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.VendorEnabled">
+    <Value>Vendor filtering</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.VendorEnabled.Hint">
+    <Value>Check to allow customers to filter shopping cart items by a specific vendor in the cart. It could be useful when you have multi-vendor configured in your store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.VendorRequired">
+    <Value>Vendor required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.VendorRequired.Hint">
+    <Value>Check if customers are required to choose a vendor before starting the checkout process.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.StoreScope">
     <Value>Multi-store configuration for</Value>
@@ -18415,6 +18433,9 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Orders.ShoppingCartType.ShoppingCart">
     <Value>Shopping cart</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.ShoppingCartType.Stash">
+    <Value>Stash</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Orders.ShoppingCartType.Wishlist">
     <Value>Wishlist</Value>
   </LocaleResource>
@@ -19428,6 +19449,9 @@
   </LocaleResource>
   <LocaleResource Name="PhoneVerification.OtpCode.Error.Invalid">
     <Value>The SMS code you entered is invalid. Please try again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PhoneVerification.OtpCode.Error.Locked">
+    <Value>The SMS code has been locked due to too many failed attempts.</Value>
   </LocaleResource>
   <LocaleResource Name="PhoneVerification.OtpCode.Error.NotRequested">
     <Value>You have not requested an SMS code. Please request a code and try again.</Value>
@@ -20803,6 +20827,9 @@
   <LocaleResource Name="ShoppingCart.SelectAttribute">
     <Value>Please select {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.SelectVendorToCheckout">
+    <Value>Please select a vendor before proceeding to checkout</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.SenderEmailError">
     <Value>Enter valid sender email</Value>
   </LocaleResource>
@@ -20880,6 +20907,12 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.UpdateCart">
     <Value>Update shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.VendorList">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.VendorList.All">
+    <Value>All</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.VendorName">
     <Value>Vendor name</Value>

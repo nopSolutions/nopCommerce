@@ -1,0 +1,153 @@
+@model PunchOutIdentitySearchModel
+
+@{
+    var hideSearchBlock = Model.HideSearchBlock;
+}
+
+<div class="card-body">
+    <div class="card card-default card-search">
+        <div class="card-body">
+            <div class="row search-row @(!Model.HideSearchBlock ? "opened" : "")" data-hideAttribute="@PunchOutDefaults.HideSearchIdentityBlock">
+                <div class="search-text">@T("Admin.Common.Search")</div>
+                <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
+                <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+            </div>
+            <div class="search-body @(Model.HideSearchBlock ? "closed" : "")">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <nop-label asp-for="@Model.Identity" />
+                            </div>
+                            <div class="col-md-8">
+                                <nop-editor asp-for="@Model.Identity" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-8 offset-md-4">
+                                <button type="button" id="search-identity" class="btn btn-primary btn-search">
+                                    <i class="fas fa-magnifying-glass"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-default">
+        <div class="card-body">
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+                Name = "identity-grid",
+                UrlRead = new DataUrl("IdentityList", "PunchOutAdmin", null),
+                UrlUpdate = new DataUrl("IdentityUpdate", "PunchOutAdmin", null),
+                UrlDelete = new DataUrl("IdentityDelete", "PunchOutAdmin", null),
+                SearchButtonId = "search-identity",
+                Length = Model.PageSize,
+                LengthMenu = Model.AvailablePageSizes,
+                Filters = new List<FilterParameter>
+                {
+                    new FilterParameter(nameof(Model.Identity))
+                },
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(PunchOutIdentityModel.Identity))
+                    {
+                        Title = T("Plugins.Misc.PunchOut.Identity.Identity").Text,
+                        Editable = true,
+                        EditType = EditType.String
+                    },
+                    new ColumnProperty(nameof(PunchOutIdentityModel.SharedSecret))
+                    {
+                        Title = T("Plugins.Misc.PunchOut.Identity.SharedSecretHash").Text,
+                        Editable = true,
+                        EditType = EditType.String
+                    },
+                    new ColumnProperty(nameof(PunchOutIdentityModel.Id))
+                    {
+                        Title = T("Admin.Common.Edit").Text,
+                        Width = "100",
+                        ClassName =  NopColumnClassDefaults.Button,
+                        Render = new RenderButtonsInlineEdit()
+                    },
+                    new ColumnProperty(nameof(PunchOutIdentityModel.Id))
+                    {
+                        Title = T("Admin.Common.Delete").Text,
+                        Width = "100",
+                        ClassName =  NopColumnClassDefaults.Button,
+                        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                    }
+                }
+            })
+        </div>
+        <div class="card card-default">
+            <div class="card-header">
+                @T("Admin.Common.AddNewRecord")
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddIdentity.Identity" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddIdentity.Identity" />
+                        <span asp-validation-for="@Model.AddIdentity.Identity"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.AddIdentity.SharedSecret" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.AddIdentity.SharedSecret" />
+                        <span asp-validation-for="@Model.AddIdentity.SharedSecret"></span>
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="button" id="addIdentity" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(function() {
+                    $('#addIdentity').click(function () {
+                        $('#addIdentity').attr('disabled', true);
+                        var postData = {
+                            Identity: $("#@Html.IdFor(model => model.AddIdentity.Identity)").val(),
+                            SharedSecret: $("#@Html.IdFor(model => model.AddIdentity.SharedSecret)").val()
+                        };
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@Html.Raw(Url.Action("IdentityAdd", "PunchOutAdmin", null))",
+                            data: postData,
+                            success: function (data, textStatus, jqXHR) {
+                                if (data.Result) {
+                                    //reload grid
+                                    updateTable('#identity-grid');
+
+                                    //clear input value
+                                    $("#@Html.IdFor(model => model.AddIdentity.Identity)").val('');
+                                    $("#@Html.IdFor(model => model.AddIdentity.SharedSecret)").val('');
+                                } else {
+                                    //display errors if returned
+                                    display_nop_error(data);
+                                }
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                $('#addIdentity').attr('disabled', false);
+                            }
+                        });
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</div>

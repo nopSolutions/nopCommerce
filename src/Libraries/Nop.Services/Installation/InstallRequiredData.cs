@@ -1699,6 +1699,7 @@ public partial class InstallationService
             LoginByPhoneEnabled = false,
             OtpTimeLife = 30,
             OtpCountAttemptsToSendCode = 3,
+            OtpFailedAllowedAttempts = 3,
             OtpTimeToRepeat = 15,
             OtpLength = 6
         });
@@ -1849,7 +1850,9 @@ public partial class InstallationService
             RoundPricesDuringCalculation = true,
             GroupTierPricesForDistinctShoppingCartItems = false,
             AllowCartItemEditing = true,
-            RenderAssociatedAttributeValueQuantity = true
+            RenderAssociatedAttributeValueQuantity = true,
+            VendorEnabled = false,
+            VendorRequired = false,
         });
 
         await SaveSettingAsync(dictionary, new OrderSettings

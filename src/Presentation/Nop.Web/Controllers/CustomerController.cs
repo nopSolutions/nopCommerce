@@ -620,6 +620,7 @@ public partial class CustomerController : BasePublicController
         context.CodeGeneratedAtUtc = DateTime.UtcNow;
         context.SentCount++;
         context.LastAttemptAtUtc = DateTime.UtcNow;
+        context.FailedOtpCodeAttemptsCount = 0;
 
         // Send SMS with OTP code using SMS service
         var text = string.Format(await _localizationService.GetResourceAsync("PhoneVerification.OtpCode.Message"), otpCode);
@@ -678,6 +679,14 @@ public partial class CustomerController : BasePublicController
 
         if (context.Code != otpCode)
         {
+            context.FailedOtpCodeAttemptsCount++;
+            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.OtpContextAttribute, JsonConvert.SerializeObject(context));
+
+            if (context.FailedOtpCodeAttemptsCount >= _otpSettings.OtpFailedAllowedAttempts)
+            {
+                return Json(new { success = false, message = await _localizationService.GetResourceAsync("PhoneVerification.OtpCode.Error.Locked") });
+            }
+
             return Json(new { success = false, message = await _localizationService.GetResourceAsync("PhoneVerification.OtpCode.Error.Invalid") });
         }
 

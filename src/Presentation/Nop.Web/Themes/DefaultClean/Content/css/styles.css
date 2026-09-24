@@ -4456,6 +4456,16 @@ label, label + * {
   background-color: var(--accent-blue-active-color);
 }
 
+.shopping-cart-page .sc-vendor {
+  margin-block: 15px;
+}
+
+.shopping-cart-page .sc-vendor-label {
+  margin-block-end: 5px;
+  font-size: 18px;
+  color: var(--dark-gray-color);
+}
+
 .checkout-attributes {
   margin: -30px 0 30px;
   color: var(--dark-gray-color);

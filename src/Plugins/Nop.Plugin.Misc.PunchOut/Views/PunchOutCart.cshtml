@@ -1,0 +1,73 @@
+﻿@model ShoppingCartModel
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.ShoppingCart").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-shopping-cart-page");
+
+    var returnUrl = Url.Action("ReturnToProcurement", "PunchOut");
+}
+
+<div class="page shopping-cart-page">
+    <div class="page-title">
+        <h1>@T("ShoppingCart")</h1>
+    </div>
+    <div class="page-body">
+        <div class="order-summary-content">
+            @if (Model.Items.Count > 0)
+            {
+                if (Model.Warnings.Count > 0)
+                {
+                    <div class="message-error">
+                        <ul>
+                            @foreach (var warning in Model.Warnings)
+                            {
+                                <li>@warning</li>
+                            }
+                        </ul>
+                    </div>
+                }
+                <form asp-route="@NopRouteNames.General.CART" method="post" enctype="multipart/form-data" id="shopping-cart-form">
+                    @await Html.PartialAsync("_ShoppingCartItems", Model)
+                    <div class="cart-options">
+                        <div class="common-buttons">
+                            <button type="submit" name="updatecart" id="updatecart" class="button-2 update-cart-button" style="display: none;">@T("ShoppingCart.UpdateCart")</button>
+                            <button type="submit" name="continueshopping" class="button-2 continue-shopping-button">@T("ShoppingCart.ContinueShopping")</button>
+                        </div>
+                    </div>
+                    <div class="cart-footer">
+                        <div class="totals">
+                            <div class="checkout-buttons">
+                                <button type="button" id="punchout-submit" name="punchout-submit" class="button-1 checkout-button">
+                                    @T("Plugins.Misc.PunchOut.Button.SubmitForApproval")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div class="no-data">
+                    @T("ShoppingCart.CartIsEmpty")
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script asp-location="Footer">
+
+    $(function() {
+        const punchoutButton = $('#punchout-submit');
+
+        punchoutButton.on('click', function() {
+            window.location = '@Html.Raw(returnUrl)';
+        });
+    });
+
+</script>
+

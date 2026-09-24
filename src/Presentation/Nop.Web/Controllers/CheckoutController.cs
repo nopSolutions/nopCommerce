@@ -377,7 +377,7 @@ public partial class CheckoutController : BasePublicController
             return RedirectToRoute(NopRouteNames.General.CART);
 
         //reset checkout data
-        await _customerService.ResetCheckoutDataAsync(customer, store.Id);
+        await _shoppingCartService.ResetCheckoutDataAsync(customer, store.Id);
 
         //validation (cart)
         var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(customer,

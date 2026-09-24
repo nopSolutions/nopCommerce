@@ -626,7 +626,8 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
         ArgumentNullException.ThrowIfNull(items);
 
         //prepare available shopping cart types
-        var availableShoppingCartTypeItems = await ShoppingCartType.ShoppingCart.ToSelectListAsync(false);
+        var availableShoppingCartTypeItems = await ShoppingCartType.ShoppingCart
+            .ToSelectListAsync(markCurrentAsSelected: false, valuesToExclude: [(int)ShoppingCartType.Stash]);
         foreach (var shoppingCartTypeItem in availableShoppingCartTypeItems)
             items.Add(shoppingCartTypeItem);
 
@@ -939,7 +940,7 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
 
         //insert special item for the default value
         await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText, defaultItemValue);
-    }    
+    }
 
     /// <summary>
     /// Prepare translation supported model
