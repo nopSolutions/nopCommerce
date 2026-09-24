@@ -1,0 +1,19 @@
+﻿@model bool
+
+@{
+    var htmlAttributes = ViewData["htmlAttributes"] as IDictionary<string, object> ?? new Dictionary<string, object>();
+
+    if (htmlAttributes.ContainsKey("class"))
+    {
+        var currentClass = htmlAttributes["class"]?.ToString() ?? "";
+        htmlAttributes["class"] = currentClass.Replace("check-box", "").Trim() + " form-check-input";
+    }
+    else
+    {
+        htmlAttributes["class"] = "form-check-input";
+    }
+}
+
+<div class="form-check">
+    @Html.CheckBoxFor(model => model, htmlAttributes)
+</div>

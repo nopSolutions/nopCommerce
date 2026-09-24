@@ -106,8 +106,8 @@ public partial class NopSelectTagHelper : TagHelper
             }
             else
             {
-                if (!htmlAttributes.TryAdd("class", "form-control"))
-                    htmlAttributes["class"] += " form-control";
+                if (!htmlAttributes.TryAdd("class", "form-select"))
+                    htmlAttributes["class"] += " form-select";
 
                 selectList = _htmlHelper.DropDownList(tagName, Items, htmlAttributes);
             }

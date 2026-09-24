@@ -1,21 +1,31 @@
 ﻿@model int
+@using System.Text.Encodings.Web
 
 @{
     var htmlAttributes = ViewData["htmlAttributes"] as Dictionary<string, object> ?? new();
 
-    htmlAttributes.TryAdd("class", "form-control select2");
+    if (htmlAttributes.ContainsKey("class"))
+    {
+        var currentClass = htmlAttributes["class"]?.ToString() ?? "";
+        htmlAttributes["class"] = currentClass.Replace("form-control", "").Trim() + " form-select select2";
+    }
+    else
+    {
+        htmlAttributes["class"] = "form-select select2";
+    }
+
     htmlAttributes.TryAdd("style", "width: 100%;");
-    htmlAttributes.TryAdd("data-dropdown-css-class", "select2-blue");
 }
 
-<div class="select2-blue">
-    @Html.DropDownList("", ViewData["SelectList"] as IEnumerable<SelectListItem>, htmlAttributes)
-</div>
+@Html.DropDownList("", ViewData["SelectList"] as IEnumerable<SelectListItem>, htmlAttributes)
 
 <script>
-    $(function() {
-        $("#@Html.IdForModel()").select2({
-            minimumResultsForSearch: @JavaScriptEncoder.Default.Encode(ViewData["MinimumItemsForSearch"]?.ToString() ?? string.Empty) || Infinity
-        });
+    $(function () {
+      var minResults = @Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Common.Wait").Text == "" ? "0" : (ViewData["MinimumItemsForSearch"]?.ToString() ?? "0")));
+
+      $("#@Html.IdForModel()").select2({
+        minimumResultsForSearch: parseInt(minResults) || Infinity,
+        width: '100%'
+      });
     });
 </script>

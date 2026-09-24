@@ -816,78 +816,137 @@ i.false-icon {
   max-width: 400px;
 }
 
-.select2-blue {
-  width: 100%;
+/* ==========================================================================
+   Select2 Fixes and Customization for Bootstrap 5 and AdminLTE 4 (RTL-Ready)
+   ========================================================================== */
+
+/* Global rules for containers (to prevent selects from shrinking in the grid) */
+.select2-container {
+  display: block !important;
+  width: 100% !important;
 }
 
-.card-search .select2-blue {
+.card-search .select2-container {
   max-width: 425px;
 }
 
-.select2-blue .select2-container--default .select2-selection--single {
-  height: 38px;
+/* Height, borders, and rounded corners for Single Select (matching Bootstrap 5 forms) */
+.select2-container .select2-selection--single {
+  height: 38px !important;
+  display: flex !important;
+  align-items: center;
+  border: 1px solid #ced4da !important;
+  border-radius: 0px !important;
 }
 
-.select2-selection--multiple {
-  height: auto;
-}
-
-.select2-blue .select2-container--default .select2-selection--single, .select2-blue .select2-container--default .select2-selection--multiple {
-  border: 1px solid #ced4da;
-  border-radius: 0px;
-}
-
-  .select2-blue .select2-container--default .select2-selection--single .select2-selection__arrow {
-    top: 6px;
+  /* Center the arrow inside the new flex container */
+  .select2-container .select2-selection--single .select2-selection__arrow {
+    top: 5px !important;
   }
 
-.select2-blue .select2-container--default.select2-container--focus .select2-selection--single {
-  border-color: #80bdff;
+/* Multiple Select Wrapper */
+.select2-container .select2-selection--multiple {
+  min-height: 38px !important;
+  height: auto !important;
+  border: 1px solid #ced4da !important;
+  border-radius: 0px !important;
 }
 
-.select2-blue + .select2-container--default.select2-container--open .select2-selection--single {
-  border-color: #3c8dbc
+/* Focus and Open states — Blue border color */
+.select2-container.select2-container--focus .select2-selection--single,
+.select2-container.select2-container--focus .select2-selection--multiple,
+.select2-container.select2-container--open .select2-selection--single {
+  border-color: #3c8dbc !important;
+  box-shadow: 0 0 0 0.25rem rgba(60, 141, 188, 0.25) !important;
 }
 
-.select2-blue + .select2-container--default.select2-container--focus .select2-selection--single {
-  border-color: #3c8dbc
+/* Styling the search bar inside the dropdown */
+.select2-dropdown .select2-search__field:focus {
+  border: 1px solid #467e9f !important;
+  outline: none !important;
 }
 
-.select2-container--default .select2-blue .select2-dropdown .select2-search__field:focus, .select2-container--default .select2-blue .select2-search--inline .select2-search__field:focus, .select2-container--default .select2-blue.select2-dropdown .select2-search__field:focus, .select2-blue .select2-container--default .select2-dropdown .select2-search__field:focus, .select2-blue .select2-container--default .select2-search--inline .select2-search__field:focus, .select2-blue .select2-container--default.select2-dropdown .select2-search__field:focus {
-  border: 1px solid #467e9f
+/* Highlight active items in the drop-down list (#3c8dbc) */
+.select2-results__option--highlighted,
+.select2-results__option--highlighted[aria-selected],
+.select2-results__option--highlighted[aria-selected]:hover {
+  background-color: #3c8dbc !important;
+  color: #fff !important;
 }
 
-.select2-container--default .select2-blue .select2-results__option--highlighted, .select2-blue .select2-container--default .select2-results__option--highlighted {
-  background-color: #3c8dbc;
-  color: #fff
+/* Customization of selected items in a multiple select (Tags / Text) */
+.select2-container .select2-selection--multiple .select2-selection__choice {
+  background-color: #3c8dbc !important;
+  border-color: #3c8dbc !important;
+  color: #fff !important;
+  padding: 2px 8px !important;
 }
 
-  .select2-container--default .select2-blue .select2-results__option--highlighted[aria-selected], .select2-container--default .select2-blue .select2-results__option--highlighted[aria-selected]:hover, .select2-blue .select2-container--default .select2-results__option--highlighted[aria-selected], .select2-blue .select2-container--default .select2-results__option--highlighted[aria-selected]:hover {
-    background-color: #3c8dbc;
-    color: #fff
+/* ==========================================================================
+   Fixing the background color of the Select2 dropdown list
+   ========================================================================== */
+
+/* We are restoring the white background for the drop-down window itself */
+.select2-dropdown {
+  background-color: #ffffff !important;
+  border: 1px solid #ced4da !important;
+}
+
+/* Set the default text color for inactive list items */
+.select2-container .select2-results__option {
+  background-color: #ffffff !important;
+  color: #212529 !important;
+}
+
+  /* Keep the active element blue (to avoid background conflicts) */
+  .select2-container .select2-results__option--highlighted,
+  .select2-container .select2-results__option[aria-selected="true"] {
+    background-color: #3c8dbc !important;
+    color: #ffffff !important;
   }
 
-.select2-container--default .select2-blue .select2-selection--multiple:focus, .select2-blue .select2-container--default .select2-selection--multiple:focus {
-  border-color: #467e9f
+/* Fix for the search bar inside the dropdown (if enabled) */
+.select2-dropdown .select2-search__field {
+  background-color: #ffffff !important;
+  color: #212529 !important;
 }
 
-.select2-container--default .select2-blue .select2-selection--multiple .select2-selection__choice, .select2-blue .select2-container--default .select2-selection--multiple .select2-selection__choice {
-  background-color: #3c8dbc;
-  border-color: #3c8dbc;
-  color: #fff
+/* ==========================================================================
+   FIX FOR MULTI-SELECT REMOVE BUTTON (END SIDE AND VERTICALLY CENTERED)
+   ========================================================================== */
+
+/* Convert choice box to inline-flex and change item ordering (end side for both LTR/RTL) */
+.select2-container .select2-selection--multiple .select2-selection__choice {
+  display: inline-flex !important;
+  align-items: center !important; /* Vertically center text and remove icon */
+  flex-direction: row-reverse !important; /* Move remove icon to the visual end side */
+  padding: 2px 8px !important;
 }
 
-.select2-container--default .select2-blue .select2-selection--multiple .select2-selection__choice__remove, .select2-blue .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-  color: #fff
+/* Adjust spacing and separators using CSS Logical Properties for native LTR/RTL support */
+.select2-container .select2-selection--multiple .select2-selection__choice__remove {
+  color: inherit !important; /* Inherit text color from parent to prevent black/gray override */
+  opacity: 0.7 !important; /* Slight transparency for better design look */
+
+  margin-inline-start: 6px !important; /* Space between text and remove icon (auto left/right) */
+  margin-inline-end: -2px !important; /* Adjustment at the edge of the choice box (auto left/right) */
+
+  border-inline-end: none !important; /* Reset old border using logical property */
+  border-inline-start: 1px solid rgba(255, 255, 255, 0.2) !important; /* Draw new separator between text and icon */
+
+  padding-inline-start: 6px !important; /* Inner padding near the separator */
+  padding-inline-end: 0 !important;
+  display: flex !important;
+  align-items: center !important; /* Center the 'x' symbol inside its clickable zone */
+  height: 100% !important;
 }
 
-  .select2-container--default .select2-blue .select2-selection--multiple .select2-selection__choice__remove:hover, .select2-blue .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
-    color: #fff
+  /* Hover adjustments for the end-side remove icon */
+  .select2-container .select2-selection--multiple .select2-selection__choice__remove:hover {
+    background-color: transparent !important;
+    color: #fff !important;
+    opacity: 1 !important; /* Fully visible on hover */
   }
-
-.select2-container--default .select2-blue.select2-container--focus .select2-selection--multiple, .select2-blue .select2-container--default.select2-container--focus .select2-selection--multiple {
-  border-color: #3c8dbc
-}
 
 /*GRID FOOTER*/
 .page-item.active .page-link {

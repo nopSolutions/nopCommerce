@@ -18,22 +18,11 @@
 <link rel="stylesheet" href="~/lib_npm/overlayscrollbars/styles/overlayscrollbars.min.css" />
 <link rel="stylesheet" href="~/lib_npm/bootstrap-icons/font/bootstrap-icons.min.css" />
 
-@if (supportRtl)
-{
-    <link rel="stylesheet" href="~/lib_npm/bootstrap/css/bootstrap.rtl.min.css"/>
-    <link rel="stylesheet" href="~/lib_npm/admin-lte/css/adminlte.rtl.min.css"/>
-    <link rel="stylesheet" href="~/css/admin/styles.rtl.css"/>
-}
-else
-{
-    <link rel="stylesheet" href="~/lib_npm/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/lib_npm/admin-lte/css/adminlte.min.css"/>
-    <link rel="stylesheet" href="~/css/admin/styles.css"/>
-}
-@* custom add *@
-<link rel="stylesheet" href="~/lib/select2/select2.min.css" />
-
-<link rel="stylesheet" href="~/lib_npm/admin-lte/css/adminlte-select2@(supportRtl ? ".rtl" : "").min.css">
+<link rel="stylesheet" href="~/lib_npm/bootstrap/css/bootstrap@(supportRtl ? ".rtl" : "").min.css" />
+<link rel="stylesheet" href="~/lib_npm/select2/css/select2.min.css" />
+<link rel="stylesheet" href="~/lib_npm/admin-lte/css/adminlte@(supportRtl ? ".rtl" : "").min.css" />
+<link rel="stylesheet" href="~/lib_npm/admin-lte/css/adminlte-select2@(supportRtl ? ".rtl" : "").min.css" />
+<link rel="stylesheet" href="~/css/admin/styles@(supportRtl ? ".rtl" : "").css" />
 
 @NopHtml.GenerateCssFiles()
 
@@ -41,13 +30,12 @@ else
 <script asp-location="None" src="~/lib_npm/jquery/jquery.min.js"></script>
 <script src="~/lib_npm/jquery-ui-dist/jquery-ui.min.js"></script>
 <script src="~/lib_npm/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="~/lib_npm/admin-lte/js/adminlte.min.js"></script>
 <script src="~/lib_npm/overlayscrollbars/browser/overlayscrollbars.browser.es6.min.js"></script>
+<script src="~/lib_npm/admin-lte/js/adminlte.min.js"></script>
+<script src="~/lib_npm/select2/js/select2.full.min.js"></script>
 <script src="~/lib_npm/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
 <script src="~/lib_npm/jquery-validation/jquery.validate.min.js"></script>
 <script src="~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-@* custom add *@
-<script src="~/lib/select2/select2.full.min.js"></script>
 
 @* cldr scripts (needed for globalize) *@
 <script src="~/lib_npm/cldrjs/cldr.js"></script>
