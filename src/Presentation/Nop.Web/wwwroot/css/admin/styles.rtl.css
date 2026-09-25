@@ -990,20 +990,8 @@ i.false-icon {
   white-space: normal;
 }
 
-.sidebar-collapse .app-sidebar .sidebar-menu .nav-link p {
-  white-space: nowrap;
-}
-
-.sidebar-collapse .app-sidebar:hover .sidebar-menu .nav-link p {
-  white-space: normal;
-}
-
 .sidebar-menu .nav-treeview .nav-item > .nav-link p .nav-arrow {
   margin-left: 0.75rem;
-}
-
-.sidebar-menu .nav-link p {
-  padding-left: 1.5rem;
 }
 
 .sidebar-menu .nav-link {
