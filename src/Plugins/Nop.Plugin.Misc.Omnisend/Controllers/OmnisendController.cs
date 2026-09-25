@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Http;
-using Nop.Plugin.Misc.Omnisend.Services;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -17,7 +16,6 @@ public class OmnisendController : BasePluginController
     private readonly IGenericAttributeService _genericAttributeService;
     private readonly IWebHelper _webHelper;
     private readonly IWorkContext _workContext;
-    private readonly OmnisendService _omnisendService;
 
     #endregion
 
@@ -26,14 +24,12 @@ public class OmnisendController : BasePluginController
     public OmnisendController(ICustomerService customerService,
         IGenericAttributeService genericAttributeService,
         IWebHelper webHelper,
-        IWorkContext workContext,
-        OmnisendService omnisendService)
+        IWorkContext workContext)
     {
         _customerService = customerService;
         _genericAttributeService = genericAttributeService;
         _webHelper = webHelper;
         _workContext = workContext;
-        _omnisendService = omnisendService;
     }
 
     #endregion
@@ -49,8 +45,6 @@ public class OmnisendController : BasePluginController
         var customerEmail = await _genericAttributeService.GetAttributeAsync<string>(customer, OmnisendDefaults.CustomerEmailAttribute);
         if (!string.IsNullOrEmpty(customerEmail) && !customerEmail.Equals(customer.Email, StringComparison.InvariantCultureIgnoreCase))
             return RedirectToRoute(NopRouteNames.General.LOGIN, new { ReturnUrl = _webHelper.GetRawUrl(Request) });
-
-        await _omnisendService.RestoreShoppingCartAsync(cartId);
 
         return RedirectToRoute(NopRouteNames.General.CART);
     }

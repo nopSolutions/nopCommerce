@@ -3,6 +3,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Plugin.Misc.Omnisend.Services;
 using Nop.Services.Common;
 using Nop.Services.Events;
@@ -25,12 +26,10 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     IConsumer<EntityInsertedEvent<StockQuantityHistory>>,
     IConsumer<EntityUpdatedEvent<ShoppingCartItem>>,
     IConsumer<EntityInsertedEvent<OrderItem>>,
-    IConsumer<OrderAuthorizedEvent>,
     IConsumer<OrderPaidEvent>,
     IConsumer<OrderPlacedEvent>,
     IConsumer<OrderRefundedEvent>,
     IConsumer<OrderStatusChangedEvent>,
-    IConsumer<OrderVoidedEvent>,
     IConsumer<PageRenderingEvent>
 {
     #region Fields
@@ -174,7 +173,6 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
             return;
 
         await _omnisendEventsService.SendAddedProductToCartEventAsync(entity);
-        //await _omnisendService.AddShoppingCartItemAsync(eventMessage.Entity);
     }
 
     /// <summary>
@@ -188,7 +186,6 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
             return;
 
         await _omnisendEventsService.SendOrderPlacedEventAsync(eventMessage.Order);
-        await _omnisendService.PlaceOrderAsync(eventMessage.Order);
     }
 
     /// <summary>
@@ -202,7 +199,6 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
             return;
 
         await _omnisendEventsService.SendOrderPaidEventAsync(eventMessage);
-        //await _omnisendService.UpdateOrderAsync(eventMessage.Order);
     }
 
     /// <summary>
@@ -216,7 +212,6 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
             return;
 
         await _omnisendEventsService.SendOrderRefundedEventAsync(eventMessage);
-        //await _omnisendService.UpdateOrderAsync(eventMessage.Order);
     }
 
     /// <summary>
@@ -230,7 +225,6 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
             return;
 
         await _omnisendEventsService.SendOrderStatusChangedEventAsync(eventMessage);
-        //await _omnisendService.UpdateOrderAsync(eventMessage.Order);
     }
 
     /// <summary>
@@ -243,7 +237,12 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
         if (!_omnisendService.IsConfigured)
             return;
 
-        await _omnisendEventsService.SendStartedCheckoutEventAsync(eventMessage);
+        var routeName = eventMessage.GetRouteName();
+        if (!routeName.Equals(NopRouteNames.Standard.CHECKOUT_ONE_PAGE, StringComparison.InvariantCultureIgnoreCase) &&
+            !routeName.Equals(NopRouteNames.Standard.CHECKOUT_BILLING_ADDRESS, StringComparison.InvariantCultureIgnoreCase))
+            return;
+
+        await _omnisendEventsService.SendStartedCheckoutEventAsync();
     }
 
     /// <summary>
@@ -251,14 +250,12 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
     /// </summary>
     /// <param name="eventMessage">Event</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
+    public async Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
     {
         if (!_omnisendService.IsConfigured)
-            return Task.CompletedTask;
+            return;
 
-        //await _omnisendService.EditShoppingCartItemAsync(eventMessage.Entity);
-
-        return Task.CompletedTask;
+        await _omnisendEventsService.SendStartedCheckoutEventAsync();
     }
 
     /// <summary>
@@ -271,37 +268,7 @@ internal class EventConsumer : IConsumer<CustomerLoggedinEvent>,
         if (!_omnisendService.IsConfigured)
             return;
 
-        await _omnisendService.DeleteShoppingCartItemAsync(eventMessage.Entity);
-    }
-
-    /// <summary>
-    /// Handle event
-    /// </summary>
-    /// <param name="eventMessage">Event</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public Task HandleEventAsync(OrderAuthorizedEvent eventMessage)
-    {
-        if (!_omnisendService.IsConfigured)
-            return Task.CompletedTask;
-
-        //await _omnisendService.UpdateOrderAsync(eventMessage.Order);
-
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// Handle event
-    /// </summary>
-    /// <param name="eventMessage">Event</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public Task HandleEventAsync(OrderVoidedEvent eventMessage)
-    {
-        if (!_omnisendService.IsConfigured)
-            return Task.CompletedTask;
-
-        //await _omnisendService.UpdateOrderAsync(eventMessage.Order);
-
-        return Task.CompletedTask;
+        await _omnisendEventsService.SendStartedCheckoutEventAsync();
     }
 
     /// <summary>
