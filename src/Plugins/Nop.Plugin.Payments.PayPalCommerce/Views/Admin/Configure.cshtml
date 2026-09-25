@@ -154,7 +154,7 @@
                     <div class="col-md-9 offset-md-3 mb-3">
                         @if (!string.IsNullOrEmpty(Model.UseSandbox ? Model.SandboxSignUpUrl : Model.LiveSignUpUrl))
                         {
-                            <a id="onboardingButton" href="@(Model.UseSandbox ? Model.SandboxSignUpUrl : Model.LiveSignUpUrl)" target="_blank" class="btn btn-info" data-paypal-onboard-complete="onboardedCallback" data-paypal-button="true" onclick="return onboarding();">
+                            <a id="onboardingButton" href="@(Model.UseSandbox ? Model.SandboxSignUpUrl : Model.LiveSignUpUrl)" target="_blank" class="btn btn-info text-white" data-paypal-onboard-complete="onboardedCallback" data-paypal-button="true" onclick="return onboarding();">
                                 @T("Plugins.Payments.PayPalCommerce.Onboarding.Button")
                             </a>
                             <script src="@PayPalCommerceDefaults.Onboarding.ScriptUrl" id="paypal-js"></script>

@@ -107,7 +107,7 @@
                                         <div class="input-group-append">
                                             @if (Model.Id > 0)
                                             {
-                                                <button type="submit" name="changepassword" class="btn btn-info">
+                                                <button type="submit" name="changepassword" class="btn btn-info text-white">
                                                     @T("Admin.Configuration.EmailAccounts.Fields.Password.Change")
                                                 </button>
                                             }
@@ -146,7 +146,7 @@
                                     <div class="input-group">
                                         <nop-editor asp-for="ClientSecret" html-attributes="@(new { value = Model.ClientSecret })" />
                                         <div class="input-group-append">
-                                            <button type="submit" name="changesecret" class="btn btn-info">
+                                            <button type="submit" name="changesecret" class="btn btn-info text-white">
                                                 @T("Admin.Configuration.EmailAccounts.Fields.ClientSecret.Change")
                                             </button>
                                         </div>
@@ -187,7 +187,7 @@
                                     <div class="input-group">
                                         <nop-editor asp-for="SendTestEmailTo" />
                                         <div class="input-group-append">
-                                            <button type="submit" name="sendtestemail" class="btn btn-info">
+                                            <button type="submit" name="sendtestemail" class="btn btn-info text-white">
                                                 @T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")
                                             </button>
                                         </div>

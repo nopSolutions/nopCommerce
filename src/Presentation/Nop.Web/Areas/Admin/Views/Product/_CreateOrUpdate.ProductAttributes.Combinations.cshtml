@@ -96,11 +96,11 @@
             <button type="submit" id="btnAddNewCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 700, true); return false;" class="btn btn-primary">
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")
             </button>
-            <button type="button" id="btnGenerateAllCombinations" class="btn btn-info">
+            <button type="button" id="btnGenerateAllCombinations" class="btn btn-info text-white">
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")
             </button>
 
-            <button type="submit" id="btnGenerateSeveralCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationGeneratePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 700, true); return false;" class="btn btn-info">
+            <button type="submit" id="btnGenerateSeveralCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationGeneratePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 700, true); return false;" class="btn btn-info text-white">
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveral")
             </button>
             <nop-action-confirmation asp-button-id="btnGenerateAllCombinations" />

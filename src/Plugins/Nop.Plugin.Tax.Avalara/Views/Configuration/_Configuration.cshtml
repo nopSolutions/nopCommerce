@@ -246,12 +246,12 @@
             </button>
             @if (Model.IsConfigured)
             {
-                <button type="submit" name="check-credentials" class="btn btn-info ml-1">
+                <button type="submit" name="check-credentials" class="btn btn-info text-white ml-1">
                     @T("Plugins.Tax.Avalara.Configuration.Credentials.Button")
                 </button>
                 @if (Model.EnableCertificates)
                 {
-                    <button type="submit" name="request-certificate-setup" class="btn btn-info ml-1">
+                    <button type="submit" name="request-certificate-setup" class="btn btn-info text-white ml-1">
                         @T("Plugins.Tax.Avalara.Configuration.Certificates.Button")
                     </button>
                 }
@@ -339,7 +339,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-md-9 offset-md-3">
-                        <button type="submit" name="test-tax" class="btn btn-info">
+                        <button type="submit" name="test-tax" class="btn btn-info text-white">
                             @T("Plugins.Tax.Avalara.TestTax.Button")
                         </button>
                     </div>

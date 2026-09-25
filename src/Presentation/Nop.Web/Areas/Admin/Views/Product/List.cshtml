@@ -26,11 +26,11 @@
                     <i class="fas fa-square-plus"></i>
                     @T("Admin.Common.AddNew")
                 </a>
-                <a asp-action="BulkEdit" class="btn btn-info">
+                <a asp-action="BulkEdit" class="btn btn-info text-white">
                     <i class="fas fa-pen"></i>
                     @T("Admin.Catalog.Products.BulkEdit")
                 </a>
-                <button asp-action="DownloadCatalogPDF" type="submit" name="download-catalog-pdf" class="btn bg-purple">
+                <button asp-action="DownloadCatalogPDF" type="submit" name="download-catalog-pdf" class="btn text-bg-indigo">
                     <i class="far fa-file-pdf"></i>
                     @T("Admin.Catalog.Products.List.DownloadPDF")
                 </button>
@@ -71,7 +71,7 @@
                 @if (!Model.IsLoggedInAsVendor || Model.AllowVendorsToImportProducts)
                 {
                     //a vendor cannot import products
-                    <button type="button" name="importexcel" class="btn bg-olive" data-bs-toggle="modal" data-bs-target="#importexcel-window">
+                    <button type="button" name="importexcel" class="btn text-bg-olive" data-bs-toggle="modal" data-bs-target="#importexcel-window">
                         <i class="fas fa-upload"></i>
                         @T("Admin.Common.Import")
                     </button>
@@ -181,7 +181,7 @@
                                                     <div class="input-group input-group-short">
                                                         <nop-editor asp-for="GoDirectlyToSku" />
                                                         <span class="input-group-append">
-                                                            <button type="submit" id="go-to-product-by-sku" name="go-to-product-by-sku" class="btn btn-info btn-flat">
+                                                            <button type="submit" id="go-to-product-by-sku" name="go-to-product-by-sku" class="btn btn-info btn-flat text-white">
                                                                 @T("Admin.Common.Go")
                                                             </button>
                                                         </span>

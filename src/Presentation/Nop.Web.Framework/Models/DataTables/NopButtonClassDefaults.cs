@@ -24,7 +24,7 @@ public static partial class NopButtonClassDefaults
     /// <summary>
     /// Blue class name
     /// </summary>
-    public static string Info => "btn btn-info";
+    public static string Info => "btn btn-info text-white";
 
     /// <summary>
     /// Red class name
@@ -39,5 +39,5 @@ public static partial class NopButtonClassDefaults
     /// <summary>
     /// Olive class name
     /// </summary>
-    public static string Olive => "btn bg-olive";
+    public static string Olive => "btn text-bg-olive";
 }

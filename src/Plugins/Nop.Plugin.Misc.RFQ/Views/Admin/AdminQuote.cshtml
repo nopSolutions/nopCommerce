@@ -30,7 +30,7 @@
         <div class="float-end">
             @if (Model.DisplayAddNewProductButton)
             {
-                <button type="submit" id="btnAddNewProduct" name="btnAddNewProduct" onclick="javascript:setLocation('@(Url.Action("AddProductToQuote", "RfqAdmin", new { quoteId = Model.Id }))'); return false;" class="btn btn-info">
+                <button type="submit" id="btnAddNewProduct" name="btnAddNewProduct" onclick="javascript:setLocation('@(Url.Action("AddProductToQuote", "RfqAdmin", new { quoteId = Model.Id }))'); return false;" class="btn btn-info text-white">
                     <i class="far fa-plus-square"></i>
                     @T("Plugins.Misc.RFQ.AddNewProduct")
                 </button>
@@ -40,14 +40,14 @@
                 <button type="submit"
                         name="sendQuote"
                         id="send-request"
-                        class="btn btn-info">
+                        class="btn btn-info text-white">
                     <i class="far fa-share-square"></i>
                     @T("Plugins.Misc.RFQ.SendQuote")
                 </button>
             }
             @if (Model.Items.Any())
             {
-                <a asp-action="PdfDocument" asp-controller="RfqAdmin" asp-route-quoteId="@Model.Id" class="btn btn-info">
+                <a asp-action="PdfDocument" asp-controller="RfqAdmin" asp-route-quoteId="@Model.Id" class="btn btn-info text-white">
                     <i class="far fa-file-pdf"></i>
                     @T("Plugins.Misc.RFQ.CreatePdf")
                 </a>

@@ -73,7 +73,7 @@
 
                             <script>
                             function renderColumnSystemName(data, type, row, meta) {
-                                return '<a href="@Url.Content("~/Admin/Sms/MarkAsPrimaryProvider/")?systemName=' + row.SystemName +'" class="btn bg-green">@T("Admin.Configuration.Sms.Providers.Fields.MarkAsPrimaryProvider").Text</a>';
+                                return '<a href="@Url.Content("~/Admin/Sms/MarkAsPrimaryProvider/")?systemName=' + row.SystemName +'" class="btn text-bg-success">@T("Admin.Configuration.Sms.Providers.Fields.MarkAsPrimaryProvider").Text</a>';
                             }
 
                             function renderColumnConfigure(data, type, row, meta) {

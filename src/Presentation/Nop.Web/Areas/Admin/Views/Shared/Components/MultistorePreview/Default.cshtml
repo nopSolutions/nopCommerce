@@ -5,7 +5,7 @@
     var models = Model.PreviewModels;
     @if (models.Count == 1)
     {
-        <button id="preview-topic-button" type="button" onclick="javascript:OpenWindow('@models[0].Url', 800, 600, true); return false;" class="btn btn-info">
+        <button id="preview-topic-button" type="button" onclick="javascript:OpenWindow('@models[0].Url', 800, 600, true); return false;" class="btn btn-info text-white">
             <i class="far fa-eye"></i>
             @T("Admin.Common.Preview")
         </button>
@@ -13,11 +13,11 @@
     else
     {
         <div class="btn-group" id="preview-topic-button">
-            <button type="button" class="btn btn-info">
+            <button type="button" class="btn btn-info text-white">
                 <i class="far fa-eye"></i>
                 @T("Admin.Common.Preview")
             </button>
-            <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-bs-toggle="dropdown" aria-expanded="false"></button>
+            <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split text-white" data-bs-toggle="dropdown" aria-expanded="false"></button>
             <ul class="dropdown-menu">
                 @foreach (var multistorePreview in models)
                 {

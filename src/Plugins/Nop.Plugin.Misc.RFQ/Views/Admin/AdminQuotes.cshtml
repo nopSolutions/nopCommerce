@@ -22,7 +22,7 @@
         </h1>
         <div class="float-end">
             <button type="submit" id="btnCreate" name="btnCreate" style="display: none"></button>
-            <button type="submit" id="btnCreateNewQuote" onclick="javascript:OpenWindow('@Url.Action("SelectCustomerPopup", "RfqAdmin", new { btnId = "btnCreate", productIdInput = Html.IdFor(model => model.CustomerId) })', 800, 850, true); return false;" class="btn btn-info">
+            <button type="submit" id="btnCreateNewQuote" onclick="javascript:OpenWindow('@Url.Action("SelectCustomerPopup", "RfqAdmin", new { btnId = "btnCreate", productIdInput = Html.IdFor(model => model.CustomerId) })', 800, 850, true); return false;" class="btn btn-info text-white">
                 <i class="fas fa-plus-square"></i>
                 @T("Plugins.Misc.RFQ.CreateNew")
             </button>

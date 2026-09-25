@@ -59,16 +59,16 @@
                         </li>
                     </ul>
                 </div>
-                <button type="button" name="importexcel" class="btn bg-olive" data-bs-toggle="modal" data-bs-target="#importexcel-window">
+                <button type="button" name="importexcel" class="btn text-bg-olive" data-bs-toggle="modal" data-bs-target="#importexcel-window">
                     <i class="fas fa-upload"></i>
                     @T("Admin.Common.Import")
                 </button>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-info">
+                    <button type="button" class="btn btn-info text-white">
                         <i class="far fa-file-pdf"></i>
                         @T("Admin.Orders.PdfInvoices")
                     </button>
-                    <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split text-white" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="sr-only">&nbsp;</span>
                     </button>
                     <ul class="dropdown-menu">
@@ -133,7 +133,7 @@
                                                 <div class="col-md-8">
                                                     <input type="text" id="search-product-name" autocomplete="off" class="form-control" />
                                                     <span id="search-product-friendly-name"></span>
-                                                    <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
+                                                    <button type="button" id="search-product-clear" class="btn btn-secondary" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
                                                     <input asp-for="ProductId" autocomplete="off" style="display: none;" />
                                                     <script>
                                                     $(function() {
@@ -262,7 +262,7 @@
                                                     <div class="input-group input-group-short">
                                                         <nop-editor asp-for="GoDirectlyToCustomOrderNumber" />
                                                         <span class="input-group-append">
-                                                            <button type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="btn btn-info btn-flat">
+                                                            <button type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="btn btn-info btn-flat text-white">
                                                                 @T("Admin.Common.Go")
                                                             </button>
                                                         </span>

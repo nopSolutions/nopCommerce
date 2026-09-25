@@ -205,7 +205,7 @@
                                 </div>
                                 <div class="card-body">
 
-                                    <a onclick="applyCurrencyRate()" class="btn bg-olive">@T("Admin.Configuration.Currencies.ApplyRate.All")</a>
+                                    <a onclick="applyCurrencyRate()" class="btn text-bg-olive">@T("Admin.Configuration.Currencies.ApplyRate.All")</a>
                                     @await Html.PartialAsync("Table", new DataTablesModel
                                     {
                                         Name = "rate-grid",
@@ -239,7 +239,7 @@
                                         row.Rate +
                                         '\',\'' +
                                         row.CurrencyCode +
-                                        '\')" class="btn bg-olive">@T("Admin.Configuration.Currencies.ApplyRate")</a>';
+                                        '\')" class="btn text-bg-olive">@T("Admin.Configuration.Currencies.ApplyRate")</a>';
                                 }
 
                                 function applyCurrencyRate(rate, currencyCode) {

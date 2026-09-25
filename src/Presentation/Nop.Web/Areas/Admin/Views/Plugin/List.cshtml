@@ -45,7 +45,7 @@
                         });
                 });
             </script>
-            <button type="button" name="uploadplugin" class="btn bg-olive" data-bs-toggle="modal" data-bs-target="#uploadplugin-window">
+            <button type="button" name="uploadplugin" class="btn text-bg-olive" data-bs-toggle="modal" data-bs-target="#uploadplugin-window">
                 <i class="fas fa-upload"></i>
                 @T("Admin.Configuration.Plugins.Upload")
             </button>
@@ -276,7 +276,7 @@
                                 if (row.Installed) {
                                     return '<button type="submit" name="uninstall-plugin-link-' + row.SystemName + '" class="btn btn-danger uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall").Text</button>';
                                 } else {
-                                    return '<button type="submit" name="install-plugin-link-' + row.SystemName + '" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install").Text</button> <button type="button" name="delete-plugin-link-' + row.SystemName + '" class="btn btn-danger delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete").Text</button>';
+                                                                return '<button type="submit" name="install-plugin-link-' + row.SystemName + '" class="btn text-bg-success install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install").Text</button> <button type="button" name="delete-plugin-link-' + row.SystemName + '" class="btn btn-danger delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete").Text</button>';
                                 }
                             }
                         </script>

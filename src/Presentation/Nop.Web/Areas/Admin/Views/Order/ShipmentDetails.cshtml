@@ -75,7 +75,7 @@
             </small>
         </h1>
         <div class="float-end">
-            <a asp-action="PdfPackagingSlip" asp-route-shipmentId="@Model.Id" class="btn btn-info">
+            <a asp-action="PdfPackagingSlip" asp-route-shipmentId="@Model.Id" class="btn btn-info text-white">
                 <i class="far fa-file-pdf"></i>
                 @T("Admin.Orders.Shipments.PrintPackagingSlip")
             </a>
@@ -110,7 +110,7 @@
                                     <div class="input-group input-group-short float-left">
                                         <nop-editor asp-for="TrackingNumber" />
                                         <span class="input-group-append">
-                                            <button type="submit" name="settrackingnumber" class="btn btn-info">
+                                            <button type="submit" name="settrackingnumber" class="btn btn-info text-white">
                                                 @T("Admin.Orders.Shipments.TrackingNumber.Button")
                                             </button>
                                         </span>
@@ -129,7 +129,7 @@
                                     <div class="input-group">
                                         <nop-editor asp-for="AdminComment" />
                                         <span class="input-group-append">
-                                            <button type="submit" name="setadmincomment" class="btn btn-info">
+                                            <button type="submit" name="setadmincomment" class="btn btn-info text-white">
                                                 @T("Admin.Orders.Shipments.AdminComment.Button")
                                             </button>
                                         </span>
@@ -165,7 +165,7 @@
                                             <div class="input-group-append col-md-3">
                                                 @if (Model.CanMarkAsReadyForPickup)
                                                 {
-                                                    <button type="submit" name="setasreadyforpickup" id="setasreadyforpickup" class="btn btn-info btn-flat">
+                                                    <button type="submit" name="setasreadyforpickup" id="setasreadyforpickup" class="btn btn-info btn-flat text-white">
                                                         @T("Admin.Orders.Shipments.ReadyForPickupDate.Button")
                                                     </button>
                                                 }
@@ -210,7 +210,7 @@
                                             <div class="input-group-append col-md-3">
                                                 @if (Model.CanShip)
                                                 {
-                                                    <button type="submit" name="setasshipped" id="setasshipped" class="btn btn-info btn-flat">
+                                                    <button type="submit" name="setasshipped" id="setasshipped" class="btn btn-info btn-flat text-white">
                                                         @T("Admin.Orders.Shipments.ShippedDate.Button")
                                                     </button>
                                                 }
@@ -254,7 +254,7 @@
                                         <div class="input-group-append col-md-3">
                                             @if (Model.CanDeliver)
                                             {
-                                                <button type="submit" name="setasdelivered" id="setasdelivered" class="btn btn-info btn-flat">
+                                                <button type="submit" name="setasdelivered" id="setasdelivered" class="btn btn-info btn-flat text-white">
                                                     @T("Admin.Orders.Shipments.DeliveryDate.Button")
                                                 </button>
                                             }
