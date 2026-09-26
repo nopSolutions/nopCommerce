@@ -14,7 +14,7 @@
     <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project.
     You need to set this parameter to true if your plugin has a nuget package
     to ensure that the dlls copied from the NuGet cache to the output of your project-->
-    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
@@ -86,6 +86,10 @@
     <Content Include="Views\_ViewImports.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PayPalServerSDK" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
