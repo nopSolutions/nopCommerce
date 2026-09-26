@@ -6,6 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
@@ -25,6 +26,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Discounts;
 using Nop.Services.ExportImport.Help;
 using Nop.Services.FilterLevels;
 using Nop.Services.Localization;
@@ -59,6 +61,7 @@ public partial class ImportManager : IImportManager
     protected readonly ICustomNumberFormatter _customNumberFormatter;
     protected readonly INopDataProvider _dataProvider;
     protected readonly IDateRangeService _dateRangeService;
+    // protected readonly IDiscountService _discountService;
     protected readonly IFilterLevelValueService _filterLevelValueService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IHttpClientFactory _httpClientFactory;
@@ -84,6 +87,7 @@ public partial class ImportManager : IImportManager
     protected readonly IStoreContext _storeContext;
     protected readonly IStoreMappingService _storeMappingService;
     protected readonly IStoreService _storeService;
+    protected readonly IDiscountService _discountService;
     protected readonly ITaxCategoryService _taxCategoryService;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVendorService _vendorService;
@@ -109,6 +113,7 @@ public partial class ImportManager : IImportManager
         ICustomNumberFormatter customNumberFormatter,
         INopDataProvider dataProvider,
         IDateRangeService dateRangeService,
+        IDiscountService discountService,
         IFilterLevelValueService filterLevelValueService,
         IGenericAttributeService genericAttributeService,
         IHttpClientFactory httpClientFactory,
@@ -154,6 +159,7 @@ public partial class ImportManager : IImportManager
         _customNumberFormatter = customNumberFormatter;
         _dataProvider = dataProvider;
         _dateRangeService = dateRangeService;
+        _discountService = discountService;
         _filterLevelValueService = filterLevelValueService;
         _genericAttributeService = genericAttributeService;
         _httpClientFactory = httpClientFactory;
@@ -3853,6 +3859,115 @@ public partial class ImportManager : IImportManager
         //activity log
         await _customerActivityService.InsertActivityAsync("ImportPriceLists",
             string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportPriceLists"), metadata.CountPriceListsInFile));
+    }
+
+    /// <summary>
+    /// Import discounts from XLSX file
+    /// </summary>
+    /// <param name="stream">Stream</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task ImportDiscountsFromXlsxAsync(Stream stream)
+    {
+        using var workbook = new XLWorkbook(stream);
+
+        var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
+        //the columns
+        var metadata = GetWorkbookMetadata<Discount>(workbook, languages);
+        var defaultWorksheet = metadata.DefaultWorksheet;
+        var defaultProperties = metadata.DefaultProperties;
+        var localizedProperties = metadata.LocalizedProperties;
+
+        var manager = new PropertyManager<Discount>(defaultProperties, _catalogSettings, localizedProperties, languages);
+
+        var iRow = 2;
+
+        while (true)
+        {
+            var allColumnsAreEmpty = manager.GetDefaultProperties
+                .Select(property => defaultWorksheet.Row(iRow).Cell(property.PropertyOrderPosition))
+                .All(cell => cell?.Value == null || string.IsNullOrEmpty(cell.Value.ToString()));
+
+            if (allColumnsAreEmpty)
+                break;
+
+            manager.ReadDefaultFromXlsx(defaultWorksheet, iRow);
+
+            var discount = await _discountService.GetDiscountByIdAsync(manager.GetDefaultProperty("Id").IntValue);
+
+            var isNew = discount == null;
+
+            discount ??= new Discount();
+
+            foreach (var property in manager.GetDefaultProperties)
+            {
+                switch (property.PropertyName)
+                {
+                    case "Name":
+                        discount.Name = property.StringValue;
+                        break;
+                    case "AdminComment":
+                        discount.AdminComment = property.StringValue;
+                        break;
+                    case "DiscountTypeId":
+                        discount.DiscountTypeId = property.IntValue;
+                        break;
+                    case "UsePercentage":
+                        discount.UsePercentage = property.BooleanValue;
+                        break;
+                    case "DiscountPercentage":
+                        discount.DiscountPercentage = property.DecimalValue;
+                        break;
+                    case "DiscountAmount":
+                        discount.DiscountAmount = property.DecimalValue;
+                        break;
+                    case "MaximumDiscountAmount":
+                        discount.MaximumDiscountAmount = property.DecimalValue == 0 ? null : property.DecimalValue;
+                        break;
+                    case "StartDateUtc":
+                        discount.StartDateUtc = property.PropertyValue is DateTime startDate ? startDate : null;
+                        break;
+                    case "EndDateUtc":
+                        discount.EndDateUtc = property.PropertyValue is DateTime endDate ? endDate : null;
+                        break;
+                    case "RequiresCouponCode":
+                        discount.RequiresCouponCode = property.BooleanValue;
+                        break;
+                    case "CouponCode":
+                        discount.CouponCode = property.StringValue;
+                        break;
+                    case "IsCumulative":
+                        discount.IsCumulative = property.BooleanValue;
+                        break;
+                    case "DiscountLimitationId":
+                        discount.DiscountLimitationId = property.IntValue;
+                        break;
+                    case "LimitationTimes":
+                        discount.LimitationTimes = property.IntValue;
+                        break;
+                    case "MaximumDiscountedQuantity":
+                        discount.MaximumDiscountedQuantity = property.IntValue == 0 ? null : property.IntValue;
+                        break;
+                    case "AppliedToSubCategories":
+                        discount.AppliedToSubCategories = property.BooleanValue;
+                        break;
+                    case "IsActive":
+                        discount.IsActive = property.BooleanValue;
+                        break;
+                }
+            }
+
+            if (isNew)
+                await _discountService.InsertDiscountAsync(discount);
+            else
+                await _discountService.UpdateDiscountAsync(discount);
+
+            iRow++;
+        }
+
+        //activity log
+        await _customerActivityService.InsertActivityAsync("ImportDiscounts",
+            string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportDiscounts"), iRow - 2));
     }
 
     #endregion
