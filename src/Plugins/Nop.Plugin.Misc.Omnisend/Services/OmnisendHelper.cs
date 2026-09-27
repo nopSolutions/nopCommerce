@@ -1,6 +1,5 @@
 ﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
-using Nop.Plugin.Misc.Omnisend.DTO;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
