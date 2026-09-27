@@ -1,0 +1,32 @@
+﻿@{
+    Layout = "_ColumnsOne";
+    ViewBag.Title = "Payment Pending";
+}
+
+<div class="page payment-pending-page">
+    <div class="page-title">
+        <h1>Your Payment Is Being Processed</h1>
+    </div>
+
+    <div class="page-body">
+        <p>
+            Thank you. Your payment is currently being processed by your bank.
+            This may take a few moments.
+        </p>
+
+        <p>
+            You will be redirected automatically once the payment is confirmed.
+        </p>
+
+        <div class="spinner-border text-primary" role="status" style="margin-top:20px;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+
+        <script>
+            // Optional: auto-refresh every 5 seconds
+            setTimeout(function () {
+                location.reload();
+            }, 5000);
+        </script>
+    </div>
+</div>

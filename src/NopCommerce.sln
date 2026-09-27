@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 18
-VisualStudioVersion = 18.2.11415.280
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37628.2 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E4ACA93B-D3DE-4557-B069-F1DB42925A4B}"
 EndProject
@@ -88,6 +88,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Misc.PunchOut", "Plugins\Nop.Plugin.Misc.PunchOut\Nop.Plugin.Misc.PunchOut.csproj", "{350207D3-5CD7-DEBC-19FD-59D187574035}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Feed.ChatGptShopping", "Plugins\Nop.Plugin.Feed.ChatGptShopping\Nop.Plugin.Feed.ChatGptShopping.csproj", "{8850FC94-04BB-47BB-80D1-8D0677C13981}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Payments.WorldpayHpp", "Plugins\Nop.Plugin.Payments.WorldpayHpp\Nop.Plugin.Payments.WorldpayHpp.csproj", "{803F1C97-9CDD-400B-BD4C-A33332E30965}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -547,6 +549,18 @@ Global
 		{8850FC94-04BB-47BB-80D1-8D0677C13981}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8850FC94-04BB-47BB-80D1-8D0677C13981}.Release|x86.ActiveCfg = Release|Any CPU
 		{8850FC94-04BB-47BB-80D1-8D0677C13981}.Release|x86.Build.0 = Release|Any CPU
+		{803F1C97-9CDD-400B-BD4C-A33332E30965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{803F1C97-9CDD-400B-BD4C-A33332E30965}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{803F1C97-9CDD-400B-BD4C-A33332E30965}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{803F1C97-9CDD-400B-BD4C-A33332E30965}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{803F1C97-9CDD-400B-BD4C-A33332E30965}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{803F1C97-9CDD-400B-BD4C-A33332E30965}.Debug|x86.Build.0 = Debug|Any CPU
+		{803F1C97-9CDD-400B-BD4C-A33332E30965}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{803F1C97-9CDD-400B-BD4C-A33332E30965}.Release|Any CPU.Build.0 = Release|Any CPU
+		{803F1C97-9CDD-400B-BD4C-A33332E30965}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{803F1C97-9CDD-400B-BD4C-A33332E30965}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{803F1C97-9CDD-400B-BD4C-A33332E30965}.Release|x86.ActiveCfg = Release|Any CPU
+		{803F1C97-9CDD-400B-BD4C-A33332E30965}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -591,6 +605,7 @@ Global
 		{E6AD3CEE-5F70-4102-BA13-5F5500749439} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{350207D3-5CD7-DEBC-19FD-59D187574035} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{8850FC94-04BB-47BB-80D1-8D0677C13981} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
+		{803F1C97-9CDD-400B-BD4C-A33332E30965} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE72A8B2-332A-4175-9319-6726D36E9D25}

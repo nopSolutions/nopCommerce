@@ -1,0 +1,83 @@
+﻿@using Nop.Web.Framework
+@model Nop.Plugin.Payments.WorldpayHpp.Models.ConfigurationModel
+@{
+    // Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+   // Layout = "_ConfigurePlugin";
+   Layout = "_AdminLayout";
+   // NopHtml.SetActiveMenuItemSystemName($"{PayPalCommerceDefaults.SystemName} Configuration");
+
+}
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+<div class="content">
+    <div class="form-horizontal">
+        <form asp-action="Configure" method="post">
+
+            <div class="form-group"> 
+                <label>Narrative line 1</label> 
+                <input asp-for="NarrativeLine1" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Entity Id</label>
+                <input asp-for="EntityId" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Transaction reference prefix</label>
+                <input asp-for="TransactionReferencePrefix" class="form-control" /> 
+            </div>
+
+            <div class="form-group">
+                <label>Username</label>
+                <input asp-for="Username" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input asp-for="Password" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Environment</label>
+                <select asp-for="Environment" class="form-control">
+                    <option>TEST</option>
+                    <option>LIVE</option>
+                </select>
+            </div>
+         @*    <div class="form-group">
+                <label>Use iframe</label>
+                <input asp-for="UseIframe" type="checkbox" />
+            </div>
+            *@
+            <div class="form-group">
+                <label>Success URL</label>
+                <input asp-for="SuccessUrl" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Pending URL</label>
+                <input asp-for="PendingUrl" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Failure URL</label>
+                <input asp-for="FailureUrl" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Error URL</label>
+                <input asp-for="ErrorUrl" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Cancel URL</label>
+                <input asp-for="CancelUrl" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Expiry URL</label>
+                <input asp-for="ExpiryUrl" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+            @Html.AntiForgeryToken()
+        </form>
+    </div>
+</div>

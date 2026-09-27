@@ -1,0 +1,13 @@
+﻿{
+  "Group": "Payment methods",
+  "FriendlyName": "WorldPay Hosted Payment Page (HPP) Redirect",
+  "SystemName": "Payments.WorldpayHpp",
+  "Version": "1.03",
+  "SupportedVersions": [
+    "4.80"
+  ],
+  "Author": "Syed Alam",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.WorldpayHpp.dll",
+  "Description": "Integration for WorldPay Hosted Payment Page (HPP)"
+}

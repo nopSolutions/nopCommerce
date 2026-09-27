@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "_ColumnsOne"; // or your theme’s layout
+    ViewBag.Title = "Payment Failed";
+}
+
+<div class="page payment-failed-page">
+    <div class="page-title">
+        <h1>Payment Not Completed</h1>
+    </div>
+
+    <div class="page-body">
+        <div class="alert alert-danger" role="alert">
+            <strong>We were unable to complete your payment.</strong>
+            <br />
+            This may happen if the payment was cancelled, declined, or if something went wrong during the checkout process.
+        </div>
+
+        <p>
+            Don’t worry — your order has not been placed yet.
+            You can try to Re-Order based on the original order.
+        </p>
+
+        <hr />
+
+        <p class="text-muted" style="margin-top:20px;">
+            If you continue to experience issues, please contact our customer support team.
+        </p>
+    </div>
+</div>
