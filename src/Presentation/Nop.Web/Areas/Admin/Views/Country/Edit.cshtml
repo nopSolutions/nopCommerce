@@ -8,7 +8,7 @@
 }
 
 <form asp-controller="Country" asp-action="Edit" method="post" id="country-form">
-    <div class="app-content-header clearfix">
+    @* <div class="app-content-header clearfix">
         <h1 class="float-start">
             @T("Admin.Configuration.Countries.EditCountryDetails") - @Model.Name
             <small>
@@ -31,7 +31,39 @@
             </span>
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CountryDetailsButtons, additionalData = Model })
         </div>
+    </div> *@
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <div class="row align-items-center g-3">
+                <div class="col-sm-6">
+                    <h3 class="text-body mb-0 fs-3">
+                        @T("Admin.Configuration.Countries.EditCountryDetails") - @Model.Name
+                        <small class="text-muted d-block d-sm-inline-block ms-sm-2 fs-6 fw-normal">
+                            <i class="fas fa-arrow-circle-left me-1"></i>
+                            <a asp-action="List" class="text-decoration-none">@T("Admin.Configuration.Countries.BackToList")</a>
+                        </small>
+                    </h3>
+                </div>
+
+                <div class="col-sm-6 d-flex justify-content-sm-end justify-content-start flex-wrap gap-2">
+                    <button type="submit" name="save" class="btn btn-primary">
+                        <i class="far fa-floppy-disk me-1"></i>
+                        @T("Admin.Common.Save")
+                    </button>
+                    <button type="submit" name="save-continue" class="btn btn-primary">
+                        <i class="far fa-floppy-disk me-1"></i>
+                        @T("Admin.Common.SaveContinue")
+                    </button>
+                    <button type="button" id="country-delete" class="btn btn-danger">
+                        <i class="far fa-trash-can 'me-1'"></i>
+                        @T("Admin.Common.Delete")
+                    </button>
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CountryDetailsButtons, additionalData = Model })
+                </div>
+            </div>
+        </div>
     </div>
+
     @await Html.PartialAsync("_CreateOrUpdate", Model)
 </form>
 <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="country-delete" />
