@@ -30,6 +30,11 @@ export default function copyDependencies()
     //datatables.net
     gulp
       .src(nodeModules + '{datatables.net,datatables.net-bs4,datatables.net-buttons,datatables.net-buttons-bs4}/**')
+      .pipe(rename(function (path) {
+        if (path.dirname.includes("node_modules")) {
+          path.dirname = path.dirname.replace(/.*?node_modules[\\/]/, "bootstrap.");
+        }
+      }))
       .pipe(filter(['**/{css,js}/*.min*', '**/swf/*']))      
       .pipe(gulp.dest(targetPath)),
 
