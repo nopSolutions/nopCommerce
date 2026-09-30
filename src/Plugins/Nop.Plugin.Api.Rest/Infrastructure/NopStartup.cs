@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.Api.Rest.Security;
 
 namespace Nop.Plugin.Api.Rest.Infrastructure
 {
@@ -16,6 +18,13 @@ namespace Nop.Plugin.Api.Rest.Infrastructure
             // register memory cache used for rate limiting
             services.AddMemoryCache();
 
+            // register the API key authentication scheme. The host already calls UseAuthentication,
+            // and registering an extra scheme leaves the cookie based default scheme untouched, so the
+            // admin area keeps working exactly as before.
+            services.AddAuthentication()
+                .AddScheme<ApiRestApiKeyAuthenticationOptions, ApiRestApiKeyAuthenticationHandler>(
+                    ApiRestDefaults.AuthenticationSchemeName, options => { });
+
             // Register Swagger for this plugin only. Keep route template under a plugin-specific prefix to avoid clashes.
             services.AddSwaggerGen(options =>
             {
@@ -25,21 +34,33 @@ namespace Nop.Plugin.Api.Rest.Infrastructure
                 // var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 // if (File.Exists(xmlPath)) options.IncludeXmlComments(xmlPath);
 
-                options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                //the document describes this plugin only. SwaggerGen otherwise picks up the attribute
+                //routed controllers of every other loaded plugin and publishes them under this route.
+                options.DocInclusionPredicate((_, apiDescription) =>
+                    apiDescription.ActionDescriptor is ControllerActionDescriptor actionDescriptor
+                    && actionDescriptor.ControllerTypeInfo.Assembly == typeof(ApiRestDefaults).Assembly);
+
+                //describe the credentials the plugin actually validates. The handler accepts either header,
+                //so both are published and the operation filter lists them as alternatives.
+                options.AddSecurityDefinition(ApiRestDefaults.SecuritySchemeId, new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: 'Authorization: Bearer {token}'",
+                    Description = $"API key sent in the {ApiRestDefaults.ApiKeyHeaderName} header. Manage it on the plugin configuration page.",
+                    Name = ApiRestDefaults.ApiKeyHeaderName,
+                    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
+                });
+                options.AddSecurityDefinition(ApiRestDefaults.BearerSchemeId, new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                {
+                    Description = "API key sent as a bearer token. Accepted as an alternative to the X-Api-Key header.",
                     Name = "Authorization",
                     In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
                 });
-                options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-                {
-                    {
-                        new Microsoft.OpenApi.Models.OpenApiSecurityScheme { Reference = new Microsoft.OpenApi.Models.OpenApiReference { Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme, Id = "Bearer" } },
-                        new string[] {}
-                    }
-                });
+
+                //apply the requirement per operation instead of on the document. A document level
+                //requirement is emitted as root level "security", which locks every endpoint, including
+                //the public read operations.
+                options.OperationFilter<ApiKeySecurityOperationFilter>();
             });
         }
 

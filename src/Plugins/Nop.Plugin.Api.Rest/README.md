@@ -19,6 +19,8 @@ Configuration (appsettings or environment variables):
 - Plugins:ApiRest:ApiKey: when set, the plugin requires the header X-Api-Key with the matching value for API requests. Write operations always require it and are refused with 401 when it is not configured.
 - Plugins:ApiRest:RateLimitPerMinute: integer, default 60.
 
+The Swagger document marks only the write operations (POST/PUT/PATCH/DELETE) as requiring the X-Api-Key header, matching what the middleware enforces. The read operations are published without a lock and can be called without credentials.
+
 Example appsettings.Development.json snippet:
 
 {

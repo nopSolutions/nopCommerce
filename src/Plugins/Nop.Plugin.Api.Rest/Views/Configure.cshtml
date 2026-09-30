@@ -1,17 +1,83 @@
-@model ConfigurationModel
+@model Nop.Plugin.Api.Rest.Models.ConfigurationModel
 
 @{
     Layout = "_ConfigurePlugin";
 }
 
 <nop-cards id="api-rest">
+    <nop-card asp-name="api-rest-authentication" asp-icon="fas fa-key" asp-title="@T("Plugin.Api.Rest.Authentication")"
+              asp-hide-block-attribute-name="api-rest-authentication" asp-hide="false" asp-advanced="false">
+        <div class="card-body">
+            <p>@T("Plugin.Api.Rest.Authentication.Description")</p>
+
+            @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+
+            <form asp-controller="ApiRest" asp-action="GenerateApiKey" method="post">
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="generate-api-key" class="btn btn-primary">
+                            <i class="fas fa-random"></i>
+                            &nbsp;@T("Plugin.Api.Rest.GenerateApiKey")
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <hr/>
+
+            <form asp-controller="ApiRest" asp-action="Configure" method="post" id="api-rest-settings-form">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ApiKey_OverrideForStore" asp-input="ApiKey"
+                                                     asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="ApiKey"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ApiKey" html-attributes="@(new { autocomplete = "off", placeholder = T("Plugin.Api.Rest.ApiKey.Placeholder").Text })"/>
+                        <span asp-validation-for="ApiKey"></span>
+                        <span class="help-text">@T("Plugin.Api.Rest.ApiKey.Help")</span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="RateLimitPerMinute_OverrideForStore" asp-input="RateLimitPerMinute"
+                                                     asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="RateLimitPerMinute"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="RateLimitPerMinute"/>
+                        <span asp-validation-for="RateLimitPerMinute"></span>
+                        <span class="help-text">@T("Plugin.Api.Rest.RateLimitPerMinute.Help")</span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="RequireApiKeyForReads_OverrideForStore" asp-input="RequireApiKeyForReads"
+                                                     asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="RequireApiKeyForReads"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="RequireApiKeyForReads"/>
+                        <span asp-validation-for="RequireApiKeyForReads"></span>
+                        <span class="help-text">@T("Plugin.Api.Rest.RequireApiKeyForReads.Help")</span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </nop-card>
+
     <nop-card asp-name="api-rest-swagger" asp-icon="fas fa-file-code" asp-title="@T("Plugin.Api.Rest.Title")"
               asp-hide-block-attribute-name="api-rest-swagger" asp-hide="false" asp-advanced="false">
         <div class="card-body">
             <p>@T("Plugin.Api.Rest.Description")</p>
             <div class="form-group row">
                 <div class="col-md-3">
-                    <nop-label asp-for="SwaggerUiUrl" />
+                    <nop-label asp-for="SwaggerUiUrl"/>
                 </div>
                 <div class="col-md-9">
                     <a class="btn btn-primary" href="@Model.SwaggerUiUrl" target="_blank" rel="noopener">
@@ -23,7 +89,7 @@
             </div>
             <div class="form-group row">
                 <div class="col-md-3">
-                    <nop-label asp-for="SwaggerJsonUrl" />
+                    <nop-label asp-for="SwaggerJsonUrl"/>
                 </div>
                 <div class="col-md-9">
                     <a class="btn btn-primary" href="@Model.SwaggerJsonUrl" target="_blank" rel="noopener">
