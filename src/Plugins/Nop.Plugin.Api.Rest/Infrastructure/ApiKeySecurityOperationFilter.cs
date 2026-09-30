@@ -78,17 +78,8 @@ namespace Nop.Plugin.Api.Rest.Infrastructure
 
             var settings = _serviceProvider.GetService(typeof(ApiRestSettings)) as ApiRestSettings;
 
-            return IsMutation(context.ApiDescription.HttpMethod) || settings?.RequireApiKeyForReads == true;
+            return ApiRestDefaults.RequiresApiKey(context.ApiDescription.HttpMethod,
+                settings?.RequireApiKeyForReads == true);
         }
-
-        /// <summary>
-        /// Checks whether the request method changes data. Deliberately the inverse of the
-        /// mutation check performed by <c>ApiKeyRateLimitMiddleware</c>.
-        /// </summary>
-        /// <param name="method">HTTP request method</param>
-        /// <returns>True for the methods that create, update or delete a resource</returns>
-        protected static bool IsMutation(string method)
-            => !HttpMethods.IsGet(method) && !HttpMethods.IsHead(method)
-                && !HttpMethods.IsOptions(method) && !HttpMethods.IsTrace(method);
     }
 }

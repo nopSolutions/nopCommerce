@@ -1,4 +1,3 @@
-using System;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -68,18 +67,7 @@ public class ApiRestApiKeyAuthenticationHandler : AuthenticationHandler<ApiRestA
     /// <returns>The API key, if present</returns>
     protected virtual string GetTokenFromRequest()
     {
-        //Authorization wins, so a client can use the same header for this API and for other bearer secured services
-        if (Request.Headers.TryGetValue("Authorization", out var authorization))
-        {
-            var value = authorization.ToString();
-            if (value.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-                return value["Bearer ".Length..].Trim();
-        }
-
-        if (Request.Headers.TryGetValue(ApiRestDefaults.ApiKeyHeaderName, out var apiKey))
-            return apiKey.ToString().Trim();
-
-        return null;
+        return ApiRestDefaults.GetTokenFromRequest(Request.Headers);
     }
 
     /// <summary>

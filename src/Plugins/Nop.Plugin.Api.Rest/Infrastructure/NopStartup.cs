@@ -49,12 +49,14 @@ namespace Nop.Plugin.Api.Rest.Infrastructure
                     In = Microsoft.OpenApi.Models.ParameterLocation.Header,
                     Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
                 });
+                //must be declared as an http/bearer scheme rather than a second apiKey scheme. Declaring it as
+                //apiKey advertises a raw header value, which forces the caller to type the whole
+                //"Bearer <key>" string by hand and renders in the UI as a second, identical apiKey entry.
                 options.AddSecurityDefinition(ApiRestDefaults.BearerSchemeId, new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
                     Description = "API key sent as a bearer token. Accepted as an alternative to the X-Api-Key header.",
-                    Name = "Authorization",
-                    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+                    Scheme = "bearer"
                 });
 
                 //apply the requirement per operation instead of on the document. A document level

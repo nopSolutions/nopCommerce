@@ -93,7 +93,9 @@ namespace Nop.Plugin.Api.Rest.Controllers
                 ApiKey = apiKey,
                 HeaderName = ApiRestDefaults.ApiKeyHeaderName,
                 TokenType = ApiRestDefaults.SecuritySchemeId,
-                SecuredMethods = ["POST", "PUT", "PATCH", "DELETE"]
+                //reported from the same rule the middleware enforces, so enabling the read setting is
+                //reflected here instead of still advertising GET as public
+                SecuredMethods = ApiRestDefaults.GetSecuredMethods(_settings.RequireApiKeyForReads)
             });
         }
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -44,13 +46,15 @@ namespace Nop.Plugin.Api.Rest.Infrastructure
 
             var isAuthenticated = await context.AuthenticateAsync(ApiRestDefaults.AuthenticationSchemeName);
             var requiresApiKey = !ApiRestDefaults.IsTokenPath(path)
-                && (IsMutation(context.Request.Method) || RequiresApiKeyForReads(context));
+                && ApiRestDefaults.RequiresApiKey(context.Request.Method, RequiresApiKeyForReads(context));
 
             // Rate limiting runs before the API key is enforced, so that a rejected caller cannot spend
             // attempts. Clients are identified by key only once the key has actually validated,
-            // otherwise varying the header would hand out a fresh bucket per attempt.
+            // otherwise varying the header would hand out a fresh bucket per attempt. The key is hashed,
+            // because a bearer client leaves the X-Api-Key header empty and would otherwise be bucketed
+            // together with every other bearer client, and so that no credential is held as a cache key.
             var clientId = isAuthenticated.Succeeded
-                ? $"apiKey:{context.Request.Headers[ApiRestDefaults.ApiKeyHeaderName]}"
+                ? $"apiKey:{HashClientKey(ApiRestDefaults.GetTokenFromRequest(context.Request.Headers))}"
                 : $"ip:{context.Connection.RemoteIpAddress?.ToString() ?? "unknown"}";
 
             if (!await TryConsumeAsync(context, clientId))
@@ -116,12 +120,15 @@ namespace Nop.Plugin.Api.Rest.Infrastructure
                 ?.RequireApiKeyForReads == true;
 
         /// <summary>
-        /// Checks whether the request method changes data
+        /// Reduce a client credential to a value that is safe to use as a rate limit bucket key
         /// </summary>
-        /// <param name="method">HTTP request method</param>
-        /// <returns>True for the methods that create, update or delete a resource</returns>
-        protected static bool IsMutation(string method)
-            => HttpMethods.IsPost(method) || HttpMethods.IsPut(method)
-                || HttpMethods.IsPatch(method) || HttpMethods.IsDelete(method);
+        /// <param name="key">Presented API key</param>
+        /// <returns>The hex encoded hash of the key</returns>
+        protected static string HashClientKey(string key)
+        {
+            var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(key ?? string.Empty));
+
+            return Convert.ToHexString(bytes);
+        }
     }
 }
