@@ -32,27 +32,40 @@ namespace Nop.Plugin.Api.Rest.Infrastructure
 
         public async Task InvokeAsync(HttpContext context)
         {
-            // Allow the plugin swagger UI and json to be served without API key / rate limiting
+            // Only protect plugin API routes. The swagger UI and its JSON document are served from
+            // root level paths, so they never reach this middleware and need no exemption here.
             var path = context.Request.Path.Value ?? string.Empty;
-            if (path.StartsWith("/plugins/nop-plugin-api-rest/swagger", StringComparison.OrdinalIgnoreCase) ||
-                path.StartsWith("/plugins/nop-plugin-api-rest/swagger/", StringComparison.OrdinalIgnoreCase))
-            {
-                await _next(context);
-                return;
-            }
-
-            // Only protect plugin API routes
             if (!path.StartsWith("/api/rest", StringComparison.OrdinalIgnoreCase))
             {
                 await _next(context);
                 return;
             }
 
-            // API key enforcement (optional): if configured, require matching header
             var providedKey = context.Request.Headers["X-Api-Key"].ToString();
-            if (!string.IsNullOrEmpty(_apiKeyConfigured))
+            var keyIsValid = !string.IsNullOrEmpty(_apiKeyConfigured)
+                && !string.IsNullOrEmpty(providedKey)
+                && string.Equals(providedKey, _apiKeyConfigured, StringComparison.Ordinal);
+
+            // API key enforcement (optional): if configured, require matching header
+            if (!string.IsNullOrEmpty(_apiKeyConfigured) && !keyIsValid)
             {
-                if (string.IsNullOrEmpty(providedKey) || !string.Equals(providedKey, _apiKeyConfigured, StringComparison.Ordinal))
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                await context.Response.WriteAsJsonAsync(new { error = "API key missing or invalid" });
+                return;
+            }
+
+            // Writing data is only allowed with a valid API key, and fails closed when none is configured.
+            // Reads stay open so the catalog can be browsed and the swagger UI explored without credentials.
+            if (IsMutation(context.Request.Method))
+            {
+                if (string.IsNullOrEmpty(_apiKeyConfigured))
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    await context.Response.WriteAsJsonAsync(new { error = "Write operations are disabled because no API key is configured" });
+                    return;
+                }
+
+                if (!keyIsValid)
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     await context.Response.WriteAsJsonAsync(new { error = "API key missing or invalid" });
@@ -87,5 +100,14 @@ namespace Nop.Plugin.Api.Rest.Infrastructure
 
             await _next(context);
         }
+
+        /// <summary>
+        /// Checks whether the request method changes data
+        /// </summary>
+        /// <param name="method">HTTP request method</param>
+        /// <returns>True for the methods that create, update or delete a resource</returns>
+        protected static bool IsMutation(string method)
+            => HttpMethods.IsPost(method) || HttpMethods.IsPut(method)
+                || HttpMethods.IsPatch(method) || HttpMethods.IsDelete(method);
     }
 }

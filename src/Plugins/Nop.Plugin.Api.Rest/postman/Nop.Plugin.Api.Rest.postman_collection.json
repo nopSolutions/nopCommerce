@@ -57,6 +57,44 @@
         "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
         "url": { "raw": "{{base_url}}/api/rest/sales/totals?from=2023-01-01&to=2023-12-31", "host": ["{{base_url}}"], "path": ["api","rest","sales","totals"], "query": [ { "key": "from", "value": "2023-01-01" }, { "key": "to", "value": "2023-12-31" } ] }
       }
+    },
+    {
+      "name": "Create product",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"API created product\",\n  \"sku\": \"API-001\",\n  \"price\": 19.99,\n  \"published\": true\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/rest/products", "host": ["{{base_url}}"], "path": ["api","rest","products"] }
+      }
+    },
+    {
+      "name": "Update product",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"price\": 24.99\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/rest/products/1", "host": ["{{base_url}}"], "path": ["api","rest","products","1"] }
+      }
+    },
+    {
+      "name": "Delete product",
+      "request": {
+        "method": "DELETE",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/products/1", "host": ["{{base_url}}"], "path": ["api","rest","products","1"] }
+      }
     }
   ],
   "variable": [

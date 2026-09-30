@@ -9,14 +9,14 @@ Installation
 
 Plugin-contained Swagger
 This plugin registers Swagger and serves the UI under a plugin-specific prefix so no host changes are required.
-- Swagger UI: /plugins/nop-plugin-api-rest/swagger
-- Swagger JSON: /plugins/nop-plugin-api-rest/swagger/v1/swagger.json
+- Swagger UI: /swagger/api-rest/index.html
+- Swagger JSON: /swagger/v1/swagger.json
 
 API key and rate limiting
 The plugin includes middleware that enforces an optional API key and per-client rate limiting.
 Configuration (appsettings or environment variables):
 
-- Plugins:ApiRest:ApiKey: when set, the plugin requires the header X-Api-Key with the matching value for API requests.
+- Plugins:ApiRest:ApiKey: when set, the plugin requires the header X-Api-Key with the matching value for API requests. Write operations always require it and are refused with 401 when it is not configured.
 - Plugins:ApiRest:RateLimitPerMinute: integer, default 60.
 
 Example appsettings.Development.json snippet:
@@ -29,6 +29,19 @@ Example appsettings.Development.json snippet:
     }
   }
 }
+
+Products
+GET /api/rest/products returns a paged list of published products as ProductDto (Id, Name, Sku, Price).
+GET /api/rest/products/{id} returns a single product as ProductDetailDto, which adds the editable
+catalog properties to that list.
+
+Write operations require the X-Api-Key header and accept only the core product properties. Categories,
+manufacturers, tags, pictures, attributes and inventory per warehouse are managed from the admin area.
+
+- POST /api/rest/products creates a product and returns 201 with the created ProductDetailDto. Name is required.
+- PATCH /api/rest/products/{id} updates the supplied properties only and leaves the omitted ones untouched, so a
+  caller clears a string field by sending an empty string rather than null.
+- DELETE /api/rest/products/{id} soft deletes a product and returns 204. A second call returns 404.
 
 Postman collection
 A sample Postman collection is included at Plugins/Nop.Plugin.Api.Rest/postman/Nop.Plugin.Api.Rest.postman_collection.json. Set the collection variable `base_url` and `api_key` before running.

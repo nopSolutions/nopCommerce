@@ -29,6 +29,7 @@ This document records the plan to add a REST API plugin for nopCommerce. Proceed
 4. Integrate Swagger: prefer registering in host Nop.Web Program.cs
 5. Add authentication: JWT or API key (configurable via plugin settings)
 6. Extend endpoints for create/update/delete with validation and business rules
+   - Done for products (POST/PATCH/DELETE on /api/rest/products), write operations require the X-Api-Key header.
 7. Add integration tests and a Postman collection
 8. Performance checks: ensure large queries use repository-level filters, not in-memory LINQ
 

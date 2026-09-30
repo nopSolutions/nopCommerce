@@ -16,6 +16,10 @@ public class RouteProvider : IRouteProvider
     /// <param name="endpointRouteBuilder">Route builder</param>
     public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
     {
+        //the plugin API controllers are attribute routed, and the host only registers conventional routes
+        //through the route publisher, so attribute routing has to be enabled here
+        endpointRouteBuilder.MapControllers();
+
         endpointRouteBuilder.MapControllerRoute(name: ApiRestDefaults.ConfigurationRouteName,
             pattern: "Admin/ApiRest/Configure",
             defaults: new { controller = "ApiRest", action = "Configure", area = AreaNames.ADMIN });
