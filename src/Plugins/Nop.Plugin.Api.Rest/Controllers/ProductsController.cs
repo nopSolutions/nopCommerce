@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
+using Nop.Plugin.Api.Rest.Infrastructure;
 using Nop.Plugin.Api.Rest.Mappings;
 using Nop.Plugin.Api.Rest.Models;
 using Nop.Plugin.Api.Rest.Models.Requests;
@@ -28,19 +30,39 @@ namespace Nop.Plugin.Api.Rest.Controllers
             _localizationService = localizationService;
         }
 
-        // GET api/rest/products?page=1&pageSize=20
+        // GET api/rest/products?pageIndex=0&pageSize=20&keywords=&categoryId=&manufacturerId=&priceMin=&priceMax=
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+        public async Task<ActionResult<PagedResult<ProductDto>>> GetAll(
+            [FromQuery] int pageIndex = 0,
+            [FromQuery] int pageSize = PagingHelper.DEFAULT_PAGE_SIZE,
+            [FromQuery] string? keywords = null,
+            [FromQuery] int? categoryId = null,
+            [FromQuery] int? manufacturerId = null,
+            [FromQuery] decimal? priceMin = null,
+            [FromQuery] decimal? priceMax = null,
+            [FromQuery] bool searchSku = true,
+            [FromQuery] bool searchDescriptions = false)
         {
-            var products = await _productService.SearchProductsAsync(pageIndex: page - 1, pageSize: pageSize);
-            var dto = products.Select(p => new ProductDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Sku = p.Sku,
-                Price = p.Price
-            });
-            return Ok(dto);
+            var index = PagingHelper.NormalizePageIndex(pageIndex);
+            var size = PagingHelper.NormalizePageSize(pageSize);
+
+            //the services take id lists, while a caller narrows a listing to the single category or
+            //manufacturer it asked about. Zero means "no filter", matching the rest of the query string.
+            var categoryIds = categoryId is > 0 ? new List<int> { categoryId.Value } : null;
+            var manufacturerIds = manufacturerId is > 0 ? new List<int> { manufacturerId.Value } : null;
+
+            var products = await _productService.SearchProductsAsync(
+                pageIndex: index,
+                pageSize: size,
+                categoryIds: categoryIds,
+                manufacturerIds: manufacturerIds,
+                priceMin: priceMin,
+                priceMax: priceMax,
+                keywords: keywords,
+                searchSku: searchSku,
+                searchDescriptions: searchDescriptions);
+
+            return Ok(products.ToPagedResult().Map(p => p.ToSummaryDto()));
         }
 
         // GET api/rest/products/{id}

@@ -9,6 +9,10 @@
     to ensure that the dlls copied from the NuGet cache to the output of your project-->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!--the DTOs document which properties are optional with "string?", so the annotations context has to
+        be on. Nullable warnings stay off, because this plugin is not annotated for the flow analysis and
+        turning it on would report every existing "= null" default as a warning-->
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
   
    

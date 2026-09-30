@@ -58,6 +58,15 @@ namespace Nop.Plugin.Api.Rest.Infrastructure
                     Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
                     Scheme = "bearer"
                 });
+                //published so the customer scoped operations do not advertise the shared API key, which
+                //they refuse with a 403. Without this the document would promise a credential that fails.
+                options.AddSecurityDefinition(ApiRestDefaults.CustomerTokenSchemeId, new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                {
+                    Description = "Customer token from POST /api/rest/customer/token. Grants access to the issuing customer's own data only.",
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT"
+                });
 
                 //apply the requirement per operation instead of on the document. A document level
                 //requirement is emitted as root level "security", which locks every endpoint, including

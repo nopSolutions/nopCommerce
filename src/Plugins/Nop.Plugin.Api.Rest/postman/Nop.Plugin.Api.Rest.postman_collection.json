@@ -2,25 +2,131 @@
   "info": {
     "name": "Nop.Plugin.Api.Rest - Sample",
     "_postman_id": "nop-plugin-api-rest-sample",
-    "description": "Sample requests for Nop.Plugin.Api.Rest",
+    "description": "Sample requests for Nop.Plugin.Api.Rest. List endpoints return { items, pageIndex, pageSize, totalCount, totalPages }. pageIndex is zero based, pageSize capped at 200. Two credentials: api_key (admin level) and customer_token (one customer's own data).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
+      "name": "Get API key (admin)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json", "type": "text" } ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"your_password\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/rest/token", "host": ["{{base_url}}"], "path": ["api","rest","token"] }
+      }
+    },
+    {
+      "name": "Get customer token",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json", "type": "text" } ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"customer@example.com\",\n  \"password\": \"your_password\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/rest/customer/token", "host": ["{{base_url}}"], "path": ["api","rest","customer","token"] }
+      }
+    },
+    {
+      "name": "Get my profile",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/customer/me", "host": ["{{base_url}}"], "path": ["api","rest","customer","me"] }
+      }
+    },
+    {
+      "name": "Get my addresses",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/customer/me/addresses", "host": ["{{base_url}}"], "path": ["api","rest","customer","me","addresses"] }
+      }
+    },
+    {
+      "name": "Get my orders",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text" } ],
+        "url": {
+          "raw": "{{base_url}}/api/rest/customer/me/orders?pageIndex=0&pageSize=20",
+          "host": ["{{base_url}}"],
+          "path": ["api","rest","customer","me","orders"],
+          "query": [
+            { "key": "pageIndex", "value": "0" },
+            { "key": "pageSize", "value": "20" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get my wishlists",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/customer/me/wishlists", "host": ["{{base_url}}"], "path": ["api","rest","customer","me","wishlists"] }
+      }
+    },
+    {
+      "name": "Get my wishlist items",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text" } ],
+        "url": {
+          "raw": "{{base_url}}/api/rest/customer/me/wishlist?pageIndex=0&pageSize=20",
+          "host": ["{{base_url}}"],
+          "path": ["api","rest","customer","me","wishlist"],
+          "query": [
+            { "key": "pageIndex", "value": "0" },
+            { "key": "pageSize", "value": "20" },
+            { "key": "wishlistId", "value": "", "disabled": true }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get storefront product",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/store/products/1", "host": ["{{base_url}}"], "path": ["api","rest","store","products","1"] }
+      }
+    },
+    {
       "name": "Get all products",
       "request": {
         "method": "GET",
-        "header": [
-          {
-            "key": "X-Api-Key",
-            "value": "{{api_key}}",
-            "type": "text"
-          }
-        ],
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
         "url": {
-          "raw": "{{base_url}}/api/rest/products",
+          "raw": "{{base_url}}/api/rest/products?pageIndex=0&pageSize=20",
           "host": ["{{base_url}}"],
-          "path": ["api","rest","products"]
+          "path": ["api","rest","products"],
+          "query": [
+            { "key": "pageIndex", "value": "0" },
+            { "key": "pageSize", "value": "20" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get products filtered",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": {
+          "raw": "{{base_url}}/api/rest/products?keywords=nop&priceMin=1&priceMax=100",
+          "host": ["{{base_url}}"],
+          "path": ["api","rest","products"],
+          "query": [
+            { "key": "keywords", "value": "nop" },
+            { "key": "categoryId", "value": "", "disabled": true },
+            { "key": "manufacturerId", "value": "", "disabled": true },
+            { "key": "priceMin", "value": "1" },
+            { "key": "priceMax", "value": "100" }
+          ]
         }
       }
     },
@@ -28,10 +134,41 @@
       "name": "Get product by id",
       "request": {
         "method": "GET",
-        "header": [
-          { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" }
-        ],
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
         "url": { "raw": "{{base_url}}/api/rest/products/1", "host": ["{{base_url}}"], "path": ["api","rest","products","1"] }
+      }
+    },
+    {
+      "name": "Get product attributes",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/products/attributes/1", "host": ["{{base_url}}"], "path": ["api","rest","products","attributes","1"] }
+      }
+    },
+    {
+      "name": "Get categories",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": {
+          "raw": "{{base_url}}/api/rest/categories?pageIndex=0&pageSize=20",
+          "host": ["{{base_url}}"],
+          "path": ["api","rest","categories"],
+          "query": [
+            { "key": "pageIndex", "value": "0" },
+            { "key": "pageSize", "value": "20" },
+            { "key": "name", "value": "", "disabled": true }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get manufacturers",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/manufacturers?pageIndex=0&pageSize=20", "host": ["{{base_url}}"], "path": ["api","rest","manufacturers"] }
       }
     },
     {
@@ -39,15 +176,175 @@
       "request": {
         "method": "GET",
         "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
-        "url": { "raw": "{{base_url}}/api/rest/orders", "host": ["{{base_url}}"], "path": ["api","rest","orders"] }
+        "url": {
+          "raw": "{{base_url}}/api/rest/orders?pageIndex=0&pageSize=20",
+          "host": ["{{base_url}}"],
+          "path": ["api","rest","orders"],
+          "query": [
+            { "key": "pageIndex", "value": "0" },
+            { "key": "pageSize", "value": "20" },
+            { "key": "orderStatusId", "value": "", "disabled": true },
+            { "key": "paymentStatusId", "value": "", "disabled": true },
+            { "key": "shippingStatusId", "value": "", "disabled": true }
+          ]
+        }
       }
     },
     {
-      "name": "Get customers",
+      "name": "Get order by id",
       "request": {
         "method": "GET",
         "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
-        "url": { "raw": "{{base_url}}/api/rest/customers", "host": ["{{base_url}}"], "path": ["api","rest","customers"] }
+        "url": { "raw": "{{base_url}}/api/rest/orders/1", "host": ["{{base_url}}"], "path": ["api","rest","orders","1"] }
+      }
+    },
+    {
+      "name": "Search order by order number",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": {
+          "raw": "{{base_url}}/api/rest/orders/search?orderNumber=1003",
+          "host": ["{{base_url}}"],
+          "path": ["api","rest","orders","search"],
+          "query": [ { "key": "orderNumber", "value": "1003" } ]
+        }
+      }
+    },
+    {
+      "name": "Get order shipments",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/orders/1/shipments", "host": ["{{base_url}}"], "path": ["api","rest","orders","1","shipments"] }
+      }
+    },
+    {
+      "name": "Mark order as paid",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/orders/1/mark-paid", "host": ["{{base_url}}"], "path": ["api","rest","orders","1","mark-paid"] }
+      }
+    },
+    {
+      "name": "Cancel order",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"notifyCustomer\": true\n}" },
+        "url": { "raw": "{{base_url}}/api/rest/orders/1/cancel", "host": ["{{base_url}}"], "path": ["api","rest","orders","1","cancel"] }
+      }
+    },
+    {
+      "name": "Create shipment (everything pending)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"trackingNumber\": \"TRACK123\",\n  \"adminComment\": \"Sent by API\"\n}" },
+        "url": { "raw": "{{base_url}}/api/rest/orders/1/shipments", "host": ["{{base_url}}"], "path": ["api","rest","orders","1","shipments"] }
+      }
+    },
+    {
+      "name": "Create shipment (explicit items)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"items\": [ { \"orderItemId\": 1, \"quantity\": 2 } ],\n  \"trackingNumber\": \"TRACK123\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/rest/orders/1/shipments", "host": ["{{base_url}}"], "path": ["api","rest","orders","1","shipments"] }
+      }
+    },
+    {
+      "name": "Mark shipment as shipped",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"notifyCustomer\": true\n}" },
+        "url": { "raw": "{{base_url}}/api/rest/shipments/1/ship", "host": ["{{base_url}}"], "path": ["api","rest","shipments","1","ship"] }
+      }
+    },
+    {
+      "name": "Get customers (admin view)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": {
+          "raw": "{{base_url}}/api/rest/customers?pageIndex=0&pageSize=20",
+          "host": ["{{base_url}}"],
+          "path": ["api","rest","customers"],
+          "query": [
+            { "key": "pageIndex", "value": "0" },
+            { "key": "pageSize", "value": "20" },
+            { "key": "email", "value": "", "disabled": true },
+            { "key": "customerRoleId", "value": "", "disabled": true },
+            { "key": "isActive", "value": "", "disabled": true }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get customer by id",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/customers/1", "host": ["{{base_url}}"], "path": ["api","rest","customers","1"] }
+      }
+    },
+    {
+      "name": "Get customer addresses (admin view)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/customers/1/addresses", "host": ["{{base_url}}"], "path": ["api","rest","customers","1","addresses"] }
+      }
+    },
+    {
+      "name": "Get metafields for entity",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": {
+          "raw": "{{base_url}}/api/rest/metafields?entityType=product&entityId=1",
+          "host": ["{{base_url}}"],
+          "path": ["api","rest","metafields"],
+          "query": [
+            { "key": "entityType", "value": "product" },
+            { "key": "entityId", "value": "1" },
+            { "key": "key", "value": "", "disabled": true }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get logs",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": {
+          "raw": "{{base_url}}/api/rest/logs?pageIndex=0&pageSize=20&logLevelId=40",
+          "host": ["{{base_url}}"],
+          "path": ["api","rest","logs"],
+          "query": [
+            { "key": "pageIndex", "value": "0" },
+            { "key": "pageSize", "value": "20" },
+            { "key": "logLevelId", "value": "40" }
+          ]
+        }
       }
     },
     {
@@ -55,7 +352,12 @@
       "request": {
         "method": "GET",
         "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
-        "url": { "raw": "{{base_url}}/api/rest/sales/totals?from=2023-01-01&to=2023-12-31", "host": ["{{base_url}}"], "path": ["api","rest","sales","totals"], "query": [ { "key": "from", "value": "2023-01-01" }, { "key": "to", "value": "2023-12-31" } ] }
+        "url": {
+          "raw": "{{base_url}}/api/rest/sales/totals?from=2023-01-01&to=2023-12-31",
+          "host": ["{{base_url}}"],
+          "path": ["api","rest","sales","totals"],
+          "query": [ { "key": "from", "value": "2023-01-01" }, { "key": "to", "value": "2023-12-31" } ]
+        }
       }
     },
     {
@@ -81,10 +383,7 @@
           { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" },
           { "key": "Content-Type", "value": "application/json", "type": "text" }
         ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"price\": 24.99\n}"
-        },
+        "body": { "mode": "raw", "raw": "{\n  \"price\": 24.99\n}" },
         "url": { "raw": "{{base_url}}/api/rest/products/1", "host": ["{{base_url}}"], "path": ["api","rest","products","1"] }
       }
     },
@@ -98,7 +397,8 @@
     }
   ],
   "variable": [
-    { "key": "base_url", "value": "http://localhost:5000" },
-    { "key": "api_key", "value": "" }
+    { "key": "base_url", "value": "http://localhost:54720" },
+    { "key": "api_key", "value": "" },
+    { "key": "customer_token", "value": "" }
   ]
 }

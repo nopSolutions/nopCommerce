@@ -31,6 +31,21 @@ namespace Nop.Plugin.Api.Rest.Infrastructure
             operation.Security ??= new List<OpenApiSecurityRequirement>();
             operation.Security.Clear();
 
+            var relativePath = context.ApiDescription.RelativePath ?? string.Empty;
+
+            //the token endpoints are how a caller obtains a credential, so requiring one there would
+            //make them unreachable
+            if (!ApiRestDefaults.IsApiPath(relativePath) || ApiRestDefaults.IsTokenPath(relativePath))
+                return;
+
+            //the customer scoped operations refuse the shared API key, so they are published with the
+            //credential they actually accept
+            if (ApiRestDefaults.IsCustomerScopePath(relativePath))
+            {
+                operation.Security.Add(CreateRequirement(ApiRestDefaults.CustomerTokenSchemeId));
+                return;
+            }
+
             if (!RequiresApiKey(context))
                 return;
 
@@ -70,12 +85,6 @@ namespace Nop.Plugin.Api.Rest.Infrastructure
         /// <returns>True for the operations that require the API key</returns>
         protected virtual bool RequiresApiKey(OperationFilterContext context)
         {
-            var relativePath = context.ApiDescription.RelativePath ?? string.Empty;
-
-            //the token endpoint is how a caller obtains the key, so requiring the key there would deadlock
-            if (!ApiRestDefaults.IsApiPath(relativePath) || ApiRestDefaults.IsTokenPath(relativePath))
-                return false;
-
             var settings = _serviceProvider.GetService(typeof(ApiRestSettings)) as ApiRestSettings;
 
             return ApiRestDefaults.RequiresApiKey(context.ApiDescription.HttpMethod,

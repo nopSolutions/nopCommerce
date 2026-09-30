@@ -45,16 +45,32 @@ namespace Nop.Plugin.Api.Rest.Infrastructure
             }
 
             var isAuthenticated = await context.AuthenticateAsync(ApiRestDefaults.AuthenticationSchemeName);
-            var requiresApiKey = !ApiRestDefaults.IsTokenPath(path)
+            var isTokenPath = ApiRestDefaults.IsTokenPath(path);
+            var isCustomerScope = ApiRestDefaults.IsCustomerScopePath(path);
+            var requiresApiKey = !isTokenPath
                 && ApiRestDefaults.RequiresApiKey(context.Request.Method, RequiresApiKeyForReads(context));
 
-            // Rate limiting runs before the API key is enforced, so that a rejected caller cannot spend
-            // attempts. Clients are identified by key only once the key has actually validated,
-            // otherwise varying the header would hand out a fresh bucket per attempt. The key is hashed,
-            // because a bearer client leaves the X-Api-Key header empty and would otherwise be bucketed
-            // together with every other bearer client, and so that no credential is held as a cache key.
+            // The customer scoped endpoints always need a credential, whatever the read setting says.
+            // They expose one customer's own data, so leaving them open when anonymous reads are
+            // allowed would hand every anonymous caller the addresses and orders of any customer who
+            // can supply the identifier.
+            if (isCustomerScope && !HasCustomerCredential(isAuthenticated))
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    error = "This endpoint acts on the authenticated customer's own data and needs a customer token, not the shared API key. Obtain one from POST /api/rest/customer/token and send it as 'Authorization: Bearer <token>'."
+                });
+                return;
+            }
+
+            // Rate limiting runs before the credential is enforced, so that a rejected caller cannot
+            // spend attempts. Clients are identified by credential only once it has actually validated,
+            // otherwise varying the header would hand out a fresh bucket per attempt. A customer token is
+            // bucketed by the customer it names, so a shopper's traffic never spends the admin key's
+            // budget. The value is hashed so that no credential is held as a cache key.
             var clientId = isAuthenticated.Succeeded
-                ? $"apiKey:{HashClientKey(ApiRestDefaults.GetTokenFromRequest(context.Request.Headers))}"
+                ? BuildClientId(isAuthenticated, ApiRestDefaults.GetTokenFromRequest(context.Request.Headers))
                 : $"ip:{context.Connection.RemoteIpAddress?.ToString() ?? "unknown"}";
 
             if (!await TryConsumeAsync(context, clientId))
@@ -71,6 +87,37 @@ namespace Nop.Plugin.Api.Rest.Infrastructure
             }
 
             await _next(context);
+        }
+
+        /// <summary>
+        /// Checks whether the request presented a customer token rather than the shared API key
+        /// </summary>
+        /// <param name="result">The authentication result for the request</param>
+        /// <returns>True when the caller proved which customer it is</returns>
+        protected static bool HasCustomerCredential(AuthenticateResult result)
+        {
+            if (!result.Succeeded)
+                return false;
+
+            var credentialType = result.Principal?.FindFirst(ApiRestDefaults.CredentialTypeClaim)?.Value;
+
+            return string.Equals(credentialType, ApiRestDefaults.CredentialTypeCustomerToken,
+                StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Builds the rate limit bucket of an authenticated caller
+        /// </summary>
+        /// <param name="result">The authentication result for the request</param>
+        /// <param name="presentedCredential">The credential the request presented</param>
+        /// <returns>The bucket identifier</returns>
+        protected static string BuildClientId(AuthenticateResult result, string presentedCredential)
+        {
+            var customerId = result.Principal?.FindFirst(ApiRestDefaults.CustomerIdClaim)?.Value;
+            if (!string.IsNullOrEmpty(customerId))
+                return $"customer:{customerId}";
+
+            return $"apiKey:{HashClientKey(presentedCredential)}";
         }
 
         /// <summary>

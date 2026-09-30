@@ -57,7 +57,7 @@ namespace Nop.Plugin.Api.Rest.Controllers
         /// <param name="request">Administrator credentials</param>
         /// <returns>The API key to send in the X-Api-Key header</returns>
         [HttpPost]
-        public virtual async Task<IActionResult> Token([FromBody] GetApiKeyRequest request)
+        public virtual async Task<IActionResult> Token([FromBody] GetTokenRequest request)
         {
             if (request == null)
                 return BadRequest(new { error = "A request body with 'email' and 'password' is required." });
@@ -108,7 +108,7 @@ namespace Nop.Plugin.Api.Rest.Controllers
         /// </summary>
         /// <param name="request">Administrator credentials</param>
         /// <returns>Username when the store uses usernames, otherwise the email address</returns>
-        protected virtual string ResolveIdentifier(GetApiKeyRequest request)
+        protected virtual string ResolveIdentifier(GetTokenRequest request)
             => _customerSettings.UsernamesEnabled && !string.IsNullOrWhiteSpace(request.Username)
                 ? request.Username
                 : request.Email;

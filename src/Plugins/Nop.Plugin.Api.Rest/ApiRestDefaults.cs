@@ -42,9 +42,46 @@ public static class ApiRestDefaults
     public static string BearerSchemeId => "Bearer";
 
     /// <summary>
-    /// Gets the name of the authentication scheme that validates the API key
+    /// Gets the identifier of the OpenAPI security scheme for a customer token
+    /// </summary>
+    public static string CustomerTokenSchemeId => "CustomerToken";
+
+    /// <summary>
+    /// Gets the name of the authentication scheme that validates the presented credential
     /// </summary>
     public static string AuthenticationSchemeName => "ApiRestApiKey";
+
+    /// <summary>
+    /// Gets the claim that records which kind of credential authenticated the request
+    /// </summary>
+    public static string CredentialTypeClaim => "nop:credential";
+
+    /// <summary>
+    /// Gets the claim that carries the identifier of the customer a customer token was issued to
+    /// </summary>
+    /// <remarks>
+    /// Named to match the claim the official nopCommerce Web API puts in its own token, so a token
+    /// issued here reads the same way
+    /// </remarks>
+    public static string CustomerIdClaim => "CustomerId";
+
+    /// <summary>
+    /// The credential was the shared API key, which grants the admin level of access
+    /// </summary>
+    public static string CredentialTypeApiKey => "ApiKey";
+
+    /// <summary>
+    /// The credential was a customer token, which only grants access to the issuing customer's own data
+    /// </summary>
+    public static string CredentialTypeCustomerToken => "CustomerToken";
+
+    /// <summary>
+    /// Gets how long an issued customer token stays valid
+    /// </summary>
+    /// <remarks>
+    /// Seven days, matching the lifetime the official nopCommerce Web API issues its own tokens for
+    /// </remarks>
+    public static TimeSpan CustomerTokenLifetime => TimeSpan.FromDays(7);
 
     /// <summary>
     /// Gets the name of the header that carries the API key
@@ -76,6 +113,16 @@ public static class ApiRestDefaults
     public static string TokenRoute => "api/rest/token";
 
     /// <summary>
+    /// Gets the route of the endpoint that hands out a customer token in exchange for store credentials
+    /// </summary>
+    public static string CustomerTokenRoute => "api/rest/customer/token";
+
+    /// <summary>
+    /// Gets the route prefix of the endpoints that act on the authenticated customer's own data
+    /// </summary>
+    public static string CustomerScopeRoutePrefix => "api/rest/customer/me";
+
+    /// <summary>
     /// Checks whether a path targets the plugin API
     /// </summary>
     /// <param name="path">
@@ -86,13 +133,31 @@ public static class ApiRestDefaults
         => Normalize(path).StartsWith(ApiRoutePrefix, StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
-    /// Checks whether a path targets the API key endpoint, which is exempt from the API key checks
-    /// because it is the endpoint callers use to obtain that key in the first place
+    /// Checks whether a path targets one of the credential endpoints, which are exempt from the
+    /// credential checks because they are how a caller obtains a credential in the first place
     /// </summary>
     /// <param name="path">Request path or relative API path</param>
-    /// <returns>True when the path targets the token endpoint</returns>
+    /// <returns>True when the path targets a token endpoint</returns>
+    /// <remarks>
+    /// Both token routes are checked here, so every caller that consults this predicate stays in step
+    /// when a credential endpoint is added. Missing one would make the endpoint that hands out a
+    /// credential itself require that credential, and so unreachable.
+    /// </remarks>
     public static bool IsTokenPath(string path)
-        => string.Equals(Normalize(path), TokenRoute, StringComparison.OrdinalIgnoreCase);
+    {
+        var normalized = Normalize(path);
+
+        return string.Equals(normalized, TokenRoute, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(normalized, CustomerTokenRoute, StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Checks whether a path targets the endpoints that act on the authenticated customer's own data
+    /// </summary>
+    /// <param name="path">Request path or relative API path</param>
+    /// <returns>True when the path is scoped to the calling customer</returns>
+    public static bool IsCustomerScopePath(string path)
+        => Normalize(path).StartsWith(CustomerScopeRoutePrefix, StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
     /// Reads the API key presented by a request
