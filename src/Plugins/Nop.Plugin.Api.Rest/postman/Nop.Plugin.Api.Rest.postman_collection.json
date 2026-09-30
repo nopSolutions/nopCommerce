@@ -1,0 +1,66 @@
+{
+  "info": {
+    "name": "Nop.Plugin.Api.Rest - Sample",
+    "_postman_id": "nop-plugin-api-rest-sample",
+    "description": "Sample requests for Nop.Plugin.Api.Rest",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get all products",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-Api-Key",
+            "value": "{{api_key}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/rest/products",
+          "host": ["{{base_url}}"],
+          "path": ["api","rest","products"]
+        }
+      }
+    },
+    {
+      "name": "Get product by id",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" }
+        ],
+        "url": { "raw": "{{base_url}}/api/rest/products/1", "host": ["{{base_url}}"], "path": ["api","rest","products","1"] }
+      }
+    },
+    {
+      "name": "Get orders",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/orders", "host": ["{{base_url}}"], "path": ["api","rest","orders"] }
+      }
+    },
+    {
+      "name": "Get customers",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/customers", "host": ["{{base_url}}"], "path": ["api","rest","customers"] }
+      }
+    },
+    {
+      "name": "Sales totals",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "url": { "raw": "{{base_url}}/api/rest/sales/totals?from=2023-01-01&to=2023-12-31", "host": ["{{base_url}}"], "path": ["api","rest","sales","totals"], "query": [ { "key": "from", "value": "2023-01-01" }, { "key": "to", "value": "2023-12-31" } ] }
+      }
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000" },
+    { "key": "api_key", "value": "" }
+  ]
+}

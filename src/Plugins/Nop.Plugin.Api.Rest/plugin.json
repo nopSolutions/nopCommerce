@@ -1,0 +1,11 @@
+{
+  "Group": "Misc",
+  "FriendlyName": "Api.Rest",
+  "SystemName": "Nop.Plugin.Api.Rest",
+  "Version": "5.00.7",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Api.Rest.dll",
+  "Description": "Provides REST API endpoints (products, orders, customers, sales) with plugin-contained Swagger and API-key + rate-limiting middleware."
+}
