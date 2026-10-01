@@ -5,18 +5,24 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Plugin.Api.Rest.Models;
 using Nop.Plugin.Api.Rest.Models.Requests;
+using Nop.Plugin.Api.Rest.Security;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 
 namespace Nop.Plugin.Api.Rest.Controllers
 {
     /// <summary>
-    /// Issues the API key to an authenticated administrator.
+    /// Issues a bearer token to an authenticated administrator.
     /// </summary>
     /// <remarks>
-    /// This endpoint is the single exemption from the API key check in <c>ApiKeyRateLimitMiddleware</c>:
-    /// it is how a caller obtains that key, so requiring the key here would make it unreachable.
-    /// It is still rate limited, and it never exposes the key without valid administrator credentials.
+    /// This endpoint is the single exemption from the credential check in <c>ApiKeyRateLimitMiddleware</c>:
+    /// it is how a caller obtains that credential, so requiring one here would make it unreachable. It is
+    /// still rate limited, and it never issues a token without valid administrator credentials.
+    /// <para>
+    /// It issues a signed token rather than handing back the shared API key, so that
+    /// <c>Authorization: Bearer</c> carries exactly one kind of value. The key itself stays available in
+    /// the <c>X-Api-Key</c> header for server to server callers that would rather not hold a token.
+    /// </para>
     /// </remarks>
     [ApiController]
     [Route("api/rest/token")]
@@ -52,10 +58,10 @@ namespace Nop.Plugin.Api.Rest.Controllers
         #region Methods
 
         /// <summary>
-        /// Exchanges administrator credentials for the API key
+        /// Exchanges administrator credentials for a bearer token
         /// </summary>
         /// <param name="request">Administrator credentials</param>
-        /// <returns>The API key to send in the X-Api-Key header</returns>
+        /// <returns>The token to send back as a bearer token</returns>
         [HttpPost]
         public virtual async Task<IActionResult> Token([FromBody] GetTokenRequest request)
         {
@@ -76,23 +82,39 @@ namespace Nop.Plugin.Api.Rest.Controllers
             if (customer == null)
                 return Unauthorized(await _localizationService.GetResourceAsync("Account.Login.WrongCredentials"));
 
+            if (customer.Deleted || !customer.Active)
+                return Unauthorized(new { error = "This account cannot sign in." });
+
             //strictly the Administrators role. Vendors may sign in to the admin area but must not
-            //receive a key that grants catalog write access.
+            //receive a token that grants catalog write access.
             if (!await _customerService.IsAdminAsync(customer))
                 return Forbid();
 
-            var apiKey = _settings.ApiKey;
-            if (string.IsNullOrEmpty(apiKey))
+            if (string.IsNullOrEmpty(_settings.ApiKey))
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, new
                 {
-                    error = "No API key is configured, so write operations cannot be enabled. Generate one on the plugin configuration page."
+                    error = "No API key is configured, so tokens cannot be signed. Generate one on the plugin configuration page."
                 });
 
-            return Ok(new ApiKeyDto
+            //the key is also the signing secret, so a key that is too short to sign with would fail
+            //inside the crypto layer instead of here
+            if (!ApiTokenFactory.CanSignToken(_settings.ApiKey))
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, new
+                {
+                    error = $"The configured API key is too short to sign a token. It must be at least {ApiTokenFactory.MINIMUM_SIGNING_KEY_LENGTH} characters. Generate a new one on the plugin configuration page."
+                });
+
+            var lifetime = _settings.AdminTokenLifetime;
+            var token = ApiTokenFactory.CreateToken(customer, _settings.ApiKey, lifetime,
+                ApiRestDefaults.CredentialTypeApiKey);
+
+            return Ok(new ApiTokenDto
             {
-                ApiKey = apiKey,
-                HeaderName = ApiRestDefaults.ApiKeyHeaderName,
-                TokenType = ApiRestDefaults.SecuritySchemeId,
+                Token = token,
+                TokenType = ApiRestDefaults.BearerPrefix.TrimEnd(),
+                ExpiresInSeconds = (int)lifetime.TotalSeconds,
+                CredentialType = ApiRestDefaults.CredentialTypeApiKey,
+                Username = customer.Username ?? customer.Email,
                 //reported from the same rule the middleware enforces, so enabling the read setting is
                 //reflected here instead of still advertising GET as public
                 SecuredMethods = ApiRestDefaults.GetSecuredMethods(_settings.RequireApiKeyForReads)
@@ -135,7 +157,7 @@ namespace Nop.Plugin.Api.Rest.Controllers
                 CustomerLoginResults.Deleted => "Account.Login.WrongCredentials.Deleted",
                 CustomerLoginResults.NotActive => "Account.Login.WrongCredentials.NotActive",
                 CustomerLoginResults.LockedOut => "Account.Login.WrongCredentials.LockedOut",
-                //the API has no way to complete an interactive challenge, so it cannot hand out the key
+                //the API has no way to complete an interactive challenge, so it cannot hand out a token
                 CustomerLoginResults.MultiFactorAuthenticationRequired =>
                     "Account.Login.WrongCredentials.MultiFactorUnsupported",
                 _ => "Account.Login.WrongCredentials"

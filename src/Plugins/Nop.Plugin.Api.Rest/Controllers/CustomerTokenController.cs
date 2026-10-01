@@ -52,13 +52,13 @@ public class CustomerTokenController : ControllerBase
 
     #region Methods
 
-    /// <summary>
-    /// Exchanges store credentials for a customer token
-    /// </summary>
-    /// <param name="request">The customer credentials</param>
-    /// <returns>The token to send back as a bearer token</returns>
-    [HttpPost]
-    public virtual async Task<IActionResult> Token([FromBody] GetTokenRequest request)
+/// <summary>
+        /// Exchanges store credentials for a bearer token
+        /// </summary>
+        /// <param name="request">The customer credentials</param>
+        /// <returns>The token to send back as a bearer token</returns>
+        [HttpPost]
+        public virtual async Task<IActionResult> Token([FromBody] GetTokenRequest request)
     {
         if (request == null)
             return BadRequest(new { error = "A request body with 'email' and 'password' is required." });
@@ -74,11 +74,11 @@ public class CustomerTokenController : ControllerBase
                 error = "No API key is configured, so customer tokens cannot be signed. Generate one on the plugin configuration page."
             });
 
-        if (!CustomerTokenFactory.CanSignToken(_settings.ApiKey))
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, new
-            {
-                error = $"The configured API key is too short to sign a customer token. It must be at least {CustomerTokenFactory.MINIMUM_SIGNING_KEY_LENGTH} characters. Generate a new one on the plugin configuration page."
-            });
+if (!ApiTokenFactory.CanSignToken(_settings.ApiKey))
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, new
+                {
+                    error = $"The configured API key is too short to sign a token. It must be at least {ApiTokenFactory.MINIMUM_SIGNING_KEY_LENGTH} characters. Generate a new one on the plugin configuration page."
+                });
 
         //reuses the store credential validation, which also applies the failed attempt counter and the
         //account lockout configured for the store
@@ -99,13 +99,16 @@ public class CustomerTokenController : ControllerBase
         if (!await _customerService.IsRegisteredAsync(customer))
             return Forbid();
 
-        var token = CustomerTokenFactory.CreateToken(customer, _settings.ApiKey, ApiRestDefaults.CustomerTokenLifetime);
+        var lifetime = _settings.CustomerTokenLifetime;
+        var token = ApiTokenFactory.CreateToken(customer, _settings.ApiKey, lifetime,
+            ApiRestDefaults.CredentialTypeCustomerToken);
 
-        return Ok(new CustomerTokenDto
+        return Ok(new ApiTokenDto
         {
             Token = token,
-            TokenType = "Bearer",
-            ExpiresInSeconds = (int)ApiRestDefaults.CustomerTokenLifetime.TotalSeconds,
+            TokenType = ApiRestDefaults.BearerPrefix.TrimEnd(),
+            ExpiresInSeconds = (int)lifetime.TotalSeconds,
+            CredentialType = ApiRestDefaults.CredentialTypeCustomerToken,
             CustomerId = customer.Id,
             CustomerGuid = customer.CustomerGuid.ToString(),
             Username = customer.Username ?? customer.Email

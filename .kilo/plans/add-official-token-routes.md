@@ -1,5 +1,30 @@
 # Plan: official-shaped token routes (`/api-backend`/`/api-frontend`)
 
+**Status: REVERTED.** Everything this plan added has been removed. The two alias attributes are gone, as
+are `ApiRestDefaults.BackendTokenRoute`/`FrontendTokenRoute`, the `CustomOperationIds` workaround that
+existed only because an action sat at two paths, and the `IsTokenPath` clause in the middleware's
+`UseWhen` predicate. Only `/api/rest/token` and `/api/rest/customer/token` are served now.
+
+Kept as a record of *why* the aliases existed — clients written against the official API expect those
+paths — and why they went: they were the only aliased pair among fifteen controllers, so they were the
+only place a consumer had to make a choice that could not matter. The cost of official-API path
+compatibility was judged higher than the benefit.
+
+The two Swagger documents named `api-backend` and `api-frontend` are unrelated and still stand; see
+[`backend-frontend-split.md`](backend-frontend-split.md). Those are document names, not route aliases.
+
+**Original plan below, for the record.**
+
+One change differs from the plan below, and one was added. Item 4 was dropped in
+favour of a second attribute route on the existing actions (`[HttpPost("/api-backend/Authenticate/
+GetToken")]` next to the existing `[HttpPost]`), because `Infrastructure/RouteProvider.cs` already exists
+and exists precisely to call `MapControllers()`, so a conventional route would have needed a duplicate of
+the endpoint rather than an extra path onto the action already serving it. Attribute routing also means
+ApiExplorer and Swagger publish the official paths, which a conventional route would not. The extra
+change: `GetTokenRequest.Email` lost `[Required]`, because the official API's clients send `username`
+alone on stores with usernames enabled and the old annotation rejected those requests before either
+action could pick the right identifier. Both actions already reject a request carrying neither.
+
 ## Goal
 Expose the official nopCommerce Web API token shapes so the supplied curl works against the local
 plugin, with **identical behavior** to the existing `/api/rest/token` and `/api/rest/customer/token`:

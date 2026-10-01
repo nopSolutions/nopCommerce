@@ -26,6 +26,7 @@
             <hr/>
 
             <form asp-controller="ApiRest" asp-action="Configure" method="post" id="api-rest-settings-form">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
                 <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="ApiKey_OverrideForStore" asp-input="ApiKey"
@@ -63,6 +64,30 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="AdminTokenLifetimeHours_OverrideForStore" asp-input="AdminTokenLifetimeHours"
+                                                     asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="AdminTokenLifetimeHours"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AdminTokenLifetimeHours"/>
+                        <span asp-validation-for="AdminTokenLifetimeHours"></span>
+                        <span class="help-text">@T("Plugin.Api.Rest.AdminTokenLifetimeHours.Help")</span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="CustomerTokenLifetimeDays_OverrideForStore" asp-input="CustomerTokenLifetimeDays"
+                                                     asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="CustomerTokenLifetimeDays"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerTokenLifetimeDays"/>
+                        <span asp-validation-for="CustomerTokenLifetimeDays"></span>
+                        <span class="help-text">@T("Plugin.Api.Rest.CustomerTokenLifetimeDays.Help")</span>
+                    </div>
+                </div>
+                <div class="form-group row">
                     <div class="col-md-9 offset-md-3">
                         <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
                     </div>
@@ -89,14 +114,26 @@
             </div>
             <div class="form-group row">
                 <div class="col-md-3">
-                    <nop-label asp-for="SwaggerJsonUrl"/>
+                    <nop-label asp-for="SwaggerBackendJsonUrl"/>
                 </div>
                 <div class="col-md-9">
-                    <a class="btn btn-primary" href="@Model.SwaggerJsonUrl" target="_blank" rel="noopener">
+                    <a class="btn btn-secondary" href="@Model.SwaggerBackendJsonUrl" target="_blank" rel="noopener">
                         <i class="fas fa-file-code"></i>
-                        &nbsp;@T("Plugin.Api.Rest.OpenSwaggerJson")
+                        &nbsp;@T("Plugin.Api.Rest.OpenSwaggerBackendJson")
                     </a>
-                    <a href="@Model.SwaggerJsonUrl">@Model.SwaggerJsonUrl</a>
+                    <a href="@Model.SwaggerBackendJsonUrl">@Model.SwaggerBackendJsonUrl</a>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="SwaggerFrontendJsonUrl"/>
+                </div>
+                <div class="col-md-9">
+                    <a class="btn btn-secondary" href="@Model.SwaggerFrontendJsonUrl" target="_blank" rel="noopener">
+                        <i class="fas fa-file-code"></i>
+                        &nbsp;@T("Plugin.Api.Rest.OpenSwaggerFrontendJson")
+                    </a>
+                    <a href="@Model.SwaggerFrontendJsonUrl">@Model.SwaggerFrontendJsonUrl</a>
                 </div>
             </div>
         </div>

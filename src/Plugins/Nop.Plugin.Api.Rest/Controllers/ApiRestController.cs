@@ -81,11 +81,14 @@ public class ApiRestController : BasePluginController
         var model = new ConfigurationModel
         {
             SwaggerUiUrl = $"{storeLocation}{ApiRestDefaults.SwaggerUiPath}",
-            SwaggerJsonUrl = $"{storeLocation}{ApiRestDefaults.SwaggerJsonPath}",
+            SwaggerBackendJsonUrl = $"{storeLocation}{ApiRestDefaults.SwaggerBackendJsonPath}",
+            SwaggerFrontendJsonUrl = $"{storeLocation}{ApiRestDefaults.SwaggerFrontendJsonPath}",
             ActiveStoreScopeConfiguration = storeScope,
             ApiKey = settings.ApiKey,
             RateLimitPerMinute = settings.RateLimitPerMinute,
-            RequireApiKeyForReads = settings.RequireApiKeyForReads
+            RequireApiKeyForReads = settings.RequireApiKeyForReads,
+            AdminTokenLifetimeHours = settings.AdminTokenLifetimeHours,
+            CustomerTokenLifetimeDays = settings.CustomerTokenLifetimeDays
         };
 
         //the override checkboxes only mean something once a specific store is selected
@@ -96,6 +99,10 @@ public class ApiRestController : BasePluginController
                 await _settingService.SettingExistsAsync(settings, x => x.RateLimitPerMinute, storeScope);
             model.RequireApiKeyForReads_OverrideForStore =
                 await _settingService.SettingExistsAsync(settings, x => x.RequireApiKeyForReads, storeScope);
+            model.AdminTokenLifetimeHours_OverrideForStore =
+                await _settingService.SettingExistsAsync(settings, x => x.AdminTokenLifetimeHours, storeScope);
+            model.CustomerTokenLifetimeDays_OverrideForStore =
+                await _settingService.SettingExistsAsync(settings, x => x.CustomerTokenLifetimeDays, storeScope);
         }
 
         return View(ConfigureViewPath, model);
@@ -111,8 +118,16 @@ public class ApiRestController : BasePluginController
     [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> Configure(ConfigurationModel model)
     {
+        // One invalid field used to discard every other change silently, which is how an admin could tick
+        // a box, press Save and see the page redisplay with nothing stored. The form now lists what failed,
+        // so the save is either complete or visibly refused.
         if (!ModelState.IsValid)
+        {
+            _notificationService.ErrorNotification(
+                await _localizationService.GetResourceAsync("Common.WrongInput"));
+
             return await Configure();
+        }
 
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var settings = await _settingService.LoadSettingAsync<ApiRestSettings>(storeScope);
@@ -124,12 +139,16 @@ public class ApiRestController : BasePluginController
 
         settings.RateLimitPerMinute = model.RateLimitPerMinute;
         settings.RequireApiKeyForReads = model.RequireApiKeyForReads;
+        settings.AdminTokenLifetimeHours = model.AdminTokenLifetimeHours;
+        settings.CustomerTokenLifetimeDays = model.CustomerTokenLifetimeDays;
 
         //save each field per property so the "override for store" checkboxes work, and so the shared row
         //stays intact for the stores that do not override
         await _settingService.SaveSettingOverridablePerStoreAsync(settings, x => x.ApiKey, model.ApiKey_OverrideForStore, storeScope, false);
         await _settingService.SaveSettingOverridablePerStoreAsync(settings, x => x.RateLimitPerMinute, model.RateLimitPerMinute_OverrideForStore, storeScope, false);
         await _settingService.SaveSettingOverridablePerStoreAsync(settings, x => x.RequireApiKeyForReads, model.RequireApiKeyForReads_OverrideForStore, storeScope, false);
+        await _settingService.SaveSettingOverridablePerStoreAsync(settings, x => x.AdminTokenLifetimeHours, model.AdminTokenLifetimeHours_OverrideForStore, storeScope, false);
+        await _settingService.SaveSettingOverridablePerStoreAsync(settings, x => x.CustomerTokenLifetimeDays, model.CustomerTokenLifetimeDays_OverrideForStore, storeScope, false);
 
         await _settingService.ClearCacheAsync();
 

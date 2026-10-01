@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -7,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Nop.Core.Domain.Customers;
 
 namespace Nop.Plugin.Api.Rest.Security;
 
@@ -15,10 +15,10 @@ namespace Nop.Plugin.Api.Rest.Security;
 /// Validates the credential presented in the Authorization (Bearer) or X-Api-Key request header
 /// </summary>
 /// <remarks>
-/// Two credentials are accepted, and the request is told which one it presented: the shared API key,
-/// which carries admin level access, and a customer token, which only identifies the customer it was
-/// issued to. Both are handled by one scheme so the pipeline, the rate limiter and the Swagger document
-/// all see a single authentication result.
+/// The two headers carry different formats and neither is read as the other: <c>Authorization</c> carries
+/// a signed token, <c>X-Api-Key</c> carries the shared API key. Both are handled by one scheme so the
+/// pipeline, the rate limiter and the Swagger document all see a single authentication result, and so
+/// that result records which scope the caller proved.
 /// </remarks>
 public class ApiRestApiKeyAuthenticationHandler : AuthenticationHandler<ApiRestApiKeyAuthenticationOptions>
 {
@@ -38,20 +38,26 @@ public class ApiRestApiKeyAuthenticationHandler : AuthenticationHandler<ApiRestA
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         var settings = Context.RequestServices.GetService(typeof(ApiRestSettings)) as ApiRestSettings;
-        var presented = GetTokenFromRequest();
+        var presented = GetCredential();
 
         //no result rather than a failure, so the caller decides how to treat an anonymous request
-        if (string.IsNullOrWhiteSpace(presented) || string.IsNullOrWhiteSpace(settings?.ApiKey))
+        if (presented.Value == null || string.IsNullOrWhiteSpace(settings?.ApiKey))
             return Task.FromResult(AuthenticateResult.NoResult());
 
-        if (KeysMatch(settings.ApiKey, presented))
-            return Task.FromResult(AuthenticateResult.Success(CreateApiKeyTicket()));
+        //each slot is validated only as what it is. A token in the API key header, or the raw key in the
+        //Authorization header, is refused rather than guessed at, so a caller cannot present the wrong
+        //credential by mistake and be silently given the scope of the other one.
+        if (presented.Slot == ApiRestDefaults.CredentialSlot.ApiKeyHeader)
+        {
+            return Task.FromResult(KeysMatch(settings.ApiKey, presented.Value)
+                ? AuthenticateResult.Success(CreateTicket(ApiRestDefaults.CredentialTypeApiKey, 0))
+                : AuthenticateResult.NoResult());
+        }
 
-        //not the API key, so it may be a token issued to a customer
-        if (CustomerTokenFactory.TryValidateToken(presented, settings.ApiKey, out var customerId))
-            return Task.FromResult(AuthenticateResult.Success(CreateCustomerTicket(customerId)));
+        if (!ApiTokenFactory.TryValidateToken(presented.Value, settings.ApiKey, out var credentialType, out var customerId))
+            return Task.FromResult(AuthenticateResult.NoResult());
 
-        return Task.FromResult(AuthenticateResult.NoResult());
+        return Task.FromResult(AuthenticateResult.Success(CreateTicket(credentialType, customerId)));
     }
 
     #endregion
@@ -59,56 +65,36 @@ public class ApiRestApiKeyAuthenticationHandler : AuthenticationHandler<ApiRestA
     #region Utilities
 
     /// <summary>
-    /// Create an authenticated ticket for the shared API key
+    /// Create an authenticated ticket recording the scope the credential grants
     /// </summary>
+    /// <param name="credentialType">The scope the credential grants</param>
+    /// <param name="customerId">The customer a customer token was issued to, 0 when the credential is not one</param>
     /// <returns>The authentication ticket</returns>
-    protected virtual AuthenticationTicket CreateApiKeyTicket()
+    protected virtual AuthenticationTicket CreateTicket(string credentialType, int customerId)
     {
-        var claims = new[]
+        var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, ApiRestDefaults.CredentialTypeApiKey),
-            new Claim(ApiRestDefaults.CredentialTypeClaim, ApiRestDefaults.CredentialTypeApiKey)
+            new(ClaimTypes.Name, credentialType),
+            new(ApiRestDefaults.CredentialTypeClaim, credentialType)
         };
 
-        return CreateTicket(claims);
-    }
+        //only a customer token identifies one customer. The claim is omitted for the shared key and for
+        //an administrator token, so the customer scoped endpoints cannot be reached with either
+        if (customerId > 0)
+            claims.Add(new Claim(ApiRestDefaults.CustomerIdClaim, customerId.ToString()));
 
-    /// <summary>
-    /// Create an authenticated ticket for a customer token
-    /// </summary>
-    /// <param name="customerId">The customer the token was issued to</param>
-    /// <returns>The authentication ticket</returns>
-    protected virtual AuthenticationTicket CreateCustomerTicket(int customerId)
-    {
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.Name, ApiRestDefaults.CredentialTypeCustomerToken),
-            new Claim(ApiRestDefaults.CredentialTypeClaim, ApiRestDefaults.CredentialTypeCustomerToken),
-            new Claim(ApiRestDefaults.CustomerIdClaim, customerId.ToString())
-        };
-
-        return CreateTicket(claims);
-    }
-
-    /// <summary>
-    /// Create an authenticated ticket carrying the passed claims
-    /// </summary>
-    /// <param name="claims">The claims identifying the credential</param>
-    /// <returns>The authentication ticket</returns>
-    protected virtual AuthenticationTicket CreateTicket(Claim[] claims)
-    {
         var identity = new ClaimsIdentity(claims, Scheme.Name);
 
         return new AuthenticationTicket(new ClaimsPrincipal(identity), Scheme.Name);
     }
 
     /// <summary>
-    /// Get the credential from the Authorization (Bearer) or X-Api-Key request headers
+    /// Get the credential from the request headers, along with the slot it arrived in
     /// </summary>
-    /// <returns>The presented credential, if any</returns>
-    protected virtual string GetTokenFromRequest()
+    /// <returns>The presented credential</returns>
+    protected virtual ApiRestDefaults.PresentedCredential GetCredential()
     {
-        return ApiRestDefaults.GetTokenFromRequest(Request.Headers);
+        return ApiRestDefaults.GetCredential(Request.Headers);
     }
 
     /// <summary>

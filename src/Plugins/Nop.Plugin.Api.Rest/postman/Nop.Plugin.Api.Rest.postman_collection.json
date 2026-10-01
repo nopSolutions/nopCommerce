@@ -2,12 +2,12 @@
   "info": {
     "name": "Nop.Plugin.Api.Rest - Sample",
     "_postman_id": "nop-plugin-api-rest-sample",
-    "description": "Sample requests for Nop.Plugin.Api.Rest. List endpoints return { items, pageIndex, pageSize, totalCount, totalPages }. pageIndex is zero based, pageSize capped at 200. Two credentials: api_key (admin level) and customer_token (one customer's own data).",
+    "description": "Sample requests for Nop.Plugin.Api.Rest. List endpoints return { items, pageIndex, pageSize, totalCount, totalPages }. pageIndex is zero based, pageSize capped at 200. The API has two sides. BACK OFFICE routes (/api/rest/products, /orders, /customers, ...) take the api_key in X-Api-Key or an admin token in Authorization. PUBLIC STORE routes (/api/rest/customer/me/*, /api/rest/store/*) take customer_token in Authorization and refuse the API key with 403. Each credential is valid in one header only.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Get API key (admin)",
+      "name": "Get admin token",
       "request": {
         "method": "POST",
         "header": [ { "key": "Content-Type", "value": "application/json", "type": "text" } ],
@@ -91,7 +91,10 @@
       "name": "Get storefront product",
       "request": {
         "method": "GET",
-        "header": [ { "key": "X-Api-Key", "value": "{{api_key}}", "type": "text" } ],
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{customer_token}}", "type": "text" },
+          { "key": "X-Store-Id", "value": "{{store_id}}", "type": "text" }
+        ],
         "url": { "raw": "{{base_url}}/api/rest/store/products/1", "host": ["{{base_url}}"], "path": ["api","rest","store","products","1"] }
       }
     },
@@ -398,7 +401,9 @@
   ],
   "variable": [
     { "key": "base_url", "value": "http://localhost:54720" },
+    { "key": "store_id", "value": "" },
     { "key": "api_key", "value": "" },
+    { "key": "admin_token", "value": "" },
     { "key": "customer_token", "value": "" }
   ]
 }

@@ -39,10 +39,26 @@ single named action, and this plugin offers it anyway.
 
 | Area | Official route | Our route | Status |
 |---|---|---|---|
-| Key issuance | `api-backend/Authenticate/GetToken` | `POST /api/rest/token` | DONE |
+| Admin token | `api-backend/Authenticate/GetToken` | `POST /api/rest/token` | DONE |
+| Customer token | `api-frontend/Authenticate/GetToken` | `POST /api/rest/customer/token` | DONE |
+| Credential slots | — | `Authorization: Bearer` = token, `X-Api-Key` = key | DONE |
+| Backend / public store split | `api-backend/*` vs `api-frontend/*` | two Swagger documents, scopes enforced both ways | DONE |
+| Token lifetimes | — | configurable per scope | DONE |
 | Read protection | — | `RequireApiKeyForReads` setting | DONE |
-| Rate limiting | — | per credential and per IP | DONE |
+| Rate limiting | — | per scope and per IP | DONE |
 | Paging envelope | — | `PagedResult<T>` | DONE |
+
+One token format serves both scopes. A bearer token issued to an administrator grants admin level access;
+one issued to a customer is scoped to that customer's own data. The scopes are enforced against each
+other rather than merely labelled: a customer token is refused on back office routes, and an admin level
+credential is refused on public store routes. Both are signed with the same API key, so without that check
+the scope claim would carry no authority.
+
+The split is published as two Swagger documents, `api-backend` and `api-frontend`, chosen from a "Select
+a definition" dropdown on one UI page, matching how the official API presents itself. The document names
+match the official suite's, but the routes below them do not: this plugin serves everything under
+`/api/rest` and does not also answer at the official path spellings. The capability mapping in the tables
+below is therefore by behaviour, not by path.
 
 ## Phase 1 — Core read (DONE)
 
