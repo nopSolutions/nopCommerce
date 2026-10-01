@@ -220,45 +220,45 @@ public partial class PluginController : BaseAdminController
     [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> UploadPluginsAndThemes(IFormFile archivefile)
     {
-        try
-        {
-            if (archivefile == null || archivefile.Length == 0)
-                throw new NopException(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
+        //try
+        //{
+        //    if (archivefile == null || archivefile.Length == 0)
+        //        throw new NopException(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
 
-            var descriptors = await _uploadService.UploadPluginsAndThemesAsync(archivefile);
-            var pluginDescriptors = descriptors.OfType<PluginDescriptor>().ToList();
-            var themeDescriptors = descriptors.OfType<ThemeDescriptor>().ToList();
+        //    var descriptors = await _uploadService.UploadPluginsAndThemesAsync(archivefile);
+        //    var pluginDescriptors = descriptors.OfType<PluginDescriptor>().ToList();
+        //    var themeDescriptors = descriptors.OfType<ThemeDescriptor>().ToList();
             
-            if (pluginDescriptors.Any())
-            {
-                //events
-                await _eventPublisher.PublishAsync(new PluginsUploadedEvent(pluginDescriptors));
+        //    if (pluginDescriptors.Any())
+        //    {
+        //        //events
+        //        await _eventPublisher.PublishAsync(new PluginsUploadedEvent(pluginDescriptors));
 
-                //activity log
-                var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.UploadNewPlugin");
-                await _customerActivityService.InsertActivitiesAsync("UploadNewPlugin", pluginDescriptors, descriptor => string.Format(activityLogFormat, descriptor.FriendlyName));
-            }
+        //        //activity log
+        //        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.UploadNewPlugin");
+        //        await _customerActivityService.InsertActivitiesAsync("UploadNewPlugin", pluginDescriptors, descriptor => string.Format(activityLogFormat, descriptor.FriendlyName));
+        //    }
 
-            if (themeDescriptors.Any())
-            {
-                //events
-                await _eventPublisher.PublishAsync(new ThemesUploadedEvent(themeDescriptors));
+        //    if (themeDescriptors.Any())
+        //    {
+        //        //events
+        //        await _eventPublisher.PublishAsync(new ThemesUploadedEvent(themeDescriptors));
 
-                //activity log
-                var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.UploadNewTheme");
-                await _customerActivityService.InsertActivitiesAsync("UploadNewTheme", themeDescriptors, descriptor => string.Format(activityLogFormat, descriptor.FriendlyName));
-            }
+        //        //activity log
+        //        var activityLogFormat = await _localizationService.GetResourceAsync("ActivityLog.UploadNewTheme");
+        //        await _customerActivityService.InsertActivitiesAsync("UploadNewTheme", themeDescriptors, descriptor => string.Format(activityLogFormat, descriptor.FriendlyName));
+        //    }
 
-            var message = string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
-            _notificationService.SuccessNotification(message);
+        //    var message = string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
+        //    _notificationService.SuccessNotification(message);
 
-            if (themeDescriptors.Any())
-                return View("RestartApplication", Url.Action("List", "Plugin"));
-        }
-        catch (Exception exc)
-        {
-            await _notificationService.ErrorNotificationAsync(exc);
-        }
+        //    if (themeDescriptors.Any())
+        //        return View("RestartApplication", Url.Action("List", "Plugin"));
+        //}
+        //catch (Exception exc)
+        //{
+        //    await _notificationService.ErrorNotificationAsync(exc);
+        //}
 
         return RedirectToAction("List", new { showWarnings = false });
     }

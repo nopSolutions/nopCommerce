@@ -318,38 +318,38 @@ public partial class UploadService : IUploadService
 
         var zipFilePath = string.Empty;
         var descriptors = new List<IDescriptor>();
-        try
-        {
-            //only zip archives are supported
-            if (!_fileProvider.GetFileExtension(archivefile.FileName)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
-                throw new Exception("Only zip archives are supported");
+        //try
+        //{
+        //    //only zip archives are supported
+        //    if (!_fileProvider.GetFileExtension(archivefile.FileName)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
+        //        throw new Exception("Only zip archives are supported");
 
-            //ensure that temp directory is created
-            var tempDirectory = _fileProvider.MapPath(NopPluginDefaults.UploadsTempPath);
-            _fileProvider.CreateDirectory(tempDirectory);
+        //    //ensure that temp directory is created
+        //    var tempDirectory = _fileProvider.MapPath(NopPluginDefaults.UploadsTempPath);
+        //    _fileProvider.CreateDirectory(tempDirectory);
 
-            //copy original archive to the temp directory
-            zipFilePath = _fileProvider.Combine(tempDirectory, archivefile.FileName);
-            await using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
-                await archivefile.CopyToAsync(fileStream);
+        //    //copy original archive to the temp directory
+        //    zipFilePath = _fileProvider.Combine(tempDirectory, archivefile.FileName);
+        //    await using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
+        //        await archivefile.CopyToAsync(fileStream);
 
-            //try to get information about the uploaded items from the JSON file in the root of the archive
-            //you can find a sample of such descriptive file in Libraries\Nop.Core\Plugins\Samples\
-            var uploadedItems = await GetUploadedItemsAsync(zipFilePath);
-            if (!uploadedItems?.Any() ?? true)
-            {
-                //JSON file doesn't exist, so there is a single plugin or theme in the archive, just unzip it
-                descriptors.Add(await UploadSingleItemAsync(zipFilePath));
-            }
-            else
-                descriptors.AddRange(await UploadMultipleItemsAsync(zipFilePath, uploadedItems));
-        }
-        finally
-        {
-            //delete temporary file
-            if (!string.IsNullOrEmpty(zipFilePath))
-                _fileProvider.DeleteFile(zipFilePath);
-        }
+        //    //try to get information about the uploaded items from the JSON file in the root of the archive
+        //    //you can find a sample of such descriptive file in Libraries\Nop.Core\Plugins\Samples\
+        //    var uploadedItems = await GetUploadedItemsAsync(zipFilePath);
+        //    if (!uploadedItems?.Any() ?? true)
+        //    {
+        //        //JSON file doesn't exist, so there is a single plugin or theme in the archive, just unzip it
+        //        descriptors.Add(await UploadSingleItemAsync(zipFilePath));
+        //    }
+        //    else
+        //        descriptors.AddRange(await UploadMultipleItemsAsync(zipFilePath, uploadedItems));
+        //}
+        //finally
+        //{
+        //    //delete temporary file
+        //    if (!string.IsNullOrEmpty(zipFilePath))
+        //        _fileProvider.DeleteFile(zipFilePath);
+        //}
 
         return descriptors;
     }
