@@ -48,6 +48,16 @@ public partial class BackInStockSubscriptionService : IBackInStockSubscriptionSe
     }
 
     /// <summary>
+    /// Delete a list of back in stock subscription
+    /// </summary>
+    /// <param name="subscriptions">Subscriptions</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteSubscriptionsAsync(IList<BackInStockSubscription> subscriptions)
+    {
+        await _backInStockSubscriptionRepository.DeleteAsync(subscriptions);
+    }
+
+    /// <summary>
     /// Gets all subscriptions
     /// </summary>
     /// <param name="customerId">Customer identifier</param>
@@ -143,14 +153,20 @@ public partial class BackInStockSubscriptionService : IBackInStockSubscriptionSe
 
         var result = 0;
         var subscriptions = await GetAllSubscriptionsByProductIdAsync(product.Id);
+        var customerIds = subscriptions.Select(s => s.CustomerId).Distinct().ToList();
+
+        var customerLanguages = await (from c in _customerRepository.Table
+                where customerIds.Contains(c.Id)
+                select new { c.Id, c.LanguageId })
+            .ToDictionaryAsync(c => c.Id, c => c.LanguageId ?? 0);
+
         foreach (var subscription in subscriptions)
         {
-            var customer = await _customerRepository.GetByIdAsync(subscription.CustomerId);
-            result += (await _workflowMessageService.SendBackInStockNotificationAsync(subscription, customer?.LanguageId ?? 0)).Count;
+            var languageId = customerLanguages.GetValueOrDefault(subscription.CustomerId);
+            result += (await _workflowMessageService.SendBackInStockNotificationAsync(subscription, languageId)).Count;
         }
 
-        for (var i = 0; i <= subscriptions.Count - 1; i++)
-            await DeleteSubscriptionAsync(subscriptions[i]);
+        await DeleteSubscriptionsAsync(subscriptions);
 
         return result;
     }
