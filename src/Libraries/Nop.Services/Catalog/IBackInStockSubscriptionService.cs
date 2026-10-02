@@ -16,13 +16,6 @@ public partial interface IBackInStockSubscriptionService
     Task DeleteSubscriptionAsync(BackInStockSubscription subscription);
 
     /// <summary>
-    /// Delete a list of back in stock subscription
-    /// </summary>
-    /// <param name="subscriptions">Subscriptions</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    Task DeleteSubscriptionsAsync(IList<BackInStockSubscription> subscriptions);
-
-    /// <summary>
     /// Gets all subscriptions
     /// </summary>
     /// <param name="customerId">Customer identifier</param>
