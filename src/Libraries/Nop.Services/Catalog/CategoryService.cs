@@ -676,7 +676,7 @@ public partial class CategoryService : ICategoryService
     /// <summary>
     /// Inserts a list of product category mapping
     /// </summary>
-    /// <param name="productCategories">>Product category mappings</param>
+    /// <param name="productCategories">Product category mappings</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     public virtual async Task InsertProductCategoriesAsync(IList<ProductCategory> productCategories)
     {
