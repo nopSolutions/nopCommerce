@@ -376,25 +376,33 @@ public partial class ProductController : BaseAdminController
 
     protected virtual async Task SaveDiscountMappingsAsync(Product product, ProductModel model)
     {
+        var existingProductDiscounts = await _productService.GetAllDiscountsAppliedToProductAsync(product.Id);
+        var productDiscountsToDelete = existingProductDiscounts.Where(pd => !(model.SelectedDiscountIds ?? []).Contains(pd.DiscountId)).ToList();
+        await _productService.DeleteDiscountProductMappingsAsync(productDiscountsToDelete);
+
         var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToSkus, showHidden: true, isActive: null);
+        var discountProductToAdd = new List<DiscountProductMapping>();
 
         foreach (var discount in allDiscounts)
         {
-            if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
+            if (!model.SelectedDiscountIds.Contains(discount.Id))
             {
-                //new discount
-                if (await _productService.GetDiscountAppliedToProductAsync(product.Id, discount.Id) is null)
-                    await _productService.InsertDiscountProductMappingAsync(new DiscountProductMapping { EntityId = product.Id, DiscountId = discount.Id });
+                continue;
             }
-            else
+
+            if (_productService.FindDiscountProduct(existingProductDiscounts, product.Id, discount.Id) is null)
             {
-                //remove discount
-                if (await _productService.GetDiscountAppliedToProductAsync(product.Id, discount.Id) is DiscountProductMapping discountProductMapping)
-                    await _productService.DeleteDiscountProductMappingAsync(discountProductMapping);
+                discountProductToAdd.Add(new DiscountProductMapping
+                {
+                    EntityId = product.Id,
+                    DiscountId = discount.Id
+                });
             }
         }
+        await _productService.InsertDiscountProductMappingsAsync(discountProductToAdd);
 
-        await _productService.UpdateProductAsync(product);
+        if (productDiscountsToDelete.Any() || discountProductToAdd.Any())
+            await _productService.UpdateProductAsync(product);
     }
 
     protected virtual async Task<string> GetAttributesXmlForProductAttributeCombinationAsync(IFormCollection form, List<string> warnings, int productId)

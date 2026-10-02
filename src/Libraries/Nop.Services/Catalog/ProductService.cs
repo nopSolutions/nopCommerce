@@ -2589,6 +2589,16 @@ public partial class ProductService : IProductService
     }
 
     /// <summary>
+    /// Inserts a list of discount-product mapping record
+    /// </summary>
+    /// <param name="discountProductMappings">Discount-product mappings</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertDiscountProductMappingsAsync(IList<DiscountProductMapping> discountProductMappings)
+    {
+        await _discountProductMappingRepository.InsertAsync(discountProductMappings);
+    }
+
+    /// <summary>
     /// Deletes a discount-product mapping record
     /// </summary>
     /// <param name="discountProductMapping">Discount-product mapping</param>
@@ -2596,6 +2606,28 @@ public partial class ProductService : IProductService
     public virtual async Task DeleteDiscountProductMappingAsync(DiscountProductMapping discountProductMapping)
     {
         await _discountProductMappingRepository.DeleteAsync(discountProductMapping);
+    }
+
+    /// <summary>
+    /// Deletes a list of discount-product mapping record
+    /// </summary>
+    /// <param name="discountProductMappings">Discount-product mappings</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteDiscountProductMappingsAsync(IList<DiscountProductMapping> discountProductMappings)
+    {
+        await _discountProductMappingRepository.DeleteAsync(discountProductMappings);
+    }
+
+    /// <summary>
+    /// Returns a DiscountProductMapping that has the specified values
+    /// </summary>
+    /// <param name="source">Source</param>
+    /// <param name="productId">Product identifier</param>
+    /// <param name="discountId">Discount identifier</param>
+    /// <returns>A DiscountProductMapping that has the specified values; otherwise null</returns>
+    public virtual DiscountProductMapping FindDiscountProduct(IList<DiscountProductMapping> source, int productId, int discountId)
+    {
+        return source.FirstOrDefault(pm => pm.EntityId == productId && pm.DiscountId == discountId);
     }
 
     #endregion
