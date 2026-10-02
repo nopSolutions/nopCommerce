@@ -496,7 +496,7 @@
     <Value>Click here to finish impersonated session.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.IsAlreadyExistsVerifiedPhoneNumber">
-    <Value>A customer with the specified verified phone number already exists.</Value>
+    <Value>A customer with this verified phone number already exists.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login">
     <Value>Log in</Value>
@@ -607,7 +607,7 @@
     <Value>Options</Value>
   </LocaleResource>
   <LocaleResource Name="Account.OtpPhoneVerification.OtpUpdatePhoneSmsText">
-    <Value>We'll send you a code via SMS to confirm changing your phone number.</Value>
+    <Value>We'll send you a code via SMS to confirm the change of your phone number.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery">
     <Value>Password recovery</Value>
@@ -2797,7 +2797,7 @@
     <Value>Add customer</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.PriceList.Customers.SaveBeforeEdit">
-    <Value>You need to save the price list before you can add customers for this page.</Value>
+    <Value>You need to save the price list before you can add customers on this page.</Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.PriceList.Info">
     <Value>Price list info</Value>
@@ -2824,7 +2824,7 @@
     <Value>Original price</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.PriceList.Products.SaveBeforeEdit">
-    <Value>You need to save the price list before you can add products for this page.</Value>
+    <Value>You need to save the price list before you can add products on this page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.PriceLists">
     <Value>Price lists</Value>
@@ -2905,7 +2905,7 @@
     <Value>Price lists have been imported successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.PriceLists.ImportFromExcelTip">
-    <Value>Imported price lists are distinguished by ID. If the ID already exists, then its corresponding price list will be updated. You should not specify ID (leave 0) for new price lists.</Value>
+    <Value>Imported price lists are distinguished by ID. If the ID already exists, then its corresponding price list will be updated. You should not specify an ID (leave 0) for new price lists.</Value>
   </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.PriceLists.List.CustomerRoles">
     <Value>Customer roles</Value>
@@ -4516,7 +4516,7 @@
     <Value>Add new related product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.RelatedProducts.CyclicallyRelated">
-    <Value>Circular dependency is not allowed for required products (e.g. product A requires product B. And product B requires product A)</Value>
+    <Value>Circular dependency is not allowed for required products (e.g. product A requires product B, and product B requires product A)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder">
     <Value>Display order</Value>
@@ -4843,7 +4843,7 @@
     <Value>Required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.ContactFormAttributes.Fields.IsRequired.Hint">
-    <Value>When an attribute is required, the customer must choose an appropriate attribute value before they can send form.</Value>
+    <Value>When an attribute is required, the customer must choose an appropriate attribute value before they can send the form.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.ContactFormAttributes.Fields.Name">
     <Value>Name</Value>
@@ -8140,7 +8140,7 @@
     <Value>Show on withdrawal form</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnWithdrawalForm.Hint">
-    <Value>Check to show CAPTCHA on withdrawal form.</Value>
+    <Value>Check to show CAPTCHA on the withdrawal form.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaType">
     <Value>Type of reCAPTCHA</Value>
@@ -8841,7 +8841,7 @@
     <Value>Check this option to enable automatic cancellation of unpaid orders.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelRestoreShoppingCart">
-    <Value>Put order back as shopping cart</Value>
+    <Value>Restore order items back to the shopping cart</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AutoCancelRestoreShoppingCart.Hint">
     <Value>Check this option to add auto-canceled orders back to the shopping cart.</Value>
@@ -9177,7 +9177,7 @@
     <Value><![CDATA[Please remember <a href="{0}" target="_blank">to enable</a> the "{1}" scheduled task.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.Warning.NotFound">
-    <Value>Auto-cancel unpaid orders task not found</Value>
+    <Value>Auto-cancel unpaid orders task is not found</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.WithdrawalLinkDaysValid">
     <Value>Withdrawal link. Days valid</Value>
@@ -9798,7 +9798,7 @@
     <Value>Vendor filtering</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.VendorEnabled.Hint">
-    <Value>Check to allow customers to filter shopping cart items by a specific vendor in the cart. It could be useful when you have multi-vendor configured in your store.</Value>
+    <Value>Check to allow customers to filter shopping cart items by a specific vendor in the cart. It could be useful when you have multi-vendor setup configured configured in your store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.VendorRequired">
     <Value>Vendor required</Value>
@@ -10436,10 +10436,10 @@
     <Value>The warehouse has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Sms.Providers">
-    <Value>Sms providers</Value>
+    <Value>SMS providers</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Sms.Providers.BackToList">
-    <Value>back to sms provider list</Value>
+    <Value>back to SMS provider list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Sms.Providers.Configure">
     <Value>Configure</Value>
@@ -11672,13 +11672,13 @@
     <Value><![CDATA[This message template is used to notify customers when a store owner (or vendor) replies to their product reviews. You can set up this option by ticking the checkbox <strong>Notify customer about product review reply</strong> in Configuration - Settings - Catalog settings.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Reminders.AbandonedCartFollowUp1">
-    <Value>This message template is used to send the follow-up #1 for a abandoned cart.</Value>
+    <Value>This message template is used to send the follow-up #1 for an abandoned cart.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Reminders.AbandonedCartFollowUp2">
-    <Value>This message template is used to send the follow-up #2 for a abandoned cart.</Value>
+    <Value>This message template is used to send the follow-up #2 for an abandoned cart.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Reminders.AbandonedCartFollowUp3">
-    <Value>This message template is used to send the follow-up #3 for a abandoned cart.</Value>
+    <Value>This message template is used to send the follow-up #3 for an abandoned cart.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Reminders.PendingOrderFollowUp1">
     <Value>This message template is used to send the follow-up #1 for a pending order.</Value>
@@ -11687,7 +11687,7 @@
     <Value>This message template is used to send the follow-up #2 for a pending order.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Reminders.RegistrationFollowUp">
-    <Value>This message template is used to send the follow-up #1 for a incomplete registration.</Value>
+    <Value>This message template is used to send the follow-up #1 for an incomplete registration.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.ReturnRequest.WithdrawalLinkMessage">
     <Value>This message template is used to send the withdrawal request confirmation.</Value>
@@ -12650,7 +12650,7 @@
     <Value>Price lists</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.PriceLists.Hint">
-    <Value>Choose price lists of this user.</Value>
+    <Value>Choose price lists for this user.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.PriceLists.NoPriceList">
     <Value>No price lists available. Create at least one price list before mapping.</Value>
@@ -13271,7 +13271,7 @@
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">shopping carts and wishlists</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.SmsProviders">
-    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">sms providers</a>.]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">SMS providers</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.SpecificationAttributes">
     <Value><![CDATA[Learn more about <a target="_blank" href="{0}">specification attributes</a>]]></Value>
@@ -15296,7 +15296,7 @@
     <Value>Abandoned cart reminders may not work as expected when using a multi-store setup.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Reminders.Warning.NotFound">
-    <Value>The scheduled task not found.</Value>
+    <Value>The scheduled task is not found.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.RecurringPayments">
     <Value>Recurring payments</Value>
@@ -16310,7 +16310,7 @@
     <Value>Clear</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.ClearSearchHistory.Complete">
-    <Value>Clearing search history data completed</Value>
+    <Value>Clearing search history data has been completed</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.ClearSearchHistory.Progress">
     <Value>Clearing...</Value>
@@ -16820,7 +16820,7 @@
     <Value>The latest nopCommerce version, available for download.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.NopLatestVersion.Text">
-    <Value><![CDATA[<a href='{1}' target='_blank'>{0}</a> (see the <a href='{2}' target='_blank'>release-notes</a>)]]></Value>
+    <Value><![CDATA[<a href='{1}' target='_blank'>{0}</a> (see the <a href='{2}' target='_blank'>release notes</a>)]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.NopVersion">
     <Value>nopCommerce version</Value>
@@ -19442,7 +19442,7 @@
     <Value>Code expires in</Value>
   </LocaleResource>
   <LocaleResource Name="PhoneVerification.OtpCode.Error.AttemptLimit">
-    <Value>Attempt limit exceeded. Try again in {0} minutes.</Value>
+    <Value>Attempt limit exceeded. Please try again after {0} minutes.</Value>
   </LocaleResource>
   <LocaleResource Name="PhoneVerification.OtpCode.Error.Expired">
     <Value>The SMS code has expired.</Value>

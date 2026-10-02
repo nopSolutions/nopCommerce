@@ -485,7 +485,7 @@ public class LocalizationMigration : MigrationBase
             ["Products.ProductHasBeenUpdatedInTheWishlist.Link"] = "The product has been updated in your <a href=\"{0}\">wishlist</a>",
 
             //#8021
-            ["Admin.Catalog.Products.RelatedProducts.CyclicallyRelated"] = "Circular dependency is not allowed for required products (e.g. product A requires product B. And product B requires product A)",
+            ["Admin.Catalog.Products.RelatedProducts.CyclicallyRelated"] = "Circular dependency is not allowed for required products (e.g. product A requires product B, and product B requires product A)",
 
             //#7743 
             ["Admin.Promotions.Reminder.AbandonedCartEnabled"] = "Abandoned cart reminders enabled",
@@ -503,13 +503,13 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.Reminders"] = "Reminders",
             ["Admin.Promotions.Reminders.Warning.TaskDisabled"] = "Please remember <a href=\"{0}\" target=\"_blank\">to enable</a> the \"{1}\" scheduled task.",
             ["Admin.Promotions.Reminders.Warning.MultiStore"] = "Abandoned cart reminders may not work as expected when using a multi-store setup.",
-            ["Admin.Promotions.Reminders.Warning.NotFound"] = "The scheduled task not found.",
-            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_1_MESSAGE}"] = "This message template is used to send the follow-up #1 for a abandoned cart.",
-            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_2_MESSAGE}"] = "This message template is used to send the follow-up #2 for a abandoned cart.",
-            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_3_MESSAGE}"] = "This message template is used to send the follow-up #3 for a abandoned cart.",
+            ["Admin.Promotions.Reminders.Warning.NotFound"] = "The scheduled task is not found.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_1_MESSAGE}"] = "This message template is used to send the follow-up #1 for an abandoned cart.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_2_MESSAGE}"] = "This message template is used to send the follow-up #2 for an abandoned cart.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_3_MESSAGE}"] = "This message template is used to send the follow-up #3 for an abandoned cart.",
             [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_PENDING_ORDER_FOLLOW_UP_1_MESSAGE}"] = "This message template is used to send the follow-up #1 for a pending order.",
             [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_PENDING_ORDER_FOLLOW_UP_2_MESSAGE}"] = "This message template is used to send the follow-up #2 for a pending order.",
-            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_REGISTRATION_FOLLOW_UP_MESSAGE}"] = "This message template is used to send the follow-up #1 for a incomplete registration.",
+            [$"Admin.ContentManagement.MessageTemplates.Description.{MessageTemplateSystemNames.REMINDER_REGISTRATION_FOLLOW_UP_MESSAGE}"] = "This message template is used to send the follow-up #1 for an incomplete registration.",
 
             //#7906
             ["Wishlist.DuplicateName"] = "A wishlist with this name already exists.",
@@ -545,7 +545,7 @@ public class LocalizationMigration : MigrationBase
             //#8073
             ["Admin.System.SystemInfo.NopLatestVersion"] = "Latest nopCommerce version",
             ["Admin.System.SystemInfo.NopLatestVersion.Hint"] = "The latest nopCommerce version, available for download.",
-            ["Admin.System.SystemInfo.NopLatestVersion.Text"] = "<a href='{1}' target='_blank'>{0}</a> (see the <a href='{2}' target='_blank'>release-notes</a>)",
+            ["Admin.System.SystemInfo.NopLatestVersion.Text"] = "<a href='{1}' target='_blank'>{0}</a> (see the <a href='{2}' target='_blank'>release notes</a>)",
 
             //#8136
             ["Footer.FollowUs.TikTok"] = "TikTok",
@@ -581,7 +581,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.System.Maintenance.ClearSearchHistory.Button"] = "Clear",
             ["Admin.System.Maintenance.ClearSearchHistory.Progress"] = "Clearing...",
             ["Admin.System.Maintenance.ClearSearchHistory.Text"] = "Delete search history data from the database.",
-            ["Admin.System.Maintenance.ClearSearchHistory.Complete"] = "Clearing search history data completed",
+            ["Admin.System.Maintenance.ClearSearchHistory.Complete"] = "Clearing search history data has been completed",
             ["Admin.System.Maintenance.ClearSearchHistory.TotalDeleted"] = "{0} items were deleted",
 
             //#8120
@@ -591,9 +591,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Order.AutoCancelDelay.Hint"] = "Enter the delay (in minutes) after order placement before unpaid orders are canceled.",
             ["Admin.Configuration.Settings.Order.AutoCancelIgnoredPaymentMethods"] = "Excluded payment methods",
             ["Admin.Configuration.Settings.Order.AutoCancelIgnoredPaymentMethods.Hint"] = "Select payment methods excluded from automatic cancellation of unpaid orders.",
-            ["Admin.Configuration.Settings.Order.AutoCancelRestoreShoppingCart"] = "Put order back as shopping cart",
+            ["Admin.Configuration.Settings.Order.AutoCancelRestoreShoppingCart"] = "Restore order items back to the shopping cart",
             ["Admin.Configuration.Settings.Order.AutoCancelRestoreShoppingCart.Hint"] = "Check this option to add auto-canceled orders back to the shopping cart.",
-            ["Admin.Configuration.Settings.Order.Warning.NotFound"] = "Auto-cancel unpaid orders task not found",
+            ["Admin.Configuration.Settings.Order.Warning.NotFound"] = "Auto-cancel unpaid orders task is not found",
             ["Admin.Configuration.Settings.Order.Warning.TaskDisabled"] = "Please remember <a href=\"{0}\" target=\"_blank\">to enable</a> the \"{1}\" scheduled task.",
 
             //#1832
@@ -616,7 +616,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Common.ContactFormAttributes.Fields.DisplayOrder"] = "Display order",
             ["Admin.Common.ContactFormAttributes.Fields.DisplayOrder.Hint"] = "The contact form attribute display order. 1 represents the first item in the list.",
             ["Admin.Common.ContactFormAttributes.Fields.IsRequired"] = "Required",
-            ["Admin.Common.ContactFormAttributes.Fields.IsRequired.Hint"] = "When an attribute is required, the customer must choose an appropriate attribute value before they can send form.",
+            ["Admin.Common.ContactFormAttributes.Fields.IsRequired.Hint"] = "When an attribute is required, the customer must choose an appropriate attribute value before they can send the form.",
             ["Admin.Common.ContactFormAttributes.Fields.Name"] = "Name",
             ["Admin.Common.ContactFormAttributes.Fields.Name.Hint"] = "The name of the contact form attribute.",
             ["Admin.Common.ContactFormAttributes.Fields.Name.Required"] = "Please provide a name.",
@@ -663,9 +663,9 @@ public class LocalizationMigration : MigrationBase
             ["PageTitle.RegisterOtp"] = "Phone number verification",
             ["PageTitle.LoginOtp"] = "Phone number verification",
 
-            ["Account.IsAlreadyExistsVerifiedPhoneNumber"] = "A customer with the specified verified phone number already exists.",
+            ["Account.IsAlreadyExistsVerifiedPhoneNumber"] = "A customer with this verified phone number already exists.",
             ["Account.Register.OtpRegisterSmsText"] = "We'll send you a code via SMS to complete registration.",
-            ["Account.OtpPhoneVerification.OtpUpdatePhoneSmsText"] = "We'll send you a code via SMS to confirm changing your phone number.",
+            ["Account.OtpPhoneVerification.OtpUpdatePhoneSmsText"] = "We'll send you a code via SMS to confirm the change of your phone number.",
             ["Account.Login.OtpLoginSmsText"] = "We'll send you a code via SMS to confirm your login.",
 
             ["PhoneVerification.SendSms"] = "Send SMS",
@@ -674,7 +674,7 @@ public class LocalizationMigration : MigrationBase
             ["PhoneVerification.Fields.Phone"] = "Phone",
             ["PhoneVerification.OtpCode.Required"] = "SMS code is required.",
             ["PhoneVerification.OtpCode.Message"] = "Your OTP code is: {0}",
-            ["PhoneVerification.OtpCode.Error.AttemptLimit"] = "Attempt limit exceeded. Try again in {0} minutes.",
+            ["PhoneVerification.OtpCode.Error.AttemptLimit"] = "Attempt limit exceeded. Please try again after {0} minutes.",
             ["PhoneVerification.OtpCode.Error.RecentlySent"] = "The code has already been sent. Please wait {0} seconds.",
             ["PhoneVerification.OtpCode.Error.SendError"] = "Failed to send SMS code. Please try again.",
             ["PhoneVerification.OtpCode.Error.NotRequested"] = "You have not requested an SMS code. Please request a code and try again.",
@@ -685,14 +685,14 @@ public class LocalizationMigration : MigrationBase
             ["PhoneVerification.Placeholder"] = "+1 (555) 000-0000",
 
             //menu
-            ["Admin.Configuration.Sms.Providers"] = "Sms providers",
-            ["Admin.Configuration.Sms.Providers.BackToList"] = "back to sms provider list",
+            ["Admin.Configuration.Sms.Providers"] = "SMS providers",
+            ["Admin.Configuration.Sms.Providers.BackToList"] = "back to SMS provider list",
             ["Admin.Configuration.Sms.Providers.Configure"] = "Configure",
             ["Admin.Configuration.Sms.Providers.Fields.FriendlyName"] = "Friendly name",
             ["Admin.Configuration.Sms.Providers.Fields.IsPrimaryProvider"] = "Is primary provider",
             ["Admin.Configuration.Sms.Providers.Fields.MarkAsPrimaryProvider"] = "Mark as primary provider",
             ["Admin.Configuration.Sms.Providers.Fields.SystemName"] = "System name",
-            ["Admin.Documentation.Reference.SmsProviders"] = "Learn more about <a target=\"_blank\" href=\"{0}\">sms providers</a>.",
+            ["Admin.Documentation.Reference.SmsProviders"] = "Learn more about <a target=\"_blank\" href=\"{0}\">SMS providers</a>.",
 
             //customer info
             ["Account.CustomerInfo.VerifyPhoneNumber"] = "Verify phone number",
@@ -748,8 +748,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.PriceLists.List.SearchIsActive.Hint"] = "Filter price lists by their active status. Leave empty to display all price lists.",
 
             ["Admin.Catalog.PriceLists"] = "Price lists",
-            ["Admin.Catalog.PriceLists.AddNew"] = "Add new price list",
-            ["Admin.Catalog.PriceLists.ImportFromExcelTip"] = "Imported price lists are distinguished by ID. If the ID already exists, then its corresponding price list will be updated. You should not specify ID (leave 0) for new price lists.",
+            ["Admin.Catalog.PriceLists.ImportFromExcelTip"] = "Imported price lists are distinguished by ID. If the ID already exists, then its corresponding price list will be updated. You should not specify an ID (leave 0) for new price lists.",
             ["Admin.Documentation.Reference.PriceLists"] = "Learn more about <a target=\"_blank\" href=\"{0}\">price lists</a>",
             ["Admin.Catalog.PriceLists.NoPriceLists"] = "No price lists selected",
             ["Admin.Catalog.PriceLists.AddNew"] = "Add new price list",
@@ -760,8 +759,8 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.PriceList.Info"] = "Price list info",
             ["Admin.Catalog.PriceList.Products"] = "Products",
             ["Admin.Catalog.PriceList.Customers"] = "Customers",
-            ["Admin.Catalog.PriceList.Products.SaveBeforeEdit"] = "You need to save the price list before you can add products for this page.",
-            ["Admin.Catalog.PriceList.Customers.SaveBeforeEdit"] = "You need to save the price list before you can add customers for this page.",
+            ["Admin.Catalog.PriceList.Products.SaveBeforeEdit"] = "You need to save the price list before you can add products on this page.",
+            ["Admin.Catalog.PriceList.Customers.SaveBeforeEdit"] = "You need to save the price list before you can add customers on this page.",
             ["Admin.Catalog.PriceList.Products.Fields.Product"] = "Product",
             ["Admin.Catalog.PriceList.Products.Fields.StandardPrice"] = "Original price",
             ["Admin.Catalog.PriceList.Products.Fields.CalculatedPrice"] = "Calculated price",
@@ -799,7 +798,7 @@ public class LocalizationMigration : MigrationBase
             ["Account.CustomerReturnRequests.Withdrawal.Title"] = "Withdrawal #{0} - {1}",
             ["Account.CustomerReturnRequests.Withdrawals"] = "Withdrawals",
             ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnWithdrawalForm"] = "Show on withdrawal form",
-            ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnWithdrawalForm.Hint"] = "Check to show CAPTCHA on withdrawal form.",
+            ["Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnWithdrawalForm.Hint"] = "Check to show CAPTCHA on the withdrawal form.",
             ["Admin.Configuration.Settings.Order.GuestReturnRequestsAllowed"] = "Allow guests to create return requests",
             ["Admin.Configuration.Settings.Order.GuestReturnRequestsAllowed.Hint"] = "Check to allow guests to create return requests.",
             ["Admin.Configuration.Settings.Order.ReturnActionsEnabled"] = "Return actions enabled",
@@ -845,17 +844,17 @@ public class LocalizationMigration : MigrationBase
 
             //#8247
             ["Admin.Customers.Customers.Fields.PriceLists"] = "Price lists",
-            ["Admin.Customers.Customers.Fields.PriceLists.Hint"] = "Choose price lists of this user.",
+            ["Admin.Customers.Customers.Fields.PriceLists.Hint"] = "Choose price lists for this user.",
             ["Admin.Customers.Customers.Fields.PriceLists.NoPriceList"] = "No price lists available. Create at least one price list before mapping.",
 
             //#8248
             ["Admin.Catalog.Products.Fields.PriceLists"] = "Price lists",
-            ["Admin.Catalog.Products.Fields.PriceLists.Hint"] = "Choose price lists of this product.",
+            ["Admin.Catalog.Products.Fields.PriceLists.Hint"] = "Choose price lists for this product.",
             ["Admin.Catalog.Products.Fields.PriceLists.NoPriceList"] = "No price lists available. Create at least one price list before mapping.",
 
             //#56
             ["Admin.Configuration.Settings.ShoppingCart.VendorEnabled"] = "Vendor filtering",
-            ["Admin.Configuration.Settings.ShoppingCart.VendorEnabled.Hint"] = "Check to allow customers to filter shopping cart items by a specific vendor in the cart. It could be useful when you have multi-vendor configured in your store.",
+            ["Admin.Configuration.Settings.ShoppingCart.VendorEnabled.Hint"] = "Check to allow customers to filter shopping cart items by a specific vendor in the cart. It could be useful when you have multi-vendor setup configured in your store.",
             ["Admin.Configuration.Settings.ShoppingCart.VendorRequired"] = "Vendor required",
             ["Admin.Configuration.Settings.ShoppingCart.VendorRequired.Hint"] = "Check if customers are required to choose a vendor before starting the checkout process.",
             ["Enums.Nop.Core.Domain.Orders.ShoppingCartType.Stash"] = "Stash",
