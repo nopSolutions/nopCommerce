@@ -20014,7 +20014,7 @@
   <LocaleResource Name="ReturnRequests.WithdrawalForm">
     <Value>Find your order</Value>
   </LocaleResource>
-  <LocaleResource Name="ReturnRequests.WithdrawalForm.ConfirnationText">
+  <LocaleResource Name="ReturnRequests.WithdrawalForm.ConfirmationText">
     <Value>If your details are correct, we've sent you a link to continue.</Value>
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.WithdrawalForm.EmailAddress.Required">

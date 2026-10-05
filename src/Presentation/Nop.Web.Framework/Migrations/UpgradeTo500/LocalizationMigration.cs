@@ -822,7 +822,7 @@ public class LocalizationMigration : MigrationBase
             ["ReturnRequests.Withdrawal.Title"] = "Withdraw contract for <a href=\"{0}\">order #{1}</a>",
             ["ReturnRequests.WithdrawalForm"] = "Find your order",
             ["ReturnRequests.WithdrawalForm.Submit"] = "Continue",
-            ["ReturnRequests.WithdrawalForm.ConfirnationText"] = "If your details are correct, we've sent you a link to continue.",
+            ["ReturnRequests.WithdrawalForm.ConfirmationText"] = "If your details are correct, we've sent you a link to continue.",
             ["ReturnRequests.WithdrawalForm.EmailAddress.Required"] = "The Email address is required",
             ["ReturnRequests.WithdrawalForm.OrderNumber.Required"] = "The Order number is required",
 

@@ -150,7 +150,7 @@ public partial class ReturnRequestController : BasePublicController
             ? await _orderService.GetOrderByIdAsync(orderNumber) :
             await _orderService.GetOrderByCustomOrderNumberAsync(model.OrderNumber);
 
-        var resultText = await _localizationService.GetResourceAsync("ReturnRequests.WithdrawalForm.ConfirnationText");
+        var resultText = await _localizationService.GetResourceAsync("ReturnRequests.WithdrawalForm.ConfirmationText");
         var store = await _storeContext.GetCurrentStoreAsync();
 
         model = await _returnRequestModelFactory.PrepareWithdrawalFormModelAsync(model);
