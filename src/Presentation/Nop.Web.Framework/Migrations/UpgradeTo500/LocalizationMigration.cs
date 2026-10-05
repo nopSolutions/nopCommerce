@@ -883,6 +883,10 @@ public class LocalizationMigration : MigrationBase
             ["Products.Manufacturers.ResponsiblePerson"] = "Responsible person name: {0}",
             ["Products.Manufacturers.ResponsiblePersonPhysicalAddress"] = "Responsible person physical address: {0}",
             ["Products.Manufacturers.ResponsiblePersonElectronicAddress"] = "Responsible person electronic address: {0}",
+            //#8349
+            ["Account.Login.Phone.Required"] = "Phone number is required",
+            ["Admin.System.SystemInfo.UsedMemory"] = "Used memory (MB)",
+            ["Admin.System.SystemInfo.UsedMemory.Hint"] = "Total megabytes (MB) in use by the application.",
         });
 
         #endregion
