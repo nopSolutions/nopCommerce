@@ -1243,15 +1243,8 @@ div.row.justify-content-between.dt-layout-table thead {
   max-width: 330px;
 }
 
-.custom-input-group.input-group-short .custom-input-group-btn,
 .input-group.input-group-short .input-group-btn {
   width: auto;
-}
-
-.custom-input-group.input-group-short .bootstrap-touchspin {
-  float: left;
-  margin-right: 3px;
-  width: 200px;
 }
 
 .input-group.input-group-short .input-group-text {
