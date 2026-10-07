@@ -1,0 +1,4 @@
+// Adds the product held in "productName" to the cart; callers set it first.
+product-open
+click button "Add to cart"
+check that page contains "The product has been added to your shopping cart"

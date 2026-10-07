@@ -1,0 +1,40 @@
+labels:
+  - nop-e2e
+  - customer-register-new
+  - customer-login
+  - customer-logout
+  - product-open
+  - product-add-to-cart
+customSteps: |
+  // Cart persistence is the point: the guest cart is migrated onto the customer
+  // record at login, which no unit test covers.
+  //
+  // "Update shopping cart" is hidden and driven by the quantity field's onchange
+  // handler, so quantities are only ever changed by editing the field, and a
+  // line is dropped by setting its quantity to zero.
+  customer-register-new
+
+  save "Apple MacBook Pro" as "productName"
+  product-add-to-cart
+
+  // By URL: the header shows "Shopping cart" on every page.
+  click "Shopping cart"
+  check that url contains "/cart"
+  check that page contains "Apple MacBook Pro"
+
+  // Raise the quantity; the change handler submits the cart for us
+  enter "3" into "Qty."
+  // Keyed on the line total ($1,800.00 x 3), which is what proves the update
+  // applied; the product name was on the page already.
+  check that page contains "$5,400.00"
+  check that page contains "Apple MacBook Pro"
+
+  // --- Persistence across a session boundary ---
+  customer-logout
+  customer-login
+  click "Shopping cart"
+  check that page contains "Apple MacBook Pro"
+
+  // Setting the quantity to zero removes the line
+  enter "0" into "Qty."
+  check that page contains "Your Shopping Cart is empty!"

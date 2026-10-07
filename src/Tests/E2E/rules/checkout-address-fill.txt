@@ -1,0 +1,10 @@
+// Fills an address block, for checkout billing and for address book entries.
+// Country first, because the province list loads by ajax. The seeded country is
+// the full ISO 3166 name; "United States" also matches the Minor Outlying
+// Islands, which has no states.
+select "United States of America" from "Country"
+select "California" from "State / province"
+enter "Los Angeles" into "City"
+enter "1 Test Street" into "Address 1"
+enter "90001" into "Zip / postal code"
+enter "5551234567" into "Phone number"

@@ -1,0 +1,27 @@
+// The shipping/payment/confirm tail of checkout, after a billing address has
+// been supplied. Seeded ShipToSameAddress skips the shipping address step.
+
+// "Ground" is seeded and arrives already checked; the click only confirms the
+// control responds.
+wait up to 60 seconds until page contains "Ground"
+click "Ground"
+click button "Continue"
+
+// No payment-method step exists: BypassPaymentMethodSelectionIfOnlyOne is
+// seeded true and "Check / Money Order" is the only selectable method.
+wait up to 60 seconds until page contains "Mail Personal or Business Check"
+click button "Continue"
+
+// Proves the bypass picked the right method rather than merely skipping ahead.
+// Keyed on the method name, not the "Payment Method" heading, which is present
+// from first paint (see README).
+wait up to 60 seconds until page contains "Check / Money Order"
+check that page contains "Ground"
+
+// Both lines are load-bearing; see README. Without the scroll the click lands
+// on the accordion header and silently places no order.
+scroll down until page contains "Total:"
+click button "Confirm" roughly below "Total:"
+
+// Order placement is slow while the whole suite runs against one container.
+wait up to 180 seconds until page contains "Your order has been successfully processed!"
