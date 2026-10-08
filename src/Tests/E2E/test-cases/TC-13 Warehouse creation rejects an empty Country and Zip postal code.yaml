@@ -1,0 +1,56 @@
+labels:
+  - nop-e2e
+  - admin-login
+  - warehouse-address-validation
+customSteps: |
+  // Regression cover for issue #8286. WarehouseValidator validated only Name
+  // and never the nested Address model, so a warehouse saved happily with
+  // Country and Zip / postal code empty even though both render as required.
+  // Fixed in release-4.90.7 (commit f83a8cda41), which attaches AddressValidator.
+  //
+  // Only those two fields matter: ShippingModelFactory hard-codes
+  // CountryRequired and ZipPostalCodeRequired to true for a warehouse, while
+  // every other *Required flag on the address model stays false, so nothing
+  // else is refused here.
+  admin-login
+
+  go to url stored value "adminWarehouseCreateUrl"
+  check that page contains "Add a new warehouse"
+  generate from template "E2E Warehouse #####", then enter into "Name" and save as "warehouseName"
+  // "Save and Continue Edit" rather than "Save", which is a prefix of it.
+  click button "Save and Continue Edit"
+
+  // --- The save must be refused ---
+  // A refused save redisplays the create form; an accepted one redirects to
+  // "Edit warehouse details". Asserted instead of the validation text: the
+  // form carries hidden CountryRequired / ZipPostalCodeRequired inputs whose
+  // data-val-required attributes read "The CountryRequired field is required.",
+  // and "check that page contains" matched that near-miss against
+  // "Country is required." on a build that emitted no validation at all.
+  check that page contains "Add a new warehouse"
+
+  // --- And nothing may have been persisted ---
+  // This is the issue's actual complaint. "Warehouse 1 (New York)" is seeded
+  // sample data; asserting it first proves the ajax grid has rendered, so the
+  // absence check below cannot pass against a table that has not loaded.
+  go to url stored value "adminWarehousesUrl"
+  check that page contains "Warehouse 1 (New York)"
+  check that page does not contain stored value "warehouseName"
+
+  // --- The same warehouse saves once both fields are supplied ---
+  // The negative half alone would still pass against a form that rejects
+  // everything, so prove the guard is not over-blocking.
+  go to url stored value "adminWarehouseCreateUrl"
+  enter stored value "warehouseName" into "Name"
+  select "United States" from "Country"
+  enter "98001" into "Zip / postal code"
+  click button "Save and Continue Edit"
+  check that page contains "The new warehouse has been added successfully."
+  check that page contains "Edit warehouse details"
+
+  // --- Clean up, so the case leaves no residue ---
+  click button "Delete"
+  // The confirmation offers "Delete" / "No, cancel", not "Yes". Anchored so it
+  // resolves to the modal's button rather than the trigger above.
+  click button "Delete" to the right of "No, cancel"
+  check that page contains "The warehouse has been deleted successfully."

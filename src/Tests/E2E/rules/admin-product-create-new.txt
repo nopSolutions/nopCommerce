@@ -1,0 +1,13 @@
+// Creates a product with a generated name and SKU, saved as "productName" and
+// "productSku", so each run works on its own data. Assumes an admin session and
+// leaves the caller on the edit page.
+go to url stored value "adminProductsUrl"
+check that page contains "Add new"
+click "Add new"
+check that page contains "Add a new product"
+generate from template "E2E Product #####", then enter into "Product name" and save as "productName"
+// admin-product-delete looks the product up by this SKU.
+generate from template "E2ESKU#####", then enter into "SKU" and save as "productSku"
+enter "50" into "Price"
+click button "Save and Continue Edit"
+check that page contains "The new product has been added successfully."

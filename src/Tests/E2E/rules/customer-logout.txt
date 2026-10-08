@@ -1,0 +1,5 @@
+// Ends the customer session. Returns home first, because a notification bar
+// left by a form post can sit over the account links.
+go to url stored value "storeUrl"
+click "Log out"
+check that page contains "Log in"

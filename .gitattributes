@@ -4,6 +4,9 @@
 # Explicitly declare text files we want to always be normalized and converted to native line endings on checkout.
 *.sh    text eol=lf
 
+# The testRigor suite is uploaded verbatim; keep a Windows checkout identical to CI's.
+src/Tests/E2E/**    text eol=lf
+
 # Declare files that will always have CRLF line endings on checkout.
 *.sln   text eol=crlf
 *.csproj    text eol=crlf

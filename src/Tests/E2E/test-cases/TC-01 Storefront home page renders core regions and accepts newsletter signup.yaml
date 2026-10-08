@@ -1,0 +1,40 @@
+labels:
+  - nop-e2e
+customSteps: |
+  // Canary: the first case to fail when the container, the database or the
+  // install is broken. Read-only apart from the newsletter signup.
+  go to url stored value "storeUrl"
+  check that page contains "Welcome to our store"
+
+  // Header regions
+  check that page contains "Register"
+  check that page contains "Log in"
+  check that page contains "Wishlist"
+  check that page contains "Shopping cart"
+  check that page contains "Search store"
+
+  // Category menu seeded by the sample data. "Books" is left out: it is also a
+  // substring of "Notebooks", so it cannot fail on its own.
+  check that page contains "Computers"
+  check that page contains "Electronics"
+  check that page contains "Apparel"
+  check that page contains "Digital downloads"
+  check that page contains "Jewelry"
+  check that page contains "Gift Cards"
+
+  // Featured products from the sample catalog
+  check that page contains "Build your own computer"
+  check that page contains "Apple MacBook Pro"
+
+  // Footer topic links
+  scroll down to the bottom of the page
+  check that page contains "About us"
+  check that page contains "Privacy notice"
+  check that page contains "Contact us"
+  check that page contains "Sitemap"
+
+  // NewsLetterSubscriptionServiceTests covers the service; nothing exercises
+  // the form.
+  generate unique email, then enter into "Enter your email here..." and save as "newsletterEmail"
+  click "Subscribe"
+  check that page contains "Thank you for signing up"

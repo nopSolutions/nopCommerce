@@ -1,0 +1,33 @@
+labels:
+  - nop-e2e
+  - customer-register-new
+  - product-open
+  - product-review-submit
+  - review-product-link
+customSteps: |
+  // Regression cover for issue #8094. The account page's review link was built
+  // by a Razor expression with one closing parenthesis too many, so the stray
+  // ")" landed inside the rendered href and the link resolved to "Page not
+  // found". Fixed in release-4.90.4 by deleting that character.
+  //
+  // Nothing outside a browser sees this: the defect exists only in the markup
+  // the view produces, and the URL is still generated correctly by the route
+  // helper it wraps.
+  customer-register-new
+
+  // --- Leave a review to have something on the account page ---
+  save "Apple MacBook Pro" as "productName"
+  product-open
+  product-review-submit
+
+  // --- The product link on the account page must reach the product ---
+  go to url stored value "customerProductReviewsUrl"
+  check that page contains "My product reviews"
+  // Proves the review is listed, so the click below has a real target.
+  check that page contains stored value "reviewTitle"
+  click "Apple MacBook Pro"
+
+  // A broken href lands on the "Page not found" view, which renders the same
+  // header and footer, so assert something only the product page carries.
+  check that page contains "Add to cart"
+  check that page contains "Write your own review"
