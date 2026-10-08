@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="ఆంగ్ల" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>నిర్వాహక వినియోగదారు ఇమెయిల్</Value>
@@ -101,6 +101,24 @@
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CheckPermissions">
+    <Value>అనుమతులని నిర్ధారిస్తోంది...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CreateDatabase">
+    <Value>డేటాబేస్ సృష్టిస్తోంది...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InitializeDatabase">
+    <Value>డేటాబేస్ ప్రారంభిస్తోంది...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InsertData">
+    <Value>డేటా సెరుస్తోంది...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.PreparePlugins">
+    <Value>ప్లగ్ఇన్లని సిద్ధం చేస్తోంది...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.RegionalResources">
+    <Value>ప్రాంతిక సెట్టింగ్‌ని వర్తింపజేస్తోంది...</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
     <Value>ముడి కనెక్షన్ స్ట్రింగ్ (అధునాతన) నమోదు చేయండి</Value>

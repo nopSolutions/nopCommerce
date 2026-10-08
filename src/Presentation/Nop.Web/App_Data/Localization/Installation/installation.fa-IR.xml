@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="فارسی" IsDefault="false" IsRightToLeft="true">
   <LocaleResource Name="AdminEmail">
     <Value>ایمیل کاربری مدیر</Value>
@@ -101,6 +101,24 @@
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CheckPermissions">
+    <Value>در حال بررسی مجوزها...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CreateDatabase">
+    <Value>در حال ایجاد پایگاه داده...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InitializeDatabase">
+    <Value>در حال راه اندازی پایگاه داده...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InsertData">
+    <Value>در حال وارد کردن داده‌ها...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.PreparePlugins">
+    <Value>در حال آماده سازی پلاگین‌ها...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.RegionalResources">
+    <Value>در حال اعمال تنظیمات منطقه ای...</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
     <Value>اطلاعات اتصال به پایگاه داده به صورت کامل وارد شود (پیشرفته)</Value>

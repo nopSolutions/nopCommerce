@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="عربي" IsDefault="false" IsRightToLeft="true">
   <LocaleResource Name="AdminEmail">
     <Value>البريد الالكتروني لمدير الموقع</Value>
@@ -101,6 +101,24 @@
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CheckPermissions">
+    <Value>جاري التحقق من الأذونات...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CreateDatabase">
+    <Value>جاري إنشاء قاعدة البيانات...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InitializeDatabase">
+    <Value>جاري تهيئة قاعدة البيانات...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InsertData">
+    <Value>جاري إدخال البيانات...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.PreparePlugins">
+    <Value>جاري تحضير الإضافات...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.RegionalResources">
+    <Value>تطبيق الإعدادات الإقليمية...</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
     <Value>ادخل raw سلسلة الاتصال (الوضع المتقدم)</Value>

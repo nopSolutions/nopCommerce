@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="বাংলা (বাংলাদেশ)" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>অ্যাডমিন ইউজার ইমেইল</Value>
@@ -101,6 +101,24 @@
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>পোস্টগ্রেSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CheckPermissions">
+    <Value>অনুমতিগুলি যাচাই করা হচ্ছে...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CreateDatabase">
+    <Value>ডাটাবেস তৈরি করা হচ্ছে...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InitializeDatabase">
+    <Value>ডাটাবেস প্রাথমিকীকরণ করা হচ্ছে...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InsertData">
+    <Value>ডাটা সন্নিবিষ্ট করা হচ্ছে...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.PreparePlugins">
+    <Value>প্লাগইন প্রস্তুত করা হচ্ছে...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.RegionalResources">
+    <Value>আঞ্চলিক সেটিং প্রয়োগ করা হচ্ছে...</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
     <Value>Raw কানেকশন স্ট্রিং লিখুন (এক্সপার্ট ব্যবহারকারীর জন্য)</Value>

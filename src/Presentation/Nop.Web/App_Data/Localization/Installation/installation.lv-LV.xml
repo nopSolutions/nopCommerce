@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="Latvian" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Administratora lietotāja e-pasta adrese</Value>
@@ -101,6 +101,24 @@
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CheckPermissions">
+    <Value>Pārbauda atļaujas...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CreateDatabase">
+    <Value>Izveido datubāzi...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InitializeDatabase">
+    <Value>Inicializē datubāzi...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InsertData">
+    <Value>Ievieto datus...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.PreparePlugins">
+    <Value>Sagatavo spraudņus...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.RegionalResources">
+    <Value>Lieto reģionālos uzstādījumus...</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
     <Value>Ievadiet neapstrādātu savienojuma virkni (padziļināti)</Value>
