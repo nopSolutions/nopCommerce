@@ -234,6 +234,13 @@ public partial interface ICategoryService
     Task InsertProductCategoryAsync(ProductCategory productCategory);
 
     /// <summary>
+    /// Inserts a list of product category mapping
+    /// </summary>
+    /// <param name="productCategories">>Product category mappings</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task InsertProductCategoriesAsync(IList<ProductCategory> productCategories);
+
+    /// <summary>
     /// Updates the product category mapping 
     /// </summary>
     /// <param name="productCategory">>Product category mapping</param>
