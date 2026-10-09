@@ -414,7 +414,9 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
         if (!entities.Any())
             return;
 
+        using var transaction = _dataProvider.CreateTransactionScope();
         await _dataProvider.UpdateEntitiesAsync(entities);
+        transaction.Complete();
 
         //event notification
         if (!publishEvent)
