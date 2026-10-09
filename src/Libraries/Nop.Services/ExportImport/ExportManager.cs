@@ -9,6 +9,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
@@ -3174,6 +3175,103 @@ public partial class ExportManager : IExportManager
         }
 
         return stream.ToArray();
+    }
+
+    /// <summary>
+    /// Export discount list to XML
+    /// </summary>
+    /// <param name="discounts">Discounts</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result in XML format
+    /// </returns>
+    public virtual async Task<string> ExportDiscountsToXmlAsync(IList<Discount> discounts)
+    {
+        var settings = new XmlWriterSettings
+        {
+            Async = true,
+            ConformanceLevel = ConformanceLevel.Auto
+        };
+
+        await using var stringWriter = new StringWriter();
+        await using var xmlWriter = XmlWriter.Create(stringWriter, settings);
+
+        await xmlWriter.WriteStartDocumentAsync();
+        await xmlWriter.WriteStartElementAsync("Discounts");
+        await xmlWriter.WriteAttributeStringAsync("Version", NopVersion.CURRENT_VERSION);
+
+        foreach (var discount in discounts)
+        {
+            await xmlWriter.WriteStartElementAsync("Discount");
+
+            await xmlWriter.WriteStringAsync("DiscountId", discount.Id);
+            await xmlWriter.WriteStringAsync("Name", discount.Name);
+            await xmlWriter.WriteStringAsync("AdminComment", discount.AdminComment);
+            await xmlWriter.WriteStringAsync("DiscountTypeId", discount.DiscountTypeId);
+            await xmlWriter.WriteStringAsync("UsePercentage", discount.UsePercentage);
+            await xmlWriter.WriteStringAsync("DiscountPercentage", discount.DiscountPercentage);
+            await xmlWriter.WriteStringAsync("DiscountAmount", discount.DiscountAmount);
+            await xmlWriter.WriteStringAsync("MaximumDiscountAmount", discount.MaximumDiscountAmount);
+            await xmlWriter.WriteStringAsync("StartDateUtc", discount.StartDateUtc);
+            await xmlWriter.WriteStringAsync("EndDateUtc", discount.EndDateUtc);
+            await xmlWriter.WriteStringAsync("RequiresCouponCode", discount.RequiresCouponCode);
+            await xmlWriter.WriteStringAsync("CouponCode", discount.CouponCode);
+            await xmlWriter.WriteStringAsync("IsCumulative", discount.IsCumulative);
+            await xmlWriter.WriteStringAsync("DiscountLimitationId", discount.DiscountLimitationId);
+            await xmlWriter.WriteStringAsync("LimitationTimes", discount.LimitationTimes);
+            await xmlWriter.WriteStringAsync("MaximumDiscountedQuantity", discount.MaximumDiscountedQuantity);
+            await xmlWriter.WriteStringAsync("AppliedToSubCategories", discount.AppliedToSubCategories);
+            await xmlWriter.WriteStringAsync("IsActive", discount.IsActive);
+
+            await xmlWriter.WriteEndElementAsync();
+        }
+
+        await xmlWriter.WriteEndElementAsync();
+        await xmlWriter.WriteEndDocumentAsync();
+        await xmlWriter.FlushAsync();
+
+        //activity log
+        await _customerActivityService.InsertActivityAsync("ExportDiscounts",
+            string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportDiscounts"), discounts.Count));
+
+        return stringWriter.ToString();
+    }
+
+    /// <summary>
+    /// Export discounts to XLSX
+    /// </summary>
+    /// <param name="discounts">Discounts</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task<byte[]> ExportDiscountsToXlsxAsync(IList<Discount> discounts)
+    {
+        //property manager 
+        var manager = new PropertyManager<Discount>(new[]
+        {
+            new PropertyByName<Discount>("Id", (d, _) => d.Id),
+            new PropertyByName<Discount>("Name", (d, _) => d.Name),
+            new PropertyByName<Discount>("AdminComment", (d, _) => d.AdminComment),
+            new PropertyByName<Discount>("DiscountTypeId", (d, _) => d.DiscountTypeId),
+            new PropertyByName<Discount>("UsePercentage", (d, _) => d.UsePercentage),
+            new PropertyByName<Discount>("DiscountPercentage", (d, _) => d.DiscountPercentage),
+            new PropertyByName<Discount>("DiscountAmount", (d, _) => d.DiscountAmount),
+            new PropertyByName<Discount>("MaximumDiscountAmount", (d, _) => d.MaximumDiscountAmount),
+            new PropertyByName<Discount>("StartDateUtc", (d, _) => d.StartDateUtc),
+            new PropertyByName<Discount>("EndDateUtc", (d, _) => d.EndDateUtc),
+            new PropertyByName<Discount>("RequiresCouponCode", (d, _) => d.RequiresCouponCode),
+            new PropertyByName<Discount>("CouponCode", (d, _) => d.CouponCode),
+            new PropertyByName<Discount>("IsCumulative", (d, _) => d.IsCumulative),
+            new PropertyByName<Discount>("DiscountLimitationId", (d, _) => d.DiscountLimitationId),
+            new PropertyByName<Discount>("LimitationTimes", (d, _) => d.LimitationTimes),
+            new PropertyByName<Discount>("MaximumDiscountedQuantity", (d, _) => d.MaximumDiscountedQuantity),
+            new PropertyByName<Discount>("AppliedToSubCategories", (d, _) => d.AppliedToSubCategories),
+            new PropertyByName<Discount>("IsActive", (d, _) => d.IsActive)
+        }, _catalogSettings);
+
+        //activity log
+        await _customerActivityService.InsertActivityAsync("ExportDiscounts",
+            string.Format(await _localizationService.GetResourceAsync("ActivityLog.ExportDiscounts"), discounts.Count));
+
+        return await manager.ExportToXlsxAsync(discounts);
     }
 
     #endregion
