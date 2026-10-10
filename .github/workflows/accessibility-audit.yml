@@ -1,0 +1,48 @@
+
+name: CSharp Accessibility Audit
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  accessibility-audit:
+    name: ReSharper Accessibility Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          submodules: recursive
+
+      - name: Run ReSharper InspectCode
+        id: inspect
+        uses: JetBrains/ReSharper-InspectCode@v0.13
+        with:
+          solution: ./NopCommerce.sln
+          tool-version: 2026.1.0.1
+          dotnet-version: 10.x
+          swea: true
+          sEverity: HINT
+          format: Html
+          output: accessibility-report.html
+          upload-sarif: false
+
+      - name: Upload accessibility audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nopcommerce-accessibility-audit
+          path: accessibility-report.html
+          if-no-files-found: warn
+          retention-days: 30
