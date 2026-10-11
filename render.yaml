@@ -3,6 +3,7 @@ services:
     name: nopcommerce
     runtime: docker
     plan: free
+    autoDeployTrigger: 'off'
     region: oregon
     dockerfilePath: ./Dockerfile
     dockerContext: .
