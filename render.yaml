@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: nopcommerce
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /install
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: PORT
+        value: "10000"
+      - key: ASPNETCORE_URLS
+        value: http://+:10000
+      - key: DOTNET_SYSTEM_GLOBALIZATION_INVARIANT
+        value: "false"
+      - key: ConnectionStrings__DataProvider
+        value: postgresql
+      - key: PGHOST
+        fromDatabase:
+          name: nopcommerce-db
+          property: host
+      - key: PGPORT
+        fromDatabase:
+          name: nopcommerce-db
+          property: port
+      - key: PGDATABASE
+        fromDatabase:
+          name: nopcommerce-db
+          property: database
+      - key: PGUSER
+        fromDatabase:
+          name: nopcommerce-db
+          property: user
+      - key: PGPASSWORD
+        fromDatabase:
+          name: nopcommerce-db
+          property: password
+
+databases:
+  - name: nopcommerce-db
+    plan: free
+    databaseName: nopcommerce
+    user: nopcommerce
