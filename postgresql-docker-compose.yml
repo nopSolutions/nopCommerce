@@ -9,8 +9,6 @@ services:
     nopcommerce_database:
         image: "postgres:latest"
         container_name: nopcommerce_postgres_server
-        ports:
-            - "5432:5432"
         restart: "always"
         environment:
           POSTGRES_PASSWORD: "nopCommerce_db_password"
