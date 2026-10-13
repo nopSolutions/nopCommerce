@@ -1,6 +1,7 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
 using Nop.Data;
 using Nop.Services.Authentication.External;
@@ -30,6 +31,7 @@ public partial class GdprService : IGdprService
     protected readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
     protected readonly IProductReviewService _productReviewService;
     protected readonly IProductService _productService;
+    protected readonly IRepository<CustomWishlist> _customWishlistRepository;
     protected readonly IRepository<GdprConsent> _gdprConsentRepository;
     protected readonly IRepository<GdprLog> _gdprLogRepository;
     protected readonly IShoppingCartService _shoppingCartService;
@@ -48,6 +50,7 @@ public partial class GdprService : IGdprService
         INewsLetterSubscriptionService newsLetterSubscriptionService,
         IProductReviewService productReviewService,
         IProductService productService,
+        IRepository<CustomWishlist> customWishlistRepository,
         IRepository<GdprConsent> gdprConsentRepository,
         IRepository<GdprLog> gdprLogRepository,
         IShoppingCartService shoppingCartService)
@@ -62,6 +65,7 @@ public partial class GdprService : IGdprService
         _newsLetterSubscriptionService = newsLetterSubscriptionService;
         _productReviewService = productReviewService;
         _productService = productService;
+        _customWishlistRepository = customWishlistRepository;
         _gdprConsentRepository = gdprConsentRepository;
         _gdprLogRepository = gdprLogRepository;
         _shoppingCartService = shoppingCartService;
@@ -276,9 +280,13 @@ public partial class GdprService : IGdprService
         foreach (var ear in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
             await _externalAuthenticationService.DeleteExternalAuthenticationRecordAsync(ear);
 
-        //shopping cart items
-        foreach (var sci in await _shoppingCartService.GetShoppingCartAsync(customer))
+        //shopping cart items (including items from all custom wishlists)
+        foreach (var sci in await _shoppingCartService.GetShoppingCartAsync(customer, customWishlistId: 0))
             await _shoppingCartService.DeleteShoppingCartItemAsync(sci);
+
+        //custom wishlists
+        var customWishlists = await _customWishlistRepository.GetAllAsync(query => query.Where(w => w.CustomerId == customer.Id));
+        await _customWishlistRepository.DeleteAsync(customWishlists);
 
         //private messages (sent)
         foreach (var pm in await _customerService.GetAllPrivateMessagesAsync(0, customer.Id, 0, null, null, null, null))
