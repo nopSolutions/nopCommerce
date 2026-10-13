@@ -782,7 +782,7 @@ public partial class ProductService : IProductService
             .PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryProductsNumberCacheKey, customerRoleIds, storeId, categoryIds);
 
         //only distinct products
-        return await _staticCacheManager.GetAsync(cacheKey, () => query.Select(p => p.Id).CountAsync());
+        return await _staticCacheManager.GetAsync(cacheKey, () => query.Select(p => p.Id).Distinct().CountAsync());
     }
 
     /// <summary>
