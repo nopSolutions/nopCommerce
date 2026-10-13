@@ -457,6 +457,16 @@ public partial class ManufacturerService : IManufacturerService
     }
 
     /// <summary>
+    /// Inserts a list of product manufacturer mapping
+    /// </summary>
+    /// <param name="productManufacturers">Product manufacturer mappings</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertProductManufacturersAsync(IList<ProductManufacturer> productManufacturers)
+    {
+        await _productManufacturerRepository.InsertAsync(productManufacturers);
+    }
+
+    /// <summary>
     /// Updates the product manufacturer mapping
     /// </summary>
     /// <param name="productManufacturer">Product manufacturer mapping</param>
