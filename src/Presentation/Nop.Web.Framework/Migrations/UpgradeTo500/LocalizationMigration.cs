@@ -6,7 +6,7 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo500;
 
-[NopUpdateMigration("2026-01-10 00:00:00", "5.00", UpdateMigrationType.Localization)]
+[NopUpdateMigration("2026-10-14 00:00:00", "5.00", UpdateMigrationType.Localization)]
 public class LocalizationMigration : MigrationBase
 {
     /// <summary>Collect the UP migration expressions</summary>
@@ -887,6 +887,9 @@ public class LocalizationMigration : MigrationBase
             ["Account.Login.Phone.Required"] = "Phone number is required",
             ["Admin.System.SystemInfo.UsedMemory"] = "Used memory (MB)",
             ["Admin.System.SystemInfo.UsedMemory.Hint"] = "Total megabytes (MB) in use by the application.",
+
+            //#8372
+            ["Admin.Configuration.Settings.Catalog.CacheProductPrices.Hint"] = "Check to cache product prices. It can significantly improve performance. But you should not enable it if you use price lists, complex discounts, discount requirement rules, or coupon codes.",
         });
 
         #endregion
