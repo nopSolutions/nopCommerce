@@ -51,7 +51,7 @@ public class GoogleAiSettings : ISettings
     /// <summary>
     /// Gets or sets a value indicating whether to enable the  search for registered users only
     /// </summary>
-    public bool SearchAllowedRegisteredUsersOnly { get; set; }
+    public bool EnableForRegisteredUsersOnly { get; set; }
 
     #region Advanced
 

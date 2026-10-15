@@ -885,7 +885,7 @@ public class GoogleAiService
         if (!_googleAiSettings.SearchAllowed || !_googleAiSettings.Enabled)
             return ([], 0);
 
-        if (_googleAiSettings.SearchAllowedRegisteredUsersOnly)
+        if (_googleAiSettings.EnableForRegisteredUsersOnly)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
 
