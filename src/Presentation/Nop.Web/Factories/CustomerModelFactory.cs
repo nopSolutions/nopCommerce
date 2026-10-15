@@ -458,11 +458,12 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         model.HoneypotEnabled = _securitySettings.HoneypotEnabled;
         model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage;
         model.EnteringEmailTwice = _customerSettings.EnteringEmailTwice;
+
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(store.Id);
         if (setDefaultValues)
         {
             //newsletter subscriptions
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(store.Id);
             foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
             {
                 var nsModel = new NewsLetterSubscriptionModel
@@ -472,6 +473,15 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                     IsActive = newsLetterSubscriptionType.TickedByDefault
                 };
                 model.NewsLetterSubscriptions.Add(nsModel);
+            }
+        }
+        else
+        {
+            //prepare newsletter subscriptions by model
+            foreach (var newsLetterSubscription in model.NewsLetterSubscriptions)
+            {
+                var newsLetterSubscriptionType = newsLetterSubscriptionTypes.FirstOrDefault(x => x.Id == newsLetterSubscription.TypeId);
+                newsLetterSubscription.Name = await _localizationService.GetLocalizedAsync(newsLetterSubscriptionType, x => x.Name);
             }
         }
 
