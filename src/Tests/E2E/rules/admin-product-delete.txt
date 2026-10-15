@@ -1,0 +1,16 @@
+// Removes the product held in "productName", so the suite leaves no residue.
+// Assumes an admin session.
+go to url stored value "adminProductsUrl"
+check that page contains "Add new"
+// By SKU: the list's "Product name" filter is not addressable (see README), and
+// this lands straight on the edit page. "Go" must be clicked, because Enter
+// submits through an export button.
+enter stored value "productSku" into "Go directly to product SKU"
+click button "Go" to the right of "Go directly to product SKU"
+check that page contains stored value "productName"
+check that page contains "Edit product details"
+click button "Delete"
+// The confirmation offers "Delete" / "No, cancel", not "Yes". Anchored so it
+// resolves to the modal's button rather than the trigger above.
+click button "Delete" to the right of "No, cancel"
+check that page contains "The product has been deleted successfully."

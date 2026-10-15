@@ -1,0 +1,13 @@
+{
+  "storeUrl": "http://localhost/",
+  "searchUrl": "http://localhost/search",
+  "customerProductReviewsUrl": "http://localhost/customer/productreviews",
+  "adminUrl": "http://localhost/admin",
+  "adminProductsUrl": "http://localhost/Admin/Product/List",
+  "adminOrdersUrl": "http://localhost/Admin/Order/List",
+  "adminDiscountsUrl": "http://localhost/Admin/Discount/List",
+  "adminWarehousesUrl": "http://localhost/Admin/Shipping/Warehouses",
+  "adminWarehouseCreateUrl": "http://localhost/Admin/Shipping/CreateWarehouse",
+  "adminEmail": "admin@yourStore.com",
+  "adminPassword": "admin"
+}

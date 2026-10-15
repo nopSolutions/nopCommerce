@@ -1,0 +1,12 @@
+// Opens the detail page of the product held in "productName"; callers set it
+// first. Uses the search page's own field rather than the header box, whose
+// autocomplete was the flakiest thing in this suite, and submits with Enter
+// because both boxes render on /search and both buttons read "Search".
+go to url stored value "searchUrl"
+// Clicked first so the field holds focus: "press enter" goes to whatever is
+// focused.
+click "Search keyword"
+enter stored value "productName" into "Search keyword"
+press enter
+check that page contains stored value "productName"
+click stored value "productName"

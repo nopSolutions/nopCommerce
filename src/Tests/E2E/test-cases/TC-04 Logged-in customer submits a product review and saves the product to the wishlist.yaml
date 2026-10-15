@@ -1,0 +1,28 @@
+labels:
+  - nop-e2e
+  - customer-register-new
+  - customer-login
+  - customer-logout
+  - product-open
+  - product-review-submit
+customSteps: |
+  // Own generated customer, seeded product.
+  customer-register-new
+
+  save "Apple MacBook Pro" as "productName"
+  product-open
+  product-review-submit
+
+  // Visible to a guest, which the success banner alone does not prove
+  customer-logout
+  product-open
+  scroll down to the bottom of the page
+  check that page contains stored value "reviewTitle"
+
+  // The wishlist needs an authenticated customer
+  customer-login
+  product-open
+  click button "Add to wishlist"
+  check that page contains "The product has been added to your"
+  click "Wishlist"
+  check that page contains "Apple MacBook Pro"
