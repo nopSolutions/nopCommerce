@@ -85,14 +85,23 @@ public partial class ProcessIncompleteRegistrationsTask : IScheduleTask
                     && c.RegisteredInStoreId == store.Id
                     && c.RegistrationFollowUpDateUtc == null
                     && incomplteAttr.CreatedOrUpdatedDateUTC != null && incomplteAttr.CreatedOrUpdatedDateUTC.Value < timeToFollowUp
+                orderby c.Id
                 select c;
 
-            var skip = 0;
+            //page by customer identifier rather than by skipping rows: followed up customers drop out of the query,
+            //so skipping would pass over unprocessed ones
+            var lastCustomerId = 0;
             while (true)
             {
-                var customersToFollowUpPaged = customersToFollowUp.Skip(skip).Take(NopReminderDefaults.ProcessingBatchSize).ToList();
+                var customersToFollowUpPaged = customersToFollowUp
+                    .Where(customer => customer.Id > lastCustomerId)
+                    .Take(NopReminderDefaults.ProcessingBatchSize)
+                    .ToList();
+
                 if (!customersToFollowUpPaged.Any())
                     break;
+
+                lastCustomerId = customersToFollowUpPaged.Last().Id;
 
                 var followedUpCustomers = new List<Customer>();
                 try
@@ -116,8 +125,6 @@ public partial class ProcessIncompleteRegistrationsTask : IScheduleTask
 
                 if (customersToFollowUpPaged.Count < NopReminderDefaults.ProcessingBatchSize)
                     break;
-
-                skip += NopReminderDefaults.ProcessingBatchSize;
             }
         }
     }
