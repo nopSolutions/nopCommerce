@@ -6,6 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -29,6 +30,7 @@ public class GoogleAiService
     private readonly GoogleAiSettings _googleAiSettings;
     private readonly ICategoryService _categoryService;
     private readonly ICurrencyService _currencyService;
+    private readonly ICustomerService _customerService;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILanguageService _languageService;
     private readonly ILogger _logger;
@@ -40,6 +42,7 @@ public class GoogleAiService
     private readonly IProductTagService _productTagService;
     private readonly ISpecificationAttributeService _specificationAttributeService;
     private readonly IWebHelper _webHelper;
+    private readonly IWorkContext _workContext;
     private readonly LocalizationSettings _localizationSettings;
 
     #endregion
@@ -50,6 +53,7 @@ public class GoogleAiService
         GoogleAiSettings googleAiSettings,
         ICategoryService categoryService,
         ICurrencyService currencyService,
+        ICustomerService customerService,
         IHttpContextAccessor httpContextAccessor,
         ILanguageService languageService,
         ILogger logger,
@@ -61,12 +65,14 @@ public class GoogleAiService
         IProductTagService productTagService,
         ISpecificationAttributeService specificationAttributeService,
         IWebHelper webHelper,
+        IWorkContext workContext,
         LocalizationSettings localizationSettings)
     {
         _currencySettings = currencySettings;
         _googleAiSettings = googleAiSettings;
         _categoryService = categoryService;
         _currencyService = currencyService;
+        _customerService = customerService;
         _httpContextAccessor = httpContextAccessor;
         _languageService = languageService;
         _logger = logger;
@@ -78,6 +84,7 @@ public class GoogleAiService
         _productTagService = productTagService;
         _specificationAttributeService = specificationAttributeService;
         _webHelper = webHelper;
+        _workContext = workContext;
         _localizationSettings = localizationSettings;
     }
 
@@ -877,6 +884,14 @@ public class GoogleAiService
     {
         if (!_googleAiSettings.SearchAllowed || !_googleAiSettings.Enabled)
             return ([], 0);
+
+        if (_googleAiSettings.EnableForRegisteredUsersOnly)
+        {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+            if(!await _customerService.IsRegisteredAsync(customer))
+                return ([], 0);
+        }
 
         //keywords required
         if (string.IsNullOrEmpty(keywords))
