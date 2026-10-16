@@ -218,6 +218,8 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == (await _dateTimeHelper.GetCurrentTimeZoneAsync()).Id) });
 
         var store = await _storeContext.GetCurrentStoreAsync();
+        var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(store.Id);
+
         if (!excludeProperties)
         {
             model.VatNumber = customer.VatNumber;
@@ -245,8 +247,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             model.Fax = customer.Fax;
 
             //newsletter subscriptions
-            var currentSubscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(customer.Email, storeId: store.Id);
-            var newsLetterSubscriptionTypes = await _newsLetterSubscriptionTypeService.GetAllNewsLetterSubscriptionTypesAsync(store.Id);
+            var currentSubscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(customer.Email, storeId: store.Id);            
             foreach (var newsLetterSubscriptionType in newsLetterSubscriptionTypes)
             {
                 var nsModel = new NewsLetterSubscriptionModel
@@ -265,6 +266,13 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         {
             if (_customerSettings.UsernamesEnabled && !_customerSettings.AllowUsersToChangeUsernames)
                 model.Username = customer.Username;
+
+            //prepare newsletter subscriptions by model
+            foreach (var newsLetterSubscription in model.NewsLetterSubscriptions)
+            {
+                var newsLetterSubscriptionType = newsLetterSubscriptionTypes.FirstOrDefault(x => x.Id == newsLetterSubscription.TypeId);
+                newsLetterSubscription.Name = await _localizationService.GetLocalizedAsync(newsLetterSubscriptionType, x => x.Name);
+            }
         }
 
         if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
