@@ -7,7 +7,7 @@
     NopHtml.SetActiveMenuItemSystemName("Message templates");
 }
 
-<form asp-controller="MessageTemplate" asp-action="TestTemplate" method="post" id="specificationattribute-form">
+<form asp-controller="MessageTemplate" asp-action="TestTemplate" method="post" id="specificationattribute-form" asp-route-languageId="@Model.LanguageId" asp-route-id="@Model.Id">
     <div class="content-header clearfix">
         <h1 class="float-left">
             @T("Admin.ContentManagement.MessageTemplates.TestDetails")
@@ -23,7 +23,6 @@
         </div>
         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MessageTemplateTestButtons, additionalData = Model })
     </div>
-    <input asp-for="Id" type="hidden" />
 
     <section class="content">
         <div class="container-fluid">
