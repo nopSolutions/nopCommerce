@@ -309,9 +309,25 @@ public partial class PriceListService : IPriceListService
     /// </returns>
     public virtual decimal ApplyAdjustmentPrice(Product product, PriceList priceList)
     {
+        ArgumentNullException.ThrowIfNull(product);
+
+        return ApplyAdjustmentPrice(product.Price, priceList);
+    }
+
+    /// <summary>
+    /// Calculates the adjusted price based on the specified price list adjustment
+    /// </summary>
+    /// <param name="originalPrice">The price to adjust</param>
+    /// <param name="priceList">The price list</param>
+    /// <returns>
+    /// The calculated price after applying the adjustment defined in the price list.
+    /// </returns>
+    public virtual decimal ApplyAdjustmentPrice(decimal originalPrice, PriceList priceList)
+    {
+        ArgumentNullException.ThrowIfNull(priceList);
+
         var adjustmentType = (PriceCalculationTypeEnum)priceList.PriceCalculationTypeId;
         var value = priceList.PriceCalculationValue;
-        var originalPrice = product.Price;
 
         return adjustmentType switch
         {
