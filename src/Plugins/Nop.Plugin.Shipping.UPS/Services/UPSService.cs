@@ -208,7 +208,7 @@ public class UPSService
         {
             //prepare date
             shipmentStatusEvent.Date = DateTime
-                .ParseExact($"{activity.Date} {activity.Time}", "yyyyMMdd HHmmss", new CultureInfo("en-US"));
+                .ParseExact($"{activity.Date} {activity.Time}", "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
 
             //prepare address
             var addressDetails = new List<string>();
@@ -437,14 +437,14 @@ public class UPSService
                 Code = _upsSettings.WeightType,
                 Description = _upsSettings.WeightType
             },
-            Weight = request.Shipment.Package.Sum(x => decimal.TryParse(x.PackageWeight.Weight, NumberStyles.Any, new CultureInfo("en-US"), out var wt) ? wt : 0).ToString("0.00", new CultureInfo("en-US"))
+            Weight = request.Shipment.Package.Sum(x => decimal.TryParse(x.PackageWeight.Weight, NumberStyles.Any, CultureInfo.InvariantCulture, out var wt) ? wt : 0).ToString("0.00", CultureInfo.InvariantCulture)
         };
 
         var currencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
         request.Shipment.InvoiceLineTotal = new Shipment_InvoiceLineTotal
         {
             CurrencyCode = currencyCode,
-            MonetaryValue = shippingOptionRequest.Items.Sum(x => x.Product.Price * x.GetQuantity()).ToString("0.00", new CultureInfo("en-US"))
+            MonetaryValue = shippingOptionRequest.Items.Sum(x => x.Product.Price * x.GetQuantity()).ToString("0.00", CultureInfo.InvariantCulture)
         };
 
         return request;
@@ -478,14 +478,14 @@ public class UPSService
             width = length = height = 0;
         package.Dimensions = new Package_Dimensions
         {
-            Width = width.ToString("0.00", new CultureInfo("en-US")),
-            Length = length.ToString("0.00", new CultureInfo("en-US")),
-            Height = height.ToString("0.00", new CultureInfo("en-US")),
+            Width = width.ToString("0.00", CultureInfo.InvariantCulture),
+            Length = length.ToString("0.00", CultureInfo.InvariantCulture),
+            Height = height.ToString("0.00", CultureInfo.InvariantCulture),
             UnitOfMeasurement = new Dimensions_UnitOfMeasurement { Code = _upsSettings.DimensionsType, Description = _upsSettings.DimensionsType }
         };
         package.PackageWeight = new Package_PackageWeight
         {
-            Weight = weight.ToString("0.00", new CultureInfo("en-US")),
+            Weight = weight.ToString("0.00", CultureInfo.InvariantCulture),
             UnitOfMeasurement = new PackageWeight_UnitOfMeasurement { Code = _upsSettings.WeightType, Description = _upsSettings.WeightType },
         };
 
@@ -493,7 +493,7 @@ public class UPSService
         if (_upsSettings.InsurePackage && insuranceAmount > decimal.Zero)
         {
             var currencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
-            var monetaryValue = insuranceAmount.ToString("0.00", new CultureInfo("en-US"));
+            var monetaryValue = insuranceAmount.ToString("0.00", CultureInfo.InvariantCulture);
             package.PackageServiceOptions = new Package_PackageServiceOptions
             {
                 DeclaredValue = new PackageServiceOptions_DeclaredValue
@@ -876,10 +876,10 @@ public class UPSService
                 continue;
 
             //get rate value
-            var regularValue = decimal.TryParse(rate.TotalCharges?.MonetaryValue, NumberStyles.Any, new CultureInfo("en-US"), out var value)
+            var regularValue = decimal.TryParse(rate.TotalCharges?.MonetaryValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var value)
                 ? (decimal?)value
                 : null;
-            var negotiatedValue = decimal.TryParse(rate.NegotiatedRateCharges?.TotalCharge?.MonetaryValue, NumberStyles.Any, new CultureInfo("en-US"), out value)
+            var negotiatedValue = decimal.TryParse(rate.NegotiatedRateCharges?.TotalCharge?.MonetaryValue, NumberStyles.Any, CultureInfo.InvariantCulture, out value)
                 ? (decimal?)value
                 : null;
             var monetaryValue = negotiatedValue ?? regularValue;
