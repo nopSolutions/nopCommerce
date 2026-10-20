@@ -116,6 +116,10 @@ public class GoogleAiService
     private async Task<IEnumerable<string>> GetProductCategoriesAsync(Product product, IList<Category> allCategories)
     {
         var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id);
+
+        if (!productCategories.Any())
+            return [GoogleAiDefaults.DefaultCategoryName];
+
         var ids = productCategories.Select(pc => pc.CategoryId).ToList();
         var categories = allCategories.Where(c => ids.Contains(c.Id)).ToList();
 
@@ -256,7 +260,7 @@ public class GoogleAiService
             Id = id,
             Type = product.ParentGroupedProductId > 0 ? Google.Cloud.Retail.V2.Product.Types.Type.Variant : Google.Cloud.Retail.V2.Product.Types.Type.Primary,
             PrimaryProductId = parentId,
-            Title = CommonHelper.EnsureMaximumLength(product.ShortDescription ?? string.Empty, 1000),
+            Title = CommonHelper.EnsureMaximumLength(product.ShortDescription ?? product.Name, 1000),
             Description = CommonHelper.EnsureMaximumLength(product.FullDescription ?? string.Empty, 5000),
             LanguageCode = currentLanguage.LanguageCulture,
             PriceInfo = new PriceInfo
@@ -265,13 +269,13 @@ public class GoogleAiService
                 CurrencyCode = await GetPrimaryStoreCurrencyCodeAsync()
             },
             Uri = await _nopUrlHelper.RouteGenericUrlAsync(product, _webHelper.GetCurrentRequestProtocol(), languageId: currentLanguage.Id),
-            Rating = new Rating
-            {
-                AverageRating = product.ApprovedTotalReviews == 0 ? 0f : (float)product.ApprovedRatingSum / product.ApprovedTotalReviews,
-                RatingCount = product.ApprovedTotalReviews
-            },
             Availability = await GetAvailabilityAsync(product)
         };
+
+        var averageRating = product.ApprovedTotalReviews == 0 ? 0f : (float)product.ApprovedRatingSum / product.ApprovedTotalReviews;
+
+        if (averageRating > 0)
+            dto.Rating = new Rating { AverageRating = averageRating, RatingCount = product.ApprovedTotalReviews };
 
         dto.Categories.AddRange(await GetProductCategoriesAsync(product, allCategories));
         dto.Brands.AddRange(await GetProductManufacturersAsync(product, allManufacturers));
@@ -350,7 +354,7 @@ public class GoogleAiService
             Id = string.IsNullOrEmpty(combination.Sku) ? combination.Id.ToString() : combination.Sku,
             Type = Google.Cloud.Retail.V2.Product.Types.Type.Variant,
             PrimaryProductId = productId,
-            Title = CommonHelper.EnsureMaximumLength(product.ShortDescription ?? string.Empty, 1000),
+            Title = CommonHelper.EnsureMaximumLength(product.ShortDescription ?? product.Name, 1000),
             Description = CommonHelper.EnsureMaximumLength(product.FullDescription ?? string.Empty, 5000),
             LanguageCode = currentLanguage.LanguageCulture,
             PriceInfo = new PriceInfo
@@ -359,13 +363,13 @@ public class GoogleAiService
                 CurrencyCode = await GetPrimaryStoreCurrencyCodeAsync()
             },
             Uri = await _nopUrlHelper.RouteGenericUrlAsync(product, _webHelper.GetCurrentRequestProtocol(), languageId: currentLanguage.Id),
-            Rating = new Rating
-            {
-                AverageRating = product.ApprovedTotalReviews == 0 ? 0f : (float)product.ApprovedRatingSum / product.ApprovedTotalReviews,
-                RatingCount = product.ApprovedTotalReviews
-            },
             Availability = status,
         };
+
+        var averageRating = product.ApprovedTotalReviews == 0 ? 0f : (float)product.ApprovedRatingSum / product.ApprovedTotalReviews;
+
+        if (averageRating > 0)
+            dto.Rating = new Rating { AverageRating = averageRating, RatingCount = product.ApprovedTotalReviews };
 
         dto.Categories.AddRange(await GetProductCategoriesAsync(product, allCategories));
         dto.Brands.AddRange(await GetProductManufacturersAsync(product, allManufacturers));
@@ -598,6 +602,19 @@ public class GoogleAiService
     }
 
     /// <summary>
+    /// Creates a filter literal for a text field based on the provided field name and values
+    /// </summary>
+    /// <param name="fieldName">The name of the text field</param>
+    /// <param name="values">The values for the text field</param>
+    /// <returns>The filter literal</returns>
+    private string CreateTextFieldFilterLiteral(string fieldName, List<string> values)
+    {
+        var literal = $"({fieldName}: ANY({string.Join(",", values.Select(v => $"\"{v.Replace("\"", "'")}\""))}))";
+
+        return literal;
+    }
+
+    /// <summary>
     /// Builds a filter string based on provided parameters.
     /// </summary>
     /// <param name="categoryIds">Category identifiers</param>
@@ -617,7 +634,8 @@ public class GoogleAiService
         {
             var categories = await _categoryService.GetCategoriesByIdsAsync(categoryIds.ToArray());
             var allCategories = await _categoryService.GetAllCategoriesAsync();
-            filter.Append($"category:({string.Join(" OR ", categories.SelectAwait(async c => await _categoryService.GetFormattedBreadCrumbAsync(c, allCategories, GoogleAiDefaults.CategorySeparator, _localizationSettings.DefaultAdminLanguageId)))})");
+            var namesOfCategories = await categories.SelectAwait(async c => await _categoryService.GetFormattedBreadCrumbAsync(c, allCategories, GoogleAiDefaults.CategorySeparator, _localizationSettings.DefaultAdminLanguageId)).ToListAsync();
+            filter.Append(CreateTextFieldFilterLiteral("categories", namesOfCategories));
         }
 
         if (manufacturerIds?.Any(id => id != 0) ?? false)
@@ -626,18 +644,19 @@ public class GoogleAiService
                 filter.Append(" AND ");
 
             var manufacturers = await _manufacturerService.GetManufacturersByIdsAsync(manufacturerIds.ToArray());
-            filter.Append($"brands:({string.Join(" OR ", manufacturers.Select(m => m.Name))})");
+            filter.Append(CreateTextFieldFilterLiteral("brands", manufacturers.Select(m => m.Name).ToList()));
         }
 
-        if (productTagId != 0)
-        {
-            if (filter.Length > 0)
-                filter.Append(" AND ");
+        //not supported yet
+        //if (productTagId != 0)
+        //{
+        //    if (filter.Length > 0)
+        //        filter.Append(" AND ");
 
-            var tag = await _productTagService.GetProductTagByIdAsync(productTagId);
+        //    var tag = await _productTagService.GetProductTagByIdAsync(productTagId);
 
-            filter.Append($"productTag:({tag.Name})");
-        }
+        //    filter.Append(CreateTextFieldFilterLiteral("productTag", [tag.Name]));
+        //}
 
         if (filteredSpecOptions?.Any() ?? false)
         {
@@ -651,7 +670,7 @@ public class GoogleAiService
             var attributeDictionary = attributes.DistinctBy(a => a.Id).ToDictionary(a => a.Id, a => a);
 
             var attributeFilters = filteredSpecOptions.Select(o =>
-                $"attributes.{attributeDictionary[o.SpecificationAttributeId].Name}:{o.Name}");
+                $"(attributes.{attributeDictionary[o.SpecificationAttributeId].Name}:ANY(\"{o.Name.Replace("\"", "'")}\"))");
 
             filter.Append($"({string.Join(" AND ", attributeFilters)})");
         }
@@ -697,17 +716,22 @@ public class GoogleAiService
         int pageIndex,
         int pageSize)
     {
-        var defaultSearchPlacement =
-            $"projects/{_googleAiSettings.ProjectId}/locations/{_googleAiSettings.LocationId}/catalogs/{_googleAiSettings.CatalogId}/placements/default_search";
+        var context = _httpContextAccessor.HttpContext;
+        if (context == null)
+            return null;
 
         //try to get client_id from cookie (if available)
-        _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(GoogleAiDefaults.ClientIdCookiesName, out var clientId);
+        if (!context.Request.Cookies.TryGetValue(GoogleAiDefaults.ClientIdCookiesName, out var clientId) || string.IsNullOrEmpty(clientId))
+            return null;
+
+        var defaultSearchPlacement =
+            $"projects/{_googleAiSettings.ProjectId}/locations/{_googleAiSettings.LocationId}/catalogs/{_googleAiSettings.CatalogId}/placements/default_search";
 
         var searchRequest = new SearchRequest
         {
             Placement = defaultSearchPlacement,
             Query = keywords,
-            VisitorId = clientId ?? string.Empty,
+            VisitorId = clientId,
             PageSize = int.Min(pageSize, GoogleAiDefaults.SearchRequestCount),
             Offset = pageSize * pageIndex
         };
@@ -743,6 +767,7 @@ public class GoogleAiService
 
         var successCount = 0L;
         var failureCount = 0L;
+        var errors = new List<string>();
 
         while (true)
         {
@@ -764,6 +789,9 @@ public class GoogleAiService
             successCount += importResult.Metadata.SuccessCount;
             failureCount += importResult.Metadata.FailureCount;
 
+            if (importResult.Result is not null)
+                errors.AddRange(importResult.Result.ErrorSamples.Select(status => $"{status.Code}: {status.Message}"));
+
             if (importResult.IsFaulted)
                 break;
         }
@@ -772,6 +800,15 @@ public class GoogleAiService
         sb.AppendLine($"{GoogleAiDefaults.SystemName}. Import products operation is done");
         sb.AppendLine("Number of successfully imported products: " + successCount);
         sb.AppendLine("Number of failures during the importing: " + failureCount);
+
+        if (errors.Any())
+        {
+            sb.AppendLine("Errors encountered during import:");
+
+            foreach (var error in errors)
+                sb.AppendLine(error);
+        }
+
         await _logger.InformationAsync(sb.ToString());
 
         return (successCount, failureCount);
@@ -882,38 +919,39 @@ public class GoogleAiService
         if (string.IsNullOrEmpty(keywords))
             return ([], 0);
 
-        var client = await SearchServiceClient.CreateAsync();
         var searchRequest =
             await GetSearchRequestAsync(keywords, categoryIds, manufacturerIds, productTagId, filteredSpecOptions, pageIndex, pageSize);
+        if (searchRequest == null)
+            return ([], 0);
 
         try
         {
+            var client = await SearchServiceClient.CreateAsync();
             var firstPage = client.Search(searchRequest).AsRawResponses().FirstOrDefault();
 
-            var result = new List<int>();
-            var skus = new List<string>();
+            var result = new OrderedDictionary<string, int>();
 
             if (!(firstPage?.Any() ?? false) || firstPage.TotalSize == 0)
                 return ([], 0);
 
             foreach (var item in firstPage)
-            {
-                if (int.TryParse(item.Id, out var productId))
-                    result.Add(productId);
-                else
-                    skus.Add(item.Id);
-            }
+                result[item.Id] = int.TryParse(item.Id, out var productId) ? productId : 0;
+
+            var skus = result.Where(kvp => kvp.Value == 0).Select(kvp => kvp.Key).ToList();
 
             if (!skus.Any())
-                return (result, firstPage.TotalSize);
+                return (result.Values.ToList(), firstPage.TotalSize);
 
             var products = await _productService.GetProductsBySkuAsync(skus.ToArray());
-            result.AddRange(products.Select(p => p.Id));
             var combinations = await _productAttributeService.GetProductAttributeCombinationsBySkuAsync(skus.ToArray());
-            result.AddRange(combinations.Select(combination => combination.ProductId));
-            result = result.Distinct().ToList();
 
-            return (result, firstPage.TotalSize);
+            foreach (var product in products)
+                result[product.Sku] = product.Id;
+
+            foreach (var productAttributeCombination in combinations)
+                result[productAttributeCombination.Sku] = productAttributeCombination.ProductId;
+
+            return (result.Values.Where(v => v != 0).ToList(), firstPage.TotalSize);
         }
         catch (Exception ex)
         {
