@@ -7,9 +7,11 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Reminders;
 using Nop.Services.ScheduleTasks;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Reminders;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers;
 
@@ -53,12 +55,14 @@ public partial class ReminderController : BaseAdminController
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Promotions.REMINDERS_MANAGE)]
     public virtual async Task<IActionResult> Index()
     {
         return View(await _reminderModelFactory.PrepareRemindersModelAsync());
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Promotions.REMINDERS_MANAGE)]
     public virtual async Task<IActionResult> Index(RemindersModel model)
     {
         if (ModelState.IsValid)
@@ -100,6 +104,7 @@ public partial class ReminderController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission(StandardPermission.Promotions.REMINDERS_MANAGE)]
     public virtual async Task<IActionResult> ProcessAbandonedCartsTaskWarning(bool enabled)
     {
         if (!enabled)
@@ -117,6 +122,7 @@ public partial class ReminderController : BaseAdminController
         return Json(new { Result = string.Format(locale, Url.Action("List", "ScheduleTask"), task.Name) });
     }
 
+    [CheckPermission(StandardPermission.Promotions.REMINDERS_MANAGE)]
     public virtual async Task<IActionResult> ProcessIncompleteRegistrationsTaskWarning(bool enabled)
     {
         if (!enabled)
@@ -135,6 +141,7 @@ public partial class ReminderController : BaseAdminController
         return Json(new { Result = string.Format(locale, Url.Action("List", "ScheduleTask"), task.Name) });
     }
 
+    [CheckPermission(StandardPermission.Promotions.REMINDERS_MANAGE)]
     public virtual async Task<IActionResult> ProcessPendingOrdersTaskWarning(bool enabled)
     {
         if (!enabled)
