@@ -429,6 +429,11 @@ public partial class CustomerController : BasePublicController
         }
     }
 
+    protected virtual bool IsLockedOtpCode(OtpContext context)
+    {
+        return context.FailedOtpCodeAttemptsCount >= _otpSettings.OtpFailedAllowedAttempts;
+    }
+
     #endregion
 
     #region Methods
@@ -667,6 +672,11 @@ public partial class CustomerController : BasePublicController
         }
 
         var context = JsonConvert.DeserializeObject<OtpContext>(jsonContext);
+        if (IsLockedOtpCode(context))
+        {
+            return Json(new { success = false, message = await _localizationService.GetResourceAsync("PhoneVerification.OtpCode.Error.Locked") });
+        }
+
         if (string.IsNullOrEmpty(context.Code) || !context.CodeGeneratedAtUtc.HasValue)
         {
             return Json(new { success = false, message = await _localizationService.GetResourceAsync("Account.Login.WrongCredentials") });
@@ -682,7 +692,7 @@ public partial class CustomerController : BasePublicController
             context.FailedOtpCodeAttemptsCount++;
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.OtpContextAttribute, JsonConvert.SerializeObject(context));
 
-            if (context.FailedOtpCodeAttemptsCount >= _otpSettings.OtpFailedAllowedAttempts)
+            if (IsLockedOtpCode(context))
             {
                 return Json(new { success = false, message = await _localizationService.GetResourceAsync("PhoneVerification.OtpCode.Error.Locked") });
             }

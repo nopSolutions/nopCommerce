@@ -265,7 +265,7 @@ public partial class ReturnRequestController : BasePublicController
                     StoreId = store.Id,
                     OrderItemId = orderItem.Id,
                     Quantity = quantity,
-                    CustomerId = customer.Id,
+                    CustomerId = order.CustomerId,
                     CustomerComments = model.Comments,
                     UploadedFileId = downloadId,
                     StaffNotes = string.Empty,
@@ -280,7 +280,6 @@ public partial class ReturnRequestController : BasePublicController
 
                 //set return request custom number
                 rr.CustomNumber = _customNumberFormatter.GenerateReturnRequestCustomNumber(rr);
-                await _customerService.UpdateCustomerAsync(customer);
                 await _returnRequestService.UpdateReturnRequestAsync(rr);
 
                 //notify store owner
