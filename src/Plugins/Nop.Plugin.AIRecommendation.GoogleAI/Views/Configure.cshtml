@@ -84,6 +84,17 @@
                             <span asp-validation-for="SearchAllowed"></span>
                         </div>
                     </div>
+                    <nop-nested-setting asp-for="SearchAllowed">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="EnableForRegisteredUsersOnly" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableForRegisteredUsersOnly" />
+                                <span asp-validation-for="EnableForRegisteredUsersOnly"></span>
+                            </div>
+                        </div>
+                    </nop-nested-setting>
                     <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="LogRequests" />
