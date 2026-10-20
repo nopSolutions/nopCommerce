@@ -4214,6 +4214,16 @@ public partial class ProductController : BaseAdminController
         //remove path (passed in IE)
         var fileName = _fileProvider.GetFileName(httpPostedFile.FileName);
 
+        var fileExtension = _fileProvider.GetFileExtension(fileName);
+        if (!string.IsNullOrEmpty(fileExtension))
+            fileExtension = fileExtension.ToLowerInvariant();
+
+        if (string.IsNullOrEmpty(fileExtension) || !fileExtension.Equals(".glb"))
+            return Json(new { success = false, message = "Wrong file type" });
+
+        if ((httpPostedFile.Length/1024/1024) > _mediaSettings.Object3dUploadSizeLimit)
+            return Json(new { success = false, message = $"File is too large. Maximum allowed size is {_mediaSettings.Object3dUploadSizeLimit} MB" });
+
         var pathTo3dObjects = _fileProvider.Combine(_fileProvider.GetLocalImagesPath(_mediaSettings), NopMediaDefaults.Default3dObjectsDirectoryName);
         _fileProvider.CreateDirectory(pathTo3dObjects);
 
