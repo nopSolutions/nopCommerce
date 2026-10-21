@@ -1,0 +1,74 @@
+labels:
+  - nop-e2e
+  - customer-register-new
+  - customer-login
+  - admin-login
+  - admin-logout
+  - product-open
+  - product-add-to-cart
+  - cart-proceed-to-checkout
+  - checkout-address-fill
+  - checkout-place-order
+customSteps: |
+  // Crosses the customer/admin boundary: a generated customer places an order
+  // and finds it in account history, the admin cancels it, and the status
+  // change is verified from the customer's own account rather than from the
+  // admin grid.
+  customer-register-new
+
+  save "Apple MacBook Pro" as "productName"
+  product-add-to-cart
+
+  click "Shopping cart"
+  cart-proceed-to-checkout
+
+  // A registered customer goes straight to the billing address step
+  check that page contains "Billing address"
+  enter "Test" into "First name"
+  enter stored value "customerLastName" into "Last name"
+  enter stored value "customerEmail" into "Email"
+  checkout-address-fill
+  click button "Continue"
+
+  checkout-place-order
+
+  // --- The order is in account history with accurate details ---
+  // By URL: the account side menu lists "Orders" on every account page.
+  click "My account"
+  click "Orders"
+  check that url contains "/order/history"
+  click "Details"
+  check that page contains "Apple MacBook Pro"
+  check that page contains "1 Test Street"
+  check that page contains "Check / Money Order"
+
+  // --- Admin cancels the order ---
+  admin-login
+  // Straight to the list URL: "Sales" then "Orders" can land on the dashboard,
+  // whose cards repeat both words. "Order statuses" is unique to this page.
+  go to url stored value "adminOrdersUrl"
+  check that page contains "Order statuses"
+  enter stored value "customerEmail" into "Billing email address"
+  // Anchored, and not cosmetically: a bare click can hit the panel's collapse
+  // toggle, which reads "Search" too and persists per admin, so it breaks the
+  // next run rather than this one.
+  click button "Search" roughly below "Go directly to order #"
+  check that page contains stored value "customerEmail"
+  // Role-qualified and row-anchored: the grid's "View" column header is a <th>,
+  // and clicking a <th> is a silent no-op. The email anchor pins this case's
+  // own order.
+  click link "View" to the right of stored value "customerEmail"
+  check that page contains "Edit order details"
+
+  click button "Cancel order"
+  // This modal does say "Yes", unlike a delete confirmation. Anchored because
+  // the page holds eight such modals and only one is visible.
+  click button "Yes" to the left of "No, cancel"
+  check that page contains "Cancelled"
+  admin-logout
+
+  // --- The customer sees the new status ---
+  customer-login
+  click "My account"
+  click "Orders"
+  check that page contains "Cancelled"

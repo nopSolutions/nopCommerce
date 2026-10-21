@@ -1,0 +1,44 @@
+labels:
+  - nop-e2e
+  - admin-login
+  - admin-logout
+  - product-open
+  - product-add-to-cart
+customSteps: |
+  // DiscountServiceTests covers discount evaluation; nothing checks that a
+  // coupon created in the admin area can actually be redeemed by a shopper.
+  admin-login
+
+  // Straight to the list URL: the left menu repeats "Discounts" on every admin
+  // page (see README).
+  go to url stored value "adminDiscountsUrl"
+  check that page contains "Add new"
+  click "Add new"
+  check that page contains "Add a new discount"
+  enter "E2E Coupon" into "Name"
+  select "Assigned to order subtotal" from "Discount type"
+  click on the checkbox to the right of "Requires coupon code"
+  generate from template "E2E#####", then enter into "Coupon code" and save as "couponCode"
+  enter "10" into "Discount amount"
+  click button "Save"
+  check that page contains "The new discount has been added successfully."
+
+  // --- A shopper redeems it ---
+  // Logs out of the admin first: that account is shared by every admin-driven
+  // case and its cart is never cleared.
+  admin-logout
+  go to url stored value "storeUrl"
+  save "Apple MacBook Pro" as "productName"
+  product-add-to-cart
+
+  // By URL: the header shows "Shopping cart" on every page.
+  click "Shopping cart"
+  check that url contains "/cart"
+  // The storefront calls this field "Discount Code"; the admin side calls the
+  // same value "Coupon code".
+  enter stored value "couponCode" into "Discount Code"
+  click button "Apply coupon"
+  check that page contains "The coupon code was applied"
+  // The banner only says the code was accepted; the totals prove the $10 was
+  // actually taken off.
+  check that page contains "-$10.00"
