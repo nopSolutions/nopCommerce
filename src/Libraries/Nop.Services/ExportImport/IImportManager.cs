@@ -74,4 +74,11 @@ public partial interface IImportManager
     /// <param name="stream">Stream</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task ImportPriceListsFromXlsxAsync(Stream stream);
+
+    /// <summary>
+    /// Import discounts from XLSX file
+    /// </summary>
+    /// <param name="stream">Stream</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task ImportDiscountsFromXlsxAsync(Stream stream);
 }
