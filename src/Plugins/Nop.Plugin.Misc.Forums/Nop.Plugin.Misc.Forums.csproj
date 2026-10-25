@@ -381,7 +381,6 @@
 
   <ItemGroup>
     <PackageReference Include="HtmlSanitizer" Version="9.2.1039" />
-    <PackageReference Include="Humanizer" Version="3.0.10" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->
