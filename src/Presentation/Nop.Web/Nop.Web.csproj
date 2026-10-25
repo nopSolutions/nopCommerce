@@ -63,6 +63,15 @@
     <Content Update="**\*.config;**\*.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <!-- Plugin models are loaded at runtime and cannot be referenced by Nop.Web during compilation.
+       Keep mirrored theme views as publishable content, but exclude them from Razor generation. -->
+  <Target Name="ExcludeThemePluginViewsFromRazorCompilation" AfterTargets="ResolveRazorGenerateInputs">
+    <ItemGroup>
+      <RazorGenerate Remove="Themes\*\Plugins\**\*.cshtml" />
+      <Content Update="Themes\*\Plugins\**\*.cshtml" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+
   <!-- This target execute after "Build" target.
     We use it to clean up folder with plugins from unnecessary and obsolete libraries. -->
   <Target Name="NopTarget" AfterTargets="Build">
