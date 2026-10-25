@@ -194,14 +194,15 @@ public static class ServiceCollectionExtensions
             options.ViewLocationExpanders.Add(new ThemeableViewLocationExpander());
         });
 
-        //Keep the normal Razor engine for caching and compilation, and decorate explicit plugin paths.
+        //keep the normal Razor engine for caching and compilation, and decorate explicit plugin paths.
         services.TryAddSingleton<RazorViewEngine>();
+
         services.Replace(ServiceDescriptor.Singleton<IRazorViewEngine>(provider =>
-            new ThemeableRazorViewEngine(provider.GetRequiredService<RazorViewEngine>(),
+            new ThemeableRazorViewEngine(provider.GetRequiredService<DiagnosticListener>(),
+                provider.GetRequiredService<HtmlEncoder>(),
                 provider.GetRequiredService<IHttpContextAccessor>(),
                 provider.GetRequiredService<IRazorPageActivator>(),
-                provider.GetRequiredService<HtmlEncoder>(),
-                provider.GetRequiredService<DiagnosticListener>())));
+                provider.GetRequiredService<RazorViewEngine>())));
     }
 
     /// <summary>
