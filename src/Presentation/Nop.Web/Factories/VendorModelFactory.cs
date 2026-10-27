@@ -117,8 +117,10 @@ public partial class VendorModelFactory : IVendorModelFactory
                         var selectedValues = await _vendorAttributeParser.ParseAttributeValuesAsync(vendorAttributesXml);
                         foreach (var attributeValue in selectedValues)
                         foreach (var item in attributeModel.Values)
+                        {
                             if (attributeValue.Id == item.Id)
                                 item.IsPreSelected = true;
+                        }
                     }
                 }
                     break;
@@ -187,9 +189,7 @@ public partial class VendorModelFactory : IVendorModelFactory
         model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
 
         if (!excludeProperties)
-        {
             model.Email = customer.Email;
-        }
 
         //vendor attributes
         model.VendorAttributes = await PrepareVendorAttributesAsync(vendorAttributesXml);

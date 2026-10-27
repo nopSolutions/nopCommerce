@@ -120,13 +120,7 @@ public partial class FluentMigratorMetadataReader : IMetadataReader
         var result = new List<MappingAttribute>();
 
         if (attribute is ColumnAttribute column)
-        {
             result.Add(column);
-
-            //define sequence name for supported db engines to retrieve identity values (PostgreSQL)
-            if (column.IsIdentity)
-                result.Add(new SequenceNameAttribute($"{entityDescriptor.EntityName}_{column.Name}_seq"));
-        }
 
         return result.ToArray();
     }

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using FluentAssertions;
+using AwesomeAssertions;
 using Nop.Core.ComponentModel;
 using NUnit.Framework;
 

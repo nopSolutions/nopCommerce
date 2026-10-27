@@ -5,8 +5,8 @@ using Nop.Plugin.Widgets.FacebookPixel.Domain;
 
 namespace Nop.Plugin.Widgets.FacebookPixel.Data;
 
-[NopMigration("2020/03/25 12:00:00", "Widgets.FacebookPixel base schema", MigrationProcessType.Installation)]
-public class FacebookPixelSchemaMigration : AutoReversingMigration
+[NopMigration("2020-03-25 12:00:00", "Widgets.FacebookPixel base schema", MigrationProcessType.Installation)]
+public class FacebookPixelSchemaMigration : Migration
 {
 
     #region Methods
@@ -16,7 +16,15 @@ public class FacebookPixelSchemaMigration : AutoReversingMigration
     /// </summary>
     public override void Up()
     {
-        Create.TableFor<FacebookPixelConfiguration>();
+        this.CreateTableIfNotExists<FacebookPixelConfiguration>();
+    }
+
+    /// <summary>
+    /// Collects the DOWN migration expressions
+    /// </summary>
+    public override void Down()
+    {
+        this.DeleteTableIfExists<FacebookPixelConfiguration>();
     }
 
     #endregion

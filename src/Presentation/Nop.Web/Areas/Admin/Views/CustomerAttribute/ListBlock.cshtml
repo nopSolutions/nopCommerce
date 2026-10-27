@@ -18,25 +18,22 @@
             {
                 new ColumnProperty(nameof(CustomerAttributeModel.Name))
                 {
-                    Title = T("Admin.Customers.CustomerAttributes.Fields.Name").Text,
-                    Width = "300"
+                    Title = T("Admin.Customers.CustomerAttributes.Fields.Name").Text
                 },
                 new ColumnProperty(nameof(CustomerAttributeModel.AttributeControlTypeName))
                 {
-                    Title = T("Admin.Customers.CustomerAttributes.Fields.AttributeControlType").Text,
-                    Width = "200"
+                    Title = T("Admin.Customers.CustomerAttributes.Fields.AttributeControlType").Text
                 },
                 new ColumnProperty(nameof(CustomerAttributeModel.IsRequired))
                 {
                     Title = T("Admin.Customers.CustomerAttributes.Fields.IsRequired").Text,
-                    Width = "200",
+                    Width = "100",
                     ClassName =  NopColumnClassDefaults.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(CustomerAttributeModel.DisplayOrder))
                 {
                     Title = T("Admin.Customers.CustomerAttributes.Fields.DisplayOrder").Text,
-                    Width = "100",
                     ClassName =  NopColumnClassDefaults.CenterAll
                 },
                 new ColumnProperty(nameof(CustomerAttributeModel.Id))

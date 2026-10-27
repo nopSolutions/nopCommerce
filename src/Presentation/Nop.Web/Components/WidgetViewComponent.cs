@@ -21,6 +21,6 @@ public partial class WidgetViewComponent : NopViewComponent
         if (!model.Any())
             return Content("");
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

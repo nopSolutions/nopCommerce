@@ -16,6 +16,6 @@ public partial class PrivateMessagesInboxViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync(int pageNumber, string tab)
     {
         var model = await _privateMessagesModelFactory.PrepareInboxModelAsync(pageNumber, tab);
-        return View(model);
+        return await ViewAsync(model);
     }
 }

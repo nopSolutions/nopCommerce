@@ -1,5 +1,4 @@
-using FluentAssertions;
-using Nop.Core.Domain.Media;
+﻿using AwesomeAssertions;
 using Nop.Services.Media;
 using NUnit.Framework;
 
@@ -49,7 +48,7 @@ public class PictureServiceFileDescriptorTests : ServiceTest
         for (var i = 0; i < warmupIterations; i++)
         {
             var size = baseSize + i;
-            await _pictureService.GetDefaultPictureUrlAsync(size, PictureType.Entity);
+            await _pictureService.GetDefaultPictureUrlAsync(size);
             _generatedThumbPaths.Add(await GetDefaultThumbPathAsync(size));
         }
 
@@ -62,7 +61,7 @@ public class PictureServiceFileDescriptorTests : ServiceTest
         for (var i = 0; i < testIterations; i++)
         {
             var size = baseSize + warmupIterations + i;
-            await _pictureService.GetDefaultPictureUrlAsync(size, PictureType.Entity);
+            await _pictureService.GetDefaultPictureUrlAsync(size);
             _generatedThumbPaths.Add(await GetDefaultThumbPathAsync(size));
         }
 
@@ -78,7 +77,7 @@ public class PictureServiceFileDescriptorTests : ServiceTest
         var fdsAfterGc = CountOpenFileDescriptors();
         var leakedAfterGc = fdsAfterGc - fdsBefore;
 
-        TestContext.Out.WriteLine($"[fd leak probe] live delta = {leakedLive}, after-GC delta = {leakedAfterGc}");
+        await TestContext.Out.WriteLineAsync($"[fd leak probe] live delta = {leakedLive}, after-GC delta = {leakedAfterGc}");
 
         leakedLive.Should().Be(0,
             $"GetDefaultPictureUrlAsync leaked {leakedLive} file descriptors across {testIterations} thumb generations " +

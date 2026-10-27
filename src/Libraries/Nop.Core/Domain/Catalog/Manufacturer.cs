@@ -116,4 +116,29 @@ public partial class Manufacturer : BaseEntity, ILocalizedEntity, ISlugSupported
     /// Gets or sets a value indicating whether the price range should be entered manually
     /// </summary>
     public bool ManuallyPriceRange { get; set; }
+
+    /// <summary>
+    /// Gets or sets the manufacturer physical address
+    /// </summary>
+    public string PhysicalAddress { get; set; }
+
+    /// <summary>
+    /// Gets or sets the manufacturer electronic address
+    /// </summary>
+    public string ElectronicAddress { get; set; }
+
+    /// <summary>
+    /// Gets or sets the responsible person name
+    /// </summary>
+    public string ResponsiblePerson { get; set; }
+
+    /// <summary>
+    /// Gets or sets the responsible person physical address
+    /// </summary>
+    public string ResponsiblePersonPhysicalAddress { get; set; }
+
+    /// <summary>
+    /// Gets or sets the responsible person electronic address
+    /// </summary>
+    public string ResponsiblePersonElectronicAddress { get; set; }
 }

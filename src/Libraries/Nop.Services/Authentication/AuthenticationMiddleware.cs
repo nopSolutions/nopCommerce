@@ -77,10 +77,8 @@ public partial class AuthenticationMiddleware
         if (defaultAuthenticate != null)
         {
             var result = await context.AuthenticateAsync(defaultAuthenticate.Name);
-            if (result?.Principal != null)
-            {
+            if (result?.Principal != null) 
                 context.User = result.Principal;
-            }
         }
 
         await _next(context);

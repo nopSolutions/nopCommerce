@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Domain.Configuration;
 using NUnit.Framework;
 

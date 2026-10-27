@@ -159,9 +159,7 @@ public partial class RecurringPaymentController : BaseAdminController
             if (errors.Any())
             {
                 foreach (var error in errors)
-                {
                     _notificationService.ErrorNotification(error);
-                }
             }
             else
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.RecurringPayments.NextPaymentProcessed"));

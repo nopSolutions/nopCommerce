@@ -16,6 +16,6 @@ public partial class FooterViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var model = await _commonModelFactory.PrepareFooterModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

@@ -45,6 +45,6 @@ public partial class AclDisabledWarningViewComponent : NopViewComponent
         if (!enabled)
             return Content(string.Empty);
 
-        return View();
+        return await ViewAsync();
     }
 }

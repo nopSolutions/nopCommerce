@@ -161,8 +161,10 @@ public partial class VendorModelFactory : IVendorModelFactory
                                 var selectedValues = await _vendorAttributeParser.ParseAttributeValuesAsync(selectedVendorAttributes);
                                 foreach (var attributeValue in selectedValues)
                                     foreach (var item in attributeModel.Values)
-                                        if (attributeValue.Id == item.Id)
-                                            item.IsPreSelected = true;
+                                {
+                                    if (attributeValue.Id == item.Id)
+                                        item.IsPreSelected = true;
+                                }
                             }
                         }
                         break;

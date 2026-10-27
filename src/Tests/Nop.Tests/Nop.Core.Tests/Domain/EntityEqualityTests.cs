@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Domain.Catalog;
 using NUnit.Framework;
 

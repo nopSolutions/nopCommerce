@@ -631,6 +631,17 @@
                         </div>
                     </div>
                 }
+                @if (!string.IsNullOrEmpty(Model.DesiredDeliveryDate))
+                {
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                            <nop-label asp-for="DesiredDeliveryDate" />
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="form-text-row">@Model.DesiredDeliveryDate</div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
         if (canShipmentsView)
@@ -658,44 +669,37 @@
                             },
                             new ColumnProperty(nameof(ShipmentModel.Id))
                             {
-                                Title = T("Admin.Orders.Shipments.ID").Text,
-                                Width = "50"
+                                Title = T("Admin.Orders.Shipments.ID").Text
                             },
                             new ColumnProperty(nameof(ShipmentModel.CustomOrderNumber))
                             {
-                                Title = T("Admin.Orders.Shipments.CustomOrderNumber").Text,
-                                Width = "100"
+                                Title = T("Admin.Orders.Shipments.CustomOrderNumber").Text
                             },
                             new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
                             {
-                                Title = T("Admin.Orders.Shipments.TrackingNumber").Text,
-                                Width = "100"
+                                Title = T("Admin.Orders.Shipments.TrackingNumber").Text
                             },
                             new ColumnProperty(nameof(ShipmentModel.TotalWeight))
                             {
-                                Title = T("Admin.Orders.Shipments.TotalWeight").Text,
-                                Width = "100"
+                                Title = T("Admin.Orders.Shipments.TotalWeight").Text
                             },
                             (Model.PickupInStore ? 
                                 new ColumnProperty(nameof(ShipmentModel.ReadyForPickupDate))
                                 {
-                                    Title = T("Admin.Orders.Shipments.ReadyForPickupDate").Text,
-                                    Width = "100"
+                                    Title = T("Admin.Orders.Shipments.ReadyForPickupDate").Text
                                 } : 
                                 new ColumnProperty(nameof(ShipmentModel.ShippedDate))
                                 {
-                                    Title = T("Admin.Orders.Shipments.ShippedDate").Text,
-                                    Width = "100"
+                                    Title = T("Admin.Orders.Shipments.ShippedDate").Text
                                 }),
                             new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
                             {
-                                Title = T("Admin.Orders.Shipments.DeliveryDate").Text,
-                                Width = "100"
+                                Title = T("Admin.Orders.Shipments.DeliveryDate").Text
                             },
                             new ColumnProperty(nameof(ShipmentModel.Id))
                             {
                                 Title = T("Admin.Common.View").Text,
-                                Width = "50",
+                                Width = "100",
                                 Render = new RenderButtonView(new DataUrl("~/Admin/Order/ShipmentDetails/"))
                             }
                         },
@@ -714,28 +718,23 @@
                             {
                                 new ColumnProperty(nameof(ShipmentItemModel.ProductName))
                                 {
-                                    Title = T("Admin.Orders.Shipments.Products.ProductName").Text,
-                                    Width = "400"
+                                    Title = T("Admin.Orders.Shipments.Products.ProductName").Text
                                 },
                                 new ColumnProperty(nameof(ShipmentItemModel.ShippedFromWarehouse))
                                 {
-                                    Title = T("Admin.Orders.Shipments.Products.Warehouse").Text,
-                                    Width = "150"
+                                    Title = T("Admin.Orders.Shipments.Products.Warehouse").Text
                                 },
                                 new ColumnProperty(nameof(ShipmentItemModel.QuantityInThisShipment))
                                 {
-                                    Title = T("Admin.Orders.Shipments.Products.QtyShipped").Text,
-                                    Width = "150"
+                                    Title = T("Admin.Orders.Shipments.Products.QtyShipped").Text
                                 },
                                 new ColumnProperty(nameof(ShipmentItemModel.ItemWeight))
                                 {
-                                    Title = T("Admin.Orders.Shipments.Products.ItemWeight").Text,
-                                    Width = "150"
+                                    Title = T("Admin.Orders.Shipments.Products.ItemWeight").Text
                                 },
                                 new ColumnProperty(nameof(ShipmentItemModel.ItemDimensions))
                                 {
-                                    Title = T("Admin.Orders.Shipments.Products.ItemDimensions").Text,
-                                    Width = "150"
+                                    Title = T("Admin.Orders.Shipments.Products.ItemDimensions").Text
                                 }
                             }
                         }

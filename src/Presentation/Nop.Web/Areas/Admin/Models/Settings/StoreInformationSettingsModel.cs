@@ -48,9 +48,9 @@ public partial record StoreInformationSettingsModel : BaseNopModel, ISettingsMod
     public string FacebookLink { get; set; }
     public bool FacebookLink_OverrideForStore { get; set; }
 
-    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.TwitterLink")]
-    public string TwitterLink { get; set; }
-    public bool TwitterLink_OverrideForStore { get; set; }
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.XLink")]
+    public string XLink { get; set; }
+    public bool XLink_OverrideForStore { get; set; }
 
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.YoutubeLink")]
     public string YoutubeLink { get; set; }
@@ -59,6 +59,22 @@ public partial record StoreInformationSettingsModel : BaseNopModel, ISettingsMod
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InstagramLink")]
     public string InstagramLink { get; set; }
     public bool InstagramLink_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.TikTokLink")]
+    public string TikTokLink { get; set; }
+    public bool TikTokLink_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SnapchatLink")]
+    public string SnapchatLink { get; set; }
+    public bool SnapchatLink_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PinterestLink")]
+    public string PinterestLink { get; set; }
+    public bool PinterestLink_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.TumblrLink")]
+    public string TumblrLink { get; set; }
+    public bool TumblrLink_OverrideForStore { get; set; }
 
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SubjectFieldOnContactUsForm")]
     public bool SubjectFieldOnContactUsForm { get; set; }

@@ -116,8 +116,10 @@ public partial class AddressModelFactory : IAddressModelFactory
                         var selectedValues = await _addressAttributeParser.ParseAttributeValuesAsync(selectedAddressAttributes);
                         foreach (var attributeValue in selectedValues)
                         foreach (var item in attributeModel.Values)
+                        {
                             if (attributeValue.Id == item.Id)
                                 item.IsPreSelected = true;
+                        }
                     }
                 }
                     break;
@@ -231,13 +233,9 @@ public partial class AddressModelFactory : IAddressModelFactory
             var countries = await loadCountries();
 
             if (_addressSettings.PreselectCountryIfOnlyOne && countries.Count == 1)
-            {
                 model.CountryId = countries[0].Id;
-            }
             else
-            {
                 model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
-            }
 
             if (addressSettings.DefaultCountryId != null)
                 model.CountryId = model.CountryId ?? addressSettings.DefaultCountryId;
@@ -306,13 +304,9 @@ public partial class AddressModelFactory : IAddressModelFactory
 
         //customer attribute services
         if (_addressAttributeService != null && _addressAttributeParser != null)
-        {
             await PrepareCustomAddressAttributesAsync(model, address, overrideAttributesXml);
-        }
         if (_addressAttributeFormatter != null && address != null)
-        {
             model.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributesAsync(address.CustomAttributes);
-        }
 
         (model.AddressLine, model.AddressFields) = await _addressService.FormatAddressAsync(address, languageId);
     }

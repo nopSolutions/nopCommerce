@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Common;
+﻿using System.ComponentModel;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -36,6 +37,11 @@ public partial class Order : BaseEntity, ISoftDeletedEntity
     /// Gets or sets the shipping address identifier
     /// </summary>
     public int? ShippingAddressId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the desired delivery date
+    /// </summary>
+    public DateTime? DesiredDeliveryDateUtc { get; set; }
 
     /// <summary>
     /// Gets or sets the pickup address identifier
@@ -183,46 +189,6 @@ public partial class Order : BaseEntity, ISoftDeletedEntity
     public string CustomerIp { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether storing of credit card number is allowed
-    /// </summary>
-    public bool AllowStoringCreditCardNumber { get; set; }
-
-    /// <summary>
-    /// Gets or sets the card type
-    /// </summary>
-    public string CardType { get; set; }
-
-    /// <summary>
-    /// Gets or sets the card name
-    /// </summary>
-    public string CardName { get; set; }
-
-    /// <summary>
-    /// Gets or sets the card number
-    /// </summary>
-    public string CardNumber { get; set; }
-
-    /// <summary>
-    /// Gets or sets the masked credit card number
-    /// </summary>
-    public string MaskedCreditCardNumber { get; set; }
-
-    /// <summary>
-    /// Gets or sets the card CVV2
-    /// </summary>
-    public string CardCvv2 { get; set; }
-
-    /// <summary>
-    /// Gets or sets the card expiration month
-    /// </summary>
-    public string CardExpirationMonth { get; set; }
-
-    /// <summary>
-    /// Gets or sets the card expiration year
-    /// </summary>
-    public string CardExpirationYear { get; set; }
-
-    /// <summary>
     /// Gets or sets the authorization transaction identifier
     /// </summary>
     public string AuthorizationTransactionId { get; set; }
@@ -292,6 +258,16 @@ public partial class Order : BaseEntity, ISoftDeletedEntity
     /// </summary>
     public virtual int? RedeemedRewardPointsEntryId { get; set; }
 
+    /// <summary>
+    /// Gets or sets the current follow-up number for the pending order
+    /// </summary>
+    public int? LastPendingOrderFollowUpNumber { get; set; }
+
+    /// <summary>
+    /// Gets or sets the date and time (UTC) when the last follow-up for the pending order was sent
+    /// </summary>
+    public DateTime? LastPendingOrderFollowUpDateUtc { get; set; }
+
     #endregion
 
     #region Custom properties
@@ -331,6 +307,82 @@ public partial class Order : BaseEntity, ISoftDeletedEntity
         get => (TaxDisplayType)CustomerTaxDisplayTypeId;
         set => CustomerTaxDisplayTypeId = (int)value;
     }
+
+    #endregion
+
+    #region Obsolete properties
+
+    /// <summary>
+    /// The field is not used since 5.00 and is left only for the update process.
+    /// If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    [Obsolete("The field is not used since 5.00 and is left only for the update process. If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.")]
+    public bool AllowStoringCreditCardNumber { get; set; }
+
+    /// <summary>
+    /// The field is not used since 5.00 and is left only for the update process.
+    /// If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    [Obsolete("The field is not used since 5.00 and is left only for the update process. If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.")]
+    public string CardType { get; set; }
+
+    /// <summary>
+    /// The field is not used since 5.00 and is left only for the update process.
+    /// If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    [Obsolete("The field is not used since 5.00 and is left only for the update process. If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.")]
+    public string CardName { get; set; }
+
+    /// <summary>
+    /// The field is not used since 5.00 and is left only for the update process.
+    /// If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    [Obsolete("The field is not used since 5.00 and is left only for the update process. If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.")]
+    public string CardNumber { get; set; }
+
+    /// <summary>
+    /// The field is not used since 5.00 and is left only for the update process.
+    /// If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    [Obsolete("The field is not used since 5.00 and is left only for the update process. If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.")]
+    public string MaskedCreditCardNumber { get; set; }
+
+    /// <summary>
+    /// The field is not used since 5.00 and is left only for the update process.
+    /// If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    [Obsolete("The field is not used since 5.00 and is left only for the update process. If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.")]
+    public string CardCvv2 { get; set; }
+
+    /// <summary>
+    /// The field is not used since 5.00 and is left only for the update process.
+    /// If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    [Obsolete("The field is not used since 5.00 and is left only for the update process. If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.")]
+    public string CardExpirationMonth { get; set; }
+
+    /// <summary>
+    /// The field is not used since 5.00 and is left only for the update process.
+    /// If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Browsable(false)]
+    [Obsolete("The field is not used since 5.00 and is left only for the update process. If you are using this field, please migrate it to your infrastructure as this field will be removed in version 5.10.")]
+    public string CardExpirationYear { get; set; }
 
     #endregion
 }

@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using FluentAssertions;
+using AwesomeAssertions;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;

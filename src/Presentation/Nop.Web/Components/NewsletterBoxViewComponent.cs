@@ -22,6 +22,6 @@ public partial class NewsLetterBoxViewComponent : NopViewComponent
             return Content("");
 
         var model = await _newsLetterModelFactory.PrepareNewsLetterBoxModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

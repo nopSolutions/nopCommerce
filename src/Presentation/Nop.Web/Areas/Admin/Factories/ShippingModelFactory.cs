@@ -481,9 +481,7 @@ public partial class ShippingModelFactory : IShippingModelFactory
         {
             //fill in model values from the entity
             if (model == null)
-            {
                 model = warehouse.ToModel<WarehouseModel>();
-            }
         }
 
         //prepare address model

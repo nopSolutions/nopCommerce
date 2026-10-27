@@ -322,10 +322,8 @@ public partial class PropertyManager<T>
         if (worksheet?.Cells() == null)
             return;
 
-        foreach (var prop in _defaultProperties.Values)
-        {
+        foreach (var prop in _defaultProperties.Values) 
             prop.PropertyValue = worksheet.Row(row).Cell(prop.PropertyOrderPosition + cellOffset).Value;
-        }
     }
 
     /// <summary>
@@ -339,10 +337,8 @@ public partial class PropertyManager<T>
         if (worksheet?.Cells() == null)
             return;
 
-        foreach (var prop in _localizedProperties.Values)
-        {
+        foreach (var prop in _localizedProperties.Values) 
             prop.PropertyValue = worksheet.Row(row).Cell(prop.PropertyOrderPosition + cellOffset).Value;
-        }
     }
 
     /// <summary>

@@ -18,4 +18,9 @@ public partial class MessagesSettings : ISettings
     /// If set to false the message template email address will be use
     /// </summary>
     public bool UseDefaultEmailAccountForSendStoreOwnerEmails { get; set; }
+
+    /// <summary>
+    /// Gets or sets system name of active sms provider
+    /// </summary>
+    public string ActiveSmsProviderSystemName { get; set; }
 }

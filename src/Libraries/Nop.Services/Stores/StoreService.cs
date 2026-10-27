@@ -87,20 +87,6 @@ public partial class StoreService : IStoreService
     }
 
     /// <summary>
-    /// Gets all stores
-    /// </summary>
-    /// <returns>
-    /// The stores
-    /// </returns>
-    public virtual IList<Store> GetAllStores()
-    {
-        return _storeRepository.GetAll(query =>
-        {
-            return from s in query orderby s.DisplayOrder, s.Id select s;
-        }, _ => default, includeDeleted: false);
-    }
-
-    /// <summary>
     /// Gets a store 
     /// </summary>
     /// <param name="storeId">Store identifier</param>
@@ -131,15 +117,6 @@ public partial class StoreService : IStoreService
     public virtual async Task UpdateStoreAsync(Store store)
     {
         await _storeRepository.UpdateAsync(store);
-    }
-
-    /// <summary>
-    /// Updates the store
-    /// </summary>
-    /// <param name="store">Store</param>
-    public virtual void UpdateStore(Store store)
-    {
-        _storeRepository.Update(store);
     }
 
     /// <summary>

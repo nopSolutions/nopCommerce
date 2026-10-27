@@ -14,4 +14,9 @@ public static partial class NopValidationDefaults
     /// Gets the name of a locale used in not-null validation
     /// </summary>
     public static string NotNullValidationLocaleName => "Admin.Common.Validation.NotEmpty";
+
+    /// <summary>
+    /// Gets the cache key for cached descriptors
+    /// </summary>
+    public static string NopClientValidationCacheKey => "Nop.Client.Validation.Cache";
 }

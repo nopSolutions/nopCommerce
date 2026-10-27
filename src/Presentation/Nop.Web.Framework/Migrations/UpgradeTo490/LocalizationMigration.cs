@@ -1,9 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo490;
@@ -17,14 +15,9 @@ public class LocalizationMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        //do not use DI, because it produces exception on the installation process
-        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-
-        var (languageId, languages) = this.GetLanguageData();
-
         #region Delete locales
 
-        localizationService.DeleteLocaleResources(new List<string>
+        this.DeleteLocaleResources(new List<string>
         {
             //#7569
             "Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist",
@@ -121,9 +114,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required"] = "Admin.Promotions.NewsLetterSubscription.Fields.Email.Required",
             ["Admin.Promotions.NewsLetterSubscriptions.Fields.Language"] = "Admin.Promotions.NewsLetterSubscription.Fields.Language",
             ["Admin.Promotions.NewsLetterSubscriptions.Fields.Store"] = "Admin.Promotions.NewsLetterSubscription.Fields.Store",
-        }, languages, localizationService);
+        });
 
-        localizationService.DeleteLocaleResources(new[]
+        this.DeleteLocaleResources(new[]
         {
             "Admin.Configuration.AppSettings.AzureBlob",
             "Admin.Configuration.AppSettings.AzureBlob.ConnectionString",
@@ -148,7 +141,7 @@ public class LocalizationMigration : MigrationBase
 
         #region Add or update locales
 
-        localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
             //#4834
             ["Admin.Configuration.Settings.GeneralCommon.AdminArea.UseStickyHeaderLayout"] = "Use sticky header",
@@ -563,7 +556,7 @@ public class LocalizationMigration : MigrationBase
 
             //7807
             ["Forum.Post.Text"] = "Post",
-            
+
             //#7732
             ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery"] = "AI query to generate product description",
             ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.Info"] = "<p>Artificial intelligence functionality allows you to use third-party AI services such as <a href='https://www.deepseek.com/' target='_blank'>DeepSeek</a>, <a href='https://gemini.google.com/' target='_blank'>Gemini</a> or <a href='https://chatgpt.com/' target='_blank'>ChatGPT</a> to automatically generate content. This could be either product descriptions or meta tags for specific pages or entities.</p>",
@@ -629,7 +622,7 @@ public class LocalizationMigration : MigrationBase
 
             ["Admin.Configuration.Settings.FilterLevel.Name"] = "Name",
             ["Admin.Configuration.Settings.FilterLevel.Name.Hint"] = "Enter the name of the filter level.",
-            ["Admin.Configuration.Settings.FilterLevel.Name.Required"] = "Please provide a name.",            
+            ["Admin.Configuration.Settings.FilterLevel.Name.Required"] = "Please provide a name.",
             ["Admin.Configuration.Settings.FilterLevel.Enabled"] = "Enabled",
             ["Admin.Configuration.Settings.FilterLevel.Enabled.Hint"] = "Check to enable this filter level.",
             ["Admin.Configuration.Settings.FilterLevel.Updated"] = "The filter level has been updated successfully.",
@@ -681,8 +674,7 @@ public class LocalizationMigration : MigrationBase
             ["Products.CompatibleWith"] = "Compatible with",
             ["Products.CompatibleWith.Items"] = "{0} items are compatible with this product",
             ["Search.FilterLevelValues"] = "Search by Year Make Model",
-
-        }, languageId);
+        });
 
         #endregion
     }

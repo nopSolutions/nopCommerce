@@ -194,19 +194,13 @@ public class PayPalCommerceController : BasePluginController
 
         //display notifications
         foreach (var warning in model.Messages.Warning)
-        {
             _notificationService.WarningNotification(warning, false);
-        }
 
         foreach (var error in model.Messages.Error)
-        {
             _notificationService.ErrorNotification(error, false);
-        }
 
         foreach (var message in model.Messages.Success)
-        {
             _notificationService.SuccessNotification(message);
-        }
 
         return model;
     }

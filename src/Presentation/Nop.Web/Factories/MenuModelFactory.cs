@@ -368,9 +368,7 @@ public partial class MenuModelFactory : IMenuModelFactory
             await getItemTree(rootItemModel);
 
             if (!rootItemModel.ChildrenItems.Any() && rootItemModel.Template != MenuItemTemplate.Simple)
-            {
                 rootItemModel.ChildrenItems = await PrepareSubMenuItemsAsync(rootItemModel, rootItemModel.MaximumNumberEntities, rootItemModel.Template == MenuItemTemplate.Grid);
-            }
 
             result.Add(rootItemModel);
         }

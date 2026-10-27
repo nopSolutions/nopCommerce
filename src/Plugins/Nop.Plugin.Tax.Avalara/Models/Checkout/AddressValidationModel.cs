@@ -13,8 +13,6 @@ public record AddressValidationModel : BaseNopModel
 
     public bool IsError { get; set; }
 
-    public bool IsNewAddress { get; set; }
-
     public int AddressId { get; set; }
 
     #endregion

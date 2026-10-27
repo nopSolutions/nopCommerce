@@ -5,17 +5,19 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Infrastructure;
+using Nop.Services.Common;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.WebOptimizer;
@@ -31,13 +33,13 @@ public partial class NopHtmlHelper : INopHtmlHelper
 
     protected readonly AppSettings _appSettings;
     protected readonly HtmlEncoder _htmlEncoder;
-    protected readonly IActionContextAccessor _actionContextAccessor;
     protected readonly IHtmlHelper _htmlHelper;
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly INopAssetHelper _bundleHelper;
+    protected readonly INopFileProvider _fileProvider; 
     protected readonly Lazy<ILocalizationService> _localizationService;
     protected readonly IStoreContext _storeContext;
-    protected readonly IUrlHelperFactory _urlHelperFactory;
+    protected readonly IWebHelper _webHelper;
     protected readonly IWebHostEnvironment _webHostEnvironment;
     protected readonly SeoSettings _seoSettings;
 
@@ -61,25 +63,25 @@ public partial class NopHtmlHelper : INopHtmlHelper
 
     public NopHtmlHelper(AppSettings appSettings,
         HtmlEncoder htmlEncoder,
-        IActionContextAccessor actionContextAccessor,
         IHtmlHelper htmlHelper,
         IHttpContextAccessor httpContextAccessor,
         INopAssetHelper bundleHelper,
+        INopFileProvider fileProvider,
         Lazy<ILocalizationService> localizationService,
         IStoreContext storeContext,
-        IUrlHelperFactory urlHelperFactory,
+        IWebHelper webHelper,
         IWebHostEnvironment webHostEnvironment,
         SeoSettings seoSettings)
     {
         _appSettings = appSettings;
         _htmlEncoder = htmlEncoder;
-        _actionContextAccessor = actionContextAccessor;
         _htmlHelper = htmlHelper;
         _httpContextAccessor = httpContextAccessor;
         _bundleHelper = bundleHelper;
+        _fileProvider = fileProvider;
         _localizationService = localizationService;
         _storeContext = storeContext;
-        _urlHelperFactory = urlHelperFactory;
+        _webHelper = webHelper;
         _webHostEnvironment = webHostEnvironment;
         _seoSettings = seoSettings;
     }
@@ -110,11 +112,13 @@ public partial class NopHtmlHelper : INopHtmlHelper
     /// <returns>URL; check result</returns>
     protected virtual (string Url, bool IsLocal) GetSrcUrl(string src)
     {
-        var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        var httpContext = _httpContextAccessor?.HttpContext;
+        if (httpContext == null)
+            return (src, false);
 
-        var isLocal = urlHelper.IsLocalUrl(src);
+        var isLocal = _webHelper.CheckIsLocalUrl(src);
         var url = isLocal
-            ? urlHelper.Content(src).RemoveApplicationPathFromRawUrl(_httpContextAccessor.HttpContext.Request.PathBase)
+            ? src[1..].RemoveApplicationPathFromRawUrl(httpContext.Request.PathBase)
             : src;
 
         return (url, isLocal);
@@ -171,15 +175,11 @@ public partial class NopHtmlHelper : INopHtmlHelper
                 switch (_seoSettings.PageTitleSeoAdjustment)
                 {
                     case PageTitleSeoAdjustment.PagenameAfterStorename:
-                        {
-                            result = string.Join(_seoSettings.PageTitleSeparator, defaultTitle, specificTitle);
-                        }
+                        result = string.Join(_seoSettings.PageTitleSeparator, defaultTitle, specificTitle);
                         break;
                     case PageTitleSeoAdjustment.StorenameAfterPagename:
                     default:
-                        {
-                            result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, defaultTitle);
-                        }
+                        result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, defaultTitle);
                         break;
                 }
             }
@@ -753,12 +753,15 @@ public partial class NopHtmlHelper : INopHtmlHelper
 
         if (handleDefaultRoutes)
         {
-            return _actionContextAccessor.ActionContext.ActionDescriptor switch
+            var endpoint = httpContext.GetEndpoint();
+            var actionDescriptor = endpoint?.Metadata.GetMetadata<ActionDescriptor>();
+
+            return actionDescriptor switch
             {
                 ControllerActionDescriptor controllerAction => string.Concat(controllerAction.ControllerName, controllerAction.ActionName),
                 CompiledPageActionDescriptor compiledPage => string.Concat(compiledPage.AreaName, compiledPage.ViewEnginePath.Replace("/", "")),
                 PageActionDescriptor pageAction => string.Concat(pageAction.AreaName, pageAction.ViewEnginePath.Replace("/", "")),
-                _ => _actionContextAccessor.ActionContext.ActionDescriptor.DisplayName?.Replace("/", "") ?? string.Empty
+                _ => actionDescriptor.DisplayName?.Replace("/", "") ?? string.Empty
             };
         }
 
@@ -773,6 +776,24 @@ public partial class NopHtmlHelper : INopHtmlHelper
     {
         if (_seoSettings.MicrodataEnabled)
             AddHeadCustomParts("<script type=\"application/ld+json\">" + _htmlHelper.Raw(jsonLd) + "</script>");
+    }
+
+    /// <summary>
+    /// Get the culture name to use on the client side
+    /// </summary>
+    /// <returns>
+    /// The culture name if it exists; otherwise, <see cref="NopCommonDefaults.DefaultLocalePattern"/>
+    /// </returns>
+    public virtual string GetDefaultJavaScriptCulture()
+    {
+        var cultureToUse = NopCommonDefaults.DefaultLocalePattern;
+
+        if (_fileProvider.DirectoryExists(_fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.LocalePatternPath, CultureInfo.CurrentCulture.Name))))
+            cultureToUse = CultureInfo.CurrentCulture.Name;
+        else if (_fileProvider.DirectoryExists(_fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.LocalePatternPath, CultureInfo.CurrentCulture.TwoLetterISOLanguageName))))
+            cultureToUse = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+        return cultureToUse;
     }
 
     #endregion

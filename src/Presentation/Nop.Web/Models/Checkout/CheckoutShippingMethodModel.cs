@@ -32,6 +32,8 @@ public partial record CheckoutShippingMethodModel : BaseNopModel
         public int DisplayOrder { get; set; }
         public bool Selected { get; set; }
         public ShippingOption ShippingOption { get; set; }
+
+        public DesiredDeliveryDateModel DesiredDeliveryDate { get; set; } = new();
     }
 
     #endregion

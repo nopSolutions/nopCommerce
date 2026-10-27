@@ -92,5 +92,25 @@ public partial record MediaSettingsModel : BaseNopModel, ISettingsModel
     [NopResourceDisplayName("Admin.Configuration.Settings.Media.PicturePath")]
     public string PicturePath { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Media.Object3dCameraControlEnabled")]
+    public bool Object3dCameraControlEnabled { get; set; }
+    public bool Object3dCameraControlEnabled_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Media.Object3dZoomEnabled")]
+    public bool Object3dZoomEnabled { get; set; }
+    public bool Object3dZoomEnabled_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Media.Object3dAutoRotateEnabled")]
+    public bool Object3dAutoRotateEnabled { get; set; }
+    public bool Object3dAutoRotateEnabled_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Media.Object3dLazyLoadingEnabled")]
+    public bool Object3dLazyLoadingEnabled { get; set; }
+    public bool Object3dLazyLoadingEnabled_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Media.Object3dUploadSizeLimit")]
+    public int Object3dUploadSizeLimit { get; set; }
+    public bool Object3dUploadSizeLimit_OverrideForStore { get; set; }
+
     #endregion
 }

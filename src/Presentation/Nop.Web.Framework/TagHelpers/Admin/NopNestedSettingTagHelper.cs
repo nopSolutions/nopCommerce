@@ -70,14 +70,17 @@ public partial class NopNestedSettingTagHelper : TagHelper
         );
 
         if (!DisableAutoGeneration)
+        {
             script.InnerHtml.AppendHtml(
                 $"$('#{jsConsistentParentSettingName}').click(toggle_{jsConsistentParentSettingName});" +
                 $"toggle_{jsConsistentParentSettingName}();"
             );
+        }
 
         script.InnerHtml.AppendHtml("});");
 
         if (!DisableAutoGeneration)
+        {
             script.InnerHtml.AppendHtml(
                 $"function toggle_{jsConsistentParentSettingName}() " + "{" +
                 $"if ({isNot}$('#{jsConsistentParentSettingName}').is(':checked')) " + "{" +
@@ -87,6 +90,7 @@ public partial class NopNestedSettingTagHelper : TagHelper
                 "}" +
                 "}"
             );
+        }
 
         var scriptTag = await script.RenderHtmlContentAsync();
         output.PreContent.SetHtmlContent(scriptTag);

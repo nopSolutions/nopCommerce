@@ -121,6 +121,8 @@ public partial record RegisterModel : BaseNopModel
     [NopResourceDisplayName("Account.Fields.Phone")]
     public string Phone { get; set; }
 
+    public bool LoginByPhoneEnabled { get; set; }
+
     public bool FaxEnabled { get; set; }
     public bool FaxRequired { get; set; }
     [DataType(DataType.PhoneNumber)]

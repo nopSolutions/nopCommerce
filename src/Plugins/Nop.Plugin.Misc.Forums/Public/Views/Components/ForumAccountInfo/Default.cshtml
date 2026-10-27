@@ -1,0 +1,20 @@
+﻿@model ForumAccountInfoModel
+
+<form asp-action="SaveForumAccountInfo" asp-controller="Boards" method="post">
+    <section class="fieldset">
+        <h2 class="title">
+            @T("Plugins.Misc.Forums.Account.Forum")
+        </h2>
+
+        <div class="form-fields">
+            <div class="inputs">
+                <label asp-for="Signature" asp-postfix=":"></label>
+                <nop-textarea asp-for="Signature" />
+                <span asp-validation-for="Signature"></span>
+            </div>
+        </div>
+    </section>
+    <section class="buttons">
+        <button type="submit" id="save-forum-button" name="save-info-button" class="button-1">@T("Common.Save")</button>
+    </section>
+</form>

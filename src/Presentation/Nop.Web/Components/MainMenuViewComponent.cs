@@ -28,7 +28,7 @@ public partial class MainMenuViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var menus = await _menuModelFactory.PrepareMenuModelsAsync(MenuType.Main);
-        return View(menus?.FirstOrDefault() ?? new MenuModel());
+        return await ViewAsync(menus?.FirstOrDefault() ?? new MenuModel());
     }
 
     #endregion

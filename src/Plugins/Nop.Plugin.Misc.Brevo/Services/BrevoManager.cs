@@ -15,6 +15,7 @@ using Nop.Plugin.Misc.Brevo.Domain;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -691,17 +692,20 @@ public partial class BrevoManager
 
             //parse string to JSON object
             var unsubscriber = JsonConvert
-                .DeserializeAnonymousType(requestContent, new { list_id = new List<int>(), email = string.Empty });
+                .DeserializeAnonymousType(requestContent, new { id = 0, list_id = new List<int>(), email = string.Empty });
 
             if (unsubscriber.list_id?.Any() != true || string.IsNullOrEmpty(unsubscriber.email))
-                return true;
+                return false;
 
             //get subscriptions by email
             var subscriptions = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionsByEmailAsync(unsubscriber.email, isActive: true);
             if (!subscriptions.Any())
-                return true;
+                return false;
 
             var brevoSettings = await _settingService.LoadSettingAsync<BrevoSettings>();
+            if (brevoSettings.UnsubscribeWebhookId != unsubscriber.id)
+                return false;
+
             foreach (var mapping in brevoSettings.SubscriptionTypeMappings)
             {
                 var typeId = mapping.Key;
@@ -746,8 +750,8 @@ public partial class BrevoManager
 
             //or create new one
             var notificationUrl = _nopUrlHelper.RouteUrl(BrevoDefaults.UnsubscribeContactRoute, null, _webHelper.GetCurrentRequestProtocol());
-            var webhook = new CreateWebhook(notificationUrl, "Unsubscribe event webhook",
-                [CreateWebhook.EventsEnum.Unsubscribed], CreateWebhook.TypeEnum.Transactional);
+            var webhook = new CreateWebhook(notificationUrl, "Unsubscribe marketing campaigns",
+                [CreateWebhook.EventsEnum.Unsubscribed], CreateWebhook.TypeEnum.Marketing);
             var result = await client.CreateWebhookAsync(webhook);
 
             return (int)result.Id;
@@ -891,9 +895,7 @@ public partial class BrevoManager
                 return false;
 
             foreach (var storeCredential in storeCredentials)
-            {
                 await HttpBrevoClientAsync(storeCredential.Key, storeCredential.Value);
-            }
         }
         catch (Exception exception)
         {
@@ -1003,9 +1005,7 @@ public partial class BrevoManager
 
             //prepare id-name pairs
             foreach (var sender in senders.Senders)
-            {
                 availableSenders.Add((sender.Id.ToString(), $"{sender.Name} ({sender.Email})"));
-            }
         }
         catch (Exception exception)
         {
@@ -1203,9 +1203,7 @@ public partial class BrevoManager
             //prepare attributes to create
             var newAttributes = new List<(CategoryEnum category, string Name, string Value, CreateAttribute.TypeEnum? Type)>();
             foreach (var token in tokens)
-            {
                 newAttributes.Add((CategoryEnum.Transactional, token, null, CreateAttribute.TypeEnum.Text));
-            }
 
             return await CreateAttributesAsync(newAttributes);
         }

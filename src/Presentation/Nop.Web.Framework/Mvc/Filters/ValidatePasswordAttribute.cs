@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Http;
 using Nop.Data;
 using Nop.Services.Customers;
+using Nop.Services.Helpers;
 
 namespace Nop.Web.Framework.Mvc.Filters;
 

@@ -41,11 +41,39 @@ public class Program
                     if (directoryInfo.GetFiles().Length == 0 && directoryInfo.GetDirectories().Length == 0 && !saveLocalesFolders)
                         directoryInfo.Delete(true);
                 }
+
+                //delete runtimes folder after clearing assemblies
+                DeleteRuntimesFolder(pluginPath);
             }
             catch
             {
                 //do nothing
             }
+        }
+    }
+
+    /// <summary>
+    /// Deletes the runtimes folder from the plugin directory.
+    /// The runtimes folder contains platform-specific native libraries for cross-platform support.
+    /// Since we build for a specific OS, these folders are unnecessary and waste disk space.
+    /// </summary>
+    /// <param name="pluginPath">The path to the plugin directory</param>
+    protected static void DeleteRuntimesFolder(string pluginPath)
+    {
+        try
+        {
+            var runtimesPath = Path.Combine(pluginPath, "runtimes");
+
+            if (!Directory.Exists(runtimesPath)) 
+                return;
+
+            Directory.Delete(runtimesPath, recursive: true);
+            Console.WriteLine($"Deleted runtimes folder from: {pluginPath}");
+        }
+        catch (Exception ex)
+        {
+            //log the error but don't fail the build
+            Console.WriteLine($"Warning: Could not delete runtimes folder from {pluginPath}: {ex.Message}");
         }
     }
 
@@ -56,7 +84,7 @@ public class Program
         var saveLocalesFolders = true;
 
         var settings = args.FirstOrDefault(a => a.Contains('|')) ?? string.Empty;
-        if(string.IsNullOrEmpty(settings))
+        if (string.IsNullOrEmpty(settings))
             return;
 
         foreach (var arg in settings.Split('|'))
@@ -79,8 +107,8 @@ public class Program
                     break;
             }
         }
-        
-        if(!Directory.Exists(outputPath))
+
+        if (!Directory.Exists(outputPath))
             return;
 
         var di = new DirectoryInfo(outputPath);

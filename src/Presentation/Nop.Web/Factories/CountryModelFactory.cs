@@ -55,47 +55,57 @@ public partial class CountryModelFactory : ICountryModelFactory
         var result = new List<StateProvinceModel>();
         
         foreach (var state in states)
+        {
             result.Add(new StateProvinceModel
             {
                 id = state.Id,
                 name = await _localizationService.GetLocalizedAsync(state, x => x.Name)
             });
+        }
 
         if (country == null)
         {
             //country is not selected ("choose country" item)
             if (addSelectStateItem)
+            {
                 result.Insert(0, new StateProvinceModel
                 {
                     id = 0,
                     name = await _localizationService.GetResourceAsync("Address.SelectState")
                 });
+            }
             else
+            {
                 result.Insert(0, new StateProvinceModel
                 {
                     id = 0,
                     name = await _localizationService.GetResourceAsync("Address.Other")
                 });
+            }
         }
         else
         {
             //some country is selected
             if (!result.Any())
                 //country does not have states
+            {
                 result.Insert(0, new StateProvinceModel
                 {
                     id = 0,
                     name = await _localizationService.GetResourceAsync("Address.Other")
                 });
+            }
             else
             {
                 //country has some states
                 if (addSelectStateItem)
+                {
                     result.Insert(0, new StateProvinceModel
                     {
                         id = 0,
                         name = await _localizationService.GetResourceAsync("Address.SelectState")
                     });
+                }
             }
         }
 

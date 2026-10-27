@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Domain.Affiliates;
 using Nop.Services.Affiliates;
 using Nop.Services.Common;

@@ -1,6 +1,7 @@
 ﻿@using Nop.Core
+@using Nop.Services.Helpers
 @model CustomerInfoModel
-@inject Nop.Core.IWebHelper webHelper
+@inject IWebHelper webHelper
 @{
     Layout = "_ColumnsTwo";
 
@@ -290,13 +291,23 @@
                         {
                             <div class="inputs">
                                 <label asp-for="Phone" asp-postfix=":"></label>
-                                <input asp-for="Phone" />
+                                <input asp-for="Phone" placeholder="@T("PhoneVerification.Placeholder")" />
                                 @if (Model.PhoneRequired)
                                 {
                                     <nop-required />
                                 }
                                 <span asp-validation-for="Phone"></span>
+                                @if (Model.LoginByPhoneEnabled && !Model.PhoneSmsVerified)
+                                {
+                                    <span class="phone-status" style="color: var(--error-red-color);">@T("Account.Fields.Phone.Status.NotVerified")</span>
+                                }
                             </div>
+                            @if (Model.LoginByPhoneEnabled && !Model.PhoneSmsVerified)
+                            {
+                                <div class="buttons">
+                                    <button type="button" class="button-1 change-phone-btn" id="change-phone-btn" onclick="location.href='@Url.RouteUrl(NopRouteNames.Standard.OTP_PHONE_VERIFICATION, new { typeId = (int)PhoneVerificationFlowEnum.ChangePhoneNumber })'">@T("Account.CustomerInfo.VerifyPhoneNumber")</button>
+                                </div>
+                            }
                         }
                         @if (Model.FaxEnabled)
                         {
@@ -350,28 +361,18 @@
                 </section>
             }
             
-            @if (Model.AllowCustomersToSetTimeZone || Model.SignatureEnabled)
+            @if (Model.AllowCustomersToSetTimeZone)
             {
                 <section class="fieldset">
                     <h2 class="title">
                         @T("Account.Preferences")
                     </h2>
                     <div class="form-fields">
-                        @if (Model.AllowCustomersToSetTimeZone)
-                        {
-                            <div class="inputs">
-                                <label asp-for="TimeZoneId" asp-postfix=":"></label>
-                                <select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones"></select>
-                                <span asp-validation-for="TimeZoneId"></span>
-                            </div>
-                        }
-                        @if (Model.SignatureEnabled)
-                        {
-                            <div class="inputs">
-                                <label asp-for="Signature" asp-postfix=":"></label>
-                                <textarea asp-for="Signature" class="account-signature-text"></textarea>
-                            </div>
-                        }
+                        <div class="inputs">
+                            <label asp-for="TimeZoneId" asp-postfix=":"></label>
+                            <select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones"></select>
+                            <span asp-validation-for="TimeZoneId"></span>
+                        </div>
                     </div>
                 </section>
             }

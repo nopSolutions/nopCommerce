@@ -266,9 +266,7 @@ public partial class OrderController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null)
-        {
             model.VendorId = currentVendor.Id;
-        }
 
         var orderStatusIds = model.OrderStatusIds != null && !model.OrderStatusIds.Contains(0)
             ? model.OrderStatusIds.ToList()
@@ -362,9 +360,7 @@ public partial class OrderController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null)
-        {
             model.VendorId = currentVendor.Id;
-        }
 
         var orderStatusIds = model.OrderStatusIds != null && !model.OrderStatusIds.Contains(0)
             ? model.OrderStatusIds.ToList()
@@ -503,11 +499,21 @@ public partial class OrderController : BaseAdminController
         }
         catch (Exception exc)
         {
-            //prepare model
-            var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
-
             await _notificationService.ErrorNotificationAsync(exc);
-            return View(model);
+
+            try
+            {
+                //prepare model
+                var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                await _notificationService.ErrorNotificationAsync(e);
+            }
+
+            return RedirectToAction("Edit", new { id = order.Id });
         }
     }
 
@@ -537,11 +543,21 @@ public partial class OrderController : BaseAdminController
         }
         catch (Exception exc)
         {
-            //prepare model
-            var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
-
             await _notificationService.ErrorNotificationAsync(exc);
-            return View(model);
+
+            try
+            {
+                //prepare model
+                var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
+                
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                await _notificationService.ErrorNotificationAsync(e);
+            }
+
+            return RedirectToAction("Edit", new { id = order.Id });
         }
     }
 
@@ -568,11 +584,21 @@ public partial class OrderController : BaseAdminController
         }
         catch (Exception exc)
         {
-            //prepare model
-            var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
-
             await _notificationService.ErrorNotificationAsync(exc);
-            return View(model);
+
+            try
+            {
+                //prepare model
+                var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
+                
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                await _notificationService.ErrorNotificationAsync(e);
+            }
+
+            return RedirectToAction("Edit", new { id = order.Id });
         }
     }
 
@@ -602,11 +628,21 @@ public partial class OrderController : BaseAdminController
         }
         catch (Exception exc)
         {
-            //prepare model
-            var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
-
             await _notificationService.ErrorNotificationAsync(exc);
-            return View(model);
+
+            try
+            {
+                //prepare model
+                var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
+                
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                await _notificationService.ErrorNotificationAsync(e);
+            }
+
+            return RedirectToAction("Edit", new { id = order.Id });
         }
     }
 
@@ -633,11 +669,21 @@ public partial class OrderController : BaseAdminController
         }
         catch (Exception exc)
         {
-            //prepare model
-            var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
-
             await _notificationService.ErrorNotificationAsync(exc);
-            return View(model);
+
+            try
+            {
+                //prepare model
+                var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
+                
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                await _notificationService.ErrorNotificationAsync(e);
+            }
+
+            return RedirectToAction("Edit", new { id = order.Id });
         }
     }
 
@@ -667,11 +713,21 @@ public partial class OrderController : BaseAdminController
         }
         catch (Exception exc)
         {
-            //prepare model
-            var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
-
             await _notificationService.ErrorNotificationAsync(exc);
-            return View(model);
+
+            try
+            {
+                //prepare model
+                var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
+                
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                await _notificationService.ErrorNotificationAsync(e);
+            }
+
+            return RedirectToAction("Edit", new { id = order.Id });
         }
     }
 
@@ -698,11 +754,21 @@ public partial class OrderController : BaseAdminController
         }
         catch (Exception exc)
         {
-            //prepare model
-            var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
-
             await _notificationService.ErrorNotificationAsync(exc);
-            return View(model);
+
+            try
+            {
+                //prepare model
+                var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                await _notificationService.ErrorNotificationAsync(e);
+            }
+
+            return RedirectToAction("Edit", new { id = order.Id });
         }
     }
 
@@ -718,10 +784,19 @@ public partial class OrderController : BaseAdminController
         if (await _workContext.GetCurrentVendorAsync() != null)
             return RedirectToAction("Edit", new { id = order.Id });
 
-        //prepare model
-        var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
+        try
+        {
+            //prepare model
+            var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
 
-        return View(model);
+            return View(model);
+        }
+        catch (Exception exc)
+        {
+            await _notificationService.ErrorNotificationAsync(exc);
+
+            return RedirectToAction("Edit", new { id = order.Id });
+        }
     }
 
     [HttpPost]
@@ -777,11 +852,21 @@ public partial class OrderController : BaseAdminController
         }
         catch (Exception exc)
         {
-            //prepare model
-            model = await _orderModelFactory.PrepareOrderModelAsync(model, order);
-
             await _notificationService.ErrorNotificationAsync(exc);
-            return View(model);
+
+            try
+            {
+                //prepare model
+                model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
+                
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                await _notificationService.ErrorNotificationAsync(e);
+            }
+
+            return RedirectToAction("Edit", new { id = order.Id });
         }
     }
 
@@ -823,11 +908,21 @@ public partial class OrderController : BaseAdminController
         }
         catch (Exception exc)
         {
-            //prepare model
-            model = await _orderModelFactory.PrepareOrderModelAsync(model, order);
-
             await _notificationService.ErrorNotificationAsync(exc);
-            return View(model);
+
+            try
+            {
+                //prepare model
+                model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                await _notificationService.ErrorNotificationAsync(e);
+            }
+
+            return RedirectToAction("Edit", new { id = order.Id });
         }
     }
 
@@ -847,10 +942,19 @@ public partial class OrderController : BaseAdminController
         if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToOrderAsync(order))
             return RedirectToAction("List");
 
-        //prepare model
-        var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
+        try
+        {
+            //prepare model
+            var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
 
-        return View(model);
+            return View(model);
+        }
+        catch (Exception exc)
+        {
+            await _notificationService.ErrorNotificationAsync(exc);
+
+            return RedirectToAction("List");
+        }
     }
 
     [HttpPost]
@@ -904,9 +1008,7 @@ public partial class OrderController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null)
-        {
             model.VendorId = currentVendor.Id;
-        }
 
         var startDateValue = model.StartDate == null ? null
             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
@@ -988,9 +1090,7 @@ public partial class OrderController : BaseAdminController
         //a vendor should have access only to his products
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null)
-        {
             orders = await orders.WhereAwait(HasAccessToOrderAsync).ToListAsync();
-        }
 
         try
         {
@@ -1047,53 +1147,6 @@ public partial class OrderController : BaseAdminController
             disabledattributemappingids = disabledAttributeMappingIds.ToArray(),
             message = errors.Any() ? errors.ToArray() : null
         });
-    }
-
-    [HttpPost, ActionName("Edit")]
-    [FormValueRequired("btnSaveCC")]
-    [CheckPermission(StandardPermission.Orders.ORDERS_CREATE_EDIT_DELETE)]
-    public virtual async Task<IActionResult> EditCreditCardInfo(int id, OrderModel model)
-    {
-        //try to get an order with the specified id
-        var order = await _orderService.GetOrderByIdAsync(id);
-        if (order == null)
-            return RedirectToAction("List");
-
-        //a vendor does not have access to this functionality
-        if (await _workContext.GetCurrentVendorAsync() != null)
-            return RedirectToAction("Edit", new { id = order.Id });
-
-        if (order.AllowStoringCreditCardNumber)
-        {
-            var cardType = model.CardType;
-            var cardName = model.CardName;
-            var cardNumber = model.CardNumber;
-            var cardCvv2 = model.CardCvv2;
-            var cardExpirationMonth = model.CardExpirationMonth;
-            var cardExpirationYear = model.CardExpirationYear;
-
-            order.CardType = _encryptionService.EncryptText(cardType);
-            order.CardName = _encryptionService.EncryptText(cardName);
-            order.CardNumber = _encryptionService.EncryptText(cardNumber);
-            order.MaskedCreditCardNumber = _encryptionService.EncryptText(_paymentService.GetMaskedCreditCardNumber(cardNumber));
-            order.CardCvv2 = _encryptionService.EncryptText(cardCvv2);
-            order.CardExpirationMonth = _encryptionService.EncryptText(cardExpirationMonth);
-            order.CardExpirationYear = _encryptionService.EncryptText(cardExpirationYear);
-            await _orderService.UpdateOrderAsync(order);
-        }
-
-        //add a note
-        await _orderService.InsertOrderNoteAsync(new OrderNote
-        {
-            OrderId = order.Id,
-            Note = "Credit card info has been edited",
-            DisplayToCustomer = false,
-            CreatedOnUtc = DateTime.UtcNow
-        });
-
-        await LogEditOrderAsync(order.Id);
-
-        return RedirectToAction("Edit", new { id = order.Id });
     }
 
     [HttpPost, ActionName("Edit")]
@@ -1189,8 +1242,10 @@ public partial class OrderController : BaseAdminController
         //get order item identifier
         var orderItemId = 0;
         foreach (var formValue in form.Keys)
+        {
             if (formValue.StartsWith("btnSaveOrderItem", StringComparison.InvariantCultureIgnoreCase))
                 orderItemId = Convert.ToInt32(formValue["btnSaveOrderItem".Length..]);
+        }
 
         var orderItem = await _orderService.GetOrderItemByIdAsync(orderItemId)
             ?? throw new ArgumentException("No order item found with the specified id");
@@ -1292,8 +1347,10 @@ public partial class OrderController : BaseAdminController
         //get order item identifier
         var orderItemId = 0;
         foreach (var formValue in form.Keys)
+        {
             if (formValue.StartsWith("btnDeleteOrderItem", StringComparison.InvariantCultureIgnoreCase))
                 orderItemId = Convert.ToInt32(formValue["btnDeleteOrderItem".Length..]);
+        }
 
         var orderItem = await _orderService.GetOrderItemByIdAsync(orderItemId)
             ?? throw new ArgumentException("No order item found with the specified id");
@@ -1354,8 +1411,10 @@ public partial class OrderController : BaseAdminController
         //get order item identifier
         var orderItemId = 0;
         foreach (var formValue in form.Keys)
+        {
             if (formValue.StartsWith("btnResetDownloadCount", StringComparison.InvariantCultureIgnoreCase))
                 orderItemId = Convert.ToInt32(formValue["btnResetDownloadCount".Length..]);
+        }
 
         var orderItem = await _orderService.GetOrderItemByIdAsync(orderItemId)
             ?? throw new ArgumentException("No order item found with the specified id");
@@ -1387,8 +1446,10 @@ public partial class OrderController : BaseAdminController
         //get order item identifier
         var orderItemId = 0;
         foreach (var formValue in form.Keys)
+        {
             if (formValue.StartsWith("btnPvActivateDownload", StringComparison.InvariantCultureIgnoreCase))
                 orderItemId = Convert.ToInt32(formValue["btnPvActivateDownload".Length..]);
+        }
 
         var orderItem = await _orderService.GetOrderItemByIdAsync(orderItemId)
             ?? throw new ArgumentException("No order item found with the specified id");
@@ -1743,9 +1804,7 @@ public partial class OrderController : BaseAdminController
         var customAttributes = await _addressAttributeParser.ParseCustomAttributesAsync(form, NopCommonDefaults.AddressAttributeControlName);
         var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
         foreach (var error in customAttributeWarnings)
-        {
             ModelState.AddModelError(string.Empty, error);
-        }
 
         if (ModelState.IsValid)
         {
@@ -1881,9 +1940,7 @@ public partial class OrderController : BaseAdminController
         var orderItems = await _orderService.GetOrderItemsAsync(order.Id, isShipEnabled: true);
         //a vendor should have access only to his products
         if (currentVendor != null)
-        {
             orderItems = await orderItems.WhereAwait(HasAccessToProductAsync).ToListAsync();
-        }
 
         var shipment = new Shipment
         {
@@ -1909,11 +1966,13 @@ public partial class OrderController : BaseAdminController
 
             var qtyToAdd = 0; //parse quantity
             foreach (var formKey in form.Keys)
+            {
                 if (formKey.Equals($"qtyToAdd{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                 {
                     _ = int.TryParse(form[formKey], out qtyToAdd);
                     break;
                 }
+            }
 
             var warehouseId = 0;
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
@@ -1922,11 +1981,13 @@ public partial class OrderController : BaseAdminController
                 //multiple warehouses supported
                 //warehouse is chosen by a store owner
                 foreach (var formKey in form.Keys)
+                {
                     if (formKey.Equals($"warehouse_{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
                         _ = int.TryParse(form[formKey], out warehouseId);
                         break;
                     }
+                }
             }
             else
             {
@@ -2161,9 +2222,7 @@ public partial class OrderController : BaseAdminController
         try
         {
             if (!model.ShippedDateUtc.HasValue)
-            {
                 throw new Exception("Enter shipped date");
-            }
 
             shipment.ShippedDateUtc = model.ShippedDateUtc;
             await _shipmentService.UpdateShipmentAsync(shipment);
@@ -2280,9 +2339,7 @@ public partial class OrderController : BaseAdminController
         try
         {
             if (!model.DeliveryDateUtc.HasValue)
-            {
                 throw new Exception("Enter delivery date");
-            }
 
             shipment.DeliveryDateUtc = model.DeliveryDateUtc;
             await _shipmentService.UpdateShipmentAsync(shipment);
@@ -2388,9 +2445,7 @@ public partial class OrderController : BaseAdminController
         }
         //a vendor should have access only to his products
         if (await _workContext.GetCurrentVendorAsync() != null)
-        {
             shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
-        }
 
         try
         {
@@ -2421,9 +2476,7 @@ public partial class OrderController : BaseAdminController
 
         //a vendor should have access only to his products
         if (await _workContext.GetCurrentVendorAsync() != null)
-        {
             shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
-        }
 
         foreach (var shipment in shipments)
         {
@@ -2451,9 +2504,7 @@ public partial class OrderController : BaseAdminController
 
         //a vendor should have access only to his products
         if (await _workContext.GetCurrentVendorAsync() != null)
-        {
             shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
-        }
 
         foreach (var shipment in shipments)
         {
@@ -2481,9 +2532,7 @@ public partial class OrderController : BaseAdminController
 
         //a vendor should have access only to his products
         if (await _workContext.GetCurrentVendorAsync() != null)
-        {
             shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
-        }
 
         foreach (var shipment in shipments)
         {
@@ -2552,7 +2601,7 @@ public partial class OrderController : BaseAdminController
         if (displayToCustomer)
         {
             //email
-            await _workflowMessageService.SendNewOrderNoteAddedCustomerNotificationAsync(orderNote, (await _workContext.GetWorkingLanguageAsync()).Id);
+            await _workflowMessageService.SendNewOrderNoteAddedCustomerNotificationAsync(orderNote, order.CustomerLanguageId);
         }
 
         return Json(new { Result = true });

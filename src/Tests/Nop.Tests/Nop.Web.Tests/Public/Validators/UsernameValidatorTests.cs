@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Domain.Customers;
 using Nop.Web.Framework.Validators;
 using NUnit.Framework;

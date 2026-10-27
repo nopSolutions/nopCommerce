@@ -1243,15 +1243,8 @@ div.row.justify-content-between.dt-layout-table thead {
   max-width: 330px;
 }
 
-.custom-input-group.input-group-short .custom-input-group-btn,
 .input-group.input-group-short .input-group-btn {
   width: auto;
-}
-
-.custom-input-group.input-group-short .bootstrap-touchspin {
-  float: left;
-  margin-right: 3px;
-  width: 200px;
 }
 
 .input-group.input-group-short .input-group-text {
@@ -1905,6 +1898,10 @@ div.dt-container div.dt-paging {
   -moz-box-shadow: none !important;
   box-shadow: none !important;
   border: 1px solid #eaeaea;
+}
+
+.reminder-row input[type=checkbox] {
+  margin-top: 11px;
 }
 
 @media (max-width: 1500px) {

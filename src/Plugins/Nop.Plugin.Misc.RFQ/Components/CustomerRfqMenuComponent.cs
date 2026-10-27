@@ -54,7 +54,7 @@ public class CustomerRfqMenuComponent : NopViewComponent
         if (!_rfqSettings.Enabled)
             return Content(string.Empty);
 
-        return View("~/Plugins/Misc.RFQ/Views/Components/CustomerRfqMenu.cshtml", model);
+        return await ViewAsync("~/Plugins/Misc.RFQ/Views/Components/CustomerRfqMenu.cshtml", model);
     }
 
     #endregion

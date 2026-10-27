@@ -22,6 +22,6 @@ public partial class BlogMonthsViewComponent : NopViewComponent
             return Content("");
 
         var model = await _blogModelFactory.PrepareBlogPostYearModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

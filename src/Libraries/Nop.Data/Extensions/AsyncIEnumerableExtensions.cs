@@ -21,7 +21,8 @@ public static class AsyncIEnumerableExtensions
     public static IAsyncEnumerable<TResult> SelectAwait<TSource, TResult>(this IEnumerable<TSource> source,
         Func<TSource, ValueTask<TResult>> predicate)
     {
-        return source.ToAsyncEnumerable().SelectAwait(predicate);
+        return source.ToAsyncEnumerable()
+            .Select((TSource x, CancellationToken _) => predicate(x));
     }
 
     /// <summary>
@@ -40,7 +41,9 @@ public static class AsyncIEnumerableExtensions
     public static Task<TSource> FirstOrDefaultAwaitAsync<TSource>(this IEnumerable<TSource> source,
         Func<TSource, ValueTask<bool>> predicate)
     {
-        return source.ToAsyncEnumerable().FirstOrDefaultAwaitAsync(predicate).AsTask();
+        return source.ToAsyncEnumerable()
+            .FirstOrDefaultAsync((x, _) => predicate(x))
+            .AsTask();
     }
 
     /// <summary>
@@ -57,7 +60,9 @@ public static class AsyncIEnumerableExtensions
     public static Task<bool> AllAwaitAsync<TSource>(this IEnumerable<TSource> source,
         Func<TSource, ValueTask<bool>> predicate)
     {
-        return source.ToAsyncEnumerable().AllAwaitAsync(predicate).AsTask();
+        return source.ToAsyncEnumerable()
+            .AllAsync((x, _) => predicate(x))
+            .AsTask();
     }
 
     /// <summary>
@@ -76,13 +81,8 @@ public static class AsyncIEnumerableExtensions
     public static IAsyncEnumerable<TResult> SelectManyAwait<TSource, TResult>(this IEnumerable<TSource> source,
         Func<TSource, Task<IList<TResult>>> predicate)
     {
-        async ValueTask<IAsyncEnumerable<TResult>> getAsyncEnumerable(TSource items)
-        {
-            var rez = await predicate(items);
-            return rez.ToAsyncEnumerable();
-        }
-
-        return source.ToAsyncEnumerable().SelectManyAwait(getAsyncEnumerable);
+        return source.ToAsyncEnumerable()
+            .SelectMany<TSource, TResult>(async (x, _) =>  await predicate(x));
     }
 
     /// <summary>
@@ -101,13 +101,8 @@ public static class AsyncIEnumerableExtensions
     public static IAsyncEnumerable<TResult> SelectManyAwait<TSource, TResult>(this IEnumerable<TSource> source,
         Func<TSource, Task<IEnumerable<TResult>>> predicate)
     {
-        async ValueTask<IAsyncEnumerable<TResult>> getAsyncEnumerable(TSource items)
-        {
-            var rez = await predicate(items);
-            return rez.ToAsyncEnumerable();
-        }
-
-        return source.ToAsyncEnumerable().SelectManyAwait(getAsyncEnumerable);
+        return source.ToAsyncEnumerable()
+            .SelectMany(async (x, _) => await predicate(x));
     }
 
     /// <summary>
@@ -124,7 +119,7 @@ public static class AsyncIEnumerableExtensions
     public static IAsyncEnumerable<TSource> WhereAwait<TSource>(this IEnumerable<TSource> source,
         Func<TSource, ValueTask<bool>> predicate)
     {
-        return source.ToAsyncEnumerable().WhereAwait(predicate);
+        return source.ToAsyncEnumerable().Where((x, _) => predicate(x));
     }
 
     /// <summary>
@@ -141,28 +136,9 @@ public static class AsyncIEnumerableExtensions
     public static Task<bool> AnyAwaitAsync<TSource>(this IEnumerable<TSource> source,
         Func<TSource, ValueTask<bool>> predicate)
     {
-        return source.ToAsyncEnumerable().AnyAwaitAsync(predicate).AsTask();
-    }
-
-    /// <summary>
-    /// Returns the only element of an async-enumerable sequence that satisfies the condition
-    /// in the asynchronous predicate, or a default value if no such element exists,
-    /// and reports an exception if there is more than one element in the async-enumerable
-    /// sequence that matches the predicate
-    /// </summary>
-    /// <typeparam name="TSource">The type of elements in the source sequence</typeparam>
-    /// <param name="source">Source async-enumerable sequence</param>
-    /// <param name="predicate">An asynchronous predicate that will be applied to each element of the source sequence</param>
-    /// <returns>
-    /// Task containing the only element in the async-enumerable sequence that satisfies
-    /// the condition in the asynchronous predicate, or a default value if no such element
-    /// exists
-    /// </returns>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public static Task<TSource> SingleOrDefaultAwaitAsync<TSource>(this IEnumerable<TSource> source,
-        Func<TSource, ValueTask<bool>> predicate)
-    {
-        return source.ToAsyncEnumerable().SingleOrDefaultAwaitAsync(predicate).AsTask();
+        return source.ToAsyncEnumerable()
+            .AnyAsync((x, _) => predicate(x))
+            .AsTask();
     }
 
     /// <summary>
@@ -195,30 +171,9 @@ public static class AsyncIEnumerableExtensions
     public static IOrderedAsyncEnumerable<TSource> OrderByDescendingAwait<TSource, TKey>(
         this IEnumerable<TSource> source, Func<TSource, ValueTask<TKey>> keySelector)
     {
-        return source.ToAsyncEnumerable().OrderByDescendingAwait(keySelector);
+        return source.ToAsyncEnumerable().OrderByDescending((x, _) => keySelector(x));
     }
-
-    /// <summary>
-    /// Groups the elements of an async-enumerable sequence and selects the resulting
-    /// elements by using a specified function
-    /// </summary>
-    /// <typeparam name="TSource">The type of the elements in the source sequence</typeparam>
-    /// <typeparam name="TKey">The type of the grouping key computed for each element in the source sequence</typeparam>
-    /// <typeparam name="TElement">The type of the elements within the groups computed for each element in the source sequence</typeparam>
-    /// <param name="source">An async-enumerable sequence whose elements to group</param>
-    /// <param name="keySelector">An asynchronous function to extract the key for each element</param>
-    /// <param name="elementSelector">An asynchronous function to map each source element to an element in an async-enumerable group</param>
-    /// <returns>
-    /// A sequence of async-enumerable groups, each of which corresponds to a unique
-    /// key value, containing all elements that share that same key value
-    /// </returns>
-    public static IAsyncEnumerable<IAsyncGrouping<TKey, TElement>> GroupByAwait<TSource, TKey, TElement>(
-        this IEnumerable<TSource> source, Func<TSource, ValueTask<TKey>> keySelector,
-        Func<TSource, ValueTask<TElement>> elementSelector)
-    {
-        return source.ToAsyncEnumerable().GroupByAwait(keySelector, elementSelector);
-    }
-
+    
     /// <summary>
     /// Applies an accumulator function over an async-enumerable sequence, returning
     /// the result of the aggregation as a single element in the result sequence. The
@@ -230,11 +185,10 @@ public static class AsyncIEnumerableExtensions
     /// <param name="seed">The initial accumulator value</param>
     /// <param name="accumulator">An asynchronous accumulator function to be invoked and awaited on each element</param>
     /// <returns>A Task containing the final accumulator value</returns>
-    public static ValueTask<TAccumulate> AggregateAwaitAsync<TSource, TAccumulate>(
-        this IEnumerable<TSource> source, TAccumulate seed,
-        Func<TAccumulate, TSource, ValueTask<TAccumulate>> accumulator)
+    public static ValueTask<TAccumulate> AggregateAwaitAsync<TSource, TAccumulate>(this IEnumerable<TSource> source,
+        TAccumulate seed, Func<TAccumulate, TSource, ValueTask<TAccumulate>> accumulator)
     {
-        return source.ToAsyncEnumerable().AggregateAwaitAsync(seed, accumulator);
+        return source.ToAsyncEnumerable().AggregateAsync(seed, (a, s, _) => accumulator(a, s));
     }
 
     /// <summary>
@@ -255,7 +209,9 @@ public static class AsyncIEnumerableExtensions
         this IEnumerable<TSource> source, Func<TSource, ValueTask<TKey>> keySelector,
         Func<TSource, ValueTask<TElement>> elementSelector) where TKey : notnull
     {
-        return source.ToAsyncEnumerable().ToDictionaryAwaitAsync(keySelector, elementSelector);
+        return source.ToAsyncEnumerable().ToDictionaryAsync(
+            (x, _) => keySelector(x),
+            (x, _) => elementSelector(x));
     }
 
     /// <summary>
@@ -270,23 +226,8 @@ public static class AsyncIEnumerableExtensions
     /// A sequence of async-enumerable groups, each of which corresponds to a unique
     /// key value, containing all elements that share that same key value
     /// </returns>
-    public static IAsyncEnumerable<IAsyncGrouping<TKey, TSource>> GroupByAwait<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, ValueTask<TKey>> keySelector)
+    public static IAsyncEnumerable<IGrouping<TKey, TSource>> GroupByAwait<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, ValueTask<TKey>> keySelector)
     {
-        return source.ToAsyncEnumerable().GroupByAwait(keySelector);
-    }
-
-    /// <summary>
-    /// Computes the sum of a sequence of System.Decimal values that are obtained by
-    /// invoking a transform function on each element of the source sequence and awaiting
-    /// the result
-    /// </summary>
-    /// <typeparam name="TSource">The type of elements in the source sequence</typeparam>
-    /// <param name="source">A sequence of values that are used to calculate a sum</param>
-    /// <param name="selector">An asynchronous transform function to apply to each element</param>
-    /// <returns>A Task containing the sum of the values in the source sequence</returns>
-    public static ValueTask<decimal> SumAwaitAsync<TSource>(this IEnumerable<TSource> source,
-        Func<TSource, ValueTask<decimal>> selector)
-    {
-        return source.ToAsyncEnumerable().SumAwaitAsync(selector);
+        return source.ToAsyncEnumerable().GroupBy((x, _) => keySelector(x));
     }
 }

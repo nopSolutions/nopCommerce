@@ -5,6 +5,7 @@ using Nop.Plugin.Misc.Omnisend.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
+using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -61,15 +62,15 @@ public class OmnisendAdminController : BasePluginController
         model.Batches = batches;
 
         model.BlockSyncContacts = model.Batches.Any(p => needBlock(p, OmnisendDefaults.ContactsEndpoint));
-        model.BlockSyncOrders = model.Batches.Any(p => needBlock(p, OmnisendDefaults.OrdersEndpoint));
         model.BlockSyncProducts = model.Batches.Any(p => needBlock(p, OmnisendDefaults.ProductsEndpoint)) ||
-            batches.Any(p => needBlock(p, OmnisendDefaults.CategoriesEndpoint));
+            batches.Any(p => needBlock(p, OmnisendDefaults.CategoriesBatchEndpoint));
     }
 
     #endregion
 
     #region Methods
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> Configure()
     {
         var model = new ConfigurationModel
@@ -85,6 +86,7 @@ public class OmnisendAdminController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
         if (!ModelState.IsValid)
@@ -119,6 +121,7 @@ public class OmnisendAdminController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("sync-contacts")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SyncContacts()
     {
         if (!ModelState.IsValid || string.IsNullOrEmpty(_omnisendSettings.BrandId))
@@ -131,6 +134,7 @@ public class OmnisendAdminController : BasePluginController
 
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("sync-products")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SyncProducts()
     {
         if (!ModelState.IsValid || string.IsNullOrEmpty(_omnisendSettings.BrandId))
@@ -138,19 +142,6 @@ public class OmnisendAdminController : BasePluginController
 
         await _omnisendService.SyncCategoriesAsync();
         await _omnisendService.SyncProductsAsync();
-
-        return await Configure();
-    }
-
-    [HttpPost, ActionName("Configure")]
-    [FormValueRequired("sync-orders")]
-    public async Task<IActionResult> SyncOrders()
-    {
-        if (!ModelState.IsValid || string.IsNullOrEmpty(_omnisendSettings.BrandId))
-            return await Configure();
-
-        await _omnisendService.SyncOrdersAsync();
-        await _omnisendService.SyncCartsAsync();
 
         return await Configure();
     }

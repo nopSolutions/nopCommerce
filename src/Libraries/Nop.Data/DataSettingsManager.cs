@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Configuration;
@@ -146,30 +146,6 @@ public partial class DataSettingsManager
         _databaseIsInstalled ??= !string.IsNullOrEmpty(LoadSettings()?.ConnectionString);
 
         return _databaseIsInstalled.Value;
-    }
-
-    /// <summary>
-    /// Gets the command execution timeout.
-    /// </summary>
-    /// <value>
-    /// Number of seconds. Negative timeout value means that a default timeout will be used. 0 timeout value corresponds to infinite timeout.
-    /// </value>
-    public static int GetSqlCommandTimeout()
-    {
-        return LoadSettings()?.SQLCommandTimeout ?? -1;
-    }
-
-    /// <summary>
-    /// Gets a value that indicates whether to add NoLock hint to SELECT statements (applies only to SQL Server, otherwise returns false)
-    /// </summary>
-    public static bool UseNoLock()
-    {
-        var settings = LoadSettings();
-
-        if (settings is null)
-            return false;
-
-        return settings.DataProvider == DataProviderType.SqlServer && settings.WithNoLock;
     }
 
     #endregion

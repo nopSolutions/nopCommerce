@@ -1,8 +1,6 @@
 ﻿using FluentMigrator;
-using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo470;
@@ -16,14 +14,9 @@ public class LocalizationMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        //do not use DI, because it produces exception on the installation process
-        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-
-        var (languageId, languages) = this.GetLanguageData();
-
         #region Delete locales
 
-        localizationService.DeleteLocaleResources(new List<string>
+        this.DeleteLocaleResources(new List<string>
         {
             //#4834
             "Admin.System.Warnings.PluginNotLoaded",
@@ -75,7 +68,7 @@ public class LocalizationMigration : MigrationBase
 
         #region Add or update locales
 
-        localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
             //#4834
             ["Admin.System.Warnings.PluginMainAssemblyNotFound"] = "{0}: The main assembly isn't found. Hence this plugin can't be loaded.",
@@ -271,7 +264,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Plugins.SearchProvider.BackToList"] = "back to plugin list",
             ["Admin.Configuration.Plugins.SearchProvider.Configure"] = "Configure",
 
-        }, languageId);
+        });
 
         #endregion
     }

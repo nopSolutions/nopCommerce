@@ -21,6 +21,11 @@ public static partial class NopMediaDefaults
     public static string DefaultImagesPath => "images";
 
     /// <summary>
+    /// Gets the directory name with the 3D object files
+    /// </summary>
+    public static string Default3dObjectsDirectoryName => $"3d";
+
+    /// <summary>
     /// Gets a default avatar file name
     /// </summary>
     public static string DefaultAvatarFileName => "default-avatar.jpg";
@@ -29,4 +34,9 @@ public static partial class NopMediaDefaults
     /// Gets a default image file name
     /// </summary>
     public static string DefaultImageFileName => "default-image.png";
+
+    /// <summary>
+    /// Gets the default 3D preview file name
+    /// </summary>
+    public static string Default3dPreviewFileName => "default-3d-preview-image.png";
 }

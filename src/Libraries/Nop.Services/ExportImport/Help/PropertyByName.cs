@@ -11,7 +11,13 @@ namespace Nop.Services.ExportImport.Help;
 /// <typeparam name="T">Object type</typeparam>
 public partial class PropertyByName<T>
 {
+    #region Fields
+
     protected object _propertyValue;
+
+    #endregion
+
+    #region Ctor
 
     /// <summary>
     /// Ctor
@@ -44,6 +50,85 @@ public partial class PropertyByName<T>
         PropertyOrderPosition = 1;
         Ignore = ignore;
     }
+
+    #endregion
+
+    #region Utilities
+
+    /// <summary>
+    /// Converts the property value to decimal
+    /// </summary>
+    /// <param name="value">The converted value, or the default one when the value cannot be converted</param>
+    /// <returns>Whether the property value could be converted</returns>
+    protected virtual bool TryGetDecimalValue(out decimal value)
+    {
+        value = decimal.Zero;
+
+        //a numeric spreadsheet cell must be converted from its underlying number: ToString() formats it
+        //with the current culture ("43,5" under de-DE), and the invariant parse below would then read the
+        //decimal separator as a group separator and silently turn 43.5 into 435
+        if (PropertyValue is XLCellValue { IsNumber: true } cellValue)
+        {
+            //formatted round-trip rather than a cast, so that a number outside the decimal range reports
+            //failure instead of throwing OverflowException and aborting the whole import
+            return decimal.TryParse(cellValue.GetNumber().ToString("R", CultureInfo.InvariantCulture),
+                NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+        }
+
+        return PropertyValue != null && decimal.TryParse(PropertyValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out value);
+    }
+
+    /// <summary>
+    /// Get item identifier
+    /// </summary>
+    /// <param name="name">Name</param>
+    /// <returns>Identifier</returns>
+    protected virtual int GetItemId(object name)
+    {
+        if (string.IsNullOrEmpty(name?.ToString()))
+            return 0;
+
+        if (!int.TryParse(name.ToString(), out var id))
+            id = 0;
+
+        return Convert.ToInt32(DropDownElements.FirstOrDefault(ev => ev.Text.Trim() == name.ToString()!.Trim())?.Value ?? id.ToString());
+    }
+
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// To string
+    /// </summary>
+    /// <returns>String</returns>
+    public override string ToString()
+    {
+        return PropertyName;
+    }
+
+    /// <summary>
+    /// Get DropDown elements
+    /// </summary>
+    /// <returns>Result</returns>
+    public virtual string[] GetDropDownElements()
+    {
+        return IsDropDownCell ? DropDownElements.Select(ev => ev.Text).ToArray() : Array.Empty<string>();
+    }
+
+    /// <summary>
+    /// Get item text
+    /// </summary>
+    /// <param name="id">Identifier</param>
+    /// <returns>Text</returns>
+    public virtual string GetItemText(object id)
+    {
+        return DropDownElements.FirstOrDefault(ev => ev.Value == id.ToString())?.Text ?? string.Empty;
+    }
+
+    #endregion
+
+    #region Properties
 
     /// <summary>
     /// Property order position
@@ -78,13 +163,14 @@ public partial class PropertyByName<T>
         get
         {
             if (PropertyValue == null || !int.TryParse(PropertyValue.ToString(), out var rez))
-                return default;
+                return 0;
+
             return rez;
         }
     }
 
     /// <summary>
-    /// Converted property value to Int32
+    /// Converted property value to nullable Int32
     /// </summary>
     public int? IntValueNullable
     {
@@ -105,7 +191,8 @@ public partial class PropertyByName<T>
         get
         {
             if (PropertyValue == null || !bool.TryParse(PropertyValue.ToString(), out var rez))
-                return default;
+                return false;
+
             return rez;
         }
     }
@@ -130,7 +217,7 @@ public partial class PropertyByName<T>
     }
 
     /// <summary>
-    /// Converted property value to decimal?
+    /// Converted property value to nullable decimal
     /// </summary>
     public decimal? DecimalValueNullable
     {
@@ -151,13 +238,14 @@ public partial class PropertyByName<T>
         get
         {
             if (PropertyValue == null || !double.TryParse(PropertyValue.ToString(), out var rez))
-                return default;
+                return 0;
+
             return rez;
         }
     }
 
     /// <summary>
-    /// Converted property value to DateTime?
+    /// Converted property value to nullable DateTime
     /// </summary>
     public DateTime? DateTimeNullable => string.IsNullOrWhiteSpace(StringValue) ? null : PropertyValue as DateTime?;
 
@@ -169,18 +257,10 @@ public partial class PropertyByName<T>
         get
         {
             if (PropertyValue == null || !Guid.TryParse(PropertyValue.ToString(), out var rez))
-                return default;
+                return Guid.Empty;
+
             return rez;
         }
-    }
-
-    /// <summary>
-    /// To string
-    /// </summary>
-    /// <returns>String</returns>
-    public override string ToString()
-    {
-        return PropertyName;
     }
 
     /// <summary>
@@ -192,41 +272,6 @@ public partial class PropertyByName<T>
     /// Is drop down cell
     /// </summary>
     public bool IsDropDownCell => DropDownElements != null;
-
-    /// <summary>
-    /// Get DropDown elements
-    /// </summary>
-    /// <returns>Result</returns>
-    public string[] GetDropDownElements()
-    {
-        return IsDropDownCell ? DropDownElements.Select(ev => ev.Text).ToArray() : Array.Empty<string>();
-    }
-
-    /// <summary>
-    /// Get item text
-    /// </summary>
-    /// <param name="id">Identifier</param>
-    /// <returns>Text</returns>
-    public string GetItemText(object id)
-    {
-        return DropDownElements.FirstOrDefault(ev => ev.Value == id.ToString())?.Text ?? string.Empty;
-    }
-
-    /// <summary>
-    /// Get item identifier
-    /// </summary>
-    /// <param name="name">Name</param>
-    /// <returns>Identifier</returns>
-    public int GetItemId(object name)
-    {
-        if (string.IsNullOrEmpty(name?.ToString()))
-            return 0;
-
-        if (!int.TryParse(name.ToString(), out var id))
-            id = 0;
-
-        return Convert.ToInt32(DropDownElements.FirstOrDefault(ev => ev.Text.Trim() == name.ToString().Trim())?.Value ?? id.ToString());
-    }
 
     /// <summary>
     /// Elements for a drop-down cell
@@ -243,26 +288,5 @@ public partial class PropertyByName<T>
     /// </summary>
     public bool IsCaption => PropertyName == StringValue || PropertyName == _propertyValue.ToString();
 
-    /// <summary>
-    /// Converts the property value to decimal
-    /// </summary>
-    /// <param name="value">The converted value, or the default one when the value cannot be converted</param>
-    /// <returns>Whether the property value could be converted</returns>
-    protected virtual bool TryGetDecimalValue(out decimal value)
-    {
-        value = decimal.Zero;
-
-        //a numeric spreadsheet cell must be converted from its underlying number: ToString() formats it
-        //with the current culture ("43,5" under de-DE), and the invariant parse below would then read the
-        //decimal separator as a group separator and silently turn 43.5 into 435
-        if (PropertyValue is XLCellValue { IsNumber: true } cellValue)
-        {
-            //formatted round-trip rather than a cast, so that a number outside the decimal range reports
-            //failure instead of throwing OverflowException and aborting the whole import
-            return decimal.TryParse(cellValue.GetNumber().ToString("R", CultureInfo.InvariantCulture),
-                NumberStyles.Float, CultureInfo.InvariantCulture, out value);
-        }
-
-        return PropertyValue != null && decimal.TryParse(PropertyValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out value);
-    }
+    #endregion
 }

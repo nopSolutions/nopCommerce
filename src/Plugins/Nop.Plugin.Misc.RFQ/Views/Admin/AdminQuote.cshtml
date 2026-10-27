@@ -45,6 +45,13 @@
                     @T("Plugins.Misc.RFQ.SendQuote")
                 </button>
             }
+            @if (Model.Items.Any())
+            {
+                <a asp-action="PdfDocument" asp-controller="RfqAdmin" asp-route-quoteId="@Model.Id" class="btn btn-info">
+                    <i class="far fa-file-pdf"></i>
+                    @T("Plugins.Misc.RFQ.CreatePdf")
+                </a>
+            }
             @if (Model.DisplayDeleteQuoteButton)
             {
                 <button type="submit"
@@ -76,7 +83,7 @@
                         <div class="card-body">
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <nop-label asp-for="CustomerEmail"/>
+                                    <nop-label asp-for="CustomerEmail" />
                                 </div>
                                 <div class="col-md-9">
                                     <div class="form-text-row">
@@ -86,7 +93,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <nop-label asp-for="CreatedOn"/>
+                                    <nop-label asp-for="CreatedOn" />
                                 </div>
                                 <div class="col-md-9">
                                     <div class="form-text-row">@Model.CreatedOn</div>
@@ -96,12 +103,12 @@
                             {
                                 <div class="form-group row">
                                     <div class="col-md-3">
-                                        <nop-label asp-for="ExpirationDateUtc"/>
+                                        <nop-label asp-for="ExpirationDateUtc" />
                                     </div>
                                     @if (Model.Editable)
                                     {
                                         <div class="col-md-9">
-                                            <nop-editor asp-for="ExpirationDateUtc"/>
+                                            <nop-editor asp-for="ExpirationDateUtc" />
                                         </div>
                                     }
                                     else
@@ -114,7 +121,7 @@
                             }
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <nop-label asp-for="Status"/>
+                                    <nop-label asp-for="Status" />
                                 </div>
                                 <div class="col-md-9">
                                     <div class="form-text-row">@Model.Status</div>
@@ -124,7 +131,7 @@
                             {
                                 <div class="form-group row">
                                     <div class="col-md-3">
-                                        <nop-label asp-for="RequestQuoteId"/>
+                                        <nop-label asp-for="RequestQuoteId" />
                                     </div>
                                     <div class="col-md-9">
                                         <div class="form-text-row"><a href="~/Admin/RfqAdmin/AdminRequest/@Model.RequestQuoteId.Value">#@Model.RequestQuoteId.Value</a></div>

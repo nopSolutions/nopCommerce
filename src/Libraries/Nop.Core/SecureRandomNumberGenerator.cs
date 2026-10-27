@@ -76,10 +76,8 @@ public partial class SecureRandomNumberGenerator : RandomNumberGenerator
         if (_disposed)
             return;
 
-        if (disposing)
-        {
+        if (disposing) 
             _rng?.Dispose();
-        }
 
         _disposed = true;
     }

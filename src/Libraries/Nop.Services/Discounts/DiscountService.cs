@@ -135,22 +135,6 @@ public partial class DiscountService : IDiscountService
 
         return result;
     }
-    
-    /// <summary>
-    /// Get discount validation result
-    /// </summary>
-    /// <param name="requirements">Collection of discount requirement to validate rules</param>
-    /// <param name="groupInteractionType">Interaction type within the group of requirements</param>
-    /// <param name="customer">Customer</param>
-    /// <param name="errors">Errors</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains true if result is valid; otherwise false
-    /// </returns>
-    protected virtual async Task<bool> GetValidationResultAsync(IList<DiscountRequirement> requirements, RequirementGroupInteractionType groupInteractionType, Customer customer, List<string> errors)
-    {
-        return await GetValidationResultAsync(requirements, requirements, groupInteractionType, customer, errors);
-    }
 
     #endregion
 
@@ -233,16 +217,23 @@ public partial class DiscountService : IDiscountService
 
         //filter by dates
         if (!showHidden)
+        {
             discounts = discounts.Where(discount =>
                 (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= DateTime.UtcNow) &&
                 (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= DateTime.UtcNow));
+        }
 
         if (startDateUtc.HasValue)
+        {
             discounts = discounts.Where(discount =>
                 !discount.StartDateUtc.HasValue || discount.StartDateUtc >= startDateUtc.Value);
+        }
+
         if (endDateUtc.HasValue)
+        {
             discounts = discounts.Where(discount =>
                 !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
+        }
 
         if (vendorId > 0)
             discounts = discounts.Where(discount => discount.VendorId == vendorId);
@@ -456,8 +447,10 @@ public partial class DiscountService : IDiscountService
         ArgumentNullException.ThrowIfNull(discountRequirement);
 
         if (recursive && await GetDiscountRequirementsByParentAsync(discountRequirement) is IList<DiscountRequirement> children && children.Any())
+        {
             foreach (var child in children)
                 await DeleteDiscountRequirementAsync(child, true);
+        }
 
         await _discountRequirementRepository.DeleteAsync(discountRequirement);
     }
@@ -664,10 +657,12 @@ public partial class DiscountService : IDiscountService
 
             //filter by customer
             if (customerId.HasValue && customerId.Value > 0)
+            {
                 query = from duh in query
                     join order in _orderRepository.Table on duh.OrderId equals order.Id
                     where order.CustomerId == customerId
                     select duh;
+            }
 
             //filter by order
             if (orderId.HasValue && orderId.Value > 0)

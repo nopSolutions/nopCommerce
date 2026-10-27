@@ -242,7 +242,6 @@
                                       new ColumnProperty(nameof(ProductModel.PictureThumbnailUrl))
                                       {
                                           Title = T("Admin.Catalog.Products.Fields.PictureThumbnailUrl").Text,
-                                          Width = "100",
                                           Render = new RenderPicture(width: 100)
                                       },
                                       new ColumnProperty(nameof(ProductModel.Name))
@@ -251,8 +250,7 @@
                                       },
                                       new ColumnProperty(nameof(ProductModel.Sku))
                                       {
-                                          Title = T("Admin.Catalog.Products.Fields.Sku").Text,
-                                          Width = "100"
+                                          Title = T("Admin.Catalog.Products.Fields.Sku").Text
                                       },
                                       new ColumnProperty(nameof(ProductModel.FormattedPrice))
                                       {
@@ -265,14 +263,14 @@
                                       new ColumnProperty(nameof(ProductModel.Published))
                                       {
                                           Title = T("Admin.Catalog.Products.Fields.Published").Text,
-                                          Width = "80",
+                                          Width = "100",
                                           ClassName = NopColumnClassDefaults.CenterAll,
                                           Render = new RenderBoolean()
                                       },
                                       new ColumnProperty(nameof(ProductModel.Id))
                                       {
                                           Title = T("Admin.Common.Edit").Text,
-                                          Width = "80",
+                                          Width = "100",
                                           ClassName =  NopColumnClassDefaults.Button,
                                           Render = new RenderButtonEdit(new DataUrl("~/Admin/Product/Edit"))
                                       }

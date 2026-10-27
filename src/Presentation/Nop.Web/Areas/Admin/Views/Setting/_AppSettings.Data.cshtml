@@ -40,4 +40,22 @@
             </div>
         </div>
     }
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="DataConfigModel.BulkCopyWithCheckConstraints" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DataConfigModel.BulkCopyWithCheckConstraints" />
+            <span asp-validation-for="DataConfigModel.BulkCopyWithCheckConstraints"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="DataConfigModel.CloseDataContextAfterUse" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DataConfigModel.CloseDataContextAfterUse" />
+            <span asp-validation-for="DataConfigModel.CloseDataContextAfterUse"></span>
+        </div>
+    </div>
 </div>

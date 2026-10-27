@@ -301,6 +301,16 @@ public partial interface IProductAttributeService
     Task<ProductAttributeCombination> GetProductAttributeCombinationBySkuAsync(string sku);
 
     /// <summary>
+    /// Gets product attribute combinations by SKU array
+    /// </summary>
+    /// <param name="skuArray">SKU array</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the product attribute combinations
+    /// </returns>
+    Task<IList<ProductAttributeCombination>> GetProductAttributeCombinationsBySkuAsync(string[] skuArray);
+
+    /// <summary>
     /// Inserts a product attribute combination
     /// </summary>
     /// <param name="combination">Product attribute combination</param>

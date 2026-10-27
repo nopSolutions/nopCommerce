@@ -69,7 +69,7 @@ public partial class RedisConnectionWrapper : IRedisConnectionWrapper
         if (_options.ConnectionMultiplexerFactory is null)
             connection = _options.ConfigurationOptions is not null ? ConnectionMultiplexer.Connect(_options.ConfigurationOptions) : ConnectionMultiplexer.Connect(_options.Configuration);
         else
-            connection = _options.ConnectionMultiplexerFactory().GetAwaiter().GetResult();
+            connection = _options.ConnectionMultiplexerFactory().Result;
 
         if (_options.ProfilingSession != null)
             connection.RegisterProfiler(_options.ProfilingSession);
@@ -203,10 +203,8 @@ public partial class RedisConnectionWrapper : IRedisConnectionWrapper
         await Task.WhenAll(endPoints.Select(async endPoint =>
         {
             var server = await GetServerAsync(endPoint);
-            if (!server.IsReplica)
-            {
+            if (!server.IsReplica) 
                 await server.FlushDatabaseAsync();
-            }
         }));
     }
 

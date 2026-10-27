@@ -47,13 +47,12 @@
                                 },
                                 new ColumnProperty(nameof(EmailAccountModel.DisplayName))
                                 {
-                                    Title = T("Admin.Configuration.EmailAccounts.Fields.DisplayName").Text,
-                                    Width = "200"
+                                    Title = T("Admin.Configuration.EmailAccounts.Fields.DisplayName").Text
                                 },
                                 new ColumnProperty(nameof(EmailAccountModel.IsDefaultEmailAccount))
                                 {
                                     Title = T("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount").Text,
-                                    Width = "200",
+                                    Width = "100",
                                     ClassName =  NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean()
                                 },

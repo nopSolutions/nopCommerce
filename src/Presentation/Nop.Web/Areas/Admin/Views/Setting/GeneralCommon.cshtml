@@ -12,6 +12,9 @@
     var customer = await workContext.GetCurrentCustomerAsync();
     var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName) && !await Html.IsTourActiveAsync();
 
+    const string hideContactFormBlockAttributeName = "GeneralCommonSettingsPage.HideContactFormBlock";
+    var hideContactFormBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideContactFormBlockAttributeName);
+
     const string hideFaviconBlockAttributeName = "GeneralCommonSettingsPage.HideFaviconBlock";
     var hideFaviconBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideFaviconBlockAttributeName);
 
@@ -77,6 +80,7 @@
                     <nop-card asp-name="generalcommon-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.Common", Model)</nop-card>
                     <nop-card asp-name="generalcommon-socialmedia" asp-icon="fas fa-share-from-square" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia")" asp-hide-block-attribute-name="@hideSocialMediaBlockAttributeName" asp-hide="@hideSocialMediaBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.SocialMedia", Model)</nop-card>
                     <nop-card asp-name="generalcommon-favicon" asp-icon="far fa-images" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FaviconAndAppIcons")" asp-hide-block-attribute-name="@hideFaviconBlockAttributeName" asp-hide="@hideFaviconBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.Favicon", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-contactform" asp-icon="fas fa-envelope" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.ContactForm")" asp-hide-block-attribute-name="@hideContactFormBlockAttributeName" asp-hide="@hideContactFormBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.ContactForm", Model)</nop-card>
                     <nop-card asp-name="generalcommon-sitemap" asp-icon="fas fa-sitemap" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Sitemap")" asp-hide-block-attribute-name="@hideSitemapBlockAttributeName" asp-hide="@hideSitemapBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Sitemap", Model)</nop-card>
                     <nop-card asp-name="generalcommon-seo" asp-icon="fas fa-magnifying-glass-plus" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SEO")" asp-hide-block-attribute-name="@hideSEOBlockAttributeName" asp-hide="@hideSEOBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Seo", Model)</nop-card>
                     <nop-card asp-name="generalcommon-minification" asp-icon="fas fa-minimize" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Minification")" asp-hide-block-attribute-name="@hideMinificationBlockAttributeName" asp-hide="@hideMinificationBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Minification", Model)</nop-card>

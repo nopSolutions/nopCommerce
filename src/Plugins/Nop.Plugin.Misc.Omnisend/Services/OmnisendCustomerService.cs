@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Plugin.Misc.Omnisend.DTO;
 using Nop.Plugin.Misc.Omnisend.DTO.Events;
 using Nop.Services.Common;
+using Nop.Services.Helpers;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Misc.Omnisend.Services;
@@ -136,41 +136,10 @@ public class OmnisendCustomerService
             OmnisendDefaults.StoredCustomerShoppingCartIdAttribute);
 
         if (string.IsNullOrEmpty(cartId))
+        {
             await _genericAttributeService.SaveAttributeAsync(customer,
                 OmnisendDefaults.StoredCustomerShoppingCartIdAttribute, await GetCartIdAsync(customer));
-    }
-
-    /// <summary>
-    /// Delete the current shopping cart identifier for customer
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    public async Task DeleteCurrentCustomerShoppingCartIdAsync(Customer customer)
-    {
-        await _genericAttributeService.SaveAttributeAsync<string>(customer,
-            OmnisendDefaults.CurrentCustomerShoppingCartIdAttribute, null);
-    }
-
-    /// <summary>
-    /// Specifies whether to send the delete shopping cart event
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the True if we need to sand delete events</returns>
-    public async Task<bool> IsNeedToSendDeleteShoppingCartEventAsync(Customer customer)
-    {
-        return string.IsNullOrEmpty(await _genericAttributeService.GetAttributeAsync<string>(customer,
-            OmnisendDefaults.StoredCustomerShoppingCartIdAttribute));
-    }
-
-    /// <summary>
-    /// Delete the stored shopping cart identifier for customer
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    public async Task DeleteStoredCustomerShoppingCartIdAsync(Customer customer)
-    {
-        await _genericAttributeService.SaveAttributeAsync<string>(customer,
-            OmnisendDefaults.StoredCustomerShoppingCartIdAttribute, null);
+        }
     }
 
     /// <summary>

@@ -104,6 +104,7 @@ public sealed class ForceMultiFactorAuthenticationAttribute : TypeFilterAttribut
             var customer = await _workContext.GetCurrentCustomerAsync();
             var selectedProvider = await _genericAttributeService
                 .GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+            
             if (!string.IsNullOrEmpty(selectedProvider))
                 return;
 

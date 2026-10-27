@@ -29,4 +29,6 @@ public partial class ImportProductMetadata
     public List<string> AllSku { get; set; }
 
     public List<int> ProductsInFile { get; set; }
+
+    public Dictionary<string, string> RequiredProductsData { get; set; }
 }

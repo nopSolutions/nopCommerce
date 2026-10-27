@@ -18,6 +18,6 @@ public partial class FaviconViewComponent : NopViewComponent
         var model = await _commonModelFactory.PrepareFaviconAndAppIconsModelAsync();
         if (string.IsNullOrEmpty(model.HeadCode))
             return Content("");
-        return View(model);
+        return await ViewAsync(model);
     }
 }

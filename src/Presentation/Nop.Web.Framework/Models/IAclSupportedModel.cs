@@ -8,6 +8,12 @@ namespace Nop.Web.Framework.Models;
 /// </summary>
 public partial interface IAclSupportedModel
 {
+    #region Fields
+
+    protected static bool _isAdvancedSetting = true;
+
+    #endregion
+
     #region Properties
 
     /// <summary>
@@ -20,6 +26,15 @@ public partial interface IAclSupportedModel
     /// Gets or sets items for the all available customer roles
     /// </summary>
     IList<SelectListItem> AvailableCustomerRoles { get; set; }
+
+    /// <summary>
+    /// Gets or sets the value indicating whether the model is an advanced setting
+    /// </summary>
+    public bool IsAdvancedSetting
+    {
+        get => _isAdvancedSetting;
+        set => _isAdvancedSetting = value;
+    }
 
     #endregion
 }

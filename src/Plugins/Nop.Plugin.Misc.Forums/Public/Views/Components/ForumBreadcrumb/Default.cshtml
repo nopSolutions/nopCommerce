@@ -1,0 +1,44 @@
+﻿@model ForumBreadcrumbModel
+@using Nop.Core.Domain.Common
+@inject CommonSettings commonSettings
+@{
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+}
+<div class="breadcrumb forum-breadcrumb">
+    <ul>
+        <li>
+            <a href="@Url.RouteUrl(NopRouteNames.General.HOMEPAGE)" title="@T("Plugins.Misc.Forums.Breadcrumb.HomeTitle")">@T("Plugins.Misc.Forums.Home")</a>
+        </li>
+        <li>
+            <span class="delimiter">@breadcrumbDelimiter</span>
+            @Html.RouteLink(T("Plugins.Misc.Forums.Forums").Text, ForumDefaults.Routes.Public.BOARDS, null, new { title = T("Plugins.Misc.Forums.Breadcrumb.ForumHomeTitle") })
+        </li>
+        @if (Model.ForumGroupId > 0)
+        {
+            <li>
+                <span class="delimiter">@breadcrumbDelimiter</span>
+                @Html.RouteLink(Model.ForumGroupName, ForumDefaults.Routes.Public.FORUM_GROUP_SLUG,
+                new { id = Model.ForumGroupId, slug = Model.ForumGroupSeName },
+                new { title = $"{T("Plugins.Misc.Forums.Breadcrumb.ForumGroupTitle")}: {Model.ForumGroupName} " })
+            </li>        
+        }
+        @if (Model.ForumId > 0)
+        {
+            <li>
+                <span class="delimiter">@breadcrumbDelimiter</span>
+                @Html.RouteLink(Model.ForumName, ForumDefaults.Routes.Public.FORUM_SLUG,
+                new { id = Model.ForumId, slug = Model.ForumSeName },
+                new { title = $"{T("Plugins.Misc.Forums.Breadcrumb.ForumTitle")}: {Model.ForumName} " })
+            </li>
+        }
+        @if (Model.ForumTopicId > 0)
+        {
+            <li>
+                <span class="delimiter">@breadcrumbDelimiter</span>
+                @Html.RouteLink(Model.ForumTopicSubject, ForumDefaults.Routes.Public.TOPIC_SLUG,
+                new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName },
+                new { title = $"{T("Plugins.Misc.Forums.Breadcrumb.TopicTitle")}: {Model.ForumTopicSubject} " })
+            </li>
+        }
+    </ul>
+</div>

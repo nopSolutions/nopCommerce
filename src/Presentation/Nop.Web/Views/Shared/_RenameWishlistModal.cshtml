@@ -1,0 +1,29 @@
+﻿@model (int id, string name)
+
+<div id="renameWishlistModal_@Model.id" title="@T("Wishlist.RenameCustomWishlist")" style="display:none;">
+    <div class="rename-wishlist-content">
+        <input type="text" id="wishlistName_@Model.id" value="@Model.name" placeholder="@T("Wishlist.EnterWishlistName")" />
+        <button type="button" class="wishlist-rename-custom-button" onclick="renameWishlist(@Model.id)">@T("Common.OK")</button>
+    </div>
+</div>
+
+<script asp-location="Footer">
+    function showRenameWishlistModal(wishlistId) {
+        $('#renameWishlistModal_' + wishlistId).dialog();
+    }
+
+    function closeRenameWishlistModal(wishlistId) {
+        $('#renameWishlistModal_' + wishlistId).dialog('close');
+    }
+
+    function renameWishlist(wishlistId) {
+        const wishlistName = document.getElementById('wishlistName_' + wishlistId).value;
+        if (!wishlistName) {
+            alert('@T("Wishlist.NameRequired")');
+            return;
+        }
+
+        AjaxCart.renameCustomWishlist('@Url.RouteUrl(NopRouteNames.Ajax.RENAME_WISHLIST)', wishlistName, wishlistId);
+        $('#renameWishlistModal_' + wishlistId).dialog('close');
+    }
+</script>

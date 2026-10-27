@@ -16,6 +16,6 @@ public partial class CustomerNavigationViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync(int selectedTabId = 0)
     {
         var model = await _customerModelFactory.PrepareCustomerNavigationModelAsync(selectedTabId);
-        return View(model);
+        return await ViewAsync(model);
     }
 }

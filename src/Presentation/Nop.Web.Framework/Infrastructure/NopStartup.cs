@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
@@ -26,7 +25,6 @@ using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.ExportImport;
 using Nop.Services.FilterLevels;
-using Nop.Services.Forums;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Html;
@@ -34,15 +32,15 @@ using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
-using Nop.Services.Media.RoxyFileman;
+using Nop.Services.Media.ElFinder;
 using Nop.Services.Menus;
 using Nop.Services.Messages;
-using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Plugins.Marketplace;
-using Nop.Services.Polls;
+using Nop.Services.PriceLists;
+using Nop.Services.Reminders;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -193,6 +191,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IMessageTokenProvider, MessageTokenProvider>();
         services.AddScoped<ITokenizer, Tokenizer>();
         services.AddScoped<ISmtpBuilder, SmtpBuilder>();
+        services.AddScoped<ISmsService, SmsService>();
         services.AddScoped<IEmailSender, EmailSender>();
         services.AddScoped<ICheckoutAttributeFormatter, CheckoutAttributeFormatter>();
         services.AddScoped<IGiftCardService, GiftCardService>();
@@ -204,6 +203,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IRewardPointService, RewardPointService>();
         services.AddScoped<IShoppingCartService, ShoppingCartService>();
         services.AddScoped<ICustomWishlistService, CustomWishlistService>();
+        services.AddScoped<IPriceListService, PriceListService>();
         services.AddScoped<ICustomNumberFormatter, CustomNumberFormatter>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IEncryptionService, EncryptionService>();
@@ -219,12 +219,9 @@ public partial class NopStartup : INopStartup
         services.AddScoped<ITaxService, TaxService>();
         services.AddScoped<ILogger, DefaultLogger>();
         services.AddScoped<ICustomerActivityService, CustomerActivityService>();
-        services.AddScoped<IForumService, ForumService>();
         services.AddScoped<IGdprService, GdprService>();
-        services.AddScoped<IPollService, PollService>();
         services.AddScoped<IBlogService, BlogService>();
         services.AddScoped<ITopicService, TopicService>();
-        services.AddScoped<INewsService, NewsService>();
         services.AddScoped<IDateTimeHelper, DateTimeHelper>();
         services.AddScoped<INopHtmlHelper, NopHtmlHelper>();
         services.AddScoped<IScheduleTaskService, ScheduleTaskService>();
@@ -239,12 +236,13 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IReviewTypeService, ReviewTypeService>();
         services.AddSingleton<IEventPublisher, EventPublisher>();
         services.AddScoped<ISettingService, SettingService>();
-        services.AddScoped<IBBCodeHelper, BBCodeHelper>();
         services.AddScoped<IHtmlFormatter, HtmlFormatter>();
         services.AddScoped<IVideoService, VideoService>();
         services.AddScoped<INopUrlHelper, NopUrlHelper>();
         services.AddScoped<IWidgetModelFactory, WidgetModelFactory>();
         services.AddScoped<IMenuService, MenuService>();
+        services.AddScoped<ISyncCodeHelper, SyncCodeHelper>();
+        services.AddScoped<IReminderService, ReminderService>();
 
         //attribute services
         services.AddScoped(typeof(IAttributeService<,>), typeof(AttributeService<,>));
@@ -267,8 +265,8 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IShippingPluginManager, ShippingPluginManager>();
         services.AddScoped<ITaxPluginManager, TaxPluginManager>();
         services.AddScoped<ISearchPluginManager, SearchPluginManager>();
-
-        services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+        services.AddScoped<ISmsPluginManager, SmsPluginManager>();
+        services.AddScoped<IAiRecommendationPluginManager, AiRecommendationPluginManager>();
 
         //register all settings
         var typeFinder = Singleton<ITypeFinder>.Instance;
@@ -279,7 +277,7 @@ public partial class NopStartup : INopStartup
             services.AddScoped(setting, serviceProvider =>
             {
                 var storeId = DataSettingsManager.IsDatabaseInstalled()
-                    ? serviceProvider.GetRequiredService<IStoreContext>().GetCurrentStore()?.Id ?? 0
+                    ? serviceProvider.GetRequiredService<IStoreContext>().GetCurrentStoreAsync().Result?.Id ?? 0
                     : 0;
 
                 return serviceProvider.GetRequiredService<ISettingService>().LoadSettingAsync(setting, storeId).Result;
@@ -292,9 +290,8 @@ public partial class NopStartup : INopStartup
         //picture service
         services.AddScoped<IPictureService, PictureService>();
 
-        //roxy file manager
-        services.AddScoped<IRoxyFilemanService, RoxyFilemanService>();
-        services.AddScoped<IRoxyFilemanFileProvider, RoxyFilemanFileProvider>();
+        //elFinder file manager
+        services.AddSingleton<IElFinderService, ElFinderService>();
 
         //installation service
         services.AddScoped<IInstallationService, InstallationService>();
@@ -310,12 +307,12 @@ public partial class NopStartup : INopStartup
         //event consumers
         var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
         foreach (var consumer in consumers)
-        foreach (var findInterface in consumer.FindInterfaces((type, criteria) =>
-                 {
-                     var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
-                     return isMatch;
-                 }, typeof(IConsumer<>)))
-            services.AddScoped(findInterface, consumer);
+            foreach (var findInterface in consumer.FindInterfaces((type, criteria) =>
+                     {
+                         var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
+                         return isMatch;
+                     }, typeof(IConsumer<>)))
+                services.AddScoped(findInterface, consumer);
 
         //admin menu
         services.AddScoped<IAdminMenu, AdminMenu>();

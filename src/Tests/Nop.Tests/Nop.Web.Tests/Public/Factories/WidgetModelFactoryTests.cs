@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Cms;
 using Nop.Services.Configuration;

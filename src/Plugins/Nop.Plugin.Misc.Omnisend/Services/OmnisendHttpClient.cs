@@ -93,7 +93,8 @@ public class OmnisendHttpClient
             RequestUri = requestUri
         };
 
-        request.Headers.TryAddWithoutValidation(OmnisendDefaults.ApiKeyHeader, ApiKey);
+        request.Headers.TryAddWithoutValidation(HeaderNames.Authorization, $"{OmnisendDefaults.ApiKeyHeader} {ApiKey}");
+        request.Headers.TryAddWithoutValidation(OmnisendDefaults.ApiVersionHeader, OmnisendDefaults.ApiVersion);
 
         if (httpMethod != HttpMethod.Get && !string.IsNullOrEmpty(data))
             request.Content = new StringContent(data, Encoding.UTF8, MimeTypes.ApplicationJson);
@@ -117,6 +118,7 @@ public class OmnisendHttpClient
             case HttpStatusCode.OK:
             case HttpStatusCode.Accepted:
             case HttpStatusCode.NoContent:
+            case HttpStatusCode.Created:
                 {
                     return response;
                 }

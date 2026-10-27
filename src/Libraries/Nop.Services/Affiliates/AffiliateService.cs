@@ -5,6 +5,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Seo;
 using Nop.Data;
 using Nop.Services.Common;
+using Nop.Services.Helpers;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Affiliates;
@@ -123,16 +124,20 @@ public partial class AffiliateService : IAffiliateService
                 query = query.Where(a => a.FriendlyUrlName.Contains(friendlyUrlName));
 
             if (!string.IsNullOrWhiteSpace(firstName))
+            {
                 query = from aff in query
                     join addr in _addressRepository.Table on aff.AddressId equals addr.Id
                     where addr.FirstName.Contains(firstName)
                     select aff;
+            }
 
             if (!string.IsNullOrWhiteSpace(lastName))
+            {
                 query = from aff in query
                     join addr in _addressRepository.Table on aff.AddressId equals addr.Id
                     where addr.LastName.Contains(lastName)
                     select aff;
+            }
 
             if (!showHidden)
                 query = query.Where(a => a.Active);

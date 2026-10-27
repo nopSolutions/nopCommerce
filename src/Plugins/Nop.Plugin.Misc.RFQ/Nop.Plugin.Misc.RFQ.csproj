@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
@@ -19,6 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Content\images\details.png" />
     <None Remove="Content\styles.css" />
     <None Remove="logo.png" />
     <None Remove="plugin.json" />
@@ -46,6 +47,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Content\images\details.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\styles.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

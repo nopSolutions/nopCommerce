@@ -24,14 +24,6 @@ public partial interface IStoreService
     Task<IList<Store>> GetAllStoresAsync();
 
     /// <summary>
-    /// Gets all stores
-    /// </summary>
-    /// <returns>
-    /// The stores
-    /// </returns>
-    IList<Store> GetAllStores();
-
-    /// <summary>
     /// Gets a store 
     /// </summary>
     /// <param name="storeId">Store identifier</param>
@@ -54,12 +46,6 @@ public partial interface IStoreService
     /// <param name="store">Store</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task UpdateStoreAsync(Store store);
-
-    /// <summary>
-    /// Updates the store
-    /// </summary>
-    /// <param name="store">Store</param>
-    void UpdateStore(Store store);
 
     /// <summary>
     /// Indicates whether a store contains a specified host

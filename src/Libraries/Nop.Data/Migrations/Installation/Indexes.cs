@@ -1,10 +1,8 @@
 ﻿using FluentMigrator;
-using FluentMigrator.SqlServer;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
@@ -13,6 +11,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Topics;
+using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.Installation;
@@ -222,26 +221,6 @@ public class Indexes : ForwardOnlyMigration
             .OnColumn(nameof(GenericAttribute.KeyGroup)).Ascending()
             .WithOptions().NonClustered();
 
-        Create.Index("IX_Forums_Subscription_TopicId").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumSubscription)))
-            .OnColumn(nameof(ForumSubscription.TopicId)).Ascending()
-            .WithOptions().NonClustered();
-
-        Create.Index("IX_Forums_Subscription_ForumId").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumSubscription)))
-            .OnColumn(nameof(ForumSubscription.ForumId)).Ascending()
-            .WithOptions().NonClustered();
-
-        Create.Index("IX_Forums_Group_DisplayOrder").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumGroup)))
-            .OnColumn(nameof(ForumGroup.DisplayOrder)).Ascending()
-            .WithOptions().NonClustered();
-
-        Create.Index("IX_Forums_Forum_DisplayOrder").OnTable(NameCompatibilityManager.GetTableName(typeof(Forum)))
-            .OnColumn(nameof(Forum.DisplayOrder)).Ascending()
-            .WithOptions().NonClustered();
-
-        Create.Index("IX_Forums_Topic_Subject").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
-            .OnColumn(nameof(ForumTopic.Subject)).Ascending()
-            .WithOptions().NonClustered();
-
         Create.Index("IX_Customer_Username").OnTable(nameof(Customer))
             .OnColumn(nameof(Customer.Username)).Ascending()
             .WithOptions().NonClustered();
@@ -361,6 +340,12 @@ public class Indexes : ForwardOnlyMigration
             .OnColumn(nameof(ProductManufacturer.ManufacturerId)).Ascending()
             .WithOptions().NonClustered()
             .Include(nameof(ProductManufacturer.ProductId));
+
+        Create.Index("IX_GenericAttribute_EntityId_KeyGroup_and_Key").OnTable(nameof(GenericAttribute))
+            .OnColumn(nameof(GenericAttribute.EntityId)).Ascending()
+            .OnColumn(nameof(GenericAttribute.KeyGroup)).Ascending()
+            .OnColumn(nameof(GenericAttribute.Key)).Ascending()
+            .WithOptions().NonClustered();
     }
 
     #endregion

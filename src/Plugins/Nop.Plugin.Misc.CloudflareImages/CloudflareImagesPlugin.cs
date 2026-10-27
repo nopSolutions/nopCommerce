@@ -1,6 +1,6 @@
-﻿using Nop.Core;
-using Nop.Services.Common;
+﻿using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 

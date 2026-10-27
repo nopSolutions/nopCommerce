@@ -1,0 +1,16 @@
+﻿@model Product3dObjectModel
+
+@if (Model?.Id > 0)
+{
+    <!-- Import the component -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.2.0/model-viewer.min.js"></script>
+    <model-viewer class="model-3d-viewer" src="@Model.ObjectUrl"
+        shadow-intensity=1
+        poster="@Model.PosterImageUrl"
+        alt="@Model.AlternateText"
+        loading="@(Model.LazyLoadEnabled ? "lazy" : "auto")"
+        @(Model.ZoomEnabled ? "" : "disable-zoom")
+        @(Model.AutoRotateEnabled ? "auto-rotate" : "")
+        @(Model.CameraControlEnabled ? "camera-controls" : "")>
+    </model-viewer>
+}

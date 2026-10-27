@@ -523,6 +523,28 @@ public partial class ProductAttributeService : IProductAttributeService
     }
 
     /// <summary>
+    /// Gets product attribute combinations by SKU array
+    /// </summary>
+    /// <param name="skuArray">SKU array</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the product attribute combinations
+    /// </returns>
+    public virtual async Task<IList<ProductAttributeCombination>> GetProductAttributeCombinationsBySkuAsync(string[] skuArray)
+    {
+        ArgumentNullException.ThrowIfNull(skuArray);
+
+        var query =
+            from pac in _productAttributeCombinationRepository.Table
+            join p in _productRepository.Table on pac.ProductId equals p.Id
+            orderby pac.Id
+            where !p.Deleted && skuArray.Contains(pac.Sku)
+            select pac;
+
+        return await query.ToListAsync();
+    }
+
+    /// <summary>
     /// Inserts a product attribute combination
     /// </summary>
     /// <param name="combination">Product attribute combination</param>

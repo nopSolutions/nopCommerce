@@ -56,10 +56,8 @@ public partial class RssItem
     {
         var element = new XElement(NopRssDefaults.Item, Id, Link, Title, Content);
 
-        foreach (var elementExtensions in ElementExtensions)
-        {
+        foreach (var elementExtensions in ElementExtensions) 
             element.Add(elementExtensions);
-        }
 
         return element;
     }

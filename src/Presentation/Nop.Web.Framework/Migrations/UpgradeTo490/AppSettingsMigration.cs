@@ -1,5 +1,4 @@
 ﻿using FluentMigrator;
-using Microsoft.AspNetCore.Http.Features;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data;

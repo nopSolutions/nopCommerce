@@ -23,8 +23,6 @@ public record ConfigurationModel : BaseNopModel
 
     public bool BlockSyncProducts { get; set; }
 
-    public bool BlockSyncOrders { get; set; }
-
     public IList<BatchResponse> Batches { get; set; } = new List<BatchResponse>();
 
     #endregion

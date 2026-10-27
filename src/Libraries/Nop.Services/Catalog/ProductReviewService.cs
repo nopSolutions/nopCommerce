@@ -149,6 +149,7 @@ public partial class ProductReviewService : IProductReviewService
             .Where(r => r.ProductId == product.Id)
             .ToAsyncEnumerable();
         await foreach (var pr in reviews)
+        {
             if (pr.IsApproved)
             {
                 approvedRatingSum += pr.Rating;
@@ -159,6 +160,7 @@ public partial class ProductReviewService : IProductReviewService
                 notApprovedRatingSum += pr.Rating;
                 notApprovedTotalReviews++;
             }
+        }
 
         product.ApprovedRatingSum = approvedRatingSum;
         product.NotApprovedRatingSum = notApprovedRatingSum;

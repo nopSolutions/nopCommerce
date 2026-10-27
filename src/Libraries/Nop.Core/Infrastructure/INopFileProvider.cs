@@ -345,4 +345,16 @@ public partial interface INopFileProvider : IFileProvider
     /// Gets or sets the absolute path to the directory that contains the web-servable application content files.
     /// </summary>
     string WebRootPath { get; }
+
+    /// <summary>
+    /// Provides a platform-specific character used to separate directory levels in a path string that reflects a hierarchical file system organization.
+    /// </summary>
+    string DirectorySeparatorChar { get; }
+
+    /// <summary>
+    /// Returns the absolute path for the specified path string.
+    /// </summary>
+    /// <param name="path">The file or directory for which to obtain absolute path information.</param>
+    /// <returns>The fully qualified location of <paramref name="path" />, such as "C:\MyFile.txt".</returns>
+    string GetFullPath(string path);
 }

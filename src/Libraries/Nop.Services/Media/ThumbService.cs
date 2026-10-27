@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
+using Nop.Services.Helpers;
 
 namespace Nop.Services.Media;
 

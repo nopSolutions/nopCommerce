@@ -70,6 +70,7 @@ public partial class OrderModelFactory : IOrderModelFactory
     protected readonly MediaSettings _mediaSettings;
     protected readonly OrderSettings _orderSettings;
     protected readonly PdfSettings _pdfSettings;
+    protected readonly ReturnRequestSettings _returnRequestSettings;
     protected readonly RewardPointsSettings _rewardPointsSettings;
     protected readonly ShippingSettings _shippingSettings;
     protected readonly TaxSettings _taxSettings;
@@ -110,6 +111,7 @@ public partial class OrderModelFactory : IOrderModelFactory
         MediaSettings mediaSettings,
         OrderSettings orderSettings,
         PdfSettings pdfSettings,
+        ReturnRequestSettings returnRequestSettings,
         RewardPointsSettings rewardPointsSettings,
         ShippingSettings shippingSettings,
         TaxSettings taxSettings,
@@ -146,6 +148,7 @@ public partial class OrderModelFactory : IOrderModelFactory
         _mediaSettings = mediaSettings;
         _orderSettings = orderSettings;
         _pdfSettings = pdfSettings;
+        _returnRequestSettings = returnRequestSettings;
         _rewardPointsSettings = rewardPointsSettings;
         _shippingSettings = shippingSettings;
         _taxSettings = taxSettings;
@@ -236,8 +239,13 @@ public partial class OrderModelFactory : IOrderModelFactory
                 RouteActionName = NopRouteNames.Standard.CUSTOMER_ORDERS_PAGED,
                 UseRouteLinks = true,
                 RouteValues = new CustomerOrdersRouteValues { PageNumber = orders.PageIndex, Limit = limit.ToString().ToLower() }
-            }
+            },
+            ReturnItemsButtonText = _returnRequestSettings.UseEuWithdrawalLocales ?
+                await _localizationService.GetResourceAsync("Account.CustomerOrders.WithdrawItems") :
+                await _localizationService.GetResourceAsync("Account.CustomerOrders.ReturnItems")
         };
+
+
 
         foreach (var order in orders)
         {
@@ -319,6 +327,9 @@ public partial class OrderModelFactory : IOrderModelFactory
             OrderStatusText = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus),
             IsReOrderAllowed = _orderSettings.IsReOrderAllowed,
             IsReturnRequestAllowed = await _orderProcessingService.IsReturnRequestAllowedAsync(order),
+            ReturnRequestText = _returnRequestSettings.UseEuWithdrawalLocales ?
+                await _localizationService.GetResourceAsync("Order.WithdrawItems") :
+                await _localizationService.GetResourceAsync("Order.ReturnItems"),
             PdfInvoiceDisabled = _pdfSettings.DisablePdfInvoicesForPendingOrders && order.OrderStatus == OrderStatus.Pending,
             CustomOrderNumber = order.CustomOrderNumber,
 
@@ -362,6 +373,9 @@ public partial class OrderModelFactory : IOrderModelFactory
             }
 
             model.ShippingMethod = order.ShippingMethod;
+
+            if (order.ShippingStatus == ShippingStatus.NotYetShipped && order.DesiredDeliveryDateUtc.HasValue)
+                model.DesiredDeliveryDate = (await _dateTimeHelper.ConvertToUserTimeAsync(order.DesiredDeliveryDateUtc.Value, DateTimeKind.Utc)).ToString("D");
 
             //shipments (only already shipped or ready for pickup)
             var shipments = (await _shipmentService.GetShipmentsByOrderIdAsync(order.Id, !order.PickupInStore, order.PickupInStore)).OrderBy(x => x.CreatedOnUtc).ToList();
@@ -629,9 +643,7 @@ public partial class OrderModelFactory : IOrderModelFactory
                 orderItemModel.LicenseId = orderItem.LicenseDownloadId ?? 0;
 
             if (_orderSettings.ShowProductThumbnailInOrderDetailsPage)
-            {
                 orderItemModel.Picture = await PrepareOrderItemPictureModelAsync(orderItem, _mediaSettings.OrderThumbPictureSize, true, orderItemModel.ProductName);
-            }
         }
 
         return model;

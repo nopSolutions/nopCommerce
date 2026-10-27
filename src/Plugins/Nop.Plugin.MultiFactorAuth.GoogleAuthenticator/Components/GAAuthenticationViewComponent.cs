@@ -41,7 +41,7 @@ public class GAAuthenticationViewComponent : NopViewComponent
         var model = new AuthModel();
         model = await _authenticationModelFactory.PrepareAuthModel(model);
 
-        return View("~/Plugins/MultiFactorAuth.GoogleAuthenticator/Views/Customer/GAAuthentication.cshtml", model);
+        return await ViewAsync("~/Plugins/MultiFactorAuth.GoogleAuthenticator/Views/Customer/GAAuthentication.cshtml", model);
     }
 
     #endregion

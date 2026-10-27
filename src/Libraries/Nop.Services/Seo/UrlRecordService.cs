@@ -1443,10 +1443,12 @@ public partial class UrlRecordService : IUrlRecordService
 
         var sb = new StringBuilder();
         foreach (var c in name.Trim().ToLowerInvariant())
+        {
             if (convertNonWesternChars && _seoCharacterTable.TryGetValue(c, out var transliteration))
                 sb.Append(transliteration.ToLowerInvariant());
             else if (_okChars.Contains(c) || allowUnicodeCharsInUrls && char.IsLetterOrDigit(c))
                 sb.Append(c);
+        }
 
         var seName = WhitespaceHyphenRegex().Replace(sb.ToString(), "-");
         seName = UnderscoreRegex().Replace(seName, "_");

@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
@@ -150,6 +150,7 @@ public class TaxServiceTests : ServiceTest
     [TestCase("NO974761076", VatNumberStatus.Unknown)]
     [TestCase("GB430479893", VatNumberStatus.Invalid)]
     [TestCase("IT00478390347", VatNumberStatus.Valid)]
+    [Ignore("This test may fail in some CI/CD environments. So we leave it only for internal purposes")]
     public async Task CanCheckVatNumber(string vatNumber, VatNumberStatus canBeStatus)
     {
         var result = await _taxService.GetVatNumberStatusAsync(vatNumber);

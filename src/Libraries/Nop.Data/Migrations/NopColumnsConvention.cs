@@ -30,7 +30,7 @@ public class NopColumnsConvention : IColumnsConvention
             columnDefinition.Type = null;
             columnDefinition.CustomType = "citext";
         }
-
+        
         return expression;
     }
 

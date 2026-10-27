@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Nop.Core;
 using Nop.Core.Domain.Security;
 using Nop.Data;
+using Nop.Services.Helpers;
 
 namespace Nop.Web.Framework.Mvc.Filters;
 

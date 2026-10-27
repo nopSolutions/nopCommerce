@@ -18,6 +18,6 @@ public partial class TopicBlockViewComponent : NopViewComponent
         var model = await _topicModelFactory.PrepareTopicModelBySystemNameAsync(systemName);
         if (model == null)
             return Content("");
-        return View(model);
+        return await ViewAsync(model);
     }
 }

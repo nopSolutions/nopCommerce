@@ -1,10 +1,10 @@
-﻿using Nop.Core;
-using Nop.Core.Domain.Cms;
+﻿using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Plugin.Misc.Brevo.Components;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Plugins;
@@ -220,9 +220,7 @@ public class BrevoPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
         {
             var messageTemplates = await _messageTemplateService.GetAllMessageTemplatesAsync(store.Id);
             foreach (var messageTemplate in messageTemplates)
-            {
                 await _genericAttributeService.SaveAttributeAsync<int?>(messageTemplate, BrevoDefaults.TemplateIdAttribute, null);
-            }
         }
 
         //schedule task

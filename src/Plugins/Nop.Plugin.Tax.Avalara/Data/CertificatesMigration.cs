@@ -1,8 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Services.Configuration;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Plugin.Tax.Avalara.Data;
@@ -10,30 +8,6 @@ namespace Nop.Plugin.Tax.Avalara.Data;
 [NopMigration("2021-09-06 00:00:00", "Tax.Avalara 2.50. Add certificates feature", MigrationProcessType.Update)]
 public class CertificatesMigration : MigrationBase
 {
-    #region Fields
-
-    protected readonly AvalaraTaxSettings _avalaraTaxSettings;
-    protected readonly ILanguageService _languageService;
-    protected readonly ILocalizationService _localizationService;
-    protected readonly ISettingService _settingService;
-
-    #endregion
-
-    #region Ctor
-
-    public CertificatesMigration(AvalaraTaxSettings avalaraTaxSettings,
-        ILanguageService languageService,
-        ILocalizationService localizationService,
-        ISettingService settingService)
-    {
-        _avalaraTaxSettings = avalaraTaxSettings;
-        _languageService = languageService;
-        _localizationService = localizationService;
-        _settingService = settingService;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -44,10 +18,8 @@ public class CertificatesMigration : MigrationBase
         if (!DataSettingsManager.IsDatabaseInstalled())
             return;
 
-        //locales
-        var (languageId, languages) = this.GetLanguageData();
-
-        _localizationService.AddOrUpdateLocaleResource(new Dictionary<string, string>
+        // locales
+        this.AddOrUpdateLocaleResource(new Dictionary<string, string>
         {
             ["Plugins.Tax.Avalara.Configuration.Certificates"] = "Exemption certificates",
             ["Plugins.Tax.Avalara.Configuration.Certificates.InProgress"] = "Exemption certificates",
@@ -97,9 +69,9 @@ public class CertificatesMigration : MigrationBase
             ["Plugins.Tax.Avalara.Fields.EnableCertificates.Hint"] = "Determine whether to enable this feature. In this case, a new page will be added in the account section, so customers can manage their exemption certificates before making a purchase.",
             ["Plugins.Tax.Avalara.Fields.EnableCertificates.Warning"] = "To use this feature, you need the following information from customers: name, country, state, city, address, postal code. Ensure that the appropriate Customer form fields are enabled under <a href=\"{0}\" target=\"_blank\">Customer settings</a>",
             ["Plugins.Tax.Avalara.TestTax.Button"] = "Submit",
-        }, languageId);
+        });
 
-        _localizationService.DeleteLocaleResources(new List<string>
+        this.DeleteLocaleResources(new List<string>
         {
             "Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.Create",
             "Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.CreateResponse",
@@ -114,25 +86,15 @@ public class CertificatesMigration : MigrationBase
         });
 
         //settings
-        if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.CompanyId))
-            _avalaraTaxSettings.CompanyId = null;
-        if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.EnableCertificates))
-            _avalaraTaxSettings.EnableCertificates = false;
-        if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.AutoValidateCertificate))
-            _avalaraTaxSettings.AutoValidateCertificate = true;
-        if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.AllowEditCustomer))
-            _avalaraTaxSettings.AllowEditCustomer = true;
-        if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.DisplayNoValidCertificatesMessage))
-            _avalaraTaxSettings.DisplayNoValidCertificatesMessage = true;
-        if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.CustomerRoleIds))
-            _avalaraTaxSettings.CustomerRoleIds = null;
-        if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.PreviewCertificate))
-            _avalaraTaxSettings.PreviewCertificate = false;
-        if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.UploadOnly))
-            _avalaraTaxSettings.UploadOnly = false;
-        if (!_settingService.SettingExists(_avalaraTaxSettings, settings => settings.FillOnly))
-            _avalaraTaxSettings.FillOnly = false;
-        _settingService.SaveSetting(_avalaraTaxSettings);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, int?>(settings => settings.CompanyId, (int?)null);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.EnableCertificates, false);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.AutoValidateCertificate, true);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.AllowEditCustomer, true);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.DisplayNoValidCertificatesMessage, true);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, List<int>>(settings => settings.CustomerRoleIds, (List<int>)null);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.PreviewCertificate, false);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.UploadOnly, false);
+        this.SetSettingIfNotExists<AvalaraTaxSettings, bool>(settings => settings.FillOnly, false);
     }
 
     /// <summary>

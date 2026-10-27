@@ -57,6 +57,22 @@ var AjaxCart = {
       this.send_ajax(urlcreate, postData);
     },
 
+    //rename custom wishlist
+    renameCustomWishlist: function (urlrename, wishlistName, wishlistId) {
+      if (this.loadWaiting !== false) {
+        return;
+      }
+      this.setLoadWaiting(true);
+
+      var postData = {
+        wishlistName: wishlistName,
+        wishlistId: wishlistId
+      };
+      addAntiForgeryToken(postData);
+
+      this.send_ajax(urlrename, postData);
+    },
+
     //delete custom wishlist
     deleteCustomWishlist: function (urldelete) {
         if (this.loadWaiting !== false) {
@@ -178,6 +194,6 @@ var AjaxCart = {
     },
 
     ajaxFailure: function () {
-      alert(this.localized_data.AjaxCartFailure);
+      alert(AjaxCart.localized_data.AjaxCartFailure);
     }
 };

@@ -192,6 +192,8 @@ src/Presentation/Nop.Web/wwwroot/bundles/*
 !src/Presentation/Nop.Web/wwwroot/bundles/Index.htm
 src/Presentation/Nop.Web/wwwroot/db_backups/*.bak
 !src/Presentation/Nop.Web/wwwroot/db_backups/Index.htm
+src/Presentation/Nop.Web/wwwroot/images/3d/*
+!src/Presentation/Nop.Web/wwwroot/images/3d/placeholder.txt
 src/Presentation/Nop.Web/wwwroot/images/thumbs/*
 !src/Presentation/Nop.Web/wwwroot/images/thumbs/placeholder.txt
 src/Presentation/Nop.Web/wwwroot/images/uploaded/*

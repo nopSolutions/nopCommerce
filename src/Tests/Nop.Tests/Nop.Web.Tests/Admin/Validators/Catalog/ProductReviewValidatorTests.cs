@@ -1,6 +1,5 @@
-using FluentValidation.TestHelper;
+﻿using FluentValidation.TestHelper;
 using Nop.Core;
-using Nop.Core.Domain.Vendors;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Validators.Catalog;

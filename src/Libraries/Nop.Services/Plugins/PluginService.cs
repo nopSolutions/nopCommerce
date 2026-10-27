@@ -8,6 +8,7 @@ using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
+using Nop.Services.Helpers;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -199,9 +200,7 @@ public partial class PluginService : IPluginService
 
         //mark update migrations as applied
         if (migrationProcessType == MigrationProcessType.Installation)
-        {
             _migrationManager.Value.ApplyUpMigrations(assembly, MigrationProcessType.Update, true);
-        }
     }
 
     #endregion
@@ -331,7 +330,7 @@ public partial class PluginService : IPluginService
         var logoPathUrl = _mediaSettings.UseAbsoluteImagePath ? _webHelper.GetStoreLocation() : $"{pathBase}/";
 
         var logoUrl = $"{logoPathUrl}{NopPluginDefaults.PathName}/" +
-                      $"{_fileProvider.GetDirectoryNameOnly(pluginDirectory)}/{NopPluginDefaults.LogoFileName}.{logoExtension}";
+            $"{_fileProvider.GetDirectoryNameOnly(pluginDirectory)}/{NopPluginDefaults.LogoFileName}.{logoExtension}";
 
         return Task.FromResult(logoUrl);
     }

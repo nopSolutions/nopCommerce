@@ -18,6 +18,8 @@ public partial class GeoLookupService : IGeoLookupService
 {
     #region Fields
 
+    protected static readonly object _locker = new();
+    protected static DatabaseReader _databaseReader;
     protected readonly ILogger _logger;
     protected readonly INopFileProvider _fileProvider;
 
@@ -35,28 +37,51 @@ public partial class GeoLookupService : IGeoLookupService
     #endregion
 
     #region Utilities
+    
+    /// <summary>
+    /// Gets a cached DatabaseReader for the GeoLite2-Country database
+    /// </summary>
+    /// <returns>The cached DatabaseReader instance for the GeoLite2-Country.mmdb file.</returns>
+    protected virtual DatabaseReader GetDatabaseReader()
+    {
+        if (_databaseReader != null)
+            return _databaseReader;
+
+        //prevent multi loading data
+        lock (_locker)
+        {
+            var databasePath = _fileProvider.MapPath("~/App_Data/GeoLite2-Country.mmdb");
+
+            //data can be loaded while we waited
+            if (_databaseReader != null)
+                return _databaseReader;
+
+            _databaseReader = new DatabaseReader(databasePath);
+            
+            return _databaseReader;
+        }
+    }
 
     /// <summary>
     /// Get information
     /// </summary>
     /// <param name="ipAddress">IP address</param>
-    /// <returns>Information</returns>
-    protected virtual CountryResponse GetInformation(string ipAddress)
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the country information
+    /// </returns>
+    protected virtual async Task<CountryResponse> GetInformationAsync(string ipAddress)
     {
         if (string.IsNullOrEmpty(ipAddress))
             return null;
 
         try
         {
-            //This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
-            var databasePath = _fileProvider.MapPath("~/App_Data/GeoLite2-Country.mmdb");
-            var reader = new DatabaseReader(databasePath);
+            var reader = GetDatabaseReader();
             var omni = reader.Country(ipAddress);
 
             return omni;
-                
         }
-        //catch (AddressNotFoundException exc)
         catch (GeoIP2Exception)
         {
             //address is not found
@@ -66,7 +91,7 @@ public partial class GeoLookupService : IGeoLookupService
         catch (Exception exc)
         {
             //do not throw exceptions
-            _logger.Warning("Cannot load MaxMind record", exc);
+            await _logger.WarningAsync("Cannot load MaxMind record", exc);
             return null;
         }
     }
@@ -79,28 +104,30 @@ public partial class GeoLookupService : IGeoLookupService
     /// Get country ISO code
     /// </summary>
     /// <param name="ipAddress">IP address</param>
-    /// <returns>Country name</returns>
-    public virtual string LookupCountryIsoCode(string ipAddress)
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the country name
+    /// </returns>
+    public virtual async Task<string> LookupCountryIsoCodeAsync(string ipAddress)
     {
-        var response = GetInformation(ipAddress);
-        if (response?.Country != null)
-            return response.Country.IsoCode;
+        var response = await GetInformationAsync(ipAddress);
 
-        return string.Empty;
+        return response?.Country?.IsoCode ?? string.Empty;
     }
 
     /// <summary>
     /// Get country name
     /// </summary>
     /// <param name="ipAddress">IP address</param>
-    /// <returns>Country name</returns>
-    public virtual string LookupCountryName(string ipAddress)
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the country name
+    /// </returns>
+    public virtual async Task<string> LookupCountryNameAsync(string ipAddress)
     {
-        var response = GetInformation(ipAddress);
-        if (response?.Country != null)
-            return response.Country.Name;
+        var response = await GetInformationAsync(ipAddress);
 
-        return string.Empty;
+        return response?.Country?.Name ?? string.Empty;
     }
 
     #endregion

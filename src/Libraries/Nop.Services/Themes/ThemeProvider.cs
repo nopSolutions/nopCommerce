@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
 using Nop.Core;
-using Nop.Services.Plugins;
 
 namespace Nop.Services.Themes;
 
@@ -31,8 +30,8 @@ public partial class ThemeProvider : IThemeProvider
         //load all theme descriptors
         _themeDescriptors = new Dictionary<string, ThemeDescriptor>(StringComparer.InvariantCultureIgnoreCase);
 
-        var themeDirectoryPath = fileProvider.MapPath(NopPluginDefaults.ThemesPath);
-        foreach (var descriptionFile in fileProvider.GetFiles(themeDirectoryPath, NopPluginDefaults.ThemeDescriptionFileName, false))
+        var themeDirectoryPath = fileProvider.MapPath(NopThemeDefaults.ThemesPath);
+        foreach (var descriptionFile in fileProvider.GetFiles(themeDirectoryPath, NopThemeDefaults.ThemeDescriptionFileName, false))
         {
             var text = await fileProvider.ReadAllTextAsync(descriptionFile, Encoding.UTF8);
             if (string.IsNullOrEmpty(text))

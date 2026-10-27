@@ -1,0 +1,31 @@
+@model ForumModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Plugins.Misc.Forums.Forum.CreateForum").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Manage forums");
+}
+
+<form asp-controller="Forum" asp-action="CreateForum" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Plugins.Misc.Forums.Forum.CreateForum")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Plugins.Misc.Forums.Forum.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Plugins/Misc.Forums/Admin/Views/_CreateOrUpdateForum.cshtml", Model)
+</form>

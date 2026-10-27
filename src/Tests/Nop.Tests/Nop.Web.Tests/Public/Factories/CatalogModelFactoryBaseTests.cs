@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;

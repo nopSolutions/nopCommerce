@@ -18,6 +18,7 @@ public partial class NopLabelTagHelper : TagHelper
 
     protected const string FOR_ATTRIBUTE_NAME = "asp-for";
     protected const string DISPLAY_HINT_ATTRIBUTE_NAME = "asp-display-hint";
+    protected const string RESOURCE_TEMPLATE_PARAMETERS_NAME = "asp-resource-params";
 
     #endregion
 
@@ -69,6 +70,9 @@ public partial class NopLabelTagHelper : TagHelper
                 resourceValue = await _localizationService.GetResourceAsync(resourceName);
         }
 
+        if (!string.IsNullOrWhiteSpace(resourceValue) && ResourceParams.Any())
+            resourceValue = string.Format(resourceValue, ResourceParams.ToArray());
+
         //generate label
         var tagBuilder = Generator.GenerateLabel(ViewContext, For.ModelExplorer, For.Name, resourceValue, new { @class = "col-form-label" });
         if (tagBuilder != null)
@@ -119,6 +123,12 @@ public partial class NopLabelTagHelper : TagHelper
     /// </summary>
     [HtmlAttributeName(DISPLAY_HINT_ATTRIBUTE_NAME)]
     public bool DisplayHint { get; set; } = true;
+
+    /// <summary>
+    /// An array of the locale parameters
+    /// </summary>
+    [HtmlAttributeName(RESOURCE_TEMPLATE_PARAMETERS_NAME)]
+    public ICollection<string> ResourceParams { get; set; } = new List<string>();
 
     /// <summary>
     /// ViewContext

@@ -21,8 +21,8 @@ public static class MappingExtensions
     /// <returns>Mapped destination object</returns>
     private static TDestination Map<TDestination>(this object source)
     {
-        //use AutoMapper for mapping objects
-        return AutoMapperConfiguration.Mapper.Map<TDestination>(source);
+        //use mapper for mapping objects
+        return MapperConfiguration.Mapper.Map<TDestination>(source);
     }
 
     /// <summary>
@@ -35,8 +35,8 @@ public static class MappingExtensions
     /// <returns>Mapped destination object, same instance as the passed destination object</returns>
     private static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
     {
-        //use AutoMapper for mapping objects
-        return AutoMapperConfiguration.Mapper.Map(source, destination);
+        //use mapper for mapping objects
+        return MapperConfiguration.Mapper.Map(source, destination);
     }
 
     #endregion

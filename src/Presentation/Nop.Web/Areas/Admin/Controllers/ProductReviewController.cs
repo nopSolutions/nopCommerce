@@ -291,9 +291,7 @@ public partial class ProductReviewController : BaseAdminController
 
         //update product totals
         foreach (var product in products)
-        {
             await _productReviewService.UpdateProductReviewTotalsAsync(product);
-        }
 
         return Json(new { Result = true });
     }

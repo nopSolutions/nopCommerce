@@ -11,6 +11,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -211,8 +212,8 @@ public class BrevoController : BasePluginController
             if (partnerSet)
             {
                 brevoSettings.PartnerValueSet = true;
-                _settingService.SaveSetting(brevoSettings, settings => settings.PartnerValueSet, clearCache: false);
-                _settingService.ClearCache();
+                await _settingService.SaveSettingAsync(brevoSettings, settings => settings.PartnerValueSet, clearCache: false);
+                await _settingService.ClearCacheAsync();
             }
         }
     }
@@ -223,6 +224,7 @@ public class BrevoController : BasePluginController
 
     [AuthorizeAdmin]
     [Area(AreaNames.ADMIN)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> Configure()
     {
         var model = new ConfigurationModel();
@@ -235,6 +237,7 @@ public class BrevoController : BasePluginController
     [Area(AreaNames.ADMIN)]
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("save")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> Configure(ConfigurationModel model)
     {
         if (!ModelState.IsValid)
@@ -257,6 +260,7 @@ public class BrevoController : BasePluginController
     [Area(AreaNames.ADMIN)]
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("saveSync")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SaveSynchronization(ConfigurationModel model)
     {
         if (!ModelState.IsValid)
@@ -286,6 +290,7 @@ public class BrevoController : BasePluginController
     [Area(AreaNames.ADMIN)]
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("sync")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> Synchronization(ConfigurationModel model)
     {
         if (!ModelState.IsValid)
@@ -294,9 +299,8 @@ public class BrevoController : BasePluginController
         //synchronize contacts of selected store
         var messages = await _brevoEmailManager.SynchronizeAsync();
         foreach (var message in messages)
-        {
             _notificationService.Notification(message.Type, message.Message, false);
-        }
+
         if (!messages.Any(message => message.Type == NotifyType.Error))
         {
             ViewData["synchronizationStart"] = true;
@@ -321,6 +325,7 @@ public class BrevoController : BasePluginController
     [Area(AreaNames.ADMIN)]
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("saveSMTP")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> ConfigureSMTP(ConfigurationModel model)
     {
         if (!ModelState.IsValid)
@@ -379,6 +384,7 @@ public class BrevoController : BasePluginController
     [HttpPost]
     [AuthorizeAdmin]
     [Area(AreaNames.ADMIN)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> MessageList(BrevoMessageTemplateSearchModel searchModel)
     {
         var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -417,6 +423,7 @@ public class BrevoController : BasePluginController
     [HttpPost]
     [AuthorizeAdmin]
     [Area(AreaNames.ADMIN)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> MessageUpdate(BrevoMessageTemplateModel model)
     {
         if (!ModelState.IsValid)
@@ -458,6 +465,7 @@ public class BrevoController : BasePluginController
     [Area(AreaNames.ADMIN)]
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("saveSMS")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> ConfigureSMS(ConfigurationModel model)
     {
         if (!ModelState.IsValid)
@@ -484,6 +492,7 @@ public class BrevoController : BasePluginController
     [HttpPost]
     [AuthorizeAdmin]
     [Area(AreaNames.ADMIN)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SMSList(SmsSearchModel searchModel)
     {
         var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -550,6 +559,7 @@ public class BrevoController : BasePluginController
     [HttpPost]
     [AuthorizeAdmin]
     [Area(AreaNames.ADMIN)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SMSAdd(SmsModel model)
     {
         if (!ModelState.IsValid)
@@ -569,6 +579,7 @@ public class BrevoController : BasePluginController
     [HttpPost]
     [AuthorizeAdmin]
     [Area(AreaNames.ADMIN)]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SMSDelete(SmsModel model)
     {
         if (!ModelState.IsValid)
@@ -590,6 +601,7 @@ public class BrevoController : BasePluginController
     [Area(AreaNames.ADMIN)]
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("submitCampaign")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> SubmitCampaign(ConfigurationModel model)
     {
         if (!ModelState.IsValid)
@@ -608,6 +620,7 @@ public class BrevoController : BasePluginController
     [Area(AreaNames.ADMIN)]
     [HttpPost, ActionName("Configure")]
     [FormValueRequired("saveMA")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public async Task<IActionResult> ConfigureMA(ConfigurationModel model)
     {
         if (!ModelState.IsValid)

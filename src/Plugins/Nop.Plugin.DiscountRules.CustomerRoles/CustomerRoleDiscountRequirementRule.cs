@@ -1,7 +1,7 @@
-﻿using Nop.Core;
-using Nop.Services.Configuration;
+﻿using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Mvc.Routing;
@@ -112,9 +112,7 @@ public class CustomerRoleDiscountRequirementRule : BasePlugin, IDiscountRequirem
         var discountRequirements = (await _discountService.GetAllDiscountRequirementsAsync())
             .Where(discountRequirement => discountRequirement.DiscountRequirementRuleSystemName == DiscountRequirementDefaults.SystemName);
         foreach (var discountRequirement in discountRequirements)
-        {
             await _discountService.DeleteDiscountRequirementAsync(discountRequirement, false);
-        }
 
         //locales
         await _localizationService.DeleteLocaleResourcesAsync("Plugins.DiscountRules.CustomerRoles");

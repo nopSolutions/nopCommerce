@@ -40,7 +40,7 @@ public partial class NopCommerceNewsViewComponent : NopViewComponent
             //prepare model
             var model = await _homeModelFactory.PrepareNopCommerceNewsModelAsync();
 
-            return View(model);
+            return await ViewAsync(model);
         }
         catch
         {

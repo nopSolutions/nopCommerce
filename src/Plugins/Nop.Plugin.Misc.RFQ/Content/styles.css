@@ -13,7 +13,8 @@
   font-size: 12px;
   color: #444;
   background-color: white;
-  background: url('~/images/details.png') left center no-repeat
+  background: url('images/details.png') left center no-repeat;
+  padding-left: 18px;
 }
 
 .request-list-page .button-2:hover,

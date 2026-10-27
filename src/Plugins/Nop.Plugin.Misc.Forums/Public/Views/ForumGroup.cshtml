@@ -1,0 +1,16 @@
+﻿@model ForumGroupModel
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(Model.Name);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-forum-group-page");
+}
+
+<div class="page forum-group-page">
+    @await Component.InvokeAsync(typeof(ForumBreadcrumbViewComponent), new { forumGroupId = Model.Id })
+    @await Html.PartialAsync("~/Plugins/Misc.Forums/Public/Views/_ForumHeader.cshtml")
+    @await Html.PartialAsync("~/Plugins/Misc.Forums/Public/Views/_ForumGroup.cshtml", Model)
+</div>

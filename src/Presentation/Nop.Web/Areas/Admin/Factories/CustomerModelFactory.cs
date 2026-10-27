@@ -4,7 +4,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
@@ -22,6 +21,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
+using Nop.Services.PriceLists;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -43,7 +43,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly CustomerSettings _customerSettings;
     protected readonly DateTimeSettings _dateTimeSettings;
     protected readonly GdprSettings _gdprSettings;
-    protected readonly ForumSettings _forumSettings;
     protected readonly IAddressModelFactory _addressModelFactory;
     protected readonly IAddressService _addressService;
     protected readonly IAffiliateService _affiliateService;
@@ -66,6 +65,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly IOrderService _orderService;
     protected readonly IPictureService _pictureService;
     protected readonly IPriceFormatter _priceFormatter;
+    protected readonly IPriceListService _priceListService;
     protected readonly IProductAttributeFormatter _productAttributeFormatter;
     protected readonly IProductService _productService;
     protected readonly IRewardPointService _rewardPointService;
@@ -76,6 +76,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
     protected readonly ITaxService _taxService;
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
+    protected readonly PrivateMessageSettings _privateMessageSettings;
     protected readonly RewardPointsSettings _rewardPointsSettings;
     protected readonly TaxSettings _taxSettings;
 
@@ -87,7 +88,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         CustomerSettings customerSettings,
         DateTimeSettings dateTimeSettings,
         GdprSettings gdprSettings,
-        ForumSettings forumSettings,
         IAddressModelFactory addressModelFactory,
         IAddressService addressService,
         IAffiliateService affiliateService,
@@ -110,6 +110,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         IOrderService orderService,
         IPictureService pictureService,
         IPriceFormatter priceFormatter,
+        IPriceListService priceListService,
         IProductAttributeFormatter productAttributeFormatter,
         IProductService productService,
         IRewardPointService rewardPointService,
@@ -120,6 +121,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         ITaxService taxService,
         IWorkContext workContext,
         MediaSettings mediaSettings,
+        PrivateMessageSettings privateMessageSettings,
         RewardPointsSettings rewardPointsSettings,
         TaxSettings taxSettings)
     {
@@ -127,7 +129,6 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _customerSettings = customerSettings;
         _dateTimeSettings = dateTimeSettings;
         _gdprSettings = gdprSettings;
-        _forumSettings = forumSettings;
         _addressModelFactory = addressModelFactory;
         _addressService = addressService;
         _affiliateService = affiliateService;
@@ -150,6 +151,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _orderService = orderService;
         _pictureService = pictureService;
         _priceFormatter = priceFormatter;
+        _priceListService = priceListService;
         _productAttributeFormatter = productAttributeFormatter;
         _productService = productService;
         _rewardPointService = rewardPointService;
@@ -160,6 +162,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         _taxService = taxService;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
+        _privateMessageSettings = privateMessageSettings;
         _rewardPointsSettings = rewardPointsSettings;
         _taxSettings = taxSettings;
     }
@@ -274,8 +277,10 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                             var selectedValues = await _customerAttributeParser.ParseAttributeValuesAsync(selectedCustomerAttributes);
                             foreach (var attributeValue in selectedValues)
                             foreach (var item in attributeModel.Values)
+                            {
                                 if (attributeValue.Id == item.Id)
                                     item.IsPreSelected = true;
+                            }
                         }
                     }
                         break;
@@ -610,6 +615,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 customerModel.FullName = await _customerService.GetCustomerFullNameAsync(customer);
                 customerModel.Company = customer.Company;
                 customerModel.Phone = customer.Phone;
+                customerModel.PhoneSmsVerified = customer.PhoneSmsVerified;
                 customerModel.ZipPostalCode = customer.ZipPostalCode;
 
                 customerModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
@@ -652,7 +658,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             model.Id = customer.Id;
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.AllowSendingOfPrivateMessage = await _customerService.IsRegisteredAsync(customer) &&
-                                                 _forumSettings.AllowPrivateMessages;
+                                                 _privateMessageSettings.AllowPrivateMessages;
             model.AllowSendingOfWelcomeMessage = await _customerService.IsRegisteredAsync(customer) &&
                                                  _customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval;
             model.AllowReSendingOfActivationMessage = await _customerService.IsRegisteredAsync(customer) && !customer.Active &&
@@ -684,20 +690,13 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 model.CountryId = customer.CountryId;
                 model.StateProvinceId = customer.StateProvinceId;
                 model.Phone = customer.Phone;
+                model.PhoneSmsVerified = customer.PhoneSmsVerified;
                 model.Fax = customer.Fax;
                 model.TimeZoneId = customer.TimeZoneId;
                 model.VatNumber = customer.VatNumber;
                 model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync(customer.VatNumberStatus);
-                model.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
-                model.LastIpAddress = customer.LastIpAddress;
-                model.LastVisitedPage = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute);
                 model.SelectedCustomerRoleIds = (await _customerService.GetCustomerRoleIdsAsync(customer)).ToList();
-                model.RegisteredInStore = (await _storeService.GetAllStoresAsync())
-                    .FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
-                model.DisplayRegisteredInStore = model.Id > 0 && !string.IsNullOrEmpty(model.RegisteredInStore) &&
-                                                 (await _storeService.GetAllStoresAsync()).Select(x => x.Id).Count() > 1;
-                model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
-
+                model.SelectedPriceListIds = (await _priceListService.GetPriceListsByCustomerAsync(customer)).Select(pl => pl.Id).ToList();
                 model.MustChangePassword = customer.MustChangePassword;
 
                 //prepare model affiliate
@@ -708,6 +707,18 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                     model.AffiliateName = await _affiliateService.GetAffiliateFullNameAsync(affiliate);
                 }
             }
+
+            var allStores = await _storeService.GetAllStoresAsync();
+            model.RegisteredInStore = allStores.FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
+            model.DisplayRegisteredInStore = model.Id > 0
+                                             && !string.IsNullOrEmpty(model.RegisteredInStore)
+                                             && allStores.Select(x => x.Id).Count() > 1;
+
+            model.LastVisitedPage = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute);
+            model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
+            model.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
+            model.LastIpAddress = customer.LastIpAddress;
+
             //prepare reward points model
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
             if (model.DisplayRewardPointsHistory)
@@ -773,6 +784,15 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             Text = role.Name,
             Value = role.Id.ToString(),
             Selected = model.SelectedCustomerRoleIds.Contains(role.Id)
+        }).ToList();
+
+        //prepare available price lists
+        var availablePriceLists = await _priceListService.GetAllPriceListsAsync();
+        model.AvailablePriceLists = availablePriceLists.Select(priceList => new SelectListItem
+        {
+            Text = priceList.Name,
+            Value = priceList.Id.ToString(),
+            Selected = model.SelectedPriceListIds.Contains(priceList.Id)
         }).ToList();
 
         //prepare available time zones
@@ -984,8 +1004,10 @@ public partial class CustomerModelFactory : ICustomerModelFactory
         ArgumentNullException.ThrowIfNull(customer);
 
         //get customer shopping cart
-        var shoppingCart = (await _shoppingCartService
-            .GetShoppingCartAsync(customer, (ShoppingCartType)searchModel.ShoppingCartTypeId, customWishlistId: 0))
+        var shoppingCartTypes = new List<int> { searchModel.ShoppingCartTypeId };
+        if (searchModel.ShoppingCartTypeId == (int)ShoppingCartType.ShoppingCart)
+            shoppingCartTypes.Add((int)ShoppingCartType.Stash);
+        var shoppingCart = (await _shoppingCartService.GetShoppingCartAsync(customer, shoppingCartTypes, customWishlistId: 0))
             .ToPagedList(searchModel);
         var customWishlists = shoppingCart.Any(item => item.ShoppingCartType == ShoppingCartType.Wishlist)
             ? await _customWishlistService.GetAllCustomWishlistsAsync(customer.Id)
@@ -1169,7 +1191,7 @@ public partial class CustomerModelFactory : ICustomerModelFactory
                 customerModel.LastIpAddress = _customerSettings.StoreIpAddresses
                     ? customer.LastIpAddress
                     : await _localizationService.GetResourceAsync("Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled");
-                customerModel.Location = _geoLookupService.LookupCountryName(customer.LastIpAddress);
+                customerModel.Location = await _geoLookupService.LookupCountryNameAsync(customer.LastIpAddress);
                 customerModel.LastVisitedPage = _customerSettings.StoreLastVisitedPage
                     ? await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute)
                     : await _localizationService.GetResourceAsync("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled");

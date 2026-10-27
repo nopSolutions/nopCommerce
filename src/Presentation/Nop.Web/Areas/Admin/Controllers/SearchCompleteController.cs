@@ -44,9 +44,7 @@ public partial class SearchCompleteController : BaseAdminController
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         var vendorId = 0;
         if (currentVendor != null)
-        {
             vendorId = currentVendor.Id;
-        }
 
         //products
         const int productNumber = 15;

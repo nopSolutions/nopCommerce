@@ -62,9 +62,7 @@ public partial class CurrencyController : BaseAdminController
     protected virtual async Task UpdateLocalesAsync(Currency currency, CurrencyModel model)
     {
         foreach (var localized in model.Locales)
-        {
             await _localizedEntityService.SaveLocalizedValueAsync(currency, x => x.Name, localized.Name, localized.LanguageId);
-        }
     }
 
     #endregion

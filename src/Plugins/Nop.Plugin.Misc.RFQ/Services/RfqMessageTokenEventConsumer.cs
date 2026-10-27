@@ -14,7 +14,15 @@ public class RfqMessageTokenEventConsumer : IConsumer<AdditionalTokensAddedEvent
     /// <returns>A task that represents the asynchronous operation</returns>
     public Task HandleEventAsync(AdditionalTokensAddedEvent eventMessage)
     {
-        eventMessage.AddTokens("%RequestQuote.Id%", "%RequestQuote.CreatedOn%", "%RequestQuote.URL%", "%Quote.Id%", "%Quote.CreatedOn%", "%Quote.ExpirationOn%", "%Quote.ExpirationOnIsSet%", "%Quote.URL%");
+        if (eventMessage.MessageTemplate == null || string.IsNullOrEmpty(eventMessage.MessageTemplate.Name))
+            return Task.CompletedTask;
+
+        if (eventMessage.MessageTemplate.Name.Equals(RfqDefaults.CUSTOMER_SENT_NEW_REQUEST_QUOTE, StringComparison.InvariantCultureIgnoreCase)
+            || eventMessage.MessageTemplate.Name.Equals(RfqDefaults.ADMIN_SENT_NEW_QUOTE, StringComparison.InvariantCultureIgnoreCase))
+            eventMessage.AddTokens("%RequestQuote.Id%", "%RequestQuote.CreatedOn%", "%RequestQuote.URL%");
+
+        if (eventMessage.MessageTemplate.Name.Equals(RfqDefaults.ADMIN_SENT_NEW_QUOTE, StringComparison.InvariantCultureIgnoreCase))
+            eventMessage.AddTokens("%Quote.Id%", "%Quote.CreatedOn%", "%Quote.ExpirationOn%", "%Quote.ExpirationOnIsSet%", "%Quote.URL%");
 
         return Task.CompletedTask;
     }

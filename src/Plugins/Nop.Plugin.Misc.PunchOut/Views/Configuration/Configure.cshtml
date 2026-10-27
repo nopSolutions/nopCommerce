@@ -1,0 +1,26 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<form asp-controller="PunchOutAdmin" asp-action="Configure" method="post" id="configuration-form">
+    <div class="content">
+        <div class="form-horizontal">
+            <nop-cards id="punchout-cards">
+                <nop-card asp-name="configuration" asp-icon="fas fa-info" asp-title="@T("Plugins.Misc.PunchOut.Configuration")" asp-hide-block-attribute-name="@PunchOutDefaults.HideGeneralBlock" asp-hide="@Model.HideGeneralBlock" asp-advanced="false">
+                    @(await Html.PartialAsync("~/Plugins/Misc.PunchOut/Views/Configuration/_Configuration.cshtml", Model))
+                </nop-card>
+                <nop-card asp-name="identity" asp-icon="fas fa-star" asp-title="@T("Plugins.Misc.PunchOut.Identity")" asp-hide-block-attribute-name="@PunchOutDefaults.HideIdentityBlock" asp-hide="@Model.HideIdentityBlock" asp-advanced="false">
+                    @(await Html.PartialAsync("~/Plugins/Misc.PunchOut/Views/Identity/List.cshtml", Model.PunchOutIdentitySearchModel))
+                </nop-card>
+                <nop-card asp-name="session" asp-icon="fas fa-users" asp-title="@T("Plugins.Misc.PunchOut.Session")" asp-hide-block-attribute-name="@PunchOutDefaults.HideSessionBlock" asp-hide="@Model.HideSessionBlock" asp-advanced="false">
+                    @(await Html.PartialAsync("~/Plugins/Misc.PunchOut/Views/Session/List.cshtml", Model.PunchOutSessionSearchModel))
+                </nop-card>
+                <nop-card asp-name="log" asp-icon="fas fa-list" asp-title="@T("Plugins.Misc.PunchOut.Log")" asp-hide-block-attribute-name="@PunchOutDefaults.HideLogBlock" asp-hide="@Model.HideLogBlock" asp-advanced="false">
+                    @(await Html.PartialAsync("~/Plugins/Misc.PunchOut/Views/Log/List.cshtml", Model.PunchOutLogSearchModel))
+                </nop-card>
+            </nop-cards>
+        </div>
+    </div>
+</form>

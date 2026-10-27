@@ -3,6 +3,16 @@
 <div class="card-body">
     <div class="form-group row">
         <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="PriceListStrategy_OverrideForStore" asp-input="PriceListStrategy" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="PriceListStrategy" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="PriceListStrategy" asp-items="Model.PriceListStrategyValues" />
+            <span asp-validation-for="PriceListStrategy"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
             <nop-override-store-checkbox asp-for="AllowProductViewModeChanging_OverrideForStore" asp-input="AllowProductViewModeChanging" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="AllowProductViewModeChanging" />
         </div>

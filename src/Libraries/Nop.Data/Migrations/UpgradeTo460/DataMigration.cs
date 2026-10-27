@@ -81,7 +81,7 @@ public class DataMigration : Migration
 
         while (true)
         {
-            var customers = query.ToPagedListAsync(pageIndex++, pageSize).Result;
+            var customers = query.Skip(pageIndex++ * pageSize).Take(pageSize).ToList();
 
             if (!customers.Any())
                 break;
@@ -133,6 +133,7 @@ public class DataMigration : Migration
         var activityLogTypeTable = _dataProvider.GetTable<ActivityLogType>();
 
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ImportNewsLetterSubscriptions", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
@@ -141,8 +142,10 @@ public class DataMigration : Migration
                     Name = "Newsletter subscriptions were imported"
                 }
             );
+        }
 
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportCustomers", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
@@ -151,8 +154,10 @@ public class DataMigration : Migration
                     Name = "Customers were exported"
                 }
             );
+        }
 
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportCategories", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
@@ -161,8 +166,10 @@ public class DataMigration : Migration
                     Name = "Categories were exported"
                 }
             );
+        }
 
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportManufacturers", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
@@ -171,8 +178,10 @@ public class DataMigration : Migration
                     Name = "Manufacturers were exported"
                 }
             );
+        }
 
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportProducts", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
@@ -181,8 +190,10 @@ public class DataMigration : Migration
                     Name = "Products were exported"
                 }
             );
+        }
 
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportOrders", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
@@ -191,8 +202,10 @@ public class DataMigration : Migration
                     Name = "Orders were exported"
                 }
             );
+        }
 
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportStates", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
@@ -201,8 +214,10 @@ public class DataMigration : Migration
                     Name = "States were exported"
                 }
             );
+        }
 
         if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "ExportNewsLetterSubscriptions", StringComparison.InvariantCultureIgnoreCase) == 0))
+        {
             _dataProvider.InsertEntity(
                 new ActivityLogType
                 {
@@ -211,6 +226,7 @@ public class DataMigration : Migration
                     Name = "Newsletter subscriptions were exported"
                 }
             );
+        }
 
         //#5809
         if (!_dataProvider.GetTable<ScheduleTask>().Any(st => string.Compare(st.Type, "Nop.Services.Gdpr.DeleteInactiveCustomersTask, Nop.Services", StringComparison.InvariantCultureIgnoreCase) == 0))

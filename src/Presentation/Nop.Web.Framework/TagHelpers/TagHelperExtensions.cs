@@ -49,9 +49,7 @@ public static class TagHelperExtensions
             return result;
 
         foreach (var attrName in output.Attributes.Select(x => x.Name).Distinct())
-        {
             result.Add(attrName, await output.GetAttributeValueAsync(attrName));
-        }
 
         return result;
     }

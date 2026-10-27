@@ -46,6 +46,6 @@ public partial class MultistoreDisabledWarningViewComponent : NopViewComponent
         if (!enabled)
             return Content("");
 
-        return View();
+        return await ViewAsync();
     }
 }

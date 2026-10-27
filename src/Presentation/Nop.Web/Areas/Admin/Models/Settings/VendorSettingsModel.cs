@@ -66,6 +66,10 @@ public partial record VendorSettingsModel : BaseNopModel, ISettingsModel
     public bool ShowVendorOnOrderDetailsPage { get; set; }
     public bool ShowVendorOnOrderDetailsPage_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowVendorsToUpload3dObjects")]
+    public bool AllowVendorsToUpload3dObjects { get; set; }
+    public bool AllowVendorsToUpload3dObjects_OverrideForStore { get; set; }
+
     public VendorAttributeSearchModel VendorAttributeSearchModel { get; set; }
 
     #endregion

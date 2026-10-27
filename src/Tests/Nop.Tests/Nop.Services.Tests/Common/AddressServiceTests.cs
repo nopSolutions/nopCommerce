@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;

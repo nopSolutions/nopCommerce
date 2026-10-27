@@ -48,14 +48,9 @@ public partial class CaptchaSettings : ISettings
     public bool ShowOnBlogCommentPage { get; set; }
 
     /// <summary>
-    /// A value indicating whether CAPTCHA should be displayed on the "comment news" page
-    /// </summary>
-    public bool ShowOnNewsCommentPage { get; set; }
-
-    /// <summary>
     /// A value indicating whether CAPTCHA should be displayed on the "News letter" page
     /// </summary>
-    public bool ShowOnNewsletterPage { get; set; }        
+    public bool ShowOnNewsletterPage { get; set; }
 
     /// <summary>
     /// A value indicating whether CAPTCHA should be displayed on the product reviews page
@@ -73,11 +68,6 @@ public partial class CaptchaSettings : ISettings
     public bool ShowOnForgotPasswordPage { get; set; }
 
     /// <summary>
-    /// A value indicating whether CAPTCHA should be displayed on the Forum
-    /// </summary>
-    public bool ShowOnForum { get; set; }
-
-    /// <summary>
     /// A value indicating whether CAPTCHA should be displayed on the checkout page for guest customers
     /// </summary>
     public bool ShowOnCheckoutPageForGuests { get; set; }
@@ -86,6 +76,11 @@ public partial class CaptchaSettings : ISettings
     /// A value indicating whether CAPTCHA should be displayed on the check gift card balance page
     /// </summary>
     public bool ShowOnCheckGiftCardBalance { get; set; }
+
+    /// <summary>
+    /// A value indicating whether CAPTCHA should be displayed on the Withdrawal form
+    /// </summary>
+    public bool ShowOnWithdrawalForm { get; set; }
 
     /// <summary>
     /// The base reCAPTCHA API URL

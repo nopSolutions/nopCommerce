@@ -1,0 +1,24 @@
+﻿@model ContactFormAttributeModel
+
+@{
+    const string hideInfoBlockAttributeName = "ContactFormAttributePage.HideCommonBlock";
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+    const string hideValuesBlockAttributeName = "ContactFormAttributePage.HideValuesBlock";
+    var hideValuesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideValuesBlockAttributeName);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <nop-cards id="contact-form-attribute-cards">
+                <nop-card asp-name="contact-form-attribute-info" asp-icon="fas fa-info" asp-title="@T("Admin.Common.ContactFormAttributes.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+                <nop-card asp-name="contact-form-attribute-values" asp-icon="fas fa-square-check" asp-title="@T("Admin.Common.ContactFormAttributes.Values")" asp-hide-block-attribute-name="@hideValuesBlockAttributeName" asp-hide="@hideValuesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-card>
+            </nop-cards>
+        </div>
+    </div>
+</section>

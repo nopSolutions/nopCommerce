@@ -1,11 +1,11 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
-using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 
@@ -66,6 +66,7 @@ public class AzureBlobPlugin : BasePlugin, IMiscPlugin
         if (data?.AzureBlobConfig != null)
             settings = data.AzureBlobConfig;
         else
+        {
             settings = new AzureBlobSettings
             {
                 Enabled = false,
@@ -74,6 +75,7 @@ public class AzureBlobPlugin : BasePlugin, IMiscPlugin
                 ConnectionString = string.Empty,
                 ContainerName = string.Empty
             };
+        }
 
         settings.AzureCacheControlHeader = await _settingService.GetSettingByKeyAsync<string>($"{nameof(MediaSettings)}.{nameof(AzureBlobSettings.AzureCacheControlHeader)}") ?? string.Empty;
 

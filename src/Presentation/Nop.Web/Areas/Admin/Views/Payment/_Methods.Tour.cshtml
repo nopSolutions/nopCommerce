@@ -20,10 +20,9 @@
                 providersDataTable.on('init.dt', function() {
 
                 if (providersDataTable.rows().count() > 0)
-                {
-                    const manualMethod = providersDataTable.row((idx, data) => data.SystemName === "Payments.Manual");
+                {                    
                     const checkMoneyMethod = providersDataTable.row((idx, data) => data.SystemName === "Payments.CheckMoneyOrder");
-                    const tourProvider = manualMethod.any() ? manualMethod : providersDataTable.row(0);
+                    const tourProvider = checkMoneyMethod.any() ? checkMoneyMethod : providersDataTable.row(0);
 
                     if (checkMoneyMethod.any()) {
                         steps.push({
@@ -31,17 +30,6 @@
                             popover: {
                                 title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.CheckMoney.Title").Text)',
                                 description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.CheckMoney.Text").Text)',
-                                side: "bottom",
-                                align: "start"
-                            }});
-                    }
-
-                    if (manualMethod.any()) {
-                        steps.push({
-                            element: manualMethod.node(),
-                            popover: {
-                                title: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Manual.Title").Text)',
-                                description: '@JavaScriptEncoder.Default.Encode(T("Admin.ConfigurationSteps.PaymentMethods.Manual.Text").Text)',
                                 side: "bottom",
                                 align: "start"
                             }});

@@ -65,5 +65,28 @@ public partial class DeepSeekHttpClientHelper : IArtificialIntelligenceHttpClien
         return result ?? string.Empty;
     }
 
+    /// <summary>
+    /// Gets tokens usage information
+    /// </summary>
+    /// <param name="responseText">Text of response from AI service to get token usage information</param>
+    /// <returns>Tokens usage information</returns>
+    public virtual string GetTokensInfo(string responseText)
+    {
+        var response = JsonConvert.DeserializeAnonymousType(responseText,
+            new
+            {
+                usage = new
+                {
+                    prompt_tokens = 0,
+                    completion_tokens = 0,
+                    total_tokens = 0
+                }
+            });
+
+        var result = $"Prompt tokens: {response.usage.prompt_tokens}{Environment.NewLine}Completion tokens: {response.usage.completion_tokens}{Environment.NewLine}Total tokens: {response.usage.total_tokens}";
+
+        return result;
+    }
+
     #endregion
 }

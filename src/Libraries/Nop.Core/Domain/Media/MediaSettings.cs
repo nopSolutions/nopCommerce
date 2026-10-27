@@ -136,4 +136,29 @@ public partial class MediaSettings : ISettings
     /// Gets a path to the picture files
     /// </summary>
     public string PicturePath { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether camera controls are enabled for 3D objects
+    /// </summary>
+    public bool Object3dCameraControlEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether zoom is enabled for 3D objects
+    /// </summary>
+    public bool Object3dZoomEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether automatic rotation is enabled for 3D objects
+    /// </summary>
+    public bool Object3dAutoRotateEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether lazy loading is enabled for 3D objects
+    /// </summary>
+    public bool Object3dLazyLoadingEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum allowed upload size for 3D objects files (in megabytes)
+    /// </summary>
+    public int Object3dUploadSizeLimit { get; set; }
 }

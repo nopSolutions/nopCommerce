@@ -1,4 +1,4 @@
-﻿using Nop.Web.Areas.Admin.Models.Orders;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -13,8 +13,8 @@ public partial record OrderSettingsModel : BaseNopModel, ISettingsModel
 
     public OrderSettingsModel()
     {
-        ReturnRequestReasonSearchModel = new ReturnRequestReasonSearchModel();
-        ReturnRequestActionSearchModel = new ReturnRequestActionSearchModel();
+        AutoCancelIgnoredPaymentMethods = new List<string>();
+        AvailablePaymentMethods = new List<SelectListItem>();
     }
 
     #endregion
@@ -95,22 +95,6 @@ public partial record OrderSettingsModel : BaseNopModel, ISettingsModel
     public bool AttachPdfInvoiceToOrderCompletedEmail { get; set; }
     public bool AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore { get; set; }
 
-    [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestsEnabled")]
-    public bool ReturnRequestsEnabled { get; set; }
-    public bool ReturnRequestsEnabled_OverrideForStore { get; set; }
-
-    [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestsAllowFiles")]
-    public bool ReturnRequestsAllowFiles { get; set; }
-    public bool ReturnRequestsAllowFiles_OverrideForStore { get; set; }
-
-    [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestNumberMask")]
-    public string ReturnRequestNumberMask { get; set; }
-    public bool ReturnRequestNumberMask_OverrideForStore { get; set; }
-
-    [NopResourceDisplayName("Admin.Configuration.Settings.Order.NumberOfDaysReturnRequestAvailable")]
-    public int NumberOfDaysReturnRequestAvailable { get; set; }
-    public bool NumberOfDaysReturnRequestAvailable_OverrideForStore { get; set; }
-
     [NopResourceDisplayName("Admin.Configuration.Settings.Order.ActivateGiftCardsAfterCompletingOrder")]
     public bool ActivateGiftCardsAfterCompletingOrder { get; set; }
 
@@ -152,9 +136,28 @@ public partial record OrderSettingsModel : BaseNopModel, ISettingsModel
     public bool AllowCustomersCancelOrders { get; set; }
     public bool AllowCustomersCancelOrders_OverrideForStore { get; set; }
 
-    public ReturnRequestReasonSearchModel ReturnRequestReasonSearchModel { get; set; }
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.AutoCancelEnabled")]
+    public bool AutoCancelEnabled { get; set; }
+    public bool AutoCancelEnabled_OverrideForStore { get; set; }
 
-    public ReturnRequestActionSearchModel ReturnRequestActionSearchModel { get; set; }
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.AutoCancelDelay")]
+    public int AutoCancelDelay { get; set; }
+    public bool AutoCancelDelay_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.AutoCancelIgnoredPaymentMethods")]
+    public IList<string> AutoCancelIgnoredPaymentMethods { get; set; }
+    public bool AutoCancelIgnoredPaymentMethods_OverrideForStore { get; set; }
+    public List<SelectListItem> AvailablePaymentMethods { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.AutoCancelRestoreShoppingCart")]
+    public bool AutoCancelRestoreShoppingCart { get; set; }
+    public bool AutoCancelRestoreShoppingCart_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.Order.NextRecurringPaymentNotificationDays")]
+    public int NextRecurringPaymentNotificationDays { get; set; }
+    public bool NextRecurringPaymentNotificationDays_OverrideForStore { get; set; }
+
+    public ReturnRequestSettingsModel ReturnRequestSettings { get; set; } = new();
 
     #endregion
 }

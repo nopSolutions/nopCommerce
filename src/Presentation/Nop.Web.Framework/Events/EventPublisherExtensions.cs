@@ -14,16 +14,6 @@ public static class EventPublisherExtensions
     /// </summary>
     /// <param name="eventPublisher">Event publisher</param>
     /// <param name="model">Model</param>
-    public static void ModelPrepared(this IEventPublisher eventPublisher, object model)
-    {
-        ModelPreparedAsync(eventPublisher, model).Wait();
-    }
-
-    /// <summary>
-    /// Publish ModelPrepared event
-    /// </summary>
-    /// <param name="eventPublisher">Event publisher</param>
-    /// <param name="model">Model</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     public static async Task ModelPreparedAsync(this IEventPublisher eventPublisher, object model)
     {

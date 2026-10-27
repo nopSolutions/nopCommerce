@@ -46,8 +46,7 @@
                                         },
                                         new ColumnProperty(nameof(PaymentMethodModel.SystemName))
                                         {
-                                            Title = T("Admin.Configuration.Payment.Methods.Fields.SystemName").Text,
-                                            Width = "100"
+                                            Title = T("Admin.Configuration.Payment.Methods.Fields.SystemName").Text
                                         },
                                         new ColumnProperty(nameof(PaymentMethodModel.SupportCapture))
                                         {
@@ -79,13 +78,11 @@
                                         },
                                         new ColumnProperty(nameof(PaymentMethodModel.RecurringPaymentType))
                                         {
-                                            Title = T("Admin.Configuration.Payment.Methods.Fields.RecurringPaymentType").Text,
-                                            Width = "150"
+                                            Title = T("Admin.Configuration.Payment.Methods.Fields.RecurringPaymentType").Text
                                         },
                                         new ColumnProperty(nameof(PaymentMethodModel.DisplayOrder))
                                         {
                                             Title = T("Admin.Configuration.Payment.Methods.Fields.DisplayOrder").Text,
-                                            Width = "100",
                                             ClassName = NopColumnClassDefaults.CenterAll,
                                             Editable = true,
                                             EditType = EditType.Number
@@ -109,7 +106,7 @@
                                         new ColumnProperty(nameof(PaymentMethodModel.SystemName))
                                         {
                                             Title = T("Admin.Common.Edit").Text,
-                                            Width = "80",
+                                            Width = "100",
                                             ClassName =  NopColumnClassDefaults.Button + " column-edit",
                                             Render = new RenderButtonsInlineEdit()
                                         }

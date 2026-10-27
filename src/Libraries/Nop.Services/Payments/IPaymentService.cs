@@ -144,11 +144,4 @@ public partial interface IPaymentService
     /// The task result contains the result
     /// </returns>
     Task<CancelRecurringPaymentResult> CancelRecurringPaymentAsync(CancelRecurringPaymentRequest cancelPaymentRequest);
-
-    /// <summary>
-    /// Gets masked credit card number
-    /// </summary>
-    /// <param name="creditCardNumber">Credit card number</param>
-    /// <returns>Masked credit card number</returns>
-    string GetMaskedCreditCardNumber(string creditCardNumber);
 }

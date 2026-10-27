@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Domain.Blogs;
 using Nop.Services.Blogs;
 using NUnit.Framework;

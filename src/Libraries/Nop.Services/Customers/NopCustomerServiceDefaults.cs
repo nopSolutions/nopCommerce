@@ -52,10 +52,18 @@ public static partial class NopCustomerServicesDefaults
     /// </remarks>
     public static CacheKey CustomerByGuidCacheKey => new("Nop.customer.byguid.{0}");
 
+    /// <summary>
+    /// Gets a key for caching
+    /// </summary>
+    /// <remarks>
+    /// {0} : phone
+    /// </remarks>
+    public static CacheKey CustomerByPhoneCacheKey => new("Nop.customer.byphone.{0}");
+
     #endregion
 
     #region Customer roles
-    
+
     /// <summary>
     /// Gets a key for caching
     /// </summary>

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
@@ -8,6 +7,7 @@ using Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;

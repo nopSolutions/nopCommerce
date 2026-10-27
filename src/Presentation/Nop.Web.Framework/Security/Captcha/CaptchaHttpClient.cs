@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Security;
+using Nop.Services.Helpers;
 using Nop.Services.Security;
 
 namespace Nop.Web.Framework.Security.Captcha;

@@ -41,10 +41,6 @@ public partial record CaptchaSettingsModel : BaseNopModel, ISettingsModel
     public bool ShowOnBlogCommentPage { get; set; }
     public bool ShowOnBlogCommentPage_OverrideForStore { get; set; }
 
-    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsCommentPage")]
-    public bool ShowOnNewsCommentPage { get; set; }
-    public bool ShowOnNewsCommentPage_OverrideForStore { get; set; }
-
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsletterPage")]
     public bool ShowOnNewsLetterPage { get; set; }
     public bool ShowOnNewsLetterPage_OverrideForStore { get; set; }
@@ -61,10 +57,6 @@ public partial record CaptchaSettingsModel : BaseNopModel, ISettingsModel
     public bool ShowOnForgotPasswordPage { get; set; }
     public bool ShowOnForgotPasswordPage_OverrideForStore { get; set; }
 
-    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForum")]
-    public bool ShowOnForum { get; set; }
-    public bool ShowOnForum_OverrideForStore { get; set; }
-
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckoutPageForGuests")]
     public bool ShowOnCheckoutPageForGuests { get; set; }
     public bool ShowOnCheckoutPageForGuests_OverrideForStore { get; set; }
@@ -72,6 +64,10 @@ public partial record CaptchaSettingsModel : BaseNopModel, ISettingsModel
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnCheckGiftCardBalance")]
     public bool ShowOnCheckGiftCardBalance { get; set; }
     public bool ShowOnCheckGiftCardBalance_OverrideForStore { get; set; }
+
+    [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnWithdrawalForm")]
+    public bool ShowOnWithdrawalForm { get; set; }
+    public bool ShowOnWithdrawalForm_OverrideForStore { get; set; }
 
     [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey")]
     public string ReCaptchaPublicKey { get; set; }

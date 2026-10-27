@@ -86,19 +86,17 @@
                                             {
                                                 new(nameof(PermissionItemModel.PermissionName))
                                                 {
-                                                    Title = T("Admin.Configuration.ACL.Permission.PermissionName").Text, 
-                                                    Width = "400px"
+                                                    Title = T("Admin.Configuration.ACL.Permission.PermissionName").Text
                                                 },
                                                 new(nameof(PermissionItemModel.PermissionAppliedFor))
                                                 {
                                                     Title = T("Admin.Customers.CustomerRoles").Text,
-                                                    AutoWidth = true,
                                                     Render = new RenderCustom("renderPermissionText")
                                                 },
                                                 new(nameof(PermissionItemModel.Id))
                                                 {
                                                     Title = T("Admin.Common.Edit").Text,
-                                                    Width = "100px",
+                                                    Width = "100",
                                                     ClassName = NopColumnClassDefaults.Button,
                                                     Render = new RenderCustom("renderPermissionEdit")
                                                 },

@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlTypes;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -10,7 +11,9 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
@@ -27,12 +30,15 @@ public partial class ProductService : IProductService
 {
     #region Fields
 
+    protected readonly ArtificialIntelligenceSettings _artificialIntelligenceSettings;
     protected readonly CatalogSettings _catalogSettings;
     protected readonly IAclService _aclService;
+    protected readonly IAiRecommendationPluginManager _aiRecommendationPluginManager;
     protected readonly ICustomerService _customerService;
     protected readonly IDateRangeService _dateRangeService;
     protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
+    protected readonly IMeasureService _measureService;
     protected readonly IProductAttributeParser _productAttributeParser;
     protected readonly IProductAttributeService _productAttributeService;
     protected readonly IRepository<Category> _categoryRepository;
@@ -41,6 +47,7 @@ public partial class ProductService : IProductService
     protected readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
     protected readonly IRepository<Manufacturer> _manufacturerRepository;
     protected readonly IRepository<Product> _productRepository;
+    protected readonly IRepository<Product3dObject> _product3dObjectRepository;
     protected readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
     protected readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
     protected readonly IRepository<ProductCategory> _productCategoryRepository;
@@ -67,12 +74,15 @@ public partial class ProductService : IProductService
 
     #region Ctor
 
-    public ProductService(CatalogSettings catalogSettings,
+    public ProductService(ArtificialIntelligenceSettings artificialIntelligenceSettings,
+        CatalogSettings catalogSettings,
         IAclService aclService,
+        IAiRecommendationPluginManager aiRecommendationPluginManager,
         ICustomerService customerService,
         IDateRangeService dateRangeService,
         ILanguageService languageService,
         ILocalizationService localizationService,
+        IMeasureService measureService,
         IProductAttributeParser productAttributeParser,
         IProductAttributeService productAttributeService,
         IRepository<Category> categoryRepository,
@@ -81,6 +91,7 @@ public partial class ProductService : IProductService
         IRepository<LocalizedProperty> localizedPropertyRepository,
         IRepository<Manufacturer> manufacturerRepository,
         IRepository<Product> productRepository,
+        IRepository<Product3dObject> product3dObjectRepository,
         IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
         IRepository<ProductAttributeMapping> productAttributeMappingRepository,
         IRepository<ProductCategory> productCategoryRepository,
@@ -102,12 +113,15 @@ public partial class ProductService : IProductService
         IWorkContext workContext,
         LocalizationSettings localizationSettings)
     {
+        _artificialIntelligenceSettings = artificialIntelligenceSettings;
         _catalogSettings = catalogSettings;
         _aclService = aclService;
+        _aiRecommendationPluginManager = aiRecommendationPluginManager;
         _customerService = customerService;
         _dateRangeService = dateRangeService;
         _languageService = languageService;
         _localizationService = localizationService;
+        _measureService = measureService;
         _productAttributeParser = productAttributeParser;
         _productAttributeService = productAttributeService;
         _categoryRepository = categoryRepository;
@@ -116,6 +130,7 @@ public partial class ProductService : IProductService
         _localizedPropertyRepository = localizedPropertyRepository;
         _manufacturerRepository = manufacturerRepository;
         _productRepository = productRepository;
+        _product3dObjectRepository = product3dObjectRepository;
         _productAttributeCombinationRepository = productAttributeCombinationRepository;
         _productAttributeMappingRepository = productAttributeMappingRepository;
         _productCategoryRepository = productCategoryRepository;
@@ -261,9 +276,7 @@ public partial class ProductService : IProductService
             else
             {
                 if (combination.AllowOutOfStockOrders)
-                {
                     stockMessage = await _localizationService.GetResourceAsync("Products.Availability.InStock");
-                }
                 else
                 {
                     var productAvailabilityRange = await
@@ -286,6 +299,7 @@ public partial class ProductService : IProductService
                 var selectedIds = allIds.Intersect(exIds).ToList();
 
                 if (selectedIds.Count != allIds.Count)
+                {
                     if (_catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.AlwaysDisplay)
                         return await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
                     else
@@ -301,6 +315,7 @@ public partial class ProductService : IProductService
                         if (flag)
                             return await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
                     }
+                }
 
                 var productAvailabilityRange = await
                     _dateRangeService.GetProductAvailabilityRangeByIdAsync(product.ProductAvailabilityRangeId);
@@ -310,9 +325,7 @@ public partial class ProductService : IProductService
                         await _localizationService.GetLocalizedAsync(productAvailabilityRange, range => range.Name));
             }
             else
-            {
                 stockMessage = await _localizationService.GetResourceAsync("Products.Availability.InStock");
-            }
         }
 
         return stockMessage;
@@ -769,7 +782,7 @@ public partial class ProductService : IProductService
             .PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryProductsNumberCacheKey, customerRoleIds, storeId, categoryIds);
 
         //only distinct products
-        return await _staticCacheManager.GetAsync(cacheKey, () => query.Select(p => p.Id).CountAsync());
+        return await _staticCacheManager.GetAsync(cacheKey, () => query.Select(p => p.Id).Distinct().CountAsync());
     }
 
     /// <summary>
@@ -835,6 +848,9 @@ public partial class ProductService : IProductService
         if (pageSize == int.MaxValue)
             pageSize = int.MaxValue - 1;
 
+        //results of the search provider run
+        List<int> providerResults = null;
+
         var productsQuery = _productRepository.Table;
 
         if (!showHidden)
@@ -877,31 +893,66 @@ public partial class ProductService : IProductService
                   (priceMax == null || p.Price <= priceMax)
             select p;
 
-        var activeSearchProvider = await _searchPluginManager.LoadPrimaryPluginAsync(customer, storeId);
-        var providerResults = new List<int>();
-
         if (!string.IsNullOrEmpty(keywords))
         {
-            var langs = await _languageService.GetAllLanguagesAsync(showHidden: true);
-
-            //Set a flag which will to points need to search in localized properties. If showHidden doesn't set to true should be at least two published languages.
-            var searchLocalizedValue = languageId > 0 && langs.Count >= 2 && (showHidden || langs.Count(l => l.Published) >= 2);
-            var productsByKeywords = new List<int>().AsQueryable();
-            var runStandardSearch = activeSearchProvider is null || showHidden;
-
-            try
+            //try to use AI-powered recommendation provider to search products
+            if (!showHidden && await _aiRecommendationPluginManager.LoadPrimaryPluginAsync(customer, storeId) is { } aiRecommendationPlugin)
             {
-                if (!runStandardSearch)
+                try
                 {
-                    providerResults = await activeSearchProvider.SearchProductsAsync(keywords, searchLocalizedValue);
-                    productsByKeywords = providerResults.AsQueryable();
+                    var (results, totalItems) = await aiRecommendationPlugin
+                        .SearchProductsAsync(keywords, categoryIds, manufacturerIds, productTagId, filteredSpecOptions, pageIndex, pageSize);
+
+                    if (!results.Any())
+                        throw new Exception("AI-powered recommendation provider. No products found by the specified parameters");
+
+                    var sortedResult = await productsQuery
+                        .Join(results, product => product.Id, id => id, (product, id) => product)
+                        .OrderBy(orderBy, _localizedPropertyRepository, languageId > 0 ? languageId : (await _workContext.GetWorkingLanguageAsync()).Id, results)
+                        .ToListAsync();
+
+                    return new PagedList<Product>(sortedResult, pageIndex, pageSize, totalItems);
+                }
+                catch
+                {
+                    if (!_artificialIntelligenceSettings.UseStandardSearchWhenNoResults)
+                    {
+                        return await productsQuery
+                            .OrderBy(orderBy, _localizedPropertyRepository, languageId > 0 ? languageId : (await _workContext.GetWorkingLanguageAsync()).Id)
+                            .ToPagedListAsync(pageIndex, pageSize);
+                    }
                 }
             }
-            catch
+
+            var langs = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
+            //set a flag which will to points need to search in localized properties.
+            //if showHidden doesn't set to true should be at least two published languages.
+            var searchLocalizedValue = languageId > 0 && langs.Count >= 2 && (showHidden || langs.Count(l => l.Published) >= 2);
+
+            var productsByKeywords = new List<int>().AsQueryable();
+            var runStandardSearch = true;
+
+            //try to use search provider for searching products by keywords
+            if (!showHidden && await _searchPluginManager.LoadPrimaryPluginAsync(customer, storeId) is ISearchProvider searchProvider)
             {
-                runStandardSearch = _catalogSettings.UseStandardSearchWhenSearchProviderThrowsException;
+                try
+                {
+                    providerResults = await searchProvider.SearchProductsAsync(keywords, searchLocalizedValue);
+                    if (providerResults?.Any() != true)
+                        throw new Exception("Search provider. No products found by the specified keywords");
+
+                    productsByKeywords = providerResults.AsQueryable();
+                    runStandardSearch = false;
+                }
+                catch
+                {
+                    runStandardSearch = _catalogSettings.UseStandardSearchWhenNoResults;
+                }
             }
 
+            //use standard search if search provider is not active or failed
+            //also use standard search if showHidden is set to true, because in this case we should return all products (including hidden) and not only products that match the keywords
             if (runStandardSearch)
             {
                 productsByKeywords =
@@ -1046,15 +1097,13 @@ public partial class ProductService : IProductService
             {
                 var productCategoryQuery =
                     from pc in _productCategoryRepository.Table
-                    join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                     where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
                           categoryIds.Contains(pc.CategoryId)
-                    orderby c.DisplayOrder
-                    group pc by pc.ProductId into pc
+                    group pc.DisplayOrder by pc.ProductId into gr
                     select new
                     {
-                        ProductId = pc.Key,
-                        DisplayOrder = pc.First().DisplayOrder
+                        ProductId = gr.Key,
+                        DisplayOrder = gr.Min()
                     };
 
                 productsQuery =
@@ -1123,19 +1172,9 @@ public partial class ProductService : IProductService
             }
         }
 
-        if (providerResults.Any() && orderBy == ProductSortingEnum.Position && !showHidden)
-        {
-            var sortedProducts = from p in productsQuery
-                                 join pr in providerResults.Select((id, ind) => new { ind, id }) on p.Id equals pr.id into orderSeq
-                                 from os in orderSeq.DefaultIfEmpty()
-                                 orderby os == null ? int.MaxValue : os.ind
-                                 select p;
-                                 
-
-            return await sortedProducts.ToPagedListAsync(pageIndex, pageSize);
-        }
-
-        return await productsQuery.OrderBy(_localizedPropertyRepository, await _workContext.GetWorkingLanguageAsync(), orderBy).ToPagedListAsync(pageIndex, pageSize);
+        return await productsQuery
+            .OrderBy(orderBy, _localizedPropertyRepository, languageId > 0 ? languageId : (await _workContext.GetWorkingLanguageAsync()).Id, providerResults)
+            .ToPagedListAsync(pageIndex, pageSize);
     }
 
     /// <summary>
@@ -1188,10 +1227,8 @@ public partial class ProductService : IProductService
                 (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc.Value > DateTime.UtcNow));
         }
         //vendor filtering
-        if (vendorId > 0)
-        {
+        if (vendorId > 0) 
             query = query.Where(p => p.VendorId == vendorId);
-        }
 
         //apply store mapping constraints
         if (!showHidden && storeId > 0)
@@ -1370,8 +1407,10 @@ public partial class ProductService : IProductService
         foreach (var idStr in product.RequiredProductIds
                      .Split(_separator, StringSplitOptions.RemoveEmptyEntries)
                      .Select(x => x.Trim()))
+        {
             if (int.TryParse(idStr, out var id))
                 ids.Add(id);
+        }
 
         return ids.ToArray();
     }
@@ -1687,6 +1726,52 @@ public partial class ProductService : IProductService
         return queryFilter.Except(filter).ToArray();
     }
 
+    /// <summary>
+    /// Get base price (PAngV)
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <param name="productPrice">Product price (in primary currency). Pass null if you want to use a default produce price</param>
+    /// <param name="totalWeight">Total weight of product (with attribute weight adjustment). Pass null if you want to use a default produce weight</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the base price
+    /// </returns>
+    public virtual async Task<decimal?> GetBaseProductPriceAsync(Product product, decimal? productPrice, decimal? totalWeight = null)
+    {
+        ArgumentNullException.ThrowIfNull(product);
+
+        if (!product.BasepriceEnabled)
+            return null;
+
+        var productAmount = totalWeight.HasValue && totalWeight.Value > decimal.Zero ? totalWeight.Value : product.BasepriceAmount;
+
+        //amount in product cannot be 0
+        if (productAmount == 0)
+            return null;
+        
+        var referenceAmount = product.BasepriceBaseAmount;
+        var productUnit = await _measureService.GetMeasureWeightByIdAsync(product.BasepriceUnitId);
+
+        //measure weight cannot be loaded
+        if (productUnit == null)
+            return null;
+
+        var referenceUnit = await _measureService.GetMeasureWeightByIdAsync(product.BasepriceBaseUnitId);
+
+        //measure weight cannot be loaded
+        if (referenceUnit == null)
+            return null;
+
+        productPrice ??= product.Price;
+
+        var basePrice = productPrice.Value /
+                        //do not round. otherwise, it can cause issues
+                        await _measureService.ConvertWeightAsync(productAmount, productUnit, referenceUnit, false) *
+                        referenceAmount;
+        
+        return basePrice;
+    }
+
     #endregion
 
     #region Inventory management methods
@@ -1760,9 +1845,8 @@ public partial class ProductService : IProductService
 
                 if (product.AllowAddingOnlyExistingAttributeCombinations)
                 {
-                    var totalStockByAllCombinations = await (await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id))
-                        .ToAsyncEnumerable()
-                        .SumAsync(c => c.StockQuantity);
+                    var totalStockByAllCombinations = (await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id))
+                        .Sum(c => c.StockQuantity);
 
                     await ApplyLowStockActivityAsync(product, totalStockByAllCombinations);
                 }
@@ -1792,10 +1876,8 @@ public partial class ProductService : IProductService
 
             //associated product (bundle)
             var associatedProduct = await GetProductByIdAsync(attributeValue.AssociatedProductId);
-            if (associatedProduct != null)
-            {
+            if (associatedProduct != null) 
                 await AdjustInventoryAsync(associatedProduct, quantityToChange * attributeValue.Quantity, message);
-            }
         }
     }
 
@@ -2250,10 +2332,12 @@ public partial class ProductService : IProductService
         var products = _productRepository.Table;
 
         if (discountId.HasValue)
+        {
             products = from product in products
                 join dpm in _discountProductMappingRepository.Table on product.Id equals dpm.EntityId
                 where dpm.DiscountId == discountId.Value
                 select product;
+        }
 
         if (!showHidden)
             products = products.Where(product => !product.Deleted);
@@ -2513,6 +2597,52 @@ public partial class ProductService : IProductService
     public virtual async Task DeleteDiscountProductMappingAsync(DiscountProductMapping discountProductMapping)
     {
         await _discountProductMappingRepository.DeleteAsync(discountProductMapping);
+    }
+
+    #endregion
+
+    #region Product 3D objects
+
+    /// <summary>
+    /// Gets the 3D object associated with the product
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <returns>The task result contains the associated 3D object, or <c>null</c> if the 3D object is not found</returns>
+    public virtual async Task<Product3dObject> GetProduct3dObjectAsync(Product product)
+    {
+        ArgumentNullException.ThrowIfNull(product);
+
+        return await _product3dObjectRepository.Table.FirstOrDefaultAsync(x => x.ProductId == product.Id);
+    }
+
+    /// <summary>
+    /// Deletes the 3D object
+    /// </summary>
+    /// <param name="product3dObject">The 3D object</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeleteProduct3dObjectAsync(Product3dObject product3dObject)
+    {
+        await _product3dObjectRepository.DeleteAsync(product3dObject);
+    }
+
+    /// <summary>
+    /// Inserts the 3D object
+    /// </summary>
+    /// <param name="product3dObject">The 3D object</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertProduct3dObjectAsync(Product3dObject product3dObject)
+    {
+        await _product3dObjectRepository.InsertAsync(product3dObject);
+    }
+
+    /// <summary>
+    /// Updates the 3D object
+    /// </summary>
+    /// <param name="product3dObject">The 3D object</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task UpdateProduct3dObjectAsync(Product3dObject product3dObject)
+    {
+        await _product3dObjectRepository.UpdateAsync(product3dObject);
     }
 
     #endregion

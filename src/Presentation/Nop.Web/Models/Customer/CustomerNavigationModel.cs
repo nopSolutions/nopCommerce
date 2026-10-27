@@ -33,7 +33,6 @@ public enum CustomerNavigationEnum
     RewardPoints = 60,
     ChangePassword = 70,
     Avatar = 80,
-    ForumSubscriptions = 90,
     ProductReviews = 100,
     VendorInfo = 110,
     GdprTools = 120,

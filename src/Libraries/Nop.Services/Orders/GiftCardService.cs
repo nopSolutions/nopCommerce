@@ -96,10 +96,12 @@ public partial class GiftCardService : IGiftCardService
             }
 
             if (usedWithOrderId.HasValue)
+            {
                 query = from gc in query
                     join gcuh in _giftCardUsageHistoryRepository.Table on gc.Id equals gcuh.GiftCardId
                     where gcuh.UsedWithOrderId == usedWithOrderId
                     select gc;
+            }
 
             if (createdFromUtc.HasValue)
                 query = query.Where(gc => createdFromUtc.Value <= gc.CreatedOnUtc);
@@ -180,8 +182,10 @@ public partial class GiftCardService : IGiftCardService
         {
             var giftCards = await GetAllGiftCardsAsync(isGiftCardActivated: true, giftCardCouponCode: couponCode);
             foreach (var gc in giftCards)
+            {
                 if (await IsGiftCardValidAsync(gc))
                     result.Add(gc);
+            }
         }
 
         return result;

@@ -71,4 +71,9 @@ public partial class VendorSettings : ISettings
     /// Gets or sets the maximum number of product pictures to upload for vendor
     /// </summary>
     public int MaximumProductPicturesNumber { get; set; }
+
+    /// <summary>
+    /// Get or sets a value indicating whether vendor can upload 3D objects
+    /// </summary>
+    public bool AllowVendorsToUpload3dObjects { get; set; }
 }

@@ -14,10 +14,8 @@ public static class ModelStateExtensions
         {
             var modelError = modelState.Errors[i];
 
-            if (!string.IsNullOrEmpty(modelError.ErrorMessage))
-            {
+            if (!string.IsNullOrEmpty(modelError.ErrorMessage)) 
                 errors.Add(modelError.ErrorMessage);
-            }
         }
 
         var dictionary = new Dictionary<string, object>

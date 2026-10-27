@@ -27,4 +27,14 @@ public partial interface IReturnRequestModelFactory
     /// The task result contains the customer return requests model
     /// </returns>
     Task<CustomerReturnRequestsModel> PrepareCustomerReturnRequestsModelAsync();
+
+    /// <summary>
+    /// Prepare the withdrawal form model
+    /// </summary>
+    /// <returns>
+    /// <param name="model">Withdrawal form model</param>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the withdrawal form model
+    /// </returns>
+    Task<WithdrawalFormModel> PrepareWithdrawalFormModelAsync(WithdrawalFormModel model);
 }

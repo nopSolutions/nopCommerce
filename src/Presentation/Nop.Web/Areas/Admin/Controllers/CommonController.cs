@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Common;
 using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -280,6 +281,9 @@ public partial class CommonController : BaseAdminController
             await _notificationService.ErrorNotificationAsync(exc);
         }
 
+        //prepare model
+        model = await _commonModelFactory.PrepareMaintenanceModelAsync(model);
+
         return View(model);
     }
 
@@ -297,6 +301,30 @@ public partial class CommonController : BaseAdminController
         {
             await _notificationService.ErrorNotificationAsync(exc);
         }
+
+        //prepare model
+        model = await _commonModelFactory.PrepareMaintenanceModelAsync(model);
+
+        return View(model);
+    }
+
+    [HttpPost, ActionName("Maintenance")]
+    [FormValueRequired("clear-search-history")]
+    [CheckPermission(StandardPermission.System.MANAGE_MAINTENANCE)]
+    public virtual async Task<IActionResult> ClearSearchHistoryData(MaintenanceModel model)
+    {
+        try
+        {
+            model.ClearSearchHistory.NumberOfDeletedItems = await _dataProvider.TruncateAsync<SearchTerm>();
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.Maintenance.ClearSearchHistory.Complete"));
+        }
+        catch (Exception exc)
+        {
+            await _notificationService.ErrorNotificationAsync(exc);
+        }
+
+        //prepare model
+        model = await _commonModelFactory.PrepareMaintenanceModelAsync(model);
 
         return View(model);
     }

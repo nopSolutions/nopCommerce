@@ -12,8 +12,7 @@
                 var customerConfirmation = confirm('@Model.Message');
                 if (customerConfirmation) {
                     var postData = {
-                        addressId: '@Model.AddressId',
-                        isNewAddress: '@Model.IsNewAddress'
+                        addressId: '@Model.AddressId'
                     };
                     addAntiForgeryToken(postData);
 

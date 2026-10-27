@@ -75,7 +75,7 @@ public class AzureThumbService : IThumbService
             _blobServiceClient = new BlobServiceClient(_azureBlobStorageConnectionString);
             _blobContainerClient = _blobServiceClient.GetBlobContainerClient(_azureBlobStorageContainerName);
 
-            _blobContainerClient.CreateIfNotExistsAsync(PublicAccessType.Blob).GetAwaiter().GetResult();
+            _blobContainerClient.CreateIfNotExistsAsync(PublicAccessType.Blob).Wait();
 
             _isInitialized = true;
         }

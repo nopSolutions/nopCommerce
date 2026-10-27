@@ -8,16 +8,6 @@ namespace Nop.Services.Payments;
 public partial class ProcessPaymentResult : BaseNopResult
 {
     /// <summary>
-    /// Gets or sets an AVS result
-    /// </summary>
-    public string AvsResult { get; set; }
-
-    /// <summary>
-    /// Gets or sets an CVV2 result
-    /// </summary>
-    public string Cvv2Result { get; set; }
-
-    /// <summary>
     /// Gets or sets the authorization transaction identifier
     /// </summary>
     public string AuthorizationTransactionId { get; set; }
@@ -46,11 +36,6 @@ public partial class ProcessPaymentResult : BaseNopResult
     /// Gets or sets the subscription transaction identifier
     /// </summary>
     public string SubscriptionTransactionId { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether storing of credit card number, CVV2 is allowed
-    /// </summary>
-    public bool AllowStoringCreditCardNumber { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating that the recurring payment failed

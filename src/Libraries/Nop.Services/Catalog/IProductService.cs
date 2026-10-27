@@ -419,6 +419,18 @@ public partial interface IProductService
     /// </returns>
     Task<string[]> GetNotExistingProductsAsync(string[] productSku);
 
+    /// <summary>
+    /// Get base price (PAngV)
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <param name="productPrice">Product price (in primary currency). Pass null if you want to use a default produce price</param>
+    /// <param name="totalWeight">Total weight of product (with attribute weight adjustment). Pass null if you want to use a default produce weight</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the base price
+    /// </returns>
+    Task<decimal?> GetBaseProductPriceAsync(Product product, decimal? productPrice, decimal? totalWeight = null);
+
     #endregion
 
     #region Inventory management methods
@@ -851,6 +863,38 @@ public partial interface IProductService
     /// <param name="discountProductMapping">Discount-product mapping</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task DeleteDiscountProductMappingAsync(DiscountProductMapping discountProductMapping);
+
+    #endregion
+
+    #region Product 3D objects
+
+    /// <summary>
+    /// Gets the 3D object associated with the product
+    /// </summary>
+    /// <param name="product">Product</param>
+    /// <returns>The task result contains the associated 3D object, or <c>null</c> if the 3D object is not found</returns>
+    Task<Product3dObject> GetProduct3dObjectAsync(Product product);
+
+    /// <summary>
+    /// Deletes the 3D object
+    /// </summary>
+    /// <param name="product3dObject">The 3D object</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task DeleteProduct3dObjectAsync(Product3dObject product3dObject);
+
+    /// <summary>
+    /// Inserts the 3D object
+    /// </summary>
+    /// <param name="product3dObject">The 3D object</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task InsertProduct3dObjectAsync(Product3dObject product3dObject);
+
+    /// <summary>
+    /// Updates the 3D object
+    /// </summary>
+    /// <param name="product3dObject">The 3D object</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task UpdateProduct3dObjectAsync(Product3dObject product3dObject);
 
     #endregion
 }

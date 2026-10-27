@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Orders;
+﻿namespace Nop.Core.Domain.Orders;
 
 /// <summary>
 /// Represents a shopping cart type
@@ -13,5 +13,10 @@ public enum ShoppingCartType
     /// <summary>
     /// Wishlist
     /// </summary>
-    Wishlist = 2
+    Wishlist = 2,
+
+    /// <summary>
+    /// Stash
+    /// </summary>
+    Stash
 }

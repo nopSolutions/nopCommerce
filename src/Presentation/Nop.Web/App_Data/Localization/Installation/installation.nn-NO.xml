@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="Engelsk" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Admin e-post</Value>
@@ -11,6 +11,15 @@
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Skriv inn admin passord</Value>
+  </LocaleResource>
+  <LocaleResource Name="CharacterSet">
+    <Value>Tegnsett</Value>
+  </LocaleResource>
+  <LocaleResource Name="Collation">
+    <Value>Collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="CollationRequired">
+    <Value>Collation er nødvendig</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>'{0}' kontoen har ikke endringstillatelse i mappe '{1}'. Konfigurer disse tillatelsene.</Value>
@@ -93,6 +102,24 @@
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
   </LocaleResource>
+  <LocaleResource Name="Progress.CheckPermissions">
+    <Value>Kontrollerer tillatelser...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CreateDatabase">
+    <Value>Oppretter database...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InitializeDatabase">
+    <Value>Inicialiserer database...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InsertData">
+    <Value>Setter inn data...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.PreparePlugins">
+    <Value>Forbereder utvidelser...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.RegionalResources">
+    <Value>Bruker regionale innstillinger...</Value>
+  </LocaleResource>
   <LocaleResource Name="RawConnectionString">
     <Value>Angi tilkoblingsstreng (avansert)</Value>
   </LocaleResource>
@@ -133,7 +160,7 @@
     <Value>Butikkinformasjon</Value>
   </LocaleResource>
   <LocaleResource Name="SubscribeNewsletters">
-    <Value>Subscribe to nopCommerce newsletter</Value>
+    <Value>Abonner på nyhetsbrev fra nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>nopCommerce installasjon</Value>

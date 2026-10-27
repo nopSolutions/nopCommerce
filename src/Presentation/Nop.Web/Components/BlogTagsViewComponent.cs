@@ -22,6 +22,6 @@ public partial class BlogTagsViewComponent : NopViewComponent
             return Content("");
 
         var model = await _blogModelFactory.PrepareBlogPostTagListModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

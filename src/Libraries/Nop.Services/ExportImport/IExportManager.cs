@@ -4,6 +4,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.PriceLists;
 
 namespace Nop.Services.ExportImport;
 
@@ -80,6 +81,142 @@ public partial interface IExportManager
     Task<byte[]> ExportOrdersToXlsxAsync(IList<Order> orders);
 
     /// <summary>
+    /// Export sales summary report to XML
+    /// </summary>
+    /// <param name="salesSummaries">Sales summaries</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result in XML format
+    /// </returns>
+    Task<string> ExportSalesSummaryToXmlAsync(IList<SalesSummaryReportLine> salesSummaries);
+
+    /// <summary>
+    /// Export sales summary report to XLSX
+    /// </summary>
+    /// <param name="salesSummaries">Sales Summaries</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task<byte[]> ExportSalesSummaryToXlsxAsync(IList<SalesSummaryReportLine> salesSummaries);
+
+    /// <summary>
+    /// Export low stock report to XML.
+    /// </summary>
+    /// <param name="products">Low stock products</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result in XML format
+    /// </returns>
+    Task<string> ExportLowStockToXmlAsync(IList<LowStockProductReportLine> products);
+
+    /// <summary>
+    /// Export low stock report to XLSX
+    /// </summary>
+    /// <param name="products">Low stock products</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task<byte[]> ExportLowStockToXlsxAsync(IList<LowStockProductReportLine> products);
+
+    /// <summary>
+    /// Export best sellers report to XML
+    /// </summary>
+    /// <param name="products">Best sellers products</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result in XML format
+    /// </returns>
+    Task<string> ExportBestSellersToXmlAsync(IList<BestsellersReportLine> products);
+
+    /// <summary>
+    /// Export best sellers report to XLSX
+    /// </summary>
+    /// <param name="products">Best sellers products</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task<byte[]> ExportBestSellersToXlsxAsync(IList<BestsellersReportLine> products);
+
+    /// <summary>
+    /// Export never sold report to XML
+    /// </summary>
+    /// <param name="products">Never sold products</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result in XML format
+    /// </returns>
+    Task<string> ExportNeverSoldToXmlAsync(IList<Product> products);
+
+    /// <summary>
+    /// Export never sold report to XLSX
+    /// </summary>
+    /// <param name="products">Never sold products</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task<byte[]> ExportNeverSoldToXlsxAsync(IList<Product> products);
+
+    /// <summary>
+    /// Export country sales report to XML
+    /// </summary>
+    /// <param name="orders">Orders</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result in XML format
+    /// </returns>
+    Task<string> ExportCountrySalesToXmlAsync(IList<OrderByCountryReportLine> orders);
+
+    /// <summary>
+    /// Export country sales report to XLSX
+    /// </summary>
+    /// <param name="orders">Orders</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task<byte[]> ExportCountrySalesToXlsxAsync(IList<OrderByCountryReportLine> orders);
+
+    /// <summary>
+    /// Export registered customers report to XML
+    /// </summary>
+    /// <param name="customers">Registered customers</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result in XML format
+    /// </returns>
+    Task<string> ExportRegisteredCustomersToXmlAsync(IList<RegisteredCustomersReportLine> customers);
+
+    /// <summary>
+    /// Export registered customers report to XLSX
+    /// </summary>
+    /// <param name="customers">Registered customers</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task<byte[]> ExportRegisteredCustomersToXlsxAsync(IList<RegisteredCustomersReportLine> customers);
+
+    /// <summary>
+    /// Export best customers by order total report to XML
+    /// </summary>
+    /// <param name="customers">Best customers</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result in XML format
+    /// </returns>
+    Task<string> ExportBestCustomersByOrderTotalToXmlAsync(IList<BestCustomerReportLine> customers);
+
+    /// <summary>
+    /// Export best customers by order total report to XLSX
+    /// </summary>
+    /// <param name="customers">Best customers</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task<byte[]> ExportBestCustomersByOrderTotalToXlsxAsync(IList<BestCustomerReportLine> customers);
+
+    /// <summary>
+    /// Export best customers by number of orders report to XML
+    /// </summary>
+    /// <param name="customers">Best customers</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result in XML format
+    /// </returns>
+    Task<string> ExportBestCustomersByNumberOfOrdersToXmlAsync(IList<BestCustomerReportLine> customers);
+
+    /// <summary>
+    /// Export best customers by number of orders report to XLSX
+    /// </summary>
+    /// <param name="customers">Best customers</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task<byte[]> ExportBestCustomersByNumberOfOrdersToXlsxAsync(IList<BestCustomerReportLine> customers);
+
+    /// <summary>
     /// Export customer list to XLSX
     /// </summary>
     /// <param name="customers">Customers</param>
@@ -133,4 +270,11 @@ public partial interface IExportManager
     /// <param name="filterLevelValues">Filter level values</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task<byte[]> ExportFilterLevelValuesToXlsxAsync(IList<FilterLevelValue> filterLevelValues);
+
+    /// <summary>
+    /// Export price lists to XLSX
+    /// </summary>
+    /// <param name="priceLists">Price lists</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task<byte[]> ExportPriceListsToXlsxAsync(IList<PriceList> priceLists);
 }

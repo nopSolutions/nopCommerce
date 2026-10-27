@@ -47,10 +47,8 @@ public partial class AppSettings
     /// <param name="configurations">Configurations to update</param>
     public virtual void Update(IList<IConfig> configurations)
     {
-        foreach (var config in configurations)
-        {
+        foreach (var config in configurations) 
             _configurations[config.GetType()] = config;
-        }
     }
 
     #endregion

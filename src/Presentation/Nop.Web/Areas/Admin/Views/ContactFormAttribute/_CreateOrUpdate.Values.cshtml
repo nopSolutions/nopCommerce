@@ -1,0 +1,77 @@
+@model ContactFormAttributeModel
+
+@if (Model.Id > 0)
+{
+    <div class="card-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "contact-form-attribute-values-grid",
+            UrlRead = new DataUrl("ValueList", "ContactFormAttribute", new RouteValueDictionary { [nameof(Model.ContactFormAttributeValueSearchModel.ContactFormAttributeId)] = Model.ContactFormAttributeValueSearchModel.ContactFormAttributeId }),
+            UrlDelete = new DataUrl("ValueDelete", "ContactFormAttribute", null),
+            Length = Model.ContactFormAttributeValueSearchModel.PageSize,
+            LengthMenu = Model.ContactFormAttributeValueSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ContactFormAttributeValueModel.Name))
+                {
+                    Title = T("Admin.Common.ContactFormAttributes.Values.Fields.Name").Text
+                },
+                new ColumnProperty(nameof(ContactFormAttributeValueModel.IsPreSelected))
+                {
+                    Title = T("Admin.Common.ContactFormAttributes.Values.Fields.IsPreSelected").Text,
+                    Width = "100",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(ContactFormAttributeValueModel.DisplayOrder))
+                {
+                    Title = T("Admin.Common.ContactFormAttributes.Values.Fields.DisplayOrder").Text,
+                    ClassName =  NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(ContactFormAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderCustom("renderColumnEdit")
+                },
+                new ColumnProperty(nameof(ContactFormAttributeValueModel.Id))
+                {
+                    Title = T("Admin.Common.Delete").Text,
+                    Width = "100",
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    ClassName =  NopColumnClassDefaults.Button
+                }
+            }
+        })
+    
+        <script>
+            function renderColumnEdit(data, type, row, meta) {
+                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/ContactFormAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=contact-form-attribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fas fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
+            }
+        </script>    
+    </div>
+    <div class="card-footer">
+        <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "ContactFormAttribute", new { contactFormAttributeId = Model.Id, btnId = "btnRefresh", formId = "contact-form-attribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
+            @T("Admin.Common.ContactFormAttributes.Values.AddNew")
+        </button>
+        <button type="submit" id="btnRefresh" style="display: none"></button>
+        <script>
+            $(function() {
+                $('#btnRefresh').click(function () {
+                    //refresh grid
+                    updateTable('#contact-form-attribute-values-grid');
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    </div>
+}
+else
+{
+    <div class="card-body">
+        @T("Admin.Common.ContactFormAttributes.Values.SaveBeforeEdit")
+    </div>
+}

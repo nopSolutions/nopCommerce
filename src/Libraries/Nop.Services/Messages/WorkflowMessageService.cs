@@ -4,9 +4,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
@@ -88,138 +86,6 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         _storeService = storeService;
         _tokenizer = tokenizer;
         _messagesSettings = messagesSettings;
-    }
-
-    #endregion
-
-    #region Utilities
-
-    /// <summary>
-    /// Get active message templates by the name
-    /// </summary>
-    /// <param name="messageTemplateName">Message template name</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the list of message templates
-    /// </returns>
-    protected virtual async Task<IList<MessageTemplate>> GetActiveMessageTemplatesAsync(string messageTemplateName, int storeId)
-    {
-        //get message templates by the name
-        var messageTemplates = await _messageTemplateService.GetMessageTemplatesByNameAsync(messageTemplateName, storeId);
-
-        //no template found
-        if (!messageTemplates?.Any() ?? true)
-            return new List<MessageTemplate>();
-
-        //filter active templates
-        messageTemplates = messageTemplates.Where(messageTemplate => messageTemplate.IsActive).ToList();
-
-        return messageTemplates;
-    }
-
-    /// <summary>
-    /// Get EmailAccount to use with a message templates
-    /// </summary>
-    /// <param name="messageTemplate">Message template</param>
-    /// <param name="languageId">Language identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the emailAccount
-    /// </returns>
-    protected virtual async Task<EmailAccount> GetEmailAccountOfMessageTemplateAsync(MessageTemplate messageTemplate, int languageId)
-    {
-        var emailAccountId = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.EmailAccountId, languageId);
-        //some 0 validation (for localizable "Email account" dropdownlist which saves 0 if "Standard" value is chosen)
-        if (emailAccountId == 0)
-            emailAccountId = messageTemplate.EmailAccountId;
-
-        var emailAccount = (await _emailAccountService.GetEmailAccountByIdAsync(emailAccountId) ?? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)) ??
-                           (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
-        return emailAccount;
-    }
-
-    /// <summary>
-    /// Ensure language is active
-    /// </summary>
-    /// <param name="languageId">Language identifier</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the return a value language identifier
-    /// </returns>
-    protected virtual async Task<int> EnsureLanguageIsActiveAsync(int languageId, int storeId)
-    {
-        //load language by specified ID
-        var language = await _languageService.GetLanguageByIdAsync(languageId);
-
-        if (language == null || !language.Published)
-        {
-            //load any language from the specified store
-            language = (await _languageService.GetAllLanguagesAsync(storeId: storeId)).FirstOrDefault();
-        }
-
-        if (language == null || !language.Published)
-        {
-            //load any language
-            language = (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
-        }
-
-        if (language == null)
-            throw new Exception("No active language could be loaded");
-
-        return language.Id;
-    }
-
-    /// <summary>
-    /// Get email and name to send email for store owner
-    /// </summary>
-    /// <param name="messageTemplateEmailAccount">Message template email account</param>
-    /// <returns>Email address and name to send email fore store owner</returns>
-    protected virtual async Task<(string email, string name)> GetStoreOwnerNameAndEmailAsync(EmailAccount messageTemplateEmailAccount)
-    {
-        var storeOwnerEmailAccount = _messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails ? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId) : null;
-        storeOwnerEmailAccount ??= messageTemplateEmailAccount;
-
-        return (storeOwnerEmailAccount.Email, storeOwnerEmailAccount.DisplayName);
-    }
-
-    /// <summary>
-    /// Get email and name to set ReplyTo property of email from customer 
-    /// </summary>
-    /// <param name="messageTemplate">Message template</param>
-    /// <param name="customer">Customer</param>
-    /// <returns>Email address and name when reply to email</returns>
-    protected virtual async Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Customer customer)
-    {
-        if (!messageTemplate.AllowDirectReply)
-            return (null, null);
-
-        var replyToEmail = await _customerService.IsGuestAsync(customer)
-            ? string.Empty
-            : customer.Email;
-
-        var replyToName = await _customerService.IsGuestAsync(customer)
-            ? string.Empty
-            : await _customerService.GetCustomerFullNameAsync(customer);
-
-        return (replyToEmail, replyToName);
-    }
-
-    /// <summary>
-    /// Get email and name to set ReplyTo property of email from order
-    /// </summary>
-    /// <param name="messageTemplate">Message template</param>
-    /// <param name="order">Order</param>
-    /// <returns>Email address and name when reply to email</returns>
-    protected virtual async Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Order order)
-    {
-        if (!messageTemplate.AllowDirectReply)
-            return (null, null);
-
-        var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
-
-        return (billingAddress.Email, $"{billingAddress.FirstName} {billingAddress.LastName}");
     }
 
     #endregion
@@ -1607,6 +1473,57 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         }).ToListAsync();
     }
 
+    /// <summary>
+    /// Sends a "Next recurring payment notification" message to a customer
+    /// </summary>
+    /// <param name="recurringPayment">Recurring payment</param>
+    /// <param name="delayBeforeSend">Delay before send</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    public virtual async Task<IList<int>> SendNextRecurringPaymentNotificationCustomerMessageAsync(RecurringPayment recurringPayment, int delayBeforeSend, int languageId)
+    {
+        ArgumentNullException.ThrowIfNull(recurringPayment);
+        
+        var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId) ?? throw new Exception("Order cannot be loaded");
+
+        var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+        languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
+
+        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEXT_RECURRING_PAYMENT_CUSTOMER_NOTIFICATION, store.Id);
+        if (!messageTemplates.Any())
+            return new List<int>();
+
+        //tokens
+        var commonTokens = new List<Token>();
+        await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+        await _messageTokenProvider.AddRecurringPaymentTokensAsync(commonTokens, recurringPayment);
+
+        return await messageTemplates.SelectAwait(async messageTemplate =>
+        {
+            //email account
+            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+
+            var tokens = new List<Token>(commonTokens);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
+
+            //event notification
+            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+
+            var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+
+            var toEmail = billingAddress.Email;
+            var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
+            messageTemplate.DelayPeriod = MessageDelayPeriod.Hours;
+            messageTemplate.DelayBeforeSend = delayBeforeSend;
+
+            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+        }).ToListAsync();
+    }
+
     #endregion
 
     #region Newsletter workflow
@@ -1821,7 +1738,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         var commonTokens = new List<Token>();
         await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
         await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, returnRequest.CustomerId);
-        await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
+        await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, order, orderItem, languageId);
 
         return await messageTemplates.SelectAwait(async messageTemplate =>
         {
@@ -1873,7 +1790,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         var commonTokens = new List<Token>();
         await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
         await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-        await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
+        await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, order, orderItem, languageId);
 
         return await messageTemplates.SelectAwait(async messageTemplate =>
         {
@@ -1930,7 +1847,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         var commonTokens = new List<Token>();
         await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
         await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-        await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
+        await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, order, orderItem, languageId);
 
         return await messageTemplates.SelectAwait(async messageTemplate =>
         {
@@ -1956,103 +1873,53 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         }).ToListAsync();
     }
 
+    /// <summary>
+    /// Sends 'Withdrawal request confirmation' message to a customer
+    /// </summary>
+    /// <param name="order">Order</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    public virtual async Task<IList<int>> SendWithdrawalRequestConfirmationNotificationAsync(Order order)
+    {
+        ArgumentNullException.ThrowIfNull(order);
+
+        var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+        var languageId = await EnsureLanguageIsActiveAsync(order.CustomerLanguageId, store.Id);
+
+        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RETURN_REQUEST_WITHDRAWAL_LINK_MESSAGE, store.Id);
+        if (!messageTemplates.Any())
+            return new List<int>();
+
+        //tokens
+        var commonTokens = new List<Token>();
+        await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+        await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, null, order, null, languageId);
+
+        return await messageTemplates.SelectAwait(async messageTemplate =>
+        {
+            //email account
+            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+
+            var tokens = new List<Token>(commonTokens);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
+
+            //event notification
+            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+
+            var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+
+            var toEmail = billingAddress.Email;
+            var toName = billingAddress.FirstName;
+
+            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+        }).ToListAsync();
+    }
+
     #endregion
 
-    #region Forum Notifications
-
-    /// <summary>
-    /// Sends a forum subscription message to a customer
-    /// </summary>
-    /// <param name="customer">Customer instance</param>
-    /// <param name="forumTopic">Forum Topic</param>
-    /// <param name="forum">Forum</param>
-    /// <param name="languageId">Message language identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the queued email identifier
-    /// </returns>
-    public virtual async Task<IList<int>> SendNewForumTopicMessageAsync(Customer customer, ForumTopic forumTopic, Forum forum, int languageId)
-    {
-        ArgumentNullException.ThrowIfNull(customer);
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-
-        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEW_FORUM_TOPIC_MESSAGE, store.Id);
-        if (!messageTemplates.Any())
-            return new List<int>();
-
-        //tokens
-        var commonTokens = new List<Token>();
-        await _messageTokenProvider.AddForumTopicTokensAsync(commonTokens, forumTopic);
-        await _messageTokenProvider.AddForumTokensAsync(commonTokens, forum);
-        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-
-        return await messageTemplates.SelectAwait(async messageTemplate =>
-        {
-            //email account
-            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
-
-            var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
-
-            //event notification
-            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
-
-            var toEmail = customer.Email;
-            var toName = await _customerService.GetCustomerFullNameAsync(customer);
-
-            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-        }).ToListAsync();
-    }
-
-    /// <summary>
-    /// Sends a forum subscription message to a customer
-    /// </summary>
-    /// <param name="customer">Customer instance</param>
-    /// <param name="forumPost">Forum post</param>
-    /// <param name="forumTopic">Forum Topic</param>
-    /// <param name="forum">Forum</param>
-    /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
-    /// <param name="languageId">Message language identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the queued email identifier
-    /// </returns>
-    public virtual async Task<IList<int>> SendNewForumPostMessageAsync(Customer customer, ForumPost forumPost, ForumTopic forumTopic,
-        Forum forum, int friendlyForumTopicPageIndex, int languageId)
-    {
-        ArgumentNullException.ThrowIfNull(customer);
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-
-        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEW_FORUM_POST_MESSAGE, store.Id);
-        if (!messageTemplates.Any())
-            return new List<int>();
-
-        //tokens
-        var commonTokens = new List<Token>();
-        await _messageTokenProvider.AddForumPostTokensAsync(commonTokens, forumPost);
-        await _messageTokenProvider.AddForumTopicTokensAsync(commonTokens, forumTopic, friendlyForumTopicPageIndex, forumPost.Id);
-        await _messageTokenProvider.AddForumTokensAsync(commonTokens, forum);
-        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-
-        return await messageTemplates.SelectAwait(async messageTemplate =>
-        {
-            //email account
-            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
-
-            var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
-
-            //event notification
-            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
-
-            var toEmail = customer.Email;
-            var toName = await _customerService.GetCustomerFullNameAsync(customer);
-
-            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-        }).ToListAsync();
-    }
+    #region Messages
 
     /// <summary>
     /// Sends a private message notification
@@ -2603,52 +2470,6 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     }
 
     /// <summary>
-    /// Sends a news comment notification message to a store owner
-    /// </summary>
-    /// <param name="newsComment">News comment</param>
-    /// <param name="languageId">Message language identifier</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the queued email identifier
-    /// </returns>
-    public virtual async Task<IList<int>> SendNewsCommentStoreOwnerNotificationMessageAsync(NewsComment newsComment, int languageId)
-    {
-        ArgumentNullException.ThrowIfNull(newsComment);
-
-        var store = await _storeContext.GetCurrentStoreAsync();
-        languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
-
-        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NEWS_COMMENT_STORE_OWNER_NOTIFICATION, store.Id);
-        if (!messageTemplates.Any())
-            return new List<int>();
-
-        var customer = await _customerService.GetCustomerByIdAsync(newsComment.CustomerId);
-
-        //tokens
-        var commonTokens = new List<Token>();
-        await _messageTokenProvider.AddNewsCommentTokensAsync(commonTokens, newsComment);
-        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, newsComment.CustomerId);
-
-        return await messageTemplates.SelectAwait(async messageTemplate =>
-        {
-            //email account
-            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
-
-            var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
-
-            //event notification
-            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
-
-            var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
-            var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmailAsync(messageTemplate, customer);
-
-            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
-                replyToEmailAddress: replyToEmail, replyToName: replyToName);
-        }).ToListAsync();
-    }
-
-    /// <summary>
     /// Sends a 'Back in stock' notification message to a customer
     /// </summary>
     /// <param name="subscription">Subscription</param>
@@ -2707,12 +2528,18 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     /// <param name="senderName">Sender name</param>
     /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
     /// <param name="body">Email body</param>
+    /// <param name="customAttributes">Custom attributes</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
-    public virtual async Task<IList<int>> SendContactUsMessageAsync(int languageId, string senderEmail,
-        string senderName, string subject, string body)
+    public virtual async Task<IList<int>> SendContactUsMessageAsync(
+        int languageId, 
+        string senderEmail,
+        string senderName,
+        string subject,
+        string body,
+        IDictionary<string, string> customAttributes)
     {
         var store = await _storeContext.GetCurrentStoreAsync();
         languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
@@ -2722,36 +2549,30 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             return new List<int>();
 
         //tokens
-        var commonTokens = new List<Token>
-        {
-            new("ContactUs.SenderEmail", senderEmail),
-            new("ContactUs.SenderName", senderName)
-        };
+        var commonTokens = new List<Token>();
+        var fromEmail = senderEmail;
+        var fromName = senderName;
+
+        if (_commonSettings.UseSystemEmailForContactUsForm)
+            body = $"<strong>From</strong>: {WebUtility.HtmlEncode(senderName)} - {WebUtility.HtmlEncode(senderEmail)}<br />{body}";
+
+        await _messageTokenProvider.AddContactFormTokensAsync(commonTokens, senderEmail, senderName, body, customAttributes);
 
         return await messageTemplates.SelectAwait(async messageTemplate =>
         {
             //email account
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
-            var tokens = new List<Token>(commonTokens);
-            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
-
-            string fromEmail;
-            string fromName;
             //required for some SMTP servers
             if (_commonSettings.UseSystemEmailForContactUsForm)
             {
                 fromEmail = emailAccount.Email;
                 fromName = emailAccount.DisplayName;
-                body = $"<strong>From</strong>: {WebUtility.HtmlEncode(senderName)} - {WebUtility.HtmlEncode(senderEmail)}<br /><br />{body}";
-            }
-            else
-            {
-                fromEmail = senderEmail;
-                fromName = senderName;
             }
 
-            tokens.Add(new Token("ContactUs.Body", body, true));
+            var tokens = new List<Token>(commonTokens);
+
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
 
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
@@ -2794,31 +2615,25 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             return new List<int>();
 
         //tokens
-        var commonTokens = new List<Token>
-        {
-            new("ContactUs.SenderEmail", senderEmail),
-            new("ContactUs.SenderName", senderName),
-            new("ContactUs.Body", body, true)
-        };
+        var commonTokens = new List<Token>();
+        var fromEmail = senderEmail;
+        var fromName = senderName;
+
+        if (_commonSettings.UseSystemEmailForContactUsForm)
+            body = $"<strong>From</strong>: {WebUtility.HtmlEncode(senderName)} - {WebUtility.HtmlEncode(senderEmail)}<br />{body}";
+
+        await _messageTokenProvider.AddContactFormTokensAsync(commonTokens, senderEmail, senderName, body, null);
 
         return await messageTemplates.SelectAwait(async messageTemplate =>
         {
             //email account
             var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
-            string fromEmail;
-            string fromName;
             //required for some SMTP servers
             if (_commonSettings.UseSystemEmailForContactUsForm)
             {
                 fromEmail = emailAccount.Email;
                 fromName = emailAccount.DisplayName;
-                body = $"<strong>From</strong>: {WebUtility.HtmlEncode(senderName)} - {WebUtility.HtmlEncode(senderEmail)}<br /><br />{body}";
-            }
-            else
-            {
-                fromEmail = senderEmail;
-                fromName = senderName;
             }
 
             var tokens = new List<Token>(commonTokens);
@@ -2866,6 +2681,147 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     #endregion
 
     #region Common
+
+    /// <summary>
+    /// Get active message templates by the name
+    /// </summary>
+    /// <param name="messageTemplateName">Message template name</param>
+    /// <param name="storeId">Store identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the list of message templates
+    /// </returns>
+    public virtual async Task<IList<MessageTemplate>> GetActiveMessageTemplatesAsync(string messageTemplateName, int storeId)
+    {
+        //get message templates by the name
+        var messageTemplates = await _messageTemplateService.GetMessageTemplatesByNameAsync(messageTemplateName, storeId);
+
+        //no template found
+        if (!messageTemplates?.Any() ?? true)
+            return new List<MessageTemplate>();
+
+        //filter active templates
+        messageTemplates = messageTemplates.Where(messageTemplate => messageTemplate.IsActive).ToList();
+
+        return messageTemplates;
+    }
+
+    /// <summary>
+    /// Get email account to use with a message templates
+    /// </summary>
+    /// <param name="messageTemplate">Message template</param>
+    /// <param name="languageId">Language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email account
+    /// </returns>
+    public virtual async Task<EmailAccount> GetEmailAccountOfMessageTemplateAsync(MessageTemplate messageTemplate, int languageId)
+    {
+        var emailAccountId = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.EmailAccountId, languageId);
+        //some 0 validation (for localizable "Email account" dropdownlist which saves 0 if "Standard" value is chosen)
+        if (emailAccountId == 0)
+            emailAccountId = messageTemplate.EmailAccountId;
+
+        var emailAccount = (await _emailAccountService.GetEmailAccountByIdAsync(emailAccountId)
+            ?? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId))
+            ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
+
+        return emailAccount;
+    }
+
+    /// <summary>
+    /// Ensure language is active
+    /// </summary>
+    /// <param name="languageId">Language identifier</param>
+    /// <param name="storeId">Store identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the active language identifier
+    /// </returns>
+    public virtual async Task<int> EnsureLanguageIsActiveAsync(int languageId, int storeId)
+    {
+        //load language by specified ID
+        var language = await _languageService.GetLanguageByIdAsync(languageId);
+
+        if (language == null || !language.Published)
+        {
+            //load any language from the specified store
+            language = (await _languageService.GetAllLanguagesAsync(storeId: storeId)).FirstOrDefault();
+        }
+
+        if (language == null || !language.Published)
+        {
+            //load any language
+            language = (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
+        }
+
+        if (language == null)
+            throw new Exception("No active language could be loaded");
+
+        return language.Id;
+    }
+
+    /// <summary>
+    /// Get email and name to send email for store owner
+    /// </summary>
+    /// <param name="messageTemplateEmailAccount">Message template email account</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email address and name to send email for store owner
+    /// </returns>
+    public virtual async Task<(string email, string name)> GetStoreOwnerNameAndEmailAsync(EmailAccount messageTemplateEmailAccount)
+    {
+        var storeOwnerEmailAccount = (_messagesSettings.UseDefaultEmailAccountForSendStoreOwnerEmails
+            ? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
+            : null)
+            ?? messageTemplateEmailAccount;
+
+        return (storeOwnerEmailAccount.Email, storeOwnerEmailAccount.DisplayName);
+    }
+
+    /// <summary>
+    /// Get email and name to set ReplyTo property of email from customer 
+    /// </summary>
+    /// <param name="messageTemplate">Message template</param>
+    /// <param name="customer">Customer</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email address and name to reply
+    /// </returns>
+    public virtual async Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Customer customer)
+    {
+        if (!messageTemplate.AllowDirectReply)
+            return (null, null);
+
+        var replyToEmail = await _customerService.IsGuestAsync(customer)
+            ? string.Empty
+            : customer.Email;
+
+        var replyToName = await _customerService.IsGuestAsync(customer)
+            ? string.Empty
+            : await _customerService.GetCustomerFullNameAsync(customer);
+
+        return (replyToEmail, replyToName);
+    }
+
+    /// <summary>
+    /// Get email and name to set ReplyTo property of email from order
+    /// </summary>
+    /// <param name="messageTemplate">Message template</param>
+    /// <param name="order">Order</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the email address and name to reply
+    /// </returns>
+    public virtual async Task<(string email, string name)> GetCustomerReplyToNameAndEmailAsync(MessageTemplate messageTemplate, Order order)
+    {
+        if (!messageTemplate.AllowDirectReply)
+            return (null, null);
+
+        var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+
+        return (billingAddress.Email, $"{billingAddress.FirstName} {billingAddress.LastName}");
+    }
 
     /// <summary>
     /// Send notification
@@ -2937,6 +2893,148 @@ public partial class WorkflowMessageService : IWorkflowMessageService
 
         await _queuedEmailService.InsertQueuedEmailAsync(email);
         return email.Id;
+    }
+
+    #endregion
+
+    #region Reminders
+
+    /// <summary>
+    /// Sends a registration activation follow up to a customer
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifiers
+    /// </returns>
+    public virtual async Task<IList<int>> SendIncompleteRegistrationNotificationMessageAsync(Customer customer)
+    {
+        ArgumentNullException.ThrowIfNull(customer);
+
+        var store = await _storeService.GetStoreByIdAsync(customer.RegisteredInStoreId) ?? await _storeContext.GetCurrentStoreAsync();
+        var languageId = await EnsureLanguageIsActiveAsync(customer.LanguageId ?? 0, store.Id);
+
+        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.REMINDER_REGISTRATION_FOLLOW_UP_MESSAGE, store.Id);
+        if (!messageTemplates.Any())
+            return new List<int>();
+
+        //tokens
+        var commonTokens = new List<Token>();
+        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+
+        return await messageTemplates.SelectAwait(async messageTemplate =>
+        {
+            //email account
+            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+
+            var tokens = new List<Token>(commonTokens);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
+
+            //event notification
+            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+
+            var toEmail = customer.Email;
+            var toName = await _customerService.GetCustomerFullNameAsync(customer);
+
+            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName, ignoreDelayBeforeSend: true);
+        }).ToListAsync();
+    }
+
+    /// <summary>
+    /// Sends an abandoned cart follow up to a customer
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="cart">Shopping cart</param>
+    /// <param name="messageTemplateName">Follow up message name</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifiers
+    /// </returns>
+    public virtual async Task<IList<int>> SendAbandonedCartFollowUpCustomerNotificationAsync(Customer customer, 
+        IList<ShoppingCartItem> cart, string messageTemplateName)
+    {
+        ArgumentNullException.ThrowIfNull(customer);
+        ArgumentNullException.ThrowIfNull(cart);
+        ArgumentException.ThrowIfNullOrEmpty(messageTemplateName);
+
+        //tokens
+        var commonTokens = new List<Token>();
+        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var languageId = await EnsureLanguageIsActiveAsync(customer.LanguageId ?? 0, store.Id);
+
+        var messageTemplates = await GetActiveMessageTemplatesAsync(messageTemplateName, store.Id);
+        if (!messageTemplates.Any())
+            return new List<int>();
+
+        var cartTokens = new List<Token>(commonTokens);
+        await _messageTokenProvider.AddShoppingCartTokensAsync(cartTokens, cart, languageId);
+
+        return await messageTemplates.SelectAwait(async messageTemplate =>
+        {
+            //email account
+            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+
+            var tokens = new List<Token>(cartTokens);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
+
+            //event notification
+            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+
+            var toEmail = customer.Email;
+            var toName = await _customerService.GetCustomerFullNameAsync(customer);
+
+            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName, ignoreDelayBeforeSend: true);
+        }).ToListAsync();
+    }
+
+    /// <summary>
+    /// Sends a pending order follow up to a customer
+    /// </summary>
+    /// <param name="customer">Customer</param>
+    /// <param name="order">Order</param>
+    /// <param name="messageTemplateName">Follow up message name</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifiers
+    /// </returns>
+    public virtual async Task<IList<int>> SendPendingOrderFollowUpCustomerNotificationAsync(Customer customer, Order order, string messageTemplateName)
+    {
+        ArgumentNullException.ThrowIfNull(customer);
+        ArgumentNullException.ThrowIfNull(order);
+        ArgumentException.ThrowIfNullOrEmpty(messageTemplateName);
+
+        var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+        var languageId = await EnsureLanguageIsActiveAsync(customer.LanguageId ?? 0, store.Id);
+
+        var messageTemplates = await GetActiveMessageTemplatesAsync(messageTemplateName, store.Id);
+        if (!messageTemplates.Any())
+            return new List<int>();
+
+        //tokens
+        var commonTokens = new List<Token>();
+        await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+
+        return await messageTemplates.SelectAwait(async messageTemplate =>
+        {
+            //email account
+            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+
+            var tokens = new List<Token>(commonTokens);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
+
+            //event notification
+            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+
+            var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+
+            var toEmail = billingAddress.Email;
+            var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
+
+            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName, ignoreDelayBeforeSend: true);
+        }).ToListAsync();
     }
 
     #endregion

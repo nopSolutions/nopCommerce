@@ -104,31 +104,6 @@ public partial class OrderSettings : ISettings
     public bool GeneratePdfInvoiceInCustomerLanguage { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether "Return requests" are allowed
-    /// </summary>
-    public bool ReturnRequestsEnabled { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether customers are allowed to upload files
-    /// </summary>
-    public bool ReturnRequestsAllowFiles { get; set; }
-
-    /// <summary>
-    /// Gets or sets maximum file size for upload file (return request). Set 0 to allow any file size
-    /// </summary>
-    public int ReturnRequestsFileMaximumSize { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value "Return requests" number mask
-    /// </summary>
-    public string ReturnRequestNumberMask { get; set; }
-
-    /// <summary>
-    /// Gets or sets a number of days that the Return Request Link will be available for customers after order placing.
-    /// </summary>
-    public int NumberOfDaysReturnRequestAvailable { get; set; }
-
-    /// <summary>
     /// Gets or sets a value indicating whether to activate related gift cards after completing the order
     /// </summary>
     public bool ActivateGiftCardsAfterCompletingOrder { get; set; }
@@ -202,4 +177,34 @@ public partial class OrderSettings : ISettings
     /// Gets or sets a value indicating whether to allow customers to cancel orders
     /// </summary>
     public bool AllowCustomersCancelOrders { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether unpaid orders should be canceled automatically
+    /// </summary>
+    public bool AutoCancelEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating the period of time after order placement, after which unpaid orders should be canceled (in minutes)
+    /// </summary>
+    public int AutoCancelDelay { get; set; }
+
+    /// <summary>
+    /// Gets or sets the list of payment method system names for which automatic cancellation of unpaid orders is disabled
+    /// </summary>
+    public List<string> AutoCancelIgnoredPaymentMethods { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether an auto-canceled order should be added to the shopping cart
+    /// </summary>
+    public bool AutoCancelRestoreShoppingCart { get; set; }
+
+    /// <summary>
+    /// Gets or sets the UTC date and time before which orders are ignored by the automatic cancellation
+    /// </summary>
+    public DateTime? AutoCancelIgnoreBeforeUtc { get; set; }
+
+    /// <summary>
+    /// Gets or sets the number of days before the next recurring payment when the notification should be sent to customers
+    /// </summary>
+    public int NextRecurringPaymentNotificationDays { get; set; }
 }

@@ -48,6 +48,6 @@ public partial class EuCookieLawViewComponent : NopViewComponent
         if (TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"] != null && Convert.ToBoolean(TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"]))
             return Content("");
 
-        return View();
+        return await ViewAsync();
     }
 }

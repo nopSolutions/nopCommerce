@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using LinqToDB;
+using LinqToDB.Async;
 using Nop.Core;
 
 namespace System.Linq;

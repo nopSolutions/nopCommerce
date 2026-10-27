@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Transactions;
 using LinqToDB.Data;
 using Nop.Core;
 
@@ -233,6 +234,15 @@ public partial interface INopDataProvider
     Task ShrinkDatabaseAsync();
 
     /// <summary>
+    /// Gets the database size in Kb
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the database size
+    /// </returns>
+    Task<long> GetDatabaseSizeAsync();
+
+    /// <summary>
     /// Build the connection string
     /// </summary>
     /// <param name="nopConnectionString">Connection string info</param>
@@ -299,7 +309,11 @@ public partial interface INopDataProvider
     /// Truncates database table
     /// </summary>
     /// <param name="resetIdentity">Performs reset identity column</param>
-    Task TruncateAsync<TEntity>(bool resetIdentity = false) where TEntity : BaseEntity;
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the number of records, affected by command execution.
+    /// </returns>
+    Task<int> TruncateAsync<TEntity>(bool resetIdentity = false) where TEntity : BaseEntity;
 
     /// <summary>
     /// Gets the name of the database collation
@@ -309,7 +323,13 @@ public partial interface INopDataProvider
     /// The task result contains the collation name
     /// </returns>
     Task<string> GetDataBaseCollationAsync();
-    
+
+    /// <summary>
+    /// Creates a new <see cref="TransactionScope"/> with appropriate options for bulk database operations
+    /// </summary>
+    /// <returns>The created transaction scope</returns>
+    TransactionScope CreateTransactionScope();
+
     #endregion
 
     #region Properties

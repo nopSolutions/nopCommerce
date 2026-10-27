@@ -5,16 +5,12 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Polls;
-using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Common;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Customers;
@@ -27,8 +23,8 @@ public partial class CustomerService : ICustomerService
     #region Fields
 
     protected readonly CustomerSettings _customerSettings;
-    protected readonly IEventPublisher _eventPublisher;
     protected readonly IGenericAttributeService _genericAttributeService;
+    protected readonly IHtmlFormatter _htmlFormatter;
     protected readonly INopDataProvider _dataProvider;
     protected readonly IRepository<Address> _customerAddressRepository;
     protected readonly IRepository<BlogComment> _blogCommentRepository;
@@ -37,14 +33,11 @@ public partial class CustomerService : ICustomerService
     protected readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
     protected readonly IRepository<CustomerPassword> _customerPasswordRepository;
     protected readonly IRepository<CustomerRole> _customerRoleRepository;
-    protected readonly IRepository<ForumPost> _forumPostRepository;
-    protected readonly IRepository<ForumTopic> _forumTopicRepository;
     protected readonly IRepository<GenericAttribute> _gaRepository;
-    protected readonly IRepository<NewsComment> _newsCommentRepository;
     protected readonly IRepository<Order> _orderRepository;
+    protected readonly IRepository<PrivateMessage> _privateMessageRepository;
     protected readonly IRepository<ProductReview> _productReviewRepository;
     protected readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
-    protected readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
     protected readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
     protected readonly IShortTermCacheManager _shortTermCacheManager;
     protected readonly IStaticCacheManager _staticCacheManager;
@@ -57,8 +50,8 @@ public partial class CustomerService : ICustomerService
     #region Ctor
 
     public CustomerService(CustomerSettings customerSettings,
-        IEventPublisher eventPublisher,
         IGenericAttributeService genericAttributeService,
+        IHtmlFormatter htmlFormatter,
         INopDataProvider dataProvider,
         IRepository<Address> customerAddressRepository,
         IRepository<BlogComment> blogCommentRepository,
@@ -67,14 +60,11 @@ public partial class CustomerService : ICustomerService
         IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
         IRepository<CustomerPassword> customerPasswordRepository,
         IRepository<CustomerRole> customerRoleRepository,
-        IRepository<ForumPost> forumPostRepository,
-        IRepository<ForumTopic> forumTopicRepository,
         IRepository<GenericAttribute> gaRepository,
-        IRepository<NewsComment> newsCommentRepository,
         IRepository<Order> orderRepository,
+        IRepository<PrivateMessage> privateMessageRepository,
         IRepository<ProductReview> productReviewRepository,
         IRepository<ProductReviewHelpfulness> productReviewHelpfulnessRepository,
-        IRepository<PollVotingRecord> pollVotingRecordRepository,
         IRepository<ShoppingCartItem> shoppingCartRepository,
         IShortTermCacheManager shortTermCacheManager,
         IStaticCacheManager staticCacheManager,
@@ -83,8 +73,8 @@ public partial class CustomerService : ICustomerService
         TaxSettings taxSettings)
     {
         _customerSettings = customerSettings;
-        _eventPublisher = eventPublisher;
         _genericAttributeService = genericAttributeService;
+        _htmlFormatter = htmlFormatter;
         _dataProvider = dataProvider;
         _customerAddressRepository = customerAddressRepository;
         _blogCommentRepository = blogCommentRepository;
@@ -93,14 +83,11 @@ public partial class CustomerService : ICustomerService
         _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
         _customerPasswordRepository = customerPasswordRepository;
         _customerRoleRepository = customerRoleRepository;
-        _forumPostRepository = forumPostRepository;
-        _forumTopicRepository = forumTopicRepository;
         _gaRepository = gaRepository;
-        _newsCommentRepository = newsCommentRepository;
         _orderRepository = orderRepository;
+        _privateMessageRepository = privateMessageRepository;
         _productReviewRepository = productReviewRepository;
         _productReviewHelpfulnessRepository = productReviewHelpfulnessRepository;
-        _pollVotingRecordRepository = pollVotingRecordRepository;
         _shoppingCartRepository = shoppingCartRepository;
         _shortTermCacheManager = shortTermCacheManager;
         _staticCacheManager = staticCacheManager;
@@ -212,8 +199,10 @@ public partial class CustomerService : ICustomerService
                 query = query.Where(c => c.ZipPostalCode.Contains(zipPostalCode));
 
             if (dayOfBirth > 0 && monthOfBirth > 0)
+            {
                 query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Day == dayOfBirth &&
-                                         c.DateOfBirth.Value.Month == monthOfBirth);
+                    c.DateOfBirth.Value.Month == monthOfBirth);
+            }
             else if (dayOfBirth > 0)
                 query = query.Where(c => c.DateOfBirth.HasValue && c.DateOfBirth.Value.Day == dayOfBirth);
             else if (monthOfBirth > 0)
@@ -221,9 +210,7 @@ public partial class CustomerService : ICustomerService
 
             //search by IpAddress
             if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
-            {
                 query = query.Where(w => w.LastIpAddress == ipAddress);
-            }
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
@@ -263,7 +250,7 @@ public partial class CustomerService : ICustomerService
     /// <summary>
     /// Gets customers with shopping carts
     /// </summary>
-    /// <param name="shoppingCartType">Shopping cart type; pass null to load all records</param>
+    /// <param name="shoppingCartTypes">Shopping cart types; pass null to load all records</param>
     /// <param name="storeId">Store identifier; pass 0 to load all records</param>
     /// <param name="productId">Product identifier; pass null to load all records</param>
     /// <param name="createdFromUtc">Created date from (UTC); pass null to load all records</param>
@@ -275,7 +262,7 @@ public partial class CustomerService : ICustomerService
     /// A task that represents the asynchronous operation
     /// The task result contains the customers
     /// </returns>
-    public virtual async Task<IPagedList<Customer>> GetCustomersWithShoppingCartsAsync(ShoppingCartType? shoppingCartType = null,
+    public virtual async Task<IPagedList<Customer>> GetCustomersWithShoppingCartsAsync(List<int> shoppingCartTypes = null,
         int storeId = 0, int? productId = null,
         DateTime? createdFromUtc = null, DateTime? createdToUtc = null, int? countryId = null,
         int pageIndex = 0, int pageSize = int.MaxValue)
@@ -284,8 +271,8 @@ public partial class CustomerService : ICustomerService
         var items = _shoppingCartRepository.Table;
 
         //filter by type
-        if (shoppingCartType.HasValue)
-            items = items.Where(item => item.ShoppingCartTypeId == (int)shoppingCartType.Value);
+        if (shoppingCartTypes is not null)
+            items = items.Where(item => shoppingCartTypes.Contains(item.ShoppingCartTypeId));
 
         //filter shopping cart items by store
         if (storeId > 0 && !_shoppingCartSettings.CartsSharedBetweenStores)
@@ -306,12 +293,16 @@ public partial class CustomerService : ICustomerService
 
         //filter customers by billing country
         if (countryId > 0)
-            customers = from c in customers
+        {
+            customers =
+                from c in customers
                 join a in _customerAddressRepository.Table on c.BillingAddressId equals a.Id
                 where a.CountryId == countryId
                 select c;
+        }
 
-        var customersWithCarts = from c in customers
+        var customersWithCarts =
+            from c in customers
             join item in items on c.Id equals item.CustomerId
             //we change ordering for the MySQL engine to avoid problems with the ONLY_FULL_GROUP_BY server property that is set by default since the 5.7.5 version
             orderby _dataProvider.ConfigurationName == "MySql" ? c.CreatedOnUtc : item.CreatedOnUtc descending
@@ -400,7 +391,8 @@ public partial class CustomerService : ICustomerService
         if (customerGuids == null)
             return null;
 
-        var query = from c in _customerRepository.Table
+        var query =
+            from c in _customerRepository.Table
             where customerGuids.Contains(c.CustomerGuid)
             select c;
         var customers = await query.ToListAsync();
@@ -421,7 +413,8 @@ public partial class CustomerService : ICustomerService
         if (customerGuid == Guid.Empty)
             return null;
 
-        var query = from c in _customerRepository.Table
+        var query =
+            from c in _customerRepository.Table
             where c.CustomerGuid == customerGuid
             orderby c.Id
             select c;
@@ -442,7 +435,8 @@ public partial class CustomerService : ICustomerService
         if (string.IsNullOrWhiteSpace(email))
             return null;
 
-        var query = from c in _customerRepository.Table
+        var query =
+            from c in _customerRepository.Table
             orderby c.Id
             where c.Email == email
             select c;
@@ -464,7 +458,8 @@ public partial class CustomerService : ICustomerService
         if (string.IsNullOrWhiteSpace(systemName))
             return null;
 
-        var query = from c in _customerRepository.Table
+        var query =
+            from c in _customerRepository.Table
             orderby c.Id
             where c.SystemName == systemName
             select c;
@@ -563,13 +558,60 @@ public partial class CustomerService : ICustomerService
         if (string.IsNullOrWhiteSpace(username))
             return null;
 
-        var query = from c in _customerRepository.Table
+        var query =
+            from c in _customerRepository.Table
             orderby c.Id
             where c.Username == username
             select c;
         var customer = await query.FirstOrDefaultAsync();
 
         return customer;
+    }
+
+    /// <summary>
+    /// Get customer by their phone number
+    /// </summary>
+    /// <param name="phone">The phone number of the customer
+    /// <returns>A task that represents the asynchronous operation
+    /// The task result contains the <see cref="Customer"/> 
+    /// </returns>
+    public virtual async Task<Customer> GetCustomerByPhoneAsync(string phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone))
+            return null;
+
+        return await _shortTermCacheManager.GetAsync(async () =>
+        {
+            var query =
+                from c in _customerRepository.Table
+                where c.Active && !c.Deleted && c.Phone == phone
+                orderby c.Id
+                select c;
+
+            var customers = await query.ToListAsync();
+
+            return customers.FirstOrDefault(customer => customer.PhoneSmsVerified) ?? customers.FirstOrDefault();
+        }, NopCustomerServicesDefaults.CustomerByPhoneCacheKey, phone);
+    }
+
+    /// <summary>
+    /// Determines whether a verified phone number is already associated with a customer other than the specified
+    /// customer.
+    /// </summary>
+    /// <param name="customer">The customer</param>
+    /// <param name="phone">The phone number</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains <see langword="true"/> if a
+    /// different customer with the specified verified phone number exists; otherwise, <see langword="false"/>.</returns>
+    public virtual async Task<bool> IsAlreadyExistsVerifiedPhoneNumberAsync(Customer customer, string phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone))
+            return false;
+
+        var customerByPhone = await GetCustomerByPhoneAsync(phone);
+        if (customerByPhone == null)
+            return false;
+
+        return (customer?.Id != customerByPhone.Id) && customerByPhone.PhoneSmsVerified;
     }
 
     /// <summary>
@@ -620,54 +662,6 @@ public partial class CustomerService : ICustomerService
     }
 
     /// <summary>
-    /// Reset data required for checkout
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    /// <param name="storeId">Store identifier</param>
-    /// <param name="clearCouponCodes">A value indicating whether to clear coupon code</param>
-    /// <param name="clearCheckoutAttributes">A value indicating whether to clear selected checkout attributes</param>
-    /// <param name="clearRewardPoints">A value indicating whether to clear "Use reward points" flag</param>
-    /// <param name="clearShippingMethod">A value indicating whether to clear selected shipping method</param>
-    /// <param name="clearPaymentMethod">A value indicating whether to clear selected payment method</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task ResetCheckoutDataAsync(Customer customer, int storeId,
-        bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
-        bool clearRewardPoints = true, bool clearShippingMethod = true,
-        bool clearPaymentMethod = true)
-    {
-        ArgumentNullException.ThrowIfNull(customer);
-
-        //clear entered coupon codes
-        if (clearCouponCodes)
-        {
-            await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, null);
-            await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, null);
-        }
-
-        //clear checkout attributes
-        if (clearCheckoutAttributes)
-            await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, null, storeId);
-
-        //clear reward points flag
-        if (clearRewardPoints)
-            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, false, storeId);
-
-        //clear selected shipping method
-        if (clearShippingMethod)
-        {
-            await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, storeId);
-            await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.OfferedShippingOptionsAttribute, null, storeId);
-            await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, storeId);
-        }
-
-        //clear selected payment method
-        if (clearPaymentMethod)
-            await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, null, storeId);
-
-        await _eventPublisher.PublishAsync(new ResetCheckoutDataEvent(customer, storeId));
-    }
-
-    /// <summary>
     /// Delete guest customer records
     /// </summary>
     /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
@@ -681,28 +675,25 @@ public partial class CustomerService : ICustomerService
     {
         var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
 
-        var allGuestCustomers = from guest in _customerRepository.Table
+        var allGuestCustomers =
+            from guest in _customerRepository.Table
             join ccm in _customerCustomerRoleMappingRepository.Table on guest.Id equals ccm.CustomerId
             where ccm.CustomerRoleId == guestRole.Id
             select guest;
 
-        var guestsToDelete = from guest in _customerRepository.Table
+        var guestsToDelete =
+            from guest in _customerRepository.Table
             join g in allGuestCustomers on guest.Id equals g.Id
             from sCart in _shoppingCartRepository.Table.Where(sci => sci.CustomerId == guest.Id).DefaultIfEmpty()
             from order in _orderRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             from blogComment in _blogCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from newsComment in _newsCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             from productReview in _productReviewRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             from productReviewHelpfulness in _productReviewHelpfulnessRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from pollVotingRecord in _pollVotingRecordRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from forumTopic in _forumTopicRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
-            from forumPost in _forumPostRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
             where (!onlyWithoutShoppingCart || sCart == null) &&
-                  order == null && blogComment == null && newsComment == null && productReview == null && productReviewHelpfulness == null &&
-                  pollVotingRecord == null && forumTopic == null && forumPost == null &&
-                  !guest.IsSystemAccount &&
-                  (createdFromUtc == null || guest.CreatedOnUtc > createdFromUtc) &&
-                  (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
+                order == null && blogComment == null && productReview == null && productReviewHelpfulness == null &&
+                !guest.IsSystemAccount &&
+                (createdFromUtc == null || guest.CreatedOnUtc > createdFromUtc) &&
+                (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
             select new { CustomerId = guest.Id };
 
         await using var tmpGuests = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsToDelete", guestsToDelete);
@@ -807,6 +798,23 @@ public partial class CustomerService : ICustomerService
     }
 
     /// <summary>
+    /// Formats the private message text
+    /// </summary>
+    /// <param name="pm">Private message</param>
+    /// <returns>Formatted text</returns>
+    public virtual string FormatPrivateMessageText(PrivateMessage pm)
+    {
+        var text = pm.Text;
+
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        text = _htmlFormatter.FormatText(text);
+
+        return text;
+    }
+
+    /// <summary>
     /// Formats the customer name
     /// </summary>
     /// <param name="customer">Source</param>
@@ -843,6 +851,10 @@ public partial class CustomerService : ICustomerService
             default:
                 break;
         }
+
+        result = string.IsNullOrEmpty(result)
+            ? await EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync("Customer.Guest")
+            : result;
 
         if (stripTooLong && maxLength > 0)
             result = CommonHelper.EnsureMaximumLength(result, maxLength);
@@ -978,8 +990,10 @@ public partial class CustomerService : ICustomerService
 
         //save again except removed one
         foreach (var existingCouponCode in existingCouponCodes)
+        {
             if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                 await ApplyDiscountCouponCodeAsync(customer, existingCouponCode);
+        }
     }
 
     /// <summary>
@@ -1110,8 +1124,10 @@ public partial class CustomerService : ICustomerService
 
         //save again except removed one
         foreach (var existingCouponCode in existingCouponCodes)
+        {
             if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                 await ApplyGiftCardCouponCodeAsync(customer, existingCouponCode);
+        }
     }
 
     /// <summary>
@@ -1214,7 +1230,8 @@ public partial class CustomerService : ICustomerService
 
         var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesBySystemNameCacheKey, systemName);
 
-        var query = from cr in _customerRoleRepository.Table
+        var query =
+            from cr in _customerRoleRepository.Table
             orderby cr.Id
             where cr.SystemName == systemName
             select cr;
@@ -1325,20 +1342,6 @@ public partial class CustomerService : ICustomerService
     public virtual async Task<bool> IsAdminAsync(Customer customer, bool onlyActiveCustomerRoles = true)
     {
         return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.AdministratorsRoleName, onlyActiveCustomerRoles);
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether customer is a forum moderator
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the result
-    /// </returns>
-    public virtual async Task<bool> IsForumModeratorAsync(Customer customer, bool onlyActiveCustomerRoles = true)
-    {
-        return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.ForumModeratorsRoleName, onlyActiveCustomerRoles);
     }
 
     /// <summary>
@@ -1614,7 +1617,8 @@ public partial class CustomerService : ICustomerService
     /// </returns>
     public virtual async Task<IList<Address>> GetAddressesByCustomerIdAsync(int customerId)
     {
-        var query = from address in _customerAddressRepository.Table
+        var query =
+            from address in _customerAddressRepository.Table
             join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
             where cam.CustomerId == customerId
             select address;
@@ -1636,7 +1640,8 @@ public partial class CustomerService : ICustomerService
         if (customerId == 0 || addressId == 0)
             return null;
 
-        var query = from address in _customerAddressRepository.Table
+        var query =
+            from address in _customerAddressRepository.Table
             join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
             where cam.CustomerId == customerId && address.Id == addressId
             select address;
@@ -1672,6 +1677,106 @@ public partial class CustomerService : ICustomerService
         ArgumentNullException.ThrowIfNull(customer);
 
         return await GetCustomerAddressAsync(customer.Id, customer.ShippingAddressId ?? 0);
+    }
+
+    #endregion
+
+    #region Private messages
+
+    /// <summary>
+    /// Deletes a private message
+    /// </summary>
+    /// <param name="privateMessage">Private message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task DeletePrivateMessageAsync(PrivateMessage privateMessage)
+    {
+        await _privateMessageRepository.DeleteAsync(privateMessage);
+    }
+
+    /// <summary>
+    /// Gets a private message
+    /// </summary>
+    /// <param name="privateMessageId">The private message identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the private message
+    /// </returns>
+    public virtual async Task<PrivateMessage> GetPrivateMessageByIdAsync(int privateMessageId)
+    {
+        return await _privateMessageRepository.GetByIdAsync(privateMessageId, cache => default, useShortTermCache: true);
+    }
+
+    /// <summary>
+    /// Gets private messages
+    /// </summary>
+    /// <param name="storeId">The store identifier; pass 0 to load all messages</param>
+    /// <param name="fromCustomerId">The customer identifier who sent the message</param>
+    /// <param name="toCustomerId">The customer identifier who should receive the message</param>
+    /// <param name="isRead">A value indicating whether loaded messages are read. false - to load not read messages only, 1 to load read messages only, null to load all messages</param>
+    /// <param name="isDeletedByAuthor">A value indicating whether loaded messages are deleted by author. false - messages are not deleted by author, null to load all messages</param>
+    /// <param name="isDeletedByRecipient">A value indicating whether loaded messages are deleted by recipient. false - messages are not deleted by recipient, null to load all messages</param>
+    /// <param name="keywords">Keywords</param>
+    /// <param name="pageIndex">Page index</param>
+    /// <param name="pageSize">Page size</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the private messages
+    /// </returns>
+    public virtual async Task<IPagedList<PrivateMessage>> GetAllPrivateMessagesAsync(int storeId, int fromCustomerId,
+        int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
+        string keywords, int pageIndex = 0, int pageSize = int.MaxValue)
+    {
+        var privateMessages = await _privateMessageRepository.GetAllPagedAsync(query =>
+        {
+            if (storeId > 0)
+                query = query.Where(pm => storeId == pm.StoreId);
+            if (fromCustomerId > 0)
+                query = query.Where(pm => fromCustomerId == pm.FromCustomerId);
+            if (toCustomerId > 0)
+                query = query.Where(pm => toCustomerId == pm.ToCustomerId);
+            if (isRead.HasValue)
+                query = query.Where(pm => isRead.Value == pm.IsRead);
+            if (isDeletedByAuthor.HasValue)
+                query = query.Where(pm => isDeletedByAuthor.Value == pm.IsDeletedByAuthor);
+            if (isDeletedByRecipient.HasValue)
+                query = query.Where(pm => isDeletedByRecipient.Value == pm.IsDeletedByRecipient);
+            if (!string.IsNullOrEmpty(keywords))
+            {
+                query = query.Where(pm => pm.Subject.Contains(keywords));
+                query = query.Where(pm => pm.Text.Contains(keywords));
+            }
+
+            query = query.OrderByDescending(pm => pm.CreatedOnUtc);
+
+            return query;
+        }, pageIndex, pageSize);
+
+        return privateMessages;
+    }
+
+    /// <summary>
+    /// Inserts a private message
+    /// </summary>
+    /// <param name="privateMessage">Private message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task InsertPrivateMessageAsync(PrivateMessage privateMessage)
+    {
+        await _privateMessageRepository.InsertAsync(privateMessage);
+    }
+
+    /// <summary>
+    /// Updates the private message
+    /// </summary>
+    /// <param name="privateMessage">Private message</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task UpdatePrivateMessageAsync(PrivateMessage privateMessage)
+    {
+        ArgumentNullException.ThrowIfNull(privateMessage);
+
+        if (privateMessage.IsDeletedByAuthor && privateMessage.IsDeletedByRecipient)
+            await _privateMessageRepository.DeleteAsync(privateMessage);
+        else
+            await _privateMessageRepository.UpdateAsync(privateMessage);
     }
 
     #endregion

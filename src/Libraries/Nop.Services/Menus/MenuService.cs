@@ -1,7 +1,6 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Menus;
 using Nop.Data;
-using Nop.Services.Catalog;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 

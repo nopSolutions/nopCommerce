@@ -7,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Plugin.Misc.Omnisend.Services;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Helpers;
 using Nop.Web.Framework.Components;
 using Nop.Web.Framework.Infrastructure;
 using Nop.Web.Framework.Mvc.Routing;
@@ -136,14 +137,17 @@ public class WidgetsOmnisendViewComponent : NopViewComponent
         //prepare tracking script
         if (!string.IsNullOrEmpty(_omnisendSettings.TrackingScript) &&
             widgetZone.Equals(PublicWidgetZones.BodyStartHtmlTagAfter, StringComparison.InvariantCultureIgnoreCase))
+        {
             script = await AddIdentifyContactScriptAsync(_omnisendSettings.TrackingScript
                 .Replace(OmnisendDefaults.BrandId, _omnisendSettings.BrandId));
+        }
 
         //prepare product script
         if (!string.IsNullOrEmpty(_omnisendSettings.ProductScript) &&
             widgetZone.Equals(PublicWidgetZones.ProductDetailsBottom,
                 StringComparison.InvariantCultureIgnoreCase) &&
             additionalData is ProductDetailsModel productDetails)
+        {
             script = _omnisendSettings.ProductScript
                 .Replace(OmnisendDefaults.ProductId, $"{productDetails.Id}")
                 .Replace(OmnisendDefaults.Sku, productDetails.Sku)
@@ -153,6 +157,7 @@ public class WidgetsOmnisendViewComponent : NopViewComponent
                 .Replace(OmnisendDefaults.ImageUrl, productDetails.DefaultPictureModel.ImageUrl)
                 .Replace(OmnisendDefaults.ProductUrl,
                     await _nopUrlHelper.RouteGenericUrlAsync<Product>(new { productDetails.SeName }, _webHelper.GetCurrentRequestProtocol()));
+        }
 
         return string.IsNullOrEmpty(script)
             ? Content(string.Empty)

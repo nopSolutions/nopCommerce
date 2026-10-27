@@ -16,6 +16,6 @@ public partial class HeaderLinksViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var model = await _commonModelFactory.PrepareHeaderLinksModelAsync();
-        return View(model);
+        return await ViewAsync(model);
     }
 }

@@ -18,32 +18,29 @@
             {
                 new ColumnProperty(nameof(AddressAttributeModel.Name))
                 {
-                    Title = T("Admin.Address.AddressAttributes.Fields.Name").Text,
-                    Width = "300"
+                    Title = T("Admin.Address.AddressAttributes.Fields.Name").Text
                 },
                 new ColumnProperty(nameof(AddressAttributeModel.AttributeControlTypeName))
                 {
-                    Title = T("Admin.Address.AddressAttributes.Fields.AttributeControlType").Text,
-                    Width = "200"
+                    Title = T("Admin.Address.AddressAttributes.Fields.AttributeControlType").Text
                 },
                 new ColumnProperty(nameof(AddressAttributeModel.IsRequired))
                 {
                     Title = T("Admin.Address.AddressAttributes.Fields.IsRequired").Text,
-                    Width = "100",
                     ClassName = NopColumnClassDefaults.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(AddressAttributeModel.DisplayOrder))
                 {
                     Title = T("Admin.Address.AddressAttributes.Fields.DisplayOrder").Text,
-                    Width = "100",
                     ClassName =  NopColumnClassDefaults.CenterAll
                 },
                 new ColumnProperty(nameof(AddressAttributeValueModel.Id))
                 {
                     Title = T("Admin.Common.Edit").Text,
-                    Width = "80",
-                    Render = new RenderButtonEdit(new DataUrl("~/Admin/AddressAttribute/Edit/"))
+                    Width = "100",
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/AddressAttribute/Edit/")),
+                    ClassName = NopColumnClassDefaults.Button
                 }
             }
         })

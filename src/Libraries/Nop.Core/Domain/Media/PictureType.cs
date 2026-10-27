@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Media;
+﻿namespace Nop.Core.Domain.Media;
 
 /// <summary>
 /// Represents a picture item type
@@ -13,5 +13,10 @@ public enum PictureType
     /// <summary>
     /// Avatar
     /// </summary>
-    Avatar = 10
+    Avatar = 10,
+
+    /// <summary>
+    /// 3D object
+    /// </summary>
+    Object3d = 15,
 }

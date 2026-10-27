@@ -1,0 +1,7 @@
+﻿
+@{
+    var supportRtl = await Html.ShouldUseRtlThemeAsync();
+
+    //add main CSS file
+    NopHtml.AppendCssFileParts($"~/Plugins/Misc.Forums/Content/styles{(supportRtl ? ".rtl" : "")}.css");
+}

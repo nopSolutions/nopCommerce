@@ -1,6 +1,8 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Http;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
@@ -8,6 +10,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Models.Order;
 
 namespace Nop.Web.Factories;
@@ -19,6 +22,7 @@ public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
 {
     #region Fields
 
+    protected readonly CaptchaSettings _captchaSettings;
     protected readonly ICurrencyService _currencyService;
     protected readonly IDateTimeHelper _dateTimeHelper;
     protected readonly IDownloadService _downloadService;
@@ -28,15 +32,17 @@ public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
     protected readonly IProductService _productService;
     protected readonly IReturnRequestService _returnRequestService;
     protected readonly IStoreContext _storeContext;
+    protected readonly INopUrlHelper _nopUrlHelper;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWorkContext _workContext;
-    protected readonly OrderSettings _orderSettings;
+    protected readonly ReturnRequestSettings _returnRequestSettings;
 
     #endregion
 
     #region Ctor
 
-    public ReturnRequestModelFactory(ICurrencyService currencyService,
+    public ReturnRequestModelFactory(CaptchaSettings captchaSettings,
+        ICurrencyService currencyService,
         IDateTimeHelper dateTimeHelper,
         IDownloadService downloadService,
         ILocalizationService localizationService,
@@ -45,10 +51,12 @@ public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
         IProductService productService,
         IReturnRequestService returnRequestService,
         IStoreContext storeContext,
+        INopUrlHelper nopUrlHelper,
         IUrlRecordService urlRecordService,
         IWorkContext workContext,
-        OrderSettings orderSettings)
+        ReturnRequestSettings returnRequestSettings)
     {
+        _captchaSettings = captchaSettings;
         _currencyService = currencyService;
         _dateTimeHelper = dateTimeHelper;
         _downloadService = downloadService;
@@ -58,9 +66,10 @@ public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
         _productService = productService;
         _returnRequestService = returnRequestService;
         _storeContext = storeContext;
+        _nopUrlHelper = nopUrlHelper;
         _urlRecordService = urlRecordService;
         _workContext = workContext;
-        _orderSettings = orderSettings;
+        _returnRequestSettings = returnRequestSettings;
     }
 
     #endregion
@@ -84,8 +93,26 @@ public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
         ArgumentNullException.ThrowIfNull(model);
 
         model.OrderId = order.Id;
-        model.AllowFiles = _orderSettings.ReturnRequestsAllowFiles;
+        model.AllowFiles = _returnRequestSettings.ReturnRequestsAllowFiles;
         model.CustomOrderNumber = order.CustomOrderNumber;
+        model.ReturnActionsEnabled = _returnRequestSettings.ReturnActionsEnabled;
+        model.ReturnReasonsEnabled = _returnRequestSettings.ReturnReasonsEnabled;
+
+        model.ReturnRequestPageTitle = _returnRequestSettings.UseEuWithdrawalLocales ?
+            await _localizationService.GetResourceAsync("PageTitle.ReturnItems.Withdrawal") :
+            await _localizationService.GetResourceAsync("PageTitle.ReturnItems");
+
+        var titlePattern = _returnRequestSettings.UseEuWithdrawalLocales ?
+            await _localizationService.GetResourceAsync("ReturnRequests.Withdrawal.Title") :
+            await _localizationService.GetResourceAsync("ReturnRequests.Title");
+
+        model.ReturnRequestTitle = string.Format(titlePattern,
+            _nopUrlHelper.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = order.Id }),
+            order.CustomOrderNumber);
+
+        model.ReturnRequestSubmitText = _returnRequestSettings.UseEuWithdrawalLocales ?
+            await _localizationService.GetResourceAsync("ReturnRequests.Withdrawal.Submit") :
+            await _localizationService.GetResourceAsync("ReturnRequests.Submit");
 
         //return reasons
         model.AvailableReturnReasons = await (await _returnRequestService.GetAllReturnRequestReasonsAsync())
@@ -119,7 +146,16 @@ public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
     /// </returns>
     public virtual async Task<CustomerReturnRequestsModel> PrepareCustomerReturnRequestsModelAsync()
     {
-        var model = new CustomerReturnRequestsModel();
+        var model = new CustomerReturnRequestsModel
+        {
+            ReturnRequestsTitle = _returnRequestSettings.UseEuWithdrawalLocales ?
+                await _localizationService.GetResourceAsync("Account.CustomerReturnRequests.Withdrawals") :
+                await _localizationService.GetResourceAsync("Account.CustomerReturnRequests"),
+            ReturnRequestTitlePattern = _returnRequestSettings.UseEuWithdrawalLocales ?
+                await _localizationService.GetResourceAsync("Account.CustomerReturnRequests.Withdrawal.Title") :
+                await _localizationService.GetResourceAsync("Account.CustomerReturnRequests.Title"),
+        };
+
         var store = await _storeContext.GetCurrentStoreAsync();
         var customer = await _workContext.GetCurrentCustomerAsync();
         var returnRequests = await _returnRequestService.SearchReturnRequestsAsync(store.Id, customer.Id);
@@ -142,8 +178,8 @@ public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
                     ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
                     ProductSeName = await _urlRecordService.GetSeNameAsync(product),
                     Quantity = returnRequest.Quantity,
-                    ReturnAction = returnRequest.RequestedAction,
-                    ReturnReason = returnRequest.ReasonForReturn,
+                    ReturnAction = _returnRequestSettings.ReturnActionsEnabled ? returnRequest.RequestedAction : "not available",
+                    ReturnReason = _returnRequestSettings.ReturnReasonsEnabled ? returnRequest.ReasonForReturn : "not available",
                     Comments = returnRequest.CustomerComments,
                     UploadedFileGuid = download?.DownloadGuid ?? Guid.Empty,
                     CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
@@ -153,6 +189,23 @@ public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
         }
 
         return model;
+    }
+
+    /// <summary>
+    /// Prepare the withdrawal form model
+    /// </summary>
+    /// <returns>
+    /// <param name="model">Withdrawal form model</param>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the withdrawal form model
+    /// </returns>
+    public virtual Task<WithdrawalFormModel> PrepareWithdrawalFormModelAsync(WithdrawalFormModel model)
+    {
+        model ??= new WithdrawalFormModel();
+
+        model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnWithdrawalForm;
+
+        return Task.FromResult(model);
     }
 
     /// <summary>

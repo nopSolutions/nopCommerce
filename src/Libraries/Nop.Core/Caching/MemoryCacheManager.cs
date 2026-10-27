@@ -246,10 +246,12 @@ public partial class MemoryCacheManager : CacheKeyService, IStaticCacheManager
     public virtual Task SetAsync<T>(CacheKey key, T data)
     {
         if (data != null && (key?.CacheTime ?? 0) > 0)
+        {
             _memoryCache.Set(
                 key.Key,
                 new Lazy<Task<T>>(() => Task.FromResult(data), true),
                 PrepareEntryOptions(key));
+        }
 
         return Task.CompletedTask;
     }

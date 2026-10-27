@@ -138,8 +138,10 @@ public partial class CheckoutAttributeController : BaseAdminController
                             .ToList();
 
                         if (selectedValues?.Any() ?? false)
+                        {
                             foreach (var value in selectedValues)
                                 attributesXml = _checkoutAttributeParser.AddAttribute(attributesXml, attribute, value);
+                        }
                         else
                             attributesXml = _checkoutAttributeParser.AddAttribute(null, attribute, string.Empty);
                     }

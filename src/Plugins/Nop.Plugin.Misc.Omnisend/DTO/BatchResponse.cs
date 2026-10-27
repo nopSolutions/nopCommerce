@@ -29,10 +29,7 @@ public class BatchResponse
             if (Endpoint.Equals(OmnisendDefaults.ProductsEndpoint, StringComparison.InvariantCultureIgnoreCase))
                 return "Plugins.Misc.Omnisend.SyncProducts";
 
-            if (Endpoint.Equals(OmnisendDefaults.OrdersEndpoint, StringComparison.InvariantCultureIgnoreCase))
-                return "Plugins.Misc.Omnisend.SyncOrders";
-
-            if (Endpoint.Equals(OmnisendDefaults.CategoriesEndpoint, StringComparison.InvariantCultureIgnoreCase))
+            if (Endpoint.Equals(OmnisendDefaults.CategoriesBatchEndpoint, StringComparison.InvariantCultureIgnoreCase))
                 return "Plugins.Misc.Omnisend.SyncCategories";
 
             return string.Empty;

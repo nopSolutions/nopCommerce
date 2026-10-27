@@ -184,17 +184,14 @@ public partial class MessageTemplateModelFactory : IMessageTemplateModelFactory
 
                 //PrepareEmailAccounts only gets available accounts, we need to set the item as selected manually
                 if (locale.AvailableEmailAccounts?.FirstOrDefault(x => x.Value == locale.EmailAccountId.ToString()) is SelectListItem emailAccountListItem)
-                {
                     emailAccountListItem.Selected = true;
-                }
-
             };
         }
 
         model.SendImmediately = !model.DelayBeforeSend.HasValue;
         model.HasAttachedDownload = model.AttachedDownloadId > 0;
 
-        var allowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfAllowedTokensAsync(_messageTokenProvider.GetTokenGroups(messageTemplate).ToList()));
+        var allowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfAllowedTokensAsync(messageTemplate));
         model.AllowedTokens = $"{allowedTokens}{Environment.NewLine}{Environment.NewLine}" +
                               $"{await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement")}{Environment.NewLine}";
 

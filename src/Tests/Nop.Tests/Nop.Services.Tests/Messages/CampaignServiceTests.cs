@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Services.Messages;

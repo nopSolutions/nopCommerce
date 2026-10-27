@@ -50,6 +50,7 @@ internal class PickupPointTestProvider : BasePlugin, IPickupPointProvider
         var pointAddress = await _addressService.GetAddressByIdAsync(1);
 
         for (var point = 1; point <= 3; point++)
+        {
             result.PickupPoints.Add(new PickupPoint
             {
                 Id = point.ToString(),
@@ -64,6 +65,7 @@ internal class PickupPointTestProvider : BasePlugin, IPickupPointProvider
                 DisplayOrder = point,
                 ProviderSystemName = PluginDescriptor.SystemName
             });
+        }
 
         return result;
     }

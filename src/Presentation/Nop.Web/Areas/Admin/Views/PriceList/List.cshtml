@@ -1,0 +1,258 @@
+﻿@model PriceListSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.PriceLists").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Price lists");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "PriceListPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+<form asp-controller="PriceList" asp-action="List" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Catalog.PriceLists")
+        </h1>
+        <div class="float-right">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-square-plus"></i>
+                @T("Admin.Common.AddNew")
+            </a>
+            <div class="btn-group">
+                <button type="button" class="btn btn-success">
+                    <i class="fas fa-download"></i>
+                    @T("Admin.Common.Export")
+                </button>
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">&nbsp;</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="dropdown-item">
+                        <button asp-action="ExportExcel" type="submit" name="exportexcel-all">
+                            <i class="far fa-file-excel"></i>
+                            @T("Admin.Common.ExportToExcel.All")
+                        </button>
+                    </li>
+                    <li class="dropdown-item">
+                        <button type="button" id="exportexcel-selected">
+                            <i class="far fa-file-excel"></i>
+                            @T("Admin.Common.ExportToExcel.Selected")
+                        </button>
+                    </li>
+                </ul>
+
+            </div>
+            <button type="button" name="importexcel" class="btn bg-olive" data-toggle="modal" data-target="#importexcel-window">
+                <i class="fas fa-upload"></i>
+                @T("Admin.Common.Import")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PriceListListButtons, additionalData = Model })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default card-search">
+                        <div class="card-body">
+                            <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                                <div class="search-text">@T("Admin.Common.Search")</div>
+                                <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
+                                <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                            </div>
+                            <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchIsActive" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-select asp-for="SearchIsActive" class="form-control" asp-items="Model.AvailableActiveValues" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SelectedCustomerRoleIds" />
+                                            </div>
+                                            <div class="col-md-8">                                               
+                                                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />                                                                                                                                              
+                                                <script>
+                                                    $(function() {
+                                                        var rolesIdsInput =
+                                                            $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
+                                                                closeOnSelect: false,
+                                                                @if (!Model.AvailableCustomerRoles.Any())
+                                                                {
+                                                                <text>
+                                                                disabled: true,
+                                                                placeholder: '@T("Admin.Configuration.ACL.NoCustomerRolesAvailable")',
+                                                                </text>
+                                                                }
+                                                            });
+                                                    });
+                                                </script>
+                                            </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="text-center col-12">
+                                        <button type="button" id="search-pricelists" class="btn btn-primary btn-search">
+                                            <i class="fas fa-magnifying-glass"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.PriceLists", Docs.PriceLists + Utm.OnAdmin)" />
+
+                            @{
+                                var gridModel = new DataTablesModel
+                                {
+                                    Name = "pricelist-grid",
+                                    UrlRead = new DataUrl("PriceListList", "PriceList", null),
+                                    SearchButtonId = "search-pricelists",
+                                    Length = Model.PageSize,
+                                    LengthMenu = Model.AvailablePageSizes,
+                                    Filters = new List<FilterParameter>
+                                    {
+                                        new FilterParameter(nameof(Model.SelectedCustomerRoleIds)),
+                                        new FilterParameter(nameof(Model.SearchIsActive)),
+                                    }
+                                };
+
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(PriceListModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_pricelists"),
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Width = "30"
+                                });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(PriceListModel.Name))
+                                {
+                                    Title = T("Admin.Catalog.PriceLists.Fields.Name").Text
+                                });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(PriceListModel.PriceCalculationTypeName))
+                                {
+                                    Title = T("Admin.Catalog.PriceLists.Fields.PriceCalculationTypeId").Text
+                                });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(PriceListModel.PriceCalculationValueFormatted))
+                                {
+                                    Title = T("Admin.Catalog.PriceLists.Fields.PriceCalculationValue").Text,
+                                });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(PriceListModel.CustomerRoleNames))
+                                {
+                                    Title = T("Admin.Catalog.PriceLists.Fields.CustomerRoles").Text,
+                                    Width = "100"
+                                });
+                                if (!Model.HidePriority)
+                                {
+                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(PriceListModel.Priority))
+                                    {
+                                        Title = T("Admin.Catalog.PriceLists.Fields.Priority").Text
+                                    });
+                                }
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(PriceListModel.Active))
+                                {
+                                    Title = T("Admin.Catalog.PriceLists.Fields.Active").Text,
+                                    Width = "70",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(PriceListModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "80",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("~/Admin/PriceList/Edit"))
+                                });
+                            }
+                            @await Html.PartialAsync("Table", gridModel)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+</form>
+
+@*import price lists form*@
+<div id="importexcel-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importexcel-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="importexcel-window-title">@T("Admin.Common.ImportFromExcel")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form asp-controller="PriceList" asp-action="ImportExcel" method="post" enctype="multipart/form-data">
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        <ul class="common-list">
+                            <li>
+                                <em>@T("Admin.Catalog.PriceLists.ImportFromExcelTip")</em>
+                            </li>
+                            <li>
+                                <em>@T("Admin.Common.ImportFromExcel.ManyRecordsWarning")</em>
+                            </li>
+                        </ul>
+                        <div class="form-group row">
+                            <div class="col-md-2">
+                                <div class="label-wrapper">
+                                    <label class="col-form-label">
+                                        @T("Admin.Common.ExcelFile")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="file" id="importexcelfile" name="importexcelfile" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Common.ImportFromExcel")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+<form asp-controller="PriceList" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+</form>
+<script>
+    $(function() {
+        $('#exportexcel-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            if (!ids) {
+                $('#exportExcelSelected-info').text("@T("Admin.Catalog.PriceLists.NoPriceLists")");
+                $("#exportExcelSelected").trigger("click");
+            }
+            else {
+                $('#export-excel-selected-form #selectedIds').val(ids);
+                $('#export-excel-selected-form').submit();
+                updateTable('#pricelist-grid');
+            }
+            return false;
+        });
+    });
+</script>
+<nop-alert asp-alert-id="exportExcelSelected" /> 

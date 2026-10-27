@@ -170,9 +170,7 @@ public partial class FilterLevelValueModelFactory : IFilterLevelValueModelFactor
         {
             //fill in model values from the entity
             if (model == null)
-            {
                 model = filterLevelValue.ToModel<FilterLevelValueModel>();
-            }
 
             //prepare nested search model
             PrepareFilterLevelValueProductSearchModel(model.FilterLevelValueProductSearchModel, filterLevelValue);

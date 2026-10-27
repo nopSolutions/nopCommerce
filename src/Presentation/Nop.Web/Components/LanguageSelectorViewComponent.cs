@@ -20,6 +20,6 @@ public partial class LanguageSelectorViewComponent : NopViewComponent
         if (model.AvailableLanguages.Count == 1)
             return Content("");
 
-        return View(model);
+        return await ViewAsync(model);
     }
 }

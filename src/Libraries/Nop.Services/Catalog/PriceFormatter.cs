@@ -474,44 +474,30 @@ public partial class PriceFormatter : IPriceFormatter
     /// Format base price (PAngV)
     /// </summary>
     /// <param name="product">Product</param>
-    /// <param name="productPrice">Product price (in primary currency). Pass null if you want to use a default produce price</param>
-    /// <param name="totalWeight">Total weight of product (with attribute weight adjustment). Pass null if you want to use a default produce weight</param>
+    /// <param name="basePrice">base price (PAngV)</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the base price
     /// </returns>
-    public virtual async Task<string> FormatBasePriceAsync(Product product, decimal? productPrice, decimal? totalWeight = null)
+    public virtual async Task<string> FormatBasePriceAsync(Product product, decimal? basePrice)
     {
         ArgumentNullException.ThrowIfNull(product);
 
-        if (!product.BasepriceEnabled)
+        if (!product.BasepriceEnabled || !basePrice.HasValue)
             return null;
 
-        var productAmount = totalWeight.HasValue && totalWeight.Value > decimal.Zero ? totalWeight.Value : product.BasepriceAmount;
-        //Amount in product cannot be 0
-        if (productAmount == 0)
-            return null;
+        var basePriceStr = await FormatPriceAsync(basePrice.Value, true, false);
+
         var referenceAmount = product.BasepriceBaseAmount;
-        var productUnit = await _measureService.GetMeasureWeightByIdAsync(product.BasepriceUnitId);
-        //measure weight cannot be loaded
-        if (productUnit == null)
-            return null;
+        
         var referenceUnit = await _measureService.GetMeasureWeightByIdAsync(product.BasepriceBaseUnitId);
         //measure weight cannot be loaded
         if (referenceUnit == null)
             return null;
 
-        productPrice ??= product.Price;
-
-        var basePrice = productPrice.Value /
-                        //do not round. otherwise, it can cause issues
-                        await _measureService.ConvertWeightAsync(productAmount, productUnit, referenceUnit, false) *
-                        referenceAmount;
-        var basePriceInCurrentCurrency = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(basePrice, await _workContext.GetWorkingCurrencyAsync());
-        var basePriceStr = await FormatPriceAsync(basePriceInCurrentCurrency, true, false);
-
         var result = string.Format(await _localizationService.GetResourceAsync("Products.BasePrice"),
             basePriceStr, referenceAmount.ToString("G29"), referenceUnit.Name);
+        
         return result;
     }
 
