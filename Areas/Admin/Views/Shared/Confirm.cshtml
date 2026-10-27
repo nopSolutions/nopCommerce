@@ -28,16 +28,18 @@
     $(function(){
         const openerBtn = document.getElementById('@Model.ButtonId');
 
-        openerBtn.type = "button";
-        openerBtn.setAttribute("data-toggle", "modal");
-        openerBtn.setAttribute("data-target", "#@Model.WindowId")
+        if (openerBtn) {
+            openerBtn.type = "button";
+            openerBtn.setAttribute("data-toggle", "modal");
+            openerBtn.setAttribute("data-target", "#@Model.WindowId")
 
-        $('#@(Model.WindowId)-submit-button').on('click', function() {
-            if (!openerBtn.name)
-                return;
+            $('#@(Model.WindowId)-submit-button').on('click', function() {
+                if (!openerBtn.name)
+                    return;
 
-            openerBtn.type = "submit";
-            openerBtn.click();
-        });
+                openerBtn.type = "submit";
+                openerBtn.click();
+            });
+        }
     });
 </script>

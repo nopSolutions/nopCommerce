@@ -294,7 +294,6 @@
                                         new ColumnProperty(nameof(BrevoMessageTemplateModel.Id))
                                         {
                                             Title = T("Plugins.Misc.Brevo.EditTemplate").Text,
-                                            Width = "150",
                                             Render = new RenderLink(new DataUrl(string.Empty, nameof(BrevoMessageTemplateModel.EditLink)))
                                             {
                                                 Title = T("Plugins.Misc.Brevo.EditTemplate").Text
@@ -303,7 +302,7 @@
                                         new ColumnProperty(nameof(BrevoMessageTemplateModel.Id))
                                         {
                                             Title = T("Admin.Common.Edit").Text,
-                                            Width = "200",
+                                            Width = "100",
                                             ClassName =  NopColumnClassDefaults.Button,
                                             Render = new RenderButtonsInlineEdit()
                                         }
@@ -395,18 +394,15 @@
                                     {
                                         new ColumnProperty(nameof(SmsModel.Name))
                                         {
-                                            Title = T("Admin.ContentManagement.MessageTemplates.Fields.Name").Text,
-                                            Width = "300",
+                                            Title = T("Admin.ContentManagement.MessageTemplates.Fields.Name").Text
                                         },
                                         new ColumnProperty(nameof(SmsModel.PhoneType))
                                         {
-                                            Title = T("Plugins.Misc.Brevo.PhoneType").Text,
-                                            Width = "200",
+                                            Title = T("Plugins.Misc.Brevo.PhoneType").Text
                                         },
                                         new ColumnProperty(nameof(SmsModel.Text))
                                         {
-                                            Title = T("Plugins.Misc.Brevo.SMSText").Text,
-                                            Width = "500"
+                                            Title = T("Plugins.Misc.Brevo.SMSText").Text
                                         },
                                         new ColumnProperty(nameof(SmsModel.Id))
                                         {

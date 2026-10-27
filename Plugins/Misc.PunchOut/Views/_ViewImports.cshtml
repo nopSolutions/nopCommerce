@@ -1,0 +1,38 @@
+﻿@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@removeTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Nop.Web.Framework
+
+@inject INopHtmlHelper NopHtml
+
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using Microsoft.AspNetCore.Routing
+@using Nop.Core
+@using Nop.Core.Domain.Common
+@using Nop.Core.Domain.Orders
+@using Nop.Core.Http
+@using Nop.Core.Infrastructure
+@using Nop.Plugin.Misc.PunchOut
+@using Nop.Plugin.Misc.PunchOut.Models
+@using Nop.Plugin.Misc.PunchOut.Models.Identity
+@using Nop.Plugin.Misc.PunchOut.Models.Log
+@using Nop.Plugin.Misc.PunchOut.Models.Session
+@using Nop.Services.Common
+@using Nop.Services.Events
+@using Nop.Web.Areas.Admin.Components
+@using Nop.Web.Components
+@using Nop.Web.Extensions
+@using Nop.Web.Framework
+@using Nop.Web.Framework.Events
+@using Nop.Web.Framework.Extensions
+@using Nop.Web.Framework.Infrastructure
+@using Nop.Web.Framework.Models
+@using Nop.Web.Framework.Models.AdminAreaTour
+@using Nop.Web.Framework.Models.DataTables
+@using Nop.Web.Framework.Mvc.Routing
+@using Nop.Web.Framework.Security.Captcha
+@using Nop.Web.Framework.Security.Honeypot
+@using Nop.Web.Framework.Themes
+@using Nop.Web.Framework.UI
+@using Nop.Web.Models.ShoppingCart

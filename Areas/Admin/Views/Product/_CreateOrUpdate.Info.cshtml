@@ -8,6 +8,7 @@
 
 @{
     var stores = await storeService.GetAllStoresAsync();
+    (Model as IAclSupportedModel).IsAdvancedSetting = !Model.ProductEditorSettingsModel.ACL;
 }
     @* resources for product tags input *@
     <script src="~/lib_npm/jquery-tageditor/jquery.caret.min.js"></script>
@@ -409,7 +410,6 @@
                         new ColumnProperty(nameof(AssociatedProductModel.DisplayOrder))
                         {
                             Title = T("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder").Text,
-                            Width = "150",
                             ClassName = NopColumnClassDefaults.CenterAll,
                             Editable = true,
                             EditType = EditType.Number
@@ -417,14 +417,14 @@
                         new ColumnProperty(nameof(AssociatedProductModel.Id))
                         {
                             Title = T("Admin.Common.View").Text,
-                            Width = "150",
+                            Width = "100",
                             ClassName = NopColumnClassDefaults.Button,
                             Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/", nameof(AssociatedProductModel.Id)))
                         },
                         new ColumnProperty(nameof(AssociatedProductModel.Id))
                         {
                             Title = T("Admin.Common.Edit").Text,
-                            Width = "200",
+                            Width = "100",
                             ClassName =  NopColumnClassDefaults.Button,
                             Render = new RenderButtonsInlineEdit()
                         },
@@ -515,7 +515,7 @@
             </div>
         </div>
     </nop-nested-setting>
-@await Component.InvokeAsync(typeof(AclCustomerRolesViewComponent), Model)
+    @await Component.InvokeAsync(typeof(AclCustomerRolesViewComponent), Model)
     <div class="form-group row @(Model.ProductEditorSettingsModel.Stores ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="SelectedStoreIds" />

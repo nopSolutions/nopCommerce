@@ -1,0 +1,26 @@
+/* Summernote Link Dialog Browse Button Styles */
+
+.note-link-browse-btn {
+  margin-left: 5px;
+  margin-bottom: 5px;
+  line-height: 1;
+}
+
+.note-link-browse-btn i {
+    margin-left: 5px;
+}
+
+/* Ensure elFinder dialog is above Insert Link modal */
+.elfinder {
+    z-index: 2000 !important;
+}
+
+.ui-widget-overlay {
+    z-index: 1999 !important;
+}
+
+/* Adjust modal layout for the button */
+.note-modal .form-group input {
+  display: inline-block;
+  width: calc(100% - 60px);
+}

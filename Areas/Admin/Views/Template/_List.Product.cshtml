@@ -17,35 +17,31 @@
             new ColumnProperty(nameof(ProductTemplateModel.Name))
             {
                 Title = T("Admin.System.Templates.Product.Name").Text,
-                Width = "300",
                 Editable = true,
                 EditType = EditType.String
             },
             new ColumnProperty(nameof(ProductTemplateModel.ViewPath))
             {
                 Title = T("Admin.System.Templates.Product.ViewPath").Text,
-                Width = "300",
                 Editable = true,
                 EditType = EditType.String
             },
             new ColumnProperty(nameof(ProductTemplateModel.DisplayOrder))
             {
                 Title = T("Admin.System.Templates.Product.DisplayOrder").Text,
-                Width = "100",
                 Editable = true,
                 EditType = EditType.Number
             },
             new ColumnProperty(nameof(ProductTemplateModel.IgnoredProductTypes))
             {
                 Title = T("Admin.System.Templates.Product.IgnoredProductTypes").Text,
-                Width = "300",
                 Editable = true,
                 EditType = EditType.String
             },
             new ColumnProperty(nameof(ProductTemplateModel.Id))
             {
                 Title = T("Admin.Common.Edit").Text,
-                Width = "200",
+                Width = "100",
                 ClassName =  NopColumnClassDefaults.Button,
                 Render = new RenderButtonsInlineEdit()
             },

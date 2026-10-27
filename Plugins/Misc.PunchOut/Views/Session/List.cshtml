@@ -1,0 +1,87 @@
+@model PunchOutSessionSearchModel
+
+<div class="card-body">
+    <div class="card card-default">
+        <div class="card-body">
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+                Name = "session-grid",
+                UrlRead = new DataUrl("SessionList", "PunchOutAdmin", null),
+                UrlDelete = new DataUrl("SessionDelete", "PunchOutAdmin", null),
+                Length = Model.PageSize,
+                LengthMenu = Model.AvailablePageSizes,
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(PunchOutSessionModel.SessionId))
+                    {
+                        Title = T("Plugins.Misc.PunchOut.Session.SessionId").Text,
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(PunchOutSessionModel.BuyerCookie))
+                    {
+                        Title = T("Plugins.Misc.PunchOut.Session.BuyerCookie").Text,
+                        Width = "200"
+                    },
+                    new ColumnProperty(nameof(PunchOutSessionModel.IsActive))
+                    {
+                        Title = T("Plugins.Misc.PunchOut.Session.IsActive").Text,
+                        Width = "100",
+                        ClassName =  NopColumnClassDefaults.CenterAll,
+                        Render = new RenderBoolean()
+                    },
+                    new ColumnProperty(nameof(PunchOutSessionModel.CustomerEmail))
+                    {
+                        Title = T("Plugins.Misc.PunchOut.Session.CustomerEmail").Text,
+                        Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(PunchOutSessionModel.CustomerId)))
+                    },
+                    new ColumnProperty(nameof(PunchOutSessionModel.StoreName))
+                    {
+                        Title = T("Plugins.Misc.PunchOut.Session.Store").Text,
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(PunchOutSessionModel.CreatedOnUtc))
+                    {
+                        Title = T("Plugins.Misc.PunchOut.Session.CreatedOnUtc").Text,
+                        Width = "200",
+                        Render = new RenderDate()
+                    },
+                    new ColumnProperty(nameof(PunchOutSessionModel.CustomerId))
+                    {
+                        Title = T("Plugins.Misc.PunchOut.Session.CloseSession").Text,
+                        Width = "100",
+                        ClassName =  NopColumnClassDefaults.Button,
+                        Render = new RenderCustom("renderCloseSession")
+                    }
+                }
+            })
+            <script>
+                function renderCloseSession(data, type, row, meta) {
+                    var title = '@T("Plugins.Misc.PunchOut.Session.CloseSession").Text';
+                    var buttonHtml = `<button class="btn btn-default" onclick="closeSession('${row.CustomerId}', '${row.StoreId}')" type="button">${title}</button>`;
+                    return buttonHtml;
+                }
+
+                function closeSession(customerId, storeId) {
+                    var postData = {
+                        customerId: customerId,
+                        storeId: storeId
+                    };
+                    addAntiForgeryToken(postData);
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("CloseSession", "PunchOutAdmin"))",
+                        data: postData,
+                        complete: function (jqXHR, textStatus) {
+                            updateTable('#session-grid');
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            showAlert('closeSessionAlert', '@T("Plugins.Misc.PunchOut.Session.CloseSessionError").Text');
+                        }
+                    });
+                }
+            </script>
+        </div>
+    </div>
+</div>
+<nop-alert asp-alert-id="closeSessionAlert" />

@@ -1,0 +1,101 @@
+@model PunchOutLogModel
+
+@{
+    Layout = "_ConfigurePlugin";
+    ViewBag.PageTitle = T("Plugins.Misc.PunchOut.Log.Hint").Text;
+}
+
+<form asp-controller="PunchOutAdmin" asp-action="LogView" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Plugins.Misc.PunchOut.Log.Hint")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="Configure" asp-controller="PunchOutAdmin">@T("Plugins.Misc.PunchOut.Log.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <span id="log-delete" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div asp-validation-summary="All"></div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SessionId" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Html.Raw(Model.SessionId)</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="MessageType" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Html.Raw(Model.MessageType)</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Direction" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row" style="word-break: break-all">@Html.Raw(Model.Direction)</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="RawXml" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row" style="word-break: break-all">@Html.Raw(Model.RawXml)</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Url" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row" style="word-break: break-all">@Html.Raw(Model.Url)</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Identity" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row" style="word-break: break-all">@Html.Raw(Model.Identity)</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Error" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row" style="word-break: break-all">@Html.Raw(Model.Error)</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CreatedDate" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.CreatedDate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="log-delete" />

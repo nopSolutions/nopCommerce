@@ -34,18 +34,15 @@
                                 {
                                     new ColumnProperty(nameof(MultiFactorAuthenticationMethodModel.FriendlyName))
                                     {
-                                        Title = T("Admin.Configuration.Authentication.MultiFactorMethods.Fields.FriendlyName").Text,
-                                        Width = "250"
+                                        Title = T("Admin.Configuration.Authentication.MultiFactorMethods.Fields.FriendlyName").Text
                                     },
                                     new ColumnProperty(nameof(MultiFactorAuthenticationMethodModel.SystemName))
                                     {
-                                        Title = T("Admin.Configuration.Authentication.MultiFactorMethods.Fields.SystemName").Text,
-                                        Width = "250"
+                                        Title = T("Admin.Configuration.Authentication.MultiFactorMethods.Fields.SystemName").Text
                                     },
                                     new ColumnProperty(nameof(MultiFactorAuthenticationMethodModel.DisplayOrder))
                                     {
                                         Title = T("Admin.Configuration.Authentication.MultiFactorMethods.Fields.DisplayOrder").Text,
-                                        Width = "100",
                                         ClassName = NopColumnClassDefaults.CenterAll,
                                         Editable = true,
                                         EditType = EditType.Number
@@ -53,7 +50,7 @@
                                     new ColumnProperty(nameof(MultiFactorAuthenticationMethodModel.IsActive))
                                     {
                                         Title = T("Admin.Configuration.Authentication.MultiFactorMethods.Fields.IsActive").Text,
-                                        Width = "100",
+                                        Width = "50",
                                         ClassName = NopColumnClassDefaults.CenterAll,
                                         Render = new RenderBoolean(),
                                         Editable = true,
@@ -69,7 +66,7 @@
                                     new ColumnProperty(nameof(MultiFactorAuthenticationMethodModel.SystemName))
                                     {
                                         Title = T("Admin.Common.Edit").Text,
-                                        Width = "200",
+                                        Width = "100",
                                         ClassName =  NopColumnClassDefaults.Button,
                                         Render = new RenderButtonsInlineEdit()
                                     }

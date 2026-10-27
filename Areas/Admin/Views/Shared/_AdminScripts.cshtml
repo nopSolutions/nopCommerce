@@ -1,29 +1,9 @@
-@inject INopFileProvider fileProvider;
-@inject IWebHelper webHelper
 @inject LocalizationSettings localizationSettings
-@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
 @using Nop.Core.Domain.Localization
+@using Nop.Services.Helpers
 
 @{
     var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
-
-    var culture = CultureInfo.CurrentCulture;
-    var uiCulture = CultureInfo.CurrentUICulture;
-
-    //Code to get check if current cultures scripts are exists. If not, select parent cultures scripts
-    string GetDefaultCulture()
-    {
-        var localePattern = NopCommonDefaults.LocalePatternPath;
-
-        var cultureToUse = NopCommonDefaults.DefaultLocalePattern; //Default regionalisation to use
-
-        if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, culture.Name))))
-            cultureToUse = culture.Name;
-        else if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, culture.TwoLetterISOLanguageName))))
-            cultureToUse = culture.TwoLetterISOLanguageName;
-
-        return cultureToUse;
-    }
 }
 
 @*Google Font*@
@@ -33,7 +13,7 @@
 <link rel="stylesheet" href="~/lib_npm/jquery-ui-dist/jquery-ui.min.css"/>
 <link rel="stylesheet" href="~/lib_npm/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css"/>
 <link rel="stylesheet" href="~/lib_npm/@("@fortawesome")/fontawesome-free/css/all.min.css"/>
-<link rel="stylesheet" href="~/lib_npm/datatables.net-bs4/css/dataTables.bootstrap4.min.css" />
+<link rel="stylesheet" href="~/lib_npm/bootstrap.datatables.net-bs4/css/dataTables.bootstrap4.min.css" />
 <link rel="stylesheet" href="~/lib_npm/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css"/>
 <link rel="stylesheet" href="~/lib_npm/overlayscrollbars/styles/overlayscrollbars.min.css" />
 
@@ -82,13 +62,13 @@ else
 <script src="~/js/admin.search.js"></script>
 
 <script src="~/lib_npm/datatables.net/js/dataTables.min.js"></script>
-<script src="~/lib_npm/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/lib_npm/bootstrap.datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="~/lib_npm/moment/min/moment-with-locales.min.js"></script>
 <script src="~/lib_npm/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
 <script src="~/lib_npm/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
 <script asp-location="Footer">
         var rootAppPath = '@(Url.Content("~/"))';
-        var culture = "@GetDefaultCulture()";
+        var culture = "@NopHtml.GetDefaultJavaScriptCulture()";
 
         //load cldr for current culture
         $.when(

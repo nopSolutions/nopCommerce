@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Jotform AI agent widget",
+  "SystemName": "Widgets.Jotform",
+  "Version": "5.00.0",
+  "SupportedVersions": [ "5.00" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.Jotform.dll",
+  "Description": "This plugin allows you to add Jotform AI agent as chatbot on your store"
+}

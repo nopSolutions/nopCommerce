@@ -180,8 +180,7 @@
                             new ColumnProperty(nameof(ProductReviewModel.StoreName))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.Store").Text,
-                                Visible = (await storeService.GetAllStoresAsync()).Count > 1 ? true : false,
-                                Width = "150"
+                                Visible = (await storeService.GetAllStoresAsync()).Count > 1 ? true : false
                             },
                             new ColumnProperty(nameof(ProductReviewModel.ProductName))
                             {
@@ -197,8 +196,7 @@
                             },
                             new ColumnProperty(nameof(ProductReviewModel.Title))
                             {
-                                Title = T("Admin.Catalog.ProductReviews.Fields.Title").Text,
-                                Width = "200"
+                                Title = T("Admin.Catalog.ProductReviews.Fields.Title").Text
                             },
                             new ColumnProperty(nameof(ProductReviewModel.ReviewText))
                             {
@@ -226,7 +224,7 @@
                             new ColumnProperty(nameof(ProductReviewModel.CreatedOn))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.CreatedOn").Text,
-                                Width = "150",
+                                Width = "180",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(ProductReviewModel.Id))

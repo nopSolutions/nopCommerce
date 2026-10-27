@@ -53,6 +53,12 @@
                             <nop-required />
                             <span asp-validation-for="Enquiry"></span>
                         </div>
+
+                        @if (Model.ContactFormAttributes.Count > 0)
+                        {
+                            @await Html.PartialAsync("_ContactFormAttributes", Model.ContactFormAttributes)
+                        }
+
                         @if (Model.DisplayCaptcha)
                         {
                             <nop-captcha />

@@ -44,7 +44,7 @@
                         <div class="buttons">
                             @if (order.IsReturnRequestAllowed)
                             {
-                                <button type="button" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.RETURN_REQUEST, new { orderId = order.Id })')">@T("Account.CustomerOrders.ReturnItems")</button>
+                                <button type="button" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.RETURN_REQUEST, new { orderId = order.Id })')">@Model.ReturnItemsButtonText</button>
                             }
                             <button type="button" class="button-2 order-details-button" onclick="setLocation('@Url.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = order.Id })')">@T("Account.CustomerOrders.OrderDetails")</button>
                         </div>

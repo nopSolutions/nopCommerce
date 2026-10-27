@@ -53,6 +53,9 @@
 
     const string hideProductSortingBlockAttributeName = "CatalogSettingsPage.HideProductSortingBlock";
     var hideProductSortingBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductSortingBlockAttributeName);
+
+    const string hideGpsrBlockAttributeName = "CatalogSettingsPage.HideGpsrBlock";
+    var hideGpsrBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideGpsrBlockAttributeName);
 }
 
 
@@ -91,6 +94,7 @@
                     <nop-card asp-name="catalogsettings-catalog-pages" asp-icon="fas fa-table-list" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.CatalogPages")" asp-hide-block-attribute-name="@hideCatalogPagesBlockAttributeName" asp-hide="@hideCatalogPagesBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.CatalogPages", Model)</nop-card>
                     <nop-card asp-name="catalogsettings-tags" asp-icon="fas fa-tag" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.Tags")" asp-hide-block-attribute-name="@hideTagsBlockAttributeName" asp-hide="@hideTagsBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.Tags", Model)</nop-card>
                     <nop-card asp-name="catalogsettings-tax" asp-icon="fas fa-percent" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.Tax")" asp-hide-block-attribute-name="@hideTaxBlockAttributeName" asp-hide="@hideTaxBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.Tax", Model)</nop-card>
+                    <nop-card asp-name="catalogsettings-gpsr" asp-icon="fas fa-shield" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.Gpsr")" asp-hide-block-attribute-name="@hideGpsrBlockAttributeName" asp-hide="@hideGpsrBlock">@await Html.PartialAsync("_Catalog.Gpsr", Model)</nop-card>
                     <nop-card asp-name="catalogsettings-export-import" asp-icon="fas fa-right-left" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.ExportImport")" asp-hide-block-attribute-name="@hideExportImportBlockAttributeName" asp-hide="@hideExportImportBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.ExportImport", Model)</nop-card>
                     <nop-card asp-name="catalogsettings-product-sorting" asp-icon="fas fa-sort" asp-title="@T("Admin.Configuration.Settings.Catalog.BlockTitle.ProductSorting")" asp-hide-block-attribute-name="@hideProductSortingBlockAttributeName" asp-hide="@hideProductSortingBlock" asp-advanced="true">@await Html.PartialAsync("_Catalog.ProductSorting", Model)</nop-card>
 

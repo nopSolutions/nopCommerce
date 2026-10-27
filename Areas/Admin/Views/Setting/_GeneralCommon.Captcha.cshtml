@@ -104,16 +104,6 @@
                 <span asp-validation-for="CaptchaSettings.ShowOnBlogCommentPage"></span>
             </div>
         </div>
-        <div class="form-group row" id="ssCaptchaShowOnNewsCommentPagepnl">
-            <div class="col-md-3">
-                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnNewsCommentPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnNewsCommentPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                <nop-label asp-for="CaptchaSettings.ShowOnNewsCommentPage" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="CaptchaSettings.ShowOnNewsCommentPage" />
-                <span asp-validation-for="CaptchaSettings.ShowOnNewsCommentPage"></span>
-            </div>
-        </div>
         <div class="form-group row" id="ssCaptchaShowOnNewsletterPagepnl">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnNewsLetterPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnNewsLetterPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -144,16 +134,6 @@
                 <span asp-validation-for="CaptchaSettings.ShowOnApplyVendorPage"></span>
             </div>
         </div>
-        <div class="form-group row" id="ssCaptchaShowOnForumpnl">
-            <div class="col-md-3">
-                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnForum_OverrideForStore" asp-input="CaptchaSettings.ShowOnForum" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                <nop-label asp-for="CaptchaSettings.ShowOnForum" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="CaptchaSettings.ShowOnForum" />
-                <span asp-validation-for="CaptchaSettings.ShowOnForum"></span>
-            </div>
-        </div>
         <div class="form-group row" id="ssCaptchaShowOnCheckoutPageForGuests">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnCheckoutPageForGuests_OverrideForStore" asp-input="CaptchaSettings.ShowOnCheckoutPageForGuests" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -172,6 +152,16 @@
             <div class="col-md-9">
                 <nop-editor asp-for="CaptchaSettings.ShowOnCheckGiftCardBalance" />
                 <span asp-validation-for="CaptchaSettings.ShowOnCheckGiftCardBalance"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="ssCaptchaShowOnWithdrawalForm">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnWithdrawalForm_OverrideForStore" asp-input="CaptchaSettings.ShowOnWithdrawalForm" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnWithdrawalForm" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnWithdrawalForm" />
+                <span asp-validation-for="CaptchaSettings.ShowOnWithdrawalForm"></span>
             </div>
         </div>
         <div class="form-group row" id="ssReCaptchaPublicKeypnl">
@@ -221,11 +211,9 @@
             $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').showElement();
             $('#ssCaptchaShowOnEmailProductToFriendPagepnl').showElement();
             $('#ssCaptchaShowOnBlogCommentPagepnl').showElement();
-            $('#ssCaptchaShowOnNewsCommentPagepnl').showElement();
             $('#ssCaptchaShowOnNewsletterPagepnl').showElement();
             $('#ssCaptchaShowOnProductReviewPagepnl').showElement();
             $('#ssCaptchaShowOnApplyVendorPagepnl').showElement();
-            $('#ssCaptchaShowOnForumpnl').showElement();
             $('#ssCaptchaShowOnCheckoutPageForGuests').showElement();
             $('#ssCaptchaShowOnCheckGiftCardBalance').showElement();
             $('#ssReCaptchaPublicKeypnl').showElement();
@@ -241,11 +229,9 @@
             $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hideElement();
             $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hideElement();
             $('#ssCaptchaShowOnBlogCommentPagepnl').hideElement();
-            $('#ssCaptchaShowOnNewsCommentPagepnl').hideElement();
             $('#ssCaptchaShowOnNewsletterPagepnl').hideElement();
             $('#ssCaptchaShowOnProductReviewPagepnl').hideElement();
             $('#ssCaptchaShowOnApplyVendorPagepnl').hideElement();
-            $('#ssCaptchaShowOnForumpnl').hideElement();
             $('#ssCaptchaShowOnCheckoutPageForGuests').hideElement();
             $('#ssCaptchaShowOnCheckGiftCardBalance').hideElement();
             $('#ssReCaptchaPublicKeypnl').hideElement();

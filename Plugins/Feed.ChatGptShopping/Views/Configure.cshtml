@@ -1,0 +1,175 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+
+<form asp-controller="ChatGptShopping" asp-action="Configure" method="post" id="configuration-form">
+    <section class="content">
+        <div class="cards-group">
+            <div class="card card-default no-margin">
+                <div class="card-header">
+                    @T("Plugins.Feed.ChatGptShopping.Configuration")
+                </div>
+                <div class="card-body">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            To make your products available in ChatGPT Shopping, complete the following steps:
+                        </div>
+                        <div class="panel-body">
+                            <ol>
+                                <li>
+                                    Generate the product feed.
+                                </li>
+                                <li>
+                                    Verify that the feed is publicly accessible.
+                                </li>
+                                <li>
+                                    Sign in to the
+                                    <a href="https://chatgpt.com/merchants/" target="_blank" rel="noopener noreferrer">
+                                        ChatGPT Merchant Portal
+                                    </a>.
+                                </li>
+                                <li>
+                                    Register your store (if you haven't already).
+                                </li>
+                                <li>
+                                    Add a new product feed and provide the public URL of the generated JSONL feed.
+                                </li>
+                                <li>
+                                    Complete the verification process and submit the feed for processing.
+                                </li>
+                                <li>
+                                    Regenerate the feed whenever your catalog changes. OpenAI will periodically fetch the latest version from the configured URL.
+                                </li>
+                            </ol>
+
+                            <hr />
+
+                            For more information, see the official OpenAI documentation:
+
+                            <ul>
+                                <li>
+                                    <a href="https://chatgpt.com/merchants/" target="_blank" rel="noopener noreferrer">
+                                        ChatGPT Merchant Portal
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://developers.openai.com/commerce/specs/file-upload/overview" target="_blank" rel="noopener noreferrer">
+                                        Provide a structured product feed as file upload to an SFTP server
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://developers.openai.com/commerce/specs/file-upload/products" target="_blank" rel="noopener noreferrer">
+                                        Product Feed Specification
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="CurrencyId_OverrideForStore" asp-input="CurrencyId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="CurrencyId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="CurrencyId" asp-items="Model.AvailableCurrencies" />
+                            <span asp-validation-for="CurrencyId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="LanguageId_OverrideForStore" asp-input="LanguageId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="LanguageId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="LanguageId" asp-items="Model.AvailableLanguages" />
+                            <span asp-validation-for="LanguageId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="TargetCountries_OverrideForStore" asp-input="TargetCountries" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="TargetCountries" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="TargetCountries" />
+                            <span asp-validation-for="TargetCountries"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="StoreCountry_OverrideForStore" asp-input="StoreCountry" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="StoreCountry" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="StoreCountry" />
+                            <span asp-validation-for="StoreCountry"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AutoSyncEnabled" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AutoSyncEnabled" />
+                            <span asp-validation-for="AutoSyncEnabled"></span>
+                        </div>
+                    </div>
+                    <nop-nested-setting asp-for="AutoSyncEnabled">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AutoSyncPeriod" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AutoSyncPeriod" />
+                                <span asp-validation-for="AutoSyncPeriod"></span>
+                            </div>
+                        </div>
+                    </nop-nested-setting>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="ProductPictureSize_OverrideForStore" asp-input="ProductPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="ProductPictureSize" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ProductPictureSize" />
+                            <span asp-validation-for="ProductPictureSize"></span>
+                        </div>
+                    </div>
+                    @if (Model.GeneratedFiles.Count > 0)
+                    {
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="GeneratedFiles" />
+                            </div>
+                            <div class="col-md-9">
+                                @for (var i = 0; i <= Model.GeneratedFiles.Count - 1; i++)
+                                {
+                                    var generatedFile = Model.GeneratedFiles[i];
+                                    @generatedFile.StoreName <text>-</text> <a href="@generatedFile.FileUrl" target="_blank">@generatedFile.FileUrl</a>
+                                    if (i != Model.GeneratedFiles.Count - 1)
+                                    {
+                                        <br />
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            &nbsp;
+                        </div>
+                        <div class="col-md-9">
+                            <button type="submit" name="save" class="btn btn-primary"><i class="far fa-save"></i>@T("Admin.Common.Save")</button>
+                            <button type="submit" name="generate" class="btn btn-success">@T("Plugins.Feed.ChatGptShopping.Generate")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

@@ -92,29 +92,25 @@
                             new ColumnProperty(nameof(OnlineCustomerModel.CustomerInfo))
                             {
                                 Title = T("Admin.Customers.OnlineCustomers.Fields.CustomerInfo").Text,
-                                Width = "100",
                                 Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(CustomerModel.Id)))
                             },
                             new ColumnProperty(nameof(OnlineCustomerModel.LastIpAddress))
                             {
-                                Title = T("Admin.Customers.OnlineCustomers.Fields.IPAddress").Text,
-                                Width = "100"
+                                Title = T("Admin.Customers.OnlineCustomers.Fields.IPAddress").Text
                             },
                             new ColumnProperty(nameof(OnlineCustomerModel.Location))
                             {
-                                Title = T("Admin.Customers.OnlineCustomers.Fields.Location").Text,
-                                Width = "100"
+                                Title = T("Admin.Customers.OnlineCustomers.Fields.Location").Text
                             },
                             new ColumnProperty(nameof(OnlineCustomerModel.LastActivityDate))
                             {
                                 Title = T("Admin.Customers.OnlineCustomers.Fields.LastActivityDate").Text,
-                                Width = "200",
+                                Width = "180",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(OnlineCustomerModel.LastVisitedPage))
                             {
-                                Title = T("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage").Text,
-                                Width = "100"
+                                Title = T("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage").Text
                             }
                         }
                     })

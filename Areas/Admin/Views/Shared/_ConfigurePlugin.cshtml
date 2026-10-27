@@ -3,6 +3,7 @@
 @using Nop.Services.Authentication.MultiFactor
 @using Nop.Services.Catalog
 @using Nop.Services.Cms
+@using Nop.Services.Messages
 @using Nop.Services.Payments
 @using Nop.Services.Plugins
 @using Nop.Services.Shipping
@@ -56,6 +57,15 @@
         backToLocale = "Admin.Configuration.Tax.Providers.BackToList";
         listActionMethodName = "List";
         listControllerName = "Tax";
+    }
+    else if (plugin is ISmsProvider)
+    {
+        //sms provider
+        activeMenuSystemName = "Sms providers";
+        configureLocale = "Admin.Configuration.Sms.Providers.Configure";
+        backToLocale = "Admin.Configuration.Sms.Providers.BackToList";
+        listActionMethodName = "List";
+        listControllerName = "Sms";
     }
     else if (plugin is IExternalAuthenticationMethod)
     {

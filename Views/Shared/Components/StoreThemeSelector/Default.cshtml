@@ -1,6 +1,7 @@
-﻿@model StoreThemeSelectorModel
+﻿@using Nop.Services.Helpers
+@model StoreThemeSelectorModel
 
-@inject Nop.Core.IWebHelper webHelper
+@inject IWebHelper webHelper
 
 @if (Model.AvailableStoreThemes.Count > 1)
 {

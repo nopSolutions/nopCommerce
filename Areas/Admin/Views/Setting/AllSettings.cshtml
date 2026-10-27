@@ -95,26 +95,23 @@
                             new ColumnProperty(nameof(SettingModel.Name))
                             {
                                 Title = T("Admin.Configuration.Settings.AllSettings.Fields.Name").Text,
-                                Width = "300",
                                 Editable = true,
                                 EditType = EditType.String
                             },
                             new ColumnProperty(nameof(SettingModel.Value))
                             {
                                 Title = T("Admin.Configuration.Settings.AllSettings.Fields.Value").Text,
-                                Width = "300",
                                 Editable = true,
                                 EditType = EditType.String
                             },
                             new ColumnProperty(nameof(SettingModel.Store))
                             {
-                                Title = T("Admin.Configuration.Settings.AllSettings.Fields.StoreName").Text,
-                                Width = "200"
+                                Title = T("Admin.Configuration.Settings.AllSettings.Fields.StoreName").Text
                             },
                             new ColumnProperty(nameof(SettingModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
-                                Width = "200",
+                                Width = "100",
                                 ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonsInlineEdit()
                             },

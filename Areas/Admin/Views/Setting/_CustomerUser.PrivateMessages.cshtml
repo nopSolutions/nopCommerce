@@ -1,0 +1,36 @@
+﻿@model CustomerUserSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="PrivateMessageSettings.AllowPrivateMessages_OverrideForStore" asp-input="PrivateMessageSettings.AllowPrivateMessages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="PrivateMessageSettings.AllowPrivateMessages" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PrivateMessageSettings.AllowPrivateMessages" />
+            <span asp-validation-for="PrivateMessageSettings.AllowPrivateMessages"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="PrivateMessageSettings.AllowPrivateMessages">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="PrivateMessageSettings.ShowAlertForPM_OverrideForStore" asp-input="PrivateMessageSettings.ShowAlertForPM" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="PrivateMessageSettings.ShowAlertForPM" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="PrivateMessageSettings.ShowAlertForPM" />
+                <span asp-validation-for="PrivateMessageSettings.ShowAlertForPM"></span>
+            </div>
+        </div>
+        <div class="form-group row advanced-setting" id="pnlNotifyAboutPrivateMessages">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="PrivateMessageSettings.NotifyAboutPrivateMessages_OverrideForStore" asp-input="PrivateMessageSettings.NotifyAboutPrivateMessages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="PrivateMessageSettings.NotifyAboutPrivateMessages" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="PrivateMessageSettings.NotifyAboutPrivateMessages" />
+                <span asp-validation-for="PrivateMessageSettings.NotifyAboutPrivateMessages"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>

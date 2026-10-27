@@ -1,0 +1,109 @@
+﻿@model PriceListModel
+
+@using Nop.Core.Domain.PriceLists
+@using Nop.Services
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Name" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Name" asp-required="true" />
+            <span asp-validation-for="Name"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="PriceCalculationTypeId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="PriceCalculationTypeId" asp-items="@(await ((PriceCalculationTypeEnum)Model.PriceCalculationTypeId).ToSelectListAsync())" />
+            <span asp-validation-for="PriceCalculationTypeId"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="PriceCalculationValue" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PriceCalculationValue" />
+            <span asp-validation-for="PriceCalculationValue"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Active" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Active" />
+            <span asp-validation-for="Active"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="SelectedCustomerRoleIds" />
+        </div>
+
+        <div class="col-md-9">
+            <div class="input-group-append">
+                <div class="input-group">
+                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
+                </div>
+            </div>
+            <script>
+                $(function() {
+                    var customerRoleIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
+                        closeOnSelect: false,
+                        @if (!Model.AvailableCustomerRoles.Any())
+                        {
+                            <text>
+                                disabled: true,
+                                placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")',
+                            </text>
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Description" />
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="Description" />
+            <span asp-validation-for="Description"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="StartDateUtc" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="StartDateUtc" />
+            <span asp-validation-for="StartDateUtc"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="EndDateUtc" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EndDateUtc" />
+            <span asp-validation-for="EndDateUtc"></span>
+        </div>
+    </div>
+    @if(!Model.HidePriority)
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Priority" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Priority" />
+                <span asp-validation-for="Priority"></span>
+            </div>
+        </div>
+    }
+</div>

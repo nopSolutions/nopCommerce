@@ -65,4 +65,14 @@
             <span asp-validation-for="AllowVendorsToImportProducts"></span>
         </div>
     </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowVendorsToUpload3dObjects_OverrideForStore" asp-input="AllowVendorsToUpload3dObjects" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowVendorsToUpload3dObjects" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowVendorsToUpload3dObjects" />
+            <span asp-validation-for="AllowVendorsToUpload3dObjects"></span>
+        </div>
+    </div>
 </div>

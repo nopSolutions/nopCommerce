@@ -16,6 +16,10 @@
                             1. Please <a href="https://your.omnisend.com/g1K9y2" target="_blank">sign up</a> on omnisend.com <br />
                             2. Follow steps provided here - <a href='https://app.omnisend.com/apps/connect-store/nopcommerce' target="_blank">instructions</a>.<br />
                             3. Fill in your account details below<br />
+                            if your store not connected automatically, please follow the instructions:<br />
+                            4. Click connect your store button on <a href="https://app.omnisend.com/automation/list" target="_blank">this page</a><br />
+                            5. Choose other (despite the fact that there is a separate item for nopCommerce)<br />
+                            6. Enter your store URL and click connect store, then click verify connect
                         </p>
                         <div class="form-group row">
                             <div class="col-md-3">
@@ -57,10 +61,6 @@
                                 <button type="submit" name="sync-products" class="btn bg-purple" @(Model.BlockSyncProducts ? "disabled=\"disabled\"" : string.Empty)>
                                     @T("Plugins.Misc.Omnisend.SyncProducts")
                                 </button>
-                                @*//order history not supported at this moment*@
-                                @*<button type="submit" name="sync-orders" class="btn bg-olive" @(Model.BlockSyncOrders ? "disabled=\"disabled\"" : string.Empty)>
-                                    @T("Plugins.Misc.Omnisend.SyncOrders")
-                                </button>*@
                             </div>
                         </div>
                         <p>
@@ -69,8 +69,6 @@
                         <ul>
                             <li><strong>@T("Plugins.Misc.Omnisend.SyncContacts")</strong> - Performs synchronization of customers who have subscribed to the Newsletter</li>
                             <li><strong>@T("Plugins.Misc.Omnisend.SyncProducts")</strong> - Performs category and product synchronization</li>
-                            @*//order history not supported at this moment*@
-                            @*<li><strong>@T("Plugins.Misc.Omnisend.SyncOrders")</strong> - Performs synchronization of existing orders and current user carts</li>*@
                         </ul>
                         @if (Model.Batches.Any())
                         {

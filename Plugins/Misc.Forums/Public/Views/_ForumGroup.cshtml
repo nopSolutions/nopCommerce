@@ -1,0 +1,59 @@
+﻿@model ForumGroupModel
+
+<div class="forums-table-section forum-group">
+    <div class="forums-table-section-title">
+        @Html.RouteLink(Model.Name, ForumDefaults.Routes.Public.FORUM_GROUP_SLUG, new { id = Model.Id, slug = Model.SeName })
+    </div>
+    <div class="forums-table-section-body">
+        <div class="table-wrapper">
+            <table class="forum-table">
+                <colgroup>
+                    <col width="1" />
+                    <col />
+                    <col width="1" />
+                    <col width="1" />
+                    <col width="1" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="forum-details" colspan="2">
+                            @T("Plugins.Misc.Forums.Forum")
+                        </th>
+                        <th class="topics">
+                            @T("Plugins.Misc.Forums.Topics")
+                        </th>
+                        <th class="posts">
+                            @T("Plugins.Misc.Forums.Posts")
+                        </th>
+                        <th class="latest-post">
+                            @T("Plugins.Misc.Forums.LatestPost")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var forum in Model.Forums)
+                    {
+                        <tr>
+                            <td class="image">
+                                <div class="post"></div>
+                            </td>
+                            <td class="forum-details">
+                                <div class="forum-title">
+                                    @Html.RouteLink(forum.Name, ForumDefaults.Routes.Public.FORUM_SLUG, new { id = forum.Id, slug = forum.SeName })
+                                </div>
+                                <div class="forum-description">
+                                    @forum.Description
+                                </div>
+                            </td>
+                            <td class="topics">@forum.NumTopics</td>
+                            <td class="posts">@forum.NumPosts</td>
+                            <td class="latest-post">
+                                @await Component.InvokeAsync(typeof(ForumLastPostViewComponent), new { forumPostId = forum.LastPostId, showTopic = true})
+                            </td>
+                        </tr>            
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
