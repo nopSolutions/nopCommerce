@@ -1431,7 +1431,7 @@ public partial class OrderTotalCalculationService : IOrderTotalCalculationServic
             return fee;
 
         var orderTotalWithoutPaymentFee = (await GetShoppingCartTotalAsync(cart, usePaymentMethodAdditionalFee: false)).shoppingCartTotal ?? 0;
-        var result = (decimal)((float)orderTotalWithoutPaymentFee * (float)fee / 100f);
+        var result = orderTotalWithoutPaymentFee * fee / 100;
 
         return result;
     }
