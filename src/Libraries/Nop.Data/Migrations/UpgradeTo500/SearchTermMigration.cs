@@ -20,7 +20,7 @@ public class SearchTermMigration : ForwardOnlyMigration
     /// </summary>
     public override void Up()
     {
-        _dataProvider.TruncateAsync<SearchTerm>();
+        _ = _dataProvider.TruncateAsync<SearchTerm>().Result;
 
         this.DeleteColumnsIfExists<SearchTerm>(["Count"]);
 
