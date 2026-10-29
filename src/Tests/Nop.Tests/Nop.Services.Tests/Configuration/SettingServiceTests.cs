@@ -1,4 +1,5 @@
-﻿using AwesomeAssertions;
+﻿using System.Runtime.ExceptionServices;
+using AwesomeAssertions;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
@@ -190,6 +191,42 @@ public class SettingServiceTests : ServiceTest<Setting>
         ip.Should().NotBeNull().And.Be("192.168.0.2");
     }
 
+    [Test]
+    public async Task LoadSettingSkipsEmptyValueTypeValuesWithoutThrowing()
+    {
+        await _settingService.SetSettingAsync("TestSettings.PortNumber", string.Empty);
+        await _settingService.SetSettingAsync("TestSettings.OptionalNumber", string.Empty);
+        await _settingService.SetSettingAsync("TestSettings.ServerName", "server");
+        await _settingService.SetSettingAsync("TestSettings.StartDate", string.Empty);
+
+        //the first load asks each value-type converter once whether it accepts an empty value
+        await _settingService.LoadSettingAsync<TestSettings>();
+
+        var thrown = 0;
+        void CountConversionErrors(object sender, FirstChanceExceptionEventArgs args)
+        {
+            if (args.Exception is ArgumentException or IndexOutOfRangeException)
+                Interlocked.Increment(ref thrown);
+        }
+
+        AppDomain.CurrentDomain.FirstChanceException += CountConversionErrors;
+        TestSettings settings;
+        try
+        {
+            settings = await _settingService.LoadSettingAsync<TestSettings>();
+        }
+        finally
+        {
+            AppDomain.CurrentDomain.FirstChanceException -= CountConversionErrors;
+        }
+
+        thrown.Should().Be(0);
+        settings.PortNumber.Should().Be(0);
+        settings.OptionalNumber.Should().BeNull();
+        settings.ServerName.Should().Be("server");
+        settings.StartDate.Should().Be(DateTime.MinValue);
+    }
+
     #region Nested class
 
     public class TestSettings : ISettings
@@ -199,6 +236,8 @@ public class SettingServiceTests : ServiceTest<Setting>
         public int PortNumber { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+        public int? OptionalNumber { get; set; }
+        public DateTime StartDate { get; set; } = new(2000, 1, 1);
     }
 
     #endregion
