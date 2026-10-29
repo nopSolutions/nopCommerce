@@ -244,6 +244,15 @@ public class PriceCalculationServiceTests : ServiceTest
     [TestCase(12.01, 13.00, RoundingType.Rounding1Up)]
     [TestCase(12.99, 13.00, RoundingType.Rounding1Up)]
     [TestCase(12.00, 12.00, RoundingType.Rounding1Up)]
+    [TestCase(-12.366, -12.37, RoundingType.Rounding001)]
+    [TestCase(-12.34, -12.35, RoundingType.Rounding005Up)]
+    [TestCase(-12.36, -12.35, RoundingType.Rounding005Down)]
+    [TestCase(-12.36, -12.40, RoundingType.Rounding01Up)]
+    [TestCase(-12.35, -12.30, RoundingType.Rounding01Down)]
+    [TestCase(-12.24, -12.00, RoundingType.Rounding05)]
+    [TestCase(-12.80, -13.00, RoundingType.Rounding05)]
+    [TestCase(-12.70, -13.00, RoundingType.Rounding1)]
+    [TestCase(-12.01, -13.00, RoundingType.Rounding1Up)]
     public void CanRound(decimal valueToRounding, decimal roundedValue, RoundingType roundingType)
     {
         _priceCalcService.Round(valueToRounding, roundingType).Should().Be(roundedValue);
