@@ -47,15 +47,33 @@
     //check using MasterCheckBox
     var isMasterCheckBoxUsed = Model.ColumnCollection.Any(x => x.IsMasterCheckBox);
 
+    //check whether the selection is kept across pages
+    var isSelectionPersisted = Model.IsSelectionPersisted();
+
     var listOfTables = new List<DataTablesModel>();
     GetAllModels(Model, listOfTables);
 }
 
+@if (isSelectionPersisted)
+{
+    <div id="@(Model.Name)-selection-info" class="dt-selection-info mt-2" style="display: none;" data-text="@T("Admin.DT.SelectedItems").Text">
+        <span class="dt-selection-count"></span>
+        <a href="#">@T("Admin.DT.ClearSelection")</a>
+    </div>
+}
+
 <script asp-location="Footer">
-    $(function() {
-        $('#@Model.Name').DataTable({
-            @await Html.PartialAsync("_Table.Definition", Model)
-        });
+    $(function () {
+        @if (isSelectionPersisted)
+            {
+                <text>
+                    //register before the table is created, so the first load already knows about it
+                    initSelectionPersistence('#@Model.Name', '@JavaScriptEncoder.Default.Encode(Model.GetSelectionCheckBox().Name)', '#@(Model.Name)-selection-info');
+            </text>
+        }
+            $('#@Model.Name').DataTable({
+                @await Html.PartialAsync("_Table.Definition", Model)
+            });
 
         @if (!string.IsNullOrEmpty(Model.SearchButtonId))
         {

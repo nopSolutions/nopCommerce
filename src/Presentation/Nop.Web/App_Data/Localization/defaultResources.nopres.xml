@@ -13321,6 +13321,9 @@
   <LocaleResource Name="Admin.DT.Aria.SortDescending">
     <Value>: activate to sort column descending</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.DT.ClearSelection">
+        <Value>Clear selection</Value>
+    </LocaleResource>
   <LocaleResource Name="Admin.DT.EmptyTable">
     <Value>No data available in table</Value>
   </LocaleResource>
@@ -13357,6 +13360,9 @@
   <LocaleResource Name="Admin.DT.Search">
     <Value>Search:</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.DT.SelectedItems">
+        <Value>{0} selected</Value>
+    </LocaleResource>
   <LocaleResource Name="Admin.DT.Thousands">
     <Value>,</Value>
   </LocaleResource>
