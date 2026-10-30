@@ -1,6 +1,7 @@
 ﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
@@ -13,6 +14,23 @@ namespace Nop.Services.ExportImport;
 /// </summary>
 public partial interface IExportManager
 {
+    /// <summary>
+    /// Export discount list to XML
+    /// </summary>
+    /// <param name="discounts">Discounts</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the result in XML format
+    /// </returns>
+    Task<string> ExportDiscountsToXmlAsync(IList<Discount> discounts);
+
+    /// <summary>
+    /// Export discounts to XLSX
+    /// </summary>
+    /// <param name="discounts">Discounts</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task<byte[]> ExportDiscountsToXlsxAsync(IList<Discount> discounts);
+
     /// <summary>
     /// Export manufacturer list to XML
     /// </summary>
