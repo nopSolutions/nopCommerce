@@ -286,8 +286,9 @@ public abstract partial class BaseDataProvider
     {
         //we don't use the Merge API on this level, because this API not support all databases.
         //you may see all supported databases by the following link: https://linq2db.github.io/articles/sql/merge/Merge-API.html#supported-databases
+        using var dataContext = CreateDataConnection();
         foreach (var entity in entities)
-            await UpdateEntityAsync(entity);
+            await dataContext.UpdateAsync(entity);
     }
 
     /// <summary>
@@ -300,8 +301,9 @@ public abstract partial class BaseDataProvider
     {
         //we don't use the Merge API on this level, because this API not support all databases.
         //you may see all supported databases by the following link: https://linq2db.github.io/articles/sql/merge/Merge-API.html#supported-databases
+        using var dataContext = CreateDataConnection();
         foreach (var entity in entities)
-            UpdateEntity(entity);
+            dataContext.Update(entity);
     }
 
     /// <summary>
