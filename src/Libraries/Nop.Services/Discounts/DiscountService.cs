@@ -302,7 +302,7 @@ public partial class DiscountService : IDiscountService
         //calculate discount amount
         decimal result;
         if (discount.UsePercentage)
-            result = (decimal)((float)amount * (float)discount.DiscountPercentage / 100f);
+            result = amount * discount.DiscountPercentage / 100;
         else
             result = discount.DiscountAmount;
 

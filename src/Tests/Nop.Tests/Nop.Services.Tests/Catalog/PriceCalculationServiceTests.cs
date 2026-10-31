@@ -208,6 +208,21 @@ public class PriceCalculationServiceTests : ServiceTest
         }
     }
 
+    [Test]
+    public async Task CanGetPercentageAttributeValuePriceAdjustmentWithoutPrecisionLoss()
+    {
+        var value = new ProductAttributeValue
+        {
+            AttributeValueType = AttributeValueType.Simple,
+            PriceAdjustmentUsePercentage = true,
+            PriceAdjustment = 10
+        };
+
+        var adjustment = await _priceCalcService.GetProductAttributeValuePriceAdjustmentAsync(new Product(), value, new Customer(), new Store(), 1234567.89M);
+
+        adjustment.Should().Be(123456.789M);
+    }
+
     [TestCase(12.366, 12.37, RoundingType.Rounding001)]
     [TestCase(12.363, 12.36, RoundingType.Rounding001)]
     [TestCase(12.000, 12.00, RoundingType.Rounding001)]
