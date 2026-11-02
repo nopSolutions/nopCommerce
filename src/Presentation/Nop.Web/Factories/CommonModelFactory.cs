@@ -649,9 +649,6 @@ public partial class CommonModelFactory : ICommonModelFactory
             else
                 sb.AppendLine("Disallow: /sitemap.xml");
 
-            //host
-            sb.AppendLine($"Host: {_webHelper.GetStoreLocation()}");
-
             //usual paths
             foreach (var path in _robotsTxtSettings.DisallowPaths)
                 sb.AppendLine($"Disallow: {path}");
