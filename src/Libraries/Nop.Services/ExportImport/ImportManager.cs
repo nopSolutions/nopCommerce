@@ -1640,6 +1640,12 @@ public partial class ImportManager : IImportManager
 
         var manager = new PropertyManager<PriceList>(defaultProperties, _catalogSettings);
 
+        if (_catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities)
+        {
+            manager.SetSelectList("PriceCalculationType",
+                await PriceCalculationTypeEnum.PercentageDecrease.ToSelectListAsync(useLocalization: false));
+        }
+
         var priceListItemProperties = new[]
         {
             new PropertyByName<PriceListItem>("Sku"),

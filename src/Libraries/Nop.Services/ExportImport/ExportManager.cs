@@ -3105,7 +3105,10 @@ public partial class ExportManager : IExportManager
             new PropertyByName<PriceList>("Active", (p, _) => p.Active),
             new PropertyByName<PriceList>("StartDateUtc", (p, _) => p.StartDateUtc),
             new PropertyByName<PriceList>("EndDateUtc", (p, _) => p.EndDateUtc),
-            new PropertyByName<PriceList>("PriceCalculationType", (p, _) => p.PriceCalculationTypeId),
+            new PropertyByName<PriceList>("PriceCalculationType", (p, _) => p.PriceCalculationTypeId)
+            {
+                DropDownElements = await PriceCalculationTypeEnum.PercentageDecrease.ToSelectListAsync()
+            },
             new PropertyByName<PriceList>("PriceCalculationValue", (p, _) => p.PriceCalculationValue),
             new PropertyByName<PriceList>("Customers",  async (pr, _) =>  string.Join(", ",
                 (await _priceListService.GetPriceListCustomersByPriceListIdAsync(pr.Id)).Select(priceListCustomer => priceListCustomer.CustomerId.ToString()))),
@@ -3137,8 +3140,8 @@ public partial class ExportManager : IExportManager
             // get handles to the worksheets
             // Worksheet names cannot be more than 31 characters
             var worksheet = workbook.Worksheets.Add(typeof(PriceList).Name);
-            var fpWorksheet = workbook.Worksheets.Add("DataForProductsFilters");
-            fpWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
+            var fWorksheet = workbook.Worksheets.Add("DataForFilters");
+            fWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
 
             //create Headers and format them 
             var manager = new PropertyManager<PriceList>(properties, _catalogSettings);
@@ -3148,7 +3151,7 @@ public partial class ExportManager : IExportManager
             foreach (var priceList in priceLists)
             {
                 manager.CurrentObject = priceList;
-                await manager.WriteDefaultToXlsxAsync(worksheet, row++);
+                await manager.WriteDefaultToXlsxAsync(worksheet, row++, fWorksheet: fWorksheet);
 
                 var priceListItems = (await _priceListService.GetPriceListItemsByPriceListIdAsync(priceList.Id)).ToList();
                 if (!priceListItems.Any())
@@ -3162,7 +3165,7 @@ public partial class ExportManager : IExportManager
                 {
                     row++;
                     priceListItemsManager.CurrentObject = priceListItem;
-                    await priceListItemsManager.WriteDefaultToXlsxAsync(worksheet, row, 2, fpWorksheet);
+                    await priceListItemsManager.WriteDefaultToXlsxAsync(worksheet, row, 2);
                     worksheet.Row(row).OutlineLevel = 1;
                     worksheet.Row(row).Collapse();
                 }
