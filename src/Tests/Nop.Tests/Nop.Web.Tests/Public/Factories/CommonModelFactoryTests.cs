@@ -247,7 +247,7 @@ public class CommonModelFactoryTests : BaseNopTest
 
         var allRows = new[]
         {
-            "User-agent: *", "Sitemap: http://127.0.0.1/sitemap.xml", "Host: http://127.0.0.1/", "Disallow: /admin",
+            "User-agent: *", "Sitemap: http://127.0.0.1/sitemap.xml", "Disallow: /admin",
             "Disallow: /bin/", "Disallow: /files/", "Disallow: /files/exportimport/", "Disallow: /install",
             "Disallow: /*?*returnUrl=", "Disallow: /*?*returnurl=", "Disallow: /*?*ReturnUrl=",
             "Disallow: /cart/estimateshipping", "Disallow: /cart/selectshippingoption",
