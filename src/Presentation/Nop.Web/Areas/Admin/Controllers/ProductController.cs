@@ -933,6 +933,21 @@ public partial class ProductController : BaseAdminController
         }
     }
 
+    /// <summary>
+    /// Sanitize product description (remove disallowed HTML tags)
+    /// </summary>
+    /// <param name="model">Product model</param>
+    private void SanitizeProductDescription(ProductModel model)
+    {
+        model.FullDescription = CommonHelper.EnsureOnlyAllowedHtml(model.FullDescription);
+
+        foreach (var productLocalizedModel in model.Locales)
+        {
+            productLocalizedModel.FullDescription =
+                CommonHelper.EnsureOnlyAllowedHtml(productLocalizedModel.FullDescription);
+        }
+    }
+
     #endregion
 
     #region Methods
@@ -1093,6 +1108,9 @@ public partial class ProductController : BaseAdminController
             if (currentVendor != null)
                 model.VendorId = currentVendor.Id;
 
+            if (!_adminAreaSettings.RichEditorAllowJavaScript)
+                SanitizeProductDescription(model);
+
             //vendors cannot edit "Show on home page" property
             if (currentVendor != null && model.ShowOnHomepage)
                 model.ShowOnHomepage = false;
@@ -1232,6 +1250,9 @@ public partial class ProductController : BaseAdminController
             //a vendor should have access only to his products
             if (currentVendor != null)
                 model.VendorId = currentVendor.Id;
+
+            if (!_adminAreaSettings.RichEditorAllowJavaScript)
+                SanitizeProductDescription(model);
 
             //we do not validate maximum number of products per vendor when editing existing products (only during creation of new products)
             //vendors cannot edit "Show on home page" property

@@ -379,10 +379,6 @@
     <ClearPluginAssemblies Include="$(SolutionDir)\Build\ClearPluginAssemblies.proj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="HtmlSanitizer" Version="9.2.1039" />
-  </ItemGroup>
-
   <!-- This target execute after "Build" target -->
   <Target Name="NopTarget" AfterTargets="Build">
     <!-- Delete unnecessary libraries from plugins path -->

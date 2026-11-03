@@ -22,6 +22,7 @@
     <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.12" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
+    <PackageReference Include="HtmlSanitizer" Version="9.2.1039" />
   </ItemGroup>
 
 </Project>

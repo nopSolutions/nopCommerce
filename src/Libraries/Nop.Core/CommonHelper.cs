@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
 using Nop.Core.Infrastructure;
+using Ganss.Xss;
 
 namespace Nop.Core;
 
@@ -15,6 +16,37 @@ public partial class CommonHelper
 
     //we use regular expression based on RFC 5322 Official Standard (see https://emailregex.com/)
     private const string EMAIL_EXPRESSION = @"^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|""(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*"")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$";
+
+    const string ALLOWED_TAGS = "br,hr,b,i,u,a,div,ol,ul,li,blockquote,img,span,p,em,strong,font,pre,h1,h2,h3,h4,h5,h6,address,cite,code";
+
+    #endregion
+
+    #region Utilities
+
+    [GeneratedRegex("<.*?>", RegexOptions.IgnoreCase)]
+    private static partial Regex HtmlTagRegex();
+
+    /// <summary>
+    /// Checks whether the specified tag is valid
+    /// </summary>
+    /// <param name="tag">Tag to check</param>
+    /// <returns>true if the string is a valid tag and false if it's not</returns>
+    private static bool IsValidTag(string tag)
+    {
+        var aTags = ALLOWED_TAGS.Split(',');
+
+        var endChars = new[] { ' ', '>', '/', '\t' };
+
+        var pos = tag.IndexOfAny(endChars, 1);
+
+        if (pos > 0)
+            tag = tag[..pos];
+
+        if (tag[0] == '/')
+            tag = tag[1..];
+
+        return aTags.Any(aTag => tag == aTag);
+    }
 
     #endregion
 
@@ -320,6 +352,31 @@ public partial class CommonHelper
         }
         catch { }
         return date;
+    }
+
+    /// <summary>
+    /// Ensure only allowed HTML tags
+    /// </summary>
+    /// <param name="text">Text</param>
+    /// <returns>Sanitized text with all invalid tags removed</returns>
+    public static string EnsureOnlyAllowedHtml(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        var m = HtmlTagRegex().Matches(text);
+
+        for (var i = m.Count - 1; i >= 0; i--)
+        {
+            var tag = text[(m[i].Index + 1)..(m[i].Index + m[i].Length)].Trim().ToLower();
+
+            if (!IsValidTag(tag))
+                text = text.Remove(m[i].Index, m[i].Length);
+        }
+
+        var sanitizer = new HtmlSanitizer();
+
+        return sanitizer.Sanitize(text);
     }
 
     #endregion
