@@ -132,4 +132,13 @@ public class WebHelperTests : BaseNopTest
         _webHelper.ModifyQueryString("/nopCommercepath/Controller/Action", "param1", "value1").Should().Be("/nopCommercepath/Controller/Action?param1=value1");
         _httpContext.Request.PathBase = string.Empty;
     }
+
+    [Test]
+    public void CanModifyQueryStringInVirtualDirectoryWhenPathContainsPathBase()
+    {
+        _httpContext.Request.PathBase = "/nopCommercepath";
+        _webHelper.ModifyQueryString("/nopCommercepath/nopCommercepath-category", "param1", "value1").Should().Be("/nopCommercepath/nopCommercepath-category?param1=value1");
+        _webHelper.ModifyQueryString("/nopCommercepath/Controller/nopCommercepath", "param1", "value1").Should().Be("/nopCommercepath/Controller/nopCommercepath?param1=value1");
+        _httpContext.Request.PathBase = string.Empty;
+    }
 }
