@@ -512,10 +512,15 @@ public partial class ManufacturerController : BaseAdminController
         var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
         if (selectedProducts.Any())
         {
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
             var existingProductmanufacturers = await _manufacturerService
                 .GetProductManufacturersByManufacturerIdAsync(model.ManufacturerId, showHidden: true);
             foreach (var product in selectedProducts)
             {
+                //a vendor should have access only to his products
+                if (currentVendor != null && product.VendorId != currentVendor.Id)
+                    continue;
+
                 //whether product manufacturer with such parameters already exists
                 if (_manufacturerService.FindProductManufacturer(existingProductmanufacturers, product.Id, model.ManufacturerId) != null)
                     continue;
