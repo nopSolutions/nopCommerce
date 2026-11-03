@@ -18,7 +18,7 @@ namespace Nop.Plugin.Misc.Forums.Services;
 /// <summary>
 /// Forum service
 /// </summary>
-public partial class ForumService
+public class ForumService
 {
     #region Fields
 
