@@ -53,8 +53,9 @@ public static class LocalizedUrlExtensions
     /// <returns>Result</returns>
     public static string RemoveApplicationPathFromRawUrl(this string rawUrl, PathString pathBase)
     {
-        new PathString(rawUrl).StartsWithSegments(pathBase, out var result);
-        return WebUtility.UrlDecode(result);
+        var rawSegments = new PathString(rawUrl);
+
+        return WebUtility.UrlDecode(rawSegments.StartsWithSegments(pathBase, out var result) ? result : rawSegments);
     }
 
     /// <summary>

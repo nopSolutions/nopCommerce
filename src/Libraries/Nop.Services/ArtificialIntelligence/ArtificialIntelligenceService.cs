@@ -230,6 +230,9 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
         string currentMetaTitle, string currentMetaKeywords, string currentMetaDescription, int languageId)
         where TEntity : BaseEntity, IMetaTagsSupported
     {
+        if (entity == null)
+            return (string.Empty, string.Empty, string.Empty);
+
         var currentLanguage = await _languageService.GetLanguageByIdAsync(languageId != 0 ? languageId : _localizationSettings.DefaultAdminLanguageId);
 
         var (title, text) = entity switch
@@ -333,6 +336,9 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     public virtual async Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsForLocalizedEntityAsync<TEntity>(TEntity entity, int languageId)
         where TEntity : BaseEntity, IMetaTagsSupported, ILocalizedEntity
     {
+        if(entity == null)
+            return (string.Empty, string.Empty, string.Empty);
+
         var currentMetaTitle = languageId == 0
             ? entity.MetaTitle
             : await _localizationService.GetLocalizedAsync(entity, mt => mt.MetaTitle, languageId, false);
@@ -358,6 +364,9 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     public virtual async Task<(string metaTitle, string metaKeywords, string metaDescription)> CreateMetaTagsAsync<TEntity>(TEntity entity, int languageId = 0)
         where TEntity : BaseEntity, IMetaTagsSupported
     {
+        if(entity == null)
+            return (string.Empty, string.Empty, string.Empty);
+
         var metaTitle = entity.MetaTitle;
         var metaKeywords = entity.MetaKeywords;
         var metaDescription = entity.MetaDescription;

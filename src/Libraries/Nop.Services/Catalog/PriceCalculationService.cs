@@ -116,7 +116,7 @@ public partial class PriceCalculationService : IPriceCalculationService
                     var priceListPrices = new List<decimal>();
                     foreach (var priceList in applicablePriceLists)
                     {
-                        var price = priceList.Value ?? _priceListService.ApplyAdjustmentPrice(product, priceList.Key);
+                        var price = priceList.Value ?? _priceListService.ApplyAdjustmentPrice(basePrice, priceList.Key);
                         priceListPrices.Add(price);
                     }
 
@@ -129,7 +129,7 @@ public partial class PriceCalculationService : IPriceCalculationService
                     var priceList = applicablePriceLists.OrderBy(x => x.Key.Priority).FirstOrDefault();
                     if (priceList.Key != null)
                     {
-                        var price = priceList.Value ?? _priceListService.ApplyAdjustmentPrice(product, priceList.Key);
+                        var price = priceList.Value ?? _priceListService.ApplyAdjustmentPrice(basePrice, priceList.Key);
                         return price;
                     }
 

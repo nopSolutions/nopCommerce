@@ -143,39 +143,6 @@ public class OmnisendCustomerService
     }
 
     /// <summary>
-    /// Delete the current shopping cart identifier for customer
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    public async Task DeleteCurrentCustomerShoppingCartIdAsync(Customer customer)
-    {
-        await _genericAttributeService.SaveAttributeAsync<string>(customer,
-            OmnisendDefaults.CurrentCustomerShoppingCartIdAttribute, null);
-    }
-
-    /// <summary>
-    /// Specifies whether to send the delete shopping cart event
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the True if we need to sand delete events</returns>
-    public async Task<bool> IsNeedToSendDeleteShoppingCartEventAsync(Customer customer)
-    {
-        return string.IsNullOrEmpty(await _genericAttributeService.GetAttributeAsync<string>(customer,
-            OmnisendDefaults.StoredCustomerShoppingCartIdAttribute));
-    }
-
-    /// <summary>
-    /// Delete the stored shopping cart identifier for customer
-    /// </summary>
-    /// <param name="customer">Customer</param>
-    public async Task DeleteStoredCustomerShoppingCartIdAsync(Customer customer)
-    {
-        await _genericAttributeService.SaveAttributeAsync<string>(customer,
-            OmnisendDefaults.StoredCustomerShoppingCartIdAttribute, null);
-    }
-
-    /// <summary>
     /// Gets the abandoned checkout url
     /// </summary>
     /// <param name="cartId">Cart identifier</param>

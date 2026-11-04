@@ -284,7 +284,7 @@ public static partial class NopLinksDefaults
         /// <summary>
         /// Gets a URL of the SMS providers docs page
         /// </summary>
-        public static string SmsProviders => "https://docs.nopcommerce.com/en/getting-started/advanced-configuration/index.html";
+        public static string SmsProviders => "https://docs.nopcommerce.com/getting-started/advanced-configuration/sms-providers/index.html";
 
         /// <summary>
         /// Gets a URL of the warehouses docs page

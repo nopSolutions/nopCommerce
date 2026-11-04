@@ -136,6 +136,7 @@ public class AvalaraTaxController : TaxController
         return Json(model);
     }
 
+    [CheckPermission(StandardPermission.Configuration.MANAGE_TAX_SETTINGS)]
     [HttpPost]
     public async Task<IActionResult> TaxCategoryUpdate(Models.Tax.TaxCategoryModel model)
     {

@@ -155,6 +155,12 @@ public class SettingMigration : MigrationBase
         //#56
         this.SetSettingIfNotExists<ShoppingCartSettings, bool>(settings => settings.VendorRequired, false);
         this.SetSettingIfNotExists<ShoppingCartSettings, bool>(settings => settings.VendorEnabled, false);
+
+        //#7734
+        this.SetSettingIfNotExists<CatalogSettings, bool>(settings => settings.UseStandardSearchWhenNoResults,
+            this.GetSettingByKey($"{nameof(CatalogSettings)}.UseStandardSearchWhenSearchProviderThrowsException", true));
+        this.SetSettingIfNotExists<ArtificialIntelligenceSettings, string>(settings => settings.ActiveAIRecommendationProviderSystemName, "");
+        this.SetSettingIfNotExists<ArtificialIntelligenceSettings, bool>(settings => settings.UseStandardSearchWhenNoResults, true);
     }
 
     public override void Down()

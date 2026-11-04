@@ -145,7 +145,6 @@ public class OmnisendPlugin : BasePlugin, IMiscPlugin, IWidgetPlugin
             ["Plugins.Misc.Omnisend.Synchronization"] = "Synchronization",
             ["Plugins.Misc.Omnisend.SyncContacts"] = "Sync contacts",
             ["Plugins.Misc.Omnisend.SyncProducts"] = "Sync products",
-            ["Plugins.Misc.Omnisend.SyncOrders"] = "Sync orders",
             ["Plugins.Misc.Omnisend.SyncCategories"] = "Sync categories",
             ["Plugins.Misc.Omnisend.BatchesInProcess"] = "Batches in process",
             ["Plugins.Misc.Omnisend.BatchesInProcess.StartedAt"] = "Started at",

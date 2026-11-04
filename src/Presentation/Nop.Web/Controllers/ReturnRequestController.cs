@@ -150,7 +150,7 @@ public partial class ReturnRequestController : BasePublicController
             ? await _orderService.GetOrderByIdAsync(orderNumber) :
             await _orderService.GetOrderByCustomOrderNumberAsync(model.OrderNumber);
 
-        var resultText = await _localizationService.GetResourceAsync("ReturnRequests.WithdrawalForm.ConfirnationText");
+        var resultText = await _localizationService.GetResourceAsync("ReturnRequests.WithdrawalForm.ConfirmationText");
         var store = await _storeContext.GetCurrentStoreAsync();
 
         model = await _returnRequestModelFactory.PrepareWithdrawalFormModelAsync(model);
@@ -242,6 +242,8 @@ public partial class ReturnRequestController : BasePublicController
 
         //returnable products
         var orderItems = await _orderService.GetOrderItemsAsync(order.Id, isNotReturnable: false);
+        var returnRequestAvailability = await _returnRequestService.GetReturnRequestAvailabilityAsync(order.Id);
+
         foreach (var orderItem in orderItems)
         {
             var quantity = 0; //parse quantity
@@ -256,6 +258,14 @@ public partial class ReturnRequestController : BasePublicController
 
             if (quantity > 0)
             {
+                var returnableOrderItem = returnRequestAvailability.ReturnableOrderItems.FirstOrDefault(oi =>
+                    oi.OrderItem.Id == orderItem.Id);
+
+                if (returnableOrderItem is not { AvailableQuantityForReturn: > 0 })
+                    continue;
+
+                quantity = Math.Min(quantity, returnableOrderItem.AvailableQuantityForReturn);
+
                 var rrr = await _returnRequestService.GetReturnRequestReasonByIdAsync(model.ReturnRequestReasonId);
                 var rra = await _returnRequestService.GetReturnRequestActionByIdAsync(model.ReturnRequestActionId);
 
@@ -265,7 +275,7 @@ public partial class ReturnRequestController : BasePublicController
                     StoreId = store.Id,
                     OrderItemId = orderItem.Id,
                     Quantity = quantity,
-                    CustomerId = customer.Id,
+                    CustomerId = order.CustomerId,
                     CustomerComments = model.Comments,
                     UploadedFileId = downloadId,
                     StaffNotes = string.Empty,
@@ -280,7 +290,6 @@ public partial class ReturnRequestController : BasePublicController
 
                 //set return request custom number
                 rr.CustomNumber = _customNumberFormatter.GenerateReturnRequestCustomNumber(rr);
-                await _customerService.UpdateCustomerAsync(customer);
                 await _returnRequestService.UpdateReturnRequestAsync(rr);
 
                 //notify store owner

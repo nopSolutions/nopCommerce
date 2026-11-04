@@ -3,13 +3,11 @@ using System.Text;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Themes;
 using Nop.Web.Framework.Extensions;
-using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI.Paging;
 using Nop.Web.Models.Common;
 

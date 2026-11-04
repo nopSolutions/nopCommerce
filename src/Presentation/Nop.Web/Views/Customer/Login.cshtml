@@ -83,11 +83,14 @@
                                 <span asp-validation-for="Email"></span>
                             }
                         </div>
-                        <div class="inputs" data-mode="phone" style="display: none;">
-                            <label asp-for="Phone" asp-postfix=":"></label>
-                            <input asp-for="Phone" class="phone" placeholder="@T("PhoneVerification.Placeholder")" />
-                            <span asp-validation-for="Phone"></span>
-                        </div>
+                        @if (Model.LoginByPhone)
+                        {
+                            <div class="inputs" data-mode="phone" style="display: none;">
+                                <label asp-for="Phone" asp-postfix=":"></label>
+                                <input asp-for="Phone" class="phone" placeholder="@T("PhoneVerification.Placeholder")" />
+                                <span asp-validation-for="Phone"></span>
+                            </div>
+                        }
                         <div class="inputs" data-mode="email" style="display: none;">
                             <label asp-for="Password" asp-postfix=":"></label>
                             <div class="login-password">
@@ -115,7 +118,10 @@
                         @* Mode switcher *@
                         <div class="mode-switcher" data-mode-root>
                             <button type="button" data-set-mode="email" style="display: none;" class="mode-button" id="emailModeBtn">@T("Account.Login.EmailMode")</button>
-                            <button type="button" data-set-mode="phone" style="display: none;" class="mode-button" id="phoneModeBtn">@T("Account.Login.PhoneMode")</button>
+                            @if(Model.LoginByPhone)
+                            {
+                                <button type="button" data-set-mode="phone" style="display: none;" class="mode-button" id="phoneModeBtn">@T("Account.Login.PhoneMode")</button>
+                            }
                             <input asp-for="LoginByPhone" id="LoginByPhone" class="mode-checkbox" style="display: none;" />
                         </div>
                     </div>

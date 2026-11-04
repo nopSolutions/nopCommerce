@@ -62,9 +62,8 @@ public class OmnisendAdminController : BasePluginController
         model.Batches = batches;
 
         model.BlockSyncContacts = model.Batches.Any(p => needBlock(p, OmnisendDefaults.ContactsEndpoint));
-        model.BlockSyncOrders = model.Batches.Any(p => needBlock(p, OmnisendDefaults.OrdersEndpoint));
         model.BlockSyncProducts = model.Batches.Any(p => needBlock(p, OmnisendDefaults.ProductsEndpoint)) ||
-            batches.Any(p => needBlock(p, OmnisendDefaults.CategoriesEndpoint));
+            batches.Any(p => needBlock(p, OmnisendDefaults.CategoriesBatchEndpoint));
     }
 
     #endregion
@@ -143,20 +142,6 @@ public class OmnisendAdminController : BasePluginController
 
         await _omnisendService.SyncCategoriesAsync();
         await _omnisendService.SyncProductsAsync();
-
-        return await Configure();
-    }
-
-    [HttpPost, ActionName("Configure")]
-    [FormValueRequired("sync-orders")]
-    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
-    public async Task<IActionResult> SyncOrders()
-    {
-        if (!ModelState.IsValid || string.IsNullOrEmpty(_omnisendSettings.BrandId))
-            return await Configure();
-
-        await _omnisendService.SyncOrdersAsync();
-        await _omnisendService.SyncCartsAsync();
 
         return await Configure();
     }

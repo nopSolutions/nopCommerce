@@ -202,7 +202,7 @@ public class ForumController : BasePluginController
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Forums.ForumGroup.Added"));
 
-            return continueEditing ? RedirectToAction(nameof(CreateForumGroup), new { forumGroup.Id }) : RedirectToAction(nameof(List));
+            return continueEditing ? RedirectToAction(nameof(EditForumGroup), new { id = forumGroup.Id }) : RedirectToAction(nameof(List));
         }
 
         //prepare model
@@ -279,7 +279,7 @@ public class ForumController : BasePluginController
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Forums.ForumGroup.Updated"));
 
-            return continueEditing ? RedirectToAction(nameof(EditForumGroup), forumGroup.Id) : RedirectToAction(nameof(List));
+            return continueEditing ? RedirectToAction(nameof(EditForumGroup), new { id = forumGroup.Id }) : RedirectToAction(nameof(List));
         }
 
         //prepare model
@@ -320,7 +320,7 @@ public class ForumController : BasePluginController
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Misc.Forums.Forum.Updated"));
 
-            return continueEditing ? RedirectToAction(nameof(EditForum), forum.Id) : RedirectToAction(nameof(List));
+            return continueEditing ? RedirectToAction(nameof(EditForum), new { id = forum.Id }) : RedirectToAction(nameof(List));
         }
 
         //prepare model

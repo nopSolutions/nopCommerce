@@ -43,18 +43,15 @@ public class MultiplePicturesMigration : ForwardOnlyMigration
                 if (!combinations.Any())
                     break;
 
-                foreach (var combination in combinations.Where(combination => combination.PictureId.HasValue))
-                {
-                    _dataProvider.InsertEntity(new ProductAttributeCombinationPicture
-                    {
-                        PictureId = combination.PictureId!.Value,
-                        ProductAttributeCombinationId = combination.Id
-                    });
+                var pictures = combinations
+                    .Where(combination => combination.PictureId.HasValue).Select(combination =>
+                        new ProductAttributeCombinationPicture
+                        {
+                            PictureId = combination.PictureId!.Value, 
+                            ProductAttributeCombinationId = combination.Id
+                        }).ToList();
 
-                    combination.PictureId = null;
-                }
-
-                _dataProvider.UpdateEntitiesAsync(combinations);
+                _dataProvider.BulkInsertEntities(pictures);
 
                 pageIndex++;
             }
@@ -80,18 +77,15 @@ public class MultiplePicturesMigration : ForwardOnlyMigration
                 if (!values.Any())
                     break;
 
-                foreach (var value in values.Where(value => value.PictureId.HasValue))
-                {
-                    _dataProvider.InsertEntity(new ProductAttributeValuePicture
+                var pictures = values
+                    .Where(value => value.PictureId.HasValue)
+                    .Select(value => new ProductAttributeValuePicture
                     {
                         PictureId = value.PictureId!.Value,
                         ProductAttributeValueId = value.Id
-                    });
+                    }).ToList();
 
-                    value.PictureId = null;
-                }
-
-                _dataProvider.UpdateEntitiesAsync(values);
+                _dataProvider.BulkInsertEntities(pictures);
 
                 pageIndex++;
             }

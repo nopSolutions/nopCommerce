@@ -52,10 +52,7 @@ public class EventConsumer : IConsumer<CustomerPermanentlyDeleted>,
         if (eventMessage.CustomerId <= 0)
             return;
 
-        //forum subscriptions
-        var forumSubscriptions = await _forumService.GetAllSubscriptionsAsync(eventMessage.CustomerId);
-        foreach (var forumSubscription in forumSubscriptions)
-            await _forumService.DeleteSubscriptionAsync(forumSubscription);
+        await _forumService.DeleteCustomerDataAsync(eventMessage.CustomerId);
     }
 
     #endregion

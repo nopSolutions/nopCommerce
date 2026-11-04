@@ -1761,11 +1761,20 @@ public partial class ProductController : BaseAdminController
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> RelatedProductAddPopup(AddRelatedProductModel model)
     {
+        //try to get a product with the specified id
+        var parentProduct = await _productService.GetProductByIdAsync(model.ProductId)
+                      ?? throw new ArgumentException("No product found with the specified id");
+
+        //a vendor should have access only to his products
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && parentProduct.VendorId != currentVendor.Id)
+            return Content("This is not your product");
+
         var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
         if (selectedProducts.Any())
         {
             var existingRelatedProducts = await _productService.GetRelatedProductsByProductId1Async(model.ProductId, showHidden: true);
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            
             foreach (var product in selectedProducts)
             {
                 //a vendor should have access only to his products
@@ -1858,11 +1867,19 @@ public partial class ProductController : BaseAdminController
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> CrossSellProductAddPopup(AddCrossSellProductModel model)
     {
+        //try to get a product with the specified id
+        var parentProduct = await _productService.GetProductByIdAsync(model.ProductId)
+                            ?? throw new ArgumentException("No product found with the specified id");
+
+        //a vendor should have access only to his products
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && parentProduct.VendorId != currentVendor.Id)
+            return Content("This is not your product");
+
         var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
         if (selectedProducts.Any())
         {
             var existingCrossSellProducts = await _productService.GetCrossSellProductsByProductId1Async(model.ProductId, showHidden: true);
-            var currentVendor = await _workContext.GetCurrentVendorAsync();
             foreach (var product in selectedProducts)
             {
                 //a vendor should have access only to his products
@@ -2064,11 +2081,16 @@ public partial class ProductController : BaseAdminController
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> AssociatedProductAddPopup(AddAssociatedProductModel model)
     {
-        var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
+        //try to get a product with the specified id
+        var parentProduct = await _productService.GetProductByIdAsync(model.ProductId)
+                            ?? throw new ArgumentException("No product found with the specified id");
 
-        var tryToAddSelfGroupedProduct = selectedProducts
-            .Select(p => p.Id)
-            .Contains(model.ProductId);
+        //a vendor should have access only to his products
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && parentProduct.VendorId != currentVendor.Id)
+            return Content("This is not your product");
+
+        var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
 
         if (selectedProducts.Any())
         {
@@ -2078,30 +2100,32 @@ public partial class ProductController : BaseAdminController
                     continue;
 
                 //a vendor should have access only to his products
-                var currentVendor = await _workContext.GetCurrentVendorAsync();
                 if (currentVendor != null && product.VendorId != currentVendor.Id)
                     continue;
 
                 product.ParentGroupedProductId = model.ProductId;
                 await _productService.UpdateProductAsync(product);
             }
-        }
 
-        if (tryToAddSelfGroupedProduct)
-        {
-            _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.AssociatedProducts.TryToAddSelfGroupedProduct"));
+            var tryToAddSelfGroupedProduct = selectedProducts
+                .Select(p => p.Id)
+                .Contains(model.ProductId);
 
-            var addAssociatedProductSearchModel = await _productModelFactory.PrepareAddAssociatedProductSearchModelAsync(new AddAssociatedProductSearchModel());
-            //set current product id
-            addAssociatedProductSearchModel.ProductId = model.ProductId;
+            if (tryToAddSelfGroupedProduct)
+            {
+                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.AssociatedProducts.TryToAddSelfGroupedProduct"));
 
-            ViewBag.RefreshPage = true;
+                var addAssociatedProductSearchModel = await _productModelFactory.PrepareAddAssociatedProductSearchModelAsync(new AddAssociatedProductSearchModel());
+                //set current product id
+                addAssociatedProductSearchModel.ProductId = model.ProductId;
 
-            return View(addAssociatedProductSearchModel);
+                ViewBag.RefreshPage = true;
+
+                return View(addAssociatedProductSearchModel);
+            }
         }
 
         ViewBag.RefreshPage = true;
-
         ViewBag.ClosePage = true;
 
         return View(new AddAssociatedProductSearchModel());
@@ -4213,6 +4237,16 @@ public partial class ProductController : BaseAdminController
 
         //remove path (passed in IE)
         var fileName = _fileProvider.GetFileName(httpPostedFile.FileName);
+
+        var fileExtension = _fileProvider.GetFileExtension(fileName);
+        if (!string.IsNullOrEmpty(fileExtension))
+            fileExtension = fileExtension.ToLowerInvariant();
+
+        if (string.IsNullOrEmpty(fileExtension) || !fileExtension.Equals(".glb"))
+            return Json(new { success = false, message = "Wrong file type" });
+
+        if ((httpPostedFile.Length/1024/1024) > _mediaSettings.Object3dUploadSizeLimit)
+            return Json(new { success = false, message = $"File is too large. Maximum allowed size is {_mediaSettings.Object3dUploadSizeLimit} MB" });
 
         var pathTo3dObjects = _fileProvider.Combine(_fileProvider.GetLocalImagesPath(_mediaSettings), NopMediaDefaults.Default3dObjectsDirectoryName);
         _fileProvider.CreateDirectory(pathTo3dObjects);

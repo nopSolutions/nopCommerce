@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Microsoft.Net.Http.Headers;
 using Nop.Core.Infrastructure;
-using Nop.Services.Helpers;
 using Nop.Services.Logging;
 using static System.TimeSpan;
 

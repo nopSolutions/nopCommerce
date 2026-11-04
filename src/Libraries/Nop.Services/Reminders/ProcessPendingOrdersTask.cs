@@ -68,15 +68,15 @@ public partial class ProcessPendingOrdersTask : IScheduleTask
             if (!messageTemplates.Any())
                 continue;
 
-            var followUps = messageTemplates
+            var followUpDates = messageTemplates
                 .DistinctBy(template => template.Name)
                 .ToDictionary(
                     mt => mt.Name,
-                    mt => new
-                    {
-                        FollowUp = mt,
-                        Date = DateTime.UtcNow - TimeSpan.FromHours(mt.DelayPeriod.ToHours(mt.DelayBeforeSend.Value))
-                    });
+                    mt => DateTime.UtcNow - TimeSpan.FromHours(mt.DelayPeriod.ToHours(mt.DelayBeforeSend.Value)));
+
+            //inactive follow-ups have no date, so orders waiting for them are not selected
+            var followUp1Date = followUpDates.TryGetValue(MessageTemplateSystemNames.REMINDER_PENDING_ORDER_FOLLOW_UP_1_MESSAGE, out var date1) ? date1 : (DateTime?)null;
+            var followUp2Date = followUpDates.TryGetValue(MessageTemplateSystemNames.REMINDER_PENDING_ORDER_FOLLOW_UP_2_MESSAGE, out var date2) ? date2 : (DateTime?)null;
 
             var pendingOrders =
                 from order in _orderRepository.Table
@@ -87,18 +87,30 @@ public partial class ProcessPendingOrdersTask : IScheduleTask
                     && (reminderSettings.ProcessingStartDateUtc == null || order.CreatedOnUtc >= reminderSettings.ProcessingStartDateUtc)
                     && order.StoreId == store.Id && order.LastPendingOrderFollowUpNumber != 2
                     && (
-                        ((order.LastPendingOrderFollowUpNumber == null || order.LastPendingOrderFollowUpNumber == 0) && order.CreatedOnUtc < followUps[MessageTemplateSystemNames.REMINDER_PENDING_ORDER_FOLLOW_UP_1_MESSAGE].Date)
-                        || (order.LastPendingOrderFollowUpNumber == 1 && order.LastPendingOrderFollowUpDateUtc < followUps[MessageTemplateSystemNames.REMINDER_PENDING_ORDER_FOLLOW_UP_2_MESSAGE].Date)
+                        ((order.LastPendingOrderFollowUpNumber == null || order.LastPendingOrderFollowUpNumber == 0) && followUp1Date != null && order.CreatedOnUtc < followUp1Date)
+                        || (order.LastPendingOrderFollowUpNumber == 1 && followUp2Date != null && order.LastPendingOrderFollowUpDateUtc < followUp2Date)
                     )
-                orderby order.CreatedOnUtc
                 select new { Customer = c, Order = order };
 
-            var skip = 0;
+            //page by customer identifier rather than by skipping rows: followed up orders drop out of the query,
+            //so skipping would pass over unprocessed ones
+            var lastCustomerId = 0;
             while (true)
             {
-                var pendingOrdersPaged = pendingOrders.Skip(skip).Take(NopReminderDefaults.ProcessingBatchSize).ToList();
-                if (!pendingOrdersPaged.Any())
+                var customerIds = pendingOrders
+                    .Select(item => item.Customer.Id)
+                    .Where(customerId => customerId > lastCustomerId)
+                    .Distinct()
+                    .OrderBy(customerId => customerId)
+                    .Take(NopReminderDefaults.ProcessingBatchSize)
+                    .ToList();
+
+                if (!customerIds.Any())
                     break;
+
+                lastCustomerId = customerIds.Last();
+
+                var pendingOrdersPaged = pendingOrders.Where(item => customerIds.Contains(item.Customer.Id)).ToList();
 
                 var customersWithOrders = pendingOrdersPaged
                     .GroupBy(customerItem => customerItem.Customer.Id)
@@ -145,10 +157,8 @@ public partial class ProcessPendingOrdersTask : IScheduleTask
                     await _orderRepository.UpdateAsync(followedUpOrders);
                 }
 
-                if (pendingOrdersPaged.Count < NopReminderDefaults.ProcessingBatchSize)
+                if (customerIds.Count < NopReminderDefaults.ProcessingBatchSize)
                     break;
-
-                skip += NopReminderDefaults.ProcessingBatchSize;
             }
         }
     }

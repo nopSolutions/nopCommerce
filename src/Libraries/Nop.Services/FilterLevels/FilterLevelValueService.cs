@@ -145,7 +145,7 @@ public partial class FilterLevelValueService : IFilterLevelValueService
                     orderby flv.Id
                     select flv;
 
-        return await  query.ToListAsync();
+        return await query.ToListAsync();
     }
 
     /// <summary>
@@ -210,7 +210,7 @@ public partial class FilterLevelValueService : IFilterLevelValueService
     /// The task result contains the products collection
     /// </returns>
     public virtual async Task<IPagedList<Product>> GetProductsByFilterLevelValueIdAsync(int filterLevelValueId,
-        int pageIndex = 0, 
+        int pageIndex = 0,
         int pageSize = int.MaxValue,
         int storeId = 0,
         ProductSortingEnum orderBy = ProductSortingEnum.Position)
@@ -219,6 +219,7 @@ public partial class FilterLevelValueService : IFilterLevelValueService
             return new PagedList<Product>(new List<Product>(), pageIndex, pageSize);
 
         var customer = await _workContext.GetCurrentCustomerAsync();
+        var language = await _workContext.GetWorkingLanguageAsync();
 
         var query = from pc in _filterLevelValueProductMappingRepository.Table
                     join p in _productRepository.Table on pc.ProductId equals p.Id
@@ -232,7 +233,9 @@ public partial class FilterLevelValueService : IFilterLevelValueService
         //apply ACL constraints
         query = await _aclService.ApplyAcl(query, customer);
 
-        return await query.OrderBy(_localizedPropertyRepository, await _workContext.GetWorkingLanguageAsync(), orderBy).ToPagedListAsync(pageIndex, pageSize);
+        return await query
+            .OrderBy(orderBy, _localizedPropertyRepository, language.Id)
+            .ToPagedListAsync(pageIndex, pageSize);
     }
 
     /// <summary>

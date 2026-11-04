@@ -380,7 +380,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Humanizer" Version="3.0.10" />
+    <PackageReference Include="HtmlSanitizer" Version="9.2.1039" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->

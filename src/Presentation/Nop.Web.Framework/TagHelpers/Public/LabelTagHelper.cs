@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+﻿using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -87,8 +88,9 @@ public partial class LabelTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.LabelT
 
         if (tagBuilder != null)
         {
-            //add label
-            output.Content.SetHtmlContent(tagBuilder);
+            //merge into this tag instead of nesting a second <label> inside it
+            output.MergeAttributes(tagBuilder);
+            output.Content.SetHtmlContent(tagBuilder.InnerHtml);
         }
     }
 

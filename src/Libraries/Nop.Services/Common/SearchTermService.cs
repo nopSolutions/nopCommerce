@@ -46,10 +46,22 @@ public partial class SearchTermService : ISearchTermService
         if (string.IsNullOrEmpty(keyword))
             return;
 
-        var searchTerms = await GetSearchTermsAsync(keyword, customerId, storeId);
+        ////don't use GetSearchTermsAsync here, it returns only the latest record per keyword,
+        ////but the same keyword is stored as a separate record for each search
+        var searchTerms = await _searchTermRepository.GetAllAsync(query =>
+        {
+            query = query.Where(st => st.Keyword == keyword);
 
-        foreach (var term in searchTerms)
-            await _searchTermRepository.DeleteAsync(term);
+            if (storeId > 0)
+                query = query.Where(st => st.StoreId == storeId);
+
+            if (customerId > 0)
+                query = query.Where(st => st.CustomerId == customerId);
+
+            return query;
+        }, includeDeleted: false);
+
+        await _searchTermRepository.DeleteAsync(searchTerms);
     }
 
     /// <summary>

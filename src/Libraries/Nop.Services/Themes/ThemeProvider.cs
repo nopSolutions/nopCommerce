@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
 using Nop.Core;
-using Nop.Services.Plugins;
 
 namespace Nop.Services.Themes;
 

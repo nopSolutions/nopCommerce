@@ -4,7 +4,7 @@
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
-    <Version>5.00</Version>
+    <Version>5.10</Version>
     <Description>Nop.Web.Framework is a class library project containing some common presentation things for Nop.Web project</Description>
     <PackageLicenseUrl>https://www.nopcommerce.com/license</PackageLicenseUrl>
     <PackageProjectUrl>https://www.nopcommerce.com/</PackageProjectUrl>
@@ -16,6 +16,8 @@
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="Google.Cloud.Translation.V2" Version="3.5.0" />
+    <!--Do not remove the Humanizer package reference, we need it for plugins, such as Misc.Forums-->
+    <PackageReference Include="Humanizer" Version="3.0.10" />
     <PackageReference Include="libphonenumber-csharp" Version="9.0.39" />
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.477" />
     <PackageReference Include="WebMarkupMin.AspNetCoreLatest" Version="2.22.4" />

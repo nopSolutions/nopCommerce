@@ -15,14 +15,18 @@ public class RouteProvider : IRouteProvider
     /// <param name="endpointRouteBuilder">Route builder</param>
     public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapControllerRoute(BrevoDefaults.ImportContactsRoute, "Plugins/Brevo/ImportContacts",
-            new { controller = "Brevo", action = "ImportContacts" });
+        endpointRouteBuilder.MapControllerRoute(name: BrevoDefaults.ImportContactsRoute,
+            pattern: "Plugins/Brevo/ImportContacts",
+            defaults: new { controller = "Brevo", action = "ImportContacts" });
 
-        endpointRouteBuilder.MapControllerRoute(BrevoDefaults.UnsubscribeContactRoute, "Plugins/Sendinblue/UnsubscribeWebHook",
-            new { controller = "BrevoWebhook", action = "UnsubscribeWebHook" });
+        endpointRouteBuilder.MapControllerRoute(name: BrevoDefaults.UnsubscribeContactRoute,
+            pattern: $"Plugins/Brevo/UnsubscribeWebHook",
+            defaults: new { controller = "BrevoWebhook", action = "UnsubscribeWebHook" });
 
-        endpointRouteBuilder.MapControllerRoute(BrevoDefaults.UnsubscribeContactRoute, "Plugins/Brevo/UnsubscribeWebHook",
-            new { controller = "BrevoWebhook", action = "UnsubscribeWebHook" });
+        //leave it for compatibility
+        endpointRouteBuilder.MapControllerRoute(name: "Plugin.Misc.Sendinblue.Unsubscribe",
+            pattern: "Plugins/Sendinblue/UnsubscribeWebHook",
+            defaults: new { controller = "BrevoWebhook", action = "UnsubscribeWebHook" });
     }
 
     /// <summary>

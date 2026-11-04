@@ -19,7 +19,6 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
-using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Misc.Omnisend.Services;
@@ -216,13 +215,16 @@ public class OmnisendEventsService
 
         var property = new AddedProductToCartProperty
         {
-            AbandonedCheckoutURL = _omnisendCustomerService.GetAbandonedCheckoutUrl(cartId),
-            CartId = cartId,
-            Currency = await _omnisendHelper.GetPrimaryStoreCurrencyCodeAsync(),
-            LineItems =
-                await cart.SelectAwait(async sci => await ShoppingCartItemToProductItemAsync(sci))
-                    .ToListAsync(),
-            Value = (await GetShoppingCartItemPriceAsync(shoppingCartItem)).price,
+            Properties = new CartEventProperties
+            {
+                AbandonedCheckoutUrl = _omnisendCustomerService.GetAbandonedCheckoutUrl(cartId),
+                CartId = cartId,
+                Currency = await _omnisendHelper.GetPrimaryStoreCurrencyCodeAsync(),
+                LineItems =
+                    await cart.SelectAwait(async sci => await ShoppingCartItemToProductItemAsync(sci))
+                        .ToListAsync(),
+                Value = (float)Math.Round((await GetShoppingCartItemPriceAsync(shoppingCartItem)).price, 2)
+            },
             AddedItem = await ShoppingCartItemToProductItemAsync(shoppingCartItem)
         };
 
@@ -239,12 +241,15 @@ public class OmnisendEventsService
 
         var property = new StartedCheckoutProperty
         {
-            AbandonedCheckoutURL = _omnisendCustomerService.GetAbandonedCheckoutUrl(cartId),
-            CartId = cartId,
-            Currency = await _omnisendHelper.GetPrimaryStoreCurrencyCodeAsync(),
-            LineItems = await cart.SelectAwait(async sci => await ShoppingCartItemToProductItemAsync(sci))
-                .ToListAsync(),
-            Value = (float)cartSum
+            Properties = new CartEventProperties
+            {
+                AbandonedCheckoutUrl = _omnisendCustomerService.GetAbandonedCheckoutUrl(cartId),
+                CartId = cartId,
+                Currency = await _omnisendHelper.GetPrimaryStoreCurrencyCodeAsync(),
+                LineItems = await cart.SelectAwait(async sci => await ShoppingCartItemToProductItemAsync(sci))
+                    .ToListAsync(),
+                Value = (float)cartSum
+            }
         };
 
         return property;
@@ -253,7 +258,7 @@ public class OmnisendEventsService
     private async Task<PlacedOrderProperty> PreparePlacedOrderPropertyAsync(Order order)
     {
         var property = new PlacedOrderProperty();
-        await FillOrderEventBaseAsync(property, order);
+        await FillOrderEventBaseAsync(property.Properties, order);
 
         return property;
     }
@@ -261,7 +266,7 @@ public class OmnisendEventsService
     private async Task<PaidForOrderProperty> PreparePlacedPaidPropertyAsync(Order order)
     {
         var property = new PaidForOrderProperty();
-        await FillOrderEventBaseAsync(property, order);
+        await FillOrderEventBaseAsync(property.Properties, order);
 
         return property;
     }
@@ -269,7 +274,7 @@ public class OmnisendEventsService
     private async Task<OrderCanceledProperty> PrepareOrderCanceledPropertyAsync(Order order)
     {
         var property = new OrderCanceledProperty();
-        await FillOrderEventBaseAsync(property, order);
+        await FillOrderEventBaseAsync(property.Properties, order);
         property.CancelReason = null;
 
         return property;
@@ -278,7 +283,7 @@ public class OmnisendEventsService
     private async Task<OrderFulfilledProperty> PrepareOrderFulfilledPropertyAsync(Order order)
     {
         var property = new OrderFulfilledProperty();
-        await FillOrderEventBaseAsync(property, order);
+        await FillOrderEventBaseAsync(property.Properties, order);
 
         return property;
     }
@@ -286,7 +291,7 @@ public class OmnisendEventsService
     private async Task<OrderRefundedProperty> PrepareOrderRefundedPropertyAsync(Order order)
     {
         var property = new OrderRefundedProperty();
-        await FillOrderEventBaseAsync(property, order);
+        await FillOrderEventBaseAsync(property.Properties, order);
         property.TotalRefundedAmount = (float)order.RefundedAmount;
 
         return property;
@@ -322,7 +327,7 @@ public class OmnisendEventsService
         return productItem;
     }
 
-    private async Task FillOrderEventBaseAsync(OrderEventBaseProperty property, Order order)
+    private async Task FillOrderEventBaseAsync(OrderEventProperties properties, Order order)
     {
         var items = await _orderService.GetOrderItemsAsync(order.Id);
         var appliedDiscounts = await _discountService.GetAllDiscountUsageHistoryAsync(orderId: order.Id);
@@ -331,10 +336,10 @@ public class OmnisendEventsService
             ? await _localizationService.GetLocalizedFriendlyNameAsync(plugin, order.CustomerLanguageId)
             : order.PaymentMethodSystemName;
 
-        property.BillingAddress = await GetAddressItemDataAsync(order.BillingAddressId);
-        property.CreatedAt = order.CreatedOnUtc.ToDtoString();
-        property.Currency = await _omnisendHelper.GetPrimaryStoreCurrencyCodeAsync();
-        property.Discounts = await appliedDiscounts.SelectAwait(async duh =>
+        properties.BillingAddress = await GetAddressItemDataAsync(order.BillingAddressId);
+        properties.CreatedAt = order.CreatedOnUtc.ToDtoString();
+        properties.Currency = await _omnisendHelper.GetPrimaryStoreCurrencyCodeAsync();
+        properties.Discounts = await appliedDiscounts.SelectAwait(async duh =>
         {
             var discount = await _discountService.GetDiscountByIdAsync(duh.DiscountId);
 
@@ -345,29 +350,29 @@ public class OmnisendEventsService
                 Type = discount.DiscountType.ToString()
             };
         }).ToListAsync();
-        property.FulfillmentStatus = order.OrderStatus.ToString();
-        property.LineItems =
+        properties.FulfillmentStatus = order.OrderStatus.ToString();
+        properties.LineItems =
             await items.SelectAwait(async oi => await OrderItemToProductItemAsync(oi)).ToListAsync();
-        property.Note = null;
-        property.OrderId = order.CustomOrderNumber;
-        property.OrderNumber = order.Id;
-        property.OrderStatusURL = _nopUrlHelper.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = order.Id }, _webHelper.GetCurrentRequestProtocol());
-        property.PaymentMethod = paymentMethodName;
-        property.PaymentStatus = order.PaymentStatus.ToString();
-        property.ShippingAddress = await GetAddressItemDataAsync(order.ShippingAddressId);
-        property.ShippingMethod = order.ShippingMethod;
-        property.ShippingPrice = (float)order.OrderShippingInclTax;
-        property.SubTotalPrice = (float)order.OrderSubtotalInclTax;
-        property.SubTotalTaxIncluded = true;
-        property.Tags = null;
-        property.TotalDiscount = (float)order.OrderDiscount;
-        property.TotalPrice = (float)order.OrderTotal;
-        property.TotalTax = (float)order.OrderTax;
+        properties.Note = null;
+        properties.OrderId = order.CustomOrderNumber;
+        properties.OrderNumber = order.Id;
+        properties.OrderStatusURL = _nopUrlHelper.RouteUrl(NopRouteNames.Standard.ORDER_DETAILS, new { orderId = order.Id }, _webHelper.GetCurrentRequestProtocol());
+        properties.PaymentMethod = paymentMethodName;
+        properties.PaymentStatus = order.PaymentStatus.ToString();
+        properties.ShippingAddress = await GetAddressItemDataAsync(order.ShippingAddressId);
+        properties.ShippingMethod = order.ShippingMethod;
+        properties.ShippingPrice = (float)order.OrderShippingInclTax;
+        properties.SubTotalPrice = (float)order.OrderSubtotalInclTax;
+        properties.SubTotalTaxIncluded = true;
+        properties.Tags = null;
+        properties.TotalDiscount = (float)order.OrderDiscount;
+        properties.TotalPrice = (float)order.OrderTotal;
+        properties.TotalTax = (float)order.OrderTax;
 
         if ((await _shipmentService.GetShipmentsByOrderIdAsync(order.Id)).LastOrDefault() is { } shipment &&
             await _shipmentService.GetShipmentTrackerAsync(shipment) is { } shipmentTracker)
         {
-            property.Tracking = new TrackingItem
+            properties.Tracking = new TrackingItem
             {
                 Code = shipment.TrackingNumber,
                 CourierURL = await shipmentTracker.GetUrlAsync(shipment.TrackingNumber, shipment)
@@ -455,7 +460,7 @@ public class OmnisendEventsService
 
         var (scSubTotal, discountAmount, _, _) =
             await _shoppingCartService.GetSubTotalAsync(shoppingCartItem, true);
-        var price = (float)(await _taxService.GetProductPriceAsync(product, scSubTotal, true, customer)).price;
+        var price = (float)Math.Round((await _taxService.GetProductPriceAsync(product, scSubTotal, true, customer)).price, 2);
 
         return (price, (float)discountAmount);
     }
@@ -491,6 +496,11 @@ public class OmnisendEventsService
     public async Task SendOrderPlacedEventAsync(Order order)
     {
         await SendEventAsync(await CreateOrderPlacedEventAsync(order));
+
+        var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+
+        await _genericAttributeService.SaveAttributeAsync<string>(customer,
+            OmnisendDefaults.StoredCustomerShoppingCartIdAttribute, null);
     }
 
     /// <summary>
@@ -526,46 +536,50 @@ public class OmnisendEventsService
         switch (order.OrderStatus)
         {
             case OrderStatus.Cancelled:
-            {
-                var sent = await _genericAttributeService.GetAttributeAsync<bool>(order, OmnisendDefaults.OrderCanceledAttribute);
+                {
+                    var sent = await _genericAttributeService.GetAttributeAsync<bool>(order, OmnisendDefaults.OrderCanceledAttribute);
 
-                if (sent)
-                    return;
+                    if (sent)
+                        return;
 
-                await SendEventAsync(await CreateOrderCanceledEventAsync(order));
+                    await SendEventAsync(await CreateOrderCanceledEventAsync(order));
 
-                await _genericAttributeService.SaveAttributeAsync(order, OmnisendDefaults.OrderCanceledAttribute, true);
+                    await _genericAttributeService.SaveAttributeAsync(order, OmnisendDefaults.OrderCanceledAttribute, true);
 
-                break;
-            }
+                    break;
+                }
             case OrderStatus.Complete:
-            {
-                var sent = await _genericAttributeService.GetAttributeAsync<bool>(order, OmnisendDefaults.OrderFulfilledAttribute);
+                {
+                    var sent = await _genericAttributeService.GetAttributeAsync<bool>(order, OmnisendDefaults.OrderFulfilledAttribute);
 
-                if (sent)
-                    return;
+                    if (sent)
+                        return;
 
-                await SendEventAsync(await CreateOrderFulfilledEventAsync(order));
+                    await SendEventAsync(await CreateOrderFulfilledEventAsync(order));
 
-                await _genericAttributeService.SaveAttributeAsync(order, OmnisendDefaults.OrderFulfilledAttribute, true);
+                    await _genericAttributeService.SaveAttributeAsync(order, OmnisendDefaults.OrderFulfilledAttribute, true);
 
-                break;
-            }
+                    break;
+                }
         }
     }
 
     /// <summary>
     /// Send "started checkout" event
     /// </summary>
-    /// <param name="eventMessage">Page rendering event</param>
-    public async Task SendStartedCheckoutEventAsync(PageRenderingEvent eventMessage)
+    public async Task SendStartedCheckoutEventAsync()
     {
-        var routeName = eventMessage.GetRouteName();
-        if (!routeName.Equals(NopRouteNames.Standard.CHECKOUT_ONE_PAGE, StringComparison.InvariantCultureIgnoreCase) &&
-            !routeName.Equals(NopRouteNames.Standard.CHECKOUT_BILLING_ADDRESS, StringComparison.InvariantCultureIgnoreCase))
-            return;
-
         await SendEventAsync(await CreateStartedCheckoutEventAsync());
+
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var store = await _storeContext.GetCurrentStoreAsync();
+        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, storeId: store.Id);
+
+        if (!cart.Any())
+        {
+            await _genericAttributeService.SaveAttributeAsync<string>(customer,
+                OmnisendDefaults.CurrentCustomerShoppingCartIdAttribute, null);
+        }
     }
 
     #endregion

@@ -1,11 +1,10 @@
-using System.Data.Common;
+﻿using System.Data.Common;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.SqlServer;
 using Microsoft.Data.SqlClient;
 using Nop.Core;
-using Nop.Data;
 using Nop.Data.Mapping;
 
 namespace Nop.Data.DataProviders;

@@ -122,6 +122,16 @@ public partial interface IPriceListService
     decimal ApplyAdjustmentPrice(Product product, PriceList priceList);
 
     /// <summary>
+    /// Calculates the adjusted price based on the specified price list adjustment
+    /// </summary>
+    /// <param name="originalPrice">The price to adjust</param>
+    /// <param name="priceList">The price list</param>
+    /// <returns>
+    /// The calculated price after applying the adjustment defined in the price list.
+    /// </returns>
+    decimal ApplyAdjustmentPrice(decimal originalPrice, PriceList priceList);
+
+    /// <summary>
     /// Gets a price list item
     /// </summary>
     /// <param name="priceListItemId">Price list item identifier</param>

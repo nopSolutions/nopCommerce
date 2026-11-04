@@ -22,7 +22,6 @@ using Nop.Core.Events;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Helpers;
 using Nop.Services.Installation;

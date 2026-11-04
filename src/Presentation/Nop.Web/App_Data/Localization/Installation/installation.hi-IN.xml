@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="हिंदी" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>व्यवस्थापक उपयोगकर्ता के ईमेल</Value>
@@ -101,6 +101,24 @@
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CheckPermissions">
+    <Value>अनुमतियाँ जाँची जा रही हैं...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CreateDatabase">
+    <Value>डेटाबेस बनाया जा रहा है...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InitializeDatabase">
+    <Value>डेटाबेस शुरू किया जा रहा है...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InsertData">
+    <Value>डेटा डाला जा रहा है...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.PreparePlugins">
+    <Value>प्लगइन्स को तैयार किया जा रहा है...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.RegionalResources">
+    <Value>क्षेत्रीय सेटिंग लागू की जा रही है...</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
     <Value>कच्चे कनेक्शन स्ट्रिंग (उन्नत) दर्ज करें</Value>

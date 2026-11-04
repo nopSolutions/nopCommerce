@@ -6,9 +6,4 @@ public static class DtoExtensions
     {
         return date.ToString("s") + "Z";
     }
-
-    public static int ToCents(this decimal price)
-    {
-        return (int)(price * 100);
-    }
 }

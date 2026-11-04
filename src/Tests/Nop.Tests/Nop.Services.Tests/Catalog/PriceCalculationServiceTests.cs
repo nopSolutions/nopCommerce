@@ -3,9 +3,11 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.PriceLists;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Services.PriceLists;
 using NUnit.Framework;
 
 namespace Nop.Tests.Nop.Services.Tests.Catalog;
@@ -18,6 +20,7 @@ public class PriceCalculationServiceTests : ServiceTest
     private ICustomerService _customerService;
     private IProductService _productService;
     private IPriceCalculationService _priceCalcService;
+    private IPriceListService _priceListService;
 
     #endregion
 
@@ -29,6 +32,7 @@ public class PriceCalculationServiceTests : ServiceTest
         _customerService = GetService<ICustomerService>();
         _productService = GetService<IProductService>();
         _priceCalcService = GetService<IPriceCalculationService>();
+        _priceListService = GetService<IPriceListService>();
     }
 
     #endregion
@@ -166,6 +170,42 @@ public class PriceCalculationServiceTests : ServiceTest
 
         finalPrice.Should().Be(69.99M);
         finalPriceWithoutDiscounts.Should().Be(79.99M);
+    }
+
+    [TestCase(PriceCalculationTypeEnum.PercentageDecrease, 10, 135)]
+    [TestCase(PriceCalculationTypeEnum.PercentageIncrease, 10, 165)]
+    [TestCase(PriceCalculationTypeEnum.AmountDecrease, 10, 140)]
+    [TestCase(PriceCalculationTypeEnum.AmountIncrease, 10, 160)]
+    [TestCase(PriceCalculationTypeEnum.FixedPrice, 10, 10)]
+    public async Task CanGetFinalProductPriceWithPriceListAdjustmentOfOverriddenPrice(PriceCalculationTypeEnum calculationType, decimal calculationValue, decimal expectedPrice)
+    {
+        var product = await _productService.GetProductBySkuAsync("BP_20_WSP");
+        var customer = await _customerService.GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail);
+        var store = new Store();
+
+        var priceList = new PriceList
+        {
+            Name = "Test price list",
+            Active = true,
+            PriceCalculationType = calculationType,
+            PriceCalculationValue = calculationValue
+        };
+        await _priceListService.InsertPriceListAsync(priceList);
+
+        var priceListItem = new PriceListItem { PriceListId = priceList.Id, ProductId = product.Id };
+        await _priceListService.InsertPriceListItemAsync(priceListItem);
+
+        try
+        {
+            var (_, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 150M, 0, false, 1, null, null);
+
+            finalPrice.Should().Be(expectedPrice);
+        }
+        finally
+        {
+            await _priceListService.DeletePriceListItemAsync(priceListItem);
+            await _priceListService.DeletePriceListAsync(priceList);
+        }
     }
 
     [TestCase(12.366, 12.37, RoundingType.Rounding001)]

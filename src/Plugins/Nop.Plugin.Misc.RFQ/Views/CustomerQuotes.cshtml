@@ -35,9 +35,12 @@
             @foreach (var quote in Model)
             {
                 <div class="section">
-                    <h2 class="title">
-                        @string.Format(T("Plugins.Misc.RFQ.QuoteNumber").Text, quote.Id)
-                    </h2>
+                    <div class="request-header">
+                        <h2 class="request-title">
+                            @string.Format(T("Plugins.Misc.RFQ.QuoteNumber").Text, quote.Id)
+                        </h2>
+                        <button type="button" class="button-2" onclick="setLocation('@Url.RouteUrl(RfqDefaults.CustomerQuoteRouteName, new { quoteId = quote.Id })')">@T("Plugins.Misc.RFQ.CustomerQuote.Info")</button>
+                    </div>
                     <ul class="info">
                         <li>@T("Plugins.Misc.RFQ.Fields.Quote.CreatedOn"): <span>@quote.CreatedOn</span></li>
                         @if (quote.ExpirationDate.HasValue)
@@ -46,9 +49,6 @@
                         }
                         <li>@T("Plugins.Misc.RFQ.Fields.Quote.Status"): <span>@quote.Status</span></li>
                     </ul>
-                    <div class="buttons">
-                        <button type="button" class="button-2" onclick="setLocation('@Url.RouteUrl(RfqDefaults.CustomerQuoteRouteName, new { quoteId = quote.Id })')">@T("Plugins.Misc.RFQ.CustomerQuote.Info")</button>
-                    </div>
                 </div>
             }
         }
