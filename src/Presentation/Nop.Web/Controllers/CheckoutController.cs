@@ -7,6 +7,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Http;
 using Nop.Services.Attributes;
@@ -335,6 +336,207 @@ public partial class CheckoutController : BasePublicController
         }
     }
 
+    /// <summary>
+    /// Validates whether the current customer can access the checkout
+    /// </summary>
+    /// <param name="flow">The checkout flow to validate against</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the guard result with the loaded customer, store and cart
+    /// </returns>
+    protected virtual async Task<CheckoutGuardResult> ValidateCheckoutAccessAsync(CheckoutFlow flow)
+    {
+        var result = new CheckoutGuardResult();
+
+        if (_orderSettings.CheckoutDisabled)
+        {
+            result.Outcome = CheckoutGuardOutcome.CheckoutDisabled;
+            return result;
+        }
+
+        result.Customer = await _workContext.GetCurrentCustomerAsync();
+        result.Store = await _storeContext.GetCurrentStoreAsync();
+        result.Cart = await _shoppingCartService.GetShoppingCartAsync(result.Customer, ShoppingCartType.ShoppingCart, result.Store.Id);
+
+        if (!result.Cart.Any())
+        {
+            result.Outcome = CheckoutGuardOutcome.CartEmpty;
+            return result;
+        }
+
+        if (flow == CheckoutFlow.None)
+        {
+            result.Outcome = CheckoutGuardOutcome.Passed;
+            return result;
+        }
+
+        if (flow == CheckoutFlow.MultiStep ? _orderSettings.OnePageCheckoutEnabled : !_orderSettings.OnePageCheckoutEnabled)
+        {
+            result.Outcome = CheckoutGuardOutcome.WrongFlow;
+            return result;
+        }
+
+        if (await _customerService.IsGuestAsync(result.Customer) && !_orderSettings.AnonymousCheckoutAllowed)
+        {
+            result.Outcome = CheckoutGuardOutcome.GuestNotAllowed;
+            return result;
+        }
+
+        result.Outcome = CheckoutGuardOutcome.Passed;
+        return result;
+    }
+
+    /// <summary>
+    /// Gets the action result for a failed checkout access guard
+    /// </summary>
+    /// <param name="result">The guard result</param>
+    /// <param name="flow">The checkout flow the guard validated against</param>
+    /// <returns>The action result</returns>
+    protected virtual IActionResult GetCheckoutGuardFailureResult(CheckoutGuardResult result, CheckoutFlow flow)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+
+        return result.Outcome switch
+        {
+            CheckoutGuardOutcome.CheckoutDisabled or CheckoutGuardOutcome.CartEmpty => RedirectToRoute(NopRouteNames.General.CART),
+            CheckoutGuardOutcome.WrongFlow => flow == CheckoutFlow.OnePage
+                ? RedirectToRoute(NopRouteNames.Standard.CHECKOUT)
+                : RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE),
+            CheckoutGuardOutcome.GuestNotAllowed => Challenge(),
+            _ => throw new ArgumentOutOfRangeException(nameof(result), result.Outcome, "The checkout guard passed; there is no failure result")
+        };
+    }
+
+    /// <summary>
+    /// Throws an exception for a failed checkout access guard (used by one page checkout AJAX actions)
+    /// </summary>
+    /// <param name="result">The guard result</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task ThrowIfCheckoutGuardFailedAsync(CheckoutGuardResult result)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+
+        switch (result.Outcome)
+        {
+            case CheckoutGuardOutcome.CheckoutDisabled:
+                throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
+            case CheckoutGuardOutcome.CartEmpty:
+                throw new Exception("Your cart is empty");
+            case CheckoutGuardOutcome.WrongFlow:
+                throw new Exception("One page checkout is disabled");
+            case CheckoutGuardOutcome.GuestNotAllowed:
+                throw new Exception("Anonymous checkout is not allowed");
+            case CheckoutGuardOutcome.Passed:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(result), result.Outcome, "Unknown checkout guard outcome");
+        }
+    }
+
+    /// <summary>
+    /// Saves the shipping method selected by the customer (shared by the multi-step and one page checkout)
+    /// </summary>
+    /// <param name="shippingoption">The selected shipping option</param>
+    /// <param name="form">The form</param>
+    /// <param name="customer">The customer</param>
+    /// <param name="store">The store</param>
+    /// <param name="cart">Shopping cart</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the step result
+    /// </returns>
+    protected virtual async Task<ShippingMethodStepResult> SaveShippingMethodStepAsync(string shippingoption, IFormCollection form,
+        Customer customer, Store store, IList<ShoppingCartItem> cart)
+    {
+        //pickup point
+        if (_shippingSettings.AllowPickupInStore && _orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+        {
+            var pickupInStore = ParsePickupInStore(form);
+            if (pickupInStore)
+            {
+                var pickupOption = await ParsePickupOptionAsync(cart, form);
+                await SavePickupOptionAsync(pickupOption);
+
+                return new ShippingMethodStepResult { Outcome = ShippingMethodStepOutcome.PickupSaved };
+            }
+
+            //set value indicating that "pick up in store" option has not been chosen
+            await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
+        }
+
+        //parse selected method
+        if (string.IsNullOrEmpty(shippingoption))
+            return new ShippingMethodStepResult { Outcome = ShippingMethodStepOutcome.OptionNotParsed };
+        var splittedOption = shippingoption.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
+        if (splittedOption.Length != 2)
+            return new ShippingMethodStepResult { Outcome = ShippingMethodStepOutcome.OptionNotParsed };
+        var selectedName = splittedOption[0];
+        var shippingRateComputationMethodSystemName = splittedOption[1];
+
+        //find it
+        //performance optimization. try cache first
+        var shippingOptions = await _genericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
+            NopCustomerDefaults.OfferedShippingOptionsAttribute, store.Id);
+        if (shippingOptions == null || !shippingOptions.Any())
+        {
+            //not found? let's load them using shipping service
+            shippingOptions = (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
+                customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions.ToList();
+        }
+        else
+        {
+            //loaded cached results. let's filter result by a chosen shipping rate computation method
+            shippingOptions = shippingOptions.Where(so => so.ShippingRateComputationMethodSystemName.Equals(shippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+        }
+
+        var shippingOption = shippingOptions
+            .Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
+        if (shippingOption == null)
+            return new ShippingMethodStepResult { Outcome = ShippingMethodStepOutcome.OptionNotFound };
+
+        //parse DesiredDeliveryDate
+        var desiredDeliveryDate = await ParseSelectedShippingMethodDeliveryDateAsync(shippingOption, shippingOptions, form);
+        if (desiredDeliveryDate != null)
+            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DesiredDeliveryDate, desiredDeliveryDate, store.Id);
+
+        //save
+        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, shippingOption, store.Id);
+
+        return new ShippingMethodStepResult { Outcome = ShippingMethodStepOutcome.OptionSaved };
+    }
+
+    /// <summary>
+    /// Validates the posted payment form and stores the process payment request (shared by the multi-step and one page checkout)
+    /// </summary>
+    /// <param name="form">The form</param>
+    /// <param name="customer">The customer</param>
+    /// <param name="store">The store</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the step result
+    /// </returns>
+    protected virtual async Task<PaymentInfoStepResult> SavePaymentInfoStepAsync(IFormCollection form, Customer customer, Store store)
+    {
+        //load payment method
+        var paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
+            NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
+        var paymentMethod = await _paymentPluginManager
+            .LoadPluginBySystemNameAsync(paymentMethodSystemName, customer, store.Id);
+        if (paymentMethod == null)
+            return new PaymentInfoStepResult { Outcome = PaymentInfoStepOutcome.MethodNotSelected };
+
+        var warnings = await paymentMethod.ValidatePaymentFormAsync(form);
+        foreach (var warning in warnings)
+            ModelState.AddModelError("", warning);
+        if (!ModelState.IsValid)
+            return new PaymentInfoStepResult { Outcome = PaymentInfoStepOutcome.Invalid, PaymentMethod = paymentMethod };
+
+        await _orderProcessingService.SetProcessPaymentRequestAsync(await paymentMethod.GetPaymentInfoAsync(form));
+
+        return new PaymentInfoStepResult { Outcome = PaymentInfoStepOutcome.Saved, PaymentMethod = paymentMethod };
+    }
+
     #endregion
 
     #region Methods (common)
@@ -342,15 +544,13 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> Index()
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.None);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.None);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var customer = guardResult.Customer;
+        var store = guardResult.Store;
+        var cart = guardResult.Cart;
 
         var cartProductIds = cart.Select(ci => ci.ProductId).ToArray();
         var downloadableProductsRequireRegistration =
@@ -604,21 +804,11 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> BillingAddress(IFormCollection form)
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.MultiStep);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.MultiStep);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
-
-        if (_orderSettings.OnePageCheckoutEnabled)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE);
-
-        if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-            return Challenge();
+        var cart = guardResult.Cart;
 
         //model
         var model = new CheckoutBillingAddressModel();
@@ -681,21 +871,13 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> NewBillingAddress(CheckoutBillingAddressModel model, IFormCollection form)
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.MultiStep);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.MultiStep);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
-
-        if (_orderSettings.OnePageCheckoutEnabled)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE);
-
-        if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-            return Challenge();
+        var customer = guardResult.Customer;
+        var store = guardResult.Store;
+        var cart = guardResult.Cart;
 
         if (await _customerService.IsGuestAsync(customer) && _taxSettings.EuVatEnabled && _taxSettings.EuVatEnabledForGuests)
         {
@@ -772,21 +954,11 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> ShippingAddress()
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.MultiStep);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.MultiStep);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
-
-        if (_orderSettings.OnePageCheckoutEnabled)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE);
-
-        if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-            return Challenge();
+        var cart = guardResult.Cart;
 
         if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
             return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_SHIPPING_METHOD);
@@ -828,21 +1000,13 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> NewShippingAddress(CheckoutShippingAddressModel model, IFormCollection form)
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.MultiStep);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.MultiStep);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
-
-        if (_orderSettings.OnePageCheckoutEnabled)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE);
-
-        if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-            return Challenge();
+        var customer = guardResult.Customer;
+        var store = guardResult.Store;
+        var cart = guardResult.Cart;
 
         if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
             return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_SHIPPING_METHOD);
@@ -914,21 +1078,13 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> ShippingMethod()
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.MultiStep);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.MultiStep);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
-
-        if (_orderSettings.OnePageCheckoutEnabled)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE);
-
-        if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-            return Challenge();
+        var customer = guardResult.Customer;
+        var store = guardResult.Store;
+        var cart = guardResult.Cart;
 
         if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
         {
@@ -968,21 +1124,13 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> SelectShippingMethod(string shippingoption, IFormCollection form)
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.MultiStep);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.MultiStep);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
-
-        if (_orderSettings.OnePageCheckoutEnabled)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE);
-
-        if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-            return Challenge();
+        var customer = guardResult.Customer;
+        var store = guardResult.Store;
+        var cart = guardResult.Cart;
 
         if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
         {
@@ -991,82 +1139,26 @@ public partial class CheckoutController : BasePublicController
             return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_PAYMENT_METHOD);
         }
 
-        //pickup point
-        if (_shippingSettings.AllowPickupInStore && _orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+        var stepResult = await SaveShippingMethodStepAsync(shippingoption, form, customer, store, cart);
+
+        return stepResult.Outcome switch
         {
-            var pickupInStore = ParsePickupInStore(form);
-            if (pickupInStore)
-            {
-                var pickupOption = await ParsePickupOptionAsync(cart, form);
-                await SavePickupOptionAsync(pickupOption);
-
-                return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_PAYMENT_METHOD);
-            }
-
-            //set value indicating that "pick up in store" option has not been chosen
-            await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
-        }
-
-        //parse selected method 
-        if (string.IsNullOrEmpty(shippingoption))
-            return await ShippingMethod();
-        var splittedOption = shippingoption.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
-        if (splittedOption.Length != 2)
-            return await ShippingMethod();
-        var selectedName = splittedOption[0];
-        var shippingRateComputationMethodSystemName = splittedOption[1];
-
-        //find it
-        //performance optimization. try cache first
-        var shippingOptions = await _genericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
-            NopCustomerDefaults.OfferedShippingOptionsAttribute, store.Id);
-        if (shippingOptions == null || !shippingOptions.Any())
-        {
-            //not found? let's load them using shipping service
-            shippingOptions = (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
-                customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions.ToList();
-        }
-        else
-        {
-            //loaded cached results. let's filter result by a chosen shipping rate computation method
-            shippingOptions = shippingOptions.Where(so => so.ShippingRateComputationMethodSystemName.Equals(shippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
-                .ToList();
-        }
-
-        var shippingOption = shippingOptions
-            .Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
-        if (shippingOption == null)
-            return await ShippingMethod();
-
-        //parse DesiredDeliveryDate
-        var desiredDeliveryDate = await ParseSelectedShippingMethodDeliveryDateAsync(shippingOption, shippingOptions, form);
-        if (desiredDeliveryDate != null)
-            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DesiredDeliveryDate, desiredDeliveryDate, store.Id);
-
-        //save
-        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, shippingOption, store.Id);
-
-        return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_PAYMENT_METHOD);
+            ShippingMethodStepOutcome.PickupSaved or ShippingMethodStepOutcome.OptionSaved => RedirectToRoute(NopRouteNames.Standard.CHECKOUT_PAYMENT_METHOD),
+            ShippingMethodStepOutcome.OptionNotParsed or ShippingMethodStepOutcome.OptionNotFound => await ShippingMethod(),
+            _ => throw new ArgumentOutOfRangeException(nameof(stepResult), stepResult.Outcome, "Unknown shipping method step outcome")
+        };
     }
 
     public virtual async Task<IActionResult> PaymentMethod()
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.MultiStep);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.MultiStep);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
-
-        if (_orderSettings.OnePageCheckoutEnabled)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE);
-
-        if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-            return Challenge();
+        var customer = guardResult.Customer;
+        var store = guardResult.Store;
+        var cart = guardResult.Cart;
 
         //Check whether payment workflow is required
         //we ignore reward points during cart total calculation
@@ -1107,21 +1199,13 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> SelectPaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.MultiStep);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.MultiStep);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
-
-        if (_orderSettings.OnePageCheckoutEnabled)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE);
-
-        if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-            return Challenge();
+        var customer = guardResult.Customer;
+        var store = guardResult.Store;
+        var cart = guardResult.Cart;
 
         //reward points
         if (_rewardPointsSettings.Enabled)
@@ -1156,21 +1240,13 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> PaymentInfo()
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.MultiStep);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.MultiStep);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
-
-        if (_orderSettings.OnePageCheckoutEnabled)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE);
-
-        if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-            return Challenge();
+        var customer = guardResult.Customer;
+        var store = guardResult.Store;
+        var cart = guardResult.Cart;
 
         //Check whether payment workflow is required
         var isPaymentWorkflowRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
@@ -1205,68 +1281,39 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> EnterPaymentInfo(IFormCollection form)
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.MultiStep);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.MultiStep);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
-
-        if (_orderSettings.OnePageCheckoutEnabled)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE);
-
-        if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-            return Challenge();
+        var customer = guardResult.Customer;
+        var store = guardResult.Store;
+        var cart = guardResult.Cart;
 
         //Check whether payment workflow is required
         var isPaymentWorkflowRequired = await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart);
         if (!isPaymentWorkflowRequired)
             return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_CONFIRM);
 
-        //load payment method
-        var paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
-            NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
-        var paymentMethod = await _paymentPluginManager
-            .LoadPluginBySystemNameAsync(paymentMethodSystemName, customer, store.Id);
-        if (paymentMethod == null)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_PAYMENT_METHOD);
+        var stepResult = await SavePaymentInfoStepAsync(form, customer, store);
 
-        var warnings = await paymentMethod.ValidatePaymentFormAsync(form);
-        foreach (var warning in warnings)
-            ModelState.AddModelError("", warning);
-        if (ModelState.IsValid)
+        return stepResult.Outcome switch
         {
-            await _orderProcessingService.SetProcessPaymentRequestAsync(await paymentMethod.GetPaymentInfoAsync(form));
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_CONFIRM);
-        }
-
-        //If we got this far, something failed, redisplay form
-        //model
-        var model = await _checkoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
-        return View(model);
+            PaymentInfoStepOutcome.MethodNotSelected => RedirectToRoute(NopRouteNames.Standard.CHECKOUT_PAYMENT_METHOD),
+            PaymentInfoStepOutcome.Saved => RedirectToRoute(NopRouteNames.Standard.CHECKOUT_CONFIRM),
+            //If we got this far, something failed, redisplay form
+            PaymentInfoStepOutcome.Invalid => View(await _checkoutModelFactory.PreparePaymentInfoModelAsync(stepResult.PaymentMethod)),
+            _ => throw new ArgumentOutOfRangeException(nameof(stepResult), stepResult.Outcome, "Unknown payment info step outcome")
+        };
     }
 
     public virtual async Task<IActionResult> Confirm()
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.MultiStep);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.MultiStep);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
-
-        if (_orderSettings.OnePageCheckoutEnabled)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE);
-
-        if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-            return Challenge();
+        var cart = guardResult.Cart;
 
         //model
         var model = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
@@ -1278,21 +1325,13 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> ConfirmOrder(bool captchaValid)
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.MultiStep);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.MultiStep);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
-
-        if (_orderSettings.OnePageCheckoutEnabled)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT_ONE_PAGE);
-
-        if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-            return Challenge();
+        var customer = guardResult.Customer;
+        var store = guardResult.Store;
+        var cart = guardResult.Cart;
 
         //model
         var model = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
@@ -1495,21 +1534,11 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> OnePageCheckout()
     {
         //validation
-        if (_orderSettings.CheckoutDisabled)
-            return RedirectToRoute(NopRouteNames.General.CART);
+        var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.OnePage);
+        if (!guardResult.Passed)
+            return GetCheckoutGuardFailureResult(guardResult, CheckoutFlow.OnePage);
 
-        var customer = await _workContext.GetCurrentCustomerAsync();
-        var store = await _storeContext.GetCurrentStoreAsync();
-        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-        if (!cart.Any())
-            return RedirectToRoute(NopRouteNames.General.CART);
-
-        if (!_orderSettings.OnePageCheckoutEnabled)
-            return RedirectToRoute(NopRouteNames.Standard.CHECKOUT);
-
-        if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-            return Challenge();
+        var cart = guardResult.Cart;
 
         var model = await _checkoutModelFactory.PrepareOnePageCheckoutModelAsync(cart);
         return View(model);
@@ -1521,21 +1550,12 @@ public partial class CheckoutController : BasePublicController
         try
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
-                throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
+            var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.OnePage);
+            await ThrowIfCheckoutGuardFailedAsync(guardResult);
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-            if (!cart.Any())
-                throw new Exception("Your cart is empty");
-
-            if (!_orderSettings.OnePageCheckoutEnabled)
-                throw new Exception("One page checkout is disabled");
-
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-                throw new Exception("Anonymous checkout is not allowed");
+            var customer = guardResult.Customer;
+            var store = guardResult.Store;
+            var cart = guardResult.Cart;
 
             _ = int.TryParse(form["billing_address_id"], out var billingAddressId);
 
@@ -1675,21 +1695,12 @@ public partial class CheckoutController : BasePublicController
         try
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
-                throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
+            var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.OnePage);
+            await ThrowIfCheckoutGuardFailedAsync(guardResult);
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-            if (!cart.Any())
-                throw new Exception("Your cart is empty");
-
-            if (!_orderSettings.OnePageCheckoutEnabled)
-                throw new Exception("One page checkout is disabled");
-
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-                throw new Exception("Anonymous checkout is not allowed");
+            var customer = guardResult.Customer;
+            var store = guardResult.Store;
+            var cart = guardResult.Cart;
 
             if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                 throw new Exception("Shipping is not required");
@@ -1794,77 +1805,25 @@ public partial class CheckoutController : BasePublicController
         try
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
-                throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
+            var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.OnePage);
+            await ThrowIfCheckoutGuardFailedAsync(guardResult);
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-            if (!cart.Any())
-                throw new Exception("Your cart is empty");
-
-            if (!_orderSettings.OnePageCheckoutEnabled)
-                throw new Exception("One page checkout is disabled");
-
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-                throw new Exception("Anonymous checkout is not allowed");
+            var customer = guardResult.Customer;
+            var store = guardResult.Store;
+            var cart = guardResult.Cart;
 
             if (!await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                 throw new Exception("Shipping is not required");
 
-            //pickup point
-            if (_shippingSettings.AllowPickupInStore && _orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+            var stepResult = await SaveShippingMethodStepAsync(shippingoption, form, customer, store, cart);
+
+            switch (stepResult.Outcome)
             {
-                var pickupInStore = ParsePickupInStore(form);
-                if (pickupInStore)
-                {
-                    var pickupOption = await ParsePickupOptionAsync(cart, form);
-                    await SavePickupOptionAsync(pickupOption);
-
-                    return await OpcLoadStepAfterShippingMethod(cart);
-                }
-
-                //set value indicating that "pick up in store" option has not been chosen
-                await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, store.Id);
+                case ShippingMethodStepOutcome.OptionNotParsed:
+                    throw new Exception("Selected shipping method can't be parsed");
+                case ShippingMethodStepOutcome.OptionNotFound:
+                    throw new Exception("Selected shipping method can't be loaded");
             }
-
-            //parse selected method 
-            if (string.IsNullOrEmpty(shippingoption))
-                throw new Exception("Selected shipping method can't be parsed");
-            var splittedOption = shippingoption.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
-            if (splittedOption.Length != 2)
-                throw new Exception("Selected shipping method can't be parsed");
-            var selectedName = splittedOption[0];
-            var shippingRateComputationMethodSystemName = splittedOption[1];
-
-            //find it
-            //performance optimization. try cache first
-            var shippingOptions = await _genericAttributeService.GetAttributeAsync<List<ShippingOption>>(customer,
-                NopCustomerDefaults.OfferedShippingOptionsAttribute, store.Id);
-            if (shippingOptions == null || !shippingOptions.Any())
-            {
-                //not found? let's load them using shipping service
-                shippingOptions = (await _shippingService.GetShippingOptionsAsync(cart, await _customerService.GetCustomerShippingAddressAsync(customer),
-                    customer, shippingRateComputationMethodSystemName, store.Id)).ShippingOptions.ToList();
-            }
-            else
-            {
-                //loaded cached results. let's filter result by a chosen shipping rate computation method
-                shippingOptions = shippingOptions.Where(so => so.ShippingRateComputationMethodSystemName.Equals(shippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
-                    .ToList();
-            }
-
-            var shippingOption = shippingOptions.Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase))
-                                 ?? throw new Exception("Selected shipping method can't be loaded");
-
-            //parse DesiredDeliveryDate
-            var desiredDeliveryDate = await ParseSelectedShippingMethodDeliveryDateAsync(shippingOption, shippingOptions, form);
-            if (desiredDeliveryDate != null)
-                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DesiredDeliveryDate, desiredDeliveryDate, store.Id);
-
-            //save
-            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, shippingOption, store.Id);
 
             //load next step
             return await OpcLoadStepAfterShippingMethod(cart);
@@ -1882,21 +1841,12 @@ public partial class CheckoutController : BasePublicController
         try
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
-                throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
+            var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.OnePage);
+            await ThrowIfCheckoutGuardFailedAsync(guardResult);
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-            if (!cart.Any())
-                throw new Exception("Your cart is empty");
-
-            if (!_orderSettings.OnePageCheckoutEnabled)
-                throw new Exception("One page checkout is disabled");
-
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-                throw new Exception("Anonymous checkout is not allowed");
+            var customer = guardResult.Customer;
+            var store = guardResult.Store;
+            var cart = guardResult.Cart;
 
             //payment method 
             if (string.IsNullOrEmpty(paymentmethod))
@@ -1955,35 +1905,23 @@ public partial class CheckoutController : BasePublicController
         try
         {
             //validation
-            if (_orderSettings.CheckoutDisabled)
-                throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
+            var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.OnePage);
+            await ThrowIfCheckoutGuardFailedAsync(guardResult);
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var store = await _storeContext.GetCurrentStoreAsync();
-            var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
+            var customer = guardResult.Customer;
+            var store = guardResult.Store;
+            var cart = guardResult.Cart;
 
-            if (!cart.Any())
-                throw new Exception("Your cart is empty");
+            var stepResult = await SavePaymentInfoStepAsync(form, customer, store);
 
-            if (!_orderSettings.OnePageCheckoutEnabled)
-                throw new Exception("One page checkout is disabled");
-
-            if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-                throw new Exception("Anonymous checkout is not allowed");
-
-            var paymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
-                NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
-            var paymentMethod = await _paymentPluginManager
-                                    .LoadPluginBySystemNameAsync(paymentMethodSystemName, customer, store.Id)
-                                ?? throw new Exception("Payment method is not selected");
-
-            var warnings = await paymentMethod.ValidatePaymentFormAsync(form);
-            foreach (var warning in warnings)
-                ModelState.AddModelError("", warning);
-            if (ModelState.IsValid)
+            switch (stepResult.Outcome)
             {
-                await _orderProcessingService.SetProcessPaymentRequestAsync(await paymentMethod.GetPaymentInfoAsync(form));
+                case PaymentInfoStepOutcome.MethodNotSelected:
+                    throw new Exception("Payment method is not selected");
+            }
 
+            if (stepResult.Outcome == PaymentInfoStepOutcome.Saved)
+            {
                 var confirmOrderModel = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
                 return Json(new
                 {
@@ -1997,7 +1935,7 @@ public partial class CheckoutController : BasePublicController
             }
 
             //If we got this far, something failed, redisplay form
-            var paymentInfoModel = await _checkoutModelFactory.PreparePaymentInfoModelAsync(paymentMethod);
+            var paymentInfoModel = await _checkoutModelFactory.PreparePaymentInfoModelAsync(stepResult.PaymentMethod);
             return Json(new
             {
                 update_section = new UpdateSectionJsonModel
@@ -2034,20 +1972,11 @@ public partial class CheckoutController : BasePublicController
             if (!isCaptchaSettingEnabled || (isCaptchaSettingEnabled && captchaValid))
             {
                 //validation
-                if (_orderSettings.CheckoutDisabled)
-                    throw new Exception(await _localizationService.GetResourceAsync("Checkout.Disabled"));
+                var guardResult = await ValidateCheckoutAccessAsync(CheckoutFlow.OnePage);
+                await ThrowIfCheckoutGuardFailedAsync(guardResult);
 
-                var store = await _storeContext.GetCurrentStoreAsync();
-                var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
-
-                if (!cart.Any())
-                    throw new Exception("Your cart is empty");
-
-                if (!_orderSettings.OnePageCheckoutEnabled)
-                    throw new Exception("One page checkout is disabled");
-
-                if (await _customerService.IsGuestAsync(customer) && !_orderSettings.AnonymousCheckoutAllowed)
-                    throw new Exception("Anonymous checkout is not allowed");
+                var store = guardResult.Store;
+                var cart = guardResult.Cart;
 
                 //prevent 2 orders being placed within an X seconds time frame
                 if (!await IsMinimumOrderPlacementIntervalValidAsync(customer))
@@ -2183,4 +2112,165 @@ public partial class CheckoutController : BasePublicController
     }
 
     #endregion
-}
+
+    #region Nested types
+
+    /// <summary>
+    /// Represents the checkout flow the access guard validates against
+    /// </summary>
+    protected enum CheckoutFlow
+    {
+        /// <summary>
+        /// No flow mode or guest check (used by the checkout entry point)
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// Multi-step checkout
+        /// </summary>
+        MultiStep,
+
+        /// <summary>
+        /// One page checkout
+        /// </summary>
+        OnePage
+    }
+
+    /// <summary>
+    /// Represents the outcome of the checkout access guard
+    /// </summary>
+    protected enum CheckoutGuardOutcome
+    {
+        /// <summary>
+        /// All checks passed
+        /// </summary>
+        Passed,
+
+        /// <summary>
+        /// Checkout is disabled
+        /// </summary>
+        CheckoutDisabled,
+
+        /// <summary>
+        /// Shopping cart is empty
+        /// </summary>
+        CartEmpty,
+
+        /// <summary>
+        /// The requested flow does not match the configured checkout mode
+        /// </summary>
+        WrongFlow,
+
+        /// <summary>
+        /// Guest customer is not allowed to check out
+        /// </summary>
+        GuestNotAllowed
+    }
+
+    /// <summary>
+    /// Represents the result of the checkout access guard
+    /// </summary>
+    protected partial class CheckoutGuardResult
+    {
+        /// <summary>
+        /// Gets or sets the guard outcome
+        /// </summary>
+        public CheckoutGuardOutcome Outcome { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current customer (null when the guard stopped before loading it)
+        /// </summary>
+        public Customer Customer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current store (null when the guard stopped before loading it)
+        /// </summary>
+        public Store Store { get; set; }
+
+        /// <summary>
+        /// Gets or sets the shopping cart (null when the guard stopped before loading it)
+        /// </summary>
+        public IList<ShoppingCartItem> Cart { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether all checks passed
+        /// </summary>
+        public bool Passed => Outcome == CheckoutGuardOutcome.Passed;
+    }
+
+    /// <summary>
+    /// Represents the outcome of the shared shipping method step
+    /// </summary>
+    protected enum ShippingMethodStepOutcome
+    {
+        /// <summary>
+        /// The pickup option was saved
+        /// </summary>
+        PickupSaved,
+
+        /// <summary>
+        /// The shipping option (and the desired delivery date, if any) was saved
+        /// </summary>
+        OptionSaved,
+
+        /// <summary>
+        /// The selected shipping option is empty or malformed
+        /// </summary>
+        OptionNotParsed,
+
+        /// <summary>
+        /// The selected shipping option was not found
+        /// </summary>
+        OptionNotFound
+    }
+
+    /// <summary>
+    /// Represents the result of the shared shipping method step
+    /// </summary>
+    protected partial class ShippingMethodStepResult
+    {
+        /// <summary>
+        /// Gets or sets the step outcome
+        /// </summary>
+        public ShippingMethodStepOutcome Outcome { get; set; }
+    }
+
+    /// <summary>
+    /// Represents the outcome of the shared payment info step
+    /// </summary>
+    protected enum PaymentInfoStepOutcome
+    {
+        /// <summary>
+        /// The selected payment method could not be loaded
+        /// </summary>
+        MethodNotSelected,
+
+        /// <summary>
+        /// The posted payment form has warnings (added to the model state)
+        /// </summary>
+        Invalid,
+
+        /// <summary>
+        /// The process payment request was stored
+        /// </summary>
+        Saved
+    }
+
+    /// <summary>
+    /// Represents the result of the shared payment info step
+    /// </summary>
+    protected partial class PaymentInfoStepResult
+    {
+        /// <summary>
+        /// Gets or sets the step outcome
+        /// </summary>
+        public PaymentInfoStepOutcome Outcome { get; set; }
+
+        /// <summary>
+        /// Gets or sets the loaded payment method (null when no payment method is selected)
+        /// </summary>
+        public IPaymentMethod PaymentMethod { get; set; }
+    }
+
+    #endregion
+}
