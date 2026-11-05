@@ -178,5 +178,45 @@ public partial record DataTablesModel : BaseNopModel
     /// </summary>
     public List<LayoutOption> LayoutCollection {  get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether checkbox selection is kept when the page, or the page size, changes.
+    /// Leave null to decide automatically (see <see cref="IsSelectionPersisted"/>). Not supported for child tables
+    /// </summary>
+    public bool? PersistSelection { get; set; }
+
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// Gets a value indicating whether checkbox selection is kept when the page, or the page size, changes
+    /// </summary>
+    /// <returns>True if selection is kept across pages; otherwise false</returns>
+    public virtual bool IsSelectionPersisted()
+    {
+        if (IsChildTable || GetSelectionCheckBox() == null)
+            return false;
+
+        if (PersistSelection.HasValue)
+            return PersistSelection.Value;
+
+        //by default, only server-side paged tables, where a selection can span several pages
+        return ServerSide && Paging && Data == null;
+    }
+
+    /// <summary>
+    /// Gets the checkbox render of the selection column
+    /// </summary>
+    /// <returns>Checkbox render; null if the table has no selection column</returns>
+    public virtual RenderCheckBox GetSelectionCheckBox()
+    {
+        //a selection column holds the row key; a checkbox bound to any other field shows a saved state instead (e.g. "Enabled")
+        return ColumnCollection
+            .Where(column => column.IsMasterCheckBox)
+            .Select(column => column.Render is RenderCheckBox checkBox && !string.IsNullOrEmpty(checkBox.Name)
+                && string.Equals(column.Data, checkBox.PropertyKeyName, StringComparison.Ordinal) ? checkBox : null)
+            .FirstOrDefault(checkBox => checkBox != null);
+    }
+
     #endregion
 }
