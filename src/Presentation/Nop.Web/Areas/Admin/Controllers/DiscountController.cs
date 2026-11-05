@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
 using Nop.Services.Discounts;
+using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -28,6 +30,8 @@ public partial class DiscountController : BaseAdminController
     protected readonly IDiscountModelFactory _discountModelFactory;
     protected readonly IDiscountPluginManager _discountPluginManager;
     protected readonly IDiscountService _discountService;
+    protected readonly IExportManager _exportManager;
+    protected readonly IImportManager _importManager;
     protected readonly ILocalizationService _localizationService;
     protected readonly IManufacturerService _manufacturerService;
     protected readonly INotificationService _notificationService;
@@ -45,6 +49,8 @@ public partial class DiscountController : BaseAdminController
         IDiscountModelFactory discountModelFactory,
         IDiscountPluginManager discountPluginManager,
         IDiscountService discountService,
+        IExportManager exportManager,
+        IImportManager importManager,
         ILocalizationService localizationService,
         IManufacturerService manufacturerService,
         INotificationService notificationService,
@@ -58,6 +64,8 @@ public partial class DiscountController : BaseAdminController
         _discountModelFactory = discountModelFactory;
         _discountPluginManager = discountPluginManager;
         _discountService = discountService;
+        _exportManager = exportManager;
+        _importManager = importManager;
         _localizationService = localizationService;
         _manufacturerService = manufacturerService;
         _notificationService = notificationService;
@@ -244,6 +252,71 @@ public partial class DiscountController : BaseAdminController
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Deleted"));
 
         return RedirectToAction("List");
+    }
+
+    #endregion
+
+    #region Export / Import
+
+    [CheckPermission(StandardPermission.Promotions.DISCOUNTS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> ExportXml()
+    {
+        try
+        {
+            var discounts = await _discountService.GetAllDiscountsAsync(showHidden: true, isActive: null);
+            var xml = await _exportManager.ExportDiscountsToXmlAsync(discounts.ToList());
+
+            return File(Encoding.UTF8.GetBytes(xml), "application/xml", "discounts.xml");
+        }
+        catch (Exception exc)
+        {
+            await _notificationService.ErrorNotificationAsync(exc);
+            return RedirectToAction("List");
+        }
+    }
+
+    [CheckPermission(StandardPermission.Promotions.DISCOUNTS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> ExportXlsx()
+    {
+        try
+        {
+            var discounts = await _discountService.GetAllDiscountsAsync(showHidden: true, isActive: null);
+            var bytes = await _exportManager.ExportDiscountsToXlsxAsync(discounts.ToList());
+
+            return File(bytes, MimeTypes.TextXlsx, "discounts.xlsx");
+        }
+        catch (Exception exc)
+        {
+            await _notificationService.ErrorNotificationAsync(exc);
+            return RedirectToAction("List");
+        }
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Promotions.DISCOUNTS_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> ImportFromXlsx(IFormFile importexcelfile)
+    {
+        try
+        {
+            if (importexcelfile != null && importexcelfile.Length > 0)
+            {
+                await _importManager.ImportDiscountsFromXlsxAsync(importexcelfile.OpenReadStream());
+            }
+            else
+            {
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
+                return RedirectToAction("List");
+            }
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Imported"));
+
+            return RedirectToAction("List");
+        }
+        catch (Exception exc)
+        {
+            await _notificationService.ErrorNotificationAsync(exc);
+            return RedirectToAction("List");
+        }
     }
 
     #endregion
