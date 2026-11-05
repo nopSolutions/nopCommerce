@@ -685,6 +685,9 @@ public class PunchOutService
                 var key = _staticCacheManager.PrepareKeyForDefaultCache(PunchOutDefaults.SessionTokenCacheKey, session.SessionId);
                 await _staticCacheManager.RemoveAsync(key);
 
+                //clear shopping cart
+                await _shoppingCartService.ClearShoppingCartAsync(customer, store.Id);
+
                 //standard logout 
                 await _authenticationService.SignOutAsync();
             }
