@@ -1,0 +1,13 @@
+// Submits a review of the open product, with a title unique to the run saved
+// as "reviewTitle". Assumes a signed-in customer on a product page. Seeded
+// ProductReviewsMustBeApproved is false, so the review is visible immediately.
+//
+// Never clicks a review link: the form is inline for signed-in customers, and
+// the link text flips once any review exists, breaking the next run.
+scroll down to the bottom of the page
+check that page contains "Write your own review"
+generate from template "E2E review #####", then enter into "Review title" and save as "reviewTitle"
+enter "This machine is fast, quiet and very well built. Happy with the purchase." into "Review text"
+click on the radio button to the left of "Excellent"
+click button "Submit review"
+check that page contains "Product review is successfully added."

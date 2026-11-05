@@ -1,0 +1,117 @@
+# Boots an ephemeral nopCommerce instance from this checkout, installs it
+# unattended, and runs the plain-English testRigor suite in src/Tests/E2E
+# against it over the testRigor CLI's localhost tunnel.
+#
+# Needs the repository variable TESTRIGOR_SUITE_ID (a WebDesktopChrome suite
+# dedicated to this repository) and the secret TESTRIGOR_CI_TOKEN (that suite's
+# token, from its CI/CD Integration page). While either is unset the suite is
+# skipped, so this workflow stays inert until a maintainer opts in.
+name: E2E tests
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+  workflow_dispatch:
+
+# Every run uploads its cases to one shared remote suite, so runs are
+# serialised across the repository. Queued, not cancelled, so a push
+# does not kill a run already in flight.
+concurrency:
+  group: e2e-suite
+  cancel-in-progress: false
+
+jobs:
+  # The secrets context is not readable from a job-level `if`, so the check runs
+  # in a step and is handed down as an output. This also covers pull requests
+  # from forks, which GitHub supplies with empty secrets.
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.check.outputs.enabled }}
+    steps:
+      - id: check
+        env:
+          TOKEN: ${{ secrets.TESTRIGOR_CI_TOKEN }}
+          SUITE: ${{ vars.TESTRIGOR_SUITE_ID }}
+        run: |
+          if [ -n "$TOKEN" ] && [ -n "$SUITE" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::testRigor is not configured here, skipping E2E. Expected on forks and on pull requests from forks."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  e2e:
+    needs: gate
+    if: needs.gate.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Builds the whole solution inside the image, so this is the slow step.
+      - name: Build and start nopCommerce
+        run: docker compose up -d --build
+
+      - name: Install nopCommerce unattended
+        env:
+          BASE_URL: http://localhost
+          # /install/restartapplication ends the process and docker-compose.yml
+          # declares no restart policy, so the container is cycled explicitly.
+          NOP_RESTART_CMD: docker restart nopcommerce
+        run: bash src/Tests/E2E/scripts/install-nopcommerce.sh
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install testRigor CLI
+        run: npm install --global testrigor-cli
+
+      # The CLI downloads its tunnel client per platform on first use, so a
+      # clean runner needs no extra setup. Every case in a run executes
+      # concurrently against the one container.
+      # The branch name goes through env rather than ${{ }} in the script, so
+      # its contents are never parsed as shell.
+      #
+      # --explicit-mutations makes the stored suite match these files, deleting
+      # cases that are missing locally. Only a push to develop - reviewed, merged
+      # code - may do that. Pull requests and manual runs execute the
+      # checked-out files but leave the stored suite untouched.
+      - name: Run E2E suite
+        env:
+          TESTRIGOR_CI_TOKEN: ${{ secrets.TESTRIGOR_CI_TOKEN }}
+          TESTRIGOR_SUITE_ID: ${{ vars.TESTRIGOR_SUITE_ID }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          COMMIT: ${{ github.sha }}
+          MUTATIONS: ${{ github.event_name == 'push' && '--explicit-mutations' || '' }}
+        run: |
+          echo "Sync: ${MUTATIONS:-run-only, stored suite not modified}"
+          testrigor test-suite run "$TESTRIGOR_SUITE_ID" \
+            --token "$TESTRIGOR_CI_TOKEN" \
+            --localhost --url "http://localhost" \
+            --test-cases-path "src/Tests/E2E/test-cases/*.yaml" \
+            --rules-path "src/Tests/E2E/rules/*.txt" \
+            --variables-path "src/Tests/E2E/variables.json" \
+            --labels nop-e2e \
+            $MUTATIONS \
+            --branch "$BRANCH" \
+            --commit "$COMMIT" \
+            --junit-report-save-path e2e-results.xml
+
+      - name: Upload JUnit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results
+          path: e2e-results.xml
+          if-no-files-found: warn
+
+      - name: Dump container logs
+        if: failure()
+        run: docker compose logs --tail=300

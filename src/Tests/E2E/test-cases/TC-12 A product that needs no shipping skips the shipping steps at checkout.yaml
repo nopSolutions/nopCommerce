@@ -1,0 +1,56 @@
+labels:
+  - nop-e2e
+  - admin-login
+  - admin-logout
+  - admin-product-create-new
+  - admin-product-delete
+  - product-open
+  - product-add-to-cart
+  - cart-proceed-to-checkout
+  - checkout-billing-guest
+  - checkout-address-fill
+customSteps: |
+  // The checkout branch for a cart that needs no shipping, which nothing else
+  // covers. The product is created here because nothing in the sample data is
+  // non-shippable — "downloadable" and "needs no shipping" are independent
+  // flags.
+
+  // A new product arrives with "Shipping enabled" checked, so one click clears
+  // it. The Shipping card is open by default and deliberately not clicked: each
+  // card persists its collapsed state per user, so a click would make this pass
+  // and fail on alternate runs.
+  admin-login
+  admin-product-create-new
+  click on the checkbox to the right of "Shipping enabled"
+  click button "Save and Continue Edit"
+  check that page contains "The product has been updated successfully."
+  admin-logout
+
+  product-add-to-cart
+
+  click "Shopping cart"
+  cart-proceed-to-checkout
+  checkout-billing-guest
+
+  // Billing goes straight to payment information: no shipping steps to drive,
+  // and the payment-method step is bypassed as everywhere else.
+  wait up to 60 seconds until page contains "Mail Personal or Business Check"
+  click button "Continue"
+
+  // Keyed on the method name, not the "Payment Method" heading (see README).
+  wait up to 60 seconds until page contains "Check / Money Order"
+
+  // The assertion the case exists for: the order review renders its shipping
+  // block only for a shippable cart, and "Ground" appears nowhere unless a
+  // shipping method was actually chosen.
+  check that page does not contain "Ground"
+
+  // Same descriptor, and the same two reasons, as the checkout-place-order rule.
+  scroll down until page contains "Total:"
+  click button "Confirm" roughly below "Total:"
+  // Long timeout: order placement is slow under concurrent load.
+  wait up to 180 seconds until page contains "Your order has been successfully processed!"
+
+  // --- Leave no residue ---
+  admin-login
+  admin-product-delete

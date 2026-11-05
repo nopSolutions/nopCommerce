@@ -1,0 +1,4 @@
+// Seeded TermsOfServiceOnShoppingCartPage blocks Checkout until the terms box
+// is ticked, and the checkbox is unlabeled — the label text toggles it.
+click "I agree with the terms of service and I adhere to them unconditionally"
+click "Checkout"

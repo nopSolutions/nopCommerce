@@ -1,0 +1,10 @@
+// Checks out as a guest and supplies the billing address, after
+// cart-proceed-to-checkout. Seeded AnonymousCheckoutAllowed is true.
+check that page contains "Checkout as Guest"
+click button "Checkout as Guest"
+check that page contains "Billing address"
+enter "Guest" into "First name"
+enter "Buyer" into "Last name"
+generate unique email, then enter into "Email" and save as "guestEmail"
+checkout-address-fill
+click button "Continue"

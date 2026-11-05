@@ -1,0 +1,59 @@
+labels:
+  - nop-e2e
+  - admin-login
+  - admin-product-create-new
+  - admin-product-delete
+  - product-open
+customSteps: |
+  // Creates its own product, so it never mutates the sample catalog and two
+  // concurrent runs cannot collide. Stock needs a product that already exists,
+  // so the out-of-stock check lives here rather than in its own case.
+  admin-login
+  admin-product-create-new
+
+  // --- Reachable on the storefront and purchasable ---
+  // Catalog search is a plain database query with no index to rebuild, so the
+  // product is findable the moment it is saved.
+  product-open
+  check that page contains "Add to cart"
+
+  // --- Raise the price and stop stocking it, in one visit to the edit page ---
+  go to url stored value "adminProductsUrl"
+  check that page contains "Add new"
+  // By SKU, because the list's name filter is not addressable (see README), so
+  // this case does not cover that filter.
+  enter stored value "productSku" into "Go directly to product SKU"
+  click button "Go" to the right of "Go directly to product SKU"
+  check that page contains stored value "productName"
+  check that page contains "Edit product details"
+
+  enter "199.99" into "Price"
+
+  // The default "Don't track inventory" always reports the product in stock.
+  // The Inventory card is open by default and deliberately not clicked: a card
+  // title persists its collapsed state per user — see TC-12.
+  select "Track inventory" from "Inventory method"
+  enter "0" into "Stock quantity"
+
+  click button "Save and Continue Edit"
+  check that page contains "The product has been updated successfully."
+
+  // --- Both changes reach the storefront ---
+  product-open
+  check that page contains "199.99"
+
+  // Asserts the purchase is refused, not that a label renders: a new product is
+  // written with DisplayStockAvailability=false, so no stock message appears.
+  // The refusal comes from the server-side inventory guard, and the listing
+  // offers Add to cart regardless of stock, which is what exercises it. So this
+  // stops at the result list rather than using product-open.
+  go to url stored value "searchUrl"
+  click "Search keyword"
+  enter stored value "productName" into "Search keyword"
+  press enter
+  check that page contains stored value "productName"
+  click button "Add to cart"
+  check that page contains "Out of stock"
+
+  // --- Delete ---
+  admin-product-delete

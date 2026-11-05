@@ -1,0 +1,35 @@
+labels:
+  - nop-e2e
+customSteps: |
+  // "Build your own computer" is the seeded product carrying one option of
+  // several input types, each with a price adjustment in its label.
+  // ProductAttributeParserAndFormatterTests and PriceCalculationServiceTests
+  // cover this logic in isolation; no test drives the controls through the UI.
+  go to url stored value "storeUrl"
+  click "Build your own computer"
+  check that page contains "Build your own computer"
+
+  // Every price adjustment is advertised on the option label
+  check that page contains "400 GB [+$100.00]"
+  check that page contains "Vista Premium [+$60.00]"
+  check that page contains "Microsoft Office [+$50.00]"
+
+  // Every required attribute must be answered: the RAM dropdown defaults to
+  // "Please select" and neither HDD radio is pre-checked.
+  select "2 GB" from "RAM"
+  click "400 GB [+$100.00]"
+  click "Vista Premium [+$60.00]"
+
+  click button "Add to cart"
+  check that page contains "The product has been added to your shopping cart"
+
+  // The selections are carried into the cart line
+  click "Shopping cart"
+  check that page contains "Build your own computer"
+  check that page contains "400 GB"
+  check that page contains "Vista Premium"
+
+  // And priced: $1,200.00 base, plus the pre-selected 2.5 GHz processor
+  // (+$15.00) and Microsoft Office (+$50.00), plus 400 GB (+$100.00) and
+  // Vista Premium (+$60.00). 2 GB carries no adjustment.
+  check that page contains "$1,425.00"

@@ -1,0 +1,27 @@
+labels:
+  - nop-e2e
+  - product-open
+  - product-add-to-cart
+  - cart-proceed-to-checkout
+  - checkout-billing-guest
+  - checkout-address-fill
+  - checkout-place-order
+customSteps: |
+  // Guest checkout end to end.
+  save "Apple MacBook Pro" as "productName"
+  product-add-to-cart
+
+  // By URL: the header shows "Shopping cart" on every page.
+  click "Shopping cart"
+  check that url contains "/cart"
+
+  // Seeded "Gift wrapping" is required with "No" pre-selected. Asserted here so
+  // a pre-selection regression fails clearly instead of blocking checkout.
+  check that page contains "Gift wrapping"
+
+  cart-proceed-to-checkout
+  checkout-billing-guest
+  checkout-place-order
+
+  // The confirmation page exposes the order number
+  check that page contains "Order number"

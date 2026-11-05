@@ -1,0 +1,7 @@
+// There is no separate admin login form: /admin redirects an unauthenticated
+// visitor to the storefront login page, then returns to the dashboard.
+go to url stored value "adminUrl"
+enter stored value "adminEmail" into "Email"
+enter stored value "adminPassword" into "Password"
+click button "Log in"
+check that page contains "Dashboard"

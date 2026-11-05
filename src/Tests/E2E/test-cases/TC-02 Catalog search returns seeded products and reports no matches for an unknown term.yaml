@@ -1,0 +1,33 @@
+labels:
+  - nop-e2e
+customSteps: |
+  // Read-only against the seeded sample catalog.
+  go to url stored value "storeUrl"
+
+  // Header search finds a seeded product
+  enter "MacBook" into "Search store"
+  click button "Search"
+  check that page contains "Apple MacBook Pro"
+
+  // A result opens its detail page. "Email a friend" is the detail page's own:
+  // the result boxes already carry the product name, "Add to cart" and "Add to
+  // wishlist", so those prove nothing about the navigation.
+  click "Apple MacBook Pro"
+  check that page contains "Email a friend"
+  check that page contains "Add to cart"
+  check that page contains "Add to wishlist"
+
+  // Category browse reaches a subcategory and renders the list controls.
+  // Asserted by URL: the header menu carries every category name on every page.
+  go to url stored value "storeUrl"
+  click "Computers"
+  check that url contains "/computers"
+  click "Notebooks"
+  check that url contains "/notebooks"
+  check that page contains "Sort by"
+  check that page contains "Display"
+
+  // A search with no matches
+  enter "zzqqxxnomatch123" into "Search store"
+  click button "Search"
+  check that page contains "No products were found that matched your criteria."

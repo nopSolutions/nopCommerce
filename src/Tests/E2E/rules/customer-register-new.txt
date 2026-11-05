@@ -1,0 +1,14 @@
+// Registers a customer and leaves them signed in; seeded UserRegistrationType
+// is Standard, so there is no email confirmation step. Every write journey
+// calls this to work on its own generated customer.
+go to url stored value "storeUrl"
+click "Register"
+// The header carries a "Register" link on every page, so assert the URL.
+check that url contains "/register"
+enter "Test" into "First name"
+generate by regex "[A-Z][a-z]{5,9}", then enter into "Last name" and save as "customerLastName"
+generate unique email, then enter into "Email" and save as "customerEmail"
+generate by regex "[A-Z][a-z]{6}[0-9]{2}[!@#]", then enter into "Password" and save as "customerPassword"
+enter stored value "customerPassword" into "Confirm password"
+click button "Register"
+check that page contains "Your registration completed"

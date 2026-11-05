@@ -1,0 +1,21 @@
+# Boots a published nopCommerce release rather than building the checkout, so a
+# case can be run against two versions without a source build. Pick the version
+# with NOP_VERSION, e.g. NOP_VERSION=4.90.6 docker compose -f ... up -d
+#
+# Neither service mounts a volume, so `down && up -d` gives a genuinely fresh,
+# uninstalled instance - which is what a version switch needs.
+services:
+    nopcommerce_web:
+        image: "nopcommerceteam/nopcommerce:${NOP_VERSION:-4.90.7}"
+        container_name: nopcommerce
+        ports:
+            - "80:80"
+        depends_on:
+            - nopcommerce_database
+    nopcommerce_database:
+        image: "mcr.microsoft.com/mssql/server:2019-latest"
+        container_name: nopcommerce_mssql_server
+        environment:
+            SA_PASSWORD: "nopCommerce_db_password"
+            ACCEPT_EULA: "Y"
+            MSSQL_PID: "Express"

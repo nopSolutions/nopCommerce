@@ -1,0 +1,3 @@
+// Logging out of the admin area lands on the storefront home page.
+click "Logout"
+check that page contains "Log in"

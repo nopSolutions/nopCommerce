@@ -1,0 +1,8 @@
+// Signs in the customer held in "customerEmail" / "customerPassword".
+go to url stored value "storeUrl"
+click "Log in"
+check that page contains "Welcome, Please Sign In!"
+enter stored value "customerEmail" into "Email"
+enter stored value "customerPassword" into "Password"
+click button "Log in"
+check that page contains "Log out"
