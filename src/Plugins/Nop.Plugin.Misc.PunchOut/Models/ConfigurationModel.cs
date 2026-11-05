@@ -32,6 +32,9 @@ public record ConfigurationModel : BaseNopModel
 
     [NopResourceDisplayName("Plugins.Misc.PunchOut.Configuration.TimeToExpire")]
     public int TimeToExpire { get; set; }
+    
+    [NopResourceDisplayName("Plugins.Misc.PunchOut.Configuration.UnitOfMeasureCode")]
+    public string UnitOfMeasureCode { get; set; }
 
     public IList<SelectListItem> UnavailableCustomerRoles { get; set; }
 

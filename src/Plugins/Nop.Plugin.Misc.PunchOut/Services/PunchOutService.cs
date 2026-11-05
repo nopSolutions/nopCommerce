@@ -541,6 +541,7 @@ public class PunchOutService
                 Description = $"{name}{(!string.IsNullOrEmpty(attributes) ? $"({attributes})" : null)}",
                 Quantity = item.Quantity,
                 UnitPrice = priceValue,
+                UnitOfMeasure = _punchOutSettings.UnitOfMeasureCode ?? PunchOutDefaults.UnitOfMeasureCode,
                 CurrencyCode = currency.CurrencyCode
             });
         }
