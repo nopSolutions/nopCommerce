@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using Ganss.Xss;
-using Markdig;
+﻿using Markdig;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
@@ -20,7 +18,7 @@ namespace Nop.Plugin.Misc.Forums.Services;
 /// <summary>
 /// Forum service
 /// </summary>
-public partial class ForumService
+public class ForumService
 {
     #region Fields
 
@@ -45,8 +43,6 @@ public partial class ForumService
     private readonly IWorkContext _workContext;
     private readonly IWorkflowMessageService _workflowMessageService;
     private readonly SeoSettings _seoSettings;
-
-    const string ALLOWED_TAGS = "br,hr,b,i,u,a,div,ol,ul,li,blockquote,img,span,p,em,strong,font,pre,h1,h2,h3,h4,h5,h6,address,cite,code";
 
     #endregion
 
@@ -101,48 +97,6 @@ public partial class ForumService
 
     #region Utilities
 
-    private bool IsValidTag(string tag)
-    {
-        var aTags = ALLOWED_TAGS.Split(',');
-
-        var endChars = new[] { ' ', '>', '/', '\t' };
-
-        var pos = tag.IndexOfAny(endChars, 1);
-
-        if (pos > 0)
-            tag = tag[..pos];
-
-        if (tag[0] == '/')
-            tag = tag[1..];
-
-        return aTags.Any(aTag => tag == aTag);
-    }
-
-    /// <summary>
-    /// Ensure only allowed HTML tags
-    /// </summary>
-    /// <param name="text">Text</param>
-    /// <returns>Sanitized text with all invalid tags removed</returns>
-    private string EnsureOnlyAllowedHtml(string text)
-    {
-        if (string.IsNullOrEmpty(text))
-            return string.Empty;
-        
-        var m = HtmlTagRegex().Matches(text);
-
-        for (var i = m.Count - 1; i >= 0; i--)
-        {
-            var tag = text[(m[i].Index + 1)..(m[i].Index + m[i].Length)].Trim().ToLower();
-
-            if (!IsValidTag(tag))
-                text = text.Remove(m[i].Index, m[i].Length);
-        }
-
-        var sanitizer = new HtmlSanitizer();
-
-        return sanitizer.Sanitize(text);
-    }
-
     /// <summary>
     /// Formats the text
     /// </summary>
@@ -161,7 +115,7 @@ public partial class ForumService
             formatedText = textFormatType switch
             {
                 TextFormatType.BBCode => _bbCodeHelper.FormatText(_htmlFormatter.FormatText(text)),
-                TextFormatType.Markdown => EnsureOnlyAllowedHtml(Markdown.ToHtml(CSharpFormat.FormatTextSimple(text))),
+                TextFormatType.Markdown => CommonHelper.EnsureOnlyAllowedHtml(Markdown.ToHtml(CSharpFormat.FormatTextSimple(text))),
                 _ => _htmlFormatter.FormatText(text)
             };
         }
@@ -1569,9 +1523,6 @@ public partial class ForumService
             return await _workflowMessageService.SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }).ToListAsync();
     }
-
-    [GeneratedRegex("<.*?>", RegexOptions.IgnoreCase)]
-    private static partial Regex HtmlTagRegex();
 
     #endregion
 }
