@@ -32,6 +32,7 @@ public partial class PriceListController : BaseAdminController
     protected readonly IPriceListModelFactory _priceListModelFactory;
     protected readonly IPriceListService _priceListService;
     protected readonly IProductService _productService;
+    protected readonly IWorkContext _workContext;
     private static readonly char[] _separator = [','];
 
     #endregion
@@ -46,7 +47,8 @@ public partial class PriceListController : BaseAdminController
         INotificationService notificationService,
         IPriceListModelFactory priceListModelFactory,
         IPriceListService priceListService,
-        IProductService productService)
+        IProductService productService,
+        IWorkContext workContext)
     {
         _customerActivityService = customerActivityService;
         _customerService = customerService;
@@ -57,6 +59,7 @@ public partial class PriceListController : BaseAdminController
         _priceListModelFactory = priceListModelFactory;
         _priceListService = priceListService;
         _productService = productService;
+        _workContext = workContext;
     }
 
     #endregion
@@ -319,9 +322,14 @@ public partial class PriceListController : BaseAdminController
         var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
         if (selectedProducts.Any())
         {
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
             var existingPriceListItems = await _priceListService.GetPriceListItemsByPriceListIdAsync(model.PriceListId);
             foreach (var product in selectedProducts)
             {
+                //a vendor should have access only to his products
+                if (currentVendor != null && product.VendorId != currentVendor.Id)
+                    continue;
+
                 //whether price list item with such parameters already exists
                 if (existingPriceListItems.FirstOrDefault(pc => pc.ProductId == product.Id && pc.PriceListId == model.PriceListId) != null)
                     continue;

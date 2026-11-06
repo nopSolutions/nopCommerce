@@ -348,9 +348,14 @@ public partial class FilterLevelValueController : BaseAdminController
         var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
         if (selectedProducts.Any())
         {
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
             var existingProductFilterLevelValues = await _filterLevelValueService.GetFilterLevelValueProductsByFilterLevelValueIdAsync(model.FilterLevelValueId);
             foreach (var product in selectedProducts)
             {
+                //a vendor should have access only to his products
+                if (currentVendor != null && product.VendorId != currentVendor.Id)
+                    continue;
+
                 //whether product filter level value with such parameters already exists
                 if (existingProductFilterLevelValues.FirstOrDefault(pc => pc.ProductId == product.Id && pc.FilterLevelValueId == model.FilterLevelValueId) != null)
                     continue;
