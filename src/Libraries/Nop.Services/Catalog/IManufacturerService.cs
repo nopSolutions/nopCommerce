@@ -188,6 +188,13 @@ public partial interface IManufacturerService
     Task InsertProductManufacturerAsync(ProductManufacturer productManufacturer);
 
     /// <summary>
+    /// Inserts a list of product manufacturer mapping
+    /// </summary>
+    /// <param name="productManufacturers">Product manufacturer mappings</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    Task InsertProductManufacturersAsync(IList<ProductManufacturer> productManufacturers);
+
+    /// <summary>
     /// Updates the product manufacturer mapping
     /// </summary>
     /// <param name="productManufacturer">Product manufacturer mapping</param>

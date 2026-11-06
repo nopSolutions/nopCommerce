@@ -355,23 +355,28 @@ public partial class ProductController : BaseAdminController
         await _manufacturerService.DeleteProductManufacturersAsync(productManufacturersToDelete);
 
         //add manufacturers
-        foreach (var manufacturerId in model.SelectedManufacturerIds)
+        var manufacturers = await _manufacturerService.GetManufacturersByIdsAsync(model.SelectedManufacturerIds.ToArray());
+        var productManufacturersToAdd = new List<ProductManufacturer>();
+
+        foreach (var manufacturer in manufacturers)
         {
-            if (_manufacturerService.FindProductManufacturer(existingProductManufacturers, product.Id, manufacturerId) == null)
+            if (_manufacturerService.FindProductManufacturer(existingProductManufacturers, product.Id, manufacturer.Id) == null)
             {
                 //find next display order
                 var displayOrder = 1;
-                var existingManufacturerMapping = await _manufacturerService.GetProductManufacturersByManufacturerIdAsync(manufacturerId, showHidden: true);
+                var existingManufacturerMapping = await _manufacturerService.GetProductManufacturersByManufacturerIdAsync(manufacturer.Id, showHidden: true);
                 if (existingManufacturerMapping.Any())
                     displayOrder = existingManufacturerMapping.Max(x => x.DisplayOrder) + 1;
-                await _manufacturerService.InsertProductManufacturerAsync(new ProductManufacturer
+
+                productManufacturersToAdd.Add(new ProductManufacturer
                 {
                     ProductId = product.Id,
-                    ManufacturerId = manufacturerId,
+                    ManufacturerId = manufacturer.Id,
                     DisplayOrder = displayOrder
                 });
             }
         }
+        await _manufacturerService.InsertProductManufacturersAsync(productManufacturersToAdd);
     }
 
     protected virtual async Task SaveDiscountMappingsAsync(Product product, ProductModel model)
