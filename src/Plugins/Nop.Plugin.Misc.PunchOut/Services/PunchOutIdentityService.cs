@@ -84,6 +84,18 @@ public class PunchOutIdentityService
     }
 
     /// <summary>
+    /// Create hash by shared secret
+    /// </summary>
+    /// <param name="sharedSecret">Shared secret</param>
+    /// <returns></returns>
+    public string CreateHashBySharedSecret(string sharedSecret)
+    {
+        if (string.IsNullOrEmpty(sharedSecret))
+            return null;
+        return HashHelper.CreateHash(Encoding.UTF8.GetBytes(sharedSecret), "SHA256");
+    }
+
+    /// <summary>
     /// Add PunchOut identity
     /// </summary>
     /// <param name="identity">PunchOut identity</param>
@@ -97,7 +109,7 @@ public class PunchOutIdentityService
         var record = new PunchOutIdentity
         {
             Identity = identity,
-            SharedSecretHash = HashHelper.CreateHash(Encoding.UTF8.GetBytes(sharedSecret), "SHA256")
+            SharedSecretHash = CreateHashBySharedSecret(sharedSecret)
         };
 
         await _punchOutIdentityRepository.InsertAsync(record, false);

@@ -124,11 +124,11 @@ public class PunchOutService
             ?? throw new NopException("Unknown PunchOut identity.");
 
         // client validation verification
-        var storedIdentity = sender?.SharedSecretHash;
-        var incomingSecret = sharedSecret;
+        var storedIdentityHash = sender?.SharedSecretHash;
+        var incomingSecretHash = _punchOutIdentityService.CreateHashBySharedSecret(sharedSecret);
 
-        var incomingBytes = Encoding.UTF8.GetBytes(incomingSecret);
-        var expectedBytes = Encoding.UTF8.GetBytes(storedIdentity);
+        var incomingBytes = Encoding.UTF8.GetBytes(incomingSecretHash);
+        var expectedBytes = Encoding.UTF8.GetBytes(storedIdentityHash);
 
         if (!CryptographicOperations.FixedTimeEquals(incomingBytes, expectedBytes))
         {
