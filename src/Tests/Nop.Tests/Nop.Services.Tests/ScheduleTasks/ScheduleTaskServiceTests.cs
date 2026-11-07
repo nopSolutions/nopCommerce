@@ -90,6 +90,7 @@ public class ScheduleTaskServiceTests : ServiceTest
             _scheduleTaskService.UpdateTaskAsync(null).Wait());
     }
 
+    [Test]
     public async Task CanDeleteTask()
     {
         _task.Id = 0;
