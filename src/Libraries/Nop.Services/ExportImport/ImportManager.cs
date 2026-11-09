@@ -1640,6 +1640,12 @@ public partial class ImportManager : IImportManager
 
         var manager = new PropertyManager<PriceList>(defaultProperties, _catalogSettings);
 
+        if (_catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities)
+        {
+            manager.SetSelectList("PriceCalculationType",
+                await PriceCalculationTypeEnum.PercentageDecrease.ToSelectListAsync(useLocalization: false));
+        }
+
         var priceListItemProperties = new[]
         {
             new PropertyByName<PriceListItem>("Sku"),
@@ -1756,7 +1762,7 @@ public partial class ImportManager : IImportManager
             return;
 
         var sku = priceListItemManager.GetDefaultProperty(nameof(Product.Sku)).StringValue;
-        var manualPrice = priceListItemManager.GetDefaultProperty(nameof(PriceListItem.ManualPrice)).DecimalValue;
+        var manualPrice = priceListItemManager.GetDefaultProperty(nameof(PriceListItem.ManualPrice)).DecimalValueNullable;
 
         var priceListItemProduct = await _productService.GetProductBySkuAsync(sku);
         var priceListItem = (await _priceListService.GetPriceListItemsByPriceListIdAsync(lastLoadedPriceList.Id))
@@ -1782,7 +1788,7 @@ public partial class ImportManager : IImportManager
     }
 
     /// <returns>A task that represents the asynchronous operation</returns>
-    protected virtual async Task ImportProductLocalizedAsync(Product product, ImportProductMetadata metadata, int iRow, IList<Language> languages)
+    protected virtual async Task ImportProductLocalizedAsync(Product product, ImportProductMetadata metadata, int iRow, IList<Language> languages, Vendor currentVendor)
     {
         if (metadata.LocalizedWorksheets.Any())
         {
@@ -1810,7 +1816,7 @@ public partial class ImportManager : IImportManager
                             await _localizedEntityService.SaveLocalizedValueAsync(product, p => p.ShortDescription, property.StringValue, language.Id);
                             break;
                         case "FullDescription":
-                            await _localizedEntityService.SaveLocalizedValueAsync(product, p => p.FullDescription, property.StringValue, language.Id);
+                            await _localizedEntityService.SaveLocalizedValueAsync(product, p => p.FullDescription, currentVendor != null ? CommonHelper.EnsureOnlyAllowedHtml(property.StringValue) : property.StringValue, language.Id);
                             break;
                         case "MetaKeywords":
                             await _localizedEntityService.SaveLocalizedValueAsync(product, p => p.MetaKeywords, property.StringValue, language.Id);
@@ -1830,6 +1836,12 @@ public partial class ImportManager : IImportManager
                 }
             }
         }
+    }
+
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task ImportProductLocalizedAsync(Product product, ImportProductMetadata metadata, int iRow, IList<Language> languages)
+    {
+        await ImportProductLocalizedAsync(product, metadata, iRow, languages, await _workContext.GetCurrentVendorAsync());
     }
 
     #endregion
@@ -2321,7 +2333,7 @@ public partial class ImportManager : IImportManager
                         product.ShortDescription = property.StringValue;
                         break;
                     case "FullDescription":
-                        product.FullDescription = property.StringValue;
+                        product.FullDescription = currentVendor != null ? CommonHelper.EnsureOnlyAllowedHtml(property.StringValue) : property.StringValue;
                         break;
                     case "Vendor":
                         //vendor can't change this field
@@ -2658,7 +2670,7 @@ public partial class ImportManager : IImportManager
             await _urlRecordService.SaveSlugAsync(product, await _urlRecordService.ValidateSeNameAsync(product, seName, product.Name, true), 0);
 
             //save product localized data
-            await ImportProductLocalizedAsync(product, metadata, iRow, languages);
+            await ImportProductLocalizedAsync(product, metadata, iRow, languages, currentVendor);
 
             tempProperty = metadata.Manager.GetDefaultProperty("Categories");
 

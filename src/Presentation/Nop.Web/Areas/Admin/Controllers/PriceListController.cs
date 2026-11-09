@@ -319,9 +319,15 @@ public partial class PriceListController : BaseAdminController
         var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
         if (selectedProducts.Any())
         {
+            var workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IWorkContext>();
+            var currentVendor = await workContext.GetCurrentVendorAsync();
             var existingPriceListItems = await _priceListService.GetPriceListItemsByPriceListIdAsync(model.PriceListId);
             foreach (var product in selectedProducts)
             {
+                //a vendor should have access only to his products
+                if (currentVendor != null && product.VendorId != currentVendor.Id)
+                    continue;
+
                 //whether price list item with such parameters already exists
                 if (existingPriceListItems.FirstOrDefault(pc => pc.ProductId == product.Id && pc.PriceListId == model.PriceListId) != null)
                     continue;

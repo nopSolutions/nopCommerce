@@ -57,6 +57,7 @@ public class PunchOutMethod : BasePlugin, IMiscPlugin
         {
             IsActive = false,
             TimeToExpire = PunchOutDefaults.TimeToExpireSession,
+            UnitOfMeasureCode = PunchOutDefaults.UnitOfMeasureCode,
             RestrictedCustomerRoleIds = [(await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.AdministratorsRoleName)).Id]
         });
 
@@ -72,6 +73,8 @@ public class PunchOutMethod : BasePlugin, IMiscPlugin
             ["Plugins.Misc.PunchOut.Configuration.CustomerRoles.NoRoles"] = "No customer roles found",
             ["Plugins.Misc.PunchOut.Configuration.TimeToExpire"] = "Time to expire",
             ["Plugins.Misc.PunchOut.Configuration.TimeToExpire.Hint"] = "The time in hours after which the PunchOut session will expire.",
+            ["Plugins.Misc.PunchOut.Configuration.UnitOfMeasureCode"] = "Unit of measure code",
+            ["Plugins.Misc.PunchOut.Configuration.UnitOfMeasureCode.Hint"] = "The unit of measure code for PunchOut session.",
             ["Plugins.Misc.PunchOut.SessionExpired"] = "Your PunchOut session has expired.",
             ["Plugins.Misc.PunchOut.ServiceUnavailable"] = "The PunchOut service is currently unavailable.",
 

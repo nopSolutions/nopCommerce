@@ -124,11 +124,11 @@ public class PunchOutService
             ?? throw new NopException("Unknown PunchOut identity.");
 
         // client validation verification
-        var storedIdentity = sender?.SharedSecretHash;
-        var incomingSecret = sharedSecret;
+        var storedIdentityHash = sender?.SharedSecretHash;
+        var incomingSecretHash = _punchOutIdentityService.CreateHashBySharedSecret(sharedSecret);
 
-        var incomingBytes = Encoding.UTF8.GetBytes(incomingSecret);
-        var expectedBytes = Encoding.UTF8.GetBytes(storedIdentity);
+        var incomingBytes = Encoding.UTF8.GetBytes(incomingSecretHash);
+        var expectedBytes = Encoding.UTF8.GetBytes(storedIdentityHash);
 
         if (!CryptographicOperations.FixedTimeEquals(incomingBytes, expectedBytes))
         {
@@ -541,6 +541,7 @@ public class PunchOutService
                 Description = $"{name}{(!string.IsNullOrEmpty(attributes) ? $"({attributes})" : null)}",
                 Quantity = item.Quantity,
                 UnitPrice = priceValue,
+                UnitOfMeasure = _punchOutSettings.UnitOfMeasureCode ?? PunchOutDefaults.UnitOfMeasureCode,
                 CurrencyCode = currency.CurrencyCode
             });
         }
@@ -683,6 +684,9 @@ public class PunchOutService
                 //clear cache
                 var key = _staticCacheManager.PrepareKeyForDefaultCache(PunchOutDefaults.SessionTokenCacheKey, session.SessionId);
                 await _staticCacheManager.RemoveAsync(key);
+
+                //clear shopping cart
+                await _shoppingCartService.ClearShoppingCartAsync(customer, store.Id);
 
                 //standard logout 
                 await _authenticationService.SignOutAsync();

@@ -95,6 +95,7 @@ public class PunchOutAdminController : BasePluginController
         {
             IsActive = _punchOutSettings.IsActive,
             TimeToExpire = _punchOutSettings.TimeToExpire,
+            UnitOfMeasureCode = _punchOutSettings.UnitOfMeasureCode,
             SelectedCustomerRoleIds = _punchOutSettings.RestrictedCustomerRoleIds
         };
 
@@ -130,6 +131,7 @@ public class PunchOutAdminController : BasePluginController
         //set new settings values
         _punchOutSettings.IsActive = model.IsActive;
         _punchOutSettings.TimeToExpire = model.TimeToExpire;
+        _punchOutSettings.UnitOfMeasureCode = model.UnitOfMeasureCode;
         _punchOutSettings.RestrictedCustomerRoleIds = model.SelectedCustomerRoleIds.ToList();
 
         await _settingService.SaveSettingAsync(_punchOutSettings);
@@ -272,7 +274,10 @@ public class PunchOutAdminController : BasePluginController
             ?? throw new ArgumentException("No punchout identity found with the specified id");
 
         identity.Identity = model.Identity;
-        identity.SharedSecretHash = model.SharedSecret;
+        if (!string.IsNullOrEmpty(model.SharedSecret) && model.SharedSecret != identity.SharedSecretHash)
+        {
+            identity.SharedSecretHash = _punchOutIdentityService.CreateHashBySharedSecret(model.SharedSecret);
+        }
 
         await _punchOutIdentityService.UpdatePunchOutIdentityAsync(identity);
 
