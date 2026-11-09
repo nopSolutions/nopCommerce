@@ -123,6 +123,21 @@ public class DiscountServiceTests : ServiceTest
     }
 
     [Test]
+    public void CanCalculateDiscountAmountPercentageWithoutPrecisionLoss()
+    {
+        var discount = new Discount
+        {
+            UsePercentage = true,
+            DiscountPercentage = 10
+        };
+
+        _discountService.GetDiscountAmount(discount, 1234567.89M).Should().Be(123456.789M);
+
+        discount.DiscountPercentage = 12.5M;
+        _discountService.GetDiscountAmount(discount, 99999.99M).Should().Be(12499.99875M);
+    }
+
+    [Test]
     public void CanCalculateDiscountAmountFixed()
     {
         var discount = new Discount
