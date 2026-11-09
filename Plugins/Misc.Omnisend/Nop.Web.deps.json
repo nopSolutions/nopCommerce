@@ -368,6 +368,31 @@
           "lib/net10.0/AdvancedStringBuilder.dll": {}
         }
       },
+      "AngleSharp/1.7.2": {
+        "runtime": {
+          "lib/net10.0/AngleSharp.dll": {
+            "assemblyVersion": "1.7.2.0",
+            "fileVersion": "1.7.2.0"
+          }
+        },
+        "compile": {
+          "lib/net10.0/AngleSharp.dll": {}
+        }
+      },
+      "AngleSharp.Css/1.0.2": {
+        "dependencies": {
+          "AngleSharp": "1.7.2"
+        },
+        "runtime": {
+          "lib/net10.0/AngleSharp.Css.dll": {
+            "assemblyVersion": "1.0.2.0",
+            "fileVersion": "1.0.2.0"
+          }
+        },
+        "compile": {
+          "lib/net10.0/AngleSharp.Css.dll": {}
+        }
+      },
       "Autofac/8.1.0": {
         "runtime": {
           "lib/net8.0/Autofac.dll": {
@@ -953,6 +978,21 @@
             "assetType": "native",
             "fileVersion": "0.0.0.0"
           }
+        }
+      },
+      "HtmlSanitizer/9.2.1039": {
+        "dependencies": {
+          "AngleSharp": "1.7.2",
+          "AngleSharp.Css": "1.0.2"
+        },
+        "runtime": {
+          "lib/net8.0/HtmlSanitizer.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.2.1039.0"
+          }
+        },
+        "compile": {
+          "lib/net8.0/HtmlSanitizer.dll": {}
         }
       },
       "Humanizer/3.0.10": {
@@ -2987,6 +3027,7 @@
         "dependencies": {
           "Autofac.Extensions.DependencyInjection": "10.0.0",
           "Azure.Identity": "1.21.0",
+          "HtmlSanitizer": "9.2.1039",
           "Mapster": "10.0.12",
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "10.0.12",
           "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "10.0.12",
@@ -4962,6 +5003,20 @@
       "path": "advancedstringbuilder/0.2.0",
       "hashPath": "advancedstringbuilder.0.2.0.nupkg.sha512"
     },
+    "AngleSharp/1.7.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-r1rb5Qo/0KPzmP0nbSiXPDVfh4Ctu0B+y1RyyUq73g4sgAmEW7q10RDyTq2ZsILwtO9O2LAvMrUles7eD4zz1g==",
+      "path": "anglesharp/1.7.2",
+      "hashPath": "anglesharp.1.7.2.nupkg.sha512"
+    },
+    "AngleSharp.Css/1.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XeBxh0h/73+MWFsGfeMwiK7xbzAK3YeHFdUIrMH1P90amIrDFD/vUDIrPlF3CixqaMH5MRIUvT6Ux+2zvhJ3SA==",
+      "path": "anglesharp.css/1.0.2",
+      "hashPath": "anglesharp.css.1.0.2.nupkg.sha512"
+    },
     "Autofac/8.1.0": {
       "type": "package",
       "serviceable": true,
@@ -5213,6 +5268,13 @@
       "sha512": "sha512-NCqaG3bJDl66JdmHeyOpRUf4eiGVwu8OSxGv6ukofBiukVyUpWj01btr/telMQLQ+XuQ83iDpi6NRDFoRIcojA==",
       "path": "harfbuzzsharp.nativeassets.win32/14.2.0",
       "hashPath": "harfbuzzsharp.nativeassets.win32.14.2.0.nupkg.sha512"
+    },
+    "HtmlSanitizer/9.2.1039": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PKxy1hYknAij8YlHCC2a9GSqzUd4bh3IvY+abJBvOH1FKcZpbyafEHtdFcXQBt12Y7hNPkNEOP6Qa7uKNSs/yA==",
+      "path": "htmlsanitizer/9.2.1039",
+      "hashPath": "htmlsanitizer.9.2.1039.nupkg.sha512"
     },
     "Humanizer/3.0.10": {
       "type": "package",

@@ -38,7 +38,6 @@
     ".NETCoreApp,Version=v10.0": {
       "Nop.Plugin.Misc.Forums/1.0.0": {
         "dependencies": {
-          "HtmlSanitizer": "9.2.1039",
           "Nop.Web": "5.0.0",
           "Microsoft.AspNetCore.Antiforgery": "10.0.0.0",
           "Microsoft.AspNetCore.Authentication.Abstractions": "10.0.0.0",
@@ -3063,6 +3062,7 @@
         "dependencies": {
           "Autofac.Extensions.DependencyInjection": "10.0.0",
           "Azure.Identity": "1.21.0",
+          "HtmlSanitizer": "9.2.1039",
           "Mapster": "10.0.12",
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "10.0.12",
           "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "10.0.12",
