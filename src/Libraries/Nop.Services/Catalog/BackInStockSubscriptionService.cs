@@ -143,17 +143,17 @@ public partial class BackInStockSubscriptionService : IBackInStockSubscriptionSe
 
         var result = 0;
         var subscriptions = await GetAllSubscriptionsByProductIdAsync(product.Id);
-        var customerIds = subscriptions.Select(s => s.CustomerId).Distinct().ToList();
+        var customerIds = subscriptions.Select(s => s.CustomerId).Distinct().ToArray();
 
-        var customerLanguages = await (from c in _customerRepository.Table
-                where customerIds.Contains(c.Id)
-                select new { c.Id, c.LanguageId })
+        var customerLanguages = await _customerRepository.Table.Where(c => customerIds.Contains(c.Id))
+            .Select(c => new { c.Id, c.LanguageId })
             .ToDictionaryAsync(c => c.Id, c => c.LanguageId ?? 0);
 
         foreach (var subscription in subscriptions)
         {
             var languageId = customerLanguages.GetValueOrDefault(subscription.CustomerId);
-            result += (await _workflowMessageService.SendBackInStockNotificationAsync(subscription, languageId)).Count;
+            var identifier = await _workflowMessageService.SendBackInStockNotificationAsync(subscription, languageId);
+            result += identifier.Count;
         }
 
         await _backInStockSubscriptionRepository.DeleteAsync(subscriptions);
