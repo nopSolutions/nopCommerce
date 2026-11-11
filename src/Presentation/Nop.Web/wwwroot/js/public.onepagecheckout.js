@@ -210,10 +210,15 @@ var Billing = {
   },
 
   editAddress: function() {
-    Billing.resetBillingForm();
 
     var prefix = 'BillingNewAddress_';
     var selectedItem = $('#billing-address-select').children("option:selected").val();
+
+    if (!selectedItem){
+      selectedItem = 0;
+    } else {
+      Billing.resetBillingForm();
+    }
 
     $.ajax({
       cache: false,
