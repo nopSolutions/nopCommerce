@@ -320,30 +320,32 @@ public partial class ProductController : BaseAdminController
         await _categoryService.DeleteProductCategoriesAsync(productCategoriesToDelete);
 
         //add categories
-        foreach (var categoryId in model.SelectedCategoryIds)
-        {
-            var category = await _categoryService.GetCategoryByIdAsync(categoryId);
-            if (category is null)
-                continue;
+        var categories = await _categoryService.GetCategoriesByIdsAsync(model.SelectedCategoryIds.ToArray());
+        var productCategoriesToAdd = new List<ProductCategory>();
 
+        foreach (var category in categories)
+        {
             if (!await _categoryService.CanVendorAddProductsAsync(category))
                 continue;
 
-            if (_categoryService.FindProductCategory(existingProductCategories, product.Id, categoryId) == null)
+            if (_categoryService.FindProductCategory(existingProductCategories, product.Id, category.Id) == null)
             {
                 //find next display order
                 var displayOrder = 1;
-                var existingCategoryMapping = await _categoryService.GetProductCategoriesByCategoryIdAsync(categoryId, showHidden: true);
+                var existingCategoryMapping = await _categoryService.GetProductCategoriesByCategoryIdAsync(category.Id, showHidden: true);
                 if (existingCategoryMapping.Any())
                     displayOrder = existingCategoryMapping.Max(x => x.DisplayOrder) + 1;
-                await _categoryService.InsertProductCategoryAsync(new ProductCategory
+
+                productCategoriesToAdd.Add(new ProductCategory
                 {
                     ProductId = product.Id,
-                    CategoryId = categoryId,
+                    CategoryId = category.Id,
                     DisplayOrder = displayOrder
                 });
             }
         }
+
+        await _categoryService.InsertProductCategoriesAsync(productCategoriesToAdd);
     }
 
     protected virtual async Task SaveManufacturerMappingsAsync(Product product, ProductModel model)
