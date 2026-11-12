@@ -603,41 +603,35 @@ public class ForumInstallService
     /// <returns>A task that represents the asynchronous operation</returns>
     private async Task UpdateGuestDataAsync()
     {
-        var ftPageIndex = 0;
         while (true)
         {
-            var topics =
-                (from ft in _forumTopicRepository.Table
-                 join c in _customerRepository.Table on ft.CustomerId equals c.Id
-                 where string.IsNullOrEmpty(c.Email)
-                 select ft).Skip(ftPageIndex++ * PAGE_SIZE).Take(PAGE_SIZE).ToList();
+            var topics = _forumTopicRepository.Table
+                .Join(_customerRepository.Table, ft => ft.CustomerId, c => c.Id, (ft, c) => new { ft = ft, c })
+                .Where(t => string.IsNullOrEmpty(t.c.Email))
+                .Select(t => t.ft).Take(PAGE_SIZE).ToList();
 
             if (!topics.Any())
                 break;
 
             foreach (var topic in topics)
-            {
                 topic.CustomerId = null;
-            }
+
             await _forumTopicRepository.UpdateAsync(topics);
         }
 
-        var fpPageIndex = 0;
         while (true)
         {
-            var posts =
-                (from fp in _forumPostRepository.Table
-                 join c in _customerRepository.Table on fp.CustomerId equals c.Id
-                 where string.IsNullOrEmpty(c.Email)
-                 select fp).Skip(fpPageIndex++ * PAGE_SIZE).Take(PAGE_SIZE).ToList();
+            var posts = _forumPostRepository.Table
+                .Join(_customerRepository.Table, fp => fp.CustomerId, c => c.Id, (fp, c) => new { fp = fp, c })
+                .Where(t => string.IsNullOrEmpty(t.c.Email))
+                .Select(t => t.fp).Take(PAGE_SIZE).ToList();
 
             if (!posts.Any())
                 break;
 
             foreach (var post in posts)
-            {
                 post.CustomerId = null;
-            }
+
             await _forumPostRepository.UpdateAsync(posts);
         }
     }

@@ -438,22 +438,19 @@ public class NewsInstallService
     /// <returns>A task that represents the asynchronous operation</returns>
     private async Task UpdateGuestDataAsync()
     {
-        var commentPageIndex = 0;
         while (true)
         {
-            var comments =
-                (from comment in _newsCommentRepository.Table
-                 join c in _customerRepository.Table on comment.CustomerId equals c.Id
-                 where string.IsNullOrEmpty(c.Email)
-                 select comment).Skip(commentPageIndex++ * PAGE_SIZE).Take(PAGE_SIZE).ToList();
+            var comments = _newsCommentRepository.Table
+                .Join(_customerRepository.Table, nc => nc.CustomerId, c => c.Id, (nc, c) => new { nc, c })
+                .Where(t => string.IsNullOrEmpty(t.c.Email))
+                .Select(t => t.nc).Take(PAGE_SIZE).ToList();
 
             if (!comments.Any())
                 break;
 
             foreach (var comment in comments)
-            {
                 comment.CustomerId = null;
-            }
+
             await _newsCommentRepository.UpdateAsync(comments);
         }
     }
