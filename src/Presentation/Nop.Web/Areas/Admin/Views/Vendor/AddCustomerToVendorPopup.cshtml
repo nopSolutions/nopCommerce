@@ -13,13 +13,15 @@
 <form asp-controller="Vendor" asp-action="AddCustomerToVendorPopup"
       asp-route-customerIdInput="@customerIdInput"
       asp-route-customerInfoInput="@customerInfoInput"
-      asp-route-btnId="@btnId">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @T("Admin.Vendors.PmCustomer.Choose")
-        </h1>
-        <div class="float-end">
-            &nbsp;
+      asp-route-btnId="@btnId" data-bs-theme="light">
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.Vendors.PmCustomer.Choose")
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                &nbsp;
+            </div>
         </div>
     </div>
 

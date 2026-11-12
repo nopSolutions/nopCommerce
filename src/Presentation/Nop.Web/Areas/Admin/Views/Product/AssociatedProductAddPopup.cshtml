@@ -24,13 +24,15 @@
 <form asp-controller="Product" asp-action="AssociatedProductAddPopup"
         asp-route-productId="@Context.Request.Query["productId"]"
         asp-route-btnId="@Context.Request.Query["btnId"]"
-        asp-route-formId="@Context.Request.Query["formId"]">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @T("Admin.Catalog.Products.AssociatedProducts.AddNew")
-        </h1>
-        <div class="float-end">
-            &nbsp;
+      asp-route-formId="@Context.Request.Query["formId"]" data-bs-theme="light">
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.Catalog.Products.AssociatedProducts.AddNew")
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                &nbsp;
+            </div>
         </div>
     </div>
 

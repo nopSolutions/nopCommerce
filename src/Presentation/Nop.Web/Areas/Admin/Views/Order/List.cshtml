@@ -18,73 +18,75 @@
 @if (Model.LicenseCheckModel.BlockPages != true)
 {
     <form asp-controller="Order" asp-action="List" method="post">
-        <div class="app-content-header clearfix">
-            <h1 class="float-start">
-                @T("Admin.Orders")
-            </h1>
-            <div class="float-end">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-success">
-                        <i class="fas fa-download"></i>
-                        @T("Admin.Common.Export")
+        <div class="app-content-header">
+            <div class="container-fluid">
+                <h1 class="text-body m-0 fs-3">
+                    @T("Admin.Orders")
+                </h1>
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success">
+                            <i class="fas fa-download"></i>
+                            @T("Admin.Common.Export")
+                        </button>
+                        <button type="button" class="btn btn-success dropdown-toggle dropdown-icon" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="sr-only">&nbsp;</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item">
+                                <button asp-action="ExportXml" type="submit" name="exportxml-all">
+                                    <i class="far fa-file-code"></i>
+                                    @T("Admin.Common.ExportToXml.All")
+                                </button>
+                            </li>
+                            <li class="dropdown-item">
+                                <button type="button" id="exportxml-selected">
+                                    <i class="far fa-file-code"></i>
+                                    @T("Admin.Common.ExportToXml.Selected")
+                                </button>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="dropdown-item">
+                                <button asp-action="ExportExcel" type="submit" name="exportexcel-all">
+                                    <i class="far fa-file-excel"></i>
+                                    @T("Admin.Common.ExportToExcel.All")
+                                </button>
+                            </li>
+                            <li class="dropdown-item">
+                                <button type="button" id="exportexcel-selected">
+                                    <i class="far fa-file-excel"></i>
+                                    @T("Admin.Common.ExportToExcel.Selected")
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <button type="button" name="importexcel" class="btn text-bg-olive" data-bs-toggle="modal" data-bs-target="#importexcel-window">
+                        <i class="fas fa-upload"></i>
+                        @T("Admin.Common.Import")
                     </button>
-                    <button type="button" class="btn btn-success dropdown-toggle dropdown-icon" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="sr-only">&nbsp;</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-item">
-                            <button asp-action="ExportXml" type="submit" name="exportxml-all">
-                                <i class="far fa-file-code"></i>
-                                @T("Admin.Common.ExportToXml.All")
-                            </button>
-                        </li>
-                        <li class="dropdown-item">
-                            <button type="button" id="exportxml-selected">
-                                <i class="far fa-file-code"></i>
-                                @T("Admin.Common.ExportToXml.Selected")
-                            </button>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li class="dropdown-item">
-                            <button asp-action="ExportExcel" type="submit" name="exportexcel-all">
-                                <i class="far fa-file-excel"></i>
-                                @T("Admin.Common.ExportToExcel.All")
-                            </button>
-                        </li>
-                        <li class="dropdown-item">
-                            <button type="button" id="exportexcel-selected">
-                                <i class="far fa-file-excel"></i>
-                                @T("Admin.Common.ExportToExcel.Selected")
-                            </button>
-                        </li>
-                    </ul>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info text-white">
+                            <i class="far fa-file-pdf"></i>
+                            @T("Admin.Orders.PdfInvoices")
+                        </button>
+                        <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split text-white" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="sr-only">&nbsp;</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item">
+                                <button asp-action="PdfInvoice" type="submit" name="pdf-invoice-all">
+                                    @T("Admin.Orders.PdfInvoices.All")
+                                </button>
+                            </li>
+                            <li class="dropdown-item">
+                                <button type="button" id="pdf-invoice-selected">
+                                    @T("Admin.Orders.PdfInvoices.Selected")
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderListButtons, additionalData = Model })
                 </div>
-                <button type="button" name="importexcel" class="btn text-bg-olive" data-bs-toggle="modal" data-bs-target="#importexcel-window">
-                    <i class="fas fa-upload"></i>
-                    @T("Admin.Common.Import")
-                </button>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-info text-white">
-                        <i class="far fa-file-pdf"></i>
-                        @T("Admin.Orders.PdfInvoices")
-                    </button>
-                    <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split text-white" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="sr-only">&nbsp;</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-item">
-                            <button asp-action="PdfInvoice" type="submit" name="pdf-invoice-all">
-                                @T("Admin.Orders.PdfInvoices.All")
-                            </button>
-                        </li>
-                        <li class="dropdown-item">
-                            <button type="button" id="pdf-invoice-selected">
-                                @T("Admin.Orders.PdfInvoices.Selected")
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderListButtons, additionalData = Model })
             </div>
         </div>
         <section class="app-content">

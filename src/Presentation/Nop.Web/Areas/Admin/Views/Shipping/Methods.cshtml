@@ -7,20 +7,24 @@
     NopHtml.SetActiveMenuItemSystemName("Shipping providers");
 }
 
-<div class="app-content-header clearfix">
-    <h1 class="float-start">
-        @T("Admin.Configuration.Shipping.Methods")
-        <small>
-            <i class="fas fa-arrow-circle-left"></i>
-            <a asp-action="Providers">@T("Admin.Configuration.Shipping.Providers.BackToList")</a>
-        </small>
-    </h1>
-    <div class="float-end">
-        <a asp-action="CreateMethod" class="btn btn-primary">
-            <i class="fas fa-square-plus"></i>
-            @T("Admin.Common.AddNew")
-        </a>
-        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShippingMethodListButtons, additionalData = Model })
+<div class="app-content-header">
+    <div class="container-fluid">
+        <h1 class="text-body m-0 fs-3">
+            @T("Admin.Configuration.Shipping.Methods")
+            <small>
+                <a asp-action="Providers">
+                    <i class="fas fa-arrow-circle-left"></i>
+                    @T("Admin.Configuration.Shipping.Providers.BackToList")
+                </a>
+            </small>
+        </h1>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            <a asp-action="CreateMethod" class="btn btn-primary">
+                <i class="fas fa-square-plus"></i>
+                @T("Admin.Common.AddNew")
+            </a>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShippingMethodListButtons, additionalData = Model })
+        </div>
     </div>
 </div>
 

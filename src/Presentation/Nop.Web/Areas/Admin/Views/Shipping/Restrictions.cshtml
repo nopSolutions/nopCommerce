@@ -9,20 +9,24 @@
 
 
 <form asp-controller="Shipping" asp-action="Restrictions" method="post">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @T("Admin.Configuration.Shipping.Restrictions")
-            <small>
-                <i class="fas fa-arrow-circle-left"></i>
-                <a asp-action="Providers">@T("Admin.Configuration.Shipping.Providers.BackToList")</a>
-            </small>
-        </h1>
-        <div class="float-end">
-            <button type="submit" name="save" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.Save")
-            </button>
-            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShippingRestrictionListButtons, additionalData = Model })
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.Configuration.Shipping.Restrictions")
+                <small>
+                    <a asp-action="Providers">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        @T("Admin.Configuration.Shipping.Providers.BackToList")
+                    </a>
+                </small>
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <button type="submit" name="save" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ShippingRestrictionListButtons, additionalData = Model })
+            </div>
         </div>
     </div>
 

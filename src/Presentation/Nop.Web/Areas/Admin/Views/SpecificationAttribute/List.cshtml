@@ -10,24 +10,26 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<div class="app-content-header clearfix">
-    <h1 class="float-start">
-        @T("Admin.Catalog.Attributes.SpecificationAttributes")
-    </h1>
-    <div class="float-end">
-        <a asp-action="CreateSpecificationAttributeGroup" class="btn btn-primary">
-            <i class="fas fa-square-plus"></i>
-            @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Buttons.AddNew")
-        </a>
-        <a asp-action="CreateSpecificationAttribute" class="btn btn-primary">
-            <i class="fas fa-square-plus"></i>
-            @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.AddNew")
-        </a>
-        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeListButtons, additionalData = Model })
-        <button type="button" id="delete-selected-specification-attributes" class="btn btn-danger">
-            <i class="far fa-trash-can"></i>
-            @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.DeleteSelected")
-        </button>
+<div class="app-content-header">
+    <div class="container-fluid">
+        <h1 class="text-body m-0 fs-3">
+            @T("Admin.Catalog.Attributes.SpecificationAttributes")
+        </h1>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            <a asp-action="CreateSpecificationAttributeGroup" class="btn btn-primary">
+                <i class="fas fa-square-plus"></i>
+                @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Buttons.AddNew")
+            </a>
+            <a asp-action="CreateSpecificationAttribute" class="btn btn-primary">
+                <i class="fas fa-square-plus"></i>
+                @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.AddNew")
+            </a>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeListButtons, additionalData = Model })
+            <button type="button" id="delete-selected-specification-attributes" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.DeleteSelected")
+            </button>
+        </div>
     </div>
 </div>
 

@@ -8,15 +8,15 @@
     NopHtml.SetActiveMenuItemSystemName(RfqDefaults.QuotesAdminMenuSystemName);
 }
 
-<div class="app-content-header clearfix">
-    <h1 class="float-start">
+<div class="app-content-header">
+    <h1 class="text-body m-0 fs-3">
         @string.Format(T("Plugins.Misc.RFQ.AdminQuote.Products.AddNew.Title1").Text, Model.EntityId)
         <small>
             <i class="fas fa-arrow-circle-left"></i>
             <a asp-action="AdminQuote" asp-route-id="@Model.EntityId">@T("Plugins.Misc.RFQ.AdminQuote.Products.AddNew.BackToQuote")</a>
         </small>
     </h1>
-    <div class="float-end">
+    <div class="d-flex flex-wrap align-items-center gap-2">
         &nbsp;
     </div>
 </div>

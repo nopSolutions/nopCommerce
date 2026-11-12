@@ -275,6 +275,34 @@ i.false-icon {
   overflow-x: scroll;
 }
 
+.app-content-header > .container-fluid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+/* "back to" - small in header */
+.app-content-header h1 > small {
+  font-size: 1rem !important; 
+  font-weight: 400 !important;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+  .app-content-header h1 > small a {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+    .app-content-header h1 > small a:hover {
+      text-decoration: underline;
+    }
+
 /*COLLAPSIBLE BLOCKS*/
 #ajaxBusy span.no-ajax-loader {
   background: none;

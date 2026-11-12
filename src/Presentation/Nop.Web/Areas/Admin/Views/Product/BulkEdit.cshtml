@@ -15,23 +15,27 @@
 @if (Model.LicenseCheckModel.BlockPages != true)
 {
     <form asp-controller="Product" asp-action="BulkEdit" method="post">
-        <div class="app-content-header clearfix">
-            <h1 class="float-start">
-                @T("Admin.Catalog.Products.BulkEdit")
-                <small>
-                    <i class="fas fa-arrow-circle-left"></i>
-                    <a asp-action="List">@T("Admin.Catalog.Products.BackToList")</a>
-                </small>
-            </h1>
-            <div class="float-end">
-                <button type="submit" id="bulk-edit-save-selected" name="bulk-edit-save-selected" class="btn btn-primary">
-                    <i class="far fa-save"></i>
-                    @T("Admin.Catalog.Products.BulkEdit.SaveSelected")
-                </button>
-                <button type="submit" id="bulk-edit-save-all" name="bulk-edit-save-all" class="btn btn-success">
-                    <i class="far fa-save"></i>
-                    @T("Admin.Catalog.Products.BulkEdit.SaveAll")
-                </button>
+        <div class="app-content-header">
+            <div class="container-fluid">
+                <h1 class="text-body m-0 fs-3">
+                    @T("Admin.Catalog.Products.BulkEdit")
+                    <small>
+                        <a asp-action="List">
+                            <i class="fas fa-arrow-circle-left"></i>
+                            @T("Admin.Catalog.Products.BackToList")
+                        </a>
+                    </small>
+                </h1>
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <button type="submit" id="bulk-edit-save-selected" name="bulk-edit-save-selected" class="btn btn-primary">
+                        <i class="far fa-save"></i>
+                        @T("Admin.Catalog.Products.BulkEdit.SaveSelected")
+                    </button>
+                    <button type="submit" id="bulk-edit-save-all" name="bulk-edit-save-all" class="btn btn-success">
+                        <i class="far fa-save"></i>
+                        @T("Admin.Catalog.Products.BulkEdit.SaveAll")
+                    </button>
+                </div>
             </div>
         </div>
 

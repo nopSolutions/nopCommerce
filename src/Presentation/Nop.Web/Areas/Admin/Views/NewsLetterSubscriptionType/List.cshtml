@@ -7,16 +7,18 @@
     NopHtml.SetActiveMenuItemSystemName("Newsletter subscription types");
 }
 
-<div class="app-content-header clearfix">
-    <h1 class="float-start">
-        @T("Admin.Promotions.NewsLetterSubscriptionType")
-    </h1>
-    <div class="float-end">
-        <a href="@Url.Action("Create")" class="btn btn-primary">
-            <i class="fas fa-square-plus"></i>
-            @T("Admin.Common.AddNew")
-        </a>
-        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.NewsLetterSubscriptionTypeListButtons, additionalData = Model })
+<div class="app-content-header">
+    <div class="container-fluid">
+        <h1 class="text-body m-0 fs-3">
+            @T("Admin.Promotions.NewsLetterSubscriptionType")
+        </h1>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            <a href="@Url.Action("Create")" class="btn btn-primary">
+                <i class="fas fa-square-plus"></i>
+                @T("Admin.Common.AddNew")
+            </a>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.NewsLetterSubscriptionTypeListButtons, additionalData = Model })
+        </div>
     </div>
 </div>
 

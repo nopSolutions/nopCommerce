@@ -10,37 +10,41 @@
 }
 
 <form asp-controller="Product" asp-action="Edit" method="post" id="product-form">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @T("Admin.Catalog.Products.EditProductDetails") - @Model.Name
-            <small>
-                <i class="fas fa-arrow-circle-left"></i>
-                <a asp-action="List">@T("Admin.Catalog.Products.BackToList")</a>
-            </small>
-        </h1>
-        <div class="float-end">
-            @await Component.InvokeAsync(typeof(MultistorePreviewViewComponent), Model)
-            @if (Model.PreTranslationAvailable)
-            {
-                @await Html.PartialAsync("_PreTranslateButton", "PreTranslate")
-            }
-            <button type="submit" name="save" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.Save")
-            </button>
-            <button type="submit" name="save-continue" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.SaveContinue")
-            </button>
-            <button type="button" name="copyproduct" class="btn text-bg-olive" data-bs-toggle="modal" data-bs-target="#copyproduct-window">
-                <i class="far fa-clone"></i>
-                @T("Admin.Catalog.Products.Copy")
-            </button>
-            <span id="product-delete" class="btn btn-danger">
-                <i class="far fa-trash-can"></i>
-                @T("Admin.Common.Delete")
-            </span>
-            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsButtons, additionalData = Model })
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.Catalog.Products.EditProductDetails") - @Model.Name
+                <small>
+                    <a asp-action="List">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        @T("Admin.Catalog.Products.BackToList")
+                    </a>
+                </small>
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                @await Component.InvokeAsync(typeof(MultistorePreviewViewComponent), Model)
+                @if (Model.PreTranslationAvailable)
+                {
+                    @await Html.PartialAsync("_PreTranslateButton", "PreTranslate")
+                }
+                <button type="submit" name="save" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                <button type="submit" name="save-continue" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.SaveContinue")
+                </button>
+                <button type="button" name="copyproduct" class="btn text-bg-olive" data-bs-toggle="modal" data-bs-target="#copyproduct-window">
+                    <i class="far fa-clone"></i>
+                    @T("Admin.Catalog.Products.Copy")
+                </button>
+                <span id="product-delete" class="btn btn-danger">
+                    <i class="far fa-trash-can"></i>
+                    @T("Admin.Common.Delete")
+                </span>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductDetailsButtons, additionalData = Model })
+            </div>
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

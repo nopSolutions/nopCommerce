@@ -12,45 +12,47 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<div class="app-content-header clearfix">
-    <h1 class="float-start">
-        @T("Admin.Catalog.Manufacturers")
-    </h1>
-    <div class="float-end">
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="fas fa-square-plus"></i>
-            @T("Admin.Common.AddNew")
-        </a>
-        <div class="btn-group">
-            <button type="button" class="btn btn-success">
-                <i class="fas fa-download"></i>
-                @T("Admin.Common.Export")
+<div class="app-content-header">
+    <div class="container-fluid">
+        <h1 class="text-body m-0 fs-3">
+            @T("Admin.Catalog.Manufacturers")
+        </h1>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-square-plus"></i>
+                @T("Admin.Common.AddNew")
+            </a>
+            <div class="btn-group">
+                <button type="button" class="btn btn-success">
+                    <i class="fas fa-download"></i>
+                    @T("Admin.Common.Export")
+                </button>
+                <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" asp-action="ExportXml">
+                            <i class="far fa-file-code"></i>
+                            @T("Admin.Common.ExportToXml")
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" asp-action="ExportXlsx">
+                            <i class="far fa-file-excel"></i>
+                            @T("Admin.Common.ExportToExcel")
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <button type="button" name="importexcel" class="btn text-bg-olive" data-bs-toggle="modal" data-bs-target="#importexcel-window">
+                <i class="fas fa-upload"></i>
+                @T("Admin.Common.Import")
             </button>
-            <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
-            <ul class="dropdown-menu">
-                <li>
-                    <a class="dropdown-item" asp-action="ExportXml">
-                        <i class="far fa-file-code"></i>
-                        @T("Admin.Common.ExportToXml")
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item" asp-action="ExportXlsx">
-                        <i class="far fa-file-excel"></i>
-                        @T("Admin.Common.ExportToExcel")
-                    </a>
-                </li>
-            </ul>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ManufacturerListButtons, additionalData = Model })
+            <button type="button" id="delete-selected" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.Common.Delete.Selected")
+            </button>
         </div>
-        <button type="button" name="importexcel" class="btn text-bg-olive" data-bs-toggle="modal" data-bs-target="#importexcel-window">
-            <i class="fas fa-upload"></i>
-            @T("Admin.Common.Import")
-        </button>
-        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ManufacturerListButtons, additionalData = Model })
-        <button type="button" id="delete-selected" class="btn btn-danger">
-            <i class="far fa-trash-can"></i>
-            @T("Admin.Common.Delete.Selected")
-        </button>
     </div>
 </div>
 

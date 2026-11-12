@@ -8,24 +8,26 @@
 }
 
 <form asp-controller="Currency" asp-action="List" method="post">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @T("Admin.Configuration.Currencies")
-        </h1>
-        <div class="float-end">
-            <button type="submit" name="save" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.Save")
-            </button>
-            <a asp-controller="Currency" asp-action="List" asp-route-liveRates="true" class="btn btn-success">
-                <i class="fas fa-list-check"></i>
-                @T("Admin.Configuration.Currencies.GetLiveRates")
-            </a>
-            <a asp-action="Create" class="btn btn-primary">
-                <i class="fas fa-square-plus"></i>
-                @T("Admin.Common.AddNew")
-            </a>
-            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CurrencyListButtons, additionalData = Model })
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.Configuration.Currencies")
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <button type="submit" name="save" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                <a asp-controller="Currency" asp-action="List" asp-route-liveRates="true" class="btn btn-success">
+                    <i class="fas fa-list-check"></i>
+                    @T("Admin.Configuration.Currencies.GetLiveRates")
+                </a>
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-square-plus"></i>
+                    @T("Admin.Common.AddNew")
+                </a>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CurrencyListButtons, additionalData = Model })
+            </div>
         </div>
     </div>
 

@@ -7,24 +7,28 @@
 }
 
 <form asp-controller="Campaign" asp-action="Create" method="post">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @T("Admin.Promotions.Campaigns.AddNew") 
-            <small>
-                <i class="fas fa-arrow-circle-left"></i>
-                <a asp-action="List">@T("Admin.Promotions.Campaigns.BackToList")</a>
-            </small>
-        </h1>
-        <div class="float-end">
-            <button type="submit" name="save" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.Save")
-            </button>
-            <button type="submit" name="save-continue" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.SaveContinue")
-            </button>
-            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CampaignDetailsButtons, additionalData = Model })
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.Promotions.Campaigns.AddNew") 
+                <small>
+                    <a asp-action="List">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        @T("Admin.Promotions.Campaigns.BackToList")
+                    </a>
+                </small>
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <button type="submit" name="save" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                <button type="submit" name="save-continue" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.SaveContinue")
+                </button>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CampaignDetailsButtons, additionalData = Model })
+            </div>
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

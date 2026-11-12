@@ -15,13 +15,15 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<div class="app-content-header clearfix">
-    <h1 class="float-start">
-        @T("Admin.Configuration.Settings.AllSettings")
-    </h1>
-    <div class="float-end">
-        &nbsp;
-        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AllSettingListButtons, additionalData = Model })
+<div class="app-content-header">
+    <div class="container-fluid">
+        <h1 class="text-body m-0 fs-3">
+            @T("Admin.Configuration.Settings.AllSettings")
+        </h1>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            &nbsp;
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.AllSettingListButtons, additionalData = Model })
+        </div>
     </div>
 </div>
 

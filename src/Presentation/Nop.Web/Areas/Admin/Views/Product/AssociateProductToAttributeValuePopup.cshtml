@@ -21,13 +21,15 @@
 
 <form asp-controller="Product" asp-action="AssociateProductToAttributeValuePopup"
       asp-route-productIdInput="@Context.Request.Query["productIdInput"]"
-      asp-route-productNameInput="@Context.Request.Query["productNameInput"]">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew")
-        </h1>
-        <div class="float-end">
-            &nbsp;
+      asp-route-productNameInput="@Context.Request.Query["productNameInput"]" data-bs-theme="light">
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew")
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                &nbsp;
+            </div>
         </div>
     </div>
 

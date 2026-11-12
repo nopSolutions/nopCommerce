@@ -12,20 +12,22 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 <form asp-controller="ProductAttribute" asp-action="List" method="post">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @T("Admin.Catalog.Attributes.ProductAttributes")
-        </h1>
-        <div class="float-end">
-            <a asp-action="Create" class="btn btn-primary">
-                <i class="fas fa-square-plus"></i>
-                @T("Admin.Common.AddNew")
-            </a>
-            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeListButtons, additionalData = Model })
-            <button type="button" id="delete-selected" class="btn btn-danger">
-                <i class="far fa-trash-can"></i>
-                @T("Admin.Common.Delete.Selected")
-            </button>
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.Catalog.Attributes.ProductAttributes")
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-square-plus"></i>
+                    @T("Admin.Common.AddNew")
+                </a>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeListButtons, additionalData = Model })
+                <button type="button" id="delete-selected" class="btn btn-danger">
+                    <i class="far fa-trash-can"></i>
+                    @T("Admin.Common.Delete.Selected")
+                </button>
+            </div>
         </div>
     </div>
 

@@ -7,19 +7,25 @@
     NopHtml.SetActiveMenuItemSystemName("Message templates");
 }
 
-<form asp-controller="MessageTemplate" asp-action="TestTemplate" method="post" id="testtemplate-form" asp-route-languageId="@Model.LanguageId" asp-route-id="@Model.Id">
-    <div class="content-header clearfix">
-        <h1 class="float-start">
-            @T("Admin.ContentManagement.MessageTemplates.TestDetails")
-            <small>
-                <a asp-action="Edit" asp-route-id="@Model.Id">@T("Admin.ContentManagement.MessageTemplates.Test.BackToTemplate")</a>
-                <i class="fas fa-arrow-circle-left"></i>
-            </small>
-        </h1>
-        <div class="float-end">
-            <button type="submit" name="send-test" class="btn btn-primary">
-                @T("Admin.ContentManagement.MessageTemplates.Test.Send")
-            </button>
+<form asp-controller="MessageTemplate" asp-action="TestTemplate" method="post" id="testtemplate-form" 
+    asp-route-languageId="@Model.LanguageId" 
+    asp-route-id="@Model.Id">
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.ContentManagement.MessageTemplates.TestDetails")
+                <small>
+                    <a asp-action="Edit" asp-route-id="@Model.Id">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        @T("Admin.ContentManagement.MessageTemplates.Test.BackToTemplate")
+                    </a>
+                </small>
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <button type="submit" name="send-test" class="btn btn-primary">
+                    @T("Admin.ContentManagement.MessageTemplates.Test.Send")
+                </button>
+            </div>
         </div>
         @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.MessageTemplateTestButtons, additionalData = Model })
     </div>

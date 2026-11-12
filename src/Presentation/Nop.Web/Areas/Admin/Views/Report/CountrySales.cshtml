@@ -12,35 +12,36 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 <form asp-controller="Report" method="post">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @T("Admin.Reports.Sales.Country")
-        </h1>
-        
-        <div class="float-end">
-            <div class="btn-group">
-                <button type="button" class="btn btn-success">
-                    <i class="fas fa-download"></i>
-                    @T("Admin.Common.Export")
-                </button>
-                <button type="button" class="btn btn-success dropdown-toggle dropdown-icon" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="sr-only">&nbsp;</span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li class="dropdown-item">
-                        <button asp-action="ExportCountrySalesXmlAll" type="submit" name="exportxml-all">
-                            <i class="far fa-file-code"></i>
-                            @T("Admin.Common.ExportToXml.All")
-                        </button>
-                    </li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li class="dropdown-item">
-                        <button asp-action="ExportCountrySalesExcelAll" type="submit" name="exportexcel-all">
-                            <i class="far fa-file-excel"></i>
-                            @T("Admin.Common.ExportToExcel.All")
-                        </button>
-                    </li>
-                </ul>
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.Reports.Sales.Country")
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success">
+                        <i class="fas fa-download"></i>
+                        @T("Admin.Common.Export")
+                    </button>
+                    <button type="button" class="btn btn-success dropdown-toggle dropdown-icon" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="sr-only">&nbsp;</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item">
+                            <button asp-action="ExportCountrySalesXmlAll" type="submit" name="exportxml-all">
+                                <i class="far fa-file-code"></i>
+                                @T("Admin.Common.ExportToXml.All")
+                            </button>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li class="dropdown-item">
+                            <button asp-action="ExportCountrySalesExcelAll" type="submit" name="exportexcel-all">
+                                <i class="far fa-file-excel"></i>
+                                @T("Admin.Common.ExportToExcel.All")
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

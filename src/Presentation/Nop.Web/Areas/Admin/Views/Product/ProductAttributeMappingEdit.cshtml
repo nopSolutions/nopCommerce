@@ -8,32 +8,36 @@
 }
 
 <form asp-controller="Product" asp-action="ProductAttributeMappingEdit" method="post" id="productattribute-form">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @T("Admin.Catalog.Products.ProductAttributes.Attributes.EditAttributeDetails")
-            <small>
-                <i class="fas fa-arrow-circle-left"></i>
-                <a asp-action="Edit" asp-route-id="@Model.ProductId">@T("Admin.Catalog.Products.ProductAttributes.Attributes.BackToProduct")</a>
-            </small>
-        </h1>
-        <div class="float-end">
-            @if (Model.PreTranslationAvailable)
-            {
-                @await Html.PartialAsync("_PreTranslateButton", "PreTranslateProductAttribute")
-            }
-            <button type="submit" name="save" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.Save")
-            </button>
-            <button type="submit" name="save-continue" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.SaveContinue")
-            </button>
-            <span id="productattribute-delete" class="btn btn-danger">
-                <i class="far fa-trash-can"></i>
-                @T("Admin.Common.Delete")
-            </span>
-            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeMappingDetailsButtons, additionalData = Model })
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.Catalog.Products.ProductAttributes.Attributes.EditAttributeDetails")
+                <small>
+                    <a asp-action="Edit" asp-route-id="@Model.ProductId">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        @T("Admin.Catalog.Products.ProductAttributes.Attributes.BackToProduct")
+                    </a>
+                </small>
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                @if (Model.PreTranslationAvailable)
+                {
+                    @await Html.PartialAsync("_PreTranslateButton", "PreTranslateProductAttribute")
+                }
+                <button type="submit" name="save" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                <button type="submit" name="save-continue" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.SaveContinue")
+                </button>
+                <span id="productattribute-delete" class="btn btn-danger">
+                    <i class="far fa-trash-can"></i>
+                    @T("Admin.Common.Delete")
+                </span>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductAttributeMappingDetailsButtons, additionalData = Model })
+            </div>
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateProductAttributeMapping", Model)

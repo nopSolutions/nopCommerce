@@ -13,62 +13,64 @@
 }
 
 <form asp-controller="Product" asp-action="ProductSpecAttrUpdate" id="spec-form" method="post">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @if (Model.SpecificationId == 0)
-            {
-                <text>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</text>
-            }
-            else
-            {
-                <text>@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.EditAttributeDetails") - @Model.AttributeName</text>
-            }
-            <small>
-                <i class="fas fa-arrow-circle-left"></i>
-                <a asp-action="Edit" asp-route-id="@Model.ProductId">
-                    @T("Admin.Catalog.Products.ProductAttributes.Attributes.BackToProduct")
-                </a>
-            </small>
-        </h1>
-        <div class="float-end">
-            @if (Model.AttributeId == 0)
-            {
-                <button type="submit"
-                        name="save"
-                        formaction="@Url.Action("ProductSpecificationAttributeAdd")"
-                        formmethod="post"
-                        class="btn btn-primary">
-                    <i class="far fa-floppy-disk"></i>
-                    @T("Admin.Common.Save")
-                </button>
-                <button type="submit"
-                        name="save-continue"
-                        formaction="@Url.Action("ProductSpecificationAttributeAdd")"
-                        formmethod="post"
-                        class="btn btn-primary">
-                    <i class="far fa-floppy-disk"></i>
-                    @T("Admin.Common.SaveContinue")
-                </button>
-            }
-            else
-            {
-                <button type="submit" name="save" class="btn btn-primary">
-                    <i class="far fa-floppy-disk"></i>
-                    @T("Admin.Common.Save")
-                </button>
-                <button type="submit" name="save-continue" class="btn btn-primary">
-                    <i class="far fa-floppy-disk"></i>
-                    @T("Admin.Common.SaveContinue")
-                </button>
-                <button type="submit"
-                        name="delete"
-                        formaction="@Url.Action("ProductSpecAttrDelete")"
-                        formmethod="post"
-                        class="btn btn-danger">
-                    <i class="far fa-trash-can"></i>
-                    @T("Admin.Common.Delete")
-                </button>
-            }
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @if (Model.SpecificationId == 0)
+                {
+                    <text>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</text>
+                }
+                else
+                {
+                    <text>@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.EditAttributeDetails") - @Model.AttributeName</text>
+                }
+                <small>
+                    <a asp-action="Edit" asp-route-id="@Model.ProductId">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        @T("Admin.Catalog.Products.ProductAttributes.Attributes.BackToProduct")
+                    </a>
+                </small>
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                @if (Model.AttributeId == 0)
+                {
+                    <button type="submit"
+                            name="save"
+                            formaction="@Url.Action("ProductSpecificationAttributeAdd")"
+                            formmethod="post"
+                            class="btn btn-primary">
+                        <i class="far fa-floppy-disk"></i>
+                        @T("Admin.Common.Save")
+                    </button>
+                    <button type="submit"
+                            name="save-continue"
+                            formaction="@Url.Action("ProductSpecificationAttributeAdd")"
+                            formmethod="post"
+                            class="btn btn-primary">
+                        <i class="far fa-floppy-disk"></i>
+                        @T("Admin.Common.SaveContinue")
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" name="save" class="btn btn-primary">
+                        <i class="far fa-floppy-disk"></i>
+                        @T("Admin.Common.Save")
+                    </button>
+                    <button type="submit" name="save-continue" class="btn btn-primary">
+                        <i class="far fa-floppy-disk"></i>
+                        @T("Admin.Common.SaveContinue")
+                    </button>
+                    <button type="submit"
+                            name="delete"
+                            formaction="@Url.Action("ProductSpecAttrDelete")"
+                            formmethod="post"
+                            class="btn btn-danger">
+                        <i class="far fa-trash-can"></i>
+                        @T("Admin.Common.Delete")
+                    </button>
+                }
+            </div>
         </div>
     </div>
      <section class="app-content">

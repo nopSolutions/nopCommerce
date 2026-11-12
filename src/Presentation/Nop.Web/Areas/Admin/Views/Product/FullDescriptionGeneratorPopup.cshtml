@@ -31,34 +31,37 @@
     }
 }
 
-<form asp-controller="Product" asp-action="FullDescriptionGeneratorPopup" id="generatorForm">
+<form asp-controller="Product" asp-action="FullDescriptionGeneratorPopup" id="generatorForm" data-bs-theme="light">
     <input type="hidden" asp-for="SaveButtonClicked" />
     <input type="hidden" asp-for="LanguageId" />
-    <section class="app-content">
+
+    <div class="app-content-header">
         <div class="container-fluid">
-            <div class="app-content-header clearfix">
-                <h1 class="float-start">
-                    @T("Admin.Catalog.Products.AiGenerateFullDescription")
-                </h1>
-                <div class="float-end">
-                    @if (!string.IsNullOrEmpty(Model.GeneratedDescription))
-                    {
-                        <button id="save_button" type="submit" onclick="set_save()" name="save" class="btn btn-primary">
-                            <i class="far fa-floppy-disk"></i>
-                            @T("Admin.Common.Save")
-                        </button>
-                        <button id="copy_button" type="button" onclick="copy_to_clipboard()" class="btn btn-secondary">
-                            <i class="far fa-floppy-disk"></i>
-                            @T("Admin.Catalog.Products.AiFullDescription.CopyToClipboard")
-                        </button>
-                    }
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.Catalog.Products.AiGenerateFullDescription")
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                @if (!string.IsNullOrEmpty(Model.GeneratedDescription))
+                {
+                    <button id="save_button" type="submit" onclick="set_save()" name="save" class="btn btn-primary">
+                        <i class="far fa-floppy-disk"></i>
+                        @T("Admin.Common.Save")
+                    </button>
+                    <button id="copy_button" type="button" onclick="copy_to_clipboard()" class="btn btn-secondary">
+                        <i class="far fa-floppy-disk"></i>
+                        @T("Admin.Catalog.Products.AiFullDescription.CopyToClipboard")
+                    </button>
+                }
                     
-                    <div id="ajaxBusy">
-                        <span>&nbsp;</span>
-                    </div>
+                <div id="ajaxBusy">
+                    <span>&nbsp;</span>
                 </div>
             </div>
+        </div>
+    </div>
 
+    <section class="app-content">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group row">
@@ -109,7 +112,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 </form>

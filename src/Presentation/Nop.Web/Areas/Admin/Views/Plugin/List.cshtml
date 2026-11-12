@@ -15,11 +15,11 @@
 
 <form asp-controller="Plugin" asp-action="List" id="plugins-form-local">
     <div class="app-content-header">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <h3 class="text-body m-0">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
                 @T("Admin.Configuration.Plugins.Local")
-            </h3>    
-            <div class="d-flex gap-2">
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
                 @if (Model.NeedToRestart)
                 {
                     <button type="submit" name="plugin-apply-changes" class="btn btn-success">@T("Admin.Configuration.Plugins.ApplyChanges")</button>

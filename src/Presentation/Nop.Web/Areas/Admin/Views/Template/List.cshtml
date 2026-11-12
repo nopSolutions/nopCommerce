@@ -24,17 +24,20 @@
     var hideTopicBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideTopicBlockAttributeName);
 }
 
+
+<div class="container-fluid">
+    <div class="form-horizontal">
+        <div class="app-content-header">
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.System.Templates")
+            </h1>
+        </div>
+    </div>
+</div>
+
 <section class="app-content">
     <div class="container-fluid">
         <div class="form-horizontal">
-            <div class="row">
-                <div class="app-content-header clearfix">
-                    <h3 class="float-left">
-                        @T("Admin.System.Templates")
-                    </h3>
-                </div>
-            </div>
-
             <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Templates", Docs.Templates + Utm.OnAdmin)" />
 
             <nop-cards id="templates-cards">

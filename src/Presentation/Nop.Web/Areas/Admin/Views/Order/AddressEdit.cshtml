@@ -9,21 +9,25 @@
 
 <form asp-controller="Order" asp-action="AddressEdit"
       asp-route-addressId="@Context.Request.Query["addressId"]"
-      asp-route-orderId="@Context.Request.Query["orderId"]">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @T("Admin.Orders.Address.EditAddress")
-            <small>
-                <i class="fas fa-arrow-circle-left"></i>
-                <a asp-action="Edit" asp-route-id="@Model.OrderId">@T("Admin.Orders.Address.BackToOrder")</a>
-            </small>
-        </h1>
-        <div class="float-end">
-            <button type="submit" name="save" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.Save")
-            </button>
-            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderAddressDetailsButtons, additionalData = Model })
+      asp-route-orderId="@Context.Request.Query["orderId"]" data-bs-theme="light">
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @T("Admin.Orders.Address.EditAddress")
+                <small>
+                    <a asp-action="Edit" asp-route-id="@Model.OrderId">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        @T("Admin.Orders.Address.BackToOrder")
+                    </a>
+                </small>
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <button type="submit" name="save" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderAddressDetailsButtons, additionalData = Model })
+            </div>
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateAddress", Model)

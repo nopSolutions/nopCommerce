@@ -12,16 +12,18 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<div class="app-content-header clearfix">
-    <h1 class="float-start">
-        @T("Admin.System.SeNames")
-    </h1>
-    <div class="float-end">
-        <button type="button" id="delete-selected" class="btn btn-danger">
-            <i class="far fa-trash-can"></i>
-            @T("Admin.System.SeNames.DeleteSelected")
-        </button>
-        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SenamesButtons, additionalData = Model })
+<div class="app-content-header">
+    <div class="container-fluid">
+        <h1 class="text-body m-0 fs-3">
+            @T("Admin.System.SeNames")
+        </h1>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            <button type="button" id="delete-selected" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Admin.System.SeNames.DeleteSelected")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SenamesButtons, additionalData = Model })
+        </div>
     </div>
 </div>
 

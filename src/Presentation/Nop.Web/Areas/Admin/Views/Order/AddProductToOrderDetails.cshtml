@@ -11,21 +11,26 @@
 
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
 
-<form asp-controller="Order" asp-action="AddProductToOrderDetails" asp-route-orderId="@Model.OrderId"
-      asp-route-productId="@Model.ProductId" enctype="multipart/form-data" method="post" id="product-details-form">
+<form asp-controller="Order" asp-action="AddProductToOrderDetails" method="post" enctype="multipart/form-data" id="product-details-form"
+    asp-route-orderId="@Model.OrderId"
+    asp-route-productId="@Model.ProductId">
     
     <div asp-validation-summary="All"></div>
 
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId)
-            <small>
-                <i class="fas fa-arrow-circle-left"></i>
-                <a asp-action="AddProductToOrder" asp-route-orderId="@Model.OrderId">@T("Admin.Orders.Products.AddNew.BackToList")</a>
-            </small>
-        </h1>
-        <div class="float-end">
-            &nbsp;
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId)
+                <small>
+                    <a asp-action="AddProductToOrder" asp-route-orderId="@Model.OrderId">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        @T("Admin.Orders.Products.AddNew.BackToList")
+                    </a>
+                </small>
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                &nbsp;
+            </div>
         </div>
     </div>
 

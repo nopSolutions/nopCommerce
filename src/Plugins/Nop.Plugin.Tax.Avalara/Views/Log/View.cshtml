@@ -7,15 +7,15 @@
 }
 
 <form asp-controller="TaxTransactionLog" asp-action="View" method="post">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
+    <div class="app-content-header">
+        <h1 class="text-body m-0 fs-3">
             @T("Plugins.Tax.Avalara.Log.Hint")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="Configure" asp-controller="Avalara">@T("Plugins.Tax.Avalara.Log.BackToList")</a>
             </small>
         </h1>
-        <div class="float-end">
+        <div class="d-flex flex-wrap align-items-center gap-2">
             <span id="log-delete" class="btn btn-danger">
                 <i class="far fa-trash-can"></i>
                 @T("Admin.Common.Delete")

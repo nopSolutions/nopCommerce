@@ -50,13 +50,13 @@
         })
     </div>
     <div class="card-footer">
-        <div width="100%">
+        <div>
             <button type="submit" id="btnAddNewState"
                     onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 450, true); return false;"
                     class="btn btn-primary">
                 @T("Admin.Configuration.Countries.States.AddNew")
             </button>
-            <button type="submit" id="btnRefresh" style="display: none"></button>
+            <button type="submit" id="btnRefresh" class="d-none"></button>
             <script>
                 $(function() {
                     $('#btnRefresh').click(function () {

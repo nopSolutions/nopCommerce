@@ -14,24 +14,28 @@
 }
 
 <form asp-controller="Order" asp-action="AddShipment" method="post">
-    <div class="app-content-header clearfix">
-        <h1 class="float-start">
-            @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.CustomOrderNumber)
-            <small>
-                <i class="fas fa-arrow-circle-left"></i>
-                <a asp-action="Edit" asp-route-id="@Model.OrderId">@T("Admin.Orders.Shipments.BackToOrder")</a>
-            </small>
-        </h1>
-        <div class="float-end">
-            <button type="submit" id="shipment-save" name="save" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.Save")
-            </button>
-            <button type="submit" id="shipment-save-continue" name="save-continue" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.SaveContinue")
-            </button>
-            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderShipmentAddButtons, additionalData = Model })
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <h1 class="text-body m-0 fs-3">
+                @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.CustomOrderNumber)
+                <small>
+                    <a asp-action="Edit" asp-route-id="@Model.OrderId">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        @T("Admin.Orders.Shipments.BackToOrder")
+                    </a>
+                </small>
+            </h1>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <button type="submit" id="shipment-save" name="save" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                <button type="submit" id="shipment-save-continue" name="save-continue" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.SaveContinue")
+                </button>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderShipmentAddButtons, additionalData = Model })
+            </div>
         </div>
     </div>
     <div asp-validation-summary="All"></div>

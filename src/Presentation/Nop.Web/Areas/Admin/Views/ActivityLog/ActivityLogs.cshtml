@@ -13,17 +13,19 @@
 }
 
 <div class="app-content-header">
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
-        <h1 class="mb-0">
+    <div class="container-fluid">
+        <h1 class="text-body m-0 fs-3">
             @T("Admin.Customers.ActivityLog")
         </h1>
-        <form class="d-flex flex-wrap align-items-center justify-content-end gap-2" asp-controller="ActivityLog" asp-action="ClearAll" method="post">
-            <button type="submit" id="clearall" name="clearall" class="btn btn-danger">
-                <i class="far fa-trash-can me-1"></i>
-                @T("Admin.Customers.ActivityLog.Clear")
-            </button>
-            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ActivityLogListButtons, additionalData = Model })
-        </form>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            <form class="d-flex flex-wrap align-items-center justify-content-end gap-2" asp-controller="ActivityLog" asp-action="ClearAll" method="post">
+                <button type="submit" id="clearall" name="clearall" class="btn btn-danger">
+                    <i class="far fa-trash-can me-1"></i>
+                    @T("Admin.Customers.ActivityLog.Clear")
+                </button>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ActivityLogListButtons, additionalData = Model })
+            </form>
+        </div>
     </div>
 </div>
 

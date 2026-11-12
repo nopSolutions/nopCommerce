@@ -1,9 +1,5 @@
 @model StateProvinceModel
 
-<div asp-validation-summary="All"></div>
-<input asp-for="Id" type="hidden" />
-<input asp-for="CountryId" type="hidden" />
-
 @if (ViewBag.RefreshPage == true)
 {
     <script>
@@ -15,6 +11,10 @@
 
 <section class="app-content">
     <div class="container-fluid">
+        <div asp-validation-summary="All"></div>
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="CountryId" type="hidden" />
+
         <div class="form-horizontal">
             <div class="cards-group">
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CountryStateDetailsTop, additionalData = Model })
