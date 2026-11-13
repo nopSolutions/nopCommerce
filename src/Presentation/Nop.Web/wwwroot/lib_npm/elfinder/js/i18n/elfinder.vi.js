@@ -175,6 +175,7 @@
 			'btnCancel' : 'Hủy bỏ',
 			'btnNo'     : 'Không',
 			'btnYes'    : 'Đồng ý',
+			'btnDiscard': 'Discard changes',
 			'btnMount'  : 'Mount',  // added 18.04.2012
 			'btnApprove': 'Goto $1 & approve', // from v2.1 added 26.04.2012
 			'btnUnmount': 'Unmount', // from v2.1 added 30.04.2012
@@ -522,6 +523,12 @@
 			'kindTTF'         : 'True Type font',
 			'kindOTF'         : 'Open Type font',
 			'kindRPM'         : 'RPM package',
+			// fonts
+			'kindFont'        : 'Font',
+			'kindSFNT'        : 'SFNT font',
+			'kindEOT'         : 'Embedded Open Type font',
+			'kindWOFF'        : 'Web Open Font Format',
+			'kindWOFF2'       : 'Web Open Font Format 2',
 			// texts
 			'kindText'        : 'Text document',
 			'kindTextPlain'   : 'Plain text',

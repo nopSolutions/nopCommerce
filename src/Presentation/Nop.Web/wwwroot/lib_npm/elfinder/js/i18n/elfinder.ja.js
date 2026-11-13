@@ -2,7 +2,7 @@
  * Japanese translation
  * @author Tomoaki Yoshida <info@yoshida-studio.jp>
  * @author Naoki Sawada <hypweb+elfinder@gmail.com>
- * @version 2021-06-02
+ * @version 2026-04-29
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -17,9 +17,9 @@
 		translator : 'Tomoaki Yoshida &lt;info@yoshida-studio.jp&gt;, Naoki Sawada &lt;hypweb+elfinder@gmail.com&gt;',
 		language   : 'Japanese',
 		direction  : 'ltr',
-		dateFormat : 'Y/m/d h:i A', // will show like: 2018/08/24 04:37 PM
-		fancyDateFormat : '$1 h:i A', // will show like: 今日 04:37 PM
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 180824-163717
+		dateFormat : 'Y/m/d h:i A', // will show like: 2026/04/29 11:30 PM
+		fancyDateFormat : '$1 h:i A', // will show like: 今日 11:30 PM
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 260429-233058
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -69,6 +69,7 @@
 			'errUploadFileSize'    : 'ファイルが許容サイズを超えています。', //  old name - errFileMaxSize
 			'errUploadMime'        : '許可されていないファイル形式です。',
 			'errUploadTransfer'    : '"$1" 転送エラーです。',
+			'errUploadUrlNoCurl'    : 'URLアップロードには PHP cURL 拡張機能が必要です。',
 			'errUploadTemp'        : 'アップロード用一時ファイルを作成できません。', // from v2.1 added 26.09.2015
 			'errNotReplace'        : 'アイテム "$1" はすでにこの場所にあり、アイテムのタイプが違うので置き換えることはできません。', // new
 			'errReplace'           : '"$1" を置き換えることができません。',
@@ -175,6 +176,7 @@
 			'btnCancel' : 'キャンセル',
 			'btnNo'     : 'いいえ',
 			'btnYes'    : 'はい',
+			'btnDiscard': '変更を破棄',
 			'btnMount'  : 'マウント',  // added 18.04.2012
 			'btnApprove': '$1へ行き認可する', // from v2.1 added 26.04.2012
 			'btnUnmount': 'アンマウント', // from v2.1 added 30.04.2012
@@ -292,7 +294,7 @@
 			'untitled folder'   : '新規フォルダ',   // added 10.11.2015
 			'Archive'           : '新規アーカイブ',  // from v2.1 added 10.11.2015
 			'untitled file'     : '新規ファイル.$1',  // from v2.1.41 added 6.8.2018
-			'extentionfile'     : '$1: ファイル',     // from v2.1.41 added 6.8.2018
+			'extentionfile'     : '$1: ファイル',    // from v2.1.41 added 6.8.2018
 			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
 			/********************************** messages **********************************/
@@ -523,6 +525,12 @@
 			'kindTTF'         : 'True Type フォント',
 			'kindOTF'         : 'Open Type フォント',
 			'kindRPM'         : 'RPM パッケージ',
+			// fonts
+			'kindFont'        : 'フォント',
+			'kindSFNT'        : 'SFNT フォント',
+			'kindEOT'         : 'Embedded Open Type フォント',
+			'kindWOFF'        : 'Web Open Font Format フォント',
+			'kindWOFF2'       : 'Web Open Font Format 2  フォント',
 			// texts
 			'kindText'        : 'Text ドキュメント',
 			'kindTextPlain'   : 'プレインテキスト',
@@ -557,6 +565,8 @@
 			'kindPSD'         : 'Adobe Photoshop イメージ',
 			'kindXBITMAP'     : 'X bitmap イメージ',
 			'kindPXM'         : 'Pixelmator イメージ',
+			'kindWEBP'        : 'WEBP イメージ',
+			'kindSVG'         : 'SVG イメージ',
 			// media
 			'kindAudio'       : 'オーディオメディア',
 			'kindAudioMPEG'   : 'MPEG オーディオ',

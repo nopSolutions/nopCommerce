@@ -1,9 +1,9 @@
 /*!
  * elFinder - file manager for web
- * Version 2.1.61 (2.1-src Nightly: fdfe8f6) (2022-09-01)
+ * Version 2.1.70 (2026-08-03)
  * http://elfinder.org
  * 
- * Copyright 2009-2022, Studio 42
+ * Copyright 2009-2026, Studio 42
  * Licensed under a 3-clauses BSD license
  */
 
@@ -3437,92 +3437,56 @@ button.elfinder-info-button {
 }
 
 /* File: /css/fonts.css */
-.elfinder-font-mono {
-    font-family: "Ricty Diminished", "Myrica M", Consolas, "Courier New", Courier, Monaco, monospace;
-    font-size: 1.1em;
-}
-
-.elfinder-contextmenu .elfinder-contextmenu-item span {
-    font-size: .72em;
-}
-
-.elfinder-cwd-view-icons .elfinder-cwd-filename {
-    font-size: .7em;
-}
-
-.elfinder-cwd-view-list td {
-    font-size: .7em;
+.dialogelfinder .dialogelfinder-drag,
+.elfinder-place-drag .elfinder-navbar-dir,
+.elfinder-quicklook-preview-text-wrapper,
+.elfinder-info-tb {
+    font-size: .8em;
 }
 
 .std42-dialog .ui-dialog-titlebar {
     font-size: .82em;
 }
 
-.std42-dialog .ui-dialog-content {
-    font-size: .72em;
-}
-
-.std42-dialog .ui-dialog-buttonpane {
-    font-size: .76em;
-}
-
-.elfinder-info-tb {
-    font-size: .9em;
-}
-
-.elfinder-upload-dropbox {
-    font-size: 1.2em;
-}
-
-.elfinder-upload-dialog-or {
-    font-size: 1.2em;
-}
-
-.dialogelfinder .dialogelfinder-drag {
-    font-size: .9em;
-}
-
-.elfinder .elfinder-navbar {
-    font-size: .72em;
-}
-
-.elfinder-place-drag .elfinder-navbar-dir {
-    font-size: .9em;
-}
-
-.elfinder-quicklook-title {
-    font-size: .7em;
-    font-weight: normal;
-}
-
-.elfinder-quicklook-info-data {
-    font-size: .72em;
-}
-
-.elfinder-quicklook-preview-text-wrapper {
-    font-size: .9em;
-}
-
-.elfinder-button-menu-item {
-    font-size: .72em;
-}
-
 .elfinder-button-search input {
     font-size: .8em;
 }
 
+.std42-dialog .ui-dialog-buttonpane, .elfinder-toast {
+    font-size: .76em;
+}
+
+.elfinder-contextmenu .elfinder-contextmenu-item span,
+.std42-dialog .ui-dialog-content,
+.elfinder .elfinder-navbar,
+.elfinder-quicklook-info-data,
+.elfinder-button-menu-item {
+    font-size: .72em;
+}
+
+.elfinder-cwd-view-icons .elfinder-cwd-filename,
+.elfinder-cwd-view-list td,
+.elfinder-quicklook-title,
 .elfinder-statusbar div {
     font-size: .7em;
+}
+
+.elfinder-upload-dropbox, .elfinder-upload-dialog-or {
+    font-size: 1.2em;
+}
+
+.elfinder-font-mono {
+    font-family: "Ricty Diminished", "Myrica M", Consolas, "Courier New", Courier, Monaco, monospace;
+    font-size: 1.1em;
 }
 
 .elfinder-drag-num {
     font-size: 12px;
 }
 
-.elfinder-toast {
-    font-size: .76em;
+.elfinder-quicklook-title {
+    font-weight: normal;
 }
-
 
 /* File: /css/navbar.css */
 /*********************************************/

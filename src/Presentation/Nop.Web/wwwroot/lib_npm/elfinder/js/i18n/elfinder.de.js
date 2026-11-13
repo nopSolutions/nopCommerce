@@ -178,6 +178,7 @@
 			'btnCancel' : 'Abbrechen',
 			'btnNo'     : 'Nein',
 			'btnYes'    : 'Ja',
+			'btnDiscard': 'Änderungen verwerfen',
 			'btnMount'  : 'Verbinden',  // added 18.04.2012
 			'btnApprove': 'Gehe zu $1 und genehmige', // from v2.1 added 26.04.2012
 			'btnUnmount': 'Auswerfen', // from v2.1 added 30.04.2012
@@ -305,7 +306,7 @@
 			'confirmRest'     : 'Vorhandenes Element durch das Element aus Mülleimer ersetzen?', // fromv2.1.24 added 5.5.2017
 			'confirmConvUTF8' : 'Nicht UTF-8 kodiert<br>Zu UTF-8 konvertieren?<br>Inhalte werden zu UTF-8 konvertiert bei Speicherung.', // from v2.1 added 08.04.2014
 			'confirmNonUTF8'  : 'Die Zeichencodierung dieser Datei konnte nicht erkannt werden. Es muss vorübergehend in UTF-8 zur Bearbeitung konvertiert werden.<br> Bitte eine Zeichenkodierung dieser Datei auswählen.', // from v2.1.19 added 28.11.2016
-			'confirmNotSave'  : 'Die Datei wurde geändert.<br>Änderungen gehen verloren wenn nicht gespeichert wird.', // from v2.1 added 15.7.2015
+			'confirmNotSave'  : 'Die Datei wurde geändert.<br>Änderungen gehen verloren, wenn nicht gespeichert wird.', // from v2.1 added 15.7.2015
 			'confirmTrash'    : 'Sicher diese Elemente in den Mülleimer verschieben?', // from v2.1.24 added 29.4.2017
 			'confirmMove'     : 'Sicher alle Elemente nach "$1" verschieben?', // from v2.1.50 added 13.12.2019
 			'apllyAll'        : 'Alles bestätigen',
@@ -525,6 +526,12 @@
 			'kindTTF'         : 'True Type-Schrift',
 			'kindOTF'         : 'Open Type-Schrift',
 			'kindRPM'         : 'RPM-Paket',
+			// fonts
+			'kindFont'        : 'Schriftart',
+			'kindSFNT'        : 'SFNT-Schrift',
+			'kindEOT'         : 'Embedded-Open-Type-Schrift',
+			'kindWOFF'        : 'Web-Open-Font-Format-Schrift',
+			'kindWOFF2'       : 'Web-Open-Font-Format-2-Schrift',
 			// texts
 			'kindText'        : 'Text-Dokument',
 			'kindTextPlain'   : 'Text-Dokument',

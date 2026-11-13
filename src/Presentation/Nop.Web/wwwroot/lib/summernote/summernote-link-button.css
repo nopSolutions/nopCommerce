@@ -10,13 +10,18 @@
     margin-left: 5px;
 }
 
-/* Ensure elFinder dialog is above Insert Link modal */
+/* Ensure elFinder and its dialogs are above Insert Link modal */
 .elfinder {
-    z-index: 2000 !important;
+  z-index: 2000 !important;
 }
 
-.ui-widget-overlay {
-    z-index: 1999 !important;
+.ui-widget-overlay,
+.elfinder-overlay {
+  z-index: 2001 !important;
+}
+
+.elfinder-dialog {
+  z-index: 2002 !important;
 }
 
 /* Adjust modal layout for the button */

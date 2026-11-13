@@ -2,7 +2,7 @@
  * Slovak translation
  * @author RobiNN <robo@kelcak.com>
  * @author Jakub Ďuraš <jkblmr@gmail.com>
- * @version 2021-06-10
+ * @version 2025-11-09
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -17,9 +17,9 @@
 		translator : 'RobiNN &lt;robo@kelcak.com&gt;, Jakub Ďuraš &lt;jkblmr@gmail.com&gt;',
 		language   : 'Slovenčina',
 		direction  : 'ltr',
-		dateFormat : 'd.m.Y H:i', // will show like: 10.06.2021 23:35
-		fancyDateFormat : '$1 H:i', // will show like: Dnes 23:35
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 210610-233522
+		dateFormat : 'd.m.Y H:i', // will show like: 09.11.2025 12:25
+		fancyDateFormat : '$1 H:i', // will show like: Dnes 12:25
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 251109-122543
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -175,6 +175,7 @@
 			'btnCancel' : 'Zrušiť',
 			'btnNo'     : 'Nie',
 			'btnYes'    : 'Áno',
+			'btnDiscard': 'Zahodiť zmeny',
 			'btnMount'  : 'Pripojiť',  // added 18.04.2012
 			'btnApprove': 'Ísť na $1 & schváliť', // from v2.1 added 26.04.2012
 			'btnUnmount': 'Odpojiť', // from v2.1 added 30.04.2012
@@ -523,6 +524,12 @@
 			'kindTTF'         : 'True Type font',
 			'kindOTF'         : 'Open Type font',
 			'kindRPM'         : 'RPM balík',
+			// fonts
+			'kindFont'        : 'Font',
+			'kindSFNT'        : 'SFNT font',
+			'kindEOT'         : 'Embedded Open Type font',
+			'kindWOFF'        : 'Web Open Font Format',
+			'kindWOFF2'       : 'Web Open Font Format 2',
 			// texts
 			'kindText'        : 'Textový document',
 			'kindTextPlain'   : 'Obyčajný text',

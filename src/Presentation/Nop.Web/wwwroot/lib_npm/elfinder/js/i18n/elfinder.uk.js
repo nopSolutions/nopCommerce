@@ -174,6 +174,7 @@
 			'btnCancel' : 'Скасувати',
 			'btnNo'     : 'Ні',
 			'btnYes'    : 'Так',
+			'btnDiscard': 'Скасувати зміни',
 			'btnMount'  : 'Підключити',  // added 18.04.2012
 			'btnApprove': 'Перейти в $1 і прийняти', // from v2.1 added 26.04.2012
 			'btnUnmount': 'Відключити', // from v2.1 added 30.04.2012
@@ -522,6 +523,12 @@
 			'kindTTF'         : 'Шрифт True Type',
 			'kindOTF'         : 'Шрифт Open Type',
 			'kindRPM'         : 'Пакунок RPM',
+			// fonts
+			'kindFont'        : 'Шрифт',
+			'kindSFNT'        : 'Шрифт SFNT',
+			'kindEOT'         : 'Шрифт Embedded Open Type',
+			'kindWOFF'        : 'Шрифт Web Open Font Format',
+			'kindWOFF2'       : 'Шрифт Web Open Font Format 2',
 			// texts
 			'kindText'        : 'Текстовий документ',
 			'kindTextPlain'   : 'Простий текст',

@@ -170,6 +170,7 @@
 			'btnCancel' : 'අවලංගු කරන්න',
 			'btnNo'     : 'නැත',
 			'btnYes'    : 'ඔව්',
+			'btnDiscard': 'Discard changes',
 			'btnMount'  : 'සවිකිරීම(Mount)',  // added 18.04.2012
 			'btnApprove': 'කරුණාකර $1 අනුමත කරන්න', // from v2.1 added 26.04.2012
 			'btnUnmount': 'ගලවන්න(Unmount)', // from v2.1 added 30.04.2012
@@ -479,6 +480,12 @@
 			'kindTTF'         : 'True Type font',
 			'kindOTF'         : 'Open Type font',
 			'kindRPM'         : 'RPM package',
+			// fonts
+			'kindFont'        : 'Font',
+			'kindSFNT'        : 'SFNT font',
+			'kindEOT'         : 'Embedded Open Type font',
+			'kindWOFF'        : 'Web Open Font Format',
+			'kindWOFF2'       : 'Web Open Font Format 2',
 			// texts
 			'kindText'        : 'Text ලේඛනය',
 			'kindTextPlain'   : 'Plain text',

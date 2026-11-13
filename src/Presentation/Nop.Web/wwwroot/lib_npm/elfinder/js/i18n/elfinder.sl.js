@@ -138,6 +138,7 @@
 			'btnCancel' : 'Prekliči',
 			'btnNo'     : 'Ne',
 			'btnYes'    : 'Da',
+			'btnDiscard': 'Discard changes',
 			'btnMount'  : 'Mount',
 			
 			/******************************** notifications ********************************/
@@ -318,6 +319,12 @@
 			'kindTTF'         : 'True Type font',
 			'kindOTF'         : 'Open Type font',
 			'kindRPM'         : 'RPM paket',
+			// fonts
+			'kindFont'        : 'Font',
+			'kindSFNT'        : 'SFNT font',
+			'kindEOT'         : 'Embedded Open Type font',
+			'kindWOFF'        : 'Web Open Font Format',
+			'kindWOFF2'       : 'Web Open Font Format 2',
 			// texts
 			'kindText'        : 'Tekst dokument',
 			'kindTextPlain'   : 'Samo tekst',
