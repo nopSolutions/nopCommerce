@@ -146,6 +146,7 @@
 			'btnCancel' : 'Anulează',
 			'btnNo'     : 'Nu',
 			'btnYes'    : 'Da',
+			'btnDiscard': 'Discard changes',
 			'btnMount'  : 'Încarcă',  // added 18.04.2012
 			'btnApprove': 'Mergi la $1 și aprobă', // from v2.1 added 26.04.2012
 			'btnUnmount': 'Elimină volum', // from v2.1 added 30.04.2012
@@ -359,6 +360,12 @@
 			'kindTTF'         : 'Font True Type',
 			'kindOTF'         : 'Font Open Type',
 			'kindRPM'         : 'Pachet RPM',
+			// fonts
+			'kindFont'        : 'Font',
+			'kindSFNT'        : 'Font SFNT',
+			'kindEOT'         : 'Font Embedded Open Type',
+			'kindWOFF'        : 'Web Open Font Format',
+			'kindWOFF2'       : 'Web Open Font Format 2',
 			// texts
 			'kindText'        : 'Document text',
 			'kindTextPlain'   : 'Text simplu',

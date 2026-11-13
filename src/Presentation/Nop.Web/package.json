@@ -3,7 +3,12 @@
   "name": "nopcommerce",
   "private": true,
   "type": "module",
+  "scripts": {
+    "postinstall": "gulp --gulpfile gulp.js downloadElfinder",
+    "build": "gulp --gulpfile gulp.js"
+  },
   "devDependencies": {
+    "adm-zip": "^0.6.1",
     "del": "^7.0.0",
     "gulp": "^4.0.2",
     "gulp-filter": "^7.0.0",

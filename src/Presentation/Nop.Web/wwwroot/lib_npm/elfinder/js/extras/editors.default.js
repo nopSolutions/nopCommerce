@@ -461,8 +461,7 @@
 				if (typeof quality !== 'undefined') {
 					this.fm.storage('jpgQuality', quality);
 				}
-				if (hash) {
-					file = this.fm.file(hash);
+				if (hash && (file = this.fm.file(hash))) {
 					$base.data('mime', file.mime);
 				}
 			}
@@ -674,7 +673,9 @@
 				}
 				if (hash) {
 					file = this.fm.file(hash);
-					$base.data('mime', file.mime);
+					if (file) {
+						$base.data('mime', file.mime);
+					}
 				} else {
 					$base.removeData('mime');
 				}
@@ -858,7 +859,7 @@
 
 				// load script then init
 				if (typeof Pixo === 'undefined') {
-					fm.loadScript(['https://pixoeditor.com:8443/editor/scripts/bridge.m.js'], function() {
+					fm.loadScript(['https://pixoeditor.com/editor/scripts/bridge.m.js'], function() {
 						init(launch);
 					}, {loadType: 'tag'});
 				} else {
@@ -1837,7 +1838,7 @@
 						opts = {
 							selector: '#' + textarea.id,
 							resize: false,
-							plugins: 'print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern help',
+							plugins: 'preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help',
 							toolbar: 'formatselect | bold italic strikethrough forecolor backcolor | link image media | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat',
 							image_advtab: true,
 							init_instance_callback : function(editor) {

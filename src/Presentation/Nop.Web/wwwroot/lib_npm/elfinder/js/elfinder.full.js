@@ -1,9 +1,9 @@
 /*!
  * elFinder - file manager for web
- * Version 2.1.61 (2.1-src Nightly: fdfe8f6) (2022-09-01)
+ * Version 2.1.70 (2026-08-03)
  * http://elfinder.org
  * 
- * Copyright 2009-2022, Studio 42
+ * Copyright 2009-2026, Studio 42
  * Licensed under a 3-clauses BSD license
  */
 (function(root, factory) {
@@ -673,6 +673,13 @@ var elFinder = function(elm, opts, bootCallback) {
 		 * @type Object
 		 */
 		currentOpenCmd = null,
+
+		/**
+		 * Current CSRF refresh request instance
+		 *
+		 * @type Object
+		 */
+		currentCsrfRefresh = null,
 
 		/**
 		 * Exec shortcut
@@ -1442,6 +1449,97 @@ var elFinder = function(elm, opts, bootCallback) {
 	this.customHeaders = $.isPlainObject(this.options.customHeaders) ? this.options.customHeaders : {};
 
 	/**
+	 * CSRF header name for connector requests
+	 *
+	 * @type String
+	 */
+	this.csrfHeaderName = 'X-elFinder-CSRF';
+
+	/**
+	 * JSON response key for CSRF token
+	 *
+	 * @type String
+	 */
+	this.csrfResponseKey = 'csrf';
+
+	/**
+	 * JSON response key that marks a CSRF-triggered reload request
+	 *
+	 * @type String
+	 */
+	this.csrfReloadKey = 'csrfReload';
+
+	/**
+	 * Store or clear current CSRF token header
+	 *
+	 * @param  {String} token
+	 * @return void
+	 */
+	this.setCsrfToken = function(token) {
+		if (typeof token === 'string' && token) {
+			self.customHeaders[self.csrfHeaderName] = token;
+		} else {
+			delete self.customHeaders[self.csrfHeaderName];
+		}
+	};
+
+	/**
+	 * Determine whether the response represents a CSRF refreshable failure
+	 *
+	 * @param  {Object} xhr
+	 * @param  {Object} response
+	 * @return {Boolean}
+	 */
+	this.isCsrfReloadResponse = function(xhr, response) {
+		return !!(xhr
+			&& xhr.status === 403
+			&& !xhr._csrfRefresh
+			&& response
+			&& response[self.csrfReloadKey]);
+	};
+
+	/**
+	 * Refresh CSRF token via open&init=1 without replaying the failed command
+	 *
+	 * @return {jQuery.Deferred}
+	 */
+	this.refreshCsrfToken = function() {
+		var cwdFile = self.cwd(),
+			target = (cwdFile && cwdFile.hash) || self.lastDir('') || self.startDir();
+
+		if (currentCsrfRefresh && currentCsrfRefresh.state() === 'pending') {
+			return currentCsrfRefresh;
+		}
+
+		currentCsrfRefresh = self.request({
+			data           : {cmd : 'open', target : target, init : 1, tree : 1},
+			preventDefault : true,
+			preventFail    : true,
+			_csrfRefresh   : true
+		}).always(function() {
+			currentCsrfRefresh = null;
+		});
+
+		return currentCsrfRefresh;
+	};
+
+	/**
+	 * Start background CSRF refresh if current failure is refreshable
+	 *
+	 * @param  {Object} xhr
+	 * @param  {Object} response
+	 * @return {Boolean}
+	 */
+	this.handleCsrfReload = function(xhr, response) {
+		if (!self.isCsrfReloadResponse(xhr, response)) {
+			return false;
+		}
+
+		self.refreshCsrfToken();
+		return true;
+	};
+
+	/**
 	 * Any custom xhrFields to send across every ajax request
 	 *
 	 * @type Object
@@ -1611,7 +1709,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		} 
 	});
 	
-	this.compare = $.proxy(this.compare, this);
+	this.compare = this.compare.bind(this);
 	
 	/**
 	 * Delay in ms before open notification dialog
@@ -2333,6 +2431,8 @@ var elFinder = function(elm, opts, bootCallback) {
 			isBinary = (opts.options || {}).dataType === 'binary',
 			// current cmd is "open"
 			isOpen   = (!opts.asNotOpen && cmd === 'open'),
+			// the tree option is enabled (for "open" command) 
+			isTree   = (data.tree === 1),
 			// call default fail callback (display error dialog) ?
 			deffail  = !(isBinary || opts.preventDefault || opts.preventFail),
 			// call default success callback ?
@@ -2472,6 +2572,7 @@ var elFinder = function(elm, opts, bootCallback) {
 							// check responseText, Is that JSON?
 							try {
 								data = JSON.parse(xhr.responseText);
+								xhr._elfinderResponse = data;
 								if (data && data.error) {
 									error = data.error;
 								}
@@ -2525,7 +2626,13 @@ var elFinder = function(elm, opts, bootCallback) {
 					return dfrd.reject({error :['errResponse', 'errDataEmpty']}, xhr, response);
 				} else if (!$.isPlainObject(response)) {
 					return dfrd.reject({error :['errResponse', 'errDataNotJSON']}, xhr, response);
-				} else if (response.error) {
+				}
+
+				if (isOpen && !!data.init && Object.prototype.hasOwnProperty.call(response, self.csrfResponseKey)) {
+					self.setCsrfToken(response[self.csrfResponseKey]);
+				}
+
+				if (response.error) {
 					if (isOpen) {
 						// check leafRoots
 						$.each(self.leafRoots, function(phash, roots) {
@@ -2554,7 +2661,7 @@ var elFinder = function(elm, opts, bootCallback) {
 					},
 					actionTarget;
 					
-					if (isOpen) {
+					if (isOpen && !isTree) {
 						pushLeafRoots('files');
 					} else if (cmd === 'tree') {
 						pushLeafRoots('tree');
@@ -2764,6 +2871,12 @@ var elFinder = function(elm, opts, bootCallback) {
 						if (error) {
 							error.error = '';
 						}
+					} else if (xhr && self.handleCsrfReload(xhr, xhr._elfinderResponse)) {
+						deffail = false;
+						syncOnFail = false;
+						if (error) {
+							error.error = '';
+						}
 					}
 					// abort xhr
 					xhrAbort();
@@ -2841,6 +2954,7 @@ var elFinder = function(elm, opts, bootCallback) {
 						requestQueue.shift()();
 					}
 				}).fail(error).done(success);
+				xhr._csrfRefresh = !!opts._csrfRefresh;
 				
 				if (self.api >= 2.1029) {
 					xhr._requestId = reqId;
@@ -3091,11 +3205,22 @@ var elFinder = function(elm, opts, bootCallback) {
 	};
 	
 	/**
+	 * Sync Stopper
+	 * 
+	 * @type Boolean
+	 */
+	this.syncStopper = false;
+
+	/**
 	 * Sync content
 	 * 
 	 * @return jQuery.Deferred
 	 */
 	this.sync = function(onlydir, polling) {
+		if (this.syncStopper) {
+			return $.Deferred().reject();
+		}
+		this.syncStopper = true;
 		this.autoSync('stop');
 		var self  = this,
 			compare = function(){
@@ -3112,9 +3237,11 @@ var elFinder = function(elm, opts, bootCallback) {
 				return c;
 			},
 			comp  = compare(),
+			odataRoots,
 			dfrd  = $.Deferred().always(function() { !reqFail && self.trigger('sync'); }),
+			tree = (! onlydir && this.ui.tree) ? 1 : 0,
 			opts = [this.request({
-				data           : {cmd : 'open', reload : 1, target : cwd, tree : (! onlydir && this.ui.tree) ? 1 : 0, compare : comp},
+				data           : {cmd : 'open', reload : 1, target : cwd, tree : tree, compare : comp},
 				preventDefault : true
 			})],
 			exParents = function() {
@@ -3206,7 +3333,14 @@ var elFinder = function(elm, opts, bootCallback) {
 			if (!self.validResponse('tree', pdata)) {
 				return dfrd.reject((pdata.norError || 'errResponse'));
 			}
-			
+
+			// When tree = 1, the server will return all volumes in response to the open command.
+			// Remove volumes from the tree command that do not exist anymore.
+			if (tree && pdata && pdata.tree) {
+				odataRoots = $.map($.grep(odata.files, function(f) {return f.isroot;}), function(f) {return f.hash;});
+				pdata.tree = $.grep(pdata.tree, function(f) {return !f.isroot || odataRoots.indexOf(f.hash) >= 0;});
+			}
+
 			var diff = self.diff(odata.files.concat(pdata && pdata.tree ? pdata.tree : []), onlydir);
 
 			diff.added.push(odata.cwd);
@@ -3220,6 +3354,7 @@ var elFinder = function(elm, opts, bootCallback) {
 			return dfrd.resolve(diff);
 		})
 		.always(function() {
+			self.syncStopper = false;
 			self.autoSync();
 		});
 		
@@ -3247,7 +3382,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	this.shortcut = function(s) {
 		var patterns, pattern, code, i, parts;
 		
-		if (this.options.allowShortcuts && s.pattern && $.isFunction(s.callback)) {
+		if (this.options.allowShortcuts && s.pattern && typeof s.callback === 'function') {
 			patterns = s.pattern.toUpperCase().split(/\s+/);
 			
 			for (i= 0; i < patterns.length; i++) {
@@ -3384,7 +3519,7 @@ var elFinder = function(elm, opts, bootCallback) {
 			this.autoSync('stop');
 		}
 		if (!dstHash && files) {
-			if ($.isArray(files)) {
+			if (Array.isArray(files)) {
 				if (files.length) {
 					dstHash = files[0];
 				}
@@ -4137,14 +4272,14 @@ var elFinder = function(elm, opts, bootCallback) {
 	}
 	
 	if (this.transport.upload == 'iframe') {
-		this.transport.upload = $.proxy(this.uploads.iframe, this);
+		this.transport.upload = this.uploads.iframe.bind(this);
 	} else if (typeof(this.transport.upload) == 'function') {
 		this.dragUpload = !!this.options.dragUploadAllow;
 	} else if (this.xhrUpload && !!this.options.dragUploadAllow) {
-		this.transport.upload = $.proxy(this.uploads.xhr, this);
+		this.transport.upload = this.uploads.xhr.bind(this);
 		this.dragUpload = true;
 	} else {
-		this.transport.upload = $.proxy(this.uploads.iframe, this);
+		this.transport.upload = this.uploads.iframe.bind(this);
 	}
 
 	/**
@@ -4610,9 +4745,22 @@ var elFinder = function(elm, opts, bootCallback) {
 	if (true === this.options.sound) {
 		this.bind('playsound', function(e) {
 			var play  = beeper.canPlayType && beeper.canPlayType('audio/wav; codecs="1"'),
-				file = e.data && e.data.soundFile;
+				file = e.data && e.data.soundFile,
+				source;
 
-			play && file && play != '' && play != 'no' && $(beeper).html('<source src="' + soundPath + file + '" type="audio/wav">')[0].play();
+			// Reject non-wav / path-traversal / HTML-breakout soundFile values (DOM XSS)
+			if (!(play && file && play != '' && play != 'no')) {
+				return;
+			}
+			if (typeof file !== 'string' || !/^[A-Za-z0-9._-]+\.wav$/.test(file)) {
+				return;
+			}
+			beeper.innerHTML = '';
+			source = document.createElement('source');
+			source.src = soundPath + file;
+			source.type = 'audio/wav';
+			beeper.appendChild(source);
+			beeper.play();
 		});
 	}
 
@@ -4854,15 +5002,36 @@ var elFinder = function(elm, opts, bootCallback) {
 		// bind window onmessage for CORS
 		$(window).on('message.' + namespace, function(e){
 			var res = e.originalEvent || null,
-				obj, data;
-			if (res && (self.convAbsUrl(self.options.url).indexOf(res.origin) === 0 || self.convAbsUrl(self.uploadURL).indexOf(res.origin) === 0)) {
+				obj, data, bind, trusted = {};
+			// Exact-origin match only (prefix indexOf check allowed origin bypass)
+			try {
+				trusted[new URL(self.convAbsUrl(self.options.url)).origin] = true;
+			} catch (ignore) {}
+			try {
+				trusted[new URL(self.convAbsUrl(self.uploadURL)).origin] = true;
+			} catch (ignore) {}
+			if (res && res.origin && trusted[res.origin]) {
 				try {
-					obj = JSON.parse(res.data);
-					data = obj.data || null;
+					try {
+						if (typeof res.data !== 'string') {
+							return;
+						}
+						obj = JSON.parse(res.data);
+						if (obj.type !== "io.studio-42.github") {
+							return;
+						}
+						data = obj.data || null;
+					} catch (e2) {
+						return;
+					} 
 					if (data) {
+						bind = obj.bind;
+						if (bind && !/^[a-zA-Z0-9._-]+$/.test(bind)) {
+							bind = '';
+						}
 						if (data.error) {
-							if (obj.bind) {
-								self.trigger(obj.bind+'fail', data);
+							if (bind) {
+								self.trigger(bind+'fail', data);
 							}
 							self.error(data.error);
 						} else {
@@ -4871,9 +5040,9 @@ var elFinder = function(elm, opts, bootCallback) {
 							data.removed && data.removed.length && self.remove(data);
 							data.added   && data.added.length   && self.add(data);
 							data.changed && data.changed.length && self.change(data);
-							if (obj.bind) {
-								self.trigger(obj.bind, data);
-								self.trigger(obj.bind+'done');
+							if (bind) {
+								self.trigger(bind, data);
+								self.trigger(bind+'done');
 							}
 							data.sync && self.sync();
 						}
@@ -5267,10 +5436,10 @@ var elFinder = function(elm, opts, bootCallback) {
 		$.each(self.commands, function(name, cmd) {
 			var proto = Object.assign({}, cmd.prototype),
 				extendsCmd, opts;
-			if ($.isFunction(cmd) && !self._commands[name] && (cmd.prototype.forceLoad || $.inArray(name, self.options.commands) !== -1)) {
+			if (typeof cmd === 'function' && !self._commands[name] && (cmd.prototype.forceLoad || $.inArray(name, self.options.commands) !== -1)) {
 				extendsCmd = cmd.prototype.extendsCmd || '';
 				if (extendsCmd) {
-					if ($.isFunction(self.commands[extendsCmd])) {
+					if (typeof self.commands[extendsCmd] === 'function') {
 						cmd.prototype = Object.assign({}, base, new self.commands[extendsCmd](), cmd.prototype);
 					} else {
 						return true;
@@ -5289,7 +5458,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				if (self._commands[name].linkedCmds.length) {
 					$.each(self._commands[name].linkedCmds, function(i, n) {
 						var lcmd = self.commands[n];
-						if ($.isFunction(lcmd) && !self._commands[n]) {
+						if (typeof lcmd === 'function' && !self._commands[n]) {
 							lcmd.prototype = base;
 							self._commands[n] = new lcmd();
 							self._commands[n].setup(n, self.options.commandsOptions[n]||{});
@@ -6010,6 +6179,18 @@ elFinder.prototype = {
 			'image/vnd.adobe.photoshop'     : 'PSD',
 			'image/xbm'                     : 'XBITMAP',
 			'image/pxm'                     : 'PXM',
+			'image/webp'                    : 'WEBP',
+			'application/vnd.ms-fontobject' : 'EOT',
+			'font/sfnt'                     : 'SFNT',
+			'application/font-sfnt'         : 'SFNT',
+			'font/ttf'                      : 'TTF',
+			'font/opentype'                 : 'OTF',
+			'font/otf'                      : 'OTF',
+			'application/x-font-opentype'   : 'OTF',
+			'font/woff'                     : 'WOFF',
+			'application/font-woff'         : 'WOFF',
+			'font/woff2'                    : 'WOFF2',
+			'application/font-woff2'        : 'WOFF2',
 			'audio/mpeg'                    : 'AudioMPEG',
 			'audio/midi'                    : 'AudioMIDI',
 			'audio/ogg'                     : 'AudioOGG',
@@ -6077,7 +6258,7 @@ elFinder.prototype = {
 		var self = this,
 			data;
 		
-		if (!$.trim(text)) {
+		if (!text.trim()) {
 			return {error : ['errResponse', 'errDataEmpty']};
 		}
 		
@@ -6492,7 +6673,7 @@ elFinder.prototype = {
 							};
 						if (text = $(this).text()) {
 							loc = parseUrl($(this).attr('href'));
-							if (loc.href && loc.href.match(/^(?:ht|f)tp/i) && (atag.length === 1 || ! loc.pathname.match(/(?:\.html?|\/[^\/.]*)$/i) || $.trim(text).match(/\.[a-z0-9-]{1,10}$/i))) {
+							if (loc.href && loc.href.match(/^(?:ht|f)tp/i) && (atag.length === 1 || ! loc.pathname.match(/(?:\.html?|\/[^\/.]*)$/i) || text.trim().match(/\.[a-z0-9-]{1,10}$/i))) {
 								if ($.inArray(loc.href, ret) == -1 && $.inArray(loc.href, check) == -1) ret.push(loc.href);
 							}
 						}
@@ -6831,6 +7012,8 @@ elFinder.prototype = {
 					// trigger "requestError" event
 					self.trigger('requestError', errData);
 					if (errData._getEvent && errData._getEvent().isDefaultPrevented()) {
+						res.error = '';
+					} else if (self.handleCsrfReload(xhr, res)) {
 						res.error = '';
 					}
 					if (res._chunkfailure || res._multiupload) {
@@ -7832,7 +8015,7 @@ elFinder.prototype = {
 				c = document.cookie.split(';');
 				name += '=';
 				for (i=0; i<c.length; i++) {
-					c[i] = $.trim(c[i]);
+					c[i] = c[i].trim();
 					if (c[i].substring(0, name.length) == name) {
 						retval = decodeURIComponent(c[i].substring(name.length));
 						if (retval.substr(0,1) === '{' || retval.substr(0,1) === '[') {
@@ -8131,7 +8314,7 @@ elFinder.prototype = {
 							}
 						}
 						
-						if (isRoot) {
+						if (isRoot && self.options.enableRootRename !== false) {
 							if (rootNames = self.storage('rootNames')) {
 								if (rootNames[file.hash]) {
 									file._name = file.name;
@@ -8630,7 +8813,7 @@ elFinder.prototype = {
 		
 		if (cnt > 0) {
 			if (cancel && button.length) {
-				if ($.isFunction(cancel) || (typeof cancel === 'object' && cancel.promise)) {
+				if (typeof cancel === 'function' || (typeof cancel === 'object' && cancel.promise)) {
 					notify._esc = function(e) {
 						if (e.type == 'keydown' && e.keyCode != $.ui.keyCode.ESCAPE) {
 							return;
@@ -8787,7 +8970,7 @@ elFinder.prototype = {
 			};
 		}
 		
-		if (opts.optionsCallback && $.isFunction(opts.optionsCallback)) {
+		if (opts.optionsCallback && typeof opts.optionsCallback === 'function') {
 			opts.optionsCallback(options);
 		}
 		
@@ -9000,6 +9183,8 @@ elFinder.prototype = {
 				kind = 'Video';
 			} else if (mime.indexOf('application') === 0) {
 				kind = 'App';
+			} else if (mime.indexOf('font') === 0) {
+				kind = 'Font';
 			} else {
 				kind = mime;
 			}
@@ -9197,7 +9382,7 @@ elFinder.prototype = {
 		if (!style) {
 			style = this.options.fileModeStyle.toLowerCase();
 		}
-		p = $.trim(p);
+		p = p.trim();
 		if (p.match(/[rwxs-]{9}$/i)) {
 			str = p = p.substr(-9);
 			if (style == 'string') {
@@ -9281,7 +9466,7 @@ elFinder.prototype = {
 	 * @return void
 	 */
 	registRawStringDecoder : function(rawStringDecoder) {
-		if ($.isFunction(rawStringDecoder)) {
+		if (typeof rawStringDecoder === 'function') {
 			this.decodeRawString = this.options.rawStringDecoder = rawStringDecoder;
 		}
 	},
@@ -9773,7 +9958,7 @@ elFinder.prototype = {
 					}
 				});
 				if (!hasError) {
-					if ($.isFunction(callback)) {
+					if (typeof callback === 'function') {
 						if (check) {
 							if (typeof check.obj[check.name] === 'undefined') {
 								cnt = check.timeout? (check.timeout / 10) : 1;
@@ -9791,7 +9976,7 @@ elFinder.prototype = {
 						}
 					}
 				} else {
-					if (opts.error && $.isFunction(opts.error)) {
+					if (opts.error && typeof opts.error === 'function') {
 						opts.error({ loadResults: results });
 					}
 				}
@@ -10254,6 +10439,9 @@ elFinder.prototype = {
 						if (themeObj.cssurls) {
 							themeObj.cssurls = absUrl(themeObj.cssurls, m[1]);
 						}
+						if (themeObj.image) {
+							themeObj.image = absUrl(themeObj.image, m[1]);
+						}
 						dfd.resolve(themeObj);
 					}).fail(function() {
 						dfd.reject();
@@ -10448,7 +10636,7 @@ elFinder.prototype = {
 	arrayFlip : function (trans, val) {
 		var key,
 			tmpArr = {},
-			isArr = $.isArray(trans);
+			isArr = Array.isArray(trans);
 		for (key in trans) {
 			if (isArr || trans.hasOwnProperty(key)) {
 				tmpArr[trans[key]] = val || key;
@@ -10616,7 +10804,7 @@ if (!Object.keys) {
 // Array.isArray
 if (!Array.isArray) {
 	Array.isArray = function(arr) {
-		return jQuery.isArray(arr);
+		return Object.prototype.toString.call(arr) === '[object Array]';
 	};
 }
 // Object.assign
@@ -10736,7 +10924,7 @@ if (!window.cancelAnimationFrame) {
  *
  * @type String
  **/
-elFinder.prototype.version = '2.1.61 (2.1-src Nightly: fdfe8f6)';
+elFinder.prototype.version = '2.1.70';
 
 
 
@@ -11057,12 +11245,13 @@ if ($.ui) {
 	var self = this;
 
 	if (self.element.hasClass('touch-punch')) {
+		self._touchPunchHandlers = self._touchPunchHandlers || {
+			touchstart: self._touchStart.bind(self),
+			touchmove: self._touchMove.bind(self),
+			touchend: self._touchEnd.bind(self)
+		};
 		// Delegate the touch handlers to the widget's element
-		self.element.on({
-		  touchstart: $.proxy(self, '_touchStart'),
-		  touchmove: $.proxy(self, '_touchMove'),
-		  touchend: $.proxy(self, '_touchEnd')
-		});
+		self.element.on(self._touchPunchHandlers);
 	}
 
 	// Call the original $.ui.mouse init method
@@ -11076,13 +11265,9 @@ if ($.ui) {
 	
 	var self = this;
 
-	if (self.element.hasClass('touch-punch')) {
+	if (self.element.hasClass('touch-punch') && self._touchPunchHandlers) {
 		// Delegate the touch handlers to the widget's element
-		self.element.off({
-		  touchstart: $.proxy(self, '_touchStart'),
-		  touchmove: $.proxy(self, '_touchMove'),
-		  touchend: $.proxy(self, '_touchEnd')
-		});
+		self.element.off(self._touchPunchHandlers);
 	}
 
 	// Call the original $.ui.mouse destroy method
@@ -11131,7 +11316,7 @@ $.fn.elfinder = function(o, o2) {
 					if (elfinder) {
 						opts = $.extend(true, elfinder.options, $.isPlainObject(o2)? o2 : {});
 						bootCallback = elfinder.bootCallback;
-						if (elfinder.reloadCallback && $.isFunction(elfinder.reloadCallback)) {
+						if (elfinder.reloadCallback && typeof elfinder.reloadCallback === 'function') {
 							elfinder.reloadCallback(opts, bootCallback);
 						} else {
 							elfinder.destroy();
@@ -11201,7 +11386,8 @@ if (! $.fn.scrollBottom) {
  * File: /js/elFinder.mimetypes.js
  */
 
-elFinder.prototype.mimeTypes = {"application\/x-executable":"exe","application\/x-jar":"jar","application\/x-gzip":"gz","application\/x-bzip2":"tbz","application\/x-rar":"rar","text\/x-php":"php","text\/javascript":"js","application\/rtfd":"rtfd","text\/x-python":"py","text\/x-ruby":"rb","text\/x-shellscript":"sh","text\/x-perl":"pl","text\/xml":"xml","text\/x-csrc":"c","text\/x-chdr":"h","text\/x-c++src":"cpp","text\/x-c++hdr":"hh","text\/x-markdown":"md","text\/x-yaml":"yml","image\/x-ms-bmp":"bmp","image\/x-targa":"tga","image\/xbm":"xbm","image\/pxm":"pxm","audio\/wav":"wav","video\/x-dv":"dv","video\/x-ms-wmv":"wm","video\/ogg":"ogm","video\/MP2T":"m2ts","application\/x-mpegURL":"m3u8","application\/dash+xml":"mpd","application\/andrew-inset":"ez","application\/applixware":"aw","application\/atom+xml":"atom","application\/atomcat+xml":"atomcat","application\/atomsvc+xml":"atomsvc","application\/ccxml+xml":"ccxml","application\/cdmi-capability":"cdmia","application\/cdmi-container":"cdmic","application\/cdmi-domain":"cdmid","application\/cdmi-object":"cdmio","application\/cdmi-queue":"cdmiq","application\/cu-seeme":"cu","application\/davmount+xml":"davmount","application\/docbook+xml":"dbk","application\/dssc+der":"dssc","application\/dssc+xml":"xdssc","application\/ecmascript":"ecma","application\/emma+xml":"emma","application\/epub+zip":"epub","application\/exi":"exi","application\/font-tdpfr":"pfr","application\/gml+xml":"gml","application\/gpx+xml":"gpx","application\/gxf":"gxf","application\/hyperstudio":"stk","application\/inkml+xml":"ink","application\/ipfix":"ipfix","application\/java-serialized-object":"ser","application\/java-vm":"class","application\/json":"json","application\/jsonml+json":"jsonml","application\/lost+xml":"lostxml","application\/mac-binhex40":"hqx","application\/mac-compactpro":"cpt","application\/mads+xml":"mads","application\/marc":"mrc","application\/marcxml+xml":"mrcx","application\/mathematica":"ma","application\/mathml+xml":"mathml","application\/mbox":"mbox","application\/mediaservercontrol+xml":"mscml","application\/metalink+xml":"metalink","application\/metalink4+xml":"meta4","application\/mets+xml":"mets","application\/mods+xml":"mods","application\/mp21":"m21","application\/mp4":"mp4s","application\/msword":"doc","application\/mxf":"mxf","application\/octet-stream":"bin","application\/oda":"oda","application\/oebps-package+xml":"opf","application\/ogg":"ogx","application\/omdoc+xml":"omdoc","application\/onenote":"onetoc","application\/oxps":"oxps","application\/patch-ops-error+xml":"xer","application\/pdf":"pdf","application\/pgp-encrypted":"pgp","application\/pgp-signature":"asc","application\/pics-rules":"prf","application\/pkcs10":"p10","application\/pkcs7-mime":"p7m","application\/pkcs7-signature":"p7s","application\/pkcs8":"p8","application\/pkix-attr-cert":"ac","application\/pkix-cert":"cer","application\/pkix-crl":"crl","application\/pkix-pkipath":"pkipath","application\/pkixcmp":"pki","application\/pls+xml":"pls","application\/postscript":"ai","application\/prs.cww":"cww","application\/pskc+xml":"pskcxml","application\/rdf+xml":"rdf","application\/reginfo+xml":"rif","application\/relax-ng-compact-syntax":"rnc","application\/resource-lists+xml":"rl","application\/resource-lists-diff+xml":"rld","application\/rls-services+xml":"rs","application\/rpki-ghostbusters":"gbr","application\/rpki-manifest":"mft","application\/rpki-roa":"roa","application\/rsd+xml":"rsd","application\/rss+xml":"rss","application\/rtf":"rtf","application\/sbml+xml":"sbml","application\/scvp-cv-request":"scq","application\/scvp-cv-response":"scs","application\/scvp-vp-request":"spq","application\/scvp-vp-response":"spp","application\/sdp":"sdp","application\/set-payment-initiation":"setpay","application\/set-registration-initiation":"setreg","application\/shf+xml":"shf","application\/smil+xml":"smi","application\/sparql-query":"rq","application\/sparql-results+xml":"srx","application\/srgs":"gram","application\/srgs+xml":"grxml","application\/sru+xml":"sru","application\/ssdl+xml":"ssdl","application\/ssml+xml":"ssml","application\/tei+xml":"tei","application\/thraud+xml":"tfi","application\/timestamped-data":"tsd","application\/vnd.3gpp.pic-bw-large":"plb","application\/vnd.3gpp.pic-bw-small":"psb","application\/vnd.3gpp.pic-bw-var":"pvb","application\/vnd.3gpp2.tcap":"tcap","application\/vnd.3m.post-it-notes":"pwn","application\/vnd.accpac.simply.aso":"aso","application\/vnd.accpac.simply.imp":"imp","application\/vnd.acucobol":"acu","application\/vnd.acucorp":"atc","application\/vnd.adobe.air-application-installer-package+zip":"air","application\/vnd.adobe.formscentral.fcdt":"fcdt","application\/vnd.adobe.fxp":"fxp","application\/vnd.adobe.xdp+xml":"xdp","application\/vnd.adobe.xfdf":"xfdf","application\/vnd.ahead.space":"ahead","application\/vnd.airzip.filesecure.azf":"azf","application\/vnd.airzip.filesecure.azs":"azs","application\/vnd.amazon.ebook":"azw","application\/vnd.americandynamics.acc":"acc","application\/vnd.amiga.ami":"ami","application\/vnd.android.package-archive":"apk","application\/vnd.anser-web-certificate-issue-initiation":"cii","application\/vnd.anser-web-funds-transfer-initiation":"fti","application\/vnd.antix.game-component":"atx","application\/vnd.apple.installer+xml":"mpkg","application\/vnd.aristanetworks.swi":"swi","application\/vnd.astraea-software.iota":"iota","application\/vnd.audiograph":"aep","application\/vnd.blueice.multipass":"mpm","application\/vnd.bmi":"bmi","application\/vnd.businessobjects":"rep","application\/vnd.chemdraw+xml":"cdxml","application\/vnd.chipnuts.karaoke-mmd":"mmd","application\/vnd.cinderella":"cdy","application\/vnd.claymore":"cla","application\/vnd.cloanto.rp9":"rp9","application\/vnd.clonk.c4group":"c4g","application\/vnd.cluetrust.cartomobile-config":"c11amc","application\/vnd.cluetrust.cartomobile-config-pkg":"c11amz","application\/vnd.commonspace":"csp","application\/vnd.contact.cmsg":"cdbcmsg","application\/vnd.cosmocaller":"cmc","application\/vnd.crick.clicker":"clkx","application\/vnd.crick.clicker.keyboard":"clkk","application\/vnd.crick.clicker.palette":"clkp","application\/vnd.crick.clicker.template":"clkt","application\/vnd.crick.clicker.wordbank":"clkw","application\/vnd.criticaltools.wbs+xml":"wbs","application\/vnd.ctc-posml":"pml","application\/vnd.cups-ppd":"ppd","application\/vnd.curl.car":"car","application\/vnd.curl.pcurl":"pcurl","application\/vnd.dart":"dart","application\/vnd.data-vision.rdz":"rdz","application\/vnd.dece.data":"uvf","application\/vnd.dece.ttml+xml":"uvt","application\/vnd.dece.unspecified":"uvx","application\/vnd.dece.zip":"uvz","application\/vnd.denovo.fcselayout-link":"fe_launch","application\/vnd.dna":"dna","application\/vnd.dolby.mlp":"mlp","application\/vnd.dpgraph":"dpg","application\/vnd.dreamfactory":"dfac","application\/vnd.ds-keypoint":"kpxx","application\/vnd.dvb.ait":"ait","application\/vnd.dvb.service":"svc","application\/vnd.dynageo":"geo","application\/vnd.ecowin.chart":"mag","application\/vnd.enliven":"nml","application\/vnd.epson.esf":"esf","application\/vnd.epson.msf":"msf","application\/vnd.epson.quickanime":"qam","application\/vnd.epson.salt":"slt","application\/vnd.epson.ssf":"ssf","application\/vnd.eszigno3+xml":"es3","application\/vnd.ezpix-album":"ez2","application\/vnd.ezpix-package":"ez3","application\/vnd.fdf":"fdf","application\/vnd.fdsn.mseed":"mseed","application\/vnd.fdsn.seed":"seed","application\/vnd.flographit":"gph","application\/vnd.fluxtime.clip":"ftc","application\/vnd.framemaker":"fm","application\/vnd.frogans.fnc":"fnc","application\/vnd.frogans.ltf":"ltf","application\/vnd.fsc.weblaunch":"fsc","application\/vnd.fujitsu.oasys":"oas","application\/vnd.fujitsu.oasys2":"oa2","application\/vnd.fujitsu.oasys3":"oa3","application\/vnd.fujitsu.oasysgp":"fg5","application\/vnd.fujitsu.oasysprs":"bh2","application\/vnd.fujixerox.ddd":"ddd","application\/vnd.fujixerox.docuworks":"xdw","application\/vnd.fujixerox.docuworks.binder":"xbd","application\/vnd.fuzzysheet":"fzs","application\/vnd.genomatix.tuxedo":"txd","application\/vnd.geogebra.file":"ggb","application\/vnd.geogebra.tool":"ggt","application\/vnd.geometry-explorer":"gex","application\/vnd.geonext":"gxt","application\/vnd.geoplan":"g2w","application\/vnd.geospace":"g3w","application\/vnd.gmx":"gmx","application\/vnd.google-earth.kml+xml":"kml","application\/vnd.google-earth.kmz":"kmz","application\/vnd.grafeq":"gqf","application\/vnd.groove-account":"gac","application\/vnd.groove-help":"ghf","application\/vnd.groove-identity-message":"gim","application\/vnd.groove-injector":"grv","application\/vnd.groove-tool-message":"gtm","application\/vnd.groove-tool-template":"tpl","application\/vnd.groove-vcard":"vcg","application\/vnd.hal+xml":"hal","application\/vnd.handheld-entertainment+xml":"zmm","application\/vnd.hbci":"hbci","application\/vnd.hhe.lesson-player":"les","application\/vnd.hp-hpgl":"hpgl","application\/vnd.hp-hpid":"hpid","application\/vnd.hp-hps":"hps","application\/vnd.hp-jlyt":"jlt","application\/vnd.hp-pcl":"pcl","application\/vnd.hp-pclxl":"pclxl","application\/vnd.hydrostatix.sof-data":"sfd-hdstx","application\/vnd.ibm.minipay":"mpy","application\/vnd.ibm.modcap":"afp","application\/vnd.ibm.rights-management":"irm","application\/vnd.ibm.secure-container":"sc","application\/vnd.iccprofile":"icc","application\/vnd.igloader":"igl","application\/vnd.immervision-ivp":"ivp","application\/vnd.immervision-ivu":"ivu","application\/vnd.insors.igm":"igm","application\/vnd.intercon.formnet":"xpw","application\/vnd.intergeo":"i2g","application\/vnd.intu.qbo":"qbo","application\/vnd.intu.qfx":"qfx","application\/vnd.ipunplugged.rcprofile":"rcprofile","application\/vnd.irepository.package+xml":"irp","application\/vnd.is-xpr":"xpr","application\/vnd.isac.fcs":"fcs","application\/vnd.jam":"jam","application\/vnd.jcp.javame.midlet-rms":"rms","application\/vnd.jisp":"jisp","application\/vnd.joost.joda-archive":"joda","application\/vnd.kahootz":"ktz","application\/vnd.kde.karbon":"karbon","application\/vnd.kde.kchart":"chrt","application\/vnd.kde.kformula":"kfo","application\/vnd.kde.kivio":"flw","application\/vnd.kde.kontour":"kon","application\/vnd.kde.kpresenter":"kpr","application\/vnd.kde.kspread":"ksp","application\/vnd.kde.kword":"kwd","application\/vnd.kenameaapp":"htke","application\/vnd.kidspiration":"kia","application\/vnd.kinar":"kne","application\/vnd.koan":"skp","application\/vnd.kodak-descriptor":"sse","application\/vnd.las.las+xml":"lasxml","application\/vnd.llamagraphics.life-balance.desktop":"lbd","application\/vnd.llamagraphics.life-balance.exchange+xml":"lbe","application\/vnd.lotus-1-2-3":123,"application\/vnd.lotus-approach":"apr","application\/vnd.lotus-freelance":"pre","application\/vnd.lotus-notes":"nsf","application\/vnd.lotus-organizer":"org","application\/vnd.lotus-screencam":"scm","application\/vnd.lotus-wordpro":"lwp","application\/vnd.macports.portpkg":"portpkg","application\/vnd.mcd":"mcd","application\/vnd.medcalcdata":"mc1","application\/vnd.mediastation.cdkey":"cdkey","application\/vnd.mfer":"mwf","application\/vnd.mfmp":"mfm","application\/vnd.micrografx.flo":"flo","application\/vnd.micrografx.igx":"igx","application\/vnd.mif":"mif","application\/vnd.mobius.daf":"daf","application\/vnd.mobius.dis":"dis","application\/vnd.mobius.mbk":"mbk","application\/vnd.mobius.mqy":"mqy","application\/vnd.mobius.msl":"msl","application\/vnd.mobius.plc":"plc","application\/vnd.mobius.txf":"txf","application\/vnd.mophun.application":"mpn","application\/vnd.mophun.certificate":"mpc","application\/vnd.mozilla.xul+xml":"xul","application\/vnd.ms-artgalry":"cil","application\/vnd.ms-cab-compressed":"cab","application\/vnd.ms-excel":"xls","application\/vnd.ms-excel.addin.macroenabled.12":"xlam","application\/vnd.ms-excel.sheet.binary.macroenabled.12":"xlsb","application\/vnd.ms-excel.sheet.macroenabled.12":"xlsm","application\/vnd.ms-excel.template.macroenabled.12":"xltm","application\/vnd.ms-fontobject":"eot","application\/vnd.ms-htmlhelp":"chm","application\/vnd.ms-ims":"ims","application\/vnd.ms-lrm":"lrm","application\/vnd.ms-officetheme":"thmx","application\/vnd.ms-outlook":"msg","application\/vnd.ms-pki.seccat":"cat","application\/vnd.ms-pki.stl":"stl","application\/vnd.ms-powerpoint":"ppt","application\/vnd.ms-powerpoint.addin.macroenabled.12":"ppam","application\/vnd.ms-powerpoint.presentation.macroenabled.12":"pptm","application\/vnd.ms-powerpoint.slide.macroenabled.12":"sldm","application\/vnd.ms-powerpoint.slideshow.macroenabled.12":"ppsm","application\/vnd.ms-powerpoint.template.macroenabled.12":"potm","application\/vnd.ms-project":"mpp","application\/vnd.ms-word.document.macroenabled.12":"docm","application\/vnd.ms-word.template.macroenabled.12":"dotm","application\/vnd.ms-works":"wps","application\/vnd.ms-wpl":"wpl","application\/vnd.ms-xpsdocument":"xps","application\/vnd.mseq":"mseq","application\/vnd.musician":"mus","application\/vnd.muvee.style":"msty","application\/vnd.mynfc":"taglet","application\/vnd.neurolanguage.nlu":"nlu","application\/vnd.nitf":"ntf","application\/vnd.noblenet-directory":"nnd","application\/vnd.noblenet-sealer":"nns","application\/vnd.noblenet-web":"nnw","application\/vnd.nokia.n-gage.data":"ngdat","application\/vnd.nokia.n-gage.symbian.install":"n-gage","application\/vnd.nokia.radio-preset":"rpst","application\/vnd.nokia.radio-presets":"rpss","application\/vnd.novadigm.edm":"edm","application\/vnd.novadigm.edx":"edx","application\/vnd.novadigm.ext":"ext","application\/vnd.oasis.opendocument.chart":"odc","application\/vnd.oasis.opendocument.chart-template":"otc","application\/vnd.oasis.opendocument.database":"odb","application\/vnd.oasis.opendocument.formula":"odf","application\/vnd.oasis.opendocument.formula-template":"odft","application\/vnd.oasis.opendocument.graphics":"odg","application\/vnd.oasis.opendocument.graphics-template":"otg","application\/vnd.oasis.opendocument.image":"odi","application\/vnd.oasis.opendocument.image-template":"oti","application\/vnd.oasis.opendocument.presentation":"odp","application\/vnd.oasis.opendocument.presentation-template":"otp","application\/vnd.oasis.opendocument.spreadsheet":"ods","application\/vnd.oasis.opendocument.spreadsheet-template":"ots","application\/vnd.oasis.opendocument.text":"odt","application\/vnd.oasis.opendocument.text-master":"odm","application\/vnd.oasis.opendocument.text-template":"ott","application\/vnd.oasis.opendocument.text-web":"oth","application\/vnd.olpc-sugar":"xo","application\/vnd.oma.dd2+xml":"dd2","application\/vnd.openofficeorg.extension":"oxt","application\/vnd.openxmlformats-officedocument.presentationml.presentation":"pptx","application\/vnd.openxmlformats-officedocument.presentationml.slide":"sldx","application\/vnd.openxmlformats-officedocument.presentationml.slideshow":"ppsx","application\/vnd.openxmlformats-officedocument.presentationml.template":"potx","application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet":"xlsx","application\/vnd.openxmlformats-officedocument.spreadsheetml.template":"xltx","application\/vnd.openxmlformats-officedocument.wordprocessingml.document":"docx","application\/vnd.openxmlformats-officedocument.wordprocessingml.template":"dotx","application\/vnd.osgeo.mapguide.package":"mgp","application\/vnd.osgi.dp":"dp","application\/vnd.osgi.subsystem":"esa","application\/vnd.palm":"pdb","application\/vnd.pawaafile":"paw","application\/vnd.pg.format":"str","application\/vnd.pg.osasli":"ei6","application\/vnd.picsel":"efif","application\/vnd.pmi.widget":"wg","application\/vnd.pocketlearn":"plf","application\/vnd.powerbuilder6":"pbd","application\/vnd.previewsystems.box":"box","application\/vnd.proteus.magazine":"mgz","application\/vnd.publishare-delta-tree":"qps","application\/vnd.pvi.ptid1":"ptid","application\/vnd.quark.quarkxpress":"qxd","application\/vnd.realvnc.bed":"bed","application\/vnd.recordare.musicxml":"mxl","application\/vnd.recordare.musicxml+xml":"musicxml","application\/vnd.rig.cryptonote":"cryptonote","application\/vnd.rim.cod":"cod","application\/vnd.rn-realmedia":"rm","application\/vnd.rn-realmedia-vbr":"rmvb","application\/vnd.route66.link66+xml":"link66","application\/vnd.sailingtracker.track":"st","application\/vnd.seemail":"see","application\/vnd.sema":"sema","application\/vnd.semd":"semd","application\/vnd.semf":"semf","application\/vnd.shana.informed.formdata":"ifm","application\/vnd.shana.informed.formtemplate":"itp","application\/vnd.shana.informed.interchange":"iif","application\/vnd.shana.informed.package":"ipk","application\/vnd.simtech-mindmapper":"twd","application\/vnd.smaf":"mmf","application\/vnd.smart.teacher":"teacher","application\/vnd.solent.sdkm+xml":"sdkm","application\/vnd.spotfire.dxp":"dxp","application\/vnd.spotfire.sfs":"sfs","application\/vnd.stardivision.calc":"sdc","application\/vnd.stardivision.draw":"sda","application\/vnd.stardivision.impress":"sdd","application\/vnd.stardivision.math":"smf","application\/vnd.stardivision.writer":"sdw","application\/vnd.stardivision.writer-global":"sgl","application\/vnd.stepmania.package":"smzip","application\/vnd.stepmania.stepchart":"sm","application\/vnd.sun.xml.calc":"sxc","application\/vnd.sun.xml.calc.template":"stc","application\/vnd.sun.xml.draw":"sxd","application\/vnd.sun.xml.draw.template":"std","application\/vnd.sun.xml.impress":"sxi","application\/vnd.sun.xml.impress.template":"sti","application\/vnd.sun.xml.math":"sxm","application\/vnd.sun.xml.writer":"sxw","application\/vnd.sun.xml.writer.global":"sxg","application\/vnd.sun.xml.writer.template":"stw","application\/vnd.sus-calendar":"sus","application\/vnd.svd":"svd","application\/vnd.symbian.install":"sis","application\/vnd.syncml+xml":"xsm","application\/vnd.syncml.dm+wbxml":"bdm","application\/vnd.syncml.dm+xml":"xdm","application\/vnd.tao.intent-module-archive":"tao","application\/vnd.tcpdump.pcap":"pcap","application\/vnd.tmobile-livetv":"tmo","application\/vnd.trid.tpt":"tpt","application\/vnd.triscape.mxs":"mxs","application\/vnd.trueapp":"tra","application\/vnd.ufdl":"ufd","application\/vnd.uiq.theme":"utz","application\/vnd.umajin":"umj","application\/vnd.unity":"unityweb","application\/vnd.uoml+xml":"uoml","application\/vnd.vcx":"vcx","application\/vnd.visio":"vsd","application\/vnd.visionary":"vis","application\/vnd.vsf":"vsf","application\/vnd.wap.wbxml":"wbxml","application\/vnd.wap.wmlc":"wmlc","application\/vnd.wap.wmlscriptc":"wmlsc","application\/vnd.webturbo":"wtb","application\/vnd.wolfram.player":"nbp","application\/vnd.wordperfect":"wpd","application\/vnd.wqd":"wqd","application\/vnd.wt.stf":"stf","application\/vnd.xara":"xar","application\/vnd.xfdl":"xfdl","application\/vnd.yamaha.hv-dic":"hvd","application\/vnd.yamaha.hv-script":"hvs","application\/vnd.yamaha.hv-voice":"hvp","application\/vnd.yamaha.openscoreformat":"osf","application\/vnd.yamaha.openscoreformat.osfpvg+xml":"osfpvg","application\/vnd.yamaha.smaf-audio":"saf","application\/vnd.yamaha.smaf-phrase":"spf","application\/vnd.yellowriver-custom-menu":"cmp","application\/vnd.zul":"zir","application\/vnd.zzazz.deck+xml":"zaz","application\/voicexml+xml":"vxml","application\/widget":"wgt","application\/winhlp":"hlp","application\/wsdl+xml":"wsdl","application\/wspolicy+xml":"wspolicy","application\/x-7z-compressed":"7z","application\/x-abiword":"abw","application\/x-ace-compressed":"ace","application\/x-apple-diskimage":"dmg","application\/x-authorware-bin":"aab","application\/x-authorware-map":"aam","application\/x-authorware-seg":"aas","application\/x-bcpio":"bcpio","application\/x-bittorrent":"torrent","application\/x-blorb":"blb","application\/x-bzip":"bz","application\/x-cbr":"cbr","application\/x-cdlink":"vcd","application\/x-cfs-compressed":"cfs","application\/x-chat":"chat","application\/x-chess-pgn":"pgn","application\/x-conference":"nsc","application\/x-cpio":"cpio","application\/x-csh":"csh","application\/x-debian-package":"deb","application\/x-dgc-compressed":"dgc","application\/x-director":"dir","application\/x-doom":"wad","application\/x-dtbncx+xml":"ncx","application\/x-dtbook+xml":"dtb","application\/x-dtbresource+xml":"res","application\/x-dvi":"dvi","application\/x-envoy":"evy","application\/x-eva":"eva","application\/x-font-bdf":"bdf","application\/x-font-ghostscript":"gsf","application\/x-font-linux-psf":"psf","application\/x-font-pcf":"pcf","application\/x-font-snf":"snf","application\/x-font-type1":"pfa","application\/x-freearc":"arc","application\/x-futuresplash":"spl","application\/x-gca-compressed":"gca","application\/x-glulx":"ulx","application\/x-gnumeric":"gnumeric","application\/x-gramps-xml":"gramps","application\/x-gtar":"gtar","application\/x-hdf":"hdf","application\/x-install-instructions":"install","application\/x-iso9660-image":"iso","application\/x-java-jnlp-file":"jnlp","application\/x-latex":"latex","application\/x-lzh-compressed":"lzh","application\/x-mie":"mie","application\/x-mobipocket-ebook":"prc","application\/x-ms-application":"application","application\/x-ms-shortcut":"lnk","application\/x-ms-wmd":"wmd","application\/x-ms-wmz":"wmz","application\/x-ms-xbap":"xbap","application\/x-msaccess":"mdb","application\/x-msbinder":"obd","application\/x-mscardfile":"crd","application\/x-msclip":"clp","application\/x-msdownload":"dll","application\/x-msmediaview":"mvb","application\/x-msmetafile":"wmf","application\/x-msmoney":"mny","application\/x-mspublisher":"pub","application\/x-msschedule":"scd","application\/x-msterminal":"trm","application\/x-mswrite":"wri","application\/x-netcdf":"nc","application\/x-nzb":"nzb","application\/x-pkcs12":"p12","application\/x-pkcs7-certificates":"p7b","application\/x-pkcs7-certreqresp":"p7r","application\/x-research-info-systems":"ris","application\/x-shar":"shar","application\/x-shockwave-flash":"swf","application\/x-silverlight-app":"xap","application\/x-sql":"sql","application\/x-stuffit":"sit","application\/x-stuffitx":"sitx","application\/x-subrip":"srt","application\/x-sv4cpio":"sv4cpio","application\/x-sv4crc":"sv4crc","application\/x-t3vm-image":"t3","application\/x-tads":"gam","application\/x-tar":"tar","application\/x-tcl":"tcl","application\/x-tex":"tex","application\/x-tex-tfm":"tfm","application\/x-texinfo":"texinfo","application\/x-tgif":"obj","application\/x-ustar":"ustar","application\/x-wais-source":"src","application\/x-x509-ca-cert":"der","application\/x-xfig":"fig","application\/x-xliff+xml":"xlf","application\/x-xpinstall":"xpi","application\/x-xz":"xz","application\/x-zmachine":"z1","application\/xaml+xml":"xaml","application\/xcap-diff+xml":"xdf","application\/xenc+xml":"xenc","application\/xhtml+xml":"xhtml","application\/xml":"xsl","application\/xml-dtd":"dtd","application\/xop+xml":"xop","application\/xproc+xml":"xpl","application\/xslt+xml":"xslt","application\/xspf+xml":"xspf","application\/xv+xml":"mxml","application\/yang":"yang","application\/yin+xml":"yin","application\/zip":"zip","audio\/adpcm":"adp","audio\/basic":"au","audio\/midi":"mid","audio\/mp4":"m4a","audio\/mpeg":"mpga","audio\/ogg":"oga","audio\/s3m":"s3m","audio\/silk":"sil","audio\/vnd.dece.audio":"uva","audio\/vnd.digital-winds":"eol","audio\/vnd.dra":"dra","audio\/vnd.dts":"dts","audio\/vnd.dts.hd":"dtshd","audio\/vnd.lucent.voice":"lvp","audio\/vnd.ms-playready.media.pya":"pya","audio\/vnd.nuera.ecelp4800":"ecelp4800","audio\/vnd.nuera.ecelp7470":"ecelp7470","audio\/vnd.nuera.ecelp9600":"ecelp9600","audio\/vnd.rip":"rip","audio\/webm":"weba","audio\/x-aac":"aac","audio\/x-aiff":"aif","audio\/x-caf":"caf","audio\/x-flac":"flac","audio\/x-matroska":"mka","audio\/x-mpegurl":"m3u","audio\/x-ms-wax":"wax","audio\/x-ms-wma":"wma","audio\/x-pn-realaudio":"ram","audio\/x-pn-realaudio-plugin":"rmp","audio\/xm":"xm","chemical\/x-cdx":"cdx","chemical\/x-cif":"cif","chemical\/x-cmdf":"cmdf","chemical\/x-cml":"cml","chemical\/x-csml":"csml","chemical\/x-xyz":"xyz","font\/collection":"ttc","font\/otf":"otf","font\/ttf":"ttf","font\/woff":"woff","font\/woff2":"woff2","image\/cgm":"cgm","image\/g3fax":"g3","image\/gif":"gif","image\/ief":"ief","image\/jpeg":"jpeg","image\/ktx":"ktx","image\/png":"png","image\/prs.btif":"btif","image\/sgi":"sgi","image\/svg+xml":"svg","image\/tiff":"tiff","image\/vnd.adobe.photoshop":"psd","image\/vnd.dece.graphic":"uvi","image\/vnd.djvu":"djvu","image\/vnd.dvb.subtitle":"sub","image\/vnd.dwg":"dwg","image\/vnd.dxf":"dxf","image\/vnd.fastbidsheet":"fbs","image\/vnd.fpx":"fpx","image\/vnd.fst":"fst","image\/vnd.fujixerox.edmics-mmr":"mmr","image\/vnd.fujixerox.edmics-rlc":"rlc","image\/vnd.ms-modi":"mdi","image\/vnd.ms-photo":"wdp","image\/vnd.net-fpx":"npx","image\/vnd.wap.wbmp":"wbmp","image\/vnd.xiff":"xif","image\/webp":"webp","image\/x-3ds":"3ds","image\/x-cmu-raster":"ras","image\/x-cmx":"cmx","image\/x-freehand":"fh","image\/x-icon":"ico","image\/x-mrsid-image":"sid","image\/x-pcx":"pcx","image\/x-pict":"pic","image\/x-portable-anymap":"pnm","image\/x-portable-bitmap":"pbm","image\/x-portable-graymap":"pgm","image\/x-portable-pixmap":"ppm","image\/x-rgb":"rgb","image\/x-xpixmap":"xpm","image\/x-xwindowdump":"xwd","message\/rfc822":"eml","model\/iges":"igs","model\/mesh":"msh","model\/vnd.collada+xml":"dae","model\/vnd.dwf":"dwf","model\/vnd.gdl":"gdl","model\/vnd.gtw":"gtw","model\/vnd.vtu":"vtu","model\/vrml":"wrl","model\/x3d+binary":"x3db","model\/x3d+vrml":"x3dv","model\/x3d+xml":"x3d","text\/cache-manifest":"appcache","text\/calendar":"ics","text\/css":"css","text\/csv":"csv","text\/html":"html","text\/n3":"n3","text\/plain":"txt","text\/prs.lines.tag":"dsc","text\/richtext":"rtx","text\/sgml":"sgml","text\/tab-separated-values":"tsv","text\/troff":"t","text\/turtle":"ttl","text\/uri-list":"uri","text\/vcard":"vcard","text\/vnd.curl":"curl","text\/vnd.curl.dcurl":"dcurl","text\/vnd.curl.mcurl":"mcurl","text\/vnd.curl.scurl":"scurl","text\/vnd.fly":"fly","text\/vnd.fmi.flexstor":"flx","text\/vnd.graphviz":"gv","text\/vnd.in3d.3dml":"3dml","text\/vnd.in3d.spot":"spot","text\/vnd.sun.j2me.app-descriptor":"jad","text\/vnd.wap.wml":"wml","text\/vnd.wap.wmlscript":"wmls","text\/x-asm":"s","text\/x-c":"cc","text\/x-fortran":"f","text\/x-java-source":"java","text\/x-nfo":"nfo","text\/x-opml":"opml","text\/x-pascal":"p","text\/x-setext":"etx","text\/x-sfv":"sfv","text\/x-uuencode":"uu","text\/x-vcalendar":"vcs","text\/x-vcard":"vcf","video\/3gpp":"3gp","video\/3gpp2":"3g2","video\/h261":"h261","video\/h263":"h263","video\/h264":"h264","video\/jpeg":"jpgv","video\/jpm":"jpm","video\/mj2":"mj2","video\/mp4":"mp4","video\/mpeg":"mpeg","video\/quicktime":"qt","video\/vnd.dece.hd":"uvh","video\/vnd.dece.mobile":"uvm","video\/vnd.dece.pd":"uvp","video\/vnd.dece.sd":"uvs","video\/vnd.dece.video":"uvv","video\/vnd.dvb.file":"dvb","video\/vnd.fvt":"fvt","video\/vnd.mpegurl":"mxu","video\/vnd.ms-playready.media.pyv":"pyv","video\/vnd.uvvu.mp4":"uvu","video\/vnd.vivo":"viv","video\/webm":"webm","video\/x-f4v":"f4v","video\/x-fli":"fli","video\/x-flv":"flv","video\/x-m4v":"m4v","video\/x-matroska":"mkv","video\/x-mng":"mng","video\/x-ms-asf":"asf","video\/x-ms-vob":"vob","video\/x-ms-wmx":"wmx","video\/x-ms-wvx":"wvx","video\/x-msvideo":"avi","video\/x-sgi-movie":"movie","video\/x-smv":"smv","x-conference\/x-cooltalk":"ice","text\/x-sql":"sql","image\/x-pixlr-data":"pxd","image\/x-adobe-dng":"dng","image\/x-sketch":"sketch","image\/x-xcf":"xcf","audio\/amr":"amr","image\/vnd-ms.dds":"dds","application\/plt":"plt","application\/sat":"sat","application\/step":"step","text\/x-httpd-cgi":"cgi","text\/x-asap":"asp","text\/x-jsp":"jsp"};
+elFinder.prototype.mimeTypes = {"application/x-executable":"exe","application/x-jar":"jar","application/x-rpm":"rpm","application/x-gzip":"gz","application/x-bzip2":"tbz","application/x-rar":"rar","text/x-php":"php","text/javascript":"js","application/rtfd":"rtfd","text/x-python":"py","text/x-ruby":"rb","text/x-shellscript":"sh","text/x-perl":"pl","text/xml":"xml","text/x-csrc":"c","text/x-chdr":"h","text/x-c++src":"cpp","text/x-c++hdr":"hpp","text/x-markdown":"md","text/x-yaml":"yml","image/x-ms-bmp":"bmp","image/x-targa":"tga","image/xbm":"xbm","image/pxm":"pxm","audio/wav":"wav","video/x-dv":"dv","video/x-ms-wmv":"wm","video/ogg":"ogm","video/mp2t":"m2ts","application/x-mpegurl":"m3u8","application/dash+xml":"mpd","application/andrew-inset":"ez","application/applixware":"aw","application/atom+xml":"atom","application/atomcat+xml":"atomcat","application/atomsvc+xml":"atomsvc","application/ccxml+xml":"ccxml","application/cdmi-capability":"cdmia","application/cdmi-container":"cdmic","application/cdmi-domain":"cdmid","application/cdmi-object":"cdmio","application/cdmi-queue":"cdmiq","application/cu-seeme":"cu","application/davmount+xml":"davmount","application/docbook+xml":"dbk","application/dssc+der":"dssc","application/dssc+xml":"xdssc","application/ecmascript":"ecma","application/emma+xml":"emma","application/epub+zip":"epub","application/exi":"exi","application/font-tdpfr":"pfr","application/gml+xml":"gml","application/gpx+xml":"gpx","application/gxf":"gxf","application/hyperstudio":"stk","application/inkml+xml":"ink","application/ipfix":"ipfix","application/java-serialized-object":"ser","application/java-vm":"class","application/json":"json","application/jsonml+json":"jsonml","application/lost+xml":"lostxml","application/mac-binhex40":"hqx","application/mac-compactpro":"cpt","application/mads+xml":"mads","application/marc":"mrc","application/marcxml+xml":"mrcx","application/mathematica":"ma","application/mathml+xml":"mathml","application/mbox":"mbox","application/mediaservercontrol+xml":"mscml","application/metalink+xml":"metalink","application/metalink4+xml":"meta4","application/mets+xml":"mets","application/mods+xml":"mods","application/mp21":"m21","application/mp4":"mp4s","application/msword":"doc","application/mxf":"mxf","application/octet-stream":"bin","application/oda":"oda","application/oebps-package+xml":"opf","application/ogg":"ogx","application/omdoc+xml":"omdoc","application/onenote":"onetoc","application/oxps":"oxps","application/patch-ops-error+xml":"xer","application/pdf":"pdf","application/pgp-encrypted":"pgp","application/pgp-signature":"asc","application/pics-rules":"prf","application/pkcs10":"p10","application/pkcs7-mime":"p7m","application/pkcs7-signature":"p7s","application/pkcs8":"p8","application/pkix-attr-cert":"ac","application/pkix-cert":"cer","application/pkix-crl":"crl","application/pkix-pkipath":"pkipath","application/pkixcmp":"pki","application/pls+xml":"pls","application/postscript":"ai","application/prs.cww":"cww","application/pskc+xml":"pskcxml","application/rdf+xml":"rdf","application/reginfo+xml":"rif","application/relax-ng-compact-syntax":"rnc","application/resource-lists+xml":"rl","application/resource-lists-diff+xml":"rld","application/rls-services+xml":"rs","application/rpki-ghostbusters":"gbr","application/rpki-manifest":"mft","application/rpki-roa":"roa","application/rsd+xml":"rsd","application/rss+xml":"rss","application/rtf":"rtf","application/sbml+xml":"sbml","application/scvp-cv-request":"scq","application/scvp-cv-response":"scs","application/scvp-vp-request":"spq","application/scvp-vp-response":"spp","application/sdp":"sdp","application/set-payment-initiation":"setpay","application/set-registration-initiation":"setreg","application/shf+xml":"shf","application/smil+xml":"smi","application/sparql-query":"rq","application/sparql-results+xml":"srx","application/srgs":"gram","application/srgs+xml":"grxml","application/sru+xml":"sru","application/ssdl+xml":"ssdl","application/ssml+xml":"ssml","application/tei+xml":"tei","application/thraud+xml":"tfi","application/timestamped-data":"tsd","application/vnd.3gpp.pic-bw-large":"plb","application/vnd.3gpp.pic-bw-small":"psb","application/vnd.3gpp.pic-bw-var":"pvb","application/vnd.3gpp2.tcap":"tcap","application/vnd.3m.post-it-notes":"pwn","application/vnd.accpac.simply.aso":"aso","application/vnd.accpac.simply.imp":"imp","application/vnd.acucobol":"acu","application/vnd.acucorp":"atc","application/vnd.adobe.air-application-installer-package+zip":"air","application/vnd.adobe.formscentral.fcdt":"fcdt","application/vnd.adobe.fxp":"fxp","application/vnd.adobe.xdp+xml":"xdp","application/vnd.adobe.xfdf":"xfdf","application/vnd.ahead.space":"ahead","application/vnd.airzip.filesecure.azf":"azf","application/vnd.airzip.filesecure.azs":"azs","application/vnd.amazon.ebook":"azw","application/vnd.americandynamics.acc":"acc","application/vnd.amiga.ami":"ami","application/vnd.android.package-archive":"apk","application/vnd.anser-web-certificate-issue-initiation":"cii","application/vnd.anser-web-funds-transfer-initiation":"fti","application/vnd.antix.game-component":"atx","application/vnd.apple.installer+xml":"mpkg","application/vnd.aristanetworks.swi":"swi","application/vnd.astraea-software.iota":"iota","application/vnd.audiograph":"aep","application/vnd.blueice.multipass":"mpm","application/vnd.bmi":"bmi","application/vnd.businessobjects":"rep","application/vnd.chemdraw+xml":"cdxml","application/vnd.chipnuts.karaoke-mmd":"mmd","application/vnd.cinderella":"cdy","application/vnd.claymore":"cla","application/vnd.cloanto.rp9":"rp9","application/vnd.clonk.c4group":"c4g","application/vnd.cluetrust.cartomobile-config":"c11amc","application/vnd.cluetrust.cartomobile-config-pkg":"c11amz","application/vnd.commonspace":"csp","application/vnd.contact.cmsg":"cdbcmsg","application/vnd.cosmocaller":"cmc","application/vnd.crick.clicker":"clkx","application/vnd.crick.clicker.keyboard":"clkk","application/vnd.crick.clicker.palette":"clkp","application/vnd.crick.clicker.template":"clkt","application/vnd.crick.clicker.wordbank":"clkw","application/vnd.criticaltools.wbs+xml":"wbs","application/vnd.ctc-posml":"pml","application/vnd.cups-ppd":"ppd","application/vnd.curl.car":"car","application/vnd.curl.pcurl":"pcurl","application/vnd.dart":"dart","application/vnd.data-vision.rdz":"rdz","application/vnd.dece.data":"uvf","application/vnd.dece.ttml+xml":"uvt","application/vnd.dece.unspecified":"uvx","application/vnd.dece.zip":"uvz","application/vnd.denovo.fcselayout-link":"fe_launch","application/vnd.dna":"dna","application/vnd.dolby.mlp":"mlp","application/vnd.dpgraph":"dpg","application/vnd.dreamfactory":"dfac","application/vnd.ds-keypoint":"kpxx","application/vnd.dvb.ait":"ait","application/vnd.dvb.service":"svc","application/vnd.dynageo":"geo","application/vnd.ecowin.chart":"mag","application/vnd.enliven":"nml","application/vnd.epson.esf":"esf","application/vnd.epson.msf":"msf","application/vnd.epson.quickanime":"qam","application/vnd.epson.salt":"slt","application/vnd.epson.ssf":"ssf","application/vnd.eszigno3+xml":"es3","application/vnd.ezpix-album":"ez2","application/vnd.ezpix-package":"ez3","application/vnd.fdf":"fdf","application/vnd.fdsn.mseed":"mseed","application/vnd.fdsn.seed":"seed","application/vnd.flographit":"gph","application/vnd.fluxtime.clip":"ftc","application/vnd.framemaker":"fm","application/vnd.frogans.fnc":"fnc","application/vnd.frogans.ltf":"ltf","application/vnd.fsc.weblaunch":"fsc","application/vnd.fujitsu.oasys":"oas","application/vnd.fujitsu.oasys2":"oa2","application/vnd.fujitsu.oasys3":"oa3","application/vnd.fujitsu.oasysgp":"fg5","application/vnd.fujitsu.oasysprs":"bh2","application/vnd.fujixerox.ddd":"ddd","application/vnd.fujixerox.docuworks":"xdw","application/vnd.fujixerox.docuworks.binder":"xbd","application/vnd.fuzzysheet":"fzs","application/vnd.genomatix.tuxedo":"txd","application/vnd.geogebra.file":"ggb","application/vnd.geogebra.slides":"ggs","application/vnd.geogebra.tool":"ggt","application/vnd.geometry-explorer":"gex","application/vnd.geonext":"gxt","application/vnd.geoplan":"g2w","application/vnd.geospace":"g3w","application/vnd.gmx":"gmx","application/vnd.google-earth.kml+xml":"kml","application/vnd.google-earth.kmz":"kmz","application/vnd.grafeq":"gqf","application/vnd.groove-account":"gac","application/vnd.groove-help":"ghf","application/vnd.groove-identity-message":"gim","application/vnd.groove-injector":"grv","application/vnd.groove-tool-message":"gtm","application/vnd.groove-tool-template":"tpl","application/vnd.groove-vcard":"vcg","application/vnd.hal+xml":"hal","application/vnd.handheld-entertainment+xml":"zmm","application/vnd.hbci":"hbci","application/vnd.hhe.lesson-player":"les","application/vnd.hp-hpgl":"hpgl","application/vnd.hp-hpid":"hpid","application/vnd.hp-hps":"hps","application/vnd.hp-jlyt":"jlt","application/vnd.hp-pcl":"pcl","application/vnd.hp-pclxl":"pclxl","application/vnd.hydrostatix.sof-data":"sfd-hdstx","application/vnd.ibm.minipay":"mpy","application/vnd.ibm.modcap":"afp","application/vnd.ibm.rights-management":"irm","application/vnd.ibm.secure-container":"sc","application/vnd.iccprofile":"icc","application/vnd.igloader":"igl","application/vnd.immervision-ivp":"ivp","application/vnd.immervision-ivu":"ivu","application/vnd.insors.igm":"igm","application/vnd.intercon.formnet":"xpw","application/vnd.intergeo":"i2g","application/vnd.intu.qbo":"qbo","application/vnd.intu.qfx":"qfx","application/vnd.ipunplugged.rcprofile":"rcprofile","application/vnd.irepository.package+xml":"irp","application/vnd.is-xpr":"xpr","application/vnd.isac.fcs":"fcs","application/vnd.jam":"jam","application/vnd.jcp.javame.midlet-rms":"rms","application/vnd.jisp":"jisp","application/vnd.joost.joda-archive":"joda","application/vnd.kahootz":"ktz","application/vnd.kde.karbon":"karbon","application/vnd.kde.kchart":"chrt","application/vnd.kde.kformula":"kfo","application/vnd.kde.kivio":"flw","application/vnd.kde.kontour":"kon","application/vnd.kde.kpresenter":"kpr","application/vnd.kde.kspread":"ksp","application/vnd.kde.kword":"kwd","application/vnd.kenameaapp":"htke","application/vnd.kidspiration":"kia","application/vnd.kinar":"kne","application/vnd.koan":"skp","application/vnd.kodak-descriptor":"sse","application/vnd.las.las+xml":"lasxml","application/vnd.llamagraphics.life-balance.desktop":"lbd","application/vnd.llamagraphics.life-balance.exchange+xml":"lbe","application/vnd.lotus-1-2-3":"123","application/vnd.lotus-approach":"apr","application/vnd.lotus-freelance":"pre","application/vnd.lotus-notes":"nsf","application/vnd.lotus-organizer":"org","application/vnd.lotus-screencam":"scm","application/vnd.lotus-wordpro":"lwp","application/vnd.macports.portpkg":"portpkg","application/vnd.mcd":"mcd","application/vnd.medcalcdata":"mc1","application/vnd.mediastation.cdkey":"cdkey","application/vnd.mfer":"mwf","application/vnd.mfmp":"mfm","application/vnd.micrografx.flo":"flo","application/vnd.micrografx.igx":"igx","application/vnd.mif":"mif","application/vnd.mobius.daf":"daf","application/vnd.mobius.dis":"dis","application/vnd.mobius.mbk":"mbk","application/vnd.mobius.mqy":"mqy","application/vnd.mobius.msl":"msl","application/vnd.mobius.plc":"plc","application/vnd.mobius.txf":"txf","application/vnd.mophun.application":"mpn","application/vnd.mophun.certificate":"mpc","application/vnd.mozilla.xul+xml":"xul","application/vnd.ms-artgalry":"cil","application/vnd.ms-cab-compressed":"cab","application/vnd.ms-excel":"xls","application/vnd.ms-excel.addin.macroenabled.12":"xlam","application/vnd.ms-excel.sheet.binary.macroenabled.12":"xlsb","application/vnd.ms-excel.sheet.macroenabled.12":"xlsm","application/vnd.ms-excel.template.macroenabled.12":"xltm","application/vnd.ms-fontobject":"eot","application/vnd.ms-htmlhelp":"chm","application/vnd.ms-ims":"ims","application/vnd.ms-lrm":"lrm","application/vnd.ms-officetheme":"thmx","application/vnd.ms-pki.seccat":"cat","application/vnd.ms-pki.stl":"stl","application/vnd.ms-powerpoint":"ppt","application/vnd.ms-powerpoint.addin.macroenabled.12":"ppam","application/vnd.ms-powerpoint.presentation.macroenabled.12":"pptm","application/vnd.ms-powerpoint.slide.macroenabled.12":"sldm","application/vnd.ms-powerpoint.slideshow.macroenabled.12":"ppsm","application/vnd.ms-powerpoint.template.macroenabled.12":"potm","application/vnd.ms-project":"mpp","application/vnd.ms-word.document.macroenabled.12":"docm","application/vnd.ms-word.template.macroenabled.12":"dotm","application/vnd.ms-works":"wps","application/vnd.ms-wpl":"wpl","application/vnd.ms-xpsdocument":"xps","application/vnd.mseq":"mseq","application/vnd.musician":"mus","application/vnd.muvee.style":"msty","application/vnd.mynfc":"taglet","application/vnd.neurolanguage.nlu":"nlu","application/vnd.nitf":"ntf","application/vnd.noblenet-directory":"nnd","application/vnd.noblenet-sealer":"nns","application/vnd.noblenet-web":"nnw","application/vnd.nokia.n-gage.data":"ngdat","application/vnd.nokia.n-gage.symbian.install":"n-gage","application/vnd.nokia.radio-preset":"rpst","application/vnd.nokia.radio-presets":"rpss","application/vnd.novadigm.edm":"edm","application/vnd.novadigm.edx":"edx","application/vnd.novadigm.ext":"ext","application/vnd.oasis.opendocument.chart":"odc","application/vnd.oasis.opendocument.chart-template":"otc","application/vnd.oasis.opendocument.database":"odb","application/vnd.oasis.opendocument.formula":"odf","application/vnd.oasis.opendocument.formula-template":"odft","application/vnd.oasis.opendocument.graphics":"odg","application/vnd.oasis.opendocument.graphics-template":"otg","application/vnd.oasis.opendocument.image":"odi","application/vnd.oasis.opendocument.image-template":"oti","application/vnd.oasis.opendocument.presentation":"odp","application/vnd.oasis.opendocument.presentation-template":"otp","application/vnd.oasis.opendocument.spreadsheet":"ods","application/vnd.oasis.opendocument.spreadsheet-template":"ots","application/vnd.oasis.opendocument.text":"odt","application/vnd.oasis.opendocument.text-master":"odm","application/vnd.oasis.opendocument.text-template":"ott","application/vnd.oasis.opendocument.text-web":"oth","application/vnd.olpc-sugar":"xo","application/vnd.oma.dd2+xml":"dd2","application/vnd.openofficeorg.extension":"oxt","application/vnd.openxmlformats-officedocument.presentationml.presentation":"pptx","application/vnd.openxmlformats-officedocument.presentationml.slide":"sldx","application/vnd.openxmlformats-officedocument.presentationml.slideshow":"ppsx","application/vnd.openxmlformats-officedocument.presentationml.template":"potx","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":"xlsx","application/vnd.openxmlformats-officedocument.spreadsheetml.template":"xltx","application/vnd.openxmlformats-officedocument.wordprocessingml.document":"docx","application/vnd.openxmlformats-officedocument.wordprocessingml.template":"dotx","application/vnd.osgeo.mapguide.package":"mgp","application/vnd.osgi.dp":"dp","application/vnd.osgi.subsystem":"esa","application/vnd.palm":"pdb","application/vnd.pawaafile":"paw","application/vnd.pg.format":"str","application/vnd.pg.osasli":"ei6","application/vnd.picsel":"efif","application/vnd.pmi.widget":"wg","application/vnd.pocketlearn":"plf","application/vnd.powerbuilder6":"pbd","application/vnd.previewsystems.box":"box","application/vnd.proteus.magazine":"mgz","application/vnd.publishare-delta-tree":"qps","application/vnd.pvi.ptid1":"ptid","application/vnd.quark.quarkxpress":"qxd","application/vnd.realvnc.bed":"bed","application/vnd.recordare.musicxml":"mxl","application/vnd.recordare.musicxml+xml":"musicxml","application/vnd.rig.cryptonote":"cryptonote","application/vnd.rim.cod":"cod","application/vnd.rn-realmedia":"rm","application/vnd.rn-realmedia-vbr":"rmvb","application/vnd.route66.link66+xml":"link66","application/vnd.sailingtracker.track":"st","application/vnd.seemail":"see","application/vnd.sema":"sema","application/vnd.semd":"semd","application/vnd.semf":"semf","application/vnd.shana.informed.formdata":"ifm","application/vnd.shana.informed.formtemplate":"itp","application/vnd.shana.informed.interchange":"iif","application/vnd.shana.informed.package":"ipk","application/vnd.simtech-mindmapper":"twd","application/vnd.smaf":"mmf","application/vnd.smart.teacher":"teacher","application/vnd.solent.sdkm+xml":"sdkm","application/vnd.spotfire.dxp":"dxp","application/vnd.spotfire.sfs":"sfs","application/vnd.sqlite3":"sqlite","application/vnd.stardivision.calc":"sdc","application/vnd.stardivision.draw":"sda","application/vnd.stardivision.impress":"sdd","application/vnd.stardivision.math":"smf","application/vnd.stardivision.writer":"sdw","application/vnd.stardivision.writer-global":"sgl","application/vnd.stepmania.package":"smzip","application/vnd.stepmania.stepchart":"sm","application/vnd.sun.xml.calc":"sxc","application/vnd.sun.xml.calc.template":"stc","application/vnd.sun.xml.draw":"sxd","application/vnd.sun.xml.draw.template":"std","application/vnd.sun.xml.impress":"sxi","application/vnd.sun.xml.impress.template":"sti","application/vnd.sun.xml.math":"sxm","application/vnd.sun.xml.writer":"sxw","application/vnd.sun.xml.writer.global":"sxg","application/vnd.sun.xml.writer.template":"stw","application/vnd.sus-calendar":"sus","application/vnd.svd":"svd","application/vnd.symbian.install":"sis","application/vnd.syncml+xml":"xsm","application/vnd.syncml.dm+wbxml":"bdm","application/vnd.syncml.dm+xml":"xdm","application/vnd.tao.intent-module-archive":"tao","application/vnd.tcpdump.pcap":"pcap","application/vnd.tmobile-livetv":"tmo","application/vnd.trid.tpt":"tpt","application/vnd.triscape.mxs":"mxs","application/vnd.trueapp":"tra","application/vnd.ufdl":"ufd","application/vnd.uiq.theme":"utz","application/vnd.umajin":"umj","application/vnd.unity":"unityweb","application/vnd.uoml+xml":"uoml","application/vnd.vcx":"vcx","application/vnd.visio":"vsd","application/vnd.visionary":"vis","application/vnd.vsf":"vsf","application/vnd.wap.wbxml":"wbxml","application/vnd.wap.wmlc":"wmlc","application/vnd.wap.wmlscriptc":"wmlsc","application/vnd.webturbo":"wtb","application/vnd.wolfram.player":"nbp","application/vnd.wordperfect":"wpd","application/vnd.wqd":"wqd","application/vnd.wt.stf":"stf","application/vnd.xara":"xar","application/vnd.xfdl":"xfdl","application/vnd.yamaha.hv-dic":"hvd","application/vnd.yamaha.hv-script":"hvs","application/vnd.yamaha.hv-voice":"hvp","application/vnd.yamaha.openscoreformat":"osf","application/vnd.yamaha.openscoreformat.osfpvg+xml":"osfpvg","application/vnd.yamaha.smaf-audio":"saf","application/vnd.yamaha.smaf-phrase":"spf","application/vnd.yellowriver-custom-menu":"cmp","application/vnd.zul":"zir","application/vnd.zzazz.deck+xml":"zaz","application/voicexml+xml":"vxml","application/wasm":"wasm","application/widget":"wgt","application/winhlp":"hlp","application/wsdl+xml":"wsdl","application/wspolicy+xml":"wspolicy","application/x-7z-compressed":"7z","application/x-abiword":"abw","application/x-ace-compressed":"ace","application/x-apple-diskimage":"dmg","application/x-authorware-bin":"aab","application/x-authorware-map":"aam","application/x-authorware-seg":"aas","application/x-bcpio":"bcpio","application/x-bittorrent":"torrent","application/x-blorb":"blb","application/x-bzip":"bz","application/x-cbr":"cbr","application/x-cdlink":"vcd","application/x-cfs-compressed":"cfs","application/x-chat":"chat","application/x-chess-pgn":"pgn","application/x-conference":"nsc","application/x-cpio":"cpio","application/x-csh":"csh","application/x-debian-package":"deb","application/x-dgc-compressed":"dgc","application/x-director":"dir","application/x-doom":"wad","application/x-dtbncx+xml":"ncx","application/x-dtbook+xml":"dtb","application/x-dtbresource+xml":"res","application/x-dvi":"dvi","application/x-envoy":"evy","application/x-eva":"eva","application/x-font-bdf":"bdf","application/x-font-ghostscript":"gsf","application/x-font-linux-psf":"psf","application/x-font-pcf":"pcf","application/x-font-snf":"snf","application/x-font-type1":"pfa","application/x-freearc":"arc","application/x-futuresplash":"spl","application/x-gca-compressed":"gca","application/x-glulx":"ulx","application/x-gnumeric":"gnumeric","application/x-gramps-xml":"gramps","application/x-gtar":"gtar","application/x-hdf":"hdf","application/x-install-instructions":"install","application/x-iso9660-image":"iso","application/x-java-jnlp-file":"jnlp","application/x-latex":"latex","application/x-lzh-compressed":"lzh","application/x-mie":"mie","application/x-mobipocket-ebook":"prc","application/x-ms-application":"application","application/x-ms-shortcut":"lnk","application/x-ms-wmd":"wmd","application/x-ms-wmz":"wmz","application/x-ms-xbap":"xbap","application/x-msaccess":"mdb","application/x-msbinder":"obd","application/x-mscardfile":"crd","application/x-msclip":"clp","application/x-msdownload":"dll","application/x-msmediaview":"mvb","application/x-msmetafile":"wmf","application/x-msmoney":"mny","application/x-mspublisher":"pub","application/x-msschedule":"scd","application/x-msterminal":"trm","application/x-mswrite":"wri","application/x-netcdf":"nc","application/x-nzb":"nzb","application/x-pkcs12":"p12","application/x-pkcs7-certificates":"p7b","application/x-pkcs7-certreqresp":"p7r","application/x-research-info-systems":"ris","application/x-shar":"shar","application/x-shockwave-flash":"swf","application/x-silverlight-app":"xap","application/x-sql":"sql","application/x-stuffit":"sit","application/x-stuffitx":"sitx","application/x-subrip":"srt","application/x-sv4cpio":"sv4cpio","application/x-sv4crc":"sv4crc","application/x-t3vm-image":"t3","application/x-tads":"gam","application/x-tar":"tar","application/x-tcl":"tcl","application/x-tex":"tex","application/x-tex-tfm":"tfm","application/x-texinfo":"texinfo","application/x-tgif":"obj","application/x-ustar":"ustar","application/x-wais-source":"src","application/x-x509-ca-cert":"der","application/x-xfig":"fig","application/x-xliff+xml":"xlf","application/x-xpinstall":"xpi","application/x-xz":"xz","application/x-zmachine":"z1","application/xaml+xml":"xaml","application/xcap-diff+xml":"xdf","application/xenc+xml":"xenc","application/xhtml+xml":"xhtml","application/xml":"xsl","application/xml-dtd":"dtd","application/xop+xml":"xop","application/xproc+xml":"xpl","application/xslt+xml":"xslt","application/xspf+xml":"xspf","application/xv+xml":"mxml","application/yang":"yang","application/yin+xml":"yin","application/zip":"zip","audio/adpcm":"adp","audio/basic":"au","audio/midi":"mid","audio/mp4":"m4a","audio/mpeg":"mpga","audio/ogg":"oga","audio/s3m":"s3m","audio/silk":"sil","audio/vnd.dece.audio":"uva","audio/vnd.digital-winds":"eol","audio/vnd.dra":"dra","audio/vnd.dts":"dts","audio/vnd.dts.hd":"dtshd","audio/vnd.lucent.voice":"lvp","audio/vnd.ms-playready.media.pya":"pya","audio/vnd.nuera.ecelp4800":"ecelp4800","audio/vnd.nuera.ecelp7470":"ecelp7470","audio/vnd.nuera.ecelp9600":"ecelp9600","audio/vnd.rip":"rip","audio/webm":"weba","audio/x-aac":"aac","audio/x-aiff":"aif","audio/x-caf":"caf","audio/x-flac":"flac","audio/x-matroska":"mka","audio/x-mpegurl":"m3u","audio/x-ms-wax":"wax","audio/x-ms-wma":"wma","audio/x-pn-realaudio":"ram","audio/x-pn-realaudio-plugin":"rmp","audio/xm":"xm","chemical/x-cdx":"cdx","chemical/x-cif":"cif","chemical/x-cmdf":"cmdf","chemical/x-cml":"cml","chemical/x-csml":"csml","chemical/x-xyz":"xyz","font/collection":"ttc","font/otf":"otf","font/ttf":"ttf","font/woff":"woff","font/woff2":"woff2","image/avif":"avif","image/cgm":"cgm","image/g3fax":"g3","image/gif":"gif","image/heic":"heic","image/heic-sequence":"heics","image/heif":"heif","image/heif-sequence":"heifs","image/ief":"ief","image/jpeg":"jpeg","image/jxl":"jxl","image/ktx":"ktx","image/png":"png","image/prs.btif":"btif","image/sgi":"sgi","image/svg+xml":"svg","image/tiff":"tiff","image/vnd.adobe.photoshop":"psd","image/vnd.dece.graphic":"uvi","image/vnd.djvu":"djvu","image/vnd.dvb.subtitle":"sub","image/vnd.dwg":"dwg","image/vnd.dxf":"dxf","image/vnd.fastbidsheet":"fbs","image/vnd.fpx":"fpx","image/vnd.fst":"fst","image/vnd.fujixerox.edmics-mmr":"mmr","image/vnd.fujixerox.edmics-rlc":"rlc","image/vnd.ms-modi":"mdi","image/vnd.ms-photo":"wdp","image/vnd.net-fpx":"npx","image/vnd.wap.wbmp":"wbmp","image/vnd.xiff":"xif","image/webp":"webp","image/x-3ds":"3ds","image/x-cmu-raster":"ras","image/x-cmx":"cmx","image/x-freehand":"fh","image/x-icon":"ico","image/x-mrsid-image":"sid","image/x-pcx":"pcx","image/x-pict":"pic","image/x-portable-anymap":"pnm","image/x-portable-bitmap":"pbm","image/x-portable-graymap":"pgm","image/x-portable-pixmap":"ppm","image/x-rgb":"rgb","image/x-xpixmap":"xpm","image/x-xwindowdump":"xwd","message/rfc822":"eml","model/iges":"igs","model/mesh":"msh","model/vnd.collada+xml":"dae","model/vnd.dwf":"dwf","model/vnd.gdl":"gdl","model/vnd.gtw":"gtw","model/vnd.vtu":"vtu","model/vrml":"wrl","model/x3d+binary":"x3db","model/x3d+vrml":"x3dv","model/x3d+xml":"x3d","text/cache-manifest":"appcache","text/calendar":"ics","text/css":"css","text/csv":"csv","text/html":"html","text/n3":"n3","text/plain":"txt","text/prs.lines.tag":"dsc","text/richtext":"rtx","text/sgml":"sgml","text/tab-separated-values":"tsv","text/troff":"t","text/turtle":"ttl","text/uri-list":"uri","text/vcard":"vcard","text/vnd.curl":"curl","text/vnd.curl.dcurl":"dcurl","text/vnd.curl.mcurl":"mcurl","text/vnd.curl.scurl":"scurl","text/vnd.fly":"fly","text/vnd.fmi.flexstor":"flx","text/vnd.graphviz":"gv","text/vnd.in3d.3dml":"3dml","text/vnd.in3d.spot":"spot","text/vnd.sun.j2me.app-descriptor":"jad","text/vnd.wap.wml":"wml","text/vnd.wap.wmlscript":"wmls","text/x-asm":"s","text/x-c":"cc","text/x-fortran":"f","text/x-java-source":"java","text/x-nfo":"nfo","text/x-opml":"opml","text/x-pascal":"p","text/x-setext":"etx","text/x-sfv":"sfv","text/x-uuencode":"uu","text/x-vcalendar":"vcs","text/x-vcard":"vcf","video/3gpp":"3gp","video/3gpp2":"3g2","video/h261":"h261","video/h263":"h263","video/h264":"h264","video/jpeg":"jpgv","video/jpm":"jpm","video/mj2":"mj2","video/mp4":"mp4","video/mpeg":"mpeg","video/quicktime":"qt","video/vnd.dece.hd":"uvh","video/vnd.dece.mobile":"uvm","video/vnd.dece.pd":"uvp","video/vnd.dece.sd":"uvs","video/vnd.dece.video":"uvv","video/vnd.dvb.file":"dvb","video/vnd.fvt":"fvt","video/vnd.mpegurl":"mxu","video/vnd.ms-playready.media.pyv":"pyv","video/vnd.uvvu.mp4":"uvu","video/vnd.vivo":"viv","video/webm":"webm","video/x-f4v":"f4v","video/x-fli":"fli","video/x-flv":"flv","video/x-m4v":"m4v","video/x-matroska":"mkv","video/x-mng":"mng","video/x-ms-asf":"asf","video/x-ms-vob":"vob","video/x-ms-wmx":"wmx","video/x-ms-wvx":"wvx","video/x-msvideo":"avi","video/x-sgi-movie":"movie","video/x-smv":"smv","x-conference/x-cooltalk":"ice","text/x-sql":"sql","image/x-pixlr-data":"pxd","image/x-adobe-dng":"dng","image/x-sketch":"sketch","image/x-xcf":"xcf","audio/amr":"amr","image/vnd-ms.dds":"dds","application/plt":"plt","application/sat":"sat","application/step":"step","text/x-httpd-cgi":"cgi","text/x-asap":"asp","text/x-jsp":"jsp"};
+
 
 /*
  * File: /js/elFinder.options.js
@@ -11221,29 +11407,29 @@ elFinder.prototype._options = {
 	 */
 	cdns : {
 		// for editor etc.
-		ace        : 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14',
-		codemirror : 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3',
-		ckeditor   : 'https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.18.0',
-		ckeditor5  : 'https://cdn.ckeditor.com/ckeditor5/34.0.0',
-		tinymce    : 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.2',
+		ace        : 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3',
+		codemirror : 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7',
+		ckeditor   : 'https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.22.1', // last version of Open Source Project
+		ckeditor5  : 'https://cdn.ckeditor.com/ckeditor5/40.2.0',
+		tinymce    : 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.6',
 		simplemde  : 'https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2',
-		fabric     : 'https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.2.0',
+		fabric     : 'https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1',
 		fabric16   : 'https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.6.7',
 		tui        : 'https://uicdn.toast.com',
 		// for quicklook etc.
-		hls        : 'https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.1.5/hls.min.js',
-		dash       : 'https://cdnjs.cloudflare.com/ajax/libs/dashjs/4.3.0/dash.all.min.js',
+		hls        : 'https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.6.13/hls.min.js',
+		dash       : 'https://cdnjs.cloudflare.com/ajax/libs/dashjs/4.7.4/dash.all.min.js',
 		flv        : 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.6.2/flv.min.js',
-		videojs    : 'https://cdnjs.cloudflare.com/ajax/libs/video.js/7.19.2',
-		prettify   : 'https://cdn.jsdelivr.net/gh/google/code-prettify@f1c3473acd1e8ea8c8c1a60c56e89f5cdd06f915/loader/run_prettify.js',
+		videojs    : 'https://cdnjs.cloudflare.com/ajax/libs/video.js/8.23.4',
+		prettify   : 'https://cdn.jsdelivr.net/gh/google/code-prettify@e006587b4a893f0281e9dc9a53001c7ed584d4e7/loader/run_prettify.js',
 		psd        : 'https://cdnjs.cloudflare.com/ajax/libs/psd.js/3.4.0/psd.min.js',
 		rar        : 'https://cdn.jsdelivr.net/gh/nao-pon/rar.js@6cef13ec66dd67992fc7f3ea22f132d770ebaf8b/rar.min.js',
 		zlibUnzip  : 'https://cdn.jsdelivr.net/gh/imaya/zlib.js@0.3.1/bin/unzip.min.js', // need check unzipFiles() in quicklook.plugins.js when update
 		zlibGunzip : 'https://cdn.jsdelivr.net/gh/imaya/zlib.js@0.3.1/bin/gunzip.min.js',
 		bzip2      : 'https://cdn.jsdelivr.net/gh/nao-pon/bzip2.js@0.8.0/bzip2.js',
-		marked     : 'https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js',
+		marked     : 'https://cdnjs.cloudflare.com/ajax/libs/marked/11.2.0/marked.min.js',
 		sparkmd5   : 'https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.2/spark-md5.min.js',
-		jssha      : 'https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.2.0/sha.min.js',
+		jssha      : 'https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.1/sha.min.js',
 		amr        : 'https://cdn.jsdelivr.net/gh/yxl/opencore-amr-js@dcf3d2b5f384a1d9ded2a54e4c137a81747b222b/js/amrnb.js',
 		tiff       : 'https://cdn.jsdelivr.net/gh/seikichi/tiff.js@545ede3ee46b5a5bc5f06d65954e775aa2a64017/tiff.min.js'
 	},
@@ -12553,7 +12739,7 @@ elFinder.prototype._options = {
 	 * 
 	 * @type Null|Function
 	 */
-	rawStringDecoder : typeof Encoding === 'object' && $.isFunction(Encoding.convert)? function(str) {
+	rawStringDecoder : typeof Encoding === 'object' && typeof Encoding.convert === 'function'? function(str) {
 		return Encoding.convert(str, {
 			to: 'UNICODE',
 			type: 'string'
@@ -12572,7 +12758,12 @@ elFinder.prototype._options = {
 	 *
 	 * @type Boolean|Object (toast options)
 	 */
-	toastBackendWarn : true
+	toastBackendWarn : true,
+
+	/**
+	 * Whether renaming root folders is enabled. If true, the alias for the root folder is stored as a preference for the user.
+	 */
+	enableRootRename : true,
 };
 
 
@@ -12992,7 +13183,7 @@ elFinder.prototype.command = function(fm) {
 		}
 
 		$.each(Object.assign({}, self._handlers, self.handlers), function(cmd, handler) {
-			fm.bind(cmd, $.proxy(handler, self));
+			fm.bind(cmd, handler.bind(self));
 		});
 
 		for (i = 0; i < this.shortcuts.length; i++) {
@@ -13368,7 +13559,7 @@ elFinder.prototype.resources = {
 						}
 					})
 					.on('blur', function() {
-						var name   = $.trim(input.val()),
+						var name   = input.val().trim(),
 							parent = input.parent(),
 							valid  = true,
 							cut;
@@ -13746,6 +13937,7 @@ if (typeof elFinder === 'function' && elFinder.prototype.i18) {
 			'errUploadFileSize'    : 'File exceeds maximum allowed size.', //  old name - errFileMaxSize
 			'errUploadMime'        : 'File type not allowed.',
 			'errUploadTransfer'    : '"$1" transfer error.',
+			'errUploadUrlNoCurl'    : 'URL upload requires the PHP cURL extension.',
 			'errUploadTemp'        : 'Unable to make temporary file for upload.', // from v2.1 added 26.09.2015
 			'errNotReplace'        : 'Object "$1" already exists at this location and can not be replaced by object with another type.', // new
 			'errReplace'           : 'Unable to replace "$1".',
@@ -13852,6 +14044,7 @@ if (typeof elFinder === 'function' && elFinder.prototype.i18) {
 			'btnCancel' : 'Cancel',
 			'btnNo'     : 'No',
 			'btnYes'    : 'Yes',
+			'btnDiscard': 'Discard changes',
 			'btnMount'  : 'Mount',  // added 18.04.2012
 			'btnApprove': 'Goto $1 & approve', // from v2.1 added 26.04.2012
 			'btnUnmount': 'Unmount', // from v2.1 added 30.04.2012
@@ -14200,6 +14393,12 @@ if (typeof elFinder === 'function' && elFinder.prototype.i18) {
 			'kindTTF'         : 'True Type font',
 			'kindOTF'         : 'Open Type font',
 			'kindRPM'         : 'RPM package',
+			// fonts
+			'kindFont'        : 'Font',
+			'kindSFNT'        : 'SFNT font',
+			'kindEOT'         : 'Embedded Open Type font',
+			'kindWOFF'        : 'Web Open Font Format',
+			'kindWOFF2'       : 'Web Open Font Format 2',
 			// texts
 			'kindText'        : 'Text document',
 			'kindTextPlain'   : 'Plain text',
@@ -14234,6 +14433,8 @@ if (typeof elFinder === 'function' && elFinder.prototype.i18) {
 			'kindPSD'         : 'Adobe Photoshop image',
 			'kindXBITMAP'     : 'X bitmap image',
 			'kindPXM'         : 'Pixelmator image',
+			'kindWEBP'        : 'WEBP image',
+			'kindSVG'         : 'SVG image',
 			// media
 			'kindAudio'       : 'Audio media',
 			'kindAudioMPEG'   : 'MPEG audio',
@@ -18279,6 +18480,10 @@ $.fn.elfinderdialog = function(opts, fm) {
 						.on('mousedown touchstart', function(e) {
 							e.preventDefault();
 							e.stopPropagation();
+							if (typeof opts.headerBtnCloseAction === 'function') {
+								opts.headerBtnCloseAction(e);
+								return;
+							}
 							self.elfinderdialog('close');
 						})
 					);
@@ -18358,7 +18563,7 @@ $.fn.elfinderdialog = function(opts, fm) {
 									}).position();
 									mnode = dialog.clone().on('mousedown', function() {
 										$this.trigger('mousedown');
-									}).removeClass('ui-draggable ui-resizable elfinder-frontmost');
+									}).removeClass('ui-draggable ui-resizable elfinder-frontmost elfinder-maximized');
 									tray.append(dum);
 									Object.assign(pos, dum.offset(), dumStyle);
 									dum.remove();
@@ -18501,7 +18706,7 @@ $.fn.elfinderdialog = function(opts, fm) {
 
 					fm.trigger('dialogopen', {dialog: dialog});
 
-					typeof(opts.open) == 'function' && $.proxy(opts.open, self[0])();
+					typeof (opts.open) == 'function' && opts.open.bind(self[0])();
 					
 					if (opts.closeOnEscape) {
 						$(document).on('keydown.'+id, function(e) {
@@ -18539,7 +18744,7 @@ $.fn.elfinderdialog = function(opts, fm) {
 						dialog.data('modal') && fm.getUI('overlay').elfinderoverlay('hide');
 						
 						if (typeof(opts.close) == 'function') {
-							$.proxy(opts.close, self[0])();
+							opts.close.bind(self[0])();
 						}
 						if (opts.destroyOnClose && dialog.parent().length) {
 							dialog.hide().remove();
@@ -18671,7 +18876,7 @@ $.fn.elfinderdialog = function(opts, fm) {
 					dialog.css('min-height', minH);
 					dialog.data('hasResizable') && dialog.resizable('option', { minHeight: minH });
 					if (typeof(opts.resize) === 'function') {
-						$.proxy(opts.resize, self[0])(e, data);
+						opts.resize.bind(self[0])(e, data);
 					}
 				})
 				.on('tabstopsInit', tabstopsInit)
@@ -18763,7 +18968,7 @@ $.fn.elfinderdialog = function(opts, fm) {
 					+'elfinder-btncnt-'+(btnCnt++)+' '
 					+cltabstop
 					+'"><span class="ui-button-text">'+name+'</span></button>')
-				.on('click', $.proxy(cb, self[0]));
+				.on('click', cb.bind(self[0]));
 			if (cb._cssClass) {
 				button.addClass(cb._cssClass);
 			}
@@ -18841,7 +19046,7 @@ $.fn.elfinderdialog = function(opts, fm) {
 		
 		tabstopsInit();
 		
-		typeof(opts.create) == 'function' && $.proxy(opts.create, this)();
+		typeof (opts.create) == 'function' && opts.create.bind(this)();
 		
 		if (opts.autoOpen) {
 			if (opts.open) {
@@ -18889,6 +19094,7 @@ $.fn.elfinderdialog.defaults = {
 	openMaximized : false,
 	headerBtnPos : 'auto',
 	headerBtnOrder : 'auto',
+	headerBtnCloseAction: null,
 	optimizeNumber : true,
 	propagationEvents : ['mousemove', 'mouseup']
 };
@@ -20201,7 +20407,7 @@ $.fn.elfindersearchbutton = function(cmd) {
 			},
 			search = function() {
 				input.data('inctm') && clearTimeout(input.data('inctm'));
-				var val = $.trim(input.val()),
+				var val = input.val().trim(),
 					from = !$('#' + id('SearchFromAll')).prop('checked'),
 					mime = $('#' + id('SearchMime')).prop('checked'),
 					type = '';
@@ -20411,7 +20617,7 @@ $.fn.elfindersearchbutton = function(cmd) {
 							typeSet.append($('<input id="'+id(i)+'" name="serchcol" type="radio" value="'+fm.escape(i)+'"/><label for="'+id(i)+'">'+fm.i18n(v.name)+'</label>'));
 						});
 					}
-					opts.find('div.buttonset').buttonset();
+					opts.find('div.buttonset').controlgroup();
 					$('#'+id('SearchFromAll')).next('label').attr('title', fm.i18n('searchTarget', fm.i18n('btnAll')));
 					if (sTypes) {
 						$.each(sTypes, function(i, v) {
@@ -20426,7 +20632,7 @@ $.fn.elfindersearchbutton = function(cmd) {
 						})
 						.on('click', 'input', function(e) {
 							e.stopPropagation();
-							$.trim(input.val())? search() : input.trigger('focus');
+							input.val().trim()? search() : input.trigger('focus');
 						})
 						.on('close', function() {
 							input.trigger('blur');
@@ -22963,12 +23169,12 @@ elFinder.prototype.commands.archive = function() {
 			open = fm.exec('open', cwd.hash).done(function() {
 				fm.one('cwdrender', function() {
 					fm.selectfiles({files : hashes});
-					dfrd = $.proxy(fm.res('mixin', 'make'), self)();
+					dfrd = fm.res('mixin', 'make').bind(self)();
 				});
 			});
 		} else {
 			fm.selectfiles({files : hashes});
-			dfrd = $.proxy(fm.res('mixin', 'make'), self)();
+			dfrd = fm.res('mixin', 'make').bind(self)();
 		}
 		
 		return dfrd;
@@ -23098,7 +23304,7 @@ elFinder.prototype.commands.chmod = function() {
 			return buttons;
 		},
 		save = function() {
-			var perm = $.trim($('#'+id+'-perm').val()),
+			var perm = $('#'+id+'-perm').val().trim(),
 				reqData;
 			
 			if (!isPerm(perm)) return false;
@@ -24188,7 +24394,68 @@ elFinder.prototype.commands.edit = function() {
 					});
 				},
 				cancel = function() {
-					ta.elfinderdialog('close');
+					if (!self.options.confirmUnsavedBeforeClose) {
+						ta.elfinderdialog('close');
+					} else {
+						var close = function() {
+								var conf;
+								dfrd.resolve();
+								if (ta.editor) {
+									ta.editor.close(ta[0], ta.editor.instance);
+									conf = ta.editor.confObj;
+									if (conf.info && conf.info.syncInterval) {
+										fileSync(file.hash);
+									}
+								}
+								ta.elfinderdialog('destroy');
+							},
+							onlySaveAs = (typeof saveAsFile.name !== 'undefined'),
+							accept = onlySaveAs? {
+								label    : 'btnSaveAs',
+								callback : function() {
+									requestAnimationFrame(saveAs);
+								}
+							} : {
+								label    : 'btnSaveClose',
+								callback : function() {
+									save().done(function() {
+										close();
+									});
+								}
+							};
+						changed().done(function(change) {
+							var msgs = ['confirmNotSave'];
+							var btnDiscard = {
+								label    : 'btnDiscard',
+								callback : function() {
+									close();
+								}
+							}
+							if (change) {
+								if (typeof change === 'string') {
+									msgs.unshift(change);
+								}
+								fm.confirm({
+									title  : self.title,
+									text   : msgs,
+									accept : accept,
+									cancel : {
+										label    : 'btnCancel',
+										callback : $.noop
+									},
+									buttons : onlySaveAs? [btnDiscard] : [{
+										label    : 'btnSaveAs',
+										callback : function() {
+											ta.elfinderdialog('destroy');
+											requestAnimationFrame(saveAs);
+										}
+									}, btnDiscard]
+								});
+							} else {
+								close();
+							}
+						});
+					}
 				},
 				savecl = function() {
 					if (!loaded()) { return; }
@@ -24219,7 +24486,7 @@ elFinder.prototype.commands.edit = function() {
 							self.requestCmd = 'mkfile';
 							self.nextAction = {};
 							self.data = {target : phash};
-							$.proxy(fm.res('mixin', 'make'), self)()
+							fm.res('mixin', 'make').bind(self)()
 								.done(function(data) {
 									var oldHash;
 									if (data.added && data.added.length) {
@@ -24335,7 +24602,13 @@ elFinder.prototype.commands.edit = function() {
 							}
 						}
 					},
+					headerBtnCloseAction : self.options.confirmUnsavedBeforeClose ? function() {
+						cancel();
+					} : undefined,
 					close   : function() {
+						if (self.options.confirmUnsavedBeforeClose) {
+							return;
+						}
 						var close = function() {
 								var conf;
 								dfrd.resolve();
@@ -25911,7 +26184,7 @@ elFinder.prototype.commands.fullscreen = function() {
 			
 			if (fm.i18[fm.lang].translator) {
 				$.each(fm.i18[fm.lang].translator.split(', '), function() {
-					html.push(atpl[r](author, $.trim(this))[r](work, fm.i18n('translator')+' ('+fm.i18[fm.lang].language+')'));
+					html.push(atpl[r](author, this.trim())[r](work, fm.i18n('translator')+' ('+fm.i18[fm.lang].language+')'));
 				});	
 			}
 			
@@ -25922,7 +26195,7 @@ elFinder.prototype.commands.fullscreen = function() {
 			
 			html.push(sep);
 			html.push('<div class="'+lic+'">Licence: 3-clauses BSD Licence</div>');
-			html.push('<div class="'+lic+'">Copyright © 2009-2022, Studio 42 / nao-pon</div>');
+			html.push('<div class="'+lic+'">Copyright © 2009-2024, Studio 42 / nao-pon</div>');
 			html.push('<div class="'+lic+'">„ …'+fm.i18n('dontforget')+' ”</div>');
 			html.push('</div>');
 		},
@@ -26900,7 +27173,7 @@ elFinder.prototype.commands.mkdir = function() {
 		}
 		//this.move = (!onCwd && curOrg !== 'navbar' && fm.selected().length)? true : false;
 		this.move = this.value === fm.i18n('cmdmkdirin');
-		return $.proxy(fm.res('mixin', 'make'), self)();
+		return fm.res('mixin', 'make').bind(self)();
 	};
 	
 	this.shortcuts = [{
@@ -27011,7 +27284,7 @@ elFinder.prototype.commands.mkfile = function() {
 			if (fm.uploadMimeCheck(mime)) {
 				this.mime = mime;
 				this.prefix = fm.i18n(['untitled file', type]);
-				return $.proxy(fm.res('mixin', 'make'), self)();
+				return fm.res('mixin', 'make').bind(self)();
 			}
 			err = ['errMkfile', self.getTypeName(mime, type)];
 		}
@@ -27112,10 +27385,10 @@ elFinder.prototype.commands.netmount = function() {
 							elm = $(input);
 							if (elm.is(':radio,:checkbox')) {
 								if (elm.is(':checked')) {
-									val = $.trim(elm.val());
+									val = elm.val().trim();
 								}
 							} else {
-								val = $.trim(elm.val());
+								val = elm.val().trim();
 							}
 							if (val) {
 								data[input.name] = val;
@@ -28407,7 +28680,7 @@ elFinder.prototype.commands.preference = function() {
 
 			forms.toolbarPref && (forms.toolbarPref = (function() {
 				var pnls = $.map(fm.options.uiOptions.toolbar, function(v) {
-						return $.isArray(v)? v : null;
+						return Array.isArray(v)? v : null;
 					}),
 					tags = [],
 					hides = fm.storage('toolbarhides') || {};
@@ -28838,6 +29111,7 @@ elFinder.prototype.commands.preference = function() {
 	};
 
 };
+
 
 /*
  * File: /js/commands/quicklook.js
@@ -30578,12 +30852,16 @@ elFinder.prototype.commands.quicklook.plugins = [
 						}
 					},
 					err = 0, 
+					cssClass = '',
 					canPlay;
 				//reset();
 				pDash = null;
 				opts = opts || {};
+				if (opts.cssClass) {
+					cssClass = ' ' + opts.cssClass;
+				}
 				ql.hideinfo();
-				node = $('<video class="elfinder-quicklook-preview-video" controls' + controlsList + ' preload="auto" autobuffer playsinline>'
+				node = $('<video class="elfinder-quicklook-preview-video' + cssClass + '" controls' + controlsList + ' preload="auto" autobuffer playsinline>'
 						+'</video>')
 					.on('change', function(e) {
 						// Firefox fire change event on seek or volume change
@@ -30690,10 +30968,13 @@ elFinder.prototype.commands.quicklook.plugins = [
 				opDfd = fm.openUrl(file.hash, false, function(url) {
 					loading.remove();
 					if (url) {
-						render(file);
+						render(file, {
+							src: url,
+							cssClass: 'video-js'
+						});
 						node[0].src = url;
 						cVideojs(node[0], {
-							src: url
+							autoplay: true
 						});
 					}
 				}, { progressBar: prog });
@@ -31763,12 +32044,15 @@ elFinder.prototype.commands.rename = function() {
 	"use strict";
 
 	// set alwaysEnabled to allow root rename on client size
-	this.alwaysEnabled = true;
+	if (this.fm.options.enableRootRename !== false) {
+		this.alwaysEnabled = true;
+	}
 
 	this.syncTitleOnChange = true;
 
 	var self = this,
 		fm = self.fm,
+		enableRootRename = fm.options.enableRootRename !== false,
 		request = function(dfrd, targtes, file, name) {
 			var sel = targtes? [file.hash].concat(targtes) : [file.hash],
 				cnt = sel.length,
@@ -31776,7 +32060,7 @@ elFinder.prototype.commands.rename = function() {
 			
 			fm.lockfiles({files : sel});
 			
-			if (fm.isRoot(file) && !file.netkey) {
+			if (fm.isRoot(file) && !file.netkey && enableRootRename) {
 				if (!(rootNames = fm.storage('rootNames'))) {
 					rootNames = {};
 				}
@@ -32022,7 +32306,7 @@ elFinder.prototype.commands.rename = function() {
 			isRoot = fm.isRoot(sel[0]);
 		}
 
-		state = (cnt === 1 && ((fm.cookieEnabled && isRoot) || !sel[0].locked) || (fm.api > 2.1030 && cnt === $.grep(sel, function(f) {
+		state = (cnt === 1 && ((enableRootRename && fm.cookieEnabled && isRoot) || !sel[0].locked) || (fm.api > 2.1030 && cnt === $.grep(sel, function(f) {
 			if (!brk && !f.locked && f.phash === phash && !fm.isRoot(f) && (mime === f.mime || ext === fm.splitFileExtention(f.name)[1].toLowerCase())) {
 				return true;
 			} else {
@@ -32122,7 +32406,7 @@ elFinder.prototype.commands.rename = function() {
 					fm.enable();
 				}),
 			blur = function(e) {
-				var name   = $.trim(input.val()),
+				var name   = input.val().trim(),
 				splits = fm.splitFileExtention(name),
 				valid  = true,
 				req = function() {
@@ -32293,7 +32577,7 @@ elFinder.prototype.commands.rename = function() {
 			return dfrd.reject('errCmdParams', this.title);
 		}
 		
-		if (file.locked && !fm.isRoot(file)) {
+		if (file.locked && (!fm.isRoot(file) || !enableRootRename)) {
 			return dfrd.reject(['errLocked', file.name]);
 		}
 		
@@ -32550,35 +32834,6 @@ elFinder.prototype.commands.resize = function() {
 						'<input class="api2" type="radio" name="type" id="'+id+'-crop" value="crop" /><label class="api2" for="'+id+'-crop">'+fm.i18n('crop')+'</label>',
 						'<input class="api2" type="radio" name="type" id="'+id+'-rotate" value="rotate" /><label class="api2" for="'+id+'-rotate">'+fm.i18n('rotate')+'</label>'),
 					mode     = 'resize',
-					type     = uitype[ctrgrup]()[ctrgrup]('disable').find('input')
-						.on('change', function() {
-							mode = $(this).val();
-							
-							resetView();
-							resizable(true);
-							croppable(true);
-							rotateable(true);
-							
-							if (mode == 'resize') {
-								uiresize.show();
-								uirotate.hide();
-								uicrop.hide();
-								resizable();
-								isJpeg && grid8px.insertAfter(uiresize.find('.elfinder-resize-grid8'));
-							}
-							else if (mode == 'crop') {
-								uirotate.hide();
-								uiresize.hide();
-								uicrop.show();
-								croppable();
-								isJpeg && grid8px.insertAfter(uicrop.find('.elfinder-resize-grid8'));
-							} else if (mode == 'rotate') {
-								uiresize.hide();
-								uicrop.hide();
-								uirotate.show();
-								rotateable();
-							}
-						}),
 					width   = $(input)
 						.on('change', function() {
 							var w = round(parseInt(width.val())),
@@ -33491,7 +33746,7 @@ elFinder.prototype.commands.resize = function() {
 								self.requestCmd = 'mkfile';
 								self.nextAction = {};
 								self.data = {target : file.phash};
-								$.proxy(fm.res('mixin', 'make'), self)()
+								fm.res('mixin', 'make').bind(self)()
 									.done(function(data) {
 										var hash, dfd;
 										if (data.added && data.added.length) {
@@ -33827,7 +34082,37 @@ elFinder.prototype.commands.resize = function() {
 						}
 					}
 				}).attr('id', id).closest('.ui-dialog').addClass(clsediting);
-				
+
+				// Fix for https://github.com/Studio-42/elFinder/issues/3684
+				uitype[ctrgrup]()[ctrgrup]('disable').find('input').on('change', function() {
+					mode = $(this).val();
+
+					resetView();
+					resizable(true);
+					croppable(true);
+					rotateable(true);
+
+					if (mode == 'resize') {
+						uiresize.show();
+						uirotate.hide();
+						uicrop.hide();
+						resizable();
+						isJpeg && grid8px.insertAfter(uiresize.find('.elfinder-resize-grid8'));
+					}
+					else if (mode == 'crop') {
+						uirotate.hide();
+						uiresize.hide();
+						uicrop.show();
+						croppable();
+						isJpeg && grid8px.insertAfter(uicrop.find('.elfinder-resize-grid8'));
+					} else if (mode == 'rotate') {
+						uiresize.hide();
+						uicrop.hide();
+						uirotate.show();
+						rotateable();
+					}
+				});
+
 				// for IE < 9 dialog mising at open second+ time.
 				if (fm.UA.ltIE8) {
 					$('.elfinder-dialog').css('filter', '');
@@ -34888,10 +35173,10 @@ elFinder.prototype.commands.search = function() {
 			}
 			target = target? target : '';
 			if (mime) {
-				mime = $.trim(mime).replace(',', ' ').split(' ');
+				mime = mime.trim().replace(',', ' ').split(' ');
 				if (onlyMimes.length) {
 					mime = $.map(mime, function(m){ 
-						m = $.trim(m);
+						m = m.trim();
 						return m && ($.inArray(m, onlyMimes) !== -1
 									|| $.grep(onlyMimes, function(om) { return m.indexOf(om) === 0? true : false; }).length
 									)? m : null;
@@ -35669,11 +35954,15 @@ elFinder.prototype.commands.upload = function() {
 				idx, errors;
 			
 			if (trf) {
-				if (trf.types && trf.types.length && (idx = $.inArray('Files', trf.types)) !== -1) {
-				    kind = 'file';
+				if (trf.types && trf.types.length) {
+					if ((idx = $.inArray('application/x-moz-file', trf.types)) !== -1) {
+						kind = 'file';
+					} else if ((idx = $.inArray('Files', trf.types)) !== -1) {
+						kind = 'file';
+					}
 				}
 				else if (trf.items && trf.items.length && trf.items[0].kind) {
-				    kind = trf.items[0].kind;
+					kind = trf.items[0].kind;
 				}
 
 				try {

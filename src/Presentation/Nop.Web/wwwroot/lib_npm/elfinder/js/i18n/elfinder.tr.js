@@ -3,9 +3,10 @@
  * @author I.Taskinoglu & A.Kaya <alikaya@armsyazilim.com>
  * @author Abdullah ELEN <abdullahelen@msn.com>
  * @author Osman KAYAN <osmnkayan@gmail.com>
- * @author Ali KAYAN <alikayan95@gmail.com>
+ * @author alikayan95@gmail.com
  * @author Cengiz AKCAN cengiz@vobo.company
- * @version 2022-05-08
+ * @author Ali KAYAN <alikayan95@gmail.com>
+ * @version 2025-06-26
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -20,9 +21,9 @@
 		translator : 'I.Taskinoglu & A.Kaya &lt;alikaya@armsyazilim.com&gt;, Abdullah ELEN &lt;abdullahelen@msn.com&gt;, Osman KAYAN &lt;osmnkayan@gmail.com&gt;, alikayan95@gmail.com, Cengiz AKCAN cengiz@vobo.company, Ali KAYAN &lt;alikayan95@gmail.com&gt;',
 		language   : 'Türkçe',
 		direction  : 'ltr',
-		dateFormat : 'd.m.Y H:i', // will show like: 08.05.2022 21:53
-		fancyDateFormat : '$1 H:i', // will show like: Bugün 21:53
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 220508-215305
+		dateFormat : 'd.m.Y H:i', // will show like: 26.06.2025 09:57
+		fancyDateFormat : '$1 H:i', // will show like: Bugün 09:57
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 250626-095752
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -30,48 +31,48 @@
 			'errUnknown'           : 'Bilinmeyen hata.',
 			'errUnknownCmd'        : 'Bilinmeyen komut.',
 			'errJqui'              : 'Geçersiz jQuery UI yapılandırması. Seçilebilir, sürükle ve bırak bileşenlerini içermelidir.',
-			'errNode'              : 'elFinder, DOM Element\'ini oluşturması gerekir.',
-			'errURL'               : 'Geçersiz elFinder yapılandırması! URL seçeneği ayarlı değil.',
-			'errAccess'            : 'Erişim engellendi.',
-			'errConnect'           : 'Sunucuya bağlanamıyor.',
-			'errAbort'             : 'Bağlantı durduruldu.',
+			'errNode'              : 'elFinder yaratılması için DOM Element\'ine ihtiyacı vardır.',
+			'errURL'               : 'Geçersiz elFinder yapılandırması! URL seçeneği ayarlanmamış.',
+			'errAccess'            : 'Erişim reddedildi.',
+			'errConnect'           : 'Sunucu-Tarafı\'na bağlanılamıyor.',
+			'errAbort'             : 'Bağlantı iptal edildi.',
 			'errTimeout'           : 'Bağlantı zaman aşımı.',
-			'errNotFound'          : 'Sunucu bulunamadı.',
-			'errResponse'          : 'Geçersiz sunucu yanıtı.',
-			'errConf'              : 'Geçersiz sunucu yapılandırması.',
+			'errNotFound'          : 'Sunucu-Tarafı bulunamadı.',
+			'errResponse'          : 'Geçersiz Sunucu-Tarafı yanıtı.',
+			'errConf'              : 'Geçersiz Sunucu-Tarafı yapılandırması.',
 			'errJSON'              : 'PHP JSON modülü kurulu değil.',
 			'errNoVolumes'         : 'Okunabilir birimler mevcut değil.',
 			'errCmdParams'         : '"$1" komutu için geçersiz parametre.',
-			'errDataNotJSON'       : 'Bu veri JSON formatında değil.',
-			'errDataEmpty'         : 'Boş veri.',
-			'errCmdReq'            : 'Sunucu isteği için komut adı gerekli.',
+			'errDataNotJSON'       : 'Veri JSON formatında değil.',
+			'errDataEmpty'         : 'Veri boş.',
+			'errCmdReq'            : 'Sunucu-Tarafı isteği için komut adı gerekli.',
 			'errOpen'              : '"$1" açılamıyor.',
-			'errNotFolder'         : 'Bu nesne bir klasör değil.',
-			'errNotFile'           : 'Bu nesne bir dosya değil.',
+			'errNotFolder'         : 'Nesne bir dizin değil.',
+			'errNotFile'           : 'Nesne bir dosya değil.',
 			'errRead'              : '"$1" okunamıyor.',
 			'errWrite'             : '"$1" yazılamıyor.',
-			'errPerm'              : 'Yetki engellendi.',
+			'errPerm'              : 'İzin reddedildi.',
 			'errLocked'            : '"$1" kilitli. Bu nedenle taşıma, yeniden adlandırma veya kaldırma yapılamıyor.',
 			'errExists'            : '"$1" adında bir dosya zaten var.',
 			'errInvName'           : 'Geçersiz dosya ismi.',
-			'errInvDirname'        : 'Geçersiz klasör ismi',  // from v2.1.24 added 12.4.2017
-			'errFolderNotFound'    : 'Klasör bulunamıyor.',
+			'errInvDirname'        : 'Geçersiz dizin ismi.',  // from v2.1.24 added 12.4.2017
+			'errFolderNotFound'    : 'Dizin bulunamadı.',
 			'errFileNotFound'      : 'Dosya bulunamadı.',
-			'errTrgFolderNotFound' : 'Hedef klasör "$1" bulunamadı.',
+			'errTrgFolderNotFound' : 'Hedef dizin "$1" bulunamadı.',
 			'errPopup'             : 'Tarayıcı popup penceresi açmayı engelledi. Tarayıcı ayarlarından dosya açmayı aktif hale getirin.',
-			'errMkdir'             : 'Klasör oluşturulamıyor "$1".',
+			'errMkdir'             : 'Dizin oluşturulamıyor "$1".',
 			'errMkfile'            : '"$1" dosyası oluşturulamıyor.',
 			'errRename'            : '"$1" yeniden adlandırma yapılamıyor.',
 			'errCopyFrom'          : '"$1" biriminden dosya kopyalamaya izin verilmedi.',
 			'errCopyTo'            : '"$1" birimine dosya kopyalamaya izin verilmedi.',
-			'errMkOutLink'         : 'Kök birim dışında bir bağlantı oluşturulamıyor', // from v2.1 added 03.10.2015
+			'errMkOutLink'         : 'Birim kökü dışında bir bağlantı oluşturulamıyor', // from v2.1 added 03.10.2015
 			'errUpload'            : 'Dosya yükleme hatası.',  // old name - errUploadCommon
-			'errUploadFile'        : '"$1" dosya yüklenemedi.', // old name - errUpload
+			'errUploadFile'        : '"$1" dosyası yüklenemedi.', // old name - errUpload
 			'errUploadNoFiles'     : 'Yüklenecek dosya bulunamadı.',
 			'errUploadTotalSize'   : 'Veri izin verilen boyuttan büyük.', // old name - errMaxSize
 			'errUploadFileSize'    : 'Dosya izin verilen boyuttan büyük.', //  old name - errFileMaxSize
-			'errUploadMime'        : 'Dosya türüne izin verilmedi.',
-			'errUploadTransfer'    : '"$1" transfer hatası.',
+			'errUploadMime'        : 'Dosya türüne izin verilmiyor.',
+			'errUploadTransfer'    : '"$1" aktarma hatası.',
 			'errUploadTemp'        : 'Yükleme için geçici dosya yapılamıyor.', // from v2.1 added 26.09.2015
 			'errNotReplace'        : '"$1" nesnesi bu konumda zaten var ve başka türde nesne ile değiştirilemez.', // new
 			'errReplace'           : 'Değişiklik yapılamıyor "$1".',
@@ -86,8 +87,8 @@
 			'errArchive'           : 'Arşiv oluşturulamıyor.',
 			'errArcType'           : 'Desteklenmeyen arşiv türü.',
 			'errNoArchive'         : 'Dosya arşiv değil veya desteklenmeyen arşiv türü.',
-			'errCmdNoSupport'      : 'Sunucu bu komutu desteklemiyor.',
-			'errReplByChild'       : '“$1” klasörü içerdiği bir öğe tarafından değiştirilemez.',
+			'errCmdNoSupport'      : 'Sunucu-Tarafı bu komutu desteklemiyor.',
+			'errReplByChild'       : '“$1” dizini, içerdiği bir öğe tarafından değiştirilemez.',
 			'errArcSymlinks'       : 'Sembolik bağlantıları içeren arşivlerin açılması güvenlik nedeniyle reddedildi.', // edited 24.06.2012
 			'errArcMaxSize'        : 'Arşiv dosyaları izin verilen maksimum boyutu aştı.',
 			'errResize'            : '"$1" yeniden boyutlandırılamıyor.',
@@ -99,8 +100,8 @@
 			'errNotUTF8Content'    : 'Dosya "$1" UTF-8 olmadığından düzenlenemez.',  // added 9.11.2011
 			'errNetMount'          : '"$1" bağlanamadı.', // added 17.04.2012
 			'errNetMountNoDriver'  : 'Desteklenmeyen protokol.',     // added 17.04.2012
-			'errNetMountFailed'    : 'Bağlama hatası.',         // added 17.04.2012
-			'errNetMountHostReq'   : 'Sunucu gerekli.', // added 18.04.2012
+			'errNetMountFailed'    : 'Bağlama başarısız oldu.',         // added 17.04.2012
+			'errNetMountHostReq'   : 'Host gerekli.', // added 18.04.2012
 			'errSessionExpires'    : 'Uzun süre işlem yapılmadığından oturumunuz sonlandı.',
 			'errCreatingTempDir'   : 'Geçici dizin oluşturulamıyor: "$1"',
 			'errFtpDownloadFile'   : 'Dosya FTP: "$1" adresinden indirilemiyor.',
@@ -110,16 +111,16 @@
 			'errExtractExec'       : '"$1" Dosyaları arşivden çıkartılırken hata oluştu.',
 			'errNetUnMount'        : 'Bağlantı kaldırılamıyor.', // from v2.1 added 30.04.2012
 			'errConvUTF8'          : 'UTF-8\'e dönüştürülemez.', // from v2.1 added 08.04.2014
-			'errFolderUpload'      : 'Klasör yükleyebilmek için daha modern bir tarayıcıya ihtiyacınız var.', // from v2.1 added 26.6.2015
-			'errSearchTimeout'     : '"$1" araması zaman aşımına uğradı. Kısmi arama sonuçları listeleniyor.', // from v2.1 added 12.1.2016
+			'errFolderUpload'      : 'Dizin yükleyebilmek için daha modern bir tarayıcıya ihtiyacınız var.', // from v2.1 added 26.6.2015
+			'errSearchTimeout'     : '"$1" aranırken zaman aşımına uğradı. Arama sonuçları kısmidir.', // from v2.1 added 12.1.2016
 			'errReauthRequire'     : 'Yeniden yetkilendirme gerekiyor.', // from v2.1.10 added 24.3.2016
-			'errMaxTargets'        : 'Maksimum seçilebilir öge sayısı $1 adettir', // from v2.1.17 added 17.10.2016
+			'errMaxTargets'        : 'Maksimum seçilebilir öge sayısı $1 adettir.', // from v2.1.17 added 17.10.2016
 			'errRestore'           : 'Çöp kutusundan geri yüklenemiyor. Geri yükleme notkası belirlenemiyor.', // from v2.1.24 added 3.5.2017
-			'errEditorNotFound'    : 'Editör bu dosya türünü bulamıyor.', // from v2.1.25 added 23.5.2017
+			'errEditorNotFound'    : 'Bu doya türü için düzenleyici bulunamadı.', // from v2.1.25 added 23.5.2017
 			'errServerError'       : 'Sunucu tarafında beklenilmeyen bir hata oluştu.', // from v2.1.25 added 16.6.2017
-			'errEmpty'             : '"$1" klasörü boşaltılamıyor.', // from v2.1.25 added 22.6.2017
-			'moreErrors'           : '"$1" veya daha fazla hata', // from v2.1.44 added 9.12.2018
-			'errMaxMkdirs'         : 'Tek seferde 1$\'a kadar klasör oluşturabilirsiniz.', // from v2.1.58 added 20.6.2021
+			'errEmpty'             : '"$1" Dizini boşaltılamıyor.', // from v2.1.25 added 22.6.2017
+			'moreErrors'           : '"$1" tane daha hata var.', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : 'Tek seferde en fazla 1$ dizin oluşturabilirsiniz.', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'Arşiv oluştur',
@@ -127,40 +128,40 @@
 			'cmdcopy'      : 'Kopyala',
 			'cmdcut'       : 'Kes',
 			'cmddownload'  : 'İndir',
-			'cmdduplicate' : 'Çoğalt',
+			'cmdduplicate' : 'Kopyasını oluştur',
 			'cmdedit'      : 'Dosyayı düzenle',
 			'cmdextract'   : 'Arşivden dosyaları çıkart',
 			'cmdforward'   : 'İleri',
 			'cmdgetfile'   : 'Dosyaları seç',
 			'cmdhelp'      : 'Bu yazılım hakkında',
-			'cmdhome'      : 'Anasayfa',
+			'cmdhome'      : 'Kök',
 			'cmdinfo'      : 'Bilgi göster',
 			'cmdmkdir'     : 'Yeni klasör',
 			'cmdmkdirin'   : 'Yeni Klasör / aç', // from v2.1.7 added 19.2.2016
 			'cmdmkfile'    : 'Yeni dosya',
 			'cmdopen'      : 'Aç',
 			'cmdpaste'     : 'Yapıştır',
-			'cmdquicklook' : 'Ön izleme',
+			'cmdquicklook' : 'Önizleme',
 			'cmdreload'    : 'Geri Yükle',
 			'cmdrename'    : 'Yeniden Adlandır',
 			'cmdrm'        : 'Sil',
 			'cmdtrash'     : 'Çöpe at', //from v2.1.24 added 29.4.2017
-			'cmdrestore'   : 'geri yükle', //from v2.1.24 added 3.5.2017
+			'cmdrestore'   : 'Geri yükle', //from v2.1.24 added 3.5.2017
 			'cmdsearch'    : 'Dosyaları bul',
 			'cmdup'        : 'Üst dizine çık',
 			'cmdupload'    : 'Dosyaları yükle',
 			'cmdview'      : 'Görüntüle',
-			'cmdresize'    : 'Resmi yeniden boyutlandır',
+			'cmdresize'    : 'Boyutlandır & Döndür',
 			'cmdsort'      : 'Sırala',
-			'cmdnetmount'  : 'Bağlı ağ birimi', // added 18.04.2012
-			'cmdnetunmount': 'Devredışı bırak', // from v2.1 added 30.04.2012
+			'cmdnetmount'  : 'Ağ birimi bağla', // added 18.04.2012
+			'cmdnetunmount': 'bağlantıyı kes', // from v2.1 added 30.04.2012
 			'cmdplaces'    : 'Yerlere', // added 28.12.2014
 			'cmdchmod'     : 'Mod değiştir', // from v2.1 added 20.6.2015
-			'cmdopendir'   : 'Klasör aç', // from v2.1 added 13.1.2016
+			'cmdopendir'   : 'Bir Dizin Aç', // from v2.1 added 13.1.2016
 			'cmdcolwidth'  : 'Sütun genişliğini sıfırla', // from v2.1.13 added 12.06.2016
-			'cmdfullscreen': 'Tam ekran', // from v2.1.15 added 03.08.2016
+			'cmdfullscreen': 'Tam Ekran', // from v2.1.15 added 03.08.2016
 			'cmdmove'      : 'Taşı', // from v2.1.15 added 21.08.2016
-			'cmdempty'     : 'Klasörü boşalt', // from v2.1.25 added 22.06.2017
+			'cmdempty'     : 'Dizini boşalt', // from v2.1.25 added 22.06.2017
 			'cmdundo'      : 'Geri al', // from v2.1.27 added 31.07.2017
 			'cmdredo'      : 'Yinele', // from v2.1.27 added 31.07.2017
 			'cmdpreference': 'Tercihler', // from v2.1.27 added 03.08.2017
@@ -178,6 +179,7 @@
 			'btnCancel' : 'İptal',
 			'btnNo'     : 'Hayır',
 			'btnYes'    : 'Evet',
+			'btnDiscard': 'Discard changes',
 			'btnMount'  : 'Bağla',  // added 18.04.2012
 			'btnApprove': 'Git $1 & onayla', // from v2.1 added 26.04.2012
 			'btnUnmount': 'Bağlantıyı kes', // from v2.1 added 30.04.2012
@@ -196,15 +198,15 @@
 			'btnSaveAs'   : 'Farklı Kaydet', // from v2.1.25 added 24.5.2017
 
 			/******************************** notifications ********************************/
-			'ntfopen'     : 'Klasör Aç',
+			'ntfopen'     : 'Dizin Aç',
 			'ntffile'     : 'Dosya Aç',
-			'ntfreload'   : 'Klasör içeriğini yeniden yükle',
+			'ntfreload'   : 'Dizin içeriğini yeniden yükle',
 			'ntfmkdir'    : 'Dizin oluşturuluyor',
 			'ntfmkfile'   : 'Dosyaları oluşturma',
-			'ntfrm'       : 'Dosyaları sil',
-			'ntfcopy'     : 'Dosyaları kopyala',
-			'ntfmove'     : 'Dosyaları taşı',
-			'ntfprepare'  : 'Dosyaları kopyalamaya hazırla',
+			'ntfrm'       : 'Öğeleri sil',
+			'ntfcopy'     : 'Öğeleri kopyala',
+			'ntfmove'     : 'Öğeleri taşı',
+			'ntfprepare'  : 'Varolan öğeler kontrol ediliyor',
 			'ntfrename'   : 'Dosyaları yeniden adlandır',
 			'ntfupload'   : 'Dosyalar yükleniyor',
 			'ntfdownload' : 'Dosyalar indiriliyor',
@@ -218,7 +220,7 @@
 			'ntfnetmount' : 'Ağ birimine bağlanılıyor', // added 18.04.2012
 			'ntfnetunmount': 'Ağ birimi bağlantısı kesiliyor', // from v2.1 added 30.04.2012
 			'ntfdim'      : 'Resim boyutu alınıyor', // added 20.05.2013
-			'ntfreaddir'  : 'Klasör bilgisi okunuyor', // from v2.1 added 01.07.2013
+			'ntfreaddir'  : 'Dizin bilgisi okunuyor', // from v2.1 added 01.07.2013
 			'ntfurl'      : 'Bağlantının URL\'si alınıyor', // from v2.1 added 11.03.2014
 			'ntfchmod'    : 'Dosya modu değiştiriliyor', // from v2.1 added 20.6.2015
 			'ntfpreupload': 'Yüklenen dosya ismi doğrulanıyor', // from v2.1 added 31.11.2015
@@ -227,7 +229,7 @@
 			'ntfchunkmerge': 'Yüklenen dosya işleniyor', // from v2.1.17 added 2.11.2016
 			'ntftrash'    : 'Çöp kutusuna atma', // from v2.1.24 added 2.5.2017
 			'ntfrestore'  : 'Çöp kutusundan geri yükle', // from v2.1.24 added 3.5.2017
-			'ntfchkdir'   : 'Hedef klasör kontrol ediliyor', // from v2.1.24 added 3.5.2017
+			'ntfchkdir'   : 'Hedef dizin kontrol ediliyor', // from v2.1.24 added 3.5.2017
 			'ntfundo'     : 'Önceki işlemi geri alma', // from v2.1.27 added 31.07.2017
 			'ntfredo'     : 'Önceki geri almayı tekrarlama', // from v2.1.27 added 31.07.2017
 			'ntfchkcontent' : 'İçeriği kontrol ediniz', // from v2.1.41 added 3.8.2018
@@ -283,7 +285,7 @@
 			'sortkind'          : 'Türe göre',
 			'sortsize'          : 'Boyuta göre',
 			'sortdate'          : 'Tarihe göre',
-			'sortFoldersFirst'  : 'Önce klasörler',
+			'sortFoldersFirst'  : 'Önce dizinler',
 			'sortperm'          : 'izinlere göre', // from v2.1.13 added 13.06.2016
 			'sortmode'          : 'moduna göre',       // from v2.1.13 added 13.06.2016
 			'sortowner'         : 'sahibine göre',      // from v2.1.13 added 13.06.2016
@@ -300,7 +302,7 @@
 
 			/********************************** messages **********************************/
 			'confirmReq'      : 'Onay gerekli',
-			'confirmRm'       : 'Dosyaları kaldırmak istediğinden emin misin?<br/>Bu işlem geri alınamaz!',
+			'confirmRm'       : 'Öğeleri kaldırmak istediğinden emin misin?<br/>Bu işlem geri alınamaz!',
 			'confirmRepl'     : 'Eski dosya yenisi ile değiştirilsin mi?',
 			'confirmRest'     : 'Mevcut öge çöp kutusundaki ögeyle değiştirilsin mi?', // fromv2.1.24 added 5.5.2017
 			'confirmConvUTF8' : 'UTF-8 değil<br/>UTF-8\'e dönüştürülsün mü?<br/>Dönüştürme sonrası kaydedebilmek için içeriğin UTF-8 olması gerekir.', // from v2.1 added 08.04.2014
@@ -318,25 +320,25 @@
 			'write'           : 'yaz',
 			'noaccess'        : 'erişim yok',
 			'and'             : 've',
-			'unknown'         : 'bilinimiyor',
-			'selectall'       : 'Tüm dosyaları seç',
-			'selectfiles'     : 'Dosya(lar)ı seç',
-			'selectffile'     : 'İlk dosyayı seç',
-			'selectlfile'     : 'Son dosyayı seç',
+			'unknown'         : 'bilinmeyen',
+			'selectall'       : 'Tüm öğeleri seç',
+			'selectfiles'     : 'Öğe(ler)i seç',
+			'selectffile'     : 'İlk öğeyi seç',
+			'selectlfile'     : 'Son öğeyi seç',
 			'viewlist'        : 'Liste görünümü',
 			'viewicons'       : 'Simge görünümü',
-			'viewSmall'       : 'Small iconlar', // from v2.1.39 added 22.5.2018
-			'viewMedium'      : 'Medium iconlar', // from v2.1.39 added 22.5.2018
-			'viewLarge'       : 'Large iconlar', // from v2.1.39 added 22.5.2018
-			'viewExtraLarge'  : 'Extra large iconlar', // from v2.1.39 added 22.5.2018
+			'viewSmall'       : 'Küçük simgeler', // from v2.1.39 added 22.5.2018
+			'viewMedium'      : 'Orta simgleler', // from v2.1.39 added 22.5.2018
+			'viewLarge'       : 'Büyük simgleler', // from v2.1.39 added 22.5.2018
+			'viewExtraLarge'  : 'Çok büyük simgeler', // from v2.1.39 added 22.5.2018
 			'places'          : 'Yerler',
 			'calc'            : 'Hesapla',
-			'path'            : 'Yol',
-			'aliasfor'        : 'Takma adı:',
+			'path'            : 'Dosya Yolu',
+			'aliasfor'        : 'Takma adı',
 			'locked'          : 'Kilitli',
 			'dim'             : 'Ölçüler',
 			'files'           : 'Dosyalar',
-			'folders'         : 'Klasörler',
+			'folders'         : 'Dizinler',
 			'items'           : 'Nesneler',
 			'yes'             : 'evet',
 			'no'              : 'hayır',
@@ -359,15 +361,15 @@
 			'developer'       : 'geliştirici',
 			'contributor'     : 'iştirakçi',
 			'maintainer'      : 'bakıcı',
-			'translator'      : 'çeviri',
+			'translator'      : 'tercüman',
 			'icons'           : 'Simgeler',
 			'dontforget'      : 've havlunuzu almayı unutmayın',
 			'shortcutsof'     : 'Kısayollar devre dışı',
 			'dropFiles'       : 'Dosyaları buraya taşı',
 			'or'              : 'veya',
 			'selectForUpload' : 'Yüklemek için dosyaları seçin',
-			'moveFiles'       : 'Dosyaları taşı',
-			'copyFiles'       : 'Dosyaları kopyala',
+			'moveFiles'       : 'Öğeleri taşı',
+			'copyFiles'       : 'Öğeleri kopyala',
 			'restoreFiles'    : 'Öğeleri geri yükle', // from v2.1.24 added 5.5.2017
 			'rmFromPlaces'    : 'Yerlerinden sil',
 			'aspectRatio'     : 'Görünüm oranı',
@@ -379,10 +381,10 @@
 			'rotate'          : 'Döndür',
 			'rotate-cw'       : '90 derece sağa döndür',
 			'rotate-ccw'      : '90 derece sola döndür',
-			'degree'          : 'Derece',
+			'degree'          : '°',
 			'netMountDialogTitle' : 'Bağlı (Mount) ağ birimi', // added 18.04.2012
 			'protocol'            : 'Protokol', // added 18.04.2012
-			'host'                : 'Sunucu', // added 18.04.2012
+			'host'                : 'Host', // added 18.04.2012
 			'port'                : 'Kapı(Port)', // added 18.04.2012
 			'user'                : 'Kullanıcı', // added 18.04.2012
 			'pass'                : 'Şifre', // added 18.04.2012
@@ -399,15 +401,15 @@
 			'execute'         : 'Çalıştır', // from v2.1 added 20.6.2015
 			'perm'            : 'Yetki', // from v2.1 added 20.6.2015
 			'mode'            : 'Mod', // from v2.1 added 20.6.2015
-			'emptyFolder'     : 'Klasör boş', // from v2.1.6 added 30.12.2015
-			'emptyFolderDrop' : 'Klasör boş\\A Eklemek için sürükleyin', // from v2.1.6 added 30.12.2015
-			'emptyFolderLTap' : 'Klasör boş\\A Eklemek için basılı tutun', // from v2.1.6 added 30.12.2015
+			'emptyFolder'     : 'Dizin boş', // from v2.1.6 added 30.12.2015
+			'emptyFolderDrop' : 'Dizin boş\\Öğe eklemek için sürükleyin', // from v2.1.6 added 30.12.2015
+			'emptyFolderLTap' : 'Dizin boş\\Öğe eklemek için basılı tutun', // from v2.1.6 added 30.12.2015
 			'quality'         : 'Kalite', // from v2.1.6 added 5.1.2016
 			'autoSync'        : 'Otomatik senkronizasyon',  // from v2.1.6 added 10.1.2016
 			'moveUp'          : 'Yukarı taşı',  // from v2.1.6 added 18.1.2016
 			'getLink'         : 'URL bağlantısı alın', // from v2.1.7 added 9.2.2016
 			'selectedItems'   : 'Seçili öğeler ($1)', // from v2.1.7 added 2.19.2016
-			'folderId'        : 'Klasör kimliği', // from v2.1.10 added 3.25.2016
+			'folderId'        : 'Dizin kimliği', // from v2.1.10 added 3.25.2016
 			'offlineAccess'   : 'Çevrimdışı erişime izin ver', // from v2.1.10 added 3.25.2016
 			'reAuth'          : 'Yeniden kimlik doğrulaması için', // from v2.1.10 added 3.25.2016
 			'nowLoading'      : 'Şimdi yükleniyor...', // from v2.1.12 added 4.26.2016
@@ -420,9 +422,9 @@
 			'incSearchOnly'   : 'Artan arama yalnızca geçerli görünümden yapılır.', // from v2.1.13 added 6.30.2016
 			'reinstate'       : 'Eski durumuna getir', // from v2.1.15 added 3.8.2016
 			'complete'        : '$1 tamamlandı', // from v2.1.15 added 21.8.2016
-			'contextmenu'     : 'Durum menüsü', // from v2.1.15 added 9.9.2016
+			'contextmenu'     : 'Konteks menüsü', // from v2.1.15 added 9.9.2016
 			'pageTurning'     : 'Sayfa çevir', // from v2.1.15 added 10.9.2016
-			'volumeRoots'     : 'Disk kök dizini', // from v2.1.16 added 16.9.2016
+			'volumeRoots'     : 'Kök birimler', // from v2.1.16 added 16.9.2016
 			'reset'           : 'Sıfırla', // from v2.1.16 added 1.10.2016
 			'bgcolor'         : 'Arkaplan rengi', // from v2.1.16 added 1.10.2016
 			'colorPicker'     : 'Renk seçici', // from v2.1.16 added 1.10.2016
@@ -435,13 +437,13 @@
 			'minsLeft'        : '$1 dakika kaldı', // from v2.1.17 added 13.11.2016
 			'openAsEncoding'  : 'Seçilen kodlamayla yeniden aç', // from v2.1.19 added 2.12.2016
 			'saveAsEncoding'  : 'Seçilen kodlamayla kaydet', // from v2.1.19 added 2.12.2016
-			'selectFolder'    : 'Klasör seç', // from v2.1.20 added 13.12.2016
+			'selectFolder'    : 'Dizin seç', // from v2.1.20 added 13.12.2016
 			'firstLetterSearch': 'İlk arama sayfası', // from v2.1.23 added 24.3.2017
 			'presets'         : 'Hazır ayarlar', // from v2.1.25 added 26.5.2017
 			'tooManyToTrash'  : 'çok fazla öge var çöp kutusuna atılamaz.', // from v2.1.25 added 9.6.2017
 			'TextArea'        : 'Metin alanı(TextArea)', // from v2.1.25 added 14.6.2017
-			'folderToEmpty'   : '"$1" klasörünü boşalt.', // from v2.1.25 added 22.6.2017
-			'filderIsEmpty'   : '"$1" klasöründe öge yok.', // from v2.1.25 added 22.6.2017
+			'folderToEmpty'   : '"$1" dizinini boşalt.', // from v2.1.25 added 22.6.2017
+			'filderIsEmpty'   : '"$1" dizininde öğe yok.', // from v2.1.25 added 22.6.2017
 			'preference'      : 'Tercih', // from v2.1.26 added 28.6.2017
 			'language'        : 'Dil ayarları', // from v2.1.26 added 28.6.2017
 			'clearBrowserData': 'Bu tarayıcıda kayıtlı ayarları başlat', // from v2.1.26 added 28.6.2017
@@ -464,7 +466,7 @@
 			'columnPref'      : 'Sütun ayarları (Liste görünümü)', // from v2.1.32 added 6.2.2018
 			'reflectOnImmediate' : 'Tüm değişiklikler hemen arşive yansıtılacaktır.', // from v2.1.33 added 2.3.2018
 			'reflectOnUnmount'   : 'Herhangi bir değişiklik, bu birimi kaldırılıncaya kadar yansıtılmayacaktır.', // from v2.1.33 added 2.3.2018
-			'unmountChildren' : 'Bu cihaza monte edilen aşağıdaki birim (ler) de bağlanmamıştır. Çıkardığınızdan emin misiniz?', // from v2.1.33 added 5.3.2018
+			'unmountChildren' : 'Bağlatıyı kesmek istediğiniz birime bağlı şu birim(ler)\'in de bağlantısı kesilecek. Bağlantıyı kesmek istediğinize emin misiniz?', // from v2.1.33 added 5.3.2018
 			'selectionInfo'   : 'Seçim Bilgisi', // from v2.1.33 added 7.3.2018
 			'hashChecker'     : 'Dosya imza(hash) algoritmaları', // from v2.1.33 added 10.3.2018
 			'infoItems'       : 'öğelerin bilgisi (Seçim Bilgi Paneli)', // from v2.1.38 added 28.3.2018
@@ -473,7 +475,7 @@
 			'workspace'       : 'Çalışma alanı', // from v2.1.38 added 4.4.2018
 			'dialog'          : 'Diyalog', // from v2.1.38 added 4.4.2018
 			'all'             : 'Tümü', // from v2.1.38 added 4.4.2018
-			'iconSize'        : 'İcon Boyutu (İcon Görünümü İçin)', // from v2.1.39 added 7.5.2018
+			'iconSize'        : 'Simge Boyutu (Simge Görünümü)', // from v2.1.39 added 7.5.2018
 			'editorMaximized' : 'Maksimum düzenleyici penceresini aç', // from v2.1.40 added 30.6.2018
 			'editorConvNoApi' : 'API ile dönüşüm şu anda mevcut olmadığından, lütfen web sitesinde dönüştürün.', //from v2.1.40 added 8.7.2018
 			'editorConvNeedUpload' : 'Dönüştürmeden sonra, dönüştürülen dosyayı kaydetmek için öğe URL\'si veya indirilen bir dosya ile karşıya yüklemeniz gerekir.', //from v2.1.40 added 8.7.2018
@@ -499,8 +501,8 @@
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'Bilinmiyor',
-			'kindRoot'        : 'Sürücü Kök dizini', // from v2.1.16 added 16.10.2016
-			'kindFolder'      : 'Klasör',
+			'kindRoot'        : 'Birim Kök dizini', // from v2.1.16 added 16.10.2016
+			'kindFolder'      : 'Dizin',
 			'kindSelects'     : 'Seçim', // from v2.1.29 added 29.8.2017
 			'kindAlias'       : 'Alias (Takma ad)',
 			'kindAliasBroken' : 'Bozuk alias',
@@ -526,6 +528,12 @@
 			'kindTTF'         : 'True Type fontu',
 			'kindOTF'         : 'Open Type fontu',
 			'kindRPM'         : 'RPM paketi',
+			// fonts
+			'kindFont'        : 'Fontu',
+			'kindSFNT'        : 'SFNT fontu',
+			'kindEOT'         : 'Embedded Open Type fontu',
+			'kindWOFF'        : 'Web Open Font Format',
+			'kindWOFF2'       : 'Web Open Font Format 2',
 			// texts
 			'kindText'        : 'Metin dosyası',
 			'kindTextPlain'   : 'Düz metin',
@@ -581,4 +589,3 @@
 		}
 	};
 }));
-

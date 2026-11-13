@@ -174,6 +174,7 @@
 			'btnCancel' : 'Annuler',
 			'btnNo'     : 'Nej',
 			'btnYes'    : 'Ja',
+			'btnDiscard': 'Discard changes',
 			'btnMount'  : 'Mount',  // added 18.04.2012
 			'btnApprove': 'Gå til $1 & godkend', // from v2.1 added 26.04.2012
 			'btnUnmount': 'Unmount', // from v2.1 added 30.04.2012
@@ -522,6 +523,12 @@
 			'kindTTF'         : 'True Type skrift',
 			'kindOTF'         : 'Open Type skrift',
 			'kindRPM'         : 'RPM pakke',
+			// fonts
+			'kindFont'        : 'Skrift',
+			'kindSFNT'        : 'SFNT skrift',
+			'kindEOT'         : 'Embedded Open Type skrift',
+			'kindWOFF'        : 'Web Open Font Format skrift',
+			'kindWOFF2'       : 'Web Open Font Format 2 skrift',
 			// texts
 			'kindText'        : 'Tekstdokument',
 			'kindTextPlain'   : 'Ren tekst',
