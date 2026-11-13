@@ -306,7 +306,11 @@ public partial class ProductService : IProductService
                     {
                         var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
 
-                        combinations = combinations.Where(p => p.StockQuantity >= 0 || p.AllowOutOfStockOrders).ToList();
+                        combinations = combinations.Where(p => p.StockQuantity > 0 || p.AllowOutOfStockOrders).ToList();
+
+                        //nothing selected yet: the product is available when any combination is in stock
+                        if (!selectedIds.Any() && combinations.Any())
+                            return await _localizationService.GetResourceAsync("Products.Availability.InStock");
 
                         var attributes = await combinations.SelectAwait(async c => await _productAttributeParser.ParseProductAttributeMappingsAsync(c.AttributesXml)).ToListAsync();
 
