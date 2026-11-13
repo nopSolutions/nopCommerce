@@ -8,7 +8,7 @@ using Nop.Plugin.Misc.Forums.Domain;
 
 namespace Nop.Plugin.Misc.Forums.Data.Migrations;
 
-[NopMigration("2026-02-02 00:00:00", "Misc.Forums schema", MigrationProcessType.Installation)]
+[NopMigration("2026-11-13 00:00:03", "Misc.Forums schema")]
 public class SchemaMigration : Migration
 {
     #region Utilities
