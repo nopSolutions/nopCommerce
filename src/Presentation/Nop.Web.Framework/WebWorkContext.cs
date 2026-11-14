@@ -324,7 +324,8 @@ public partial class WebWorkContext : IWorkContext
         //save passed language identifier
         var customer = await GetCurrentCustomerAsync();
 
-        if (!customer.IsSystemAccount)
+        //Do not change the saved language preference of an impersonated customer
+        if (!customer.IsSystemAccount && OriginalCustomerIfImpersonated is null)
         {
             customer.LanguageId = language?.Id;
             await _customerService.UpdateCustomerAsync(customer);
