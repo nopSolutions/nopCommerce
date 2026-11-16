@@ -56,6 +56,8 @@ label:not(.form-check-label):not(.custom-file-label) {
 
 a {
   color: #3c8dbc;
+  text-decoration: none;
+  background-color: transparent;
 }
 
 .alert a {
@@ -310,15 +312,12 @@ i.false-icon {
 }
 
   .app-content-header h1 > small a {
+    background-color: transparent;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
   }
-
-    .app-content-header h1 > small a:hover {
-      text-decoration: underline;
-    }
 
 /*COLLAPSIBLE BLOCKS*/
 #ajaxBusy span.no-ajax-loader {
