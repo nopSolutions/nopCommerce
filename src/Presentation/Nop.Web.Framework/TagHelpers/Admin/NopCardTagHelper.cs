@@ -63,76 +63,90 @@ public partial class NopCardTagHelper : TagHelper
         viewContextAware?.Contextualize(ViewContext);
 
         //create card
-        var card = new TagBuilder("div")
-        {
-            Attributes =
-            {
-                new KeyValuePair<string, string>("id", Name),
-                new KeyValuePair<string, string>("data-card-name", Name),
-            }
-        };
+        var card = new TagBuilder("div");
+        card.Attributes.Add("id", Name);
+        card.Attributes.Add("data-card-name", Name);
         card.AddCssClass("card card-secondary card-outline");
-        if (context.AllAttributes.ContainsName(IS_ADVANCED_ATTRIBUTE_NAME)
-            && context.AllAttributes[IS_ADVANCED_ATTRIBUTE_NAME].Value.Equals(true))
-            card.AddCssClass("advanced-setting");
-        card.Attributes.Add("data-hideAttribute", context.AllAttributes[HIDE_BLOCK_ATTRIBUTE_NAME_ATTRIBUTE_NAME].Value.ToString());
 
-        if (context.AllAttributes[IS_HIDE_ATTRIBUTE_NAME].Value.Equals(true))
+        if (IsAdvanced)
+            card.AddCssClass("advanced-setting");
+
+        if (!string.IsNullOrEmpty(HideBlockAttributeName))
+            card.Attributes.Add("data-hideAttribute", HideBlockAttributeName);
+
+        if (IsHide)
             card.AddCssClass("collapsed-card");
 
         //create card heading and append title and icon to it
-        var cardHeading = new TagBuilder("div");
-        cardHeading.AddCssClass("card-header with-border clearfix");
+        var cardHeader = new TagBuilder("div");
+        cardHeader.AddCssClass("card-header");
 
-        if (context.AllAttributes.ContainsName(CARD_ICON_ATTRIBUTE_NAME))
+        //card title
+        var cardTitle = new TagBuilder("div");
+        cardTitle.AddCssClass("card-title");
+
+        if (!string.IsNullOrEmpty(CardIcon))
         {
             var cardIcon = new TagBuilder("i");
-            cardIcon.AddCssClass(context.AllAttributes[CARD_ICON_ATTRIBUTE_NAME].Value.ToString());
-            var iconContainer = new TagBuilder("div");
-            iconContainer.AddCssClass("card-title");
-            iconContainer.InnerHtml.AppendHtml(cardIcon);
-            iconContainer.InnerHtml.AppendHtml($"{context.AllAttributes[TITLE_ATTRIBUTE_NAME].Value}");
-            cardHeading.InnerHtml.AppendHtml(iconContainer);
+            cardIcon.AddCssClass(CardIcon);
+            cardTitle.InnerHtml.AppendHtml(cardIcon);
+            cardTitle.InnerHtml.Append(" ");
         }
 
-        var collapseIcon = new TagBuilder("i");
-        collapseIcon.AddCssClass("fa");
-        collapseIcon.AddCssClass("toggle-icon");
-        collapseIcon.AddCssClass(context.AllAttributes[IS_HIDE_ATTRIBUTE_NAME].Value.Equals(true) ? "fa-plus" : "fa-minus");
+        cardTitle.InnerHtml.Append(Title ?? string.Empty);
+        cardHeader.InnerHtml.AppendHtml(cardTitle);
 
-        var cardToolContainer = new TagBuilder("div");
-        cardToolContainer.AddCssClass("card-tools float-end");
-        var cardbtnContainer = new TagBuilder("button");
+        //collapse button
+        var collapseIconExpand = new TagBuilder("i");
+        collapseIconExpand.Attributes.Add("data-lte-icon", "expand");
+        collapseIconExpand.AddCssClass("bi bi-plus-lg");
 
-        cardbtnContainer.AddCssClass("btn btn-tool");
-        cardbtnContainer.MergeAttribute("type", "button");
-        cardbtnContainer.MergeAttribute("data-card-widget", "collapse");
-        cardbtnContainer.InnerHtml.AppendHtml(collapseIcon);
+        var collapseIconCollapse = new TagBuilder("i");
+        collapseIconCollapse.Attributes.Add("data-lte-icon", "collapse");
+        collapseIconCollapse.AddCssClass("bi bi-dash-lg");
 
-        cardToolContainer.InnerHtml.AppendHtml(cardbtnContainer);
-        cardHeading.InnerHtml.AppendHtml(cardToolContainer);
+        var cardButton = new TagBuilder("button");
+        cardButton.AddCssClass("btn btn-tool");
+        cardButton.MergeAttribute("type", "button");
+        cardButton.MergeAttribute("data-lte-toggle", "card-collapse");
+        cardButton.MergeAttribute("aria-label", "Collapse card");
+        cardButton.InnerHtml.AppendHtml(collapseIconExpand);
+        cardButton.InnerHtml.AppendHtml(collapseIconCollapse);
 
-        //add heading and container to card
-        card.InnerHtml.AppendHtml(cardHeading);
+        var cardTools = new TagBuilder("div");
+        cardTools.AddCssClass("card-tools");
+        cardTools.InnerHtml.AppendHtml(cardButton);
 
-        var modelsBefore = await _widgetModelFactory.PrepareRenderWidgetModelAsync(AdminWidgetZones.CardBefore, new WidgetNopCardModel { CardName = Name });
+        cardHeader.InnerHtml.AppendHtml(cardTools);
+
+        // create card body
+        var cardBody = new TagBuilder("div");
+        cardBody.AddCssClass("card-body");
+
+        var modelsBefore = await _widgetModelFactory.PrepareRenderWidgetModelAsync(
+            AdminWidgetZones.CardBefore,
+            new WidgetNopCardModel { CardName = Name });
 
         foreach (var model in modelsBefore)
         {
             var content = await _viewComponentHelper.InvokeAsync(model.WidgetViewComponent, model.WidgetViewComponentArguments);
-            card.InnerHtml.AppendHtml(content);
+            cardBody.InnerHtml.AppendHtml(content);
         }
 
         var childContent = await output.GetChildContentAsync();
-        card.InnerHtml.AppendHtml(childContent.GetContent());
+        cardBody.InnerHtml.AppendHtml(childContent);
 
         var modelsAfter = await _widgetModelFactory.PrepareRenderWidgetModelAsync(AdminWidgetZones.CardAfter, new WidgetNopCardModel { CardName = Name });
 
         foreach (var model in modelsAfter)
         {
             var content = await _viewComponentHelper.InvokeAsync(model.WidgetViewComponent, model.WidgetViewComponentArguments);
-            card.InnerHtml.AppendHtml(content);
+            cardBody.InnerHtml.AppendHtml(content);
         }
+
+        // assemble card
+        card.InnerHtml.AppendHtml(cardHeader);
+        card.InnerHtml.AppendHtml(cardBody);
 
         output.Content.AppendHtml(await card.RenderHtmlContentAsync());
     }
@@ -175,7 +189,7 @@ public partial class NopCardTagHelper : TagHelper
     /// Card icon
     /// </summary>
     [HtmlAttributeName(CARD_ICON_ATTRIBUTE_NAME)]
-    public string CardIconIsAdvanced { get; set; }
+    public string CardIcon { get; set; }
 
     /// <summary>
     /// ViewContext
