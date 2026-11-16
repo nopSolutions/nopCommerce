@@ -7,14 +7,14 @@
 
 <form asp-controller="PunchOutAdmin" asp-action="LogView" method="post">
     <div class="app-content-header">
-        <h1 class="text-body m-0 fs-3">
+        <h1>
             @T("Plugins.Misc.PunchOut.Log.Hint")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="Configure" asp-controller="PunchOutAdmin">@T("Plugins.Misc.PunchOut.Log.BackToList")</a>
             </small>
         </h1>
-        <div class="d-flex flex-wrap align-items-center gap-2">
+        <div class="app-content-header-actions">
             <span id="log-delete" class="btn btn-danger">
                 <i class="far fa-trash-can"></i>
                 @T("Admin.Common.Delete")

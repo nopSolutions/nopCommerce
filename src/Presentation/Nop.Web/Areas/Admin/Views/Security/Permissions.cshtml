@@ -23,7 +23,7 @@
 
 <form asp-controller="Security" asp-action="Permissions" method="post" id="permissions-form">
     <div class="app-content-header">
-        <div class="d-flex flex-wrap align-items-center gap-2">
+        <div class="app-content-header-actions">
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PermissionListButtons, additionalData = Model })
         </div>
     </div>

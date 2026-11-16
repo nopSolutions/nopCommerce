@@ -15,10 +15,10 @@
 <form asp-controller="QueuedEmail" asp-action="List" method="post">
     <div class="app-content-header">
         <div class="container-fluid">
-            <h1 class="text-body m-0 fs-3">
+            <h1>
                 @T("Admin.System.QueuedEmails")
             </h1>
-            <div class="d-flex flex-wrap align-items-center gap-2">
+            <div class="app-content-header-actions">
                 <button type="button" id="requeue-selected" class="btn btn-success">
                     <i class="far fa-clone"></i>
                     @T("Admin.System.QueuedEmails.RequeueSelected")

@@ -17,10 +17,10 @@
 <form asp-controller="RfqAdmin" asp-action="AdminQuotes" method="post">
     <input asp-for="CustomerId" type="hidden" />
     <div class="app-content-header">
-        <h1 class="text-body m-0 fs-3">
+        <h1>
             @T("Plugins.Misc.RFQ.Quotes")
         </h1>
-        <div class="d-flex flex-wrap align-items-center gap-2">
+        <div class="app-content-header-actions">
             <button type="submit" id="btnCreate" name="btnCreate" style="display: none"></button>
             <button type="submit" id="btnCreateNewQuote" onclick="javascript:OpenWindow('@Url.Action("SelectCustomerPopup", "RfqAdmin", new { btnId = "btnCreate", productIdInput = Html.IdFor(model => model.CustomerId) })', 800, 850, true); return false;" class="btn btn-info text-white">
                 <i class="fas fa-plus-square"></i>

@@ -12,7 +12,7 @@
 <form asp-controller="Manufacturer" asp-action="Edit" method="post" id="manufacturer-form">
     <div class="app-content-header">
         <div class="container-fluid">
-            <h1 class="text-body m-0 fs-3">
+            <h1>
                 @T("Admin.Catalog.Manufacturers.EditManufacturerDetails") - @Model.Name
                 <small>
                     <a asp-action="List">
@@ -21,7 +21,7 @@
                     </a>
                 </small>
             </h1>
-            <div class="d-flex flex-wrap align-items-center gap-2">
+            <div class="app-content-header-actions">
                 @await Component.InvokeAsync(typeof(MultistorePreviewViewComponent), Model)
                 @if (Model.PreTranslationAvailable)
                 {

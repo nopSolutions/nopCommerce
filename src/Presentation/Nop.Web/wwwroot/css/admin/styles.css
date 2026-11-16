@@ -275,6 +275,23 @@ i.false-icon {
   overflow-x: scroll;
 }
 
+/* Content header title */
+.app-content-header h1 {
+  color: var(--bs-body-color);
+  margin: 0;
+  font-size: 1.75rem; /* Bootstrap fs-3 */
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Content header actions */
+.app-content-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem; /* Bootstrap gap-2 */
+}
+
 .app-content-header > .container-fluid {
   display: flex;
   flex-wrap: wrap;

@@ -14,7 +14,7 @@
 
 <div class="app-content-header">
     <div class="container-fluid">
-        <h1 class="text-body m-0 fs-3">
+        <h1>
             @string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId)
             <small>
                 <a asp-action="Edit" asp-route-id="@Model.OrderId">
@@ -23,7 +23,7 @@
                 </a>
             </small>
         </h1>
-        <div class="d-flex flex-wrap align-items-center gap-2">
+        <div class="app-content-header-actions">
             &nbsp;
         </div>
     </div>

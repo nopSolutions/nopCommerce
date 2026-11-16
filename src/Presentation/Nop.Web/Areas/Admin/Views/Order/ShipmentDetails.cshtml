@@ -68,7 +68,7 @@
 
     <div class="app-content-header">
         <div class="container-fluid">
-            <h1 class="text-body m-0 fs-3">
+            <h1>
                 @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id
                 <small>
                     <a asp-action="Edit" asp-route-id="@Model.OrderId">
@@ -77,7 +77,7 @@
                     </a>
                 </small>
             </h1>
-            <div class="d-flex flex-wrap align-items-center gap-2">
+            <div class="app-content-header-actions">
                 <a asp-action="PdfPackagingSlip" asp-route-shipmentId="@Model.Id" class="btn btn-info text-white">
                     <i class="far fa-file-pdf"></i>
                     @T("Admin.Orders.Shipments.PrintPackagingSlip")

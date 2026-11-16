@@ -12,10 +12,10 @@
       asp-route-formId="@Context.Request.Query["formId"]" data-bs-theme="light">
     <div class="app-content-header">
         <div class="container-fluid">
-            <h1 class="text-body m-0 fs-3">
+            <h1>
                 @T("Admin.Customers.CustomerAttributes.Values.EditValueDetails")
             </h1>
-            <div class="d-flex flex-wrap align-items-center gap-2">
+            <div class="app-content-header-actions">
                 <button type="submit" name="save" class="btn btn-primary">
                     <i class="far fa-floppy-disk"></i>
                     @T("Admin.Common.Save")

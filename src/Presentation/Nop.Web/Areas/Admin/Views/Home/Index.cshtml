@@ -18,14 +18,16 @@
 
 <script src="~/js/admin.table.js" asp-location="Footer"></script>
 
-<div class="content-header">
-    <h1>
-        @T("Admin.Dashboard")
-    </h1>
+<div class="app-content-header">
+    <div class="container-fluid">
+        <h1>
+            @T("Admin.Dashboard")
+        </h1>
+    </div>
 </div>
 <section class="app-content">
     <div class="container-fluid">
-        <div class="container-fluid">
+        <div class="form-horizontal">
             <div class="row">
                 <div class="col-md-12">
                     @if (!closeConfigurationStepsCard)

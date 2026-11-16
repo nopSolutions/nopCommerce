@@ -25,7 +25,7 @@
     <form asp-controller="Order" asp-action="Edit" method="post" id="order-form">
         <div class="app-content-header">
             <div class="container-fluid">
-                <h1 class="text-body m-0 fs-3">
+                <h1>
                     @T("Admin.Orders.EditOrderDetails") - @Model.CustomOrderNumber
                     <small>
                         <a asp-action="List">
@@ -34,7 +34,7 @@
                         </a>
                     </small>
                 </h1>
-                <div class="d-flex flex-wrap align-items-center gap-2">
+                <div class="app-content-header-actions">
                     <a asp-action="PdfInvoice" asp-route-orderId="@Model.Id" class="btn btn-info text-white">
                         <i class="far fa-file-pdf"></i>
                         @T("Admin.Orders.PdfInvoice")

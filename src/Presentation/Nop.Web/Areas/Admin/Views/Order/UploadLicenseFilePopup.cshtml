@@ -21,10 +21,10 @@
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
     <div class="app-content-header">
-        <h1 class="text-body m-0 fs-3">
+        <h1>
             @T("Admin.Orders.Products.License.UploadFile")
         </h1>
-        <div class="d-flex flex-wrap align-items-center gap-2">
+        <div class="app-content-header-actions">
             &nbsp;
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderUploadLicenseButtons, additionalData = Model })
         </div>

@@ -10,7 +10,7 @@
 <form asp-controller="ProductAttribute" asp-action="Edit" method="post" id="productattribute-form">
     <div class="app-content-header">
         <div class="container-fluid">
-            <h1 class="text-body m-0 fs-3">
+            <h1>
                 @T("Admin.Catalog.Attributes.ProductAttributes.EditAttributeDetails") - @Model.Name
                 <small>
                     <a asp-action="List">
@@ -19,7 +19,7 @@
                     </a>
                 </small>
             </h1>
-            <div class="d-flex flex-wrap align-items-center gap-2">
+            <div class="app-content-header-actions">
                 @if (Model.PreTranslationAvailable)
                 {
                     @await Html.PartialAsync("_PreTranslateButton", "PreTranslate")

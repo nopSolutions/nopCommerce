@@ -10,7 +10,7 @@
 <form asp-controller="Log" asp-action="View" method="post">
     <div class="app-content-header">
         <div class="container-fluid">
-            <h1 class="text-body m-0 fs-3">
+            <h1>
                 @T("Admin.System.Log.ViewLogDetails")
                 <small>                
                     <a asp-action="List">
@@ -19,7 +19,7 @@
                     </a>
                 </small>
             </h1>
-            <div class="d-flex flex-wrap align-items-center gap-2">
+            <div class="app-content-header-actions">
                 <span id="log-delete" class="btn btn-danger">
                     <i class="far fa-trash-can"></i>
                     @T("Admin.Common.Delete")

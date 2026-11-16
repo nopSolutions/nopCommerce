@@ -8,12 +8,14 @@
 }
 
 <div class="app-content-header">
-    <h1 class="text-body m-0 fs-3">
-        @T("Admin.System.ScheduleTasks")
-    </h1>
-    <div class="d-flex flex-wrap align-items-center gap-2">
-        &nbsp;
-        @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ScheduleTaskListButtons, additionalData = Model })
+    <div class="container-fluid">
+        <h1>
+            @T("Admin.System.ScheduleTasks")
+        </h1>
+        <div class="app-content-header-actions">
+            &nbsp;
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ScheduleTaskListButtons, additionalData = Model })
+        </div>
     </div>
 </div>
 

@@ -37,10 +37,10 @@
 
     <div class="app-content-header">
         <div class="container-fluid">
-            <h1 class="text-body m-0 fs-3">
+            <h1>
                 @T("Admin.Catalog.Products.AiGenerateFullDescription")
             </h1>
-            <div class="d-flex flex-wrap align-items-center gap-2">
+            <div class="app-content-header-actions">
                 @if (!string.IsNullOrEmpty(Model.GeneratedDescription))
                 {
                     <button id="save_button" type="submit" onclick="set_save()" name="save" class="btn btn-primary">

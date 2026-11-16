@@ -13,22 +13,24 @@
 }
 
 <div class="app-content-header">
-    <h1 class="text-body m-0 fs-3">
-        @T("Plugins.Misc.News.Comments")
-    </h1>
-    <div class="d-flex flex-wrap align-items-center gap-2">
-        <button type="button" id="approve-selected" class="btn btn-success">
-            <i class="fas fa-square-check"></i>
-            @T("Plugins.Misc.News.Comments.ApproveSelected")
-        </button>
-        <button type="button" id="disapprove-selected" class="btn btn-secondary">
-            <i class="fas fa-square-minus"></i>
-            @T("Plugins.Misc.News.Comments.DisapproveSelected")
-        </button>
-        <button type="button" id="delete-selected" class="btn btn-danger">
-            <i class="far fa-trash-can"></i>
-            @T("Plugins.Misc.News.Comments.DeleteSelected")
-        </button>
+    <div class="container-fluid">
+        <h1>
+            @T("Plugins.Misc.News.Comments")
+        </h1>
+        <div class="app-content-header-actions">
+            <button type="button" id="approve-selected" class="btn btn-success">
+                <i class="fas fa-square-check"></i>
+                @T("Plugins.Misc.News.Comments.ApproveSelected")
+            </button>
+            <button type="button" id="disapprove-selected" class="btn btn-secondary">
+                <i class="fas fa-square-minus"></i>
+                @T("Plugins.Misc.News.Comments.DisapproveSelected")
+            </button>
+            <button type="button" id="delete-selected" class="btn btn-danger">
+                <i class="far fa-trash-can"></i>
+                @T("Plugins.Misc.News.Comments.DeleteSelected")
+            </button>
+        </div>
     </div>
 </div>
 

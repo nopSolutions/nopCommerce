@@ -14,10 +14,10 @@
 
 <div class="app-content-header">
     <div class="container-fluid">
-        <h1 class="text-body m-0 fs-3">
+        <h1>
             @T("Admin.Customers.ActivityLog")
         </h1>
-        <div class="d-flex flex-wrap align-items-center gap-2">
+        <div class="app-content-header-actions">
             <form class="d-flex flex-wrap align-items-center justify-content-end gap-2" asp-controller="ActivityLog" asp-action="ClearAll" method="post">
                 <button type="submit" id="clearall" name="clearall" class="btn btn-danger">
                     <i class="far fa-trash-can me-1"></i>

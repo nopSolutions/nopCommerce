@@ -9,22 +9,26 @@
 
 <form asp-controller="NewsAdmin" asp-action="NewsItemCreate" method="post">
     <div class="app-content-header">
-        <h1 class="text-body m-0 fs-3">
-            @T("Plugins.Misc.News.NewsItems.AddNew")
-            <small>
-                <i class="fas fa-arrow-circle-left"></i>
-                <a asp-action="NewsItems">@T("Plugins.Misc.News.NewsItems.BackToList")</a>
-            </small>
-        </h1>
-        <div class="d-flex flex-wrap align-items-center gap-2">
-            <button type="submit" name="save" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.Save")
-            </button>
-            <button type="submit" name="save-continue" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.SaveContinue")
-            </button>
+        <div class="container-fluid">
+            <h1>
+                @T("Plugins.Misc.News.NewsItems.AddNew")
+                <small>
+                    <a asp-action="NewsItems">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        @T("Plugins.Misc.News.NewsItems.BackToList")
+                    </a>
+                </small>
+            </h1>
+            <div class="app-content-header-actions">
+                <button type="submit" name="save" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                <button type="submit" name="save-continue" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.SaveContinue")
+                </button>
+            </div>
         </div>
     </div>
     @await Html.PartialAsync("~/Plugins/Misc.News/Admin/Views/_CreateOrUpdate.cshtml", Model)

@@ -12,7 +12,7 @@
 <form asp-controller="FilterLevelValue" asp-action="Edit" method="post" id="filter-level-value-form">
     <div class="app-content-header">
         <div class="container-fluid">
-            <h1 class="text-body m-0 fs-3">
+            <h1>
                 @T("Admin.Catalog.FilterLevelValue.EditFilterLevelValueDetails") - @Model.Id
                 <small>
                     <a asp-action="List">
@@ -21,7 +21,7 @@
                     </a>
                 </small>
             </h1>
-            <div class="d-flex flex-wrap align-items-center gap-2">
+            <div class="app-content-header-actions">
                 <button type="submit" name="save" class="btn btn-primary">
                     <i class="far fa-floppy-disk"></i>
                     @T("Admin.Common.Save")

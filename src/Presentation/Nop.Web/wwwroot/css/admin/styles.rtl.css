@@ -271,6 +271,51 @@ i.false-icon {
   overflow-x: scroll;
 }
 
+/* Content header title */
+.app-content-header h1 {
+  color: var(--bs-body-color);
+  margin: 0;
+  font-size: 1.75rem; /* Bootstrap fs-3 */
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Content header actions */
+.app-content-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem; /* Bootstrap gap-2 */
+}
+
+.app-content-header > .container-fluid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+/* "back to" - small in header */
+.app-content-header h1 > small {
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+  .app-content-header h1 > small a {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+    .app-content-header h1 > small a:hover {
+      text-decoration: underline;
+    }
+
 /*COLLAPSIBLE BLOCKS*/
 #ajaxBusy span.no-ajax-loader {
   background: none;

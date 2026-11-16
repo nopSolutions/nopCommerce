@@ -15,10 +15,10 @@
 <form asp-controller="Product" asp-action="ProductTags" method="post" id="product-tags-form">
     <div class="app-content-header">
         <div class="container-fluid">
-            <h1 class="text-body m-0 fs-3">
+            <h1>
                 @T("Admin.Catalog.ProductTags")
             </h1>
-            <div class="d-flex flex-wrap align-items-center gap-2">
+            <div class="app-content-header-actions">
                 &nbsp;
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.ProductTagListButtons, additionalData = Model })
                 <button type="button" id="delete-selected" class="btn btn-danger">

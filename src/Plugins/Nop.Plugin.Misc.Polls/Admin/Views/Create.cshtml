@@ -10,22 +10,26 @@
 
 <form asp-controller="PollAdmin" asp-action="Create" method="post">
     <div class="app-content-header">
-        <h1 class="text-body m-0 fs-3">
-            @T("Plugins.Misc.Polls.AddNew")
-            <small>
-                <i class="fas fa-arrow-circle-left"></i>
-                <a asp-action="List">@T("Plugins.Misc.Polls.BackToList")</a>
-            </small>
-        </h1>
-        <div class="d-flex flex-wrap align-items-center gap-2">
-            <button type="submit" name="save" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.Save")
-            </button>
-            <button type="submit" name="save-continue" class="btn btn-primary">
-                <i class="far fa-floppy-disk"></i>
-                @T("Admin.Common.SaveContinue")
-            </button>
+        <div class="container-fluid">
+            <h1>
+                @T("Plugins.Misc.Polls.AddNew")
+                <small>
+                    <a asp-action="List">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        @T("Plugins.Misc.Polls.BackToList")
+                    </a>
+                </small>
+            </h1>
+            <div class="app-content-header-actions">
+                <button type="submit" name="save" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                <button type="submit" name="save-continue" class="btn btn-primary">
+                    <i class="far fa-floppy-disk"></i>
+                    @T("Admin.Common.SaveContinue")
+                </button>
+            </div>
         </div>
     </div>
     @await Html.PartialAsync("~/Plugins/Misc.Polls/Admin/Views/_CreateOrUpdate.cshtml", Model)

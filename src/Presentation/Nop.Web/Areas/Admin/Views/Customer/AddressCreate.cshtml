@@ -10,7 +10,7 @@
 <form asp-controller="Customer" asp-action="AddressCreate" method="post">
     <div class="app-content-header">
         <div class="container-fluid">
-            <h1 class="text-body m-0 fs-3">
+            <h1>
                 @T("Admin.Customers.Customers.Addresses.AddNew") 
                 <small>
                     <a asp-action="Edit" asp-route-id="@Model.CustomerId">
@@ -19,7 +19,7 @@
                     </a>
                 </small>
             </h1>
-            <div class="d-flex flex-wrap align-items-center gap-2">
+            <div class="app-content-header-actions">
                 <button type="submit" class="btn btn-primary">
                     @T("Admin.Common.Save")
                 </button>
