@@ -2,24 +2,19 @@
     const string cardId = "order-incomplete-report-card";
     const string hideCardAttributeName = "Reports.HideOrderIncompleteReportCard";
     var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
+    var preferenceUrl = Url.Action("SavePreference", "Preferences");
 }
 
-<div class="card card-primary card-outline @if(hideCard){<text>collapsed-card</text>}" id="@cardId">
-    <div class="card-header with-border">
-        <h3 class="card-title">
-            <i class="fas fa-hourglass-start"></i>
+<div class="card card-primary card-outline @(hideCard ? "collapsed-card" : "")" id="@cardId">
+    <div class="card-header clearfix">
+        <div class="card-title">
+            <i class="bi bi-hourglass-split"></i>
             @T("Admin.Dashboard.IncompleteOrders")
-        </h3>
-        <div class="card-tools float-end">
-            <button class="btn btn-tool" data-card-widget="collapse">
-                @if (hideCard)
-                {
-                    <text><i class="fas fa-plus"></i></text>
-                }
-                else
-                {
-                    <text><i class="fas fa-minus"></i></text>
-                }
+        </div>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
             </button>
         </div>
     </div>
@@ -30,9 +25,9 @@
                 $('#orderIncompleteReport').load('@Url.Action("GetOrderIncomplete", "Home")');
             }
 
-            $('#@cardId').on('click', 'button[data-card-widget="collapse"]', function () {
+            $('#@cardId').on('click', 'button[data-lte-toggle="card-collapse"]', function () {
                 collapsed = !$('#@cardId').hasClass('collapsed-card');
-                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);
+                saveUserPreferences('@preferenceUrl', '@hideCardAttributeName', collapsed);
                 if (!collapsed){
                     $('#orderIncompleteReport').load('@Url.Action("GetOrderIncomplete", "Home")');
                 }
@@ -43,7 +38,7 @@
         <div id="orderIncompleteReport"></div>
         <script>
             function renderColumnOrderIncompleteReportCount(data, type, row, meta) {
-                return '<a class="btn btn-default" href="' + row.ViewLink +'"><i class="far fa-eye"></i>' + row.Count + ' - @T("Admin.SalesReport.Incomplete.View").Text</a>';
+                return '<a class="btn btn-default" href="' + row.ViewLink + '"><i class="bi bi-eye"></i>' + row.Count + ' - @T("Admin.SalesReport.Incomplete.View").Text</a>';
             }
         </script>
     </div>

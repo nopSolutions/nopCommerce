@@ -324,6 +324,14 @@ i.false-icon {
   background: none;
 }
 
+.card.card-primary {
+  margin-bottom: 10px;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
 .card.card-secondary {
   margin-bottom: 10px;
   border-top: 3px solid #00c0ef;
@@ -754,7 +762,7 @@ i.false-icon {
 }
 
 /*override font-awesome styles*/
-.fa, .far, .fas {
+.fa, .far, .fas, .bi {
   width: auto;
   padding-right: 5px;
   font-size: 1.0em;

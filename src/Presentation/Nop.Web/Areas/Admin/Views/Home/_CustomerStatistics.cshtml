@@ -2,29 +2,30 @@
     const string prefix = "customer-statistics";
     const string hideCardAttributeName = "Reports.HideCustomerStatisticsCard";
     var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
+    var preferenceUrl = Url.Action("SavePreference", "Preferences");
 }
 
 <script src="~/lib_npm/chart.js/chart.umd.min.js"></script>
 
-<div class="card card-primary card-outline @if (hideCard){<text>collapsed-card</text>}" id="@(prefix)-card">
-    <div class="card-header with-border">
-        <h3 class="card-title">
-            <i class="far fa-user"></i>
+<div class="card card-primary card-outline @(hideCard ? "collapsed-card" : "")" id="@(prefix)-card">
+    <div class="card-header clearfix">
+        <div class="card-title">
+            <i class="bi bi-person"></i>
             @T("Admin.Reports.Customers.CustomerStatistics")
-        </h3>
-        <div class="card-tools float-end">
-            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hideCard) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="year">@T("Admin.Reports.Customers.CustomerStatistics.Year")</button>
-            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hideCard) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="month">@T("Admin.Reports.Customers.CustomerStatistics.Month")</button>
-            <button class="btn btn-xs btn-info btn-flat" @if (hideCard) { <text> disabled="disabled" </text>  } data-chart-role="toggle-chart" data-chart-period="week">@T("Admin.Reports.Customers.CustomerStatistics.Week")</button>
-            <button class="btn btn-tool margin-l-10" data-card-widget="collapse">
-                @if (hideCard)
-                {
-                    <text><i class="fas fa-plus"></i></text>
-                }
-                else
-                {
-                    <text><i class="fas fa-minus"></i></text>
-                }
+        </div>
+        <div class="card-tools">
+            <button type="button" class="btn btn-sm btn-info me-1" data-chart-role="toggle-chart" data-chart-period="year" disabled="@hideCard">
+                @T("Admin.Reports.Customers.CustomerStatistics.Year")
+            </button>
+            <button type="button" class="btn btn-sm btn-info me-1" data-chart-role="toggle-chart" data-chart-period="month" disabled="@hideCard">
+                @T("Admin.Reports.Customers.CustomerStatistics.Month")
+            </button>
+            <button type="button" class="btn btn-sm btn-info" data-chart-role="toggle-chart" data-chart-period="week" disabled="@hideCard">
+                @T("Admin.Reports.Customers.CustomerStatistics.Week")
+            </button>
+            <button type="button" class="btn btn-tool ms-2" data-lte-toggle="card-collapse">
+                <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
             </button>
         </div>
     </div>
@@ -39,10 +40,10 @@
     $(function() {
         var csCurrentPeriod;
 
-        $('#@(prefix)-card').on('click',  'button[data-card-widget="collapse"]', function () {
+        $('#@(prefix)-card').on('click', 'button[data-lte-toggle="card-collapse"]', function() {
             
             var collapsed = !$('#@(prefix)-card').hasClass('collapsed-card');
-            saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);
+            saveUserPreferences('@preferenceUrl', '@hideCardAttributeName', collapsed);
                        
             if (!collapsed) {
                 $('#@(prefix)-card button[data-chart-role="toggle-chart"]').removeAttr('disabled');
@@ -143,7 +144,6 @@
                     if (!window.customerStatistics) {
                         csConfig.data.labels = csLabels;
                         csConfig.data.datasets[0].data = csData;
-                        csConfig.data.scales =
                         window.customerStatistics = new Chart(document.getElementById("@prefix-chart").getContext("2d"), csConfig);
                     } else {
                         window.customerStatistics.config.data.labels = csLabels;

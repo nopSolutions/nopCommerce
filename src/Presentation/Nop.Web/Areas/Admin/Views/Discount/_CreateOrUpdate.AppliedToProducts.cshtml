@@ -63,7 +63,7 @@
                 return '';
 
             var textRenderer = $.fn.dataTable.render.text().display;
-            return `<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")${row.ProductId}"><i class="far fa-eye"></i>${textRenderer('@T("Admin.Common.View")')}</a >`;
+            return `<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")${row.ProductId}"><i class="bi bi-eye"></i>${textRenderer('@T("Admin.Common.View")')}</a >`;
         }
     </script>
 }
