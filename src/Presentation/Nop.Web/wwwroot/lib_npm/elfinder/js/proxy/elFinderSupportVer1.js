@@ -29,7 +29,7 @@ window.elFinderSupportVer1 = function(upload) {
 		this.fm.parseUploadData = function(text) {
 			var data;
 
-			if (!$.trim(text)) {
+			if (!text.trim()) {
 				return {error : ['errResponse', 'errDataEmpty']};
 			}
 
