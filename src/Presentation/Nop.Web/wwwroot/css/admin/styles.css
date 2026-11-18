@@ -324,6 +324,10 @@ i.false-icon {
   background: none;
 }
 
+.card.card-default {
+  margin-bottom: 1rem;
+}
+
 .card.card-primary {
   margin-bottom: 10px;
   border-left: none;
