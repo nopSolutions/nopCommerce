@@ -32,7 +32,7 @@
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
 <!DOCTYPE html>
-<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(localizationSettings.IgnoreRtlPropertyForAdminArea)">
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(localizationSettings.IgnoreRtlPropertyForAdminArea)" data-bs-theme="light">
 <head>
     <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
@@ -72,7 +72,7 @@
         else
         {
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderBefore })
-            <nav class="app-header navbar navbar-expand bg-body">
+            <nav class="app-header navbar navbar-expand bg-body" data-bs-theme="dark">
                 <div class="container-fluid">
                     <ul class="navbar-nav ps-2 ps-md-0">
                         <li class="nav-item">
