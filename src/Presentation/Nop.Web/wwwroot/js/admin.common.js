@@ -363,41 +363,22 @@ function prepareTableCheckboxes(masterCheckbox, childCheckbox) {
 }
 
 function displayBarNotification(message, notifyTypeId, timeout) {
+  const cssStyles = ["alert-success", "alert-danger", "alert-warning"];
+  const cssStyle = cssStyles[notifyTypeId] || cssStyles;
 
-  var cssStyles = ["alert-success", "alert-danger", "alert-warning"]
+  const $alert = $(`
+    <div class="alert ${cssStyle} alert-dismissible" role="alert">
+      <button type="button" class="btn-close" aria-label="Close"></button>
+      <span>${message}</span>
+    </div>
+  `).appendTo('#admin-notifications');
 
-  cssStyle = notifyTypeId >= 0 && notifyTypeId <= 2 ? cssStyles[notifyTypeId] : cssStyles[0];
+  const closeAlert = () => $alert.fadeOut('fast', () => $alert.remove());
 
-  var htmlcode = document.createElement('div');
-  htmlcode.classList.add('alert', cssStyle, 'alert-dismissible');
+  $alert.find('.btn-close').on('click', closeAlert);
 
-  var button = document.createElement('button');
-  button.classList.add('btn-close');
-  button.setAttribute('data-bs-dismiss', 'alert');
-  button.setAttribute('aria-label', 'Close');
-  htmlcode.appendChild(button);
-
-  var html = document.createElement('span');
-  html.innerHTML = message;
-  htmlcode.appendChild(html);
-
-  $('#admin-notifications').append(htmlcode);
-
-  //callback for notification removing
-  var removeNoteItem = function () {
-    $(htmlcode).remove();
-  };
-
-  //timeout (if set)
   if (timeout > 0) {
-    var notificationTimeout = setTimeout(function () {
-      $(htmlcode).fadeOut('slow', removeNoteItem);
-    }, timeout);
-
-    $(htmlcode)
-      .fadeIn('slow')
-      .on('mouseenter', function () {
-        clearTimeout(notificationTimeout);
-      });
+    const timer = setTimeout(closeAlert, timeout);
+    $alert.on('mouseenter', () => clearTimeout(timer));
   }
 }
