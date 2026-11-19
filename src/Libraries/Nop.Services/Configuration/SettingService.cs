@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using Nop.Core;
@@ -15,6 +16,8 @@ namespace Nop.Services.Configuration;
 public partial class SettingService : ISettingService
 {
     #region Fields
+
+    protected static readonly ConcurrentDictionary<Type, (PropertyInfo Property, bool SkipEmptyValue)[]> _settingsProperties = new();
 
     protected readonly IRepository<Setting> _settingRepository;
     protected readonly IStaticCacheManager _staticCacheManager;
@@ -331,16 +334,23 @@ public partial class SettingService : ISettingService
         if (!DataSettingsManager.IsDatabaseInstalled())
             return settings as ISettings;
 
-        foreach (var prop in type.GetProperties())
-        {
-            // get properties we can read and write to
-            if (!prop.CanRead || !prop.CanWrite)
-                continue;
+        //keep the properties we can read and write to per type, so their reflection invoke stubs are reused between loads,
+        //and ask each value-type converter once whether it accepts an empty value (IsValid throws internally to say no)
+        var properties = _settingsProperties.GetOrAdd(type, static settingsType => settingsType.GetProperties()
+            .Where(prop => prop.CanRead && prop.CanWrite)
+            .Select(prop => (prop, prop.PropertyType.IsValueType &&
+                !TypeDescriptor.GetConverter(prop.PropertyType).IsValid(string.Empty)))
+            .ToArray());
 
+        foreach (var (prop, skipEmptyValue) in properties)
+        {
             var key = type.Name + "." + prop.Name;
             //load by store
             var setting = await GetSettingByKeyAsync<string>(key, storeId: storeId, loadSharedValueIfNotFound: true);
             if (setting == null)
+                continue;
+
+            if (setting.Length == 0 && skipEmptyValue)
                 continue;
 
             if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
