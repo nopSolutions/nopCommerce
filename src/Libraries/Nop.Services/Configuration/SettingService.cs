@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using Nop.Core;
@@ -18,6 +19,8 @@ public partial class SettingService : ISettingService
 
     protected readonly IRepository<Setting> _settingRepository;
     protected readonly IStaticCacheManager _staticCacheManager;
+
+    protected static readonly ConcurrentDictionary<Type, (PropertyInfo Property, string Key)[]> _settingPropertiesCache = new();
 
     #endregion
 
@@ -112,6 +115,25 @@ public partial class SettingService : ISettingService
             };
             await InsertSettingAsync(setting, clearCache);
         }
+    }
+
+    /// <summary>
+    /// Gets the readable and writable properties of a settings type together with their setting keys
+    /// </summary>
+    /// <param name="type">Settings type</param>
+    /// <returns>Cached properties and setting keys</returns>
+    /// <remarks>
+    /// The result is cached per type. Settings are loaded for every request scope, and the runtime keeps its own reflection cache
+    /// only through a weak handle, so without a strong reference to the PropertyInfo instances new ones (with newly emitted
+    /// invoke stubs) are created after garbage collections
+    /// </remarks>
+    protected static (PropertyInfo Property, string Key)[] GetSettingProperties(Type type)
+    {
+        return _settingPropertiesCache.GetOrAdd(type, static settingsType => settingsType.GetProperties()
+            // get properties we can read and write to
+            .Where(prop => prop.CanRead && prop.CanWrite)
+            .Select(prop => (Property: prop, Key: $"{settingsType.Name}.{prop.Name}"))
+            .ToArray());
     }
 
     #endregion
@@ -331,25 +353,21 @@ public partial class SettingService : ISettingService
         if (!DataSettingsManager.IsDatabaseInstalled())
             return settings as ISettings;
 
-        foreach (var prop in type.GetProperties())
+        foreach (var (prop, key) in GetSettingProperties(type))
         {
-            // get properties we can read and write to
-            if (!prop.CanRead || !prop.CanWrite)
-                continue;
-
-            var key = type.Name + "." + prop.Name;
             //load by store
             var setting = await GetSettingByKeyAsync<string>(key, storeId: storeId, loadSharedValueIfNotFound: true);
             if (setting == null)
                 continue;
 
-            if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
+            var converter = TypeDescriptor.GetConverter(prop.PropertyType);
+            if (!converter.CanConvertFrom(typeof(string)))
                 continue;
 
-            if (!TypeDescriptor.GetConverter(prop.PropertyType).IsValid(setting))
+            if (!converter.IsValid(setting))
                 continue;
 
-            var value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromInvariantString(setting);
+            var value = converter.ConvertFromInvariantString(setting);
 
             //set property
             prop.SetValue(settings, value, null);
