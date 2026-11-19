@@ -1,8 +1,6 @@
 ﻿using System.Data;
 using FluentMigrator;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Data;
 using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
@@ -10,24 +8,9 @@ using Nop.Plugin.Misc.News.Domain;
 
 namespace Nop.Plugin.Misc.News.Data.Migrations;
 
-[NopMigration("2025-03-06 00:00:00", "Misc.News schema", MigrationProcessType.Installation)]
+[NopMigration("2026-11-13 00:00:02", "Misc.News schema")]
 public class SchemaMigration : Migration
 {
-    #region Fields
-
-    private readonly INopDataProvider _dataProvider;
-
-    #endregion
-
-    #region Ctor
-
-    public SchemaMigration(INopDataProvider dataProvider)
-    {
-        _dataProvider = dataProvider;
-    }
-
-    #endregion
-
     #region Methods
 
     /// <summary>
@@ -35,28 +18,15 @@ public class SchemaMigration : Migration
     /// </summary>
     public override void Up()
     {
-        var newsCommentTableName = NameCompatibilityManager.GetTableName(typeof(NewsComment));
-        var newsCommentCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(NewsComment), nameof(NewsComment.CustomerId));
-
         this.CreateTableIfNotExists<NewsItem>();
 
+        var newsCommentTableName = NameCompatibilityManager.GetTableName(typeof(NewsComment));
+        var newsCommentCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(NewsComment), nameof(NewsComment.CustomerId));
         if (Schema.Table(newsCommentTableName).Column(newsCommentCustomerIdColumnName).Exists())
         {
-            var customerTableName = NameCompatibilityManager.GetTableName(typeof(Customer));
-            var customerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(Customer), nameof(BaseEntity.Id));
-
-            var constraintName = _dataProvider
-                .CreateForeignKeyName(newsCommentTableName, newsCommentCustomerIdColumnName, customerTableName, customerIdColumnName);
-
-            if (Schema.Table(newsCommentTableName).Constraint(constraintName).Exists())
-                Delete.UniqueConstraint(constraintName).FromTable(newsCommentTableName);
-
-            //databases migrated from version 3.00
-            constraintName = "NewsComment_Customer";
-            if (Schema.Table(newsCommentTableName).Constraint(constraintName).Exists())
-                Delete.UniqueConstraint(constraintName).FromTable(newsCommentTableName);
-
-            this.AddOrAlterForeignKeyColumnFor<NewsComment, Customer>(t => t.CustomerId, Rule.SetNull).Nullable();
+            this.AddOrAlterForeignKeyColumnFor<NewsComment, Customer>(record => record.CustomerId, "NewsComment_Customer")
+                .OnDelete(Rule.SetNull)
+                .Nullable();
         }
         else
         {

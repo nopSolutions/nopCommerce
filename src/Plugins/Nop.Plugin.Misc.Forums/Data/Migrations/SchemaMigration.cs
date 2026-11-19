@@ -1,4 +1,6 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
+using Nop.Core.Domain.Customers;
 using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
@@ -6,7 +8,7 @@ using Nop.Plugin.Misc.Forums.Domain;
 
 namespace Nop.Plugin.Misc.Forums.Data.Migrations;
 
-[NopMigration("2026-02-02 00:00:00", "Misc.Forums schema", MigrationProcessType.Installation)]
+[NopMigration("2026-11-13 00:00:03", "Misc.Forums schema")]
 public class SchemaMigration : Migration
 {
     #region Utilities
@@ -84,8 +86,33 @@ public class SchemaMigration : Migration
     {
         this.CreateTableIfNotExists<ForumGroup>();
         this.CreateTableIfNotExists<Forum>();
-        this.CreateTableIfNotExists<ForumTopic>();
-        this.CreateTableIfNotExists<ForumPost>();
+
+        var forumTopicTableName = NameCompatibilityManager.GetTableName(typeof(ForumTopic));
+        var forumTopicCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(ForumTopic), nameof(ForumTopic.CustomerId));
+        if (Schema.Table(forumTopicTableName).Column(forumTopicCustomerIdColumnName).Exists())
+        {
+            this.AddOrAlterForeignKeyColumnFor<ForumTopic, Customer>(record => record.CustomerId, "ForumTopic_Customer")
+                .OnDelete(Rule.SetNull)
+                .Nullable();
+        }
+        else
+        {
+            this.CreateTableIfNotExists<ForumTopic>();
+        }
+
+        var forumPostTableName = NameCompatibilityManager.GetTableName(typeof(ForumPost));
+        var forumPostCustomerIdColumnName = NameCompatibilityManager.GetColumnName(typeof(ForumPost), nameof(ForumPost.CustomerId));
+        if (Schema.Table(forumPostTableName).Column(forumPostCustomerIdColumnName).Exists())
+        {
+            this.AddOrAlterForeignKeyColumnFor<ForumPost, Customer>(record => record.CustomerId, "ForumPost_Customer")
+                .OnDelete(Rule.SetNull)
+                .Nullable();
+        }
+        else
+        {
+            this.CreateTableIfNotExists<ForumPost>();
+        }
+
         this.CreateTableIfNotExists<ForumPostVote>();
         this.CreateTableIfNotExists<ForumSubscription>();
 

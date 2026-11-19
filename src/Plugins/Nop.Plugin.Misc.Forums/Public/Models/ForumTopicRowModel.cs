@@ -15,7 +15,7 @@ public record ForumTopicRowModel : BaseNopEntityModel
     public int Votes { get; set; }
     public int NumReplies { get; set; }
     public ForumTopicType ForumTopicType { get; set; }
-    public int CustomerId { get; set; }
+    public int? CustomerId { get; set; }
     public bool AllowViewingProfiles { get; set; }
     public string CustomerName { get; set; }
     public int TotalPostPages { get; set; }

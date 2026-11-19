@@ -18,7 +18,7 @@ public partial class SearchTerm : BaseEntity, ISoftDeletedEntity
     /// <summary>
     /// Gets or sets the customer identifier
     /// </summary>
-    public int CustomerId { get; set; }
+    public int? CustomerId { get; set; }
 
     /// <summary>
     /// Gets or sets the date and time of instance creation

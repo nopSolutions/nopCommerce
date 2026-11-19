@@ -192,7 +192,7 @@
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.Customer").Text,
                                 Width = "200",
-                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(ProductReviewModel.CustomerId)))
+                                Render = new RenderCustom("renderColumnCustomerInfo")
                             },
                             new ColumnProperty(nameof(ProductReviewModel.Title))
                             {
@@ -238,8 +238,16 @@
                     })
 
                     <script>
-                        $(function() {
+                        function renderColumnCustomerInfo(data, type, row, meta) {
+                            if (row.CustomerId) {
+                                return `<a href="@Url.Content("~/Admin/Customer/Edit/")${row.CustomerId}">${row.CustomerInfo}</a>`;
+                            }
+                            else {
+                                return `<span>${row.CustomerInfo}</span>`;
+                            }
+                        }
 
+                        $(function() {
                             //"approve selected" button
                             $('#approve-selected').click(function(e) {
                                 e.preventDefault();

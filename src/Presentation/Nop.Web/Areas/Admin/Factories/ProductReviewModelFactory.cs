@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -156,9 +155,11 @@ public partial class ProductReviewModelFactory : IProductReviewModelFactory
                 //fill in additional values (not existing in the entity)
                 productReviewModel.StoreName = (await _storeService.GetStoreByIdAsync(productReview.StoreId))?.Name;
                 productReviewModel.ProductName = (await _productService.GetProductByIdAsync(productReview.ProductId))?.Name;
-                productReviewModel.CustomerInfo = (await _customerService.GetCustomerByIdAsync(productReview.CustomerId)) is Customer customer && (await _customerService.IsRegisteredAsync(customer))
-                    ? customer.Email
-                    : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
+
+                var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId ?? 0);
+                productReviewModel.CustomerInfo = string.IsNullOrEmpty(customer?.Email)
+                    ? await _localizationService.GetResourceAsync("Admin.Customers.Guest")
+                    : customer.Email;
 
                 productReviewModel.ReviewText = _htmlFormatter.FormatText(productReview.ReviewText);
                 productReviewModel.ReplyText = _htmlFormatter.FormatText(productReview.ReplyText);
@@ -200,8 +201,10 @@ public partial class ProductReviewModelFactory : IProductReviewModelFactory
 
             model.ShowStoreName = showStoreName;
 
-            model.CustomerInfo = await _customerService.GetCustomerByIdAsync(productReview.CustomerId) is Customer customer && await _customerService.IsRegisteredAsync(customer)
-                ? customer.Email : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
+            var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId ?? 0);
+            model.CustomerInfo = string.IsNullOrEmpty(customer?.Email)
+                ? await _localizationService.GetResourceAsync("Admin.Customers.Guest")
+                : customer.Email;
 
             model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(productReview.CreatedOnUtc, DateTimeKind.Utc);
 

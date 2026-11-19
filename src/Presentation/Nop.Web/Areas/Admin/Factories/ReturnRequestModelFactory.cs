@@ -145,9 +145,9 @@ public partial class ReturnRequestModelFactory : IReturnRequestModelFactory
         var customer = await _customerService.GetCustomerByIdAsync(returnRequest.CustomerId);
 
         model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
-
-        model.CustomerInfo = await _customerService.IsRegisteredAsync(customer)
-            ? customer.Email : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
+        model.CustomerInfo = !string.IsNullOrEmpty(customer?.Email)
+            ? customer.Email
+            : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
         model.UploadedFileGuid = (await _downloadService.GetDownloadByIdAsync(returnRequest.UploadedFileId))?.DownloadGuid ?? Guid.Empty;
         model.ReturnRequestStatusStr = await _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus);
         var orderItem = await _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);
