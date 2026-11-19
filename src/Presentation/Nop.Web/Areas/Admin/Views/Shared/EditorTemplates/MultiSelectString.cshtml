@@ -9,9 +9,7 @@
     htmlAttributes.TryAdd("multiple", "multiple");
 }
 
-<div class="select2-blue">
-    @Html.ListBox("", ViewData["SelectList"] as IEnumerable<SelectListItem>, htmlAttributes)
-</div>
+@Html.ListBox("", ViewData["SelectList"] as IEnumerable<SelectListItem>, htmlAttributes)
 
 <script>
     $(function() {

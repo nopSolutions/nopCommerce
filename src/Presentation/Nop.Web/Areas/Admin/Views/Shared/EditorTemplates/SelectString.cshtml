@@ -8,9 +8,7 @@
     htmlAttributes.TryAdd("data-dropdown-css-class", "select2-blue");
 }
 
-<div class="select2-blue">
-    @Html.DropDownList("", ViewData["SelectList"] as IEnumerable<SelectListItem>, htmlAttributes)
-</div>
+@Html.DropDownList("", ViewData["SelectList"] as IEnumerable<SelectListItem>, htmlAttributes)
 
 <script>
     $(function() {

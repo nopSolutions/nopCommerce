@@ -868,39 +868,16 @@ i.false-icon {
 }
 
 /* ==========================================================================
-   Select2 Fixes and Customization for Bootstrap 5 and AdminLTE 4 (RTL-Ready)
+   Select2
    ========================================================================== */
 
-/* Global rules for containers (to prevent selects from shrinking in the grid) */
-.select2-container {
-  display: block !important;
-  width: 100% !important;
+/* Keep the control full-width without forcing the body-level dropdown to full width */
+.select2-hidden-accessible + .select2-container {
+  display: block;
 }
 
 .card-search .select2-container {
   max-width: 425px;
-}
-
-/* Height, borders, and rounded corners for Single Select (matching Bootstrap 5 forms) */
-.select2-container .select2-selection--single {
-  height: 38px !important;
-  display: flex !important;
-  align-items: center;
-  border: 1px solid #ced4da !important;
-  border-radius: 0px !important;
-}
-
-  /* Center the arrow inside the new flex container */
-  .select2-container .select2-selection--single .select2-selection__arrow {
-    top: 5px !important;
-  }
-
-/* Multiple Select Wrapper */
-.select2-container .select2-selection--multiple {
-  min-height: 38px !important;
-  height: auto !important;
-  border: 1px solid #ced4da !important;
-  border-radius: 0px !important;
 }
 
 /* Focus and Open states — Blue border color */
@@ -911,67 +888,20 @@ i.false-icon {
   box-shadow: 0 0 0 0.25rem rgba(60, 141, 188, 0.25) !important;
 }
 
-/* Styling the search bar inside the dropdown */
-.select2-dropdown .select2-search__field:focus {
-  border: 1px solid #467e9f !important;
-  outline: none !important;
-}
-
-/* Highlight active items in the drop-down list (#3c8dbc) */
-.select2-results__option--highlighted,
-.select2-results__option--highlighted[aria-selected],
-.select2-results__option--highlighted[aria-selected]:hover {
-  background-color: #3c8dbc !important;
-  color: #fff !important;
-}
-
-/* Customization of selected items in a multiple select (Tags / Text) */
+/* Selected tags and remove button positioning */
 .select2-container .select2-selection--multiple .select2-selection__choice {
+  flex-direction: row-reverse !important;
   background-color: #3c8dbc !important;
   border-color: #3c8dbc !important;
   color: #fff !important;
   padding: 2px 8px !important;
 }
 
-/* ==========================================================================
-   Fixing the background color of the Select2 dropdown list
-   ========================================================================== */
-
-/* We are restoring the white background for the drop-down window itself */
-.select2-dropdown {
-  background-color: #ffffff !important;
-  border: 1px solid #ced4da !important;
-}
-
-/* Set the default text color for inactive list items */
-.select2-container .select2-results__option {
-  background-color: #ffffff !important;
-  color: #212529 !important;
-}
-
-  /* Keep the active element blue (to avoid background conflicts) */
-  .select2-container .select2-results__option--highlighted,
-  .select2-container .select2-results__option[aria-selected="true"] {
-    background-color: #3c8dbc !important;
-    color: #ffffff !important;
-  }
-
-/* Fix for the search bar inside the dropdown (if enabled) */
-.select2-dropdown .select2-search__field {
-  background-color: #ffffff !important;
-  color: #212529 !important;
-}
-
-/* ==========================================================================
-   FIX FOR MULTI-SELECT REMOVE BUTTON (END SIDE AND VERTICALLY CENTERED)
-   ========================================================================== */
-
-/* Convert choice box to inline-flex and change item ordering (end side for both LTR/RTL) */
-.select2-container .select2-selection--multiple .select2-selection__choice {
-  display: inline-flex !important;
-  align-items: center !important; /* Vertically center text and remove icon */
-  flex-direction: row-reverse !important; /* Move remove icon to the visual end side */
-  padding: 2px 8px !important;
+/* Keep selected options visible and highlight the current mouse or keyboard item */
+.select2-container--default .select2-results__option--selected,
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+  background-color: #3c8dbc !important;
+  color: #ffffff !important;
 }
 
 /* Adjust spacing and separators using CSS Logical Properties for native LTR/RTL support */
@@ -987,9 +917,6 @@ i.false-icon {
 
   padding-inline-start: 6px !important; /* Inner padding near the separator */
   padding-inline-end: 0 !important;
-  display: flex !important;
-  align-items: center !important; /* Center the 'x' symbol inside its clickable zone */
-  height: 100% !important;
 }
 
   /* Hover adjustments for the end-side remove icon */

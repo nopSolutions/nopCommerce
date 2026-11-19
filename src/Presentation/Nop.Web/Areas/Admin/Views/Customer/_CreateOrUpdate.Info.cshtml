@@ -318,16 +318,8 @@
         <div class="col-md-3">
             <nop-label asp-for="SelectedCustomerRoleIds" />
         </div>
-
         <div class="col-md-9">            
-            <div class="input-group-append input-group-required">
-                <div class="input-group">
-                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
-                </div>
-                <div class="input-group-btn">
-                    <nop-required />
-                </div>
-            </div>
+            <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" asp-required="true" />
             <script>
                 $(function() {
                     var customerRoleIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').select2({
@@ -349,11 +341,7 @@
             <nop-label asp-for="SelectedPriceListIds" />
         </div>
         <div class="col-md-9">
-            <div class="input-group-append">
-                <div class="input-group">
-                    <nop-select asp-for="SelectedPriceListIds" asp-items="Model.AvailablePriceLists" asp-multiple="true" />
-                </div>
-            </div>
+            <nop-select asp-for="SelectedPriceListIds" asp-items="Model.AvailablePriceLists" asp-multiple="true" />
             <script>
                 $(function() {
                     var priceListIdsInput = $('#@Html.IdFor(model => model.SelectedPriceListIds)').select2({
