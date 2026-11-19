@@ -1843,11 +1843,13 @@ public partial class SettingController : BaseAdminController
             var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var commonSettings = await _settingService.LoadSettingAsync<CommonSettings>(storeScope);
 
-            switch (_fileProvider.GetFileExtension(iconsFile.FileName))
+            var fileName = _fileProvider.GetFileName(iconsFile.FileName);
+
+            switch (_fileProvider.GetFileExtension(fileName))
             {
                 case ".ico":
                     await _uploadService.UploadFaviconAsync(iconsFile);
-                    commonSettings.FaviconAndAppIconsHeadCode = string.Format(NopCommonDefaults.SingleFaviconHeadLink, storeScope, iconsFile.FileName);
+                    commonSettings.FaviconAndAppIconsHeadCode = string.Format(NopCommonDefaults.SingleFaviconHeadLink, storeScope, fileName);
 
                     break;
 
