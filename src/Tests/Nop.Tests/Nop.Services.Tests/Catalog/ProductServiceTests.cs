@@ -1,6 +1,8 @@
 ﻿using AwesomeAssertions;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
+using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using NUnit.Framework;
 
 namespace Nop.Tests.Nop.Services.Tests.Catalog;
@@ -363,6 +365,96 @@ public class ProductServiceTests : ServiceTest
         _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2015, 3, 7)).Should().Be(1);
         //more than two year
         _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2016, 3, 7)).Should().Be(2);
+    }
+
+    [Test]
+    public async Task CanShowInStockMessageWhenNoAttributeIsSelectedAndCombinationsAreInStock()
+    {
+        var message = await GetStockMessageWithoutSelectionAsync(10, 10, 10);
+
+        message.Should().Be(await GetService<ILocalizationService>().GetResourceAsync("Products.Availability.InStock"));
+    }
+
+    [Test]
+    public async Task CanShowOutOfStockMessageWhenNoAttributeIsSelectedAndNoCombinationIsInStock()
+    {
+        var message = await GetStockMessageWithoutSelectionAsync(0, 0, 0);
+
+        message.Should().Be(await GetService<ILocalizationService>().GetResourceAsync("Products.Availability.OutOfStock"));
+    }
+
+    #endregion
+
+    #region Utilities
+
+    /// <summary>
+    /// Creates a product that tracks inventory by attribute combinations and has one required attribute,
+    /// with one combination per given stock quantity. Returns the availability message the product page
+    /// shows on load, before the customer selects any attribute value,
+    /// when "Display type for attribute value when out of stock" is "Disable".
+    /// </summary>
+    private static async Task<string> GetStockMessageWithoutSelectionAsync(params int[] combinationStocks)
+    {
+        var settingService = GetService<ISettingService>();
+        var catalogSettings = GetService<CatalogSettings>();
+        var attributeService = GetService<IProductAttributeService>();
+        var attributeParser = GetService<IProductAttributeParser>();
+        var productService = GetService<IProductService>();
+
+        var previousDisplayType = catalogSettings.AttributeValueOutOfStockDisplayType;
+        var product = new Product
+        {
+            Name = "Product with attribute combinations",
+            Published = true,
+            ManageInventoryMethod = ManageInventoryMethod.ManageStockByAttributes,
+            DisplayStockAvailability = true,
+            AllowAddingOnlyExistingAttributeCombinations = true
+        };
+        var attribute = new ProductAttribute { Name = "Size" };
+
+        try
+        {
+            catalogSettings.AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.Disable;
+            await settingService.SaveSettingAsync(catalogSettings);
+
+            await productService.InsertProductAsync(product);
+            await attributeService.InsertProductAttributeAsync(attribute);
+
+            var mapping = new ProductAttributeMapping
+            {
+                ProductId = product.Id,
+                ProductAttributeId = attribute.Id,
+                IsRequired = true,
+                AttributeControlType = AttributeControlType.DropdownList
+            };
+            await attributeService.InsertProductAttributeMappingAsync(mapping);
+
+            for (var i = 0; i < combinationStocks.Length; i++)
+            {
+                var value = new ProductAttributeValue { ProductAttributeMappingId = mapping.Id, Name = $"Value {i}" };
+                await attributeService.InsertProductAttributeValueAsync(value);
+
+                await attributeService.InsertProductAttributeCombinationAsync(new ProductAttributeCombination
+                {
+                    ProductId = product.Id,
+                    AttributesXml = attributeParser.AddProductAttribute(string.Empty, mapping, value.Id.ToString()),
+                    StockQuantity = combinationStocks[i]
+                });
+            }
+
+            //a new service instance reads the setting saved above
+            return await GetService<IProductService>().FormatStockMessageAsync(product, string.Empty);
+        }
+        finally
+        {
+            catalogSettings.AttributeValueOutOfStockDisplayType = previousDisplayType;
+            await settingService.SaveSettingAsync(catalogSettings);
+
+            if (product.Id > 0)
+                await productService.DeleteProductAsync(product);
+            if (attribute.Id > 0)
+                await attributeService.DeleteProductAttributeAsync(attribute);
+        }
     }
 
     #endregion
