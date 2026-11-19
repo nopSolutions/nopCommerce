@@ -862,6 +862,10 @@ public class LocalizationMigration : MigrationBase
             ["ShoppingCart.VendorList.All"] = "All",
             ["ShoppingCart.SelectVendorToCheckout"] = "Please select a vendor before proceeding to checkout",
 
+            //grid selection kept across pages
+            ["Admin.DT.ClearSelection"] = "Clear selection",
+            ["Admin.DT.SelectedItems"] = "{0} selected",
+
             //#7400
             ["Admin.Catalog.Manufacturers.Gpsr"] = "GPSR",
             ["Admin.Configuration.Settings.Catalog.BlockTitle.Gpsr"] = "GPSR",
