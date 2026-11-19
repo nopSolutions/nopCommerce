@@ -49,9 +49,7 @@
             <nop-label asp-for="FlagImageFileName" />
         </div>
         <div class="col-md-9">
-            <div class="select2-blue">
-                <nop-select asp-for="FlagImageFileName" asp-items="Model.AvailableFlagImages" class="form-control" data-dropdown-css-class="select2-blue"/>
-            </div>
+            <nop-select asp-for="FlagImageFileName" asp-items="Model.AvailableFlagImages"/>
             <span asp-validation-for="FlagImageFileName"></span>
             <script>
                 $(function() {
