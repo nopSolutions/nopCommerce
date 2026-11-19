@@ -53,11 +53,7 @@
             <nop-label asp-for="SelectedPriceListIds" />
         </div>
         <div class="col-md-9">
-            <div class="input-group-append">
-                <div class="input-group">
-                    <nop-select asp-for="SelectedPriceListIds" asp-items="Model.AvailablePriceLists" asp-multiple="true" />
-                </div>
-            </div>
+            <nop-select asp-for="SelectedPriceListIds" asp-items="Model.AvailablePriceLists" asp-multiple="true" />
             <script>
                 $(function() {
                     var priceListIdsInput = $('#@Html.IdFor(model => model.SelectedPriceListIds)').select2({
