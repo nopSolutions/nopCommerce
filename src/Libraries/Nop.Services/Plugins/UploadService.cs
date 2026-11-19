@@ -282,6 +282,46 @@ public partial class UploadService : IUploadService
     }
 
     /// <summary>
+    /// Return a single path segment from an untrusted upload name, rejecting
+    /// empty names and "." / ".." after splitting on both / and \. ASP.NET
+    /// Core leaves directory parts in <c>IFormFile.FileName</c>, and
+    /// <see cref="INopFileProvider.Combine"/> keeps ".." segments, so the
+    /// raw name must not be joined onto a destination folder.
+    /// </summary>
+    protected virtual string GetSafeFileName(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+            throw new Exception("Invalid file name");
+
+        // Path.GetFileName only splits on the local directory separator, so a
+        // Windows-style ".." + backslash name would survive on Unix.
+        var normalized = fileName.Replace('\', '/');
+        var safe = _fileProvider.GetFileName(normalized);
+        if (string.IsNullOrEmpty(safe) || safe == "." || safe == ".." || safe.EndsWith("."))
+            throw new Exception("Invalid file name");
+
+        return safe;
+    }
+
+    /// <summary>
+    /// Combine <paramref name="fileName"/> onto <paramref name="directory"/> and
+    /// refuse the result unless it is still inside that directory.
+    /// </summary>
+    protected virtual string CombineInsideDirectory(string directory, string fileName)
+    {
+        var safe = GetSafeFileName(fileName);
+        var combined = _fileProvider.Combine(directory, safe);
+        var fullDirectory = Path.GetFullPath(directory);
+        var fullFile = Path.GetFullPath(combined);
+        var prefix = fullDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                     + Path.DirectorySeparatorChar;
+        if (!fullFile.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            throw new Exception("Invalid file name");
+
+        return combined;
+    }
+
+    /// <summary>
     /// Creates the directory if not exist; otherwise deletes and creates directory 
     /// </summary>
     /// <param name="path"></param>
@@ -367,7 +407,7 @@ public partial class UploadService : IUploadService
         try
         {
             //only zip archives are supported
-            if (!_fileProvider.GetFileExtension(archivefile.FileName)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
+            if (!_fileProvider.GetFileExtension(GetSafeFileName(archivefile.FileName))?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
                 throw new Exception("Only zip archives are supported (*.zip)");
 
             //check if there is a folder for favicon and app icons for the current store (all store icons folders are in wwwroot/icons and are called icons_{storeId})
@@ -375,7 +415,7 @@ public partial class UploadService : IUploadService
 
             CreateDirectory(storeIconsPath);
 
-            zipFilePath = _fileProvider.Combine(storeIconsPath, archivefile.FileName);
+            zipFilePath = CombineInsideDirectory(storeIconsPath, archivefile.FileName);
             await using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
                 await archivefile.CopyToAsync(fileStream);
 
@@ -399,7 +439,7 @@ public partial class UploadService : IUploadService
         ArgumentNullException.ThrowIfNull(favicon);
 
         //only icons are supported
-        if (!_fileProvider.GetFileExtension(favicon.FileName)?.Equals(".ico", StringComparison.InvariantCultureIgnoreCase) ?? true)
+        if (!_fileProvider.GetFileExtension(GetSafeFileName(favicon.FileName))?.Equals(".ico", StringComparison.InvariantCultureIgnoreCase) ?? true)
             throw new Exception("Only icons are supported (*.ico)");
 
         //check if there is a folder for favicon (favicon folder is in wwwroot/icons and is called icons_{storeId})
@@ -407,7 +447,7 @@ public partial class UploadService : IUploadService
 
         CreateDirectory(storeFaviconPath);
 
-        var faviconPath = _fileProvider.Combine(storeFaviconPath, favicon.FileName);
+        var faviconPath = CombineInsideDirectory(storeFaviconPath, favicon.FileName);
         await using var fileStream = new FileStream(faviconPath, FileMode.Create);
         await favicon.CopyToAsync(fileStream);
     }

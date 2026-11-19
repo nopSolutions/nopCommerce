@@ -1843,11 +1843,18 @@ public partial class SettingController : BaseAdminController
             var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var commonSettings = await _settingService.LoadSettingAsync<CommonSettings>(storeScope);
 
-            switch (_fileProvider.GetFileExtension(iconsFile.FileName))
+            // IFormFile.FileName is client-controlled and may contain directory
+            // segments. Use only the final name in the head link and for the
+            // extension check; the upload methods also confine the write path.
+            var uploadedFileName = _fileProvider.GetFileName(iconsFile.FileName.Replace('\', '/'));
+            if (string.IsNullOrEmpty(uploadedFileName) || uploadedFileName == "." || uploadedFileName == "..")
+                throw new InvalidOperationException("File is not supported.");
+
+            switch (_fileProvider.GetFileExtension(uploadedFileName))
             {
                 case ".ico":
                     await _uploadService.UploadFaviconAsync(iconsFile);
-                    commonSettings.FaviconAndAppIconsHeadCode = string.Format(NopCommonDefaults.SingleFaviconHeadLink, storeScope, iconsFile.FileName);
+                    commonSettings.FaviconAndAppIconsHeadCode = string.Format(NopCommonDefaults.SingleFaviconHeadLink, storeScope, uploadedFileName);
 
                     break;
 
