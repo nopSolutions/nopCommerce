@@ -91,12 +91,12 @@
 </form>
 
 @*send email form*@
-<div id="sendemail-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendemail-window-title">
+<div id="sendemail-window" class="modal fade" tabindex="-1" aria-labelledby="sendemail-window-title">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="sendemail-window-title">@T("Admin.Customers.Customers.SendEmail")</h4>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>                
             </div>
             <form asp-controller="Customer" asp-action="SendEmail" method="post">
                 <input type="hidden" asp-for="Id" id="SendEmail_Id"/>
@@ -172,12 +172,12 @@
 </script>
 
 @*send PM form*@
-<div id="sendprivatemessage-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendprivatemessage-window-title">
+<div id="sendprivatemessage-window" class="modal fade" tabindex="-1" aria-labelledby="sendprivatemessage-window-title">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">                
                 <h4 class="modal-title" id="sendprivatemessage-window-title">@T("Admin.Customers.Customers.SendPM")</h4>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form asp-controller="Customer" asp-action="SendPm" method="post">
                 <input type="hidden" asp-for="Id" id="SendPm_Id"/>

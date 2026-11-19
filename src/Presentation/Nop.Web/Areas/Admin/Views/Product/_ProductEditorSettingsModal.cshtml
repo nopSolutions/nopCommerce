@@ -3,15 +3,14 @@
 
 @inject IWebHelper webHelper
 
-<div id="productsettings-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="productsettings-window-title">
+<div id="productsettings-window" class="modal fade" tabindex="-1" aria-labelledby="productsettings-window-title">
     <div class="modal-dialog editor-settings-modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="productsettings-window-title">
                     @T("Admin.Configuration.Settings.ProductEditor.ModalTitle")
                 </h4>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form asp-controller="Product" asp-action="SaveProductEditorSettings" method="post">

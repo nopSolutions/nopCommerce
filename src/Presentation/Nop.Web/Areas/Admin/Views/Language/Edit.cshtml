@@ -49,12 +49,12 @@
 <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="language-delete" />
 
 @*import resources form*@
-<div id="importxml-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importxml-window-title">
+<div id="importxml-window" class="modal fade" tabindex="-1" aria-labelledby="importxml-window-title">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="importxml-window-title">@T("Admin.Configuration.Languages.Import")</h4>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>                
             </div>
             <form asp-controller="Language" asp-route-id="@Model.Id" asp-action="ImportXml" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">

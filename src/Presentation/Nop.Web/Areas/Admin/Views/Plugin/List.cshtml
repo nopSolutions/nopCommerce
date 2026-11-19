@@ -284,7 +284,7 @@
                         </script>
                     </div>
 
-                    <div id="plugin-delete-confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="plugin-delete-confirmation-title" style="display: none;">
+                    <div id="plugin-delete-confirmation" class="modal fade" tabindex="-1" aria-labelledby="plugin-delete-confirmation-title" style="display: none;">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -327,12 +327,12 @@
 </form>
 
 @*upload plugin form*@
-<div id="uploadplugin-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadplugin-window-title">
+<div id="uploadplugin-window" class="modal fade" tabindex="-1" aria-labelledby="uploadplugin-window-title">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="uploadplugin-window-title">@T("Admin.Configuration.Plugins.Upload")</h4>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>                
             </div>
             <form asp-controller="Plugin" asp-action="UploadPluginsAndThemes" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">

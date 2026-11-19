@@ -128,12 +128,12 @@
 </form>
 
 @*upload favicon and app icons form*@
-<div id="uploadicons-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadiconsarchive-window-title">
+<div id="uploadicons-window" class="modal fade" tabindex="-1" aria-labelledby="uploadiconsarchive-window-title">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="uploadicons-window-title">@T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons")</h4>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form asp-controller="Setting" asp-action="UploadIcons" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">

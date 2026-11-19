@@ -44,12 +44,12 @@
 <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="campaign-delete" />
 
 @*copy campaign form*@
-<div id="copycampaign-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="copycampaign-window-title">
+<div id="copycampaign-window" class="modal fade" tabindex="-1" aria-labelledby="copycampaign-window-title">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="copycampaign-window-title">@T("Admin.Promotions.Campaigns.Copy")</h4>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form asp-controller="Campaign" asp-action="CopyCampaign" method="post">
                 <div class="form-horizontal">

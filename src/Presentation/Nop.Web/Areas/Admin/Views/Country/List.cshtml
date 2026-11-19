@@ -200,12 +200,12 @@
 <nop-alert asp-alert-id="nothingSelectedAlert" />
 
 @*import states form*@
-<div id="importcsv-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importcsv-window-title">
+<div id="importcsv-window" class="modal fade" tabindex="-1" aria-labelledby="importcsv-window-title">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="importcsv-window-title">@T("Admin.Common.ImportFromCsv")</h4>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>                
             </div>
             <form asp-controller="Country" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">

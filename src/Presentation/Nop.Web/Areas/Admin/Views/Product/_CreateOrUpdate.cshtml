@@ -70,12 +70,12 @@
         <div class="form-horizontal">
             <div class="row">
                 <div class="col-md-12 clearfix">
-                    <div class="float-left">
+                    <div class="float-start">
                         @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "product-advanced-mode" })
                     </div>
                     @if (!Model.IsLoggedInAsVendor)
                     {
-                        <button type="button" class="btn btn-info text-white float-left mx-2" id="product-editor-settings" data-bs-toggle="modal" data-bs-target="#productsettings-window">
+                        <button type="button" class="btn btn-info text-white float-start mx-2" id="product-editor-settings" data-bs-toggle="modal" data-bs-target="#productsettings-window">
                             <i class="fas fa-gear"></i>
                             @T("Admin.Configuration.Settings.ProductEditor.Button")
                         </button>

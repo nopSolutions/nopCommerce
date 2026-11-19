@@ -197,12 +197,12 @@
     </div>   
 </section>
 @*import manufacturers form*@
-<div id="importexcel-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importexcel-window-title">
+<div id="importexcel-window" class="modal fade" tabindex="-1" aria-labelledby="importexcel-window-title">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="importexcel-window-title">@T("Admin.Common.ImportFromExcel")</h4>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                                
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>                                
             </div>
             <form asp-controller="Manufacturer" asp-action="ImportFromXlsx" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">

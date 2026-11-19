@@ -187,13 +187,13 @@
                 <div class="requirement-container {{if IsGroup}}requirement-group{{/if}}" id="editrequirement{{>DiscountRequirementId}}">
                     <div class="requirement-heading clearfix">
                         {{if IsGroup}}
-                        <span class="float-left margin-r-5">
+                        <span class="float-start margin-r-5">
                             @T("Admin.Promotions.Discounts.Requirements.RequirementGroup.Title")
                             <i>{{:RuleName}}</i>
                         </span>
-                        <div class="interaction-type float-left clearfix">
-                            <span class="float-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
-                            <select class="form-control input-sm float-left" id="interactiontype{{>DiscountRequirementId}}" 
+                        <div class="interaction-type float-start clearfix">
+                            <span class="float-start margin-r-10">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
+                            <select class="form-control input-sm float-start" id="interactiontype{{>DiscountRequirementId}}" 
                                     name="interactiontype{{>DiscountRequirementId}}" 
                                     onchange="changeInteraction({{> DiscountRequirementId}}, {{if ParentId}} {{>ParentId}} {{else}} null {{/if}}, this.value)">
                                 {{for AvailableInteractionTypes}}
@@ -206,7 +206,7 @@
                             </select>
                         </div>
                         {{else}}
-                        <div class="float-left">
+                        <div class="float-start">
                             @T("Admin.Promotions.Discounts.Requirements.Requirement.Title")
                             <i>{{:RuleName}}</i>
                         </div>

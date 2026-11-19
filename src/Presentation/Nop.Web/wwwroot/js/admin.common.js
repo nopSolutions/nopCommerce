@@ -30,9 +30,13 @@ function showThrobber(message) {
     }, 1000);
 }
 
-$(function() {
-    $('[data-bs-dismiss]').each(function () {
-        $(this).attr('data-bs-dismiss', $(this).attr('data-bs-dismiss')).removeAttr('data-bs-dismiss');
+$(function () {
+    //blocked aria-hidden fix
+    $(document).on('hide.bs.modal', '.modal', function () {
+      this.inert = true;
+    });
+    $(document).on('show.bs.modal', '.modal', function () {
+      this.inert = false;
     });
 
     $('.multi-store-override-option').each(function (k, v) {
