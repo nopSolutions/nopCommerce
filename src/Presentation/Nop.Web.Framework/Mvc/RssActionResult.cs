@@ -17,14 +17,14 @@ public partial class RssActionResult : ContentResult
     /// <param name="feedPageUrl">Feed page url for atom self link</param>
     public RssActionResult(RssFeed feed, string feedPageUrl)
     {
-        ContentType = "application/atom+xml";
+        ContentType = "application/atom+xml; charset=utf-8";
         Feed = feed;
 
         //add atom namespace
         XNamespace atom = "http://www.w3.org/2005/Atom";
         Feed.AttributeExtension = new KeyValuePair<XmlQualifiedName, string>(new XmlQualifiedName("atom", XNamespace.Xmlns.NamespaceName), atom.NamespaceName);
         //add atom:link with rel='self' 
-        Feed.ElementExtensions.Add(new XElement(atom + "link", new XAttribute("href", new Uri(feedPageUrl)), new XAttribute("rel", "self"), new XAttribute("type", "application/rss+xml")));
+        Feed.ElementExtensions.Add(new XElement(atom + "link", new XAttribute("href", new Uri(feedPageUrl)), new XAttribute("rel", "self"), new XAttribute("type", "application/atom+xml")));
     }
 
     /// <summary>
