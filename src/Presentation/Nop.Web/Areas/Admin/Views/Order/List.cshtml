@@ -375,7 +375,8 @@
                                     {
                                         gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
                                         {
-                                            Title = T("Admin.Orders.Fields.OrderTotal").Text
+                                            Title = T("Admin.Orders.Fields.OrderTotal").Text,
+                                            Width = "150"
                                         });
                                     }
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))

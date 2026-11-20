@@ -1879,19 +1879,19 @@ div.dt-buttons.btn-group.flex-wrap > button {
     border: 1px solid #e3e3e3;
   }
 
-    .table-bordered > thead > tr > th label,
-    .table-bordered > tbody > tr > th label,
-    .table-bordered > tfoot > tr > th label {
+    .table-bordered > thead > tr > th span,
+    .table-bordered > tbody > tr > th span,
+    .table-bordered > tfoot > tr > th span {
       font-weight: bold !important;
-      margin-bottom: 0;
-      display: flex;
-      align-items: center;
     }
 
       .table-bordered > thead > tr > th label input[type=checkbox],
       .table-bordered > tbody > tr > th label input[type=checkbox],
       .table-bordered > tfoot > tr > th label input[type=checkbox] {
         margin-right: 5px;
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
       }
 
   .table-bordered > thead > tr > td,
