@@ -1271,7 +1271,7 @@ div.row.justify-content-between.dt-layout-table thead {
   font-size: 18px;
 }
 
-.card-search .form-control {
+.card-search .form-control, .card-search .input-group-short {
   max-width: 425px;
 }
 
