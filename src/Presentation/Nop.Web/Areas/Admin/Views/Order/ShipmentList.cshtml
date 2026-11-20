@@ -15,42 +15,44 @@
 
 <form asp-controller="Order" asp-action="ShipmentList" method="post">
     <div class="app-content-header">
-        <h1>
-            @T("Admin.Orders.Shipments.List")
-        </h1>
-        <div class="app-content-header-actions">
-            <div class="btn-group">
-                <button type="button" class="btn btn-info text-white">
-                    <i class="far fa-file-pdf"></i>
-                    @T("Admin.Orders.Shipments.PrintPackagingSlips")
+        <div class="container-fluid">
+            <h1>
+                @T("Admin.Orders.Shipments.List")
+            </h1>
+            <div class="app-content-header-actions">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-info text-white">
+                        <i class="far fa-file-pdf"></i>
+                        @T("Admin.Orders.Shipments.PrintPackagingSlips")
+                    </button>
+                    <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split text-white" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <button type="submit" name="exportpackagingslips-all" class="dropdown-item">
+                                @T("Admin.Orders.Shipments.PrintPackagingSlips.All")
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" id="exportpackagingslips-selected" class="dropdown-item">
+                                @T("Admin.Orders.Shipments.PrintPackagingSlips.Selected")
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <button type="button" id="ship-selected" class="btn btn-primary" onclick="uploadSelectedShipments('@(Url.Action("SetAsShippedSelected", "Order"))', 'setAsShippedSelectedFailed');return false;">
+                    <i class="fas fa-truck"></i>
+                    @T("Admin.Orders.Shipments.ShipSelected")
                 </button>
-                <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split text-white" data-bs-toggle="dropdown" aria-expanded="false"></button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <button type="submit" name="exportpackagingslips-all" class="dropdown-item">
-                            @T("Admin.Orders.Shipments.PrintPackagingSlips.All")
-                        </button>
-                    </li>
-                    <li>
-                        <button type="button" id="exportpackagingslips-selected" class="dropdown-item">
-                            @T("Admin.Orders.Shipments.PrintPackagingSlips.Selected")
-                        </button>
-                    </li>
-                </ul>
+                <button type="button" id="ready-for-pickup-selected" class="btn btn-primary" onclick="uploadSelectedShipments('@(Url.Action("SetAsReadyForPickupSelected", "Order"))', 'setAsReadyForPickupSelectedFailed');return false;">
+                    <i class="fas fa-cube"></i>
+                    @T("Admin.Orders.Shipments.ReadyForPickupSelected")
+                </button>
+                <button type="button" id="deliver-selected" class="btn btn-success" onclick="uploadSelectedShipments('@(Url.Action("SetAsDeliveredSelected", "Order"))', 'setAsDeliveredSelectedFailed');return false;">
+                    <i class="fas fa-square-check"></i>
+                    @T("Admin.Orders.Shipments.DeliverySelected")
+                </button>
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderShipmentListButtons, additionalData = Model })
             </div>
-            <button type="button" id="ship-selected" class="btn btn-primary" onclick="uploadSelectedShipments('@(Url.Action("SetAsShippedSelected", "Order"))', 'setAsShippedSelectedFailed');return false;">
-                <i class="fas fa-truck"></i>
-                @T("Admin.Orders.Shipments.ShipSelected")
-            </button>
-            <button type="button" id="ready-for-pickup-selected" class="btn btn-primary" onclick="uploadSelectedShipments('@(Url.Action("SetAsReadyForPickupSelected", "Order"))', 'setAsReadyForPickupSelectedFailed');return false;">
-                <i class="fas fa-cube"></i>
-                @T("Admin.Orders.Shipments.ReadyForPickupSelected")
-            </button>
-            <button type="button" id="deliver-selected" class="btn btn-success" onclick="uploadSelectedShipments('@(Url.Action("SetAsDeliveredSelected", "Order"))', 'setAsDeliveredSelectedFailed');return false;">
-                <i class="fas fa-square-check"></i>
-                @T("Admin.Orders.Shipments.DeliverySelected")
-            </button>
-            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderShipmentListButtons, additionalData = Model })
         </div>
     </div>
     <section class="app-content">

@@ -20,59 +20,63 @@
 <form asp-controller="RfqAdmin" asp-action="AdminQuote" method="post">
     <input asp-for="Id" type="hidden" />
     <div class="app-content-header">
-        <h1>
-            @title
-            <small>
-                <i class="fas fa-arrow-circle-left"></i>
-                <a asp-action="AdminQuotes">@T("Plugins.Misc.RFQ.AdminQuote.BackToList")</a>
-            </small>
-        </h1>
-        <div class="app-content-header-actions">
-            @if (Model.DisplayAddNewProductButton)
-            {
-                <button type="submit" id="btnAddNewProduct" name="btnAddNewProduct" onclick="javascript:setLocation('@(Url.Action("AddProductToQuote", "RfqAdmin", new { quoteId = Model.Id }))'); return false;" class="btn btn-info text-white">
-                    <i class="far fa-plus-square"></i>
-                    @T("Plugins.Misc.RFQ.AddNewProduct")
-                </button>
-            }
-            @if (Model.DisplaySendQuoteButton)
-            {
-                <button type="submit"
-                        name="sendQuote"
-                        id="send-request"
-                        class="btn btn-info text-white">
-                    <i class="far fa-share-square"></i>
-                    @T("Plugins.Misc.RFQ.SendQuote")
-                </button>
-            }
-            @if (Model.Items.Any())
-            {
-                <a asp-action="PdfDocument" asp-controller="RfqAdmin" asp-route-quoteId="@Model.Id" class="btn btn-info text-white">
-                    <i class="far fa-file-pdf"></i>
-                    @T("Plugins.Misc.RFQ.CreatePdf")
-                </a>
-            }
-            @if (Model.DisplayDeleteQuoteButton)
-            {
-                <button type="submit"
-                        id="delete-quote"
-                        name="deleteQuote"
-                        class="btn btn-danger">
-                    <i class="far fa-trash-alt"></i>
-                    @T("Admin.Common.Delete")
-                </button>
-            }
-            @if (Model.DisplaySaveButtons)
-            {
-                <button type="submit" name="save" class="btn btn-primary">
-                    <i class="far fa-save"></i>
-                    @T("Admin.Common.Save")
-                </button>
-                <button type="submit" name="save-continue" class="btn btn-primary">
-                    <i class="far fa-save"></i>
-                    @T("Admin.Common.SaveContinue")
-                </button>
-            }
+        <div class="container-fluid">
+            <h1>
+                @title
+                <small>
+                    <a asp-action="AdminQuotes">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        @T("Plugins.Misc.RFQ.AdminQuote.BackToList")
+                    </a>
+                </small>
+            </h1>
+            <div class="app-content-header-actions">
+                @if (Model.DisplayAddNewProductButton)
+                {
+                    <button type="submit" id="btnAddNewProduct" name="btnAddNewProduct" onclick="javascript:setLocation('@(Url.Action("AddProductToQuote", "RfqAdmin", new { quoteId = Model.Id }))'); return false;" class="btn btn-info text-white">
+                        <i class="far fa-plus-square"></i>
+                        @T("Plugins.Misc.RFQ.AddNewProduct")
+                    </button>
+                }
+                @if (Model.DisplaySendQuoteButton)
+                {
+                    <button type="submit"
+                            name="sendQuote"
+                            id="send-request"
+                            class="btn btn-info text-white">
+                        <i class="far fa-share-square"></i>
+                        @T("Plugins.Misc.RFQ.SendQuote")
+                    </button>
+                }
+                @if (Model.Items.Any())
+                {
+                    <a asp-action="PdfDocument" asp-controller="RfqAdmin" asp-route-quoteId="@Model.Id" class="btn btn-info text-white">
+                        <i class="far fa-file-pdf"></i>
+                        @T("Plugins.Misc.RFQ.CreatePdf")
+                    </a>
+                }
+                @if (Model.DisplayDeleteQuoteButton)
+                {
+                    <button type="submit"
+                            id="delete-quote"
+                            name="deleteQuote"
+                            class="btn btn-danger">
+                        <i class="far fa-trash-alt"></i>
+                        @T("Admin.Common.Delete")
+                    </button>
+                }
+                @if (Model.DisplaySaveButtons)
+                {
+                    <button type="submit" name="save" class="btn btn-primary">
+                        <i class="far fa-save"></i>
+                        @T("Admin.Common.Save")
+                    </button>
+                    <button type="submit" name="save-continue" class="btn btn-primary">
+                        <i class="far fa-save"></i>
+                        @T("Admin.Common.SaveContinue")
+                    </button>
+                }
+            </div>
         </div>
     </div>
     <section class="app-content">

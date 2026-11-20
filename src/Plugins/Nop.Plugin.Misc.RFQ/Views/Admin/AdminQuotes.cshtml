@@ -17,19 +17,21 @@
 <form asp-controller="RfqAdmin" asp-action="AdminQuotes" method="post">
     <input asp-for="CustomerId" type="hidden" />
     <div class="app-content-header">
-        <h1>
-            @T("Plugins.Misc.RFQ.Quotes")
-        </h1>
-        <div class="app-content-header-actions">
-            <button type="submit" id="btnCreate" name="btnCreate" style="display: none"></button>
-            <button type="submit" id="btnCreateNewQuote" onclick="javascript:OpenWindow('@Url.Action("SelectCustomerPopup", "RfqAdmin", new { btnId = "btnCreate", productIdInput = Html.IdFor(model => model.CustomerId) })', 800, 850, true); return false;" class="btn btn-info text-white">
-                <i class="fas fa-plus-square"></i>
-                @T("Plugins.Misc.RFQ.CreateNew")
-            </button>
-            <button type="button" id="delete-selected" class="btn btn-danger">
-                <i class="far fa-trash-alt"></i>
-                @T("Plugins.Misc.RFQ.DeleteSelected")
-            </button>
+        <div class="container-fluid">
+            <h1>
+                @T("Plugins.Misc.RFQ.Quotes")
+            </h1>
+            <div class="app-content-header-actions">
+                <button type="submit" id="btnCreate" name="btnCreate" style="display: none"></button>
+                <button type="submit" id="btnCreateNewQuote" onclick="javascript:OpenWindow('@Url.Action("SelectCustomerPopup", "RfqAdmin", new { btnId = "btnCreate", productIdInput = Html.IdFor(model => model.CustomerId) })', 800, 850, true); return false;" class="btn btn-info text-white">
+                    <i class="fas fa-plus-square"></i>
+                    @T("Plugins.Misc.RFQ.CreateNew")
+                </button>
+                <button type="button" id="delete-selected" class="btn btn-danger">
+                    <i class="far fa-trash-alt"></i>
+                    @T("Plugins.Misc.RFQ.DeleteSelected")
+                </button>
+            </div>
         </div>
     </div>
 

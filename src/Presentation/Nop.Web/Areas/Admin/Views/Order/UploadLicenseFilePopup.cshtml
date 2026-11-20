@@ -19,14 +19,16 @@
 <form asp-controller="Order" asp-action="UploadLicenseFilePopup"
       asp-route-orderItemId="@Context.Request.Query["orderItemId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
-      asp-route-formId="@Context.Request.Query["formId"]">
+      asp-route-formId="@Context.Request.Query["formId"]" data-bs-theme="light">
     <div class="app-content-header">
-        <h1>
-            @T("Admin.Orders.Products.License.UploadFile")
-        </h1>
-        <div class="app-content-header-actions">
-            &nbsp;
-            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderUploadLicenseButtons, additionalData = Model })
+        <div class="container-fluid">
+            <h1>
+                @T("Admin.Orders.Products.License.UploadFile")
+            </h1>
+            <div class="app-content-header-actions">
+                &nbsp;
+                @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.OrderUploadLicenseButtons, additionalData = Model })
+            </div>
         </div>
     </div>
 
