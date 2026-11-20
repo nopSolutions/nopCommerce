@@ -59,34 +59,34 @@
         <div class="col-md-9">
             <div class="input-group">
                 <nop-editor asp-for="GiftCardCouponCode"/>
-                <span asp-validation-for="GiftCardCouponCode"></span>
-                <div class="input-group-append">
-                    <button type="button" id="generateCouponCode" class="btn btn-info text-white">@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")</button>
-                    <script>
-                        $(function() {
-                            $('#generateCouponCode').click(function() {
-                                var postData = {};
-
-                                addAntiForgeryToken(postData);
-
-                                $.ajax({
-                                    cache: false,
-                                    type: "POST",
-                                    url: "@(Url.Action("GenerateCouponCode", "GiftCard"))",
-                                    data: postData,
-                                    success: function (data, textStatus, jqXHR) {
-                                        $('#@Html.IdFor(model => model.GiftCardCouponCode)').val(data.CouponCode);
-                                    },
-                                    error: function (jqXHR, textStatus, errorThrown) {
-                                        $('#generateCouponCodeFailed-info').text(errorThrown);
-                                        $("#generateCouponCodeFailed").trigger("click");                                                
-                                    }
-                                });
-                            });
-                        });
-                    </script>
-                </div>
+                <button type="button" id="generateCouponCode" class="btn btn-info text-white">
+                    @T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")
+                </button>                
             </div>
+            <script>
+                $(function() {
+                    $('#generateCouponCode').click(function() {
+                        var postData = {};
+
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@(Url.Action("GenerateCouponCode", "GiftCard"))",
+                            data: postData,
+                            success: function(data, textStatus, jqXHR) {
+                                $('#@Html.IdFor(model => model.GiftCardCouponCode)').val(data.CouponCode);
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                $('#generateCouponCodeFailed-info').text(errorThrown);
+                                $("#generateCouponCodeFailed").trigger("click");
+                            }
+                        });
+                    });
+                });
+            </script>
+            <span asp-validation-for="GiftCardCouponCode"></span>
         </div>
     </div>
     <div class="form-group row">
@@ -145,11 +145,9 @@
                     <div class="input-group-text">
                         @T(Model.IsRecipientNotified ? "Admin.Common.Yes" : "Admin.Common.No")
                     </div>
-                    <div class="input-group-append">
-                        <button type="submit" name="notifyRecipient" class="btn btn-info text-white">
-                            @T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")
-                        </button>
-                    </div>
+                    <button type="submit" name="notifyRecipient" class="btn btn-info text-white">
+                        @T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")
+                    </button>
                 </div>
             </div>
         </div>

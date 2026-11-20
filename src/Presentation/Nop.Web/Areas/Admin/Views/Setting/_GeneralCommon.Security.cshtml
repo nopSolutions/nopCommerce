@@ -26,13 +26,11 @@
         <div class="col-md-9">
             <div class="input-group input-group-short">
                 <nop-editor asp-for="SecuritySettings.EncryptionKey" />
-                <span class="input-group-append">
-                    <button type="submit" name="changeencryptionkey" id="changeencryptionkey" class="btn btn-info text-white">
-                        @T("Admin.Common.Change")
-                    </button>
-                    <nop-action-confirmation asp-button-id="changeencryptionkey" />
-                </span>
+                <button type="submit" name="changeencryptionkey" id="changeencryptionkey" class="btn btn-info text-white">
+                    @T("Admin.Common.Change")
+                </button>
             </div>
+            <nop-action-confirmation asp-button-id="changeencryptionkey" />
             <span asp-validation-for="SecuritySettings.EncryptionKey"></span>
         </div>
     </div>

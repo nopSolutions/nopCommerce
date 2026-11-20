@@ -595,20 +595,18 @@
                                 <div id="divShippingMethod">
                                     <nop-editor asp-for="ShippingMethod" />
                                 </div>
-                                <span class="input-group-append">
-                                    <button type="submit" onclick="toggleEditShippingMethod(true);return false;" id="btnEditShippingMethod" class="btn btn-primary">
-                                        @T("Admin.Common.Edit")
-                                    </button>
+                                <button type="submit" onclick="toggleEditShippingMethod(true);return false;" id="btnEditShippingMethod" class="btn btn-primary">
+                                    @T("Admin.Common.Edit")
+                                </button>
 
-                                    <button type="submit" id="btnSaveShippingMethod" name="save-shipping-method" class="btn btn-primary">
-                                        @T("Admin.Common.Save")
-                                    </button>
-                                    <nop-action-confirmation asp-button-id="btnSaveShippingMethod" />
+                                <button type="submit" id="btnSaveShippingMethod" name="save-shipping-method" class="btn btn-primary">
+                                    @T("Admin.Common.Save")
+                                </button>
+                                <nop-action-confirmation asp-button-id="btnSaveShippingMethod" />
 
-                                    <button type="submit" onclick="toggleEditShippingMethod(false);return false;" id="btnCancelShippingMethod" class="btn btn-secondary">
-                                        @T("Admin.Common.Cancel")
-                                    </button>
-                                </span>
+                                <button type="submit" onclick="toggleEditShippingMethod(false);return false;" id="btnCancelShippingMethod" class="btn btn-secondary">
+                                    @T("Admin.Common.Cancel")
+                                </button>
                             </div>
                         }
                         else

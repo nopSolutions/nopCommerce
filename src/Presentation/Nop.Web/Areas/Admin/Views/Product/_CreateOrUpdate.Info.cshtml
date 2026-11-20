@@ -570,24 +570,22 @@
             <div class="col-md-9">
                 <div class="input-group">
                     <nop-editor asp-for="RequiredProductIds" />
-                    <div class="input-group-append">
-                        <button type="submit" id="btnRefreshRequiredProducts" style="display: none"></button>
-                        <script>
-                            $(function() {
-                                $('#btnRefreshRequiredProducts').click(function () {
-                                    //refresh product list
-                                    loadRequiredProductFriendlyNames();
-
-                                    //return false to don't reload a page
-                                    return false;
-                                });
-                            });
-                        </script>
-                        <button type="submit" id="btnAddNewRequiredProduct" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new {btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds"}))', 800, 850, true); return false;" class="btn btn-info text-white">
-                            @T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")
-                        </button>
-                    </div>
+                    <button type="submit" id="btnRefreshRequiredProducts" style="display: none"></button>
+                    <button type="submit" id="btnAddNewRequiredProduct" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new {btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds"}))', 800, 850, true); return false;" class="btn btn-info text-white">
+                        @T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")
+                    </button>
                 </div>
+                <script>
+                    $(function() {
+                        $('#btnRefreshRequiredProducts').click(function() {
+                            //refresh product list
+                            loadRequiredProductFriendlyNames();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
                 <span id="required-product-names"></span>
                 @Html.ValidationMessageFor(model => model.RequiredProductIds)
             </div>

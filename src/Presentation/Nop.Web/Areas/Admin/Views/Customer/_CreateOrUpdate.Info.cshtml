@@ -64,14 +64,12 @@
         <div class="col-md-9">
             <div class="input-group">
                 <nop-editor asp-for="Password" html-attributes="@(new { autocomplete = "new-password" })"/>
-                <div class="input-group-append">
-                    @if (Model.Id > 0)
-                    {
-                        <button type="submit" name="changepassword" class="btn btn-info text-white">
-                            @T("Admin.Customers.Customers.Fields.Password.Change")
-                        </button>
-                    }
-                </div>
+                @if (Model.Id > 0)
+                {
+                    <button type="submit" name="changepassword" class="btn btn-info text-white">
+                        @T("Admin.Customers.Customers.Fields.Password.Change")
+                    </button>
+                }
             </div>
             <span asp-validation-for="Password"></span>
         </div>
@@ -400,14 +398,12 @@
             <div class="col-md-9">
                 <div class="input-group">
                     <nop-editor asp-for="MultiFactorAuthenticationProvider" html-attributes="@(new { disabled = true })"/>
-                    <div class="input-group-append">
-                        @if (Model.Id > 0)
-                        {
-                            <a id="mfa-bind-delete" href="#" class="btn btn-danger">
-                                @T("Admin.Common.Delete")
-                            </a>
-                        }
-                    </div>
+                    @if (Model.Id > 0)
+                    {
+                        <a id="mfa-bind-delete" href="#" class="btn btn-danger">
+                            @T("Admin.Common.Delete")
+                        </a>
+                    }
                 </div>
                 <span asp-validation-for="MultiFactorAuthenticationProvider"></span>
             </div>

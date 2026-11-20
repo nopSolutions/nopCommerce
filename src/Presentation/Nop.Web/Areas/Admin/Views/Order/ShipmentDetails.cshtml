@@ -113,11 +113,9 @@
                                 <div class="col-md-9">
                                     <div class="input-group input-group-short float-start">
                                         <nop-editor asp-for="TrackingNumber" />
-                                        <span class="input-group-append">
-                                            <button type="submit" name="settrackingnumber" class="btn btn-info text-white">
-                                                @T("Admin.Orders.Shipments.TrackingNumber.Button")
-                                            </button>
-                                        </span>
+                                        <button type="submit" name="settrackingnumber" class="btn btn-info text-white">
+                                            @T("Admin.Orders.Shipments.TrackingNumber.Button")
+                                        </button>
                                     </div>
                                     @if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
                                     {
@@ -132,11 +130,9 @@
                                 <div class="col-md-9">
                                     <div class="input-group">
                                         <nop-editor asp-for="AdminComment" />
-                                        <span class="input-group-append">
-                                            <button type="submit" name="setadmincomment" class="btn btn-info text-white">
-                                                @T("Admin.Orders.Shipments.AdminComment.Button")
-                                            </button>
-                                        </span>
+                                        <button type="submit" name="setadmincomment" class="btn btn-info text-white">
+                                            @T("Admin.Orders.Shipments.AdminComment.Button")
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -166,7 +162,7 @@
                                                     @T("Admin.Orders.Shipments.ReadyForPickupDate.EnterUtc")&nbsp;&nbsp;
                                                 </div>
                                             }
-                                            <div class="input-group-append col-md-3">
+                                            <div class="col-md-3">
                                                 @if (Model.CanMarkAsReadyForPickup)
                                                 {
                                                     <button type="submit" name="setasreadyforpickup" id="setasreadyforpickup" class="btn btn-info btn-flat text-white">
@@ -211,7 +207,7 @@
                                                     @T("Admin.Orders.Shipments.ShippedDate.EnterUtc")&nbsp;&nbsp;
                                                 </div>
                                             }
-                                            <div class="input-group-append col-md-3">
+                                            <div class="col-md-3">
                                                 @if (Model.CanShip)
                                                 {
                                                     <button type="submit" name="setasshipped" id="setasshipped" class="btn btn-info btn-flat text-white">
@@ -255,7 +251,7 @@
                                                 @T("Admin.Orders.Shipments.DeliveryDate.EnterUtc")&nbsp;&nbsp;
                                             </div>
                                         }
-                                        <div class="input-group-append col-md-3">
+                                        <div class="col-md-3">
                                             @if (Model.CanDeliver)
                                             {
                                                 <button type="submit" name="setasdelivered" id="setasdelivered" class="btn btn-info btn-flat text-white">
