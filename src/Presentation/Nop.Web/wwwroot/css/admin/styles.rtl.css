@@ -1554,7 +1554,6 @@ span.grid-report-item {
   }
 
   .parent-setting.opened div[class^="col-md-"] + div[class^="col-md-"] {
-    padding-right: 23px;
     height: 100%;
     position: static;
     padding-bottom: 5px;
@@ -1570,20 +1569,15 @@ span.grid-report-item {
     position: absolute;
     height: 105%;
     content: "";
-    margin-right: -10px;
+    margin-right: 7.5px;
     top: 15px;
     z-index: 10;
   }
 
   .parent-setting.opened div + div input[type=checkbox] {
-    margin-right: -15px;
     z-index: 100;
     position: relative;
   }
-
-.basic-settings-mode .parent-setting.opened + .nested-setting .form-group.parent-setting.parent-setting-advanced.opened div + div input[type=checkbox] {
-  margin-right: 0;
-}
 
 .parent-setting.opened + .nested-setting .form-group {
   margin-bottom: 0;
@@ -1604,7 +1598,7 @@ span.grid-report-item {
 
 .parent-setting.opened + .nested-setting .form-group div[class^="col-md-"] + div[class^="col-md-"] {
   position: static;
-  padding-right: 23px;
+  padding-right: 29px;
   padding-bottom: 5px;
   height: 100%;
 }
@@ -2059,16 +2053,11 @@ div.dt-container div.dt-paging {
     }
 
     .parent-setting.opened div[class^="col-md-"] + div[class^="col-md-"] {
-      padding-right: 7.5px;
       height: auto;
     }
 
       .parent-setting.opened div[class^="col-md-"] + div[class^="col-md-"]:before {
         display: none;
-      }
-
-      .parent-setting.opened div[class^="col-md-"] + div[class^="col-md-"] input[type=checkbox] {
-        margin-right: 0;
       }
 
     .parent-setting.opened + .nested-setting .form-group {
@@ -2078,7 +2067,6 @@ div.dt-container div.dt-paging {
 
       .parent-setting.opened + .nested-setting .form-group div[class^="col-md-"] + div[class^="col-md-"] {
         position: static;
-        padding-right: 7.5px;
         height: auto;
       }
 
