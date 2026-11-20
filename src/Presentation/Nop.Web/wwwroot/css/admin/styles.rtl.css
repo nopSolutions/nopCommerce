@@ -286,7 +286,7 @@ i.false-icon {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem; /* Bootstrap gap-2 */
+  gap: 3px;
 }
 
 .app-content-header > .container-fluid {
