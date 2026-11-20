@@ -5,8 +5,7 @@
   border-color: #dee2e6;
 }
 
-.input-group-append,
-.input-group-prepend {
+.input-group-append {
   display: flex;
 }
 
