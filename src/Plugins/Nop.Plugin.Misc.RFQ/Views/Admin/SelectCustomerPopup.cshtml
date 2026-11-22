@@ -10,7 +10,7 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<form asp-controller="RfqAdmin" asp-action="SelectCustomerPopup" method="post">
+<form asp-controller="RfqAdmin" asp-action="SelectCustomerPopup" method="post" data-bs-theme="light">
     <div class="app-content-header">
         <div class="container-fluid">
             <h1>
