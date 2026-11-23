@@ -69,7 +69,7 @@ public partial class NopEditorTagHelper : TagHelper
         if (bool.TryParse(IsRequired, out var required) && required)
         {
             output.PreElement.SetHtmlContent("<div class='input-group input-group-required'>");
-            output.PostElement.SetHtmlContent("<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>");
+            output.PostElement.SetHtmlContent("<span class=\"required\">*</span></div>");
         }
 
         //contextualize IHtmlHelper

@@ -64,7 +64,6 @@ public class PunchOutMethod : BasePlugin, IMiscPlugin
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
             ["Plugins.Misc.PunchOut.Configuration"] = "Configuration",
-            ["Plugins.Misc.PunchOut.Configuration.Common"] = "Common settings",
 
             ["Plugins.Misc.PunchOut.Configuration.IsActive"] = "Is active",
             ["Plugins.Misc.PunchOut.Configuration.IsActive.Hint"] = "Enable or disable the plugin.",

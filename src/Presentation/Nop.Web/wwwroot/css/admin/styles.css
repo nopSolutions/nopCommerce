@@ -5,10 +5,6 @@
   border-color: #dee2e6;
 }
 
-.input-group-append {
-  display: flex;
-}
-
 .form-group {
   margin-bottom: 1rem;
 }
@@ -1300,14 +1296,14 @@ div.row.justify-content-between.dt-layout-table thead {
   width: 100%;
 }
 
-  .input-group-required .input-group-btn {
-    font-size: inherit;
-    vertical-align: top;
-    width: 1.5%;
-  }
-
   .input-group-required.input-group {
     width: 100% !important;
+    flex-wrap: nowrap;
+  }
+
+  .input-group-required > .required {
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
 
 input[type=file].form-control {
