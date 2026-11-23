@@ -1511,7 +1511,7 @@ span.grid-report-item {
     position: absolute;
     height: 105%;
     content: "";
-    margin-left: 7.5px;
+    margin-left: 7px;
     top: 15px;
     z-index: 10;
   }
