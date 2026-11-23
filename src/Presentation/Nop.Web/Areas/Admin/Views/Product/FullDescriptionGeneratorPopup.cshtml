@@ -62,52 +62,84 @@
 
     <section class="app-content">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <nop-label asp-for="ProductName" />
-                        <nop-editor html-attributes="@(new { placeholder=T("Admin.Catalog.Products.AiFullDescription.ProductName.Placeholder") })" asp-for="ProductName" asp-required="true" />
-                        <span asp-validation-for="ProductName"></span>
-                    </div>
-                    <div class="form-group row">
-                        <nop-label asp-for="TargetLanguageId" />
-                        <nop-select asp-for="TargetLanguageId" asp-items="Model.AvailableLanguages" />
-                        <span asp-validation-for="TargetLanguageId"></span>
-                    </div>
-                    <div class="form-group row">
-                        <nop-label asp-for="Keywords" />
-                        <nop-textarea asp-for="Keywords" html-attributes="@(new { placeholder=T("Admin.Catalog.Products.AiFullDescription.Keywords.Placeholder") })" asp-required="true" />
-                        <span asp-validation-for="Keywords"></span>
-                    </div>
-                    <div class="form-group row">
-                        <nop-label asp-for="ToneOfVoiceId" />
-                        <nop-select asp-for="ToneOfVoiceId" asp-items="@(await ((ToneOfVoiceType)Model.ToneOfVoiceId).ToSelectListAsync())" />
-                        <span asp-validation-for="ToneOfVoiceId"></span>
-                    </div>
-                    <div id="pnlCustomToneOfVoice" class="form-group row">
-                        <nop-label asp-for="CustomToneOfVoice" />
-                        <nop-editor asp-for="CustomToneOfVoice" html-attributes="@(new { placeholder=T("Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice.Placeholder") })" />
-                        <span asp-validation-for="CustomToneOfVoice"></span>
-                    </div>
-                    <div class="form-group row">
-                        <nop-label asp-for="Instructions" />
-                        <nop-editor asp-for="Instructions" html-attributes="@(new { placeholder=T("Admin.Catalog.Products.AiFullDescription.Instructions.Placeholder") })" />
-                        <span asp-validation-for="Instructions"></span>
-                    </div>
-                    <div class="form-group row">
-                        <button type="submit" id="generate-button" class="btn btn-primary">
-                            <i class="fa fa-cogs"></i>
-                            @T("Admin.Catalog.Products.AiFullDescription.Generate")
-                        </button>
-                        <div id="waiting-text"><strong>@T("Common.Wait")</strong></div>
-                    </div>
-                </div>
-                <div class="col-md-5 offset-1">
-                    <div class="form-group row">
-                        <nop-label asp-for="GeneratedDescription" />
-                        <div>
-                            <input type="hidden" asp-for="GeneratedDescription" />
-                            @Html.Raw(Model.GeneratedDescription)
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default card-popup">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <div class="col-sm-2">
+                                            <nop-label asp-for="ProductName" />
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <nop-editor html-attributes="@(new { placeholder=T("Admin.Catalog.Products.AiFullDescription.ProductName.Placeholder") })" asp-for="ProductName" asp-required="true" />
+                                            <span asp-validation-for="ProductName"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-2">
+                                            <nop-label asp-for="TargetLanguageId" />
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <nop-select asp-for="TargetLanguageId" asp-items="Model.AvailableLanguages" />
+                                            <span asp-validation-for="TargetLanguageId"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-2">
+                                            <nop-label asp-for="Keywords" />
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <nop-textarea asp-for="Keywords" html-attributes="@(new { placeholder=T("Admin.Catalog.Products.AiFullDescription.Keywords.Placeholder") })" asp-required="true" />
+                                            <span asp-validation-for="Keywords"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-2">
+                                            <nop-label asp-for="ToneOfVoiceId" />
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <nop-select asp-for="ToneOfVoiceId" asp-items="@(await ((ToneOfVoiceType)Model.ToneOfVoiceId).ToSelectListAsync())" />
+                                            <span asp-validation-for="ToneOfVoiceId"></span>
+                                        </div>
+                                    </div>
+                                    <div id="pnlCustomToneOfVoice" class="form-group row">
+                                        <div class="col-sm-2">
+                                            <nop-label asp-for="CustomToneOfVoice" />
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <nop-editor asp-for="CustomToneOfVoice" html-attributes="@(new { placeholder=T("Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice.Placeholder") })" />
+                                            <span asp-validation-for="CustomToneOfVoice"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-2">
+                                            <nop-label asp-for="Instructions" />
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <nop-editor asp-for="Instructions" html-attributes="@(new { placeholder=T("Admin.Catalog.Products.AiFullDescription.Instructions.Placeholder") })" />
+                                            <span asp-validation-for="Instructions"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <button type="submit" id="generate-button" class="btn btn-primary">
+                                            <i class="fa fa-cogs"></i>
+                                            @T("Admin.Catalog.Products.AiFullDescription.Generate")
+                                        </button>
+                                        <div id="waiting-text"><strong>@T("Common.Wait")</strong></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 offset-1">
+                                    <div class="form-group row">
+                                        <nop-label asp-for="GeneratedDescription" />
+                                        <div>
+                                            <input type="hidden" asp-for="GeneratedDescription" />
+                                            @Html.Raw(Model.GeneratedDescription)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

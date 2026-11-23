@@ -110,7 +110,29 @@ ul.nav-tabs li.nav-item a.nav-link {
   border-color: #02A91E;
 }
 
-.callout.callout-success, .alert-success,
+.callout {
+  padding: 1.25rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  color: var(--bs-body-color);
+  background-color: var(--bs-tertiary-bg);
+  border-left: 0.25rem solid var(--bs-secondary-color);
+  border-radius: 0.375rem;
+}
+
+.callout-info {
+  border-left-color: var(--bs-info);
+}
+
+.callout-danger {
+  border-left-color: var(--bs-danger);
+}
+
+.callout-warning {
+  border-left-color: var(--bs-warning);
+}
+
+.alert-success,
 .label-success, .modal-success .modal-body {
   background-color: #17b76d !important;
 }
@@ -1209,10 +1231,6 @@ div.row.justify-content-between.dt-layout-table thead {
     padding-top: 6px;
   }
 
-  .form-group .callout {
-    padding: 5px 15px;
-  }
-
 .form-horizontal .input-group {
   align-items: end;
 }
@@ -2114,11 +2132,6 @@ div.dt-container div.dt-paging {
 
   .form-horizontal .card-popup .label-wrapper {
     float: left;
-  }
-
-  .form-group .callout {
-    margin-right: 0 !important;
-    margin-top: 5px !important;
   }
 
   .card-search .form-control {
