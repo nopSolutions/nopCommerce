@@ -329,7 +329,8 @@ public partial class UploadService : IUploadService
             _fileProvider.CreateDirectory(tempDirectory);
 
             //copy original archive to the temp directory
-            zipFilePath = _fileProvider.Combine(tempDirectory, archivefile.FileName);
+            var fileName = _fileProvider.GetFileName(archivefile.FileName);
+            zipFilePath = _fileProvider.Combine(tempDirectory, fileName);
             await using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
                 await archivefile.CopyToAsync(fileStream);
 
@@ -372,10 +373,10 @@ public partial class UploadService : IUploadService
 
             //check if there is a folder for favicon and app icons for the current store (all store icons folders are in wwwroot/icons and are called icons_{storeId})
             var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, await _storeContext.GetActiveStoreScopeConfigurationAsync()));
-
             CreateDirectory(storeIconsPath);
 
-            zipFilePath = _fileProvider.Combine(storeIconsPath, archivefile.FileName);
+            var fileName = _fileProvider.GetFileName(archivefile.FileName);
+            zipFilePath = _fileProvider.Combine(storeIconsPath, fileName);
             await using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
                 await archivefile.CopyToAsync(fileStream);
 
@@ -404,10 +405,11 @@ public partial class UploadService : IUploadService
 
         //check if there is a folder for favicon (favicon folder is in wwwroot/icons and is called icons_{storeId})
         var storeFaviconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, await _storeContext.GetActiveStoreScopeConfigurationAsync()));
-
         CreateDirectory(storeFaviconPath);
 
-        var faviconPath = _fileProvider.Combine(storeFaviconPath, favicon.FileName);
+        var fileName = _fileProvider.GetFileName(favicon.FileName);
+        var faviconPath = _fileProvider.GetFullPath(_fileProvider.Combine(storeFaviconPath, fileName));
+        
         await using var fileStream = new FileStream(faviconPath, FileMode.Create);
         await favicon.CopyToAsync(fileStream);
     }
