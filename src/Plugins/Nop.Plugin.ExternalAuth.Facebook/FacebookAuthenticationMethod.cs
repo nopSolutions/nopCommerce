@@ -40,7 +40,7 @@ public class FacebookAuthenticationMethod : BasePlugin, IExternalAuthenticationM
     /// </summary>
     public override string GetConfigurationPageUrl()
     {
-        return $"{_webHelper.GetStoreLocation()}Admin/FacebookAuthentication/Configure";
+        return $"{_webHelper.GetStoreLocation()}Admin/FacebookAuthenticationAdmin/Configure";
     }
 
     /// <summary>

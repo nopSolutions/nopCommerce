@@ -10,19 +10,13 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Misc.Forums.Admin.Controllers;
 
-[Area(AreaNames.ADMIN)]
-[AutoValidateAntiforgeryToken]
-[ValidateIpAddress]
-[AuthorizeAdmin]
 [SaveSelectedTab]
-
-public class ForumController : BasePluginController
+public class ForumController : BasePluginAdminController
 {
     #region Fields
 

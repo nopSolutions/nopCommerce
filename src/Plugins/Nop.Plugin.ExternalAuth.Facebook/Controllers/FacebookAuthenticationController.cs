@@ -2,18 +2,12 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Nop.Core;
 using Nop.Core.Http;
-using Nop.Plugin.ExternalAuth.Facebook.Models;
 using Nop.Services.Authentication.External;
-using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
-using Nop.Services.Security;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.ExternalAuth.Facebook.Controllers;
 
@@ -27,9 +21,6 @@ public class FacebookAuthenticationController : BasePluginController
     protected readonly IExternalAuthenticationService _externalAuthenticationService;
     protected readonly ILocalizationService _localizationService;
     protected readonly INotificationService _notificationService;
-    protected readonly IOptionsMonitorCache<FacebookOptions> _optionsCache;
-    protected readonly IPermissionService _permissionService;
-    protected readonly ISettingService _settingService;
     protected readonly IStoreContext _storeContext;
     protected readonly IWorkContext _workContext;
 
@@ -42,9 +33,6 @@ public class FacebookAuthenticationController : BasePluginController
         IExternalAuthenticationService externalAuthenticationService,
         ILocalizationService localizationService,
         INotificationService notificationService,
-        IOptionsMonitorCache<FacebookOptions> optionsCache,
-        IPermissionService permissionService,
-        ISettingService settingService,
         IStoreContext storeContext,
         IWorkContext workContext)
     {
@@ -53,9 +41,6 @@ public class FacebookAuthenticationController : BasePluginController
         _externalAuthenticationService = externalAuthenticationService;
         _localizationService = localizationService;
         _notificationService = notificationService;
-        _optionsCache = optionsCache;
-        _permissionService = permissionService;
-        _settingService = settingService;
         _storeContext = storeContext;
         _workContext = workContext;
     }
@@ -63,42 +48,6 @@ public class FacebookAuthenticationController : BasePluginController
     #endregion
 
     #region Methods
-
-    [AuthorizeAdmin]
-    [Area(AreaNames.ADMIN)]
-    [CheckPermission(StandardPermission.Configuration.MANAGE_EXTERNAL_AUTHENTICATION_METHODS)]
-    public IActionResult Configure()
-    {
-        var model = new ConfigurationModel
-        {
-            ClientId = _facebookExternalAuthSettings.ClientKeyIdentifier,
-            ClientSecret = _facebookExternalAuthSettings.ClientSecret
-        };
-
-        return View("~/Plugins/ExternalAuth.Facebook/Views/Configure.cshtml", model);
-    }
-
-    [HttpPost]
-    [AuthorizeAdmin]
-    [Area(AreaNames.ADMIN)]
-    [CheckPermission(StandardPermission.Configuration.MANAGE_EXTERNAL_AUTHENTICATION_METHODS)]
-    public async Task<IActionResult> Configure(ConfigurationModel model)
-    {
-        if (!ModelState.IsValid)
-            return Configure();
-
-        //save settings
-        _facebookExternalAuthSettings.ClientKeyIdentifier = model.ClientId;
-        _facebookExternalAuthSettings.ClientSecret = model.ClientSecret;
-        await _settingService.SaveSettingAsync(_facebookExternalAuthSettings);
-
-        //clear Facebook authentication options cache
-        _optionsCache.TryRemove(FacebookDefaults.AuthenticationScheme);
-
-        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
-
-        return Configure();
-    }
 
     public async Task<IActionResult> Login(string returnUrl)
     {

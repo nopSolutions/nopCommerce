@@ -17,7 +17,7 @@ public class RouteProvider : IRouteProvider
     {
         endpointRouteBuilder.MapControllerRoute(name: BrevoDefaults.ImportContactsRoute,
             pattern: "Plugins/Brevo/ImportContacts",
-            defaults: new { controller = "Brevo", action = "ImportContacts" });
+            defaults: new { controller = "BrevoPublic", action = "ImportContacts" });
 
         endpointRouteBuilder.MapControllerRoute(name: BrevoDefaults.UnsubscribeContactRoute,
             pattern: $"Plugins/Brevo/UnsubscribeWebHook",

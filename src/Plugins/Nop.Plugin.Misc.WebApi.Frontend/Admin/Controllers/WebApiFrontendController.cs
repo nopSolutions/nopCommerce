@@ -1,0 +1,34 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Nop.Services.Security;
+using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
+
+namespace Nop.Plugin.Misc.WebApi.Frontend.Admin.Controllers;
+
+public class WebApiFrontendController : BasePluginAdminController
+{
+    #region Fields
+
+    protected readonly IPermissionService _permissionService;
+
+    #endregion
+
+    #region Ctor 
+
+    public WebApiFrontendController(IPermissionService permissionService)
+    {
+        _permissionService = permissionService;
+    }
+
+    #endregion
+
+    #region Methods
+
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
+    public virtual IActionResult Configure()
+    {
+        return View("~/Plugins/Misc.WebApi.Frontend/Views/Configure.cshtml");
+    }
+
+    #endregion
+}
