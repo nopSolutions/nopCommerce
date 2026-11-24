@@ -39,7 +39,7 @@
                         //how should we render "FormattedCustomAddressAttributes" here?
                         <option value="@(address.Id)">@(addressLine)</option>
                     }
-                    <option value="0" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>
+                    <option value="" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>
                 </select>
 
                 <button id="edit-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.editAddress(); return false;">@T("Common.Edit")</button>
