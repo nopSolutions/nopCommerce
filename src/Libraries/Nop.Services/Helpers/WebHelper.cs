@@ -258,8 +258,8 @@ public partial class WebHelper : IWebHelper
         var uriStr = url;
         if (isLocalUrl)
         {
-            var pathBase = _httpContextAccessor.HttpContext.Request.PathBase;
-            uriStr = $"{GetStoreLocation().TrimEnd('/')}{(url.StartsWith(pathBase) ? url.Replace(pathBase, "") : url)}";
+            var pathBase = _httpContextAccessor.HttpContext.Request.PathBase.ToString();
+            uriStr = $"{GetStoreLocation().TrimEnd('/')}{(url.StartsWith(pathBase) ? url[pathBase.Length..] : url)}";
         }
 
         var uri = new Uri(uriStr, UriKind.Absolute);

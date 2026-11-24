@@ -119,6 +119,7 @@ public class GoogleAuthenticatorController : BasePluginController
     }
 
     [HttpPost]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_MULTIFACTOR_AUTHENTICATION_METHODS)]
     public async Task<IActionResult> GoogleAuthenticatorDelete(GoogleAuthenticatorModel model)
     {
         if (!ModelState.IsValid)

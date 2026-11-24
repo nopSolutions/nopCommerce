@@ -35,4 +35,9 @@ public class GoogleAiDefaults
     /// Gets the category separator
     /// </summary>
     public static string CategorySeparator => " > ";
+
+    /// <summary>
+    /// Gets the default category name
+    /// </summary>
+    public static string DefaultCategoryName => "No category";
 }

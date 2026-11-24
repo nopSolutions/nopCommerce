@@ -299,9 +299,18 @@ public class ChatGptShoppingService
 
         #region Price & Promotions
 
-        var taxDisplayType = await _customerService.GetCustomerTaxDisplayTypeAsync(customer);
-        var (productPrice, _, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, store, includeDiscounts: false);
-        var (price, _) = await _taxService.GetProductPriceAsync(product, productPrice, taxDisplayType == TaxDisplayType.IncludingTax, customer);
+        decimal price;
+        if (product.CustomerEntersPrice)
+        {
+            price = product.MinimumCustomerEnteredPrice;
+        }
+        else
+        {
+            var taxDisplayType = await _customerService.GetCustomerTaxDisplayTypeAsync(customer);
+            var (productPrice, _, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, store, includeDiscounts: false);
+            (price, _) = await _taxService.GetProductPriceAsync(product, productPrice, taxDisplayType == TaxDisplayType.IncludingTax, customer);
+        }
+
         price = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(price, currency);
         price = await _priceCalculationService.RoundPriceAsync(price, currency);
         productDto.Price = $"{price.ToString(new CultureInfo("en-US", false).NumberFormat)} {currency.CurrencyCode}";

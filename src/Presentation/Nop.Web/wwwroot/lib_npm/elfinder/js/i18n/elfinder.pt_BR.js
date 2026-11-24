@@ -176,6 +176,7 @@
 			'btnCancel' : 'Cancelar',
 			'btnNo'     : 'Não',
 			'btnYes'    : 'Sim',
+			'btnDiscard': 'Discard changes',
 			'btnMount'  : 'Montar',  // added 18.04.2012
 			'btnApprove': 'Vá para $1 & aprove', // from v2.1 added 26.04.2012
 			'btnUnmount': 'Desmontar', // from v2.1 added 30.04.2012
@@ -523,6 +524,12 @@
 			'kindTTF'         : 'Tipo verdadeiro da fonte',
 			'kindOTF'         : 'Abrir tipo de fonte',
 			'kindRPM'         : 'Pacote RPM',
+			// fonts
+			'kindFont'        : 'Fonte',
+			'kindSFNT'        : 'SFNT fonte',
+			'kindEOT'         : 'Embedded Open Type fonte',
+			'kindWOFF'        : 'Web Open Font Format fonte',
+			'kindWOFF2'       : 'Web Open Font Format 2 fonte',
 			// texts
 			'kindText'        : 'Arquivo de texto',
 			'kindTextPlain'   : 'Texto simples',

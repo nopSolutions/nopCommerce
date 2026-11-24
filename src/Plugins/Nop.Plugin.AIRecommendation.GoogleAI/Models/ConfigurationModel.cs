@@ -28,4 +28,7 @@ public record ConfigurationModel : BaseNopModel
 
     [NopResourceDisplayName("Plugin.AIRecommendation.GoogleAI.SearchAllowed")]
     public bool SearchAllowed { get; set; }
+
+    [NopResourceDisplayName("Plugin.AIRecommendation.GoogleAI.EnableForRegisteredUsersOnly")]
+    public bool EnableForRegisteredUsersOnly { get; set; }
 }

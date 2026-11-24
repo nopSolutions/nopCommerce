@@ -16,8 +16,8 @@ public class NewsLetterSubscriptionMigration : ForwardOnlyMigration
         this.CreateTableIfNotExists<NewsLetterSubscriptionType>();
 
         //add new column
-        this.AddOrAlterForeignKeyColumnFor<NewsLetterSubscription, NewsLetterSubscriptionType>(t => t.TypeId,
-                onDelete: Rule.Cascade)
+        this.AddOrAlterForeignKeyColumnFor<NewsLetterSubscription, NewsLetterSubscriptionType>(t => t.TypeId)
+            .OnDelete(Rule.Cascade)
             .Nullable();
 
         this.AddOrAlterColumnFor<Campaign>(t => t.NewsLetterSubscriptionTypeId).AsInt32().NotNullable().SetExistingRowsTo(0);

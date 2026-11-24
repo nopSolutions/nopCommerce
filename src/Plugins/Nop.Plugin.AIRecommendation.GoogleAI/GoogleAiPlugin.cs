@@ -94,6 +94,7 @@ public class GoogleAiPlugin : BasePlugin, IMiscPlugin, IAiRecommendationPlugin
             LogRequests = false,
             SearchAllowed = true,
             SyncAllowed = true,
+            EnableForRegisteredUsersOnly = true,
             ImportPageSize = GoogleAiDefaults.ImportPageSize
         });
 
@@ -129,6 +130,8 @@ public class GoogleAiPlugin : BasePlugin, IMiscPlugin, IAiRecommendationPlugin
             ["Plugin.AIRecommendation.GoogleAI.SearchAllowed.Hint"] = "Check the box to allow searching by Google AI",
             ["Plugin.AIRecommendation.GoogleAI.SyncCatalog"] = "Sync catalog now",
             ["Plugin.AIRecommendation.GoogleAI.CatalogImportedSuccessfully"] = "Catalog imported successfully (successfully imported {0} products, failed to import {1} products)",
+            ["Plugin.AIRecommendation.GoogleAI.EnableForRegisteredUsersOnly"] = "Allowed for registered users only",
+            ["Plugin.AIRecommendation.GoogleAI.EnableForRegisteredUsersOnly.Hint"] = "Check the box to allow searching by Google AI only for registered users.",
         });
 
         await base.InstallAsync();

@@ -138,6 +138,7 @@
 			'btnCancel' : 'ביטול',
 			'btnNo'     : 'לא',
 			'btnYes'    : 'כן',
+			'btnDiscard': 'Discard changes',
 			'btnMount'  : 'עיגון',  // added 18.04.2012
 
 			/******************************** notifications ********************************/
@@ -318,6 +319,12 @@
 			'kindTTF'         : 'גופן True Type',
 			'kindOTF'         : 'גופן Open Type',
 			'kindRPM'         : 'חבילת RPM',
+			// fonts
+			'kindFont'        : 'גופן',
+			'kindSFNT'        : 'גופן SFNT',
+			'kindEOT'         : 'גופן Embedded Open Type',
+			'kindWOFF'        : 'גופן Web Open Font Format',
+			'kindWOFF2'       : 'גופן Web Open Font Format 2',
 			// texts
 			'kindText'        : 'מסמך טקסט',
 			'kindTextPlain'   : 'טקסט פשוט',

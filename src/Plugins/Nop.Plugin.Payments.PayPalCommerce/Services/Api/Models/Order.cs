@@ -74,7 +74,7 @@ public class Order : IWebhookResource
     /// Gets the payer-action URL.
     /// </summary>
     [JsonIgnore]
-    public string PayerActionUrl => Status?.ToUpper() == OrderStatusType.CREATED.ToString() || Status?.ToUpper() == OrderStatusType.PAYER_ACTION_REQUIRED.ToString()
+    public string PayerActionUrl => Status?.ToUpperInvariant() == OrderStatusType.CREATED.ToString() || Status?.ToUpperInvariant() == OrderStatusType.PAYER_ACTION_REQUIRED.ToString()
         ? Links?.FirstOrDefault(link => string.Equals(link.Rel, "payer-action", StringComparison.InvariantCultureIgnoreCase))?.Href
         : null;
 

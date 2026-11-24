@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="සිංහල" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>පරිපාලක පරිශීලක විද්‍යුත් තැපෑල</Value>
@@ -101,6 +101,24 @@
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CheckPermissions">
+    <Value>අවසර සොයමින්...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.CreateDatabase">
+    <Value>දත්ත ගබඩාව සාදමින්...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InitializeDatabase">
+    <Value>දත්ත ගබඩාව ආරම්භ කරමින්...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.InsertData">
+    <Value>දත්ත ඇතුළත් කරමින්...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.PreparePlugins">
+    <Value>ප්ලගින ශරීර කොටස් සැකසීම්...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Progress.RegionalResources">
+    <Value>ප්‍රාදේශීය සැකසීම් යොදමින්...</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
     <Value>අතින් කරනලද සම්බන්ධතා යෙදුම ඇතුළත් කරන්න (සංකීර්ණ)</Value>

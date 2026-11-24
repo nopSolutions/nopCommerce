@@ -1,7 +1,10 @@
-var data = self.data;
-if (data.memory) {
-  Tiff.initialize({ TOTAL_MEMORY: data.memory });
+if (self.data.memory) {
+  Tiff.initialize({ TOTAL_MEMORY: self.data.memory });
 }
-var tiff = new Tiff({buffer: data.data});
-var image = tiff.readRGBAImage();
-self.res = { image: image, width: tiff.width(), height: tiff.height() };
+
+var tiff = new Tiff({ buffer: self.data.data });
+self.res = {
+  image: tiff.readRGBAImage(),
+  width: tiff.width(),
+  height: tiff.height()
+};

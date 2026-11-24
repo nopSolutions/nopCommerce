@@ -422,6 +422,10 @@ public class RfqCustomerController : BasePublicController
                 return RedirectToRoute(RfqDefaults.CustomerQuotesRouteName);
 
             var quote = await _rfqService.GetQuoteByIdAsync(model.Id);
+
+            if (quote == null || quote.CustomerId != customer.Id)
+                return RedirectToRoute(RfqDefaults.CustomerQuotesRouteName);
+
             if (quote.Status is QuoteStatus.Expired or QuoteStatus.OrderCreated)
                 return RedirectToRoute(RfqDefaults.CustomerQuotesRouteName);
 

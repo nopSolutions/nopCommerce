@@ -57,6 +57,7 @@ public class PunchOutMethod : BasePlugin, IMiscPlugin
         {
             IsActive = false,
             TimeToExpire = PunchOutDefaults.TimeToExpireSession,
+            UnitOfMeasureCode = PunchOutDefaults.UnitOfMeasureCode,
             RestrictedCustomerRoleIds = [(await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.AdministratorsRoleName)).Id]
         });
 
@@ -68,10 +69,12 @@ public class PunchOutMethod : BasePlugin, IMiscPlugin
             ["Plugins.Misc.PunchOut.Configuration.IsActive"] = "Is active",
             ["Plugins.Misc.PunchOut.Configuration.IsActive.Hint"] = "Enable or disable the plugin.",
             ["Plugins.Misc.PunchOut.Configuration.CustomerRoles"] = "Restricted customer roles",
-            ["Plugins.Misc.PunchOut.Configuration.CustomerRoles.Hint"] = "Select customer roles that will have't access to the PunchOut feature. If no role is selected, all customers will have access.",
+            ["Plugins.Misc.PunchOut.Configuration.CustomerRoles.Hint"] = "Select customer roles that will not have access to the PunchOut feature. If no role is selected, all customers will have access.",
             ["Plugins.Misc.PunchOut.Configuration.CustomerRoles.NoRoles"] = "No customer roles found",
             ["Plugins.Misc.PunchOut.Configuration.TimeToExpire"] = "Time to expire",
-            ["Plugins.Misc.PunchOut.Configuration.TimeToExpire.Hint"] = "The time in hours after which the PunchOut session will be expired.",
+            ["Plugins.Misc.PunchOut.Configuration.TimeToExpire.Hint"] = "The time in hours after which the PunchOut session will expire.",
+            ["Plugins.Misc.PunchOut.Configuration.UnitOfMeasureCode"] = "Unit of measure code",
+            ["Plugins.Misc.PunchOut.Configuration.UnitOfMeasureCode.Hint"] = "The unit of measure code for PunchOut session.",
             ["Plugins.Misc.PunchOut.SessionExpired"] = "Your PunchOut session has expired.",
             ["Plugins.Misc.PunchOut.ServiceUnavailable"] = "The PunchOut service is currently unavailable.",
 

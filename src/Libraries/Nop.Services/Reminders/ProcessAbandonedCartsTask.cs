@@ -58,15 +58,16 @@ public partial class ProcessAbandonedCartsTask : IScheduleTask
         if (!messageTemplates.Any())
             return;
 
-        var followUps = messageTemplates
+        var followUpDates = messageTemplates
             .DistinctBy(template => template.Name)
             .ToDictionary(
                 mt => mt.Name,
-                mt => new
-                {
-                    FollowUp = mt,
-                    Date = DateTime.UtcNow - TimeSpan.FromHours(mt.DelayPeriod.ToHours(mt.DelayBeforeSend.Value))
-                });
+                mt => DateTime.UtcNow - TimeSpan.FromHours(mt.DelayPeriod.ToHours(mt.DelayBeforeSend.Value)));
+
+        //inactive follow-ups have no date, so customers waiting for them are not selected
+        var followUp1Date = followUpDates.TryGetValue(MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_1_MESSAGE, out var date1) ? date1 : (DateTime?)null;
+        var followUp2Date = followUpDates.TryGetValue(MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_2_MESSAGE, out var date2) ? date2 : (DateTime?)null;
+        var followUp3Date = followUpDates.TryGetValue(MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_3_MESSAGE, out var date3) ? date3 : (DateTime?)null;
 
         //get registered customers with abandoned carts
         var customersWithItems =
@@ -76,19 +77,32 @@ public partial class ProcessAbandonedCartsTask : IScheduleTask
                 && c.LastShoppingCartUpdateDateUtc != null
                 && (_reminderSettings.ProcessingStartDateUtc == null || c.LastShoppingCartUpdateDateUtc >= _reminderSettings.ProcessingStartDateUtc)
                 && (
-                    ((c.LastAbandonedCartFollowUpNumber == null || c.LastAbandonedCartFollowUpNumber == 0) && c.LastShoppingCartUpdateDateUtc < followUps[MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_1_MESSAGE].Date)
-                    || (c.LastAbandonedCartFollowUpNumber == 1 && c.LastAbandonedCartFollowUpDateUtc < followUps[MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_2_MESSAGE].Date)
-                    || (c.LastAbandonedCartFollowUpNumber == 2 && c.LastAbandonedCartFollowUpDateUtc < followUps[MessageTemplateSystemNames.REMINDER_ABANDONED_CART_FOLLOW_UP_3_MESSAGE].Date)
+                    ((c.LastAbandonedCartFollowUpNumber == null || c.LastAbandonedCartFollowUpNumber == 0) && followUp1Date != null && c.LastShoppingCartUpdateDateUtc < followUp1Date)
+                    || (c.LastAbandonedCartFollowUpNumber == 1 && followUp2Date != null && c.LastAbandonedCartFollowUpDateUtc < followUp2Date)
+                    || (c.LastAbandonedCartFollowUpNumber == 2 && followUp3Date != null && c.LastAbandonedCartFollowUpDateUtc < followUp3Date)
                 )
                 && (cartItem.ShoppingCartTypeId == (int)ShoppingCartType.ShoppingCart || cartItem.ShoppingCartTypeId == (int)ShoppingCartType.Stash)
             select new { Customer = c, CartItem = cartItem };
 
-        var skip = 0;
+        //page by customer identifier rather than by skipping rows: followed up customers drop out of the query,
+        //so skipping would pass over unprocessed ones, and a customer's cart must not be split across batches
+        var lastCustomerId = 0;
         while (true)
         {
-            var customersWithItemsPaged = customersWithItems.Skip(skip).Take(NopReminderDefaults.ProcessingBatchSize).ToList();
-            if (!customersWithItemsPaged.Any())
+            var customerIds = customersWithItems
+                .Select(item => item.Customer.Id)
+                .Where(customerId => customerId > lastCustomerId)
+                .Distinct()
+                .OrderBy(customerId => customerId)
+                .Take(NopReminderDefaults.ProcessingBatchSize)
+                .ToList();
+
+            if (!customerIds.Any())
                 break;
+
+            lastCustomerId = customerIds.Last();
+
+            var customersWithItemsPaged = customersWithItems.Where(item => customerIds.Contains(item.Customer.Id)).ToList();
 
             //get customers with abandoned carts for the current store
             var customersWithCart = customersWithItemsPaged
@@ -134,10 +148,8 @@ public partial class ProcessAbandonedCartsTask : IScheduleTask
                 await _customerRepository.UpdateAsync(followedUpCustomers);
             }
 
-            if (customersWithItemsPaged.Count < NopReminderDefaults.ProcessingBatchSize)
+            if (customerIds.Count < NopReminderDefaults.ProcessingBatchSize)
                 break;
-
-            skip += NopReminderDefaults.ProcessingBatchSize;
         }
     }
 

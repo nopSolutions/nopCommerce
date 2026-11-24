@@ -91,7 +91,7 @@ public class JotformPlugin : BasePlugin, IWidgetPlugin
         await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
         {
             ["Plugins.Widgets.Jotform.Enabled"] = "Enabled",
-            ["Plugins.Widgets.Jotform.Enabled.Hint"] = "Check to enable Jotform AI chatbot functionality",
+            ["Plugins.Widgets.Jotform.Enabled.Hint"] = "Check to enable the Jotform AI chatbot functionality.",
             ["Plugins.Widgets.Jotform.EmbedCode"] = "Embed code",
             ["Plugins.Widgets.Jotform.EmbedCode.Hint"] = "Add your Jotform embed code here. You can get it from your Jotform account, on the publish tab of the chatbot settings.",
             ["Plugins.Widgets.Jotform.EmbedCode.Required"] = "Jotform script is required",

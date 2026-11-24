@@ -68,7 +68,7 @@ public class PaymentToken : IWebhookResource
     /// Gets the payer-action URL.
     /// </summary>
     [JsonIgnore]
-    public string PayerActionUrl => Status?.ToUpper() == PaymentTokenStatusType.PAYER_ACTION_REQUIRED.ToString()
+    public string PayerActionUrl => Status?.ToUpperInvariant() == PaymentTokenStatusType.PAYER_ACTION_REQUIRED.ToString()
         ? Links?.FirstOrDefault(link => string.Equals(link.Rel, "approve", StringComparison.InvariantCultureIgnoreCase))?.Href
         : null;
 

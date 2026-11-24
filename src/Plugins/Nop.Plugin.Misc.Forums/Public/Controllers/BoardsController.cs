@@ -490,7 +490,7 @@ public class BoardsController : BasePluginController
                 //update forum topic
                 forumTopic.NumPosts = 1;
                 forumTopic.LastPostId = forumPost.Id;
-                forumTopic.LastPostCustomerId = forumPost.CustomerId;
+                forumTopic.LastPostCustomerId = forumPost.CustomerId ?? 0;
                 forumTopic.LastPostTime = forumPost.CreatedOnUtc;
                 forumTopic.UpdatedOnUtc = nowUtc;
                 await _forumService.UpdateTopicAsync(forumTopic);
@@ -754,7 +754,7 @@ public class BoardsController : BasePluginController
                 var forumPost = new ForumPost
                 {
                     TopicId = forumTopic.Id,
-                    CustomerId = customer.Id,
+                    CustomerId = await _customerService.IsGuestAsync(customer) ? null : customer.Id,
                     Text = text,
                     IPAddress = _customerSettings.StoreIpAddresses ? _webHelper.GetCurrentIpAddress() : string.Empty,
                     CreatedOnUtc = nowUtc,

@@ -782,7 +782,7 @@ public partial class ProductService : IProductService
             .PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryProductsNumberCacheKey, customerRoleIds, storeId, categoryIds);
 
         //only distinct products
-        return await _staticCacheManager.GetAsync(cacheKey, () => query.Select(p => p.Id).CountAsync());
+        return await _staticCacheManager.GetAsync(cacheKey, () => query.Select(p => p.Id).Distinct().CountAsync());
     }
 
     /// <summary>
@@ -893,35 +893,37 @@ public partial class ProductService : IProductService
                   (priceMax == null || p.Price <= priceMax)
             select p;
 
-        //try to use AI-powered recommendation provider to search products
-        if (!showHidden && await _aiRecommendationPluginManager.LoadPrimaryPluginAsync(customer, storeId) is IAiRecommendationPlugin aiRecommendationPlugin)
-        {
-            try
-            {
-                var (results, totalItems) = await aiRecommendationPlugin
-                    .SearchProductsAsync(keywords, categoryIds, manufacturerIds, productTagId, filteredSpecOptions, pageIndex, pageSize);
-                if (!results.Any())
-                    throw new Exception("AI-powered recommendation provider. No products found by the specified parameters");
-
-                var sortedResult = await productsQuery
-                    .OrderBy(orderBy, _localizedPropertyRepository, languageId > 0 ? languageId : (await _workContext.GetWorkingLanguageAsync()).Id, results)
-                    .ToListAsync();
-
-                return new PagedList<Product>(sortedResult, pageIndex, pageSize, totalItems);
-            }
-            catch
-            {
-                if (!_artificialIntelligenceSettings.UseStandardSearchWhenNoResults)
-                {
-                    return await productsQuery
-                        .OrderBy(orderBy, _localizedPropertyRepository, languageId > 0 ? languageId : (await _workContext.GetWorkingLanguageAsync()).Id)
-                        .ToPagedListAsync(pageIndex, pageSize);
-                }
-            }
-        }
-
         if (!string.IsNullOrEmpty(keywords))
         {
+            //try to use AI-powered recommendation provider to search products
+            if (!showHidden && await _aiRecommendationPluginManager.LoadPrimaryPluginAsync(customer, storeId) is { } aiRecommendationPlugin)
+            {
+                try
+                {
+                    var (results, totalItems) = await aiRecommendationPlugin
+                        .SearchProductsAsync(keywords, categoryIds, manufacturerIds, productTagId, filteredSpecOptions, pageIndex, pageSize);
+
+                    if (!results.Any())
+                        throw new Exception("AI-powered recommendation provider. No products found by the specified parameters");
+
+                    var sortedResult = await productsQuery
+                        .Join(results, product => product.Id, id => id, (product, id) => product)
+                        .OrderBy(orderBy, _localizedPropertyRepository, languageId > 0 ? languageId : (await _workContext.GetWorkingLanguageAsync()).Id, results)
+                        .ToListAsync();
+
+                    return new PagedList<Product>(sortedResult, pageIndex, pageSize, totalItems);
+                }
+                catch
+                {
+                    if (!_artificialIntelligenceSettings.UseStandardSearchWhenNoResults)
+                    {
+                        return await productsQuery
+                            .OrderBy(orderBy, _localizedPropertyRepository, languageId > 0 ? languageId : (await _workContext.GetWorkingLanguageAsync()).Id)
+                            .ToPagedListAsync(pageIndex, pageSize);
+                    }
+                }
+            }
+
             var langs = await _languageService.GetAllLanguagesAsync(showHidden: true);
 
             //set a flag which will to points need to search in localized properties.
@@ -1095,10 +1097,9 @@ public partial class ProductService : IProductService
             {
                 var productCategoryQuery =
                     from pc in _productCategoryRepository.Table
-                    join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                     where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
                           categoryIds.Contains(pc.CategoryId)
-                    group c.DisplayOrder by pc.ProductId into gr
+                    group pc.DisplayOrder by pc.ProductId into gr
                     select new
                     {
                         ProductId = gr.Key,

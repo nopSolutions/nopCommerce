@@ -523,9 +523,14 @@ public partial class CategoryController : BaseAdminController
         var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
         if (selectedProducts.Any())
         {
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
             var existingProductCategories = await _categoryService.GetProductCategoriesByCategoryIdAsync(model.CategoryId, showHidden: true);
             foreach (var product in selectedProducts)
             {
+                //a vendor should have access only to his products
+                if (currentVendor != null && product.VendorId != currentVendor.Id)
+                    continue;
+
                 //whether product category with such parameters already exists
                 if (_categoryService.FindProductCategory(existingProductCategories, product.Id, model.CategoryId) != null)
                     continue;

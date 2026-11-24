@@ -52,6 +52,7 @@ public class CommonModelFactoryTests : BaseNopTest
     }
 
     [Test]
+    [Ignore("This test may fail in some CI/CD environments. So we leave it only for internal purposes")]
     public async Task TestGetNopLatestVersion()
     {
         var nopLatestVersion = await _commonModelFactory.GetNopLatestVersionAsync();

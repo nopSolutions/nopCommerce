@@ -18,6 +18,8 @@ public partial class GeoLookupService : IGeoLookupService
 {
     #region Fields
 
+    protected static readonly object _locker = new();
+    protected static DatabaseReader _databaseReader;
     protected readonly ILogger _logger;
     protected readonly INopFileProvider _fileProvider;
 
@@ -35,6 +37,30 @@ public partial class GeoLookupService : IGeoLookupService
     #endregion
 
     #region Utilities
+    
+    /// <summary>
+    /// Gets a cached DatabaseReader for the GeoLite2-Country database
+    /// </summary>
+    /// <returns>The cached DatabaseReader instance for the GeoLite2-Country.mmdb file.</returns>
+    protected virtual DatabaseReader GetDatabaseReader()
+    {
+        if (_databaseReader != null)
+            return _databaseReader;
+
+        //prevent multi loading data
+        lock (_locker)
+        {
+            var databasePath = _fileProvider.MapPath("~/App_Data/GeoLite2-Country.mmdb");
+
+            //data can be loaded while we waited
+            if (_databaseReader != null)
+                return _databaseReader;
+
+            _databaseReader = new DatabaseReader(databasePath);
+            
+            return _databaseReader;
+        }
+    }
 
     /// <summary>
     /// Get information
@@ -51,14 +77,11 @@ public partial class GeoLookupService : IGeoLookupService
 
         try
         {
-            //This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
-            var databasePath = _fileProvider.MapPath("~/App_Data/GeoLite2-Country.mmdb");
-            var reader = new DatabaseReader(databasePath);
+            var reader = GetDatabaseReader();
             var omni = reader.Country(ipAddress);
 
             return omni;
         }
-        //catch (AddressNotFoundException exc)
         catch (GeoIP2Exception)
         {
             //address is not found

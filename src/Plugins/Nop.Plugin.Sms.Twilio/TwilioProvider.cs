@@ -77,13 +77,13 @@ public class TwilioProvider : BasePlugin, ISmsProvider
             ["Plugins.Sms.Twilio.Credentials.Fields.AuthToken"] = "Auth token",
             ["Plugins.Sms.Twilio.Credentials.Fields.AuthToken.Hint"] = "Enter the Auth token. You can find the Auth Token in the Account Info pane of the Console Dashboard page.",
             ["Plugins.Sms.Twilio.Credentials.Fields.AccountSID"] = "Account SID",
-            ["Plugins.Sms.Twilio.Credentials.Fields.AccountSID.Hint"] = "Enter the Account SID. A Twilio Account SID is a 34-character alphanumeric identifier that begins with the letters “AC\" and can be found on the dashboard when logging into the Twilio Console. It is a unique key that is used to identify a specific Twilio Parent Account or Subaccount and is a credential that acts as a username.",
+            ["Plugins.Sms.Twilio.Credentials.Fields.AccountSID.Hint"] = "Enter the Account SID. A Twilio Account SID is a 34-character alphanumeric identifier that begins with the letters \"AC\" and can be found on the dashboard when logging into the Twilio Console. It is a unique key that is used to identify a specific Twilio Parent Account or Subaccount and is a credential that acts as a username.",
             ["Plugins.Sms.Twilio.Credentials.Fields.PhoneNumber"] = "Phone number",
-            ["Plugins.Sms.Twilio.Credentials.Fields.PhoneNumber.Hint"] = "Enter the Phone number. Twilio account phone number.",
+            ["Plugins.Sms.Twilio.Credentials.Fields.PhoneNumber.Hint"] = "Enter the Twilio account phone number.",
             ["Plugins.Sms.Twilio.Credentials.Fields.BalanceInfo"] = "Balance info",
             ["Plugins.Sms.Twilio.Credentials.Fields.BalanceInfo.Hint"] = "Check an Account Balance",
             ["Plugins.Sms.Twilio.Credentials.Fields.BalanceInfo.Text"] = "Update to check balance.",
-            ["Plugins.Sms.Twilio.Credentials.CheckBalance"] = "Check balance",
+            ["Plugins.Sms.Twilio.Credentials.CheckBalance"] = "Check the account balance",
 
         });
 

@@ -302,10 +302,7 @@ public partial class CustomerController : BasePublicController
                 {
                     //load read-only (already server-side selected) values
                     var attributeValues = await _customerAttributeService.GetAttributeValuesAsync(attribute.Id);
-                    foreach (var selectedAttributeId in attributeValues
-                                 .Where(v => v.IsPreSelected)
-                                 .Select(v => v.Id)
-                                 .ToList())
+                    foreach (var selectedAttributeId in attributeValues.Where(v => v.IsPreSelected).Select(v => v.Id).ToList())
                     {
                         attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                             attribute, selectedAttributeId.ToString());
@@ -429,6 +426,11 @@ public partial class CustomerController : BasePublicController
         }
     }
 
+    protected virtual bool IsLockedOtpCode(OtpContext context)
+    {
+        return context.FailedOtpCodeAttemptsCount >= _otpSettings.OtpFailedAllowedAttempts;
+    }
+
     #endregion
 
     #region Methods
@@ -492,14 +494,15 @@ public partial class CustomerController : BasePublicController
                             ? await _customerService.GetCustomerByUsernameAsync(customerUserName)
                             : await _customerService.GetCustomerByEmailAsync(customerEmail);
 
-                        return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl,
-                            model.RememberMe);
+                        return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, model.RememberMe);
                     }
                     case CustomerLoginResults.MultiFactorAuthenticationRequired:
                     {
                         var customerMultiFactorAuthenticationInfo = new CustomerMultiFactorAuthenticationInfo
                         {
-                            UserName = userNameOrEmail, RememberMe = model.RememberMe, ReturnUrl = returnUrl
+                            UserName = userNameOrEmail,
+                            RememberMe = model.RememberMe,
+                            ReturnUrl = returnUrl
                         };
                         await HttpContext.Session.SetAsync(
                             NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo,
@@ -533,8 +536,7 @@ public partial class CustomerController : BasePublicController
                         ? await _customerService.GetCustomerByUsernameAsync(customerUserName)
                         : await _customerService.GetCustomerByEmailAsync(customerEmail);
 
-                    await _workflowMessageService.SendCustomerFailedLoginAttemptNotificationAsync(customer,
-                        customer.LanguageId ?? 0);
+                    await _workflowMessageService.SendCustomerFailedLoginAttemptNotificationAsync(customer, customer.LanguageId ?? 0);
                 }
 
                 await _customerActivityService.InsertActivityAsync("PublicStore.FailedLogin",
@@ -667,6 +669,11 @@ public partial class CustomerController : BasePublicController
         }
 
         var context = JsonConvert.DeserializeObject<OtpContext>(jsonContext);
+        if (IsLockedOtpCode(context))
+        {
+            return Json(new { success = false, message = await _localizationService.GetResourceAsync("PhoneVerification.OtpCode.Error.Locked") });
+        }
+
         if (string.IsNullOrEmpty(context.Code) || !context.CodeGeneratedAtUtc.HasValue)
         {
             return Json(new { success = false, message = await _localizationService.GetResourceAsync("Account.Login.WrongCredentials") });
@@ -682,7 +689,7 @@ public partial class CustomerController : BasePublicController
             context.FailedOtpCodeAttemptsCount++;
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.OtpContextAttribute, JsonConvert.SerializeObject(context));
 
-            if (context.FailedOtpCodeAttemptsCount >= _otpSettings.OtpFailedAllowedAttempts)
+            if (IsLockedOtpCode(context))
             {
                 return Json(new { success = false, message = await _localizationService.GetResourceAsync("PhoneVerification.OtpCode.Error.Locked") });
             }
@@ -751,7 +758,9 @@ public partial class CustomerController : BasePublicController
         if (string.IsNullOrEmpty(userName))
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
-        var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsernameAsync(userName) : await _customerService.GetCustomerByEmailAsync(userName);
+        var customer = _customerSettings.UsernamesEnabled
+            ? await _customerService.GetCustomerByUsernameAsync(userName)
+            : await _customerService.GetCustomerByEmailAsync(userName);
         if (customer == null)
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
 
@@ -884,7 +893,7 @@ public partial class CustomerController : BasePublicController
     {
         //For backward compatibility with previous versions where email was used as a parameter in the URL
         var customer = await _customerService.GetCustomerByEmailAsync(email)
-                       ?? await _customerService.GetCustomerByGuidAsync(guid);
+            ?? await _customerService.GetCustomerByGuidAsync(guid);
 
         if (customer == null)
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
@@ -926,7 +935,7 @@ public partial class CustomerController : BasePublicController
     {
         //For backward compatibility with previous versions where email was used as a parameter in the URL
         var customer = await _customerService.GetCustomerByEmailAsync(email)
-                       ?? await _customerService.GetCustomerByGuidAsync(guid);
+            ?? await _customerService.GetCustomerByGuidAsync(guid);
 
         if (customer == null)
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
@@ -1064,8 +1073,8 @@ public partial class CustomerController : BasePublicController
         {
             try
             {
-                var customerUserName = model.Username;
-                var customerEmail = model.Email;
+                var customerUserName = CommonHelper.EnsureMaximumLength(model.Username, 1000);
+                var customerEmail = CommonHelper.EnsureMaximumLength(model.Email, 1000);
 
                 var isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
                 var registrationRequest = new CustomerRegistrationRequest(customer,
@@ -1080,43 +1089,46 @@ public partial class CustomerController : BasePublicController
                 {
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-                        customer.TimeZoneId = model.TimeZoneId;
+                        customer.TimeZoneId = CommonHelper.EnsureMaximumLength(model.TimeZoneId, 1000);
 
                     //VAT number
                     if (_taxSettings.EuVatEnabled)
                     {
-                        customer.VatNumber = model.VatNumber;
+                        customer.VatNumber = CommonHelper.EnsureMaximumLength(model.VatNumber, 1000);
 
                         var (vatNumberStatus, _, vatAddress) =
-                            await _taxService.GetVatNumberStatusAsync(model.VatNumber);
+                            await _taxService.GetVatNumberStatusAsync(customer.VatNumber);
                         customer.VatNumberStatusId = (int)vatNumberStatus;
+                        
                         //send VAT number admin notification
-                        if (!string.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
+                        if (!string.IsNullOrEmpty(customer.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
+                        {
                             await _workflowMessageService.SendNewVatSubmittedStoreOwnerNotificationAsync(customer,
-                                model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
+                                customer.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
+                        }
                     }
 
                     //form fields
                     if (_customerSettings.GenderEnabled)
-                        customer.Gender = model.Gender;
+                        customer.Gender = CommonHelper.EnsureMaximumLength(model.Gender, 1000);
                     if (_customerSettings.FirstNameEnabled)
-                        customer.FirstName = model.FirstName;
+                        customer.FirstName = CommonHelper.EnsureMaximumLength(model.FirstName, 1000);
                     if (_customerSettings.LastNameEnabled)
-                        customer.LastName = model.LastName;
+                        customer.LastName = CommonHelper.EnsureMaximumLength(model.LastName, 1000);
                     if (_customerSettings.DateOfBirthEnabled)
                         customer.DateOfBirth = model.ParseDateOfBirth();
                     if (_customerSettings.CompanyEnabled)
-                        customer.Company = model.Company;
+                        customer.Company = CommonHelper.EnsureMaximumLength(model.Company, 1000);
                     if (_customerSettings.StreetAddressEnabled)
-                        customer.StreetAddress = model.StreetAddress;
+                        customer.StreetAddress = CommonHelper.EnsureMaximumLength(model.StreetAddress, 1000);
                     if (_customerSettings.StreetAddress2Enabled)
-                        customer.StreetAddress2 = model.StreetAddress2;
+                        customer.StreetAddress2 = CommonHelper.EnsureMaximumLength(model.StreetAddress2, 1000);
                     if (_customerSettings.ZipPostalCodeEnabled)
-                        customer.ZipPostalCode = model.ZipPostalCode;
+                        customer.ZipPostalCode = CommonHelper.EnsureMaximumLength(model.ZipPostalCode, 1000);
                     if (_customerSettings.CityEnabled)
-                        customer.City = model.City;
+                        customer.City = CommonHelper.EnsureMaximumLength(model.City, 1000);
                     if (_customerSettings.CountyEnabled)
-                        customer.County = model.County;
+                        customer.County = CommonHelper.EnsureMaximumLength(model.County, 1000);
                     if (_customerSettings.CountryEnabled)
                         customer.CountryId = model.CountryId;
                     if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
@@ -1124,7 +1136,7 @@ public partial class CustomerController : BasePublicController
                     if (_customerSettings.PhoneEnabled)
                         customer.Phone = phoneNumber;
                     if (_customerSettings.FaxEnabled)
-                        customer.Fax = model.Fax;
+                        customer.Fax = CommonHelper.EnsureMaximumLength(model.Fax, 1000);
 
                     //save customer attributes
                     customer.CustomCustomerAttributesXML = customerAttributesXml;
@@ -1426,7 +1438,7 @@ public partial class CustomerController : BasePublicController
     {
         //For backward compatibility with previous versions where email was used as a parameter in the URL
         var customer = await _customerService.GetCustomerByEmailAsync(email)
-                       ?? await _customerService.GetCustomerByGuidAsync(guid);
+            ?? await _customerService.GetCustomerByGuidAsync(guid);
 
         if (customer == null)
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);
@@ -1534,7 +1546,7 @@ public partial class CustomerController : BasePublicController
                 //username 
                 if (_customerSettings.UsernamesEnabled && _customerSettings.AllowUsersToChangeUsernames)
                 {
-                    var userName = model.Username;
+                    var userName = CommonHelper.EnsureMaximumLength(model.Username, 1000);
                     if (!customer.Username.Equals(userName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         //change username
@@ -1547,7 +1559,7 @@ public partial class CustomerController : BasePublicController
                     }
                 }
                 //email
-                var email = model.Email;
+                var email = CommonHelper.EnsureMaximumLength(model.Email, 1000);
                 if (!customer.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase))
                 {
                     //change email
@@ -1565,23 +1577,23 @@ public partial class CustomerController : BasePublicController
 
                 //properties
                 if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-                    customer.TimeZoneId = model.TimeZoneId;
+                    customer.TimeZoneId = CommonHelper.EnsureMaximumLength(model.TimeZoneId, 1000);
                 //VAT number
                 if (_taxSettings.EuVatEnabled)
                 {
                     var prevVatNumber = customer.VatNumber;
-                    customer.VatNumber = model.VatNumber;
+                    customer.VatNumber = CommonHelper.EnsureMaximumLength(model.VatNumber, 1000);
 
-                    if (prevVatNumber != model.VatNumber)
+                    if (prevVatNumber != customer.VatNumber)
                     {
-                        var (vatNumberStatus, _, vatAddress) = await _taxService.GetVatNumberStatusAsync(model.VatNumber);
+                        var (vatNumberStatus, _, vatAddress) = await _taxService.GetVatNumberStatusAsync(customer.VatNumber);
                         customer.VatNumberStatusId = (int)vatNumberStatus;
 
                         //send VAT number admin notification
-                        if (!string.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
+                        if (!string.IsNullOrEmpty(customer.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
                         {
                             await _workflowMessageService.SendNewVatSubmittedStoreOwnerNotificationAsync(customer,
-                                model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
+                                customer.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
                         }
                     }
                 }
@@ -1590,25 +1602,25 @@ public partial class CustomerController : BasePublicController
 
                 //form fields
                 if (_customerSettings.GenderEnabled)
-                    customer.Gender = model.Gender;
+                    customer.Gender = CommonHelper.EnsureMaximumLength(model.Gender, 1000);
                 if (_customerSettings.FirstNameEnabled)
-                    customer.FirstName = model.FirstName;
+                    customer.FirstName = CommonHelper.EnsureMaximumLength(model.FirstName, 1000);
                 if (_customerSettings.LastNameEnabled)
-                    customer.LastName = model.LastName;
+                    customer.LastName = CommonHelper.EnsureMaximumLength(model.LastName, 1000);
                 if (_customerSettings.DateOfBirthEnabled)
                     customer.DateOfBirth = model.ParseDateOfBirth();
                 if (_customerSettings.CompanyEnabled)
-                    customer.Company = model.Company;
+                    customer.Company = CommonHelper.EnsureMaximumLength(model.Company, 1000);
                 if (_customerSettings.StreetAddressEnabled)
-                    customer.StreetAddress = model.StreetAddress;
+                    customer.StreetAddress = CommonHelper.EnsureMaximumLength(model.StreetAddress, 1000);
                 if (_customerSettings.StreetAddress2Enabled)
-                    customer.StreetAddress2 = model.StreetAddress2;
+                    customer.StreetAddress2 = CommonHelper.EnsureMaximumLength(model.StreetAddress2, 1000);
                 if (_customerSettings.ZipPostalCodeEnabled)
-                    customer.ZipPostalCode = model.ZipPostalCode;
+                    customer.ZipPostalCode = CommonHelper.EnsureMaximumLength(model.ZipPostalCode, 1000);
                 if (_customerSettings.CityEnabled)
-                    customer.City = model.City;
+                    customer.City = CommonHelper.EnsureMaximumLength(model.City, 1000);
                 if (_customerSettings.CountyEnabled)
-                    customer.County = model.County;
+                    customer.County = CommonHelper.EnsureMaximumLength(model.County, 1000);
                 if (_customerSettings.CountryEnabled)
                     customer.CountryId = model.CountryId;
                 if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
@@ -1624,7 +1636,7 @@ public partial class CustomerController : BasePublicController
                 }
 
                 if (_customerSettings.FaxEnabled)
-                    customer.Fax = model.Fax;
+                    customer.Fax = CommonHelper.EnsureMaximumLength(model.Fax, 1000);
 
                 customer.CustomCustomerAttributesXML = customerAttributesXml;
                 await _customerService.UpdateCustomerAsync(customer);
@@ -1714,7 +1726,7 @@ public partial class CustomerController : BasePublicController
 
         if (!await _customerService.IsRegisteredAsync(currentCustomer))
             return Challenge();
-        
+
         var ear = await _externalAuthenticationService.GetExternalAuthenticationRecordByIdAsync(id);
 
         if (ear == null)
@@ -1735,7 +1747,7 @@ public partial class CustomerController : BasePublicController
     {
         //For backward compatibility with previous versions where email was used as a parameter in the URL
         var customer = await _customerService.GetCustomerByEmailAsync(email)
-                       ?? await _customerService.GetCustomerByGuidAsync(guid);
+            ?? await _customerService.GetCustomerByGuidAsync(guid);
 
         if (customer == null)
             return RedirectToRoute(NopRouteNames.General.HOMEPAGE);

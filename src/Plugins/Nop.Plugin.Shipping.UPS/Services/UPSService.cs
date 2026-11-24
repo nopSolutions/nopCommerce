@@ -437,14 +437,14 @@ public class UPSService
                 Code = _upsSettings.WeightType,
                 Description = _upsSettings.WeightType
             },
-            Weight = request.Shipment.Package.Sum(x => decimal.TryParse(x.PackageWeight.Weight, out var wt) ? wt : 0).ToString("F2", CultureInfo.InvariantCulture)
+            Weight = request.Shipment.Package.Sum(x => decimal.TryParse(x.PackageWeight.Weight, NumberStyles.Any, CultureInfo.InvariantCulture, out var wt) ? wt : 0).ToString("0.00", CultureInfo.InvariantCulture)
         };
 
         var currencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
         request.Shipment.InvoiceLineTotal = new Shipment_InvoiceLineTotal
         {
             CurrencyCode = currencyCode,
-            MonetaryValue = shippingOptionRequest.Items.Sum(x => x.Product.Price * x.GetQuantity()).ToString("F2", CultureInfo.InvariantCulture)
+            MonetaryValue = shippingOptionRequest.Items.Sum(x => x.Product.Price * x.GetQuantity()).ToString("0.00", CultureInfo.InvariantCulture)
         };
 
         return request;
@@ -876,10 +876,10 @@ public class UPSService
                 continue;
 
             //get rate value
-            var regularValue = decimal.TryParse(rate.TotalCharges?.MonetaryValue, NumberStyles.Any, new CultureInfo("en-US"), out var value)
+            var regularValue = decimal.TryParse(rate.TotalCharges?.MonetaryValue, NumberStyles.Any, CultureInfo.InvariantCulture, out var value)
                 ? (decimal?)value
                 : null;
-            var negotiatedValue = decimal.TryParse(rate.NegotiatedRateCharges?.TotalCharge?.MonetaryValue, NumberStyles.Any, new CultureInfo("en-US"), out value)
+            var negotiatedValue = decimal.TryParse(rate.NegotiatedRateCharges?.TotalCharge?.MonetaryValue, NumberStyles.Any, CultureInfo.InvariantCulture, out value)
                 ? (decimal?)value
                 : null;
             var monetaryValue = negotiatedValue ?? regularValue;

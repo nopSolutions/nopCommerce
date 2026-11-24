@@ -30,7 +30,7 @@ public partial record ProductReviewModel : BaseNopEntityModel
     public string ProductName { get; set; }
 
     [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Customer")]
-    public int CustomerId { get; set; }
+    public int? CustomerId { get; set; }
 
     [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Customer")]
     public string CustomerInfo { get; set; }

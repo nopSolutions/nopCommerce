@@ -175,6 +175,7 @@
 			'btnCancel' : 'إلغاء',
 			'btnNo'     : 'لا',
 			'btnYes'    : 'نعم',
+			'btnDiscard': 'Discard changes',
 			'btnMount'  : 'تثبيت',  // added 18.04.2012
 			'btnApprove': 'انتقل إلى $1 والموافقة', // from v2.1 added 26.04.2012
 			'btnUnmount': 'إلغاء التثبيت', // from v2.1 added 30.04.2012
@@ -523,6 +524,12 @@
 			'kindTTF'         : 'خط True Type ',
 			'kindOTF'         : 'خط Open Type ',
 			'kindRPM'         : 'حزمة RPM',
+			// fonts
+			'kindFont'        : 'خط',
+			'kindSFNT'        : 'خط SFNT',
+			'kindEOT'         : 'خط Embedded Open Type',
+			'kindWOFF'        : 'خط Web Open Font Format',
+			'kindWOFF2'       : 'خط Web Open Font Format 2',
 			// texts
 			'kindText'        : 'وثيقة نصية',
 			'kindTextPlain'   : 'نص عادي',

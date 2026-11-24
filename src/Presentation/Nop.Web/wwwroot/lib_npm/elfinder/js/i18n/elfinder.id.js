@@ -162,6 +162,7 @@
 			'btnCancel' : 'Batal',
 			'btnNo'     : 'Tidak',
 			'btnYes'    : 'Ya',
+			'btnDiscard': 'Discard changes',
 			'btnMount'  : 'Baca susunan',  // added 18.04.2012
 			'btnApprove': 'Menuju ke $1 & setujui', // from v2.1 added 26.04.2012
 			'btnUnmount': 'Unmount', // from v2.1 added 30.04.2012
@@ -440,6 +441,12 @@
 			'kindTTF'         : 'Huruf True Type',
 			'kindOTF'         : 'Huruf Open Type',
 			'kindRPM'         : 'Paket RPM',
+			// fonts
+			'kindFont'        : 'Huruf',
+			'kindSFNT'        : 'Huruf SFNT',
+			'kindEOT'         : 'Huruf Embedded Open Type',
+			'kindWOFF'        : 'Huruf Web Open Font Format',
+			'kindWOFF2'       : 'Huruf Web Open Font Format 2',
 			// texts
 			'kindText'        : 'Dokumen teks',
 			'kindTextPlain'   : 'Berkas teks biasa',

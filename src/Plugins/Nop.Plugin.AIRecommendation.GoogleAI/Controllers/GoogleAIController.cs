@@ -57,7 +57,8 @@ public class GoogleAiController : BasePluginController
             BranchId = _googleAiSettings.BranchId,
             SyncAllowed = _googleAiSettings.SyncAllowed,
             LogRequests = _googleAiSettings.LogRequests,
-            SearchAllowed = _googleAiSettings.SearchAllowed
+            SearchAllowed = _googleAiSettings.SearchAllowed,
+            EnableForRegisteredUsersOnly = _googleAiSettings.EnableForRegisteredUsersOnly
         };
 
         return View("~/Plugins/AIRecommendation.GoogleAI/Views/Configure.cshtml", model);
@@ -75,6 +76,7 @@ public class GoogleAiController : BasePluginController
         _googleAiSettings.SyncAllowed = model.SyncAllowed;
         _googleAiSettings.LogRequests = model.LogRequests;
         _googleAiSettings.SearchAllowed = model.SearchAllowed;
+        _googleAiSettings.EnableForRegisteredUsersOnly = model.EnableForRegisteredUsersOnly;
 
         await _settingService.SaveSettingAsync(_googleAiSettings);
 

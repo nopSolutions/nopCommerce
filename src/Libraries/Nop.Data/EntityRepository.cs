@@ -358,6 +358,9 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
     {
         ArgumentNullException.ThrowIfNull(entities);
 
+        if (!entities.Any())
+            return;
+
         using var transaction = _dataProvider.CreateTransactionScope();
         await _dataProvider.BulkInsertEntitiesAsync(entities);
         transaction.Complete();
