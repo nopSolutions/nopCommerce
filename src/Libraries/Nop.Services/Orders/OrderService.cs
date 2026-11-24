@@ -230,8 +230,6 @@ public partial class OrderService : IOrderService
     /// <param name="vendorId">Vendor identifier; null to load all orders</param>
     /// <param name="customerId">Customer identifier; 0 to load all orders</param>
     /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
-    /// <param name="affiliateId">Affiliate identifier; 0 to load all orders</param>
-    /// <param name="affiliateCommissionId">Affiliate commission identifier; 0 to load all orders;null to load orders which not included in the affiliate commission</param>
     /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
     /// <param name="warehouseId">Warehouse identifier, only orders with products from a specified warehouse will be loaded; 0 to load all orders</param>
     /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
@@ -253,8 +251,7 @@ public partial class OrderService : IOrderService
     /// </returns>
     public virtual async Task<IPagedList<Order>> SearchOrdersAsync(int storeId = 0,
         int vendorId = 0, int customerId = 0,
-        int productId = 0, int affiliateId = 0, 
-        int? affiliateCommissionId = 0, int warehouseId = 0,
+        int productId = 0, int warehouseId = 0,
         int billingCountryId = 0, string paymentMethodSystemName = null,
         DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
         List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
@@ -314,14 +311,6 @@ public partial class OrderService : IOrderService
         if (!string.IsNullOrEmpty(paymentMethodSystemName))
             query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
 
-        if (affiliateId > 0)
-            query = query.Where(o => o.AffiliateId == affiliateId);
-
-        if (affiliateCommissionId > 0)
-            query = query.Where(o => o.AffiliateCommissionId == affiliateCommissionId);
-        else if(affiliateCommissionId == null)
-            query = query.Where(o => o.AffiliateCommissionId == null);
-
         if (createdFromUtc.HasValue)
             query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
 
@@ -348,6 +337,66 @@ public partial class OrderService : IOrderService
                 (string.IsNullOrEmpty(billingEmail) || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
                 (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))
             select o;
+
+        query = query.Where(o => !o.Deleted);
+        query = query.OrderByDescending(o => o.CreatedOnUtc);
+
+        //database layer paging
+        return await query.ToPagedListAsync(pageIndex, pageSize, getOnlyTotalCount);
+    }
+
+    /// <summary>
+    /// Gets affiliated orders
+    /// </summary>
+    /// <param name="customerId">Customer identifier; 0 to load all orders</param>
+    /// <param name="affiliateId">Affiliate identifier; 0 to load all orders</param>
+    /// <param name="affiliateCommissionId">Affiliate commission identifier; 0 to load all orders;null to load orders which not included in the affiliate commission</param>
+    /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+    /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+    /// <param name="osIds">Order status identifiers; null to load all orders</param>
+    /// <param name="psIds">Payment status identifiers; null to load all orders</param>
+    /// <param name="ssIds">Shipping status identifiers; null to load all orders</param>
+    /// <param name="pageIndex">Page index</param>
+    /// <param name="pageSize">Page size</param>
+    /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the orders
+    /// </returns>
+    public virtual async Task<IPagedList<Order>> GetAffiliatedOrdersAsync(int customerId = 0,
+        int affiliateId = 0,
+        int? affiliateCommissionId = 0, 
+        DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+        List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
+        int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
+    {
+        var query = _orderRepository.Table;
+        
+        if (customerId > 0)
+            query = query.Where(o => o.CustomerId == customerId);
+        
+        if (affiliateId > 0)
+            query = query.Where(o => o.AffiliateId == affiliateId);
+
+        if (affiliateCommissionId > 0)
+            query = query.Where(o => o.AffiliateCommissionId == affiliateCommissionId);
+        else if (affiliateCommissionId == null)
+            query = query.Where(o => o.AffiliateCommissionId == null);
+
+        if (createdFromUtc.HasValue)
+            query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
+
+        if (createdToUtc.HasValue)
+            query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
+
+        if (osIds != null && osIds.Any())
+            query = query.Where(o => osIds.Contains(o.OrderStatusId));
+
+        if (psIds != null && psIds.Any())
+            query = query.Where(o => psIds.Contains(o.PaymentStatusId));
+
+        if (ssIds != null && ssIds.Any())
+            query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
 
         query = query.Where(o => !o.Deleted);
         query = query.OrderByDescending(o => o.CreatedOnUtc);

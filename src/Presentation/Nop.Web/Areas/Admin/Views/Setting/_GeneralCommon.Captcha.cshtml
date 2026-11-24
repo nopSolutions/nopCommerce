@@ -164,6 +164,16 @@
                 <span asp-validation-for="CaptchaSettings.ShowOnWithdrawalForm"></span>
             </div>
         </div>
+        <div class="form-group row" id="ssCaptchaShowOnApplyAffiliatePage">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnApplyAffiliatePage_OverrideForStore" asp-input="CaptchaSettings.ShowOnApplyAffiliatePage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnApplyAffiliatePage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnApplyAffiliatePage" />
+                <span asp-validation-for="CaptchaSettings.ShowOnApplyAffiliatePage"></span>
+            </div>
+        </div>
         <div class="form-group row" id="ssReCaptchaPublicKeypnl">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPublicKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPublicKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

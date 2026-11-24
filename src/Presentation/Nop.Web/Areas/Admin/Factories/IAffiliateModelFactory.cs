@@ -103,4 +103,15 @@ public partial interface IAffiliateModelFactory
     /// The task result contains the affiliate commission editor model
     /// </returns>
     Task<AffiliateCommissionEditModel> PrepareAffiliateCommissionEditModelAsync(AffiliateCommissionEditModel affiliateCommissionEditModel);
+
+    /// <summary>
+    /// Prepare affiliated order search model
+    /// </summary>
+    /// <param name="searchModel">Affiliated order search model</param>
+    /// <param name="affiliateId">Affiliate identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the affiliated order search model
+    /// </returns>
+    Task<AffiliatedOrderSearchModel> PrepareAffiliatedOrderSearchModelAsync(AffiliatedOrderSearchModel searchModel, int affiliateId);
 }

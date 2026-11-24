@@ -50,10 +50,6 @@
                         <table class="data-table">
                             <thead>
                             <tr>
-                                <th>@T("Account.Affiliates.Orders.CustomOrderNumber")</th>
-                                <th>@T("Account.Affiliates.Orders.OrderTotal")</th>
-                                <th>@T("Account.Affiliates.Orders.OrderStatus")</th>
-                                <th>@T("Account.Affiliates.Orders.PaymentStatus")</th>
                                 <th>@T("Account.Affiliates.Orders.CreatedOn")</th>
                                 <th>@T("Account.Affiliates.Orders.AffiliateCommission")</th>
                                 <th>@T("Account.Affiliates.Orders.CommissionStatus")</th>
@@ -64,10 +60,6 @@
                             @foreach (var order in Model.Orders)
                             {
                                 <tr>
-                                    <td>@order.CustomOrderNumber</td>
-                                    <td>@order.OrderTotal</td>
-                                    <td>@order.OrderStatus</td>
-                                    <td>@order.PaymentStatus</td>
                                     <td>@order.CreatedOn</td>
                                     <td>@order.AffiliateCommission</td>
                                     <td>@order.CommissionStatus</td>
@@ -90,10 +82,6 @@
                 <div>
                     <label asp-for="OrdersCount" asp-postfix=":"></label>
                     <label>@Model.OrdersCount</label>
-                </div>
-                <div>
-                    <label asp-for="OrdersAmount" asp-postfix=":"></label>
-                    <label>@Model.OrdersAmount</label>
                 </div>
                 <div>
                     <label asp-for="TotalCommission" asp-postfix=":"></label>

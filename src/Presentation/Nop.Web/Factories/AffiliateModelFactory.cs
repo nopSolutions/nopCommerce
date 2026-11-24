@@ -169,7 +169,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
         var pageSize = _affiliateSettings.CustomerAffiliatePageSize;
         var pageIndex = Math.Max((page ?? 0) - 1, 0);
 
-        var orders = await _orderService.SearchOrdersAsync(
+        var orders = await _orderService.GetAffiliatedOrdersAsync(
             affiliateId: affiliate.Id,
             createdFromUtc: limit == OrderHistoryPeriods.All ? null : DateTime.UtcNow.AddDays((int)limit * -1),
             createdToUtc: limit > 0 ? DateTime.UtcNow : null,

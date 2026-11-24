@@ -76,7 +76,7 @@ public partial class AffiliateService : IAffiliateService
     /// </returns>
     public virtual async Task<Affiliate> GetAffiliateByCustomerIdAsync(int customerId)
     {
-        return await _affiliateRepository.Table.FirstOrDefaultAsync(a => a.AssociatedCustomerId == customerId);
+        return await _affiliateRepository.Table.FirstOrDefaultAsync(a => a.AssociatedCustomerId == customerId && a.Deleted == false);
     }
 
     /// <summary>
@@ -322,7 +322,7 @@ public partial class AffiliateService : IAffiliateService
     /// </returns>
     public virtual async Task<AffiliateCommission> GetAffiliateCommissionByIdAsync(int commissionId)
     {
-        return await _affiliateCommissionRepository.GetByIdAsync(commissionId, cache => default, useShortTermCache: true);
+        return await _affiliateCommissionRepository.GetByIdAsync(commissionId);
     }
 
     /// <summary>

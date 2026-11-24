@@ -307,6 +307,16 @@ public partial class AffiliateController : BaseAdminController
         return View(model);
     }
 
+    [CheckPermission([StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE, StandardPermission.Promotions.AFFILIATES_VIEW])]
+    public virtual async Task<IActionResult> AddOrdersToAffiliateCommissionPopup(int id, int affiliateId)
+    {
+        var model = await _affiliateModelFactory.PrepareAffiliatedOrderSearchModelAsync(new AffiliatedOrderSearchModel(), affiliateId);
+        model.AffiliateCommissionId = id;
+        model.IsCommissionPage = true;
+
+        return View(model);
+    }
+
     [HttpPost]
     [FormValueRequired("save")]
     [CheckPermission([StandardPermission.Customers.CUSTOMERS_CREATE_EDIT_DELETE, StandardPermission.Promotions.AFFILIATES_CREATE_EDIT_DELETE])]
@@ -368,6 +378,10 @@ public partial class AffiliateController : BaseAdminController
 
             await _affiliateService.InsertAffiliateCommissionAsync(commission);
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("AddNewAffiliateCommission",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewAffiliateCommission"), commission.Id), commission);
+
             return continueEditing ? RedirectToAction("EditCommission", new { id = commission.Id }) : RedirectToAction("Edit", new { id = model.AffiliateId });
         }
 
@@ -412,6 +426,10 @@ public partial class AffiliateController : BaseAdminController
 
             await _affiliateService.UpdateAffiliateCommissionAsync(commission);
 
+            //activity log
+            await _customerActivityService.InsertActivityAsync("EditAffiliateCommission",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditAffiliateCommission"), commission.Id), commission);
+
             return continueEditing ? RedirectToAction("EditCommission", new { id = commission.Id }) : RedirectToAction("Edit", new { id = model.AffiliateId });
         }
 
@@ -443,10 +461,14 @@ public partial class AffiliateController : BaseAdminController
 
         await _affiliateService.UpdateAffiliateCommissionAsync(commission);
 
+        //activity log
+        await _customerActivityService.InsertActivityAsync("EditAffiliateCommission",
+            string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditAffiliateCommission"), commission.Id), commission);
+
+
         return RedirectToAction("EditCommission", new { id = commission.Id });
     }
-
-
+    
     [HttpPost]
     [CheckPermission(StandardPermission.Promotions.AFFILIATES_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> AddSelectedOrders(ICollection<int> selectedIds, int affiliateCommissionId)
@@ -469,6 +491,11 @@ public partial class AffiliateController : BaseAdminController
         }
 
         await _affiliateService.UpdateAffiliateCommissionAsync(commission);
+
+        //activity log
+        await _customerActivityService.InsertActivityAsync("EditAffiliateCommission",
+            string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditAffiliateCommission"), commission.Id), commission);
+
         var totalCommissionAmount = await _priceFormatter.FormatPriceAsync(commission.TotalCommissionAmount, true, false);
 
         return Json(new { Result = true, totalCommissionAmount });
@@ -491,6 +518,10 @@ public partial class AffiliateController : BaseAdminController
             await _orderService.UpdateOrderAsync(order);
             commission.TotalCommissionAmount -= order.AffiliateCommissionAmount ?? 0;
             await _affiliateService.UpdateAffiliateCommissionAsync(commission);
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("EditAffiliateCommission",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditAffiliateCommission"), commission.Id), commission);
         }
 
         var totalCommissionAmount = await _priceFormatter.FormatPriceAsync(commission.TotalCommissionAmount, true, false);
@@ -504,6 +535,11 @@ public partial class AffiliateController : BaseAdminController
     {
         var commission = await _affiliateService.GetAffiliateCommissionByIdAsync(id);
         await _affiliateService.DeleteAffiliateCommissionAsync(commission);
+
+        //activity log
+        await _customerActivityService.InsertActivityAsync("DeleteAffiliateCommission",
+            string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteAffiliateCommission"), commission.Id), commission);
+
 
         return RedirectToAction("Edit", new { id = commission.AffiliateId });
     }

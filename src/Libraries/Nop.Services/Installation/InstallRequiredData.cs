@@ -2557,6 +2557,11 @@ public partial class InstallationService
                     Name = "Add a new affiliate"
                 },
                 new() {
+                    SystemKeyword = "AddNewAffiliateCommission",
+                    Enabled = true,
+                    Name = "Add a new affiliate commission"
+                },
+                new() {
                     SystemKeyword = "AddNewBlogPost",
                     Enabled = true,
                     Name = "Add a new blog post"
@@ -2755,6 +2760,11 @@ public partial class InstallationService
                     SystemKeyword = "DeleteAffiliate",
                     Enabled = true,
                     Name = "Delete an affiliate"
+                },
+                new() {
+                    SystemKeyword = "DeleteAffiliateCommission",
+                    Enabled = true,
+                    Name = "Delete an affiliate commission"
                 },
                 new() {
                     SystemKeyword = "DeleteBlogPost",
@@ -2990,6 +3000,11 @@ public partial class InstallationService
                     SystemKeyword = "EditAffiliate",
                     Enabled = true,
                     Name = "Edit an affiliate"
+                },
+                new() {
+                    SystemKeyword = "EditAffiliateCommission",
+                    Enabled = true,
+                    Name = "Edit an affiliate commission"
                 },
                 new() {
                     SystemKeyword = "EditBlogPost",

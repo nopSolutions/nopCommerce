@@ -1849,6 +1849,8 @@ public partial class ExportManager : IExportManager
             await xmlWriter.WriteStringAsync("CurrencyRate", order.CurrencyRate);
             await xmlWriter.WriteStringAsync("CustomerCurrencyCode", order.CustomerCurrencyCode);
             await xmlWriter.WriteStringAsync("AffiliateId", order.AffiliateId, ignore);
+            await xmlWriter.WriteStringAsync("AffiliateCommissionId", order.AffiliateCommissionId, ignore);
+            await xmlWriter.WriteStringAsync("AffiliateCommissionAmount", order.AffiliateCommissionAmount, ignore);
             await xmlWriter.WriteStringAsync("PaymentMethodSystemName", order.PaymentMethodSystemName, ignore);
             await xmlWriter.WriteStringAsync("AuthorizationTransactionId", order.AuthorizationTransactionId, ignore);
             await xmlWriter.WriteStringAsync("AuthorizationTransactionCode", order.AuthorizationTransactionCode, ignore);
@@ -1979,6 +1981,8 @@ public partial class ExportManager : IExportManager
             new PropertyByName<Order>("CurrencyRate", (p, _) => p.CurrencyRate),
             new PropertyByName<Order>("CustomerCurrencyCode", (p, _) => p.CustomerCurrencyCode),
             new PropertyByName<Order>("AffiliateId", (p, _) => p.AffiliateId, ignore),
+            new PropertyByName<Order>("AffiliateCommissionId", (p, _) => p.AffiliateCommissionId, ignore),
+            new PropertyByName<Order>("AffiliateCommissionAmount", (p, _) => p.AffiliateCommissionAmount, ignore),
             new PropertyByName<Order>("PaymentMethodSystemName", (p, _) => p.PaymentMethodSystemName, ignore),
             new PropertyByName<Order>("ShippingPickupInStore", (p, _) => p.PickupInStore, ignore),
             new PropertyByName<Order>("ShippingMethod", (p, _) => p.ShippingMethod),

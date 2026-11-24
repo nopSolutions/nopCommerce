@@ -27,18 +27,6 @@
   <LocaleResource Name="Account.Affiliates.Orders.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.Affiliates.Orders.CustomOrderNumber">
-    <Value>Order #</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.Affiliates.Orders.OrderStatus">
-    <Value>Order status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.Affiliates.Orders.OrderTotal">
-    <Value>Order total</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.Affiliates.Orders.PaymentStatus">
-    <Value>Payment status</Value>
-  </LocaleResource>
   <LocaleResource Name="Account.Affiliates.OrdersAmount">
     <Value>Orders amount</Value>
   </LocaleResource>
@@ -810,6 +798,9 @@
   <LocaleResource Name="ActivityLog.AddNewAffiliate">
     <Value>Added a new affiliate (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewAffiliateCommission">
+    <Value>Added a new affiliate commission (ID = {0})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewBlogPost">
     <Value>Added a new blog post (ID = {0})</Value>
   </LocaleResource>
@@ -932,6 +923,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteAffiliate">
     <Value>Deleted an affiliate (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteAffiliateCommission">
+    <Value>Deleted an affiliate commission (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteBlogPost">
     <Value>Deleted a blog post (ID = {0})</Value>
@@ -1076,6 +1070,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditAffiliate">
     <Value>Edited an affiliate (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditAffiliateCommission">
+    <Value>Edited an affiliate commission (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditBlogComment">
     <Value>Edited a blog comment (ID = {0})</Value>
@@ -1713,6 +1710,9 @@
   <LocaleResource Name="Admin.Affiliates.Commission.SaveForEdit">
     <Value>Save commission before edit</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Commission.SelectOrders">
+    <Value>Select orders</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Commission.TotalCommissionAmount">
     <Value>Total commission amount</Value>
   </LocaleResource>
@@ -1775,6 +1775,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Fields.AssociatedCustomerId.Remove">
     <Value>Remove customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.CreatedOn.Hint">
+    <Value>The date and time when the affiliate was created.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Fields.FriendlyUrlName">
     <Value>Friendly URL name</Value>
@@ -11809,6 +11815,12 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Deleted">
     <Value>The message template has been deleted successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.AffiliateAccountActive.CustomerNotification">
+    <Value>This message template is used when a new affiliate account is activated. The message is received by a customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.AffiliateAccountApply.StoreOwnerNotification">
+    <Value>This message template is used when a new affiliate account is applied for. The message is received by a store owner.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Blog.BlogComment">
     <Value><![CDATA[This message template is used when a new blog comment to the certain blog post is created. The message is received by a store owner. You can set up this option by ticking the checkbox <strong>Notify about new blog comments</strong> in Configuration - Settings - Blog settings.]]></Value>
   </LocaleResource>
@@ -17659,6 +17671,9 @@
   <LocaleResource Name="Affiliate.ApplyAccount.FriendlyUrlName.Hint">
     <Value>Enter a friendly name for your affiliate URL</Value>
   </LocaleResource>
+  <LocaleResource Name="Affiliate.ApplyAccount.FriendlyUrlName.Required">
+    <Value>Friendly URL name is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Affiliate.ApplyAccount.Submitted">
     <Value>Your application has been submitted successfully. You will be notified via email once your application is reviewed.</Value>
   </LocaleResource>
@@ -18981,6 +18996,9 @@
   </LocaleResource>
   <LocaleResource Name="Languages.Selector.Label">
     <Value>Languages selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.ApplyAffiliateAccount">
+    <Value>Apply for affiliate account</Value>
   </LocaleResource>
   <LocaleResource Name="Literals.Nop.Core.Http.NopRouteNames.General.ApplyVendorAccount">
     <Value>Apply for vendor account</Value>

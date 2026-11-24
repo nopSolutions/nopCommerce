@@ -107,7 +107,7 @@ public sealed class CheckAffiliateAttribute : TypeFilterAttribute
                     case AffiliateStorageStrategyType.OverwriteAfterOrder:
                         //check for orders with existing affiliate; if there are not any yet, keep it
                         var orders = await _orderService
-                            .SearchOrdersAsync(customerId: customer.Id, affiliateId: customer.AffiliateId, getOnlyTotalCount: true);
+                            .GetAffiliatedOrdersAsync(customerId: customer.Id, affiliateId: customer.AffiliateId, getOnlyTotalCount: true);
 
                         //if there are any, overwrite it
                         if (orders.TotalCount > 0)

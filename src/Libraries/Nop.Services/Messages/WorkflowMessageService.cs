@@ -2060,14 +2060,10 @@ public partial class WorkflowMessageService : IWorkflowMessageService
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-            var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+            var toEmail = customer.Email;
+            var toName = await _customerService.GetCustomerFullNameAsync(customer);
 
-            var affiliateAddress = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
-            var replyToEmail = messageTemplate.AllowDirectReply ? affiliateAddress.Email : "";
-            var replyToName = messageTemplate.AllowDirectReply ? $"{affiliateAddress.FirstName} {affiliateAddress.LastName}" : "";
-
-            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
-                replyToEmailAddress: replyToEmail, replyToName: replyToName);
+            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }).ToListAsync();
     }
 

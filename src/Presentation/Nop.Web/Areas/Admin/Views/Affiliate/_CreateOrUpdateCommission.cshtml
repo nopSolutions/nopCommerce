@@ -53,155 +53,6 @@
                             </div>
                         }
                     }
-                    @if (!Model.PaidOn.HasValue)
-                    {
-                        <div class="card card-search">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-7">
-                                        <div class="form-group row">
-                                            <div class="col-md-5">
-                                                <nop-label asp-for="AffiliatedOrderSearchModel.StartDate" />
-                                            </div>
-                                            <div class="col-md-5">
-                                                <nop-editor asp-for="AffiliatedOrderSearchModel.StartDate" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-md-5">
-                                                <nop-label asp-for="AffiliatedOrderSearchModel.EndDate" />
-                                            </div>
-                                            <div class="col-md-5">
-                                                <nop-editor asp-for="AffiliatedOrderSearchModel.EndDate" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-md-5">
-                                                <nop-label asp-for="AffiliatedOrderSearchModel.OrderStatusId" />
-                                            </div>
-                                            <div class="col-md-5">
-                                                <nop-select asp-for="AffiliatedOrderSearchModel.OrderStatusId"
-                                                            asp-items="Model.AffiliatedOrderSearchModel.AvailableOrderStatuses" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-md-5">
-                                                <nop-label asp-for="AffiliatedOrderSearchModel.PaymentStatusId" />
-                                            </div>
-                                            <div class="col-md-5">
-                                                <nop-select asp-for="AffiliatedOrderSearchModel.PaymentStatusId"
-                                                            asp-items="Model.AffiliatedOrderSearchModel.AvailablePaymentStatuses" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-md-5">
-                                                <nop-label asp-for="AffiliatedOrderSearchModel.ShippingStatusId" />
-                                            </div>
-                                            <div class="col-md-5">
-                                                <nop-select asp-for="AffiliatedOrderSearchModel.ShippingStatusId"
-                                                            asp-items="Model.AffiliatedOrderSearchModel.AvailableShippingStatuses" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-8 offset-md-5">
-                                        <button type="button" id="search-orders" class="btn btn-primary btn-search">
-                                            <i class="fas fa-magnifying-glass"></i>
-                                            @T("Admin.Common.Search")
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-header">@T("Admin.Affiliates.Commission.CreateOrUpdate.AvailableOrders")</div>
-                            <div class="card-body">
-                                @await Html.PartialAsync("Table", new DataTablesModel
-                                {
-                                    Name = "orders-grid",
-                                    UrlRead = new DataUrl("AffiliatedOrderListGrid", "Affiliate", new RouteValueDictionary
-                                    {
-                                        [nameof(Model.AffiliatedOrderSearchModel.AffiliateId)] = Model.AffiliatedOrderSearchModel.AffiliateId,
-                                        [nameof(Model.AffiliatedOrderSearchModel.IsCommissionPage)] = true
-                                    }),
-                                    SearchButtonId = "search-orders",
-                                    Length = Model.AffiliatedOrderSearchModel.PageSize,
-                                    LengthMenu = Model.AffiliatedOrderSearchModel.AvailablePageSizes,
-                                    Filters = new List<FilterParameter>
-                                    {
-                                        new(nameof(Model.AffiliatedOrderSearchModel.StartDate), nameof(AffiliatedOrderSearchModel)),
-                                        new(nameof(Model.AffiliatedOrderSearchModel.EndDate), nameof(AffiliatedOrderSearchModel)),
-                                        new(nameof(Model.AffiliatedOrderSearchModel.OrderStatusId), nameof(AffiliatedOrderSearchModel)),
-                                        new(nameof(Model.AffiliatedOrderSearchModel.PaymentStatusId), nameof(AffiliatedOrderSearchModel)),
-                                        new(nameof(Model.AffiliatedOrderSearchModel.ShippingStatusId), nameof(AffiliatedOrderSearchModel))
-                                    },
-                                    ColumnCollection = new List<ColumnProperty>
-                                    {
-                                        new(nameof(AffiliatedOrderModel.Id))
-                                        {
-                                            IsMasterCheckBox = true,
-                                            Render = new RenderCheckBox("checkbox_products"),
-                                            ClassName = NopColumnClassDefaults.CenterAll,
-                                            Width = "50"
-                                        },
-                                        new(nameof(AffiliatedOrderModel.CustomOrderNumber))
-                                        {
-                                            Title = T("Admin.Affiliates.Orders.CustomOrderNumber").Text
-                                        },
-                                        new(nameof(AffiliatedOrderModel.OrderStatus))
-                                        {
-                                            Title = T("Admin.Affiliates.Orders.OrderStatus").Text,
-                                            Render = new RenderCustom("renderOrderStatus")
-                                        },
-                                        new(nameof(AffiliatedOrderModel.PaymentStatus))
-                                        {
-                                            Title = T("Admin.Affiliates.Orders.PaymentStatus").Text
-                                        },
-                                        new(nameof(AffiliatedOrderModel.ShippingStatus))
-                                        {
-                                            Title = T("Admin.Affiliates.Orders.ShippingStatus").Text
-                                        },
-                                        new(nameof(AffiliatedOrderModel.OrderTotal))
-                                        {
-                                            Title = T("Admin.Affiliates.Orders.OrderTotal").Text
-                                        },
-                                        new(nameof(AffiliatedOrderModel.CreatedOn))
-                                        {
-                                            Title = T("Admin.Affiliates.Orders.CreatedOn").Text,
-                                            Render = new RenderDate()
-                                        },
-                                        new(nameof(AffiliatedOrderModel.AffiliateCommission))
-                                        {
-                                            Title = T("Admin.Affiliates.Orders.AffiliateCommission").Text,
-                                        },
-                                        new(nameof(AffiliatedOrderModel.Id))
-                                        {
-                                            Title = T("Admin.Common.View").Text,
-                                            Width = "100",
-                                            ClassName = NopColumnClassDefaults.Button,
-                                            Render = new RenderButtonView(new DataUrl("~/Admin/Order/Edit/", nameof(AffiliatedOrderModel.Id)))
-                                        }
-                                    }
-                                })
-
-                                <div class="card-footer">
-                                    @if (Model.Id == 0)
-                                    {
-                                        <span>@T("Admin.Affiliates.Commission.SaveForEdit")</span>
-                                    }
-                                    else if (!Model.PaidOn.HasValue)
-                                    {
-                                        <a class="btn btn-primary" id="add-selected">
-                                            <i class="fas fa-square-plus"></i>
-                                            @T("Admin.Affiliates.Commission.AddSelectedOrders")
-                                        </a>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    }
 
                     @if (Model.Id > 0)
                     {
@@ -213,12 +64,11 @@
                                     Name = "added-orders-grid",
                                     UrlRead = new DataUrl("AffiliatedOrderListGrid", "Affiliate", new RouteValueDictionary
                                     {
-                                        [nameof(Model.AffiliatedOrderSearchModel.AffiliateId)] = Model.AffiliatedOrderSearchModel.AffiliateId,
-                                        [nameof(Model.AffiliatedOrderSearchModel.IsCommissionPage)] = true,
-                                        [nameof(Model.AffiliatedOrderSearchModel.AffiliateCommissionId)] = Model.Id
+                                        [nameof(AffiliatedOrderSearchModel.AffiliateId)] = Model.AffiliateId,
+                                        [nameof(AffiliatedOrderSearchModel.IsCommissionPage)] = true,
+                                        [nameof(AffiliatedOrderSearchModel.AffiliateCommissionId)] = Model.Id
                                     }),
-                                    Length = Model.AffiliatedOrderSearchModel.PageSize,
-                                    LengthMenu = Model.AffiliatedOrderSearchModel.AvailablePageSizes,
+                                    Length = int.MaxValue,
                                     ColumnCollection = new List<ColumnProperty>
                                     {
                                         new(nameof(AffiliatedOrderModel.CustomOrderNumber))
@@ -268,6 +118,33 @@
                                     }
                                 })
                             </div>
+                            
+                            <div class="card-footer">
+                                @if (Model.Id == 0)
+                                {
+                                    <span>@T("Admin.Affiliates.Commission.SaveForEdit")</span>
+                                }
+                                else if (!Model.PaidOn.HasValue)
+                                {
+                                    <button id="btnRefresh" type="submit" name="save" class="btn btn-default" style="display: none"></button>
+                                    <button type="submit" onclick="javascript:OpenWindow('@(Url.Action("AddOrdersToAffiliateCommissionPopup", new { id = Model.Id, affiliateId = Model.AffiliateId, btnId = "btnRefresh" }))', 800, 850, true); return false;" class="btn btn-primary">
+                                        @T("Admin.Affiliates.Commission.SelectOrders")
+                                    </button>
+
+                                    <script>
+                                        $(function() {
+                                            $('#btnRefresh').click(function () {
+                                                //refresh grid
+                                                updateTable('#added-orders-grid');
+
+                                                //return false to don't reload a page
+                                                return false;
+                                            });
+                                        });
+                                    </script>
+                                }
+                            </div>
+
                         </div>
                     }
 
@@ -280,9 +157,6 @@
 <nop-alert asp-alert-id="nothingSelectedAlert" />
 
 <script>
-    var selectedIds = [];
-    var reportAggregates = "";
-
     function renderOrderStatus(data, type, row, meta) {
 
         var color;
@@ -322,37 +196,5 @@
             }
         });
     }
-
-    $(function () {
-        $('#add-selected').on('click', function () {
-            var postData = {
-                selectedIds: selectedIds,
-                affiliateCommissionId: @Model.Id
-            };
-            addAntiForgeryToken(postData);
-            $.ajax({
-                cache: false,
-                type: 'POST',
-                url: '@(Url.Action("AddSelectedOrders", "Affiliate"))',
-                data: postData,
-                success: function (data, textStatus, jqXHR) {
-                    if (data && data.Result) {
-                        $('#totalCommissionAmount').text(data.totalCommissionAmount);
-                    }
-                },
-                complete: function (jqXHR, textStatus) {
-                    if (jqXHR.status === 204) {
-                        showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
-                        return;
-                    }
-
-                    updateTable('#orders-grid');
-                    updateTable('#added-orders-grid');
-                }
-            });
-            $('#delete-selected-action-confirmation').modal('toggle');
-            return false;
-        });
-    });
 
 </script>

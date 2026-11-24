@@ -14,6 +14,9 @@ public partial record AffiliateModel : BaseNopEntityModel
     [NopResourceDisplayName("Admin.Affiliates.Fields.URL")]
     public string Url { get; set; }
 
+    [NopResourceDisplayName("Admin.Affiliates.Fields.CreatedOn")]
+    public DateTime CreatedOn { get; set; }
+
     [NopResourceDisplayName("Admin.Affiliates.Fields.AdminComment")]
     public string AdminComment { get; set; }
 
@@ -26,6 +29,8 @@ public partial record AffiliateModel : BaseNopEntityModel
     [NopResourceDisplayName("Admin.Affiliates.Fields.AssociatedCustomerId")]
     public int? AssociatedCustomerId { get; set; }
     public string CustomerInfo { get; set; }
+
+    public bool OrdersExists { get; set; }
 
     public AddressModel Address { get; set; } = new();
 
@@ -47,8 +52,6 @@ public partial record AffiliateCommissionEditModel : AffiliateCommissionModel
     #region Properties
 
     public int AffiliateId { get; set; }
-
-    public AffiliatedOrderSearchModel AffiliatedOrderSearchModel { get; set; } = new();
 
     #endregion
 }

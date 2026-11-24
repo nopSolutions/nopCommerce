@@ -3462,6 +3462,12 @@ public partial class ImportManager : IImportManager
                     case "AffiliateId":
                         order.AffiliateId = property.IntValue;
                         break;
+                    case "AffiliateCommissionId":
+                        order.AffiliateCommissionId = property.IntValueNullable;
+                        break;
+                    case "AffiliateCommissionAmount":
+                        order.AffiliateCommissionAmount = property.DecimalValueNullable;
+                        break;
                     case "PaymentMethodSystemName":
                         order.PaymentMethodSystemName = property.StringValue;
                         break;

@@ -104,7 +104,8 @@ public partial class AffiliateController : BasePublicController
                 {
                     AddressId = address.Id,
                     AssociatedCustomerId = customer.Id,
-                    CreatedOnUtc = DateTime.UtcNow
+                    CreatedOnUtc = DateTime.UtcNow,
+                    FriendlyUrlName = model.FriendlyUrlName
                 };
 
                 await _affiliateService.InsertAffiliateAsync(affiliate);
