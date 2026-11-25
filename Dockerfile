@@ -1,5 +1,5 @@
 # create the build instance 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:11.0-alpine AS build
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
@@ -34,7 +34,7 @@ RUN chmod 775 App_Data \
 			  wwwroot/sitemaps
 
 # create the runtime instance 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS runtime 
+FROM mcr.microsoft.com/dotnet/aspnet:11.0-alpine AS runtime 
 
 # add globalization support
 RUN apk add --no-cache icu-libs icu-data-full

@@ -2,7 +2,7 @@
   "Group": "AI-powered recommendation",
   "FriendlyName": "Google AI Commerce Search",
   "SystemName": "AIRecommendation.GoogleAI",
-  "Version": "5.10.0",
+  "Version": "5.10.1",
   "SupportedVersions": [ "5.10" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,
