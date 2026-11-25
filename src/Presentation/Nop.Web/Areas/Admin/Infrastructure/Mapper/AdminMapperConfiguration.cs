@@ -238,7 +238,7 @@ public partial class AdminMapperConfiguration : BaseMapperProfile
             .ForMember(model => model.AffiliateCommissionSearchModel, options => options.Ignore())
             .ForMember(model => model.AffiliatedOrderSearchModel, options => options.Ignore())
             .ForMember(model => model.CustomerInfo, options => options.Ignore())
-            .ForMember(model => model.OrdersExists, options => options.Ignore())
+            .ForMember(model => model.OrdersTotal, options => options.Ignore())
             .ForMember(model => model.Url, options => options.Ignore());
         CreateMap<AffiliateModel, Affiliate>()
             .ForMember(entity => entity.Deleted, options => options.Ignore());

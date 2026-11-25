@@ -76,11 +76,12 @@ public class DataMigration : Migration
 
         //#8273
         if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name,
-                MessageTemplateSystemNames.NEW_AFFILIATE_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION,
-                StringComparison.InvariantCultureIgnoreCase) == 0))
+            MessageTemplateSystemNames.NEW_AFFILIATE_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION,
+            StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ??
-                            throw new Exception("Default email account cannot be loaded");
+            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault()
+                ?? throw new Exception("Default email account cannot be loaded");
+
             _dataProvider.InsertEntity(new MessageTemplate
             {
                 Name = MessageTemplateSystemNames.NEW_AFFILIATE_ACCOUNT_APPLY_STORE_OWNER_NOTIFICATION,
@@ -93,11 +94,12 @@ public class DataMigration : Migration
         }
 
         if (!_dataProvider.GetTable<MessageTemplate>().Any(st => string.Compare(st.Name,
-                MessageTemplateSystemNames.AFFILIATE_ACCOUNT_ACTIVE_CUSTOMER_NOTIFICATION,
-                StringComparison.InvariantCultureIgnoreCase) == 0))
+            MessageTemplateSystemNames.AFFILIATE_ACCOUNT_ACTIVE_CUSTOMER_NOTIFICATION,
+            StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault() ??
-                            throw new Exception("Default email account cannot be loaded");
+            var eaGeneral = _dataProvider.GetTable<EmailAccount>().FirstOrDefault()
+                ?? throw new Exception("Default email account cannot be loaded");
+
             _dataProvider.InsertEntity(new MessageTemplate
             {
                 Name = MessageTemplateSystemNames.AFFILIATE_ACCOUNT_ACTIVE_CUSTOMER_NOTIFICATION,
@@ -115,40 +117,36 @@ public class DataMigration : Migration
                 string.Compare(alt.SystemKeyword, "AddNewAffiliateCommission",
                     StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            _dataProvider.InsertEntity(
-                new ActivityLogType
-                {
-                    SystemKeyword = "AddNewAffiliateCommission",
-                    Enabled = true,
-                    Name = "Add a new affiliate commission"
-                }
-            );
+            _dataProvider.InsertEntity(new ActivityLogType
+            {
+                SystemKeyword = "AddNewAffiliateCommission",
+                Enabled = true,
+                Name = "Add a new affiliate commission"
+            });
         }
 
         if (!activityLogTypeTable.Any(alt =>
                 string.Compare(alt.SystemKeyword, "DeleteAffiliateCommission",
                     StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            _dataProvider.InsertEntity(
-                new ActivityLogType
-                {
-                    SystemKeyword = "DeleteAffiliateCommission",
-                    Enabled = true,
-                    Name = "Delete an affiliate commission"
-                }
-            );
+            _dataProvider.InsertEntity(new ActivityLogType
+            {
+                SystemKeyword = "DeleteAffiliateCommission",
+                Enabled = true,
+                Name = "Delete an affiliate commission"
+            });
         }
 
         if (!activityLogTypeTable.Any(alt =>
                 string.Compare(alt.SystemKeyword, "EditAffiliateCommission",
                     StringComparison.InvariantCultureIgnoreCase) == 0))
         {
-            _dataProvider.InsertEntity(
-                new ActivityLogType
-                {
-                    SystemKeyword = "EditAffiliateCommission", Enabled = true, Name = "Edit an affiliate commission"
-                }
-            );
+            _dataProvider.InsertEntity(new ActivityLogType
+            {
+                SystemKeyword = "EditAffiliateCommission",
+                Enabled = true,
+                Name = "Edit an affiliate commission"
+            });
         }
     }
 

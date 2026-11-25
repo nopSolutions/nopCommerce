@@ -27,9 +27,6 @@
   <LocaleResource Name="Account.Affiliates.Orders.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.Affiliates.OrdersAmount">
-    <Value>Orders amount</Value>
-  </LocaleResource>
   <LocaleResource Name="Account.Affiliates.OrdersCount">
     <Value>Orders count</Value>
   </LocaleResource>

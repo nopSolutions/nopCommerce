@@ -7,10 +7,6 @@ namespace Nop.Web.Models.Affiliate;
 /// </summary>
 public partial record AffiliatedOrderModel : BaseNopEntityModel
 {
-    public string CustomOrderNumber { get; set; }
-    public string OrderTotal { get; set; }
-    public string OrderStatus { get; set; }
-    public string PaymentStatus { get; set; }
     public DateTime CreatedOn { get; set; }
     public string AffiliateCommission { get; set; }
     public string CommissionStatus { get; set; }

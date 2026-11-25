@@ -30,7 +30,7 @@ public partial record AffiliateModel : BaseNopEntityModel
     public int? AssociatedCustomerId { get; set; }
     public string CustomerInfo { get; set; }
 
-    public bool OrdersExists { get; set; }
+    public int OrdersTotal { get; set; }
 
     public AddressModel Address { get; set; } = new();
 
@@ -42,7 +42,6 @@ public partial record AffiliateModel : BaseNopEntityModel
 
     #endregion
 }
-
 
 /// <summary>
 /// Represents an affiliate commission model to add new one

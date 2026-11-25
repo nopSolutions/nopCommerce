@@ -54,7 +54,7 @@
                 <span asp-validation-for="CaptchaSettings.ShowOnRegistrationPage"></span>
             </div>
         </div>
-        <div class="form-group row" id="ssCaptchaShowOnForgotPassworPagepnl">
+        <div class="form-group row" id="ssCaptchaShowOnForgotPasswordPagepnl">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnForgotPasswordPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnForgotPasswordPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="CaptchaSettings.ShowOnForgotPasswordPage" />
@@ -216,7 +216,7 @@
             $('#ssCaptchaTypepnl').showElement();
             $('#ssCaptchaShowOnLoginPagepnl').showElement();
             $('#ssCaptchaShowOnRegistrationPagepnl').showElement();
-            $('#ssCaptchaShowOnForgotPassworPagepnl').showElement();
+            $('#ssCaptchaShowOnForgotPasswordPagepnl').showElement();
             $('#ssCaptchaShowOnContactUsPagepnl').showElement();
             $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').showElement();
             $('#ssCaptchaShowOnEmailProductToFriendPagepnl').showElement();
@@ -226,6 +226,8 @@
             $('#ssCaptchaShowOnApplyVendorPagepnl').showElement();
             $('#ssCaptchaShowOnCheckoutPageForGuests').showElement();
             $('#ssCaptchaShowOnCheckGiftCardBalance').showElement();
+            $('#ssCaptchaShowOnWithdrawalForm').showElement();
+            $('#ssCaptchaShowOnApplyAffiliatePage').showElement();
             $('#ssReCaptchaPublicKeypnl').showElement();
             $('#ssReCaptchaPrivateKeypnl').showElement();
             toggleReCaptchaV3ScoreThreshold();
@@ -234,7 +236,7 @@
             $('#ssReCaptchaV3ScoreThresholdpnl').hideElement();
             $('#ssCaptchaShowOnLoginPagepnl').hideElement();
             $('#ssCaptchaShowOnRegistrationPagepnl').hideElement();
-            $('#ssCaptchaShowOnForgotPassworPagepnl').hideElement();
+            $('#ssCaptchaShowOnForgotPasswordPagepnl').hideElement();
             $('#ssCaptchaShowOnContactUsPagepnl').hideElement();
             $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hideElement();
             $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hideElement();
@@ -244,6 +246,8 @@
             $('#ssCaptchaShowOnApplyVendorPagepnl').hideElement();
             $('#ssCaptchaShowOnCheckoutPageForGuests').hideElement();
             $('#ssCaptchaShowOnCheckGiftCardBalance').hideElement();
+            $('#ssCaptchaShowOnWithdrawalForm').hideElement();
+            $('#ssCaptchaShowOnApplyAffiliatePage').hideElement();
             $('#ssReCaptchaPublicKeypnl').hideElement();
             $('#ssReCaptchaPrivateKeypnl').hideElement();
         }

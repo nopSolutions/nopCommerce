@@ -91,7 +91,6 @@ public class LocalizationMigration : MigrationBase
             ["Account.Affiliates.Status.Disabled"] = "Disabled",
             ["Account.Affiliates.TotalAffiliatedCustomers"] = "Total number of affiliated customers",
             ["Account.Affiliates.TotalOrders"] = "Total number of orders",
-            ["Account.Affiliates.OrdersAmount"] = "Orders amount",
             ["Account.Affiliates.OrdersCount"] = "Orders count",
             ["Account.Affiliates.Orders.CreatedOn"] = "Created on",
             ["Account.Affiliates.Orders.AffiliateCommission"] = "Commission",

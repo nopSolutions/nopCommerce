@@ -178,7 +178,6 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
 
         var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
         model.TotalOrders = orders.TotalCount;
-        model.OrdersAmount = await _priceFormatter.FormatPriceAsync(orders.Sum(o => o.OrderTotal), true, primaryStoreCurrency);
         model.OrdersCount = orders.Count;
 
         model.PagerModel = new PagerModel(_localizationService)
@@ -221,10 +220,6 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
             {
                 Id = order.Id,
                 CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc),
-                OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus),
-                PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus),
-                CustomOrderNumber = order.CustomOrderNumber,
-                OrderTotal = await _priceFormatter.FormatPriceAsync(order.OrderTotal, true, primaryStoreCurrency),
                 AffiliateCommission = commissionAmount,
                 CommissionStatus = commissionStatus,
                 CommissionPaidOn = commissionPaidOn

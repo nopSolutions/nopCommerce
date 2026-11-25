@@ -217,7 +217,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
             model ??= affiliate.ToModel<AffiliateModel>();
             model.Url = await _affiliateService.GenerateUrlAsync(affiliate);
             model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(affiliate.CreatedOnUtc ?? DateTime.UtcNow, DateTimeKind.Utc);
-            
+
             //prepare nested search models
             await PrepareAffiliatedOrderSearchModelAsync(model.AffiliatedOrderSearchModel, affiliate.Id);
             PrepareAffiliatedCustomerSearchModel(model.AffiliatedCustomerSearchModel, affiliate);
@@ -234,11 +234,8 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
                 model.Active = affiliate.Active;
             }
 
-            var orders = await _orderService.GetAffiliatedOrdersAsync(
-                affiliateId: affiliate.Id,
-                getOnlyTotalCount: true);
-
-            model.OrdersExists = orders.TotalCount > 0;
+            var orders = await _orderService.GetAffiliatedOrdersAsync(affiliateId: affiliate.Id, getOnlyTotalCount: true);
+            model.OrdersTotal = orders.TotalCount;
         }
 
         //prepare address model
@@ -429,11 +426,12 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
             //fill in model values from the entity
             return customers.SelectAwait(async customer =>
             {
-                var affiliatedCustomerModel = new AffiliatedCustomerModel { 
+                var affiliatedCustomerModel = new AffiliatedCustomerModel
+                {
                     Id = customer.Id,
                     Name = !string.IsNullOrEmpty(customer.Email)
-                    ? customer.Email
-                    : await _localizationService.GetResourceAsync("Admin.Customers.Guest")
+                        ? customer.Email
+                        : await _localizationService.GetResourceAsync("Admin.Customers.Guest")
                 };
 
                 return affiliatedCustomerModel;
@@ -519,7 +517,7 @@ public partial class AffiliateModelFactory : IAffiliateModelFactory
         AffiliateCommissionEditModel affiliateCommissionEditModel)
     {
         ArgumentNullException.ThrowIfNull(affiliateCommissionEditModel);
-        
+
         var affiliateCommission = await _affiliateService.GetAffiliateCommissionByIdAsync(affiliateCommissionEditModel.Id);
 
         if (affiliateCommission != null)

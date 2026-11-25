@@ -365,16 +365,16 @@ public partial class OrderService : IOrderService
     /// </returns>
     public virtual async Task<IPagedList<Order>> GetAffiliatedOrdersAsync(int customerId = 0,
         int affiliateId = 0,
-        int? affiliateCommissionId = 0, 
+        int? affiliateCommissionId = 0,
         DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
         List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
         int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
     {
         var query = _orderRepository.Table;
-        
+
         if (customerId > 0)
             query = query.Where(o => o.CustomerId == customerId);
-        
+
         if (affiliateId > 0)
             query = query.Where(o => o.AffiliateId == affiliateId);
 

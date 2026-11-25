@@ -15,20 +15,22 @@ public record AffiliateModel : BaseNopModel
 
     [NopResourceDisplayName("Account.Affiliates.TotalAffiliatedCustomers")]
     public int TotalAffiliatedCustomers { get; set; }
+
     public IList<SelectListItem> AvailableLimits { get; set; }
+
     [NopResourceDisplayName("Account.Affiliates.TotalOrders")]
     public int TotalOrders { get; set; }
 
-    [NopResourceDisplayName("Account.Affiliates.OrdersAmount")]
-    public string OrdersAmount { get; set; }
     [NopResourceDisplayName("Account.Affiliates.OrdersCount")]
     public int OrdersCount { get; set; }
 
     [NopResourceDisplayName("Account.Affiliates.TotalCommission")]
     public string TotalCommission { get; set; }
+
     [NopResourceDisplayName("Account.Affiliates.PaidCommission")]
     public string PaidCommission { get; set; }
 
     public PagerModel PagerModel { get; set; }
+
     public List<AffiliatedOrderModel> Orders { get; set; } = new();
 }

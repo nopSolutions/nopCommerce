@@ -811,7 +811,7 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Configuration.Settings.Order.UseEuWithdrawalLocales.Hint"] = "Check to use locales for the EU withdrawal button (Directive 2023/2673). Otherwise, locales for \"return requests\" will be used.",
             ["Admin.Configuration.Settings.Order.WithdrawalLinkDaysValid"] = "Withdrawal link. Days valid",
             ["Admin.Configuration.Settings.Order.WithdrawalLinkDaysValid.Hint"] = "Enter the number of days the withdrawal link remains valid. Set to 0 for no expiration.",
-            ["Literals.Nop.Core.Http.NopRouteNames.General.ApplyAffiliateAccount"] = "Withdraw contract",
+            ["Literals.Nop.Core.Http.NopRouteNames.General.WithdrawalRequestForm"] = "Withdraw contract",
             ["Order.WithdrawItems"] = "Withdraw contract",
             ["PageTitle.ReturnItems.Withdrawal"] = "Withdraw a contract",
             ["PageTitle.ReturnRequests.WithdrawalForm"] = "Withdraw a contract",

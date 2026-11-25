@@ -1,6 +1,5 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain;
-using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.ArtificialIntelligence;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
