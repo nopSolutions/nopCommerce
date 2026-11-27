@@ -125,11 +125,12 @@ public partial class CommonController : BasePublicController
                     var ctrlAttributes = form[controlId];
                     if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                     {
-                        var selectedAttributeId = int.Parse(ctrlAttributes);
-                        if (selectedAttributeId > 0)
+                        if (int.TryParse(ctrlAttributes, out var selectedAttributeId) && selectedAttributeId > 0)
                         {
                             var selectedVal = await _contactFormAttributeService.GetAttributeValueByIdAsync(selectedAttributeId);
-                            inputValue = selectedVal.Name;
+                            
+                            if (selectedVal != null)
+                                inputValue = selectedVal.Name;
                         }
                     }
                 }
@@ -141,13 +142,13 @@ public partial class CommonController : BasePublicController
                         break;
 
                     var attrValues = await cblAttributes
-                        .Select(int.Parse)
+                        .Select(a => int.TryParse(a, out var id) ? id : 0)
                         .Where(id => id > 0)
                         .SelectAwait(async id =>
                         {
                             var selectedVal = await _contactFormAttributeService.GetAttributeValueByIdAsync(id);
-                            return selectedVal.Name;
-                        }).ToListAsync();
+                            return selectedVal?.Name;
+                        }).Where(s => !string.IsNullOrEmpty(s)).ToListAsync();
 
                     inputValue = string.Join(", ", attrValues);
                 }

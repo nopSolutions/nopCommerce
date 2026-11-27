@@ -419,8 +419,7 @@ public partial class ProductController : BaseAdminController
                     ctrlAttributes = form[controlId];
                     if (!string.IsNullOrEmpty(ctrlAttributes))
                     {
-                        var selectedAttributeId = int.Parse(ctrlAttributes);
-                        if (selectedAttributeId > 0)
+                        if (int.TryParse(ctrlAttributes, out var selectedAttributeId) && selectedAttributeId > 0)
                         {
                             attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                 attribute, selectedAttributeId.ToString());
@@ -435,8 +434,7 @@ public partial class ProductController : BaseAdminController
                         foreach (var item in cblAttributes.Split(_separator,
                                      StringSplitOptions.RemoveEmptyEntries))
                         {
-                            var selectedAttributeId = int.Parse(item);
-                            if (selectedAttributeId > 0)
+                            if (int.TryParse(item, out var selectedAttributeId) && selectedAttributeId > 0)
                             {
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
@@ -669,12 +667,14 @@ public partial class ProductController : BaseAdminController
                         var ctrlAttributes = form[controlId];
                         if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                         {
-                            var selectedAttributeId = int.Parse(ctrlAttributes);
-                            //for conditions we should empty values save even when nothing is selected
-                            //otherwise "attributesXml" will be empty
-                            //hence we won't be able to find a selected attribute
-                            attributesXml = _productAttributeParser.AddProductAttribute(null, attribute,
-                                selectedAttributeId > 0 ? selectedAttributeId.ToString() : string.Empty);
+                            if (int.TryParse(ctrlAttributes, out var selectedAttributeId))
+                            {
+                                //for conditions we should empty values save even when nothing is selected
+                                //otherwise "attributesXml" will be empty
+                                //hence we won't be able to find a selected attribute
+                                attributesXml = _productAttributeParser.AddProductAttribute(null, attribute,
+                                    selectedAttributeId > 0 ? selectedAttributeId.ToString() : string.Empty);
+                            }
                         }
                         else
                         {
@@ -694,8 +694,7 @@ public partial class ProductController : BaseAdminController
                             foreach (var item in cblAttributes.ToString()
                                          .Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                             {
-                                var selectedAttributeId = int.Parse(item);
-                                if (selectedAttributeId <= 0)
+                                if (!int.TryParse(item, out var selectedAttributeId) || selectedAttributeId <= 0)
                                     continue;
 
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,

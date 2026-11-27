@@ -114,8 +114,7 @@ public partial class VendorController : BasePublicController
                     var ctrlAttributes = form[controlId];
                     if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                     {
-                        var selectedAttributeId = int.Parse(ctrlAttributes);
-                        if (selectedAttributeId > 0)
+                        if (int.TryParse(ctrlAttributes, out var selectedAttributeId) && selectedAttributeId > 0)
                         {
                             attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                 attribute, selectedAttributeId.ToString());
@@ -128,11 +127,9 @@ public partial class VendorController : BasePublicController
                     var cblAttributes = form[controlId];
                     if (!StringValues.IsNullOrEmpty(cblAttributes))
                     {
-                        foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries)
-                                )
+                        foreach (var item in cblAttributes.ToString().Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                         {
-                            var selectedAttributeId = int.Parse(item);
-                            if (selectedAttributeId > 0)
+                            if (int.TryParse(item, out var selectedAttributeId) && selectedAttributeId > 0)
                             {
                                 attributesXml = _vendorAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());

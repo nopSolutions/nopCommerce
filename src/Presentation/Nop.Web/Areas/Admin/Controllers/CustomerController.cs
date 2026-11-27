@@ -196,8 +196,7 @@ public partial class CustomerController : BaseAdminController
                     ctrlAttributes = form[controlId];
                     if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                     {
-                        var selectedAttributeId = int.Parse(ctrlAttributes);
-                        if (selectedAttributeId > 0)
+                        if (int.TryParse(ctrlAttributes, out var selectedAttributeId) && selectedAttributeId > 0)
                         {
                             attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                                 attribute, selectedAttributeId.ToString());
@@ -212,8 +211,7 @@ public partial class CustomerController : BaseAdminController
                         foreach (var item in cblAttributes.ToString()
                                      .Split(_separator, StringSplitOptions.RemoveEmptyEntries))
                         {
-                            var selectedAttributeId = int.Parse(item);
-                            if (selectedAttributeId > 0)
+                            if (int.TryParse(item, out var selectedAttributeId) && selectedAttributeId > 0)
                             {
                                 attributesXml = _customerAttributeParser.AddAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());

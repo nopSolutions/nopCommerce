@@ -232,8 +232,7 @@ public partial class CommonModelFactory : ICommonModelFactory
                         {
                             foreach (var attributeId in ctrlAttributes)
                             {
-                                var selectedAttributeId = int.Parse(attributeId);
-                                if (selectedAttributeId == 0)
+                                if (!int.TryParse(attributeId, out var selectedAttributeId) || selectedAttributeId == 0)
                                     continue;
 
                                 foreach (var item in attributeModel.Values)
