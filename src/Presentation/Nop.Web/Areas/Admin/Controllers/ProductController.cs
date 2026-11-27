@@ -940,11 +940,14 @@ public partial class ProductController : BaseAdminController
     protected virtual void SanitizeProductDescription(ProductModel model)
     {
         model.FullDescription = CommonHelper.EnsureOnlyAllowedHtml(model.FullDescription);
+        model.ShortDescription = CommonHelper.EnsureOnlyAllowedHtml(model.ShortDescription);
 
         foreach (var productLocalizedModel in model.Locales)
         {
             productLocalizedModel.FullDescription =
                 CommonHelper.EnsureOnlyAllowedHtml(productLocalizedModel.FullDescription);
+            productLocalizedModel.ShortDescription =
+                CommonHelper.EnsureOnlyAllowedHtml(productLocalizedModel.ShortDescription);
         }
     }
 

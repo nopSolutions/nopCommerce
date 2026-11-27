@@ -1813,7 +1813,7 @@ public partial class ImportManager : IImportManager
                             await _localizedEntityService.SaveLocalizedValueAsync(product, p => p.Name, localizedName, language.Id);
                             break;
                         case "ShortDescription":
-                            await _localizedEntityService.SaveLocalizedValueAsync(product, p => p.ShortDescription, property.StringValue, language.Id);
+                            await _localizedEntityService.SaveLocalizedValueAsync(product, p => p.ShortDescription, currentVendor != null ? CommonHelper.EnsureOnlyAllowedHtml(property.StringValue) : property.StringValue, language.Id);
                             break;
                         case "FullDescription":
                             await _localizedEntityService.SaveLocalizedValueAsync(product, p => p.FullDescription, currentVendor != null ? CommonHelper.EnsureOnlyAllowedHtml(property.StringValue) : property.StringValue, language.Id);
@@ -2330,7 +2330,7 @@ public partial class ImportManager : IImportManager
                         product.Name = property.StringValue;
                         break;
                     case "ShortDescription":
-                        product.ShortDescription = property.StringValue;
+                        product.ShortDescription = currentVendor != null ? CommonHelper.EnsureOnlyAllowedHtml(property.StringValue) : property.StringValue;
                         break;
                     case "FullDescription":
                         product.FullDescription = currentVendor != null ? CommonHelper.EnsureOnlyAllowedHtml(property.StringValue) : property.StringValue;
