@@ -675,10 +675,10 @@ public partial class ImportManager : IImportManager
             manager.CurrentLanguage = language;
             manager.ReadLocalizedFromXlsx(lWorksheet, iRow);
 
+            string localizedName = null;
+
             foreach (var property in manager.GetLocalizedProperties)
             {
-                string localizedName = null;
-
                 switch (property.PropertyName)
                 {
                     case "Name":
@@ -726,10 +726,10 @@ public partial class ImportManager : IImportManager
             manager.CurrentLanguage = language;
             manager.ReadLocalizedFromXlsx(lWorksheet, iRow);
 
+            string localizedName = null;
+
             foreach (var property in manager.GetLocalizedProperties)
             {
-                string localizedName = null;
-
                 switch (property.PropertyName)
                 {
                     case "Name":
@@ -1802,10 +1802,10 @@ public partial class ImportManager : IImportManager
                 manager.CurrentLanguage = language;
                 manager.ReadLocalizedFromXlsx(lWorksheet, iRow);
 
+                string localizedName = null;
+
                 foreach (var property in manager.GetLocalizedProperties)
                 {
-                    string localizedName = null;
-
                     switch (property.PropertyName)
                     {
                         case "Name":
