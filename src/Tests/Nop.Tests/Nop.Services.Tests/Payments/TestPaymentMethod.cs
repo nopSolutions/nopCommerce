@@ -80,9 +80,18 @@ public class TestPaymentMethod : BasePlugin, IPaymentMethod
     /// </summary>
     /// <param name="form">The parsed form values</param>
     /// <returns>List of validating errors</returns>
+    /// <remarks>
+    /// Returns the value of the <see cref="ValidationWarningFormKey"/> form field as a warning when it is posted
+    /// (used by checkout controller tests to reach the "invalid payment form" branch); otherwise no warnings
+    /// </remarks>
     public Task<IList<string>> ValidatePaymentFormAsync(IFormCollection form)
     {
-        return Task.FromResult<IList<string>>(new List<string>());
+        var warnings = new List<string>();
+
+        if (form != null && form.TryGetValue(ValidationWarningFormKey, out var warning) && !string.IsNullOrEmpty(warning))
+            warnings.Add(warning.ToString());
+
+        return Task.FromResult<IList<string>>(warnings);
     }
 
     /// <summary>
@@ -229,6 +238,11 @@ public class TestPaymentMethod : BasePlugin, IPaymentMethod
     public static bool TestSupportVoid { get; set; } = false;
 
     public static decimal AdditionalHandlingFee { get; set; } = decimal.Zero;
+
+    /// <summary>
+    /// Name of the form field whose value <see cref="ValidatePaymentFormAsync"/> returns as a validation warning
+    /// </summary>
+    public const string ValidationWarningFormKey = "TestPaymentMethod.ValidationWarning";
 
     #endregion
 
