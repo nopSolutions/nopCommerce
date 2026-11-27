@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions;
@@ -20,7 +21,21 @@ public static class HttpClientBuilderExtensions
             var handler = new HttpClientHandler();
 
             //whether proxy is enabled
-            var proxySettings = provider.GetService<ProxySettings>();
+            ProxySettings proxySettings;
+            try
+            {
+                proxySettings = provider.GetService<ProxySettings>();
+            }
+            catch (Exception exception)
+            {
+                //IHttpClientFactory keeps a handler factory exception until the app restarts,
+                //so connect directly and read the settings again when the handler is rebuilt
+                provider.GetService<ILoggerFactory>()?.CreateLogger(typeof(HttpClientBuilderExtensions)).LogWarning(
+                    exception, "Proxy settings could not be loaded; connecting directly until the handler is rebuilt");
+
+                return handler;
+            }
+
             if (!proxySettings?.Enabled ?? true)
                 return handler;
 
