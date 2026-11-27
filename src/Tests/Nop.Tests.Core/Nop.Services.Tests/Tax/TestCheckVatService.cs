@@ -1,4 +1,4 @@
-﻿using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Tax;
 
 namespace Nop.Tests.Nop.Services.Tests.Tax;
