@@ -567,7 +567,7 @@ public partial class PriceCalculationService : IPriceCalculationService
                     if (!productPrice.HasValue)
                         productPrice = (await GetFinalPriceAsync(product, customer, store, quantity: quantity)).finalPrice;
 
-                    adjustment = (decimal)((float)productPrice * (float)value.PriceAdjustment / 100f);
+                    adjustment = productPrice.Value * value.PriceAdjustment / 100;
                 }
                 else
                 {
