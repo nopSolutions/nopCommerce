@@ -113,7 +113,6 @@ public class UploadedImagesMigration : Migration
             return;
 
         const int pageSize = 400;
-        var pageIndex = 0;
         var rootPath = _nopFileProvider.Combine(_nopFileProvider.GetLocalImagesPath(_mediaSettings), NopElFinderDefaults.DefaultRootDirectory);
         var uploadRoot = _nopFileProvider.GetVirtualPath(rootPath);
 
@@ -125,9 +124,7 @@ public class UploadedImagesMigration : Migration
 
             while (true)
             {
-                var pictures = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-
-                pageIndex++;
+                var pictures = query.Take(pageSize).ToList();
 
                 //all pictures flushed?
                 if (!pictures.Any())
@@ -162,10 +159,7 @@ public class UploadedImagesMigration : Migration
                     }
 
                     if (_nopFileProvider.GetFileInfo(filePath).Exists)
-                    {
-                        _dataProvider.DeleteEntity(picture);
                         continue;
-                    }
 
                     //the named mutex helps to avoid creating the same files in different threads,
                     //and does not decrease performance significantly, because the code is blocked only for the specific file.
@@ -191,9 +185,9 @@ public class UploadedImagesMigration : Migration
                     {
                         mutex.ReleaseMutex();
                     }
-
-                    _dataProvider.DeleteEntity(picture);
                 }
+
+                _dataProvider.BulkDeleteEntities(pictures);
             }
         }
         catch
