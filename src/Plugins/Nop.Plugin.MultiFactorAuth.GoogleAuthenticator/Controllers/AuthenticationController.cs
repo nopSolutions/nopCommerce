@@ -78,6 +78,10 @@ public class AuthenticationController : BasePluginController
     public async Task<IActionResult> VerifyGoogleAuthenticator(TokenModel model)
     {
         var customerMultiFactorAuthenticationInfo = await HttpContext.Session.GetAsync<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);
+
+        if (customerMultiFactorAuthenticationInfo == null)
+            return RedirectToRoute(NopRouteNames.General.LOGIN);
+
         var username = customerMultiFactorAuthenticationInfo.UserName;
         var returnUrl = customerMultiFactorAuthenticationInfo.ReturnUrl;
         var isPersist = customerMultiFactorAuthenticationInfo.RememberMe;
