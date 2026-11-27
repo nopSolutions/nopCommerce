@@ -3397,7 +3397,7 @@ public partial class ProductController : BaseAdminController
             ?? throw new ArgumentException("No product attribute mapping found with the specified id");
 
         //try to get a product with the specified id
-        var product = await _productService.GetProductByIdAsync(productAttributeMapping.ProductId)
+        var product = await _productService.GetProductByIdAsync(model.ProductId)
             ?? throw new ArgumentException("No product found with the specified id");
 
         //a vendor should have access only to his products
@@ -3653,7 +3653,7 @@ public partial class ProductController : BaseAdminController
             return RedirectToAction("List", "Product");
 
         //try to get a product attribute mapping with the specified id
-        var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(productAttributeValue.ProductAttributeMappingId);
+        var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(model.ProductAttributeMappingId);
         if (productAttributeMapping == null)
             return RedirectToAction("List", "Product");
 
@@ -3665,6 +3665,15 @@ public partial class ProductController : BaseAdminController
         var currentVendor = await _workContext.GetCurrentVendorAsync();
         if (currentVendor != null && product.VendorId != currentVendor.Id)
             return RedirectToAction("List", "Product");
+
+        if (productAttributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct && currentVendor != null)
+        {
+            var associateProduct = await _productService.GetProductByIdAsync(model.AssociatedProductId);
+
+            //a vendor should have access only to his products
+            if (associateProduct != null && associateProduct.VendorId != currentVendor.Id)
+                return RedirectToAction("List", "Product");
+        }
 
         if (productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares)
         {
