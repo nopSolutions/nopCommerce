@@ -397,6 +397,7 @@ public partial class PluginController : BaseAdminController
 
     [HttpPost, ActionName("List")]
     [FormValueRequired("plugin-apply-changes")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
     public virtual async Task<IActionResult> ApplyChanges()
     {
         return await ReloadList();
