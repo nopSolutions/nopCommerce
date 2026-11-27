@@ -1957,7 +1957,21 @@ public partial class ShoppingCartController : BasePublicController
     public virtual async Task<IActionResult> MoveToCustomWishlist(int shoppingCartItemId, int customWishlistId)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
+
+        var cart = await _shoppingCartService.GetShoppingCartAsync(customer);
+        var shoppingCartItem = cart.FirstOrDefault(x => x.Id == shoppingCartItemId);
+
+        if (shoppingCartItem == null)
+        {
+            return Json(new
+            {
+                success = false,
+                message = "This is not your shopping cart item."
+            });
+        }
+
         var redirectUrl = Url.RouteUrl(NopRouteNames.General.WISHLIST, new { list = customWishlistId });
+
         if (customWishlistId > 0)
         {
             var wishlist = await _customWishlistService.GetCustomWishlistByIdAsync(customWishlistId);
