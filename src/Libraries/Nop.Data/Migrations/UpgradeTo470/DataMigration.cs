@@ -53,7 +53,7 @@ public class DataMigration : Migration
 
         // new permission
         if (_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "AccessProfiling", StringComparison.InvariantCultureIgnoreCase) == 0)) 
-            _dataProvider.BulkDeleteEntitiesAsync<PermissionRecord>(pr => pr.SystemName == "AccessProfiling");
+            _dataProvider.BulkDeleteEntities<PermissionRecord>(pr => pr.SystemName == "AccessProfiling");
 
         //#6890
         //remove column
