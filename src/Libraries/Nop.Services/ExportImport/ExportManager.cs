@@ -1432,7 +1432,7 @@ public partial class ExportManager : IExportManager
                                 productAttributeMapping.ValidationMaxLength.Value);
                         }
 
-                        if (string.IsNullOrEmpty(productAttributeMapping.ValidationFileAllowedExtensions))
+                        if (!string.IsNullOrEmpty(productAttributeMapping.ValidationFileAllowedExtensions))
                         {
                             await xmlWriter.WriteStringAsync("ValidationFileAllowedExtensions",
                                 productAttributeMapping.ValidationFileAllowedExtensions);
