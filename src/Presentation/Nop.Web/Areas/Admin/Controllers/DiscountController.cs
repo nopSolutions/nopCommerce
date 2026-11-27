@@ -529,6 +529,11 @@ public partial class DiscountController : BaseAdminController
         var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)
             ?? throw new ArgumentException("No discount found with the specified id");
 
+        //a vendor should have access only to his discounts
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && discount.VendorId != currentVendor.Id)
+            return Content("This is not your discount");
+
         //prepare model
         var model = await _discountModelFactory.PrepareDiscountCategoryListModelAsync(searchModel, discount);
 
@@ -541,6 +546,11 @@ public partial class DiscountController : BaseAdminController
         //try to get a discount with the specified id
         var discount = await _discountService.GetDiscountByIdAsync(discountId)
             ?? throw new ArgumentException("No discount found with the specified id", nameof(discountId));
+
+        //a vendor should have access only to his discounts
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && discount.VendorId != currentVendor.Id)
+            return Content("This is not your discount");
 
         //try to get a category with the specified id
         var category = await _categoryService.GetCategoryByIdAsync(categoryId)
@@ -583,6 +593,11 @@ public partial class DiscountController : BaseAdminController
         var discount = await _discountService.GetDiscountByIdAsync(model.DiscountId)
             ?? throw new ArgumentException("No discount found with the specified id");
 
+        //a vendor should have access only to his discounts
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && discount.VendorId != currentVendor.Id)
+            return Content("This is not your discount");
+
         foreach (var id in model.SelectedCategoryIds)
         {
             var category = await _categoryService.GetCategoryByIdAsync(id);
@@ -612,6 +627,11 @@ public partial class DiscountController : BaseAdminController
         var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)
             ?? throw new ArgumentException("No discount found with the specified id");
 
+        //a vendor should have access only to his discounts
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && discount.VendorId != currentVendor.Id)
+            return Content("This is not your discount");
+
         //prepare model
         var model = await _discountModelFactory.PrepareDiscountManufacturerListModelAsync(searchModel, discount);
 
@@ -624,6 +644,11 @@ public partial class DiscountController : BaseAdminController
         //try to get a discount with the specified id
         var discount = await _discountService.GetDiscountByIdAsync(discountId)
             ?? throw new ArgumentException("No discount found with the specified id", nameof(discountId));
+
+        //a vendor should have access only to his discounts
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && discount.VendorId != currentVendor.Id)
+            return Content("This is not your discount");
 
         //try to get a manufacturer with the specified id
         var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId)
@@ -665,6 +690,11 @@ public partial class DiscountController : BaseAdminController
         //try to get a discount with the specified id
         var discount = await _discountService.GetDiscountByIdAsync(model.DiscountId)
             ?? throw new ArgumentException("No discount found with the specified id");
+
+        //a vendor should have access only to his discounts
+        var currentVendor = await _workContext.GetCurrentVendorAsync();
+        if (currentVendor != null && discount.VendorId != currentVendor.Id)
+            return Content("This is not your discount");
 
         foreach (var id in model.SelectedManufacturerIds)
         {
