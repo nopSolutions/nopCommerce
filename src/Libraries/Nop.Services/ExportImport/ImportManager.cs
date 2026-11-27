@@ -1471,8 +1471,8 @@ public partial class ImportManager : IImportManager
             // Resolve
             var importManager = EngineContext.Current.Resolve<IImportManager>(scope);
 
-            using var sr = new StreamReader(path);
-            await importManager.ImportProductsFromXlsxAsync(sr.BaseStream);
+            using (var sr = new StreamReader(path)) 
+                await importManager.ImportProductsFromXlsxAsync(sr.BaseStream);
 
             try
             {
