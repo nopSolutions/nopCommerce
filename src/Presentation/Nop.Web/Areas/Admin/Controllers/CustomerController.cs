@@ -548,6 +548,13 @@ public partial class CustomerController : BaseAdminController
         if (customer == null || customer.Deleted)
             return RedirectToAction("List");
 
+        //ensure that the current customer cannot change data of "Administrators" if he's not an admin himself
+        if (await _customerService.IsAdminAsync(customer) && !await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()))
+        {
+            _notificationService.ErrorNotification("You're not allowed to edit administrators. Only administrators can do it.");
+            return RedirectToAction("Edit", new { id = customer.Id });
+        }
+
         //validate customer roles
         var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
         var newCustomerRoles = new List<CustomerRole>();
@@ -876,6 +883,13 @@ public partial class CustomerController : BaseAdminController
         var customer = await _customerService.GetCustomerByIdAsync(id);
         if (customer == null)
             return RedirectToAction("List");
+
+        //ensure that the current customer cannot change data of "Administrators" if he's not an admin himself
+        if (await _customerService.IsAdminAsync(customer) && !await _customerService.IsAdminAsync(await _workContext.GetCurrentCustomerAsync()))
+        {
+            _notificationService.ErrorNotification("You're not allowed to edit administrators. Only administrators can do it.");
+            return RedirectToAction("Edit", new { id = customer.Id });
+        }
 
         await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute, string.Empty);
 
