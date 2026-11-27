@@ -210,7 +210,7 @@ public partial class DiscountService : IDiscountService
                 return query;
             }, cache => cache.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountAllCacheKey,
                 couponCode ?? string.Empty, discountName ?? string.Empty, isActive)))
-            .AsQueryable();
+            .AsEnumerable();
         
         if (discountType.HasValue)
             discounts = discounts.Where(discount => discount.DiscountType == discountType.Value);
@@ -238,7 +238,7 @@ public partial class DiscountService : IDiscountService
         if (vendorId > 0)
             discounts = discounts.Where(discount => discount.VendorId == vendorId);
 
-        return await discounts.ToListAsync();
+        return discounts.ToList();
     }
 
     /// <summary>
