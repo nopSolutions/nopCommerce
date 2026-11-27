@@ -1,6 +1,8 @@
 ﻿using System.Collections.Concurrent;
+using System.Data;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Expressions;
+using FluentMigrator.Model;
 using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using Nop.Core;
@@ -50,9 +52,26 @@ public static class NopMappingSchema
                     Size = column.Size,
                     Precision = column.Precision,
                     IsIdentity = column.IsIdentity,
-                    Type = column.Type ?? System.Data.DbType.String
+                    Type = getColumnType(column)
                 }).ToList()
             };
+
+            static DbType getColumnType(ColumnDefinition column)
+            {
+                if (column.Type != null)
+                    return column.Type.Value;
+
+                if (!string.IsNullOrEmpty(column.CustomType))
+                {
+                    if(column.CustomType.StartsWith("datetime(", StringComparison.OrdinalIgnoreCase))
+                        return DbType.DateTime;
+
+                    if (column.CustomType.StartsWith("datetime2(", StringComparison.OrdinalIgnoreCase))
+                        return DbType.DateTime2;
+                }
+
+                return DbType.String;
+            }   
         });
     }
 
@@ -61,7 +80,6 @@ public static class NopMappingSchema
     /// </summary>
     public static MappingSchema GetMappingSchema(string configurationName, IDataProvider mappings)
     {
-
         if (Singleton<MappingSchema>.Instance is null)
         {
             Singleton<MappingSchema>.Instance = new MappingSchema(configurationName, mappings.MappingSchema);
